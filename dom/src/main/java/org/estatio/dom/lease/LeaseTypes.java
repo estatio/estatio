@@ -19,14 +19,24 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "40", repositoryFor = LeaseType.class)
+@DomainService(repositoryFor = LeaseType.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.1"
+)
 public class LeaseTypes extends EstatioDomainService<LeaseType> {
 
     public LeaseTypes() {
@@ -35,14 +45,8 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Other", sequence = "lease.leaseTypes.1")
-    public List<LeaseType> allLeaseTypes() {
-        return allInstances();
-    }
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Other", sequence = "lease.leaseTypes.2")
+    @MemberOrder(sequence = "1")
     public LeaseType newLeaseType(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") @Optional String name) {
@@ -51,6 +55,14 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
         leaseType.setName(name);
         persistIfNotAlready(leaseType);
         return leaseType;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<LeaseType> allLeaseTypes() {
+        return allInstances();
     }
 
     // //////////////////////////////////////

@@ -40,15 +40,13 @@ public class InvoiceNumeratorContributions extends EstatioService<InvoiceNumerat
     @NotContributed(As.ACTION)
     public Numerator lastInvoiceNumber(
             final Property property) {
-        return invoices.findInvoiceNumberNumerator(property);
+        return collectionNumerators.findInvoiceNumberNumerator(property);
     }
 
     // //////////////////////////////////////
 
-    private Invoices invoices;
+    @javax.inject.Inject
+    CollectionNumerators collectionNumerators;
 
-    public void injectInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
 
 }

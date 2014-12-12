@@ -25,14 +25,19 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.value.Blob;
 import org.estatio.dom.EstatioService;
 
 
-@DomainService(menuOrder = "00")
-@Named("Index Value Maintenance")
+@DomainService
+@DomainServiceLayout(
+        named="Indices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "60.1"
+)
 public class IndexValueMaintService extends EstatioService<IndexValueMaintService> {
 
     public IndexValueMaintService() {
@@ -50,10 +55,9 @@ public class IndexValueMaintService extends EstatioService<IndexValueMaintServic
     }
 
     // //////////////////////////////////////
-    // download (action)
-    // //////////////////////////////////////
 
-    @MemberOrder(name="Indices", sequence="20.1")
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence="1")
     public Blob downloadIndexValues() {
         final String fileName = "IndexValues.xlsx";
         final List<IndexValueMaintLineItem> viewModels = Lists.newArrayList();
@@ -61,11 +65,9 @@ public class IndexValueMaintService extends EstatioService<IndexValueMaintServic
     }
 
     // //////////////////////////////////////
-    // upload (action)
-    // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Indices", sequence="20.2")
+    @MemberOrder(sequence="2")
     public List<IndexValueMaintLineItem> uploadIndexValues(
             final @Named("Excel spreadsheet") Blob spreadsheet) {
         List<IndexValueMaintLineItem> lineItems = 
@@ -73,8 +75,6 @@ public class IndexValueMaintService extends EstatioService<IndexValueMaintServic
         return lineItems;
     }
 
-    // //////////////////////////////////////
-    // Injected Services
     // //////////////////////////////////////
 
     @javax.inject.Inject

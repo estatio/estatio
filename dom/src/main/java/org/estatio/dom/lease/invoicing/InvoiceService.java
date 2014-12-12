@@ -2,16 +2,26 @@ package org.estatio.dom.lease.invoicing;
 
 import java.util.List;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.services.clock.ClockService;
 
-@DomainService(menuOrder = "50")
+@DomainService
+@DomainServiceLayout(
+        named="Invoices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "50.5"
+)
 public class InvoiceService extends EstatioService<InvoiceService> {
 
     public InvoiceService() {
@@ -19,13 +29,12 @@ public class InvoiceService extends EstatioService<InvoiceService> {
     }
 
     /**
-     * Returns the {@link InvoiceSummary}s that are newly
-     * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
+     * Returns the {@link org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun invoice summaries} that are newly {@link Lease#calculate(InvoiceRunType, InvoiceCalculationSelection, org.joda.time.LocalDate, org.joda.time.LocalDate, org.joda.time.LocalDate) calculate}d for all of the
      * {@link Lease}s matched by the provided <tt>property</tt> and the other
      * parameters.
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Invoices", sequence = "40")
+    @MemberOrder(name = "Invoices", sequence = "1")
     public Object calculateInvoicesForProperty(
             final @Named("Property") Property property,
             final @Named("Run Type") InvoiceRunType invoiceRunType,
@@ -71,9 +80,11 @@ public class InvoiceService extends EstatioService<InvoiceService> {
 
     // //////////////////////////////////////
 
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Invoices", sequence = "40")
-    @Prototype
+    @MemberOrder(name = "Invoices", sequence = "99")
     public Object calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Run Type") InvoiceRunType runType,

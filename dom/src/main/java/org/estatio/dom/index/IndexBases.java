@@ -25,7 +25,12 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(menuOrder = "60", repositoryFor = IndexBase.class)
+@DomainService(repositoryFor = IndexBase.class)
+@DomainServiceLayout(
+        named="Indices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "60.3"
+)
 public class IndexBases
         extends EstatioDomainService<IndexBase> {
 
@@ -36,7 +41,7 @@ public class IndexBases
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Indices", sequence = "2")
+    @MemberOrder(sequence = "1")
     @NotInServiceMenu
     public IndexBase newIndexBase(
             final @Named("Index") Index index,
@@ -61,9 +66,11 @@ public class IndexBases
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Indices", sequence = "7")
+    @MemberOrder(sequence = "99")
     public List<IndexBase> allIndexBases() {
         return allInstances();
     }

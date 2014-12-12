@@ -30,7 +30,12 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(menuOrder = "10", repositoryFor = Property.class)
+@DomainService(repositoryFor = Property.class)
+@DomainServiceLayout(
+        named="Fixed Assets",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "10.1"
+)
 public class Properties extends EstatioDomainService<Property> {
 
     public Properties() {
@@ -40,7 +45,7 @@ public class Properties extends EstatioDomainService<Property> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Fixed Assets", sequence = "11")
+    @MemberOrder(sequence = "1")
     public Property newProperty(
             final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name,
@@ -73,7 +78,7 @@ public class Properties extends EstatioDomainService<Property> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Fixed Assets", sequence = "12")
+    @MemberOrder(sequence = "2")
     public List<Property> findProperties(
             @Named("Reference or Name") final String referenceOrName) {
         return allMatches("findByReferenceOrName",
@@ -83,7 +88,7 @@ public class Properties extends EstatioDomainService<Property> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Fixed Assets", sequence = "13")
+    @MemberOrder(sequence = "3")
     public List<Property> allProperties() {
         return allInstances();
     }

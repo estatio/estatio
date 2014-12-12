@@ -28,7 +28,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(menuOrder = "60", repositoryFor = IndexValue.class)
+@DomainService(repositoryFor = IndexValue.class)
+@DomainServiceLayout(
+        named="Indices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "60.4"
+)
 public class IndexValues
         extends EstatioDomainService<IndexValue> {
 
@@ -40,6 +45,7 @@ public class IndexValues
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotInServiceMenu
+    @MemberOrder(sequence = "1")
     public IndexValue newIndexValue(
             final @Named("Index Base") IndexBase indexBase,
             final @Named("Start Date") LocalDate startDate,
@@ -57,6 +63,7 @@ public class IndexValues
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotInServiceMenu
+    @MemberOrder(sequence = "1")
     public IndexValue newIndexValue(
             final @Named("Index") Index index,
             final @Named("Start Date") LocalDate startDate,
@@ -100,9 +107,11 @@ public class IndexValues
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Indices", sequence = "8")
+    @MemberOrder(sequence = "99")
     public List<IndexValue> allIndexValues() {
         return allInstances();
     }

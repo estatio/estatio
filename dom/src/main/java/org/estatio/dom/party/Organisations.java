@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "20", repositoryFor = Organisation.class)
+@DomainService(repositoryFor = Organisation.class)
+@DomainServiceLayout(
+        named = "Parties",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "20.2"
+)
 public class Organisations extends EstatioDomainService<Organisation> {
 
     public Organisations() {
@@ -36,7 +41,7 @@ public class Organisations extends EstatioDomainService<Organisation> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Parties", sequence = "2")
+    @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name) {
@@ -49,9 +54,11 @@ public class Organisations extends EstatioDomainService<Organisation> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Parties", sequence = "99.1")
+    @MemberOrder(sequence = "99")
     public List<Organisation> allOrganisations() {
         return allInstances();
     }

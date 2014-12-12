@@ -21,13 +21,9 @@ package org.estatio.dom.lease.invoicing;
 import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Test;
 import org.apache.isis.applib.query.Query;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class InvoiceItemsForLeaseTest {
 
@@ -66,15 +62,4 @@ public class InvoiceItemsForLeaseTest {
         };
     }
 
-    public static class AllInvoiceItems extends InvoiceItemsForLeaseTest {
-
-        @Test
-        public void happyCase() {
-
-            invoiceItems.allInvoiceItems();
-
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
-        }
-
-    }
 }

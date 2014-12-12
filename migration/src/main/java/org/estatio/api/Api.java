@@ -77,6 +77,7 @@ import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.CollectionNumerators;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
@@ -320,7 +321,7 @@ public class Api extends AbstractFactoryAndRepository {
         property.setExternalReference(externalReference);
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
         if (numeratorFormat != null)
-            invoices.createInvoiceNumberNumerator(property, numeratorFormat, BigInteger.ZERO);
+            collectionNumerators.createInvoiceNumberNumerator(property, numeratorFormat, BigInteger.ZERO);
     }
 
     private Property fetchProperty(String reference, boolean createIfNotFond) {
@@ -1154,6 +1155,9 @@ public class Api extends AbstractFactoryAndRepository {
 
     @Inject
     private Invoices invoices;
+
+    @Inject
+    private CollectionNumerators collectionNumerators;
 
     @Inject
     private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;

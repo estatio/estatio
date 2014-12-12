@@ -17,27 +17,44 @@
 package org.estatio.fixture.security;
 
 import java.util.List;
-
+import org.isisaddons.module.security.dom.role.ApplicationRole;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.isisaddons.module.security.dom.role.ApplicationRole;
-
 /**
  * Enables fixtures to be installed from the application.
  */
-@DomainService(menuOrder = "99")
-@Named("Prototyping")
+@DomainService
+@DomainServiceLayout(
+        named = "Prototyping",
+        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
+        menuOrder = "20.2"
+)
 public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
 
     public EstatioSecurityModuleAppFixturesService() {
         super(EstatioSecurityModuleAppFixturesService.class.getPackage().getName());
+    }
+
+    @ActionLayout(
+            prototype = true,
+            cssClassFa = "fa-bolt",
+            named = "Run Security Fixture Script"
+    )
+    @Override
+    public List<FixtureResult> runFixtureScript(FixtureScript fixtureScript, @ParameterLayout(
+            named = "Parameters",
+            describedAs = "Script-specific parameters (if any).  The format depends on the script implementation (eg key=value, CSV, JSON, XML etc)",
+            multiLine = 10) @Optional String parameters) {
+        return super.runFixtureScript(fixtureScript, parameters);
     }
 
     @Override
@@ -57,7 +74,10 @@ public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
     // //////////////////////////////////////
 
     @ActionSemantics(ActionSemantics.Of.NON_IDEMPOTENT)
-    @Prototype
+    @ActionLayout(
+            prototype = true,
+            cssClassFa = "fa-bolt"
+    )
     @MemberOrder(sequence = "20")
     public Object installFixturesAndReturnFirstRole() {
         final List<FixtureResult> fixtureResultList = findFixtureScriptFor(EstatioSecurityModuleAppSetUp.class).run(null);

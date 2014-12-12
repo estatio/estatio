@@ -58,6 +58,8 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
     Invoices invoices;
+    @Inject
+    CollectionNumerators collectionNumerators;
 
     public static class CreateCollectionNumberNumerator extends InvoicesTest {
 
@@ -75,7 +77,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Test
         public void createThenFind() throws Exception {
             // when
-            Numerator numerator = invoices.createCollectionNumberNumerator("%09d", BigInteger.TEN);
+            Numerator numerator = collectionNumerators.createCollectionNumberNumerator("%09d", BigInteger.TEN);
             // then
             assertThat(numerator, is(notNullValue()));
             assertThat(numerator.getName(), is(Constants.COLLECTION_NUMBER_NUMERATOR_NAME));
@@ -86,7 +88,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenNone() throws Exception {
-            Numerator numerator = invoices.findCollectionNumberNumerator();
+            Numerator numerator = collectionNumerators.findCollectionNumberNumerator();
             assertThat(numerator, is(nullValue()));
         }
 
@@ -129,11 +131,11 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void whenNoneForProperty() throws Exception {
 
             // given
-            Numerator numerator = invoices.findInvoiceNumberNumerator(propertyOxf);
+            Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(propertyOxf);
             Assert.assertNull(numerator);
 
             // when
-            numerator = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
+            numerator = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
 
             //then
             Assert.assertNotNull(numerator);
@@ -147,11 +149,11 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void canCreateOnePerProperty() throws Exception {
 
             // given
-            Numerator numerator1 = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
+            Numerator numerator1 = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
             // when
-            Numerator numerator2 = invoices.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO);
+            Numerator numerator2 = collectionNumerators.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO);
 
             // then
             Assert.assertNotNull(numerator2);
@@ -167,13 +169,13 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
 
             // given
-            Numerator numerator1 = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
+            Numerator numerator1 = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
             assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
 
             // when
-            Numerator numerator2 = invoices.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO);
+            Numerator numerator2 = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO);
 
             // then
             Assert.assertNotNull(numerator2);
@@ -213,7 +215,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Test
         public void whenNone() throws Exception {
             // when
-            Numerator numerator = invoices.findInvoiceNumberNumerator(propertyOxf);
+            Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(propertyOxf);
             // then
             Assert.assertNull(numerator);
         }

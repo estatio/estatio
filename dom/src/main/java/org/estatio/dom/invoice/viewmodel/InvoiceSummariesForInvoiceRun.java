@@ -22,7 +22,12 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(menuOrder = "10")
+@DomainService
+@DomainServiceLayout(
+        named="Invoices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "50.1"
+)
 @Immutable
 public class InvoiceSummariesForInvoiceRun extends EstatioDomainService<InvoiceSummaryForInvoiceRun> {
 
@@ -33,7 +38,7 @@ public class InvoiceSummariesForInvoiceRun extends EstatioDomainService<InvoiceS
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "10")
+    @MemberOrder(sequence = "1")
     public List<InvoiceSummaryForInvoiceRun> allInvoiceRuns() {
         return allInstances();
     }

@@ -22,7 +22,12 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(menuOrder = "10")
+@DomainService
+@DomainServiceLayout(
+        named="Invoices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "50.2"
+)
 @Immutable
 public class InvoiceSummariesForPropertyDueDate extends EstatioDomainService<InvoiceSummaryForPropertyDueDate> {
 
@@ -32,9 +37,11 @@ public class InvoiceSummariesForPropertyDueDate extends EstatioDomainService<Inv
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "90")
+    @MemberOrder(sequence = "90")
     public List<InvoiceSummaryForPropertyDueDate> allInvoicesByPropertyDueDate() {
         return allInstances();
     }

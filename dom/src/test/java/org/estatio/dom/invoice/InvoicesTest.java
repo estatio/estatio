@@ -51,6 +51,7 @@ public class InvoicesTest {
     FinderInteraction finderInteraction;
 
     Invoices invoices;
+    CollectionNumerators collectionNumerators;
 
     Party seller;
     Party buyer;
@@ -91,6 +92,8 @@ public class InvoicesTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
+        };
+        collectionNumerators = new CollectionNumerators() {
         };
     }
 
@@ -187,7 +190,8 @@ public class InvoicesTest {
             lastIncrement = BigInteger.TEN;
 
             invoices = new Invoices();
-            invoices.injectNumerators(mockNumerators);
+            collectionNumerators = new CollectionNumerators();
+            collectionNumerators.numerators = mockNumerators;
         }
 
 
@@ -198,7 +202,7 @@ public class InvoicesTest {
                     oneOf(mockNumerators).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
                 }
             });
-            invoices.findCollectionNumberNumerator();
+            collectionNumerators.findCollectionNumberNumerator();
         }
 
         @Test
@@ -208,7 +212,7 @@ public class InvoicesTest {
                     oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
                 }
             });
-            invoices.createCollectionNumberNumerator(format, lastIncrement);
+            collectionNumerators.createCollectionNumberNumerator(format, lastIncrement);
         }
 
         @Hidden
@@ -218,7 +222,7 @@ public class InvoicesTest {
                     oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
                 }
             });
-            invoices.findInvoiceNumberNumerator(mockProperty);
+            collectionNumerators.findInvoiceNumberNumerator(mockProperty);
         }
 
         @Hidden
@@ -232,7 +236,7 @@ public class InvoicesTest {
                     oneOf(mockNumerators).createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, format, lastIncrement);
                 }
             });
-            invoices.createInvoiceNumberNumerator(mockProperty, format, lastIncrement);
+            collectionNumerators.createInvoiceNumberNumerator(mockProperty, format, lastIncrement);
         }
 
 

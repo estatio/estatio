@@ -16,13 +16,16 @@
  */
 package org.estatio.fixture.security.tenancy;
 
-public class AllTenancies extends AbstractTenancyFixtureScript {
+public class AllTenancies extends AbstractEstatioInstanceFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, new ItalyTenancy());
-        executionContext.executeChild(this, new FranceTenancy());
-        executionContext.executeChild(this, new SwedenTenancy());
+
+        executionContext.executeChild(this, new GlobalEstatioInstance());
+
+        executionContext.executeChild(this, new ItalyEstatioInstance());
+        executionContext.executeChild(this, new FranceEstatioInstance());
+        executionContext.executeChild(this, new SwedenEstatioInstance());
     }
 
 }

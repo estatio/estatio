@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "80", repositoryFor = Country.class)
+@DomainService(repositoryFor = Country.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.5"
+)
 public class Countries extends EstatioDomainService<Country> {
 
     public Countries() {
@@ -35,20 +40,22 @@ public class Countries extends EstatioDomainService<Country> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Other", sequence = "geography.countries.1")
-    public List<Country> allCountries() {
-        return allInstances();
-    }
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Other", sequence = "geography.countries.2")
+    @MemberOrder(sequence = "1")
     public List<Country> newCountry(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Alpha-2 Code") String alpha2Code,
-            final @Named("Name") String name) {
+            final @ParameterLayout(named="Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
+            final @ParameterLayout(named="Alpha-2 Code") String alpha2Code,
+            final @ParameterLayout(named="Name") String name) {
         createCountry(reference, alpha2Code, name);
         return allCountries();
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<Country> allCountries() {
+        return allInstances();
     }
 
     // //////////////////////////////////////

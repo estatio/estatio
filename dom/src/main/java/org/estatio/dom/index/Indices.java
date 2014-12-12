@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "60", repositoryFor = Index.class)
+@DomainService(repositoryFor = Index.class)
+@DomainServiceLayout(
+        named="Indices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "60.2"
+)
 public class Indices extends EstatioDomainService<Index> {
 
     public Indices() {
@@ -50,7 +55,7 @@ public class Indices extends EstatioDomainService<Index> {
     // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "2")
     public List<Index> allIndices() {
         return allInstances();
     }

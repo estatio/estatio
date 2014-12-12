@@ -16,13 +16,14 @@
  */
 package org.estatio.fixture.security.tenancy;
 
-public class SwedenTenancy extends AbstractTenancyFixtureScript {
+public class GlobalEstatioInstance extends AbstractEstatioInstanceFixtureScript {
 
-    public static final String TENANCY_NAME = "sweden";
+    public static final String TENANCY_NAME = "Global";
+    public static final String PATH = "/";
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
-        create(TENANCY_NAME, executionContext);
+    protected void execute(final ExecutionContext executionContext) {
+        create(TENANCY_NAME, PATH, null, executionContext);
     }
 
 }

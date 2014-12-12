@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "20", repositoryFor = Person.class)
+@DomainService(repositoryFor = Person.class)
+@DomainServiceLayout(
+        named = "Parties",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "20.3"
+)
 public class Persons extends EstatioDomainService<Person> {
 
     public Persons() {
@@ -36,7 +41,7 @@ public class Persons extends EstatioDomainService<Person> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Parties", sequence = "1")
+    @MemberOrder(sequence = "1")
     public Person newPerson(
             final @Named("reference") @Optional @RegEx(validation=RegexValidation.Person.REFERENCE) String reference,
             final @Named("initials") @Optional @RegEx(validation=RegexValidation.Person.INITIALS) String initials,
@@ -52,9 +57,11 @@ public class Persons extends EstatioDomainService<Person> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Parties", sequence = "99.2")
+    @MemberOrder(sequence = "99")
     public List<Person> allPersons() {
         return allInstances();
     }

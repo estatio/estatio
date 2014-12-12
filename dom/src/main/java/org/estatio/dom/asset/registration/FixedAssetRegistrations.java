@@ -24,7 +24,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 
-@DomainService(menuOrder = "10", repositoryFor = FixedAssetRegistration.class)
+@DomainService(repositoryFor = FixedAssetRegistration.class)
+@DomainServiceLayout(
+        named="Fixed Assets",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "10.3"
+)
 public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegistration> {
 
     public FixedAssetRegistrations() {
@@ -54,7 +59,9 @@ public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegi
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @MemberOrder(name = "Fixed Assets", sequence = "99")
     public List<FixedAssetRegistration> allRegistrations() {
         return allInstances();

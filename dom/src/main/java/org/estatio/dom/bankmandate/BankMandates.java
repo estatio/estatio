@@ -35,7 +35,12 @@ import org.estatio.dom.agreement.*;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.party.Party;
 
-@DomainService(menuOrder = "30", repositoryFor = BankMandate.class)
+@DomainService(repositoryFor = BankMandate.class)
+@DomainServiceLayout(
+        named = "Accounts",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "30.2"
+)
 public class BankMandates extends EstatioDomainService<BankMandate> {
 
     public BankMandates() {
@@ -78,7 +83,9 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Accounts", sequence = "99")
     public List<BankMandate> allBankMandates() {

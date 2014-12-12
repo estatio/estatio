@@ -18,30 +18,20 @@
  */
 package org.estatio.dom.invoice;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -49,6 +39,13 @@ import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.services.clock.ClockService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class InvoiceTest {
 
@@ -61,6 +58,9 @@ public class InvoiceTest {
 
     @Mock
     Invoices mockInvoices;
+
+    @Mock
+    CollectionNumerators mockCollectionNumerators;
 
     @Mock
     ClockService mockClockService;
@@ -93,7 +93,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockInvoices).findInvoiceNumberNumerator(with(any(Property.class)));
+                allowing(mockCollectionNumerators).findInvoiceNumberNumerator(with(any(Property.class)));
                 will(returnValue(numerator));
             }
         });
@@ -102,7 +102,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnCollectionNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockInvoices).findCollectionNumberNumerator();
+                allowing(mockCollectionNumerators).findCollectionNumberNumerator();
                 will(returnValue(numerator));
             }
         });
@@ -136,7 +136,8 @@ public class InvoiceTest {
         };
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
-        invoice.injectInvoices(mockInvoices);
+        invoice.invoices = mockInvoices;
+        invoice.collectionNumerators = mockCollectionNumerators;
         invoice.injectClockService(mockClockService);
         return invoice;
     }
@@ -210,7 +211,8 @@ public class InvoiceTest {
                 }
             };
             invoice.setContainer(mockContainer);
-            invoice.injectInvoices(mockInvoices);
+            invoice.invoices = mockInvoices;
+            invoice.collectionNumerators = mockCollectionNumerators;
             return invoice;
         }
 
@@ -345,7 +347,8 @@ public class InvoiceTest {
         public void setUp() throws Exception {
             invoice = new Invoice();
             invoice.setDueDate(new LocalDate(2012, 2, 2));
-            invoice.injectInvoices(mockInvoices);
+            invoice.invoices = mockInvoices;
+            invoice.collectionNumerators = mockCollectionNumerators;
             invoice.setFixedAsset(invoiceProperty);
         }
 

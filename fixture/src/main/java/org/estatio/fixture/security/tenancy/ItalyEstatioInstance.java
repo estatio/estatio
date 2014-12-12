@@ -16,13 +16,18 @@
  */
 package org.estatio.fixture.security.tenancy;
 
-public class ItalyTenancy extends AbstractTenancyFixtureScript {
+import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
+
+public class ItalyEstatioInstance extends AbstractEstatioInstanceFixtureScript {
 
     public static final String TENANCY_NAME = "italy";
+    public static final String PATH = "/it";
+
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        create(TENANCY_NAME, executionContext);
+        create(TENANCY_NAME, PATH, CountriesAndStatesRefData.ITA, executionContext);
     }
+
 
 }

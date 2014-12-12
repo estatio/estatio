@@ -29,8 +29,12 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
-@DomainService(menuOrder = "30", repositoryFor = FinancialAccount.class)
-@Named("Accounts")
+@DomainService(repositoryFor = FinancialAccount.class)
+@DomainServiceLayout(
+        named = "Accounts",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "30.1"
+)
 public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     public FinancialAccounts() {
@@ -70,8 +74,11 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
         return bankAccount;
     }
 
+    // //////////////////////////////////////
+
     @NotContributed
     @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "1")
     public BankAccount newBankAccount(
             final @Named("Owner") Party owner,
             final @Named("IBAN") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban) {
@@ -122,8 +129,10 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @Prototype
-    @MemberOrder(sequence = "99")
+    @ActionLayout(
+            prototype = true
+    )
+    @MemberOrder(sequence = "3")
     public List<FinancialAccount> allAccounts() {
         return allInstances();
     }

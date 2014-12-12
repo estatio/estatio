@@ -16,21 +16,16 @@
  */
 package org.estatio.fixture.security.tenancy;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 
-public abstract class AbstractTenancyFixtureScript extends FixtureScript {
+public class SwedenEstatioInstance extends AbstractEstatioInstanceFixtureScript {
 
-    protected ApplicationTenancy create(
-            final String name,
-            final ExecutionContext executionContext) {
-        final ApplicationTenancy tenancy = applicationTenancies.newTenancy(name);
-        executionContext.addResult(this, name, tenancy);
-        return tenancy;
+    public static final String TENANCY_NAME = "sweden";
+    public static final String PATH = "/se";
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        create(TENANCY_NAME, PATH, CountriesAndStatesRefData.SWE, executionContext);
     }
-
-    @javax.inject.Inject
-    private ApplicationTenancies applicationTenancies;
 
 }

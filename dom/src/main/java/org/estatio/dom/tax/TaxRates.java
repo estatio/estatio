@@ -24,11 +24,17 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(menuOrder = "80", repositoryFor = TaxRate.class)
+@DomainService(repositoryFor = TaxRate.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.8"
+)
 public class TaxRates extends EstatioDomainService<TaxRate> {
 
     public TaxRates() {
@@ -37,7 +43,7 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "Other", sequence = "taxStuff.taxes.3")
+    @MemberOrder(sequence = "1")
     @ActionSemantics(Of.SAFE)
     public List<TaxRate> allTaxRates() {
         return allInstances();

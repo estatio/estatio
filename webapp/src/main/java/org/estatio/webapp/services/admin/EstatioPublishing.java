@@ -17,8 +17,8 @@
 package org.estatio.webapp.services.admin;
 
 import java.util.List;
-import org.isisaddons.module.audit.dom.AuditEntry;
-import org.isisaddons.module.audit.dom.AuditingServiceRepository;
+import org.isisaddons.module.publishing.dom.PublishedEvent;
+import org.isisaddons.module.publishing.dom.PublishingServiceRepository;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.dom.EstatioService;
 
@@ -34,37 +35,71 @@ import org.estatio.dom.EstatioService;
 @DomainServiceLayout(
         named = "Changes",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
-        menuOrder = "20.2"
+        menuOrder = "20.3"
 )
-public class EstatioAuditing extends EstatioService<EstatioAuditing> {
+public class EstatioPublishing extends EstatioService<EstatioPublishing> {
 
-    public EstatioAuditing() {
-        super(EstatioAuditing.class);
+    public EstatioPublishing() {
+        super(EstatioPublishing.class);
     }
     
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence="1")
-    public List<AuditEntry> findAuditEntries(
+    public List<PublishedEvent> allQueuedEvents() {
+        return publishingServiceRepository.findQueued();
+    }
+    public boolean hideAllQueuedEvents() {
+        return publishingServiceRepository == null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @Prototype
+    @MemberOrder(sequence="2")
+    public List<PublishedEvent> allProcessedEvents() {
+        return publishingServiceRepository.findProcessed();
+    }
+    public boolean hideAllProcessedEvents() {
+        return publishingServiceRepository == null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence="3")
+    public void purgeProcessedEvents() {
+        publishingServiceRepository.purgeProcessed();
+    }
+    public boolean hidePurgeProcessedEvents() {
+        return publishingServiceRepository == null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence="4")
+    public List<PublishedEvent> findPublishedEvents(
             final @Optional @Named("From") LocalDate from,
             final @Optional @Named("To") LocalDate to) {
-        return auditingServiceRepository.findByFromAndTo(from, to);
+        return publishingServiceRepository.findByFromAndTo(from, to);
     }
-    public boolean hideFindAuditEntries() {
-        return auditingServiceRepository == null;
+    public boolean hideFindPublishedEvents() {
+        return publishingServiceRepository == null;
     }
-    public LocalDate default0FindAuditEntries() {
+    public LocalDate default0FindPublishedEvents() {
         return clockService.now().minusDays(7);
     }
-    public LocalDate default1FindAuditEntries() {
+    public LocalDate default1FindPublishedEvents() {
         return clockService.now();
     }
 
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private AuditingServiceRepository auditingServiceRepository;
+    private PublishingServiceRepository publishingServiceRepository;
     
     @javax.inject.Inject
     private ClockService clockService;

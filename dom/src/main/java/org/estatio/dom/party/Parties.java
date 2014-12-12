@@ -25,7 +25,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(menuOrder = "20", repositoryFor = Party.class)
+@DomainService(repositoryFor = Party.class)
+@DomainServiceLayout(
+        named="Parties",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "20.1"
+)
 public class Parties extends EstatioDomainService<Party> {
 
     public Parties() {
@@ -35,7 +40,7 @@ public class Parties extends EstatioDomainService<Party> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "1")
     public List<Party> findParties(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
             String referenceOrName) {
@@ -73,7 +78,9 @@ public class Parties extends EstatioDomainService<Party> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Party> allParties() {

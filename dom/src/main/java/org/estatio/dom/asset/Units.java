@@ -19,22 +19,26 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
-
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Unit.class)
+@DomainServiceLayout(
+        named="Fixed Assets",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "10.2"
+)
 public class Units extends EstatioDomainService<Unit> {
 
     public Units() {
@@ -44,6 +48,7 @@ public class Units extends EstatioDomainService<Unit> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "1")
     public Unit newUnit(
             final Property property,
             final @RegEx(validation = RegexValidation.Unit.REFERENCE, caseSensitive = true) String reference,
@@ -65,7 +70,7 @@ public class Units extends EstatioDomainService<Unit> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Fixed Assets", sequence = "2")
+    @MemberOrder(sequence = "2")
     public List<Unit> findUnits(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
         return allMatches("findByReferenceOrName",
@@ -87,9 +92,11 @@ public class Units extends EstatioDomainService<Unit> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+        prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Fixed Assets", sequence = "99")
+    @MemberOrder(sequence = "99")
     public List<Unit> allUnits() {
         return allInstances();
     }

@@ -30,6 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.CollectionNumerators;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -354,6 +355,8 @@ public class LeaseTest extends EstatioIntegrationTest {
         @Inject
         private Invoices invoices;
         @Inject
+        private CollectionNumerators collectionNumerators;
+        @Inject
         private Indices indices;
         @Inject
         private IndexValues indexValues;
@@ -408,7 +411,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
         @Test
         public void step3_approveInvoice() throws Exception {
-            invoices.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO);
+            collectionNumerators.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO);
             List<Invoice> allInvoices = invoices.allInvoices();
             Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             invoice.approve();

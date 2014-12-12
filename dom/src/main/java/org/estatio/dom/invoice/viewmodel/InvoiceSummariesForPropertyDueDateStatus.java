@@ -23,7 +23,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.invoice.InvoiceStatus;
 
-@DomainService(menuOrder = "10")
+@DomainService
+@DomainServiceLayout(
+        named="Invoices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "50.3"
+)
 @Immutable
 public class InvoiceSummariesForPropertyDueDateStatus
         extends EstatioDomainService<InvoiceSummaryForPropertyDueDateStatus> {
@@ -35,20 +40,22 @@ public class InvoiceSummariesForPropertyDueDateStatus
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "11")
+    @MemberOrder(sequence = "1")
     public List<InvoiceSummaryForPropertyDueDateStatus> allNewInvoices() {
         return findInvoicesByStatus(InvoiceStatus.NEW);
     }
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "12")
+    @MemberOrder(sequence = "2")
     public List<InvoiceSummaryForPropertyDueDateStatus> allApprovedInvoices() {
         return findInvoicesByStatus(InvoiceStatus.APPROVED);
     }
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "90")
+    @MemberOrder(sequence = "99")
     public List<InvoiceSummaryForPropertyDueDateStatus> allInvoicesByPropertyDueDateStatus() {
         return allInstances();
     }

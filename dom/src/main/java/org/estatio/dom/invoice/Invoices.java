@@ -18,27 +18,34 @@
  */
 package org.estatio.dom.invoice;
 
-import java.math.BigInteger;
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.settings.EstatioSettingsService;
 
-@DomainService(menuOrder = "50", repositoryFor = Invoice.class)
+@DomainService(repositoryFor = Invoice.class)
+@DomainServiceLayout(
+        named="Invoices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "50.4"
+)
 public class Invoices extends EstatioDomainService<Invoice> {
 
     public Invoices() {
@@ -64,6 +71,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
     public List<Invoice> findInvoicesByInvoiceNumber(
             final @Named("Invoice number") String invoiceNumber) {
         return allMatches("findByInvoiceNumber",
@@ -104,7 +112,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     public List<Invoice> findInvoices(
             final FixedAsset fixedAsset,
             final @Named("Due Date") @Optional LocalDate dueDate,
@@ -240,7 +248,9 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "98")
     public List<Invoice> allInvoices() {
@@ -249,64 +259,6 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Administration", sequence = "numerators.invoices.1")
-    public Numerator findCollectionNumberNumerator() {
-        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name = "Administration", sequence = "numerators.invoices.2")
-    @NotContributed
-    public Numerator createCollectionNumberNumerator(
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-
-        return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
-    }
-
-    public String default0CreateCollectionNumberNumerator() {
-        return "%09d";
-    }
-
-    public BigInteger default1CreateCollectionNumberNumerator() {
-        return BigInteger.ZERO;
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Administration", sequence = "numerators.invoices.3")
-    @NotContributed
-    public Numerator findInvoiceNumberNumerator(
-            final FixedAsset fixedAsset) {
-        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset);
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name = "Administration", sequence = "numerators.invoices.4")
-    @NotContributed
-    public Numerator createInvoiceNumberNumerator(
-            final Property property,
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        return numerators.createScopedNumerator(
-                Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
-    }
-
-    public String default1CreateInvoiceNumberNumerator() {
-        return "XXX-%06d";
-    }
-
-    public BigInteger default2CreateInvoiceNumberNumerator() {
-        return BigInteger.ZERO;
-    }
-
-    // //////////////////////////////////////
 
     @Programmatic
     public void removeRuns(InvoiceCalculationParameters parameters) {
@@ -318,16 +270,8 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    private Numerators numerators;
 
-    public void injectNumerators(final Numerators numerators) {
-        this.numerators = numerators;
-    }
-
+    @javax.inject.Inject
     private EstatioSettingsService settings;
-
-    public void injectSettings(final EstatioSettingsService settings) {
-        this.settings = settings;
-    }
 
 }

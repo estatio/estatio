@@ -21,18 +21,16 @@ package org.estatio.dom.guarantee;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
 import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -41,11 +39,9 @@ import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -61,7 +57,12 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(menuOrder = "40", repositoryFor = Guarantee.class)
+@DomainService(repositoryFor = Guarantee.class)
+@DomainServiceLayout(
+        named = "Accounts",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "30.3"
+)
 public class Guarantees extends EstatioDomainService<Guarantee> {
 
     @Override
@@ -134,7 +135,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "2")
     public List<Guarantee> findGuarantees(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String refOrName) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
@@ -150,7 +151,9 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Guarantee> allGuarantees() {

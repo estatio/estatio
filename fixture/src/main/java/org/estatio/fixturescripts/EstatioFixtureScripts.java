@@ -19,30 +19,37 @@
 package org.estatio.fixturescripts;
 
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.CssClass;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
-
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(menuOrder = "93")
+@DomainServiceLayout(
+        named = "Prototyping",
+        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
+        menuOrder = "20.1"
+)
 public class EstatioFixtureScripts extends FixtureScripts {
 
     public EstatioFixtureScripts() {
         super("org.estatio");
     }
 
-    @MemberOrder(name = "Administration", sequence = "9")
+    @ActionLayout(
+            prototype = true,
+            cssClassFa = "fa-bolt",
+            named = "Run Property/Lease Fixture Script"
+    )
+    @MemberOrder(sequence = "1")
     @Override
     public List<FixtureResult> runFixtureScript(
             final FixtureScript fixtureScript,
@@ -55,8 +62,10 @@ public class EstatioFixtureScripts extends FixtureScripts {
         return super.choices0RunFixtureScript();
     }
 
-    @MemberOrder(name = "Administration", sequence = "9.2")
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
+    @MemberOrder(sequence = "2")
     public List<FixtureResult> createRetroInvoicesForProperty(
             final Property property,
             final @Named("Start due date") LocalDate startDueDate,
@@ -67,9 +76,11 @@ public class EstatioFixtureScripts extends FixtureScripts {
         return executionContext.getResults();
     }
 
-    @MemberOrder(name = "Administration", sequence = "9.3")
-    @CssClass("danger")
-    // application.css
+    @ActionLayout(
+            cssClassFa = "fa-bolt",
+            prototype = true
+    )
+    @MemberOrder(sequence = "3")
     public List<FixtureResult> createRetroInvoicesForLease(
             final Lease lease,
             final @Named("Start due date") LocalDate startDueDate,

@@ -18,11 +18,11 @@
  */
 package org.estatio.fixturescripts;
 
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.CollectionNumerators;
 import org.estatio.dom.numerator.Numerator;
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import static org.estatio.integtests.VT.bi;
 
@@ -31,23 +31,17 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext fixtureResults) {
         for (Property property : properties.allProperties()) {
-            final Numerator numerator = invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0));
+            final Numerator numerator = collectionNumerators.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0));
             fixtureResults.addResult(this, property.getReference(), numerator);
         }
     }
 
     // //////////////////////////////////////
 
-    private Invoices invoices;
+    @javax.inject.Inject
+    CollectionNumerators collectionNumerators;
 
-    final public void setInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
-
-    private Properties properties;
-
-    final public void injectProperties(final Properties properties) {
-        this.properties = properties;
-    }
+    @javax.inject.Inject
+    Properties properties;
 
 }

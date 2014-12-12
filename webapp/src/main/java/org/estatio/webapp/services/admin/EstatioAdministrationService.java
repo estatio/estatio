@@ -27,14 +27,19 @@ import org.estatio.dom.EstatioService;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
-@DomainService(menuOrder = "92")
+@DomainService()
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.TERTIARY,
+        menuOrder = "10.1"
+)
 public class EstatioAdministrationService extends EstatioService<EstatioAdministrationService> {
 
     public EstatioAdministrationService() {
         super(EstatioAdministrationService.class);
     }
 
-    @MemberOrder(name = "Administration", sequence = "aaa.1")
+    @ActionSemantics(ActionSemantics.Of.IDEMPOTENT)
+    @MemberOrder(sequence = "1")
     public void updateEpochDate(
             @Named("Epoch Date") @Optional final LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
@@ -47,7 +52,7 @@ public class EstatioAdministrationService extends EstatioService<EstatioAdminist
     // //////////////////////////////////////
 
     @TypeOf(ApplicationSettingForEstatio.class)
-    @MemberOrder(name = "Administration", sequence = "aaa.2")
+    @MemberOrder(sequence = "2")
     public List<ApplicationSetting> listAllSettings() {
         return settingsService.listAll();
     }

@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "80", repositoryFor = Tax.class)
+@DomainService(repositoryFor = Tax.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.7"
+)
 public class Taxes extends EstatioDomainService<Tax> {
 
     public Taxes() {
@@ -35,16 +40,8 @@ public class Taxes extends EstatioDomainService<Tax> {
 
     // //////////////////////////////////////
 
-    
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "taxStuff.taxes.1")
-    public List<Tax> allTaxes() {
-        return allInstances();
-    }
-
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "taxStuff.taxes.2")
+    @MemberOrder(sequence = "1")
     public Tax newTax(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") @Optional String name) {
@@ -54,6 +51,15 @@ public class Taxes extends EstatioDomainService<Tax> {
         persist(tax);
         return tax;
     }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<Tax> allTaxes() {
+        return allInstances();
+    }
+
 
     // //////////////////////////////////////
 

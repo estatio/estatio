@@ -17,11 +17,13 @@
 package org.estatio.webapp.services.admin;
 
 import java.util.List;
-import org.isisaddons.module.audit.dom.AuditEntry;
-import org.isisaddons.module.audit.dom.AuditingServiceRepository;
+import java.util.UUID;
+import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -36,36 +38,72 @@ import org.estatio.dom.EstatioService;
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "20.2"
 )
-public class EstatioAuditing extends EstatioService<EstatioAuditing> {
+public class EstatioCommands extends EstatioService<EstatioCommands> {
 
-    public EstatioAuditing() {
-        super(EstatioAuditing.class);
+    public EstatioCommands() {
+        super(EstatioCommands.class);
     }
-    
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
+    @Bookmarkable
     @MemberOrder(sequence="1")
-    public List<AuditEntry> findAuditEntries(
+    public List<CommandJdo> commandsCurrentlyRunning() {
+        return commandServiceRepository.findCurrent();
+    }
+    public boolean hideCommandsCurrentlyRunning() {
+        return commandServiceRepository == null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence="2")
+    public List<CommandJdo> commandsPreviouslyRan() {
+        return commandServiceRepository.findCompleted();
+    }
+    public boolean hideCommandsPreviouslyRan() {
+        return commandServiceRepository == null;
+    }
+
+    // //////////////////////////////////////
+
+    @MemberOrder(sequence="10.3")
+    @ActionSemantics(Of.SAFE)
+    public CommandJdo lookupCommand(
+            final @Named("Transaction Id") UUID transactionId) {
+        return commandServiceRepository.findByTransactionId(transactionId);
+    }
+    public boolean hideLookupCommand() {
+        return commandServiceRepository == null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence="10.4")
+    public List<CommandJdo> findCommands(
             final @Optional @Named("From") LocalDate from,
             final @Optional @Named("To") LocalDate to) {
-        return auditingServiceRepository.findByFromAndTo(from, to);
+        return commandServiceRepository.findByFromAndTo(from, to);
     }
-    public boolean hideFindAuditEntries() {
-        return auditingServiceRepository == null;
+    public boolean hideFindCommands() {
+        return commandServiceRepository == null;
     }
-    public LocalDate default0FindAuditEntries() {
+    public LocalDate default0FindCommands() {
         return clockService.now().minusDays(7);
     }
-    public LocalDate default1FindAuditEntries() {
+    public LocalDate default1FindCommands() {
         return clockService.now();
     }
+
 
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private AuditingServiceRepository auditingServiceRepository;
-    
+    private CommandServiceJdoRepository commandServiceRepository;
+
     @javax.inject.Inject
     private ClockService clockService;
 

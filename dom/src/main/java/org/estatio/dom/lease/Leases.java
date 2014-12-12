@@ -20,29 +20,25 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -58,7 +54,12 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@DomainService(menuOrder = "40", repositoryFor = Lease.class)
+@DomainService(repositoryFor = Lease.class)
+@DomainServiceLayout(
+        named="Leases",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "40.1"
+)
 public class Leases extends EstatioDomainService<Lease> {
 
     public Leases() {
@@ -189,28 +190,8 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    public List<Lease> allLeases() {
-        return allInstances();
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
     @ActionSemantics(Of.IDEMPOTENT)
-    public String verifyAllLeases() {
-        DateTime dt = DateTime.now();
-        List<Lease> leases = allLeases();
-        for (Lease lease : leases) {
-            lease.verifyUntil(getClockService().now());
-        }
-        Period p = new Period(dt, DateTime.now());
-        return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
-    }
-
-    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "4")
     public String verifyLeasesUntil(
             final LeaseItemType leaseItemType,
             final @Named("Until date") LocalDate untilDate) {
@@ -273,6 +254,34 @@ public class Leases extends EstatioDomainService<Lease> {
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
         agreementRoleCommunicationChannelTypes.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
         agreementRoleCommunicationChannelTypes.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionLayout(
+            prototype = true
+    )
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "99")
+    public List<Lease> allLeases() {
+        return allInstances();
+    }
+
+    // //////////////////////////////////////
+
+    @ActionLayout(
+            prototype = true
+    )
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "98")
+    public String verifyAllLeases() {
+        DateTime dt = DateTime.now();
+        List<Lease> leases = allLeases();
+        for (Lease lease : leases) {
+            lease.verifyUntil(getClockService().now());
+        }
+        Period p = new Period(dt, DateTime.now());
+        return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
 
     // //////////////////////////////////////

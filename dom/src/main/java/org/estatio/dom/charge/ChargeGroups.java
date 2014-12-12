@@ -27,7 +27,12 @@ import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.ValueUtils;
 
-@DomainService(menuOrder = "80", repositoryFor = ChargeGroup.class)
+@DomainService(repositoryFor = ChargeGroup.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.2"
+)
 public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
 
     public ChargeGroups() {
@@ -36,21 +41,23 @@ public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.1.1")
-    public List<ChargeGroup> allChargeGroups() {
-        return allInstances();
-    }
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.1.2")
+    @MemberOrder(sequence = "1")
     public List<ChargeGroup> newChargeGroup(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
             final @Named("Description") String description) {
         createChargeGroup(reference, description);
         return allChargeGroups();
     }
-    
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<ChargeGroup> allChargeGroups() {
+        return allInstances();
+    }
+
     // //////////////////////////////////////
 
     @Programmatic

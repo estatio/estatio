@@ -19,17 +19,25 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
-
-import javax.print.DocFlavor.READER;
-
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.tax.Tax;
 
-@DomainService(menuOrder = "80", repositoryFor = Charge.class)
+@DomainService(repositoryFor = Charge.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.3"
+)
 public class Charges extends EstatioDomainService<Charge> {
 
     public Charges() {
@@ -38,17 +46,9 @@ public class Charges extends EstatioDomainService<Charge> {
     
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.1")
-    public List<Charge> allCharges() {
-        return allInstances();
-    }
-
-    // //////////////////////////////////////
-
     @NotContributed
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.2")
+    @MemberOrder(sequence = "1")
     public Charge newCharge(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
             final @Named("Name") String name, 
@@ -66,6 +66,14 @@ public class Charges extends EstatioDomainService<Charge> {
         charge.setTax(tax);
         charge.setGroup(chargeGroup);
         return charge;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<Charge> allCharges() {
+        return allInstances();
     }
 
     // //////////////////////////////////////

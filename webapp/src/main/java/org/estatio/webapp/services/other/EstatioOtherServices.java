@@ -21,32 +21,26 @@ package org.estatio.webapp.services.other;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
-
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.PumpStreamHandler;
-
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
-
-import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.EstatioService;
 
-/**
- * This is a dummy service that is, nevertheless, registered, in order that
- * miscellaneous domain services, typically for {@link EstatioImmutableObject
- * reference data} entities, can associate their various actions together.
- */
 @DomainService(menuOrder = "91")
-@Named("Other")
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.TERTIARY,
+        menuOrder = "40"
+)
 public class EstatioOtherServices extends EstatioService<EstatioOtherServices> {
 
     public EstatioOtherServices() {
@@ -63,7 +57,10 @@ public class EstatioOtherServices extends EstatioService<EstatioOtherServices> {
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Other", sequence = "999")
+    @ActionLayout(
+            cssClass = "btn-warning"
+    )
+    @MemberOrder(sequence = "999")
     public String execute() {
         String command = properties.get("executeCommand");
         if (command == null) {

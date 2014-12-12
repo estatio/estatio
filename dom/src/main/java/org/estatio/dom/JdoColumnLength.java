@@ -61,6 +61,13 @@ public final class JdoColumnLength {
         public static final int URL_TEMPLATE = 254;
     }
 
+    public static final class EstatioInstance {
+        private EstatioInstance() {
+        }
+
+        public static final int PATH = 12;
+    }
+
     public static final class Event {
         private Event() {
         }

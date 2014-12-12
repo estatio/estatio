@@ -25,7 +25,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 
-@DomainService(menuOrder = "50", repositoryFor = InvoiceItem.class)
+@DomainService(repositoryFor = InvoiceItem.class)
+@DomainServiceLayout(
+        named="Invoices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "50.5"
+)
 public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     public InvoiceItems() {
@@ -49,7 +54,9 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     // //////////////////////////////////////
 
-    @Prototype
+    @ActionLayout(
+            prototype = true
+    )
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "99")
     public List<InvoiceItem> allInvoiceItems() {

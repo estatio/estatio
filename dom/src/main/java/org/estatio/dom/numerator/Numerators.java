@@ -27,6 +27,11 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.estatio.dom.EstatioDomainService;
 
 @DomainService(menuOrder = "80", repositoryFor = Numerator.class)
+@DomainServiceLayout(
+        named = "Administration",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "120.1"
+)
 public class Numerators extends EstatioDomainService<Numerator> {
 
     public Numerators() {
@@ -36,7 +41,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Administration", sequence = "numerators.1")
+    @MemberOrder(sequence = "1")
     public List<Numerator> allNumerators() {
         return allInstances();
     }

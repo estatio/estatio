@@ -499,7 +499,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
-        final Numerator numerator = invoices.findCollectionNumberNumerator();
+        final Numerator numerator = collectionNumerators.findCollectionNumberNumerator();
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
@@ -531,7 +531,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (disableCollect(true) != null) {
             return this;
         }
-        final Numerator numerator = invoices.findCollectionNumberNumerator();
+        final Numerator numerator = collectionNumerators.findCollectionNumberNumerator();
         setCollectionNumber(numerator.nextIncrementStr());
         return this;
     }
@@ -563,7 +563,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
                     getContainer().titleOf(this)));
             return this;
         }
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
+        final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
         setInvoiceNumber(numerator.nextIncrementStr());
         setInvoiceDate(invoiceDate);
         this.setStatus(InvoiceStatus.INVOICED);
@@ -575,7 +575,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
+        final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
@@ -592,7 +592,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (getDueDate() != null  && getDueDate().compareTo(invoiceDate) < 0){
             return false;
         }
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
+        final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
         if (numerator != null) {
             final String invoiceNumber = numerator.lastIncrementStr();
             if (invoiceNumber != null) {
@@ -745,16 +745,13 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    private Invoices invoices;
+    @javax.inject.Inject
+    CollectionNumerators collectionNumerators;
 
-    public final void injectInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
+    @javax.inject.Inject
+    Invoices invoices;
 
-    private InvoiceItems invoiceItems;
-
-    public final void injectInvoiceItemsForLease(final InvoiceItems invoiceItems) {
-        this.invoiceItems = invoiceItems;
-    }
+    @javax.inject.Inject
+    InvoiceItems invoiceItems;
 
 }

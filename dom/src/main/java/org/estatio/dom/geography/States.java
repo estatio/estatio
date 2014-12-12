@@ -27,7 +27,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "80", repositoryFor = State.class)
+@DomainService(repositoryFor = State.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.6"
+)
 public class States
         extends EstatioDomainService<State> {
 
@@ -35,24 +40,24 @@ public class States
         super(States.class, State.class);
     }
 
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "geography.states.1")
-    public List<State> allStates() {
-        return allInstances();
-    }
-
     // //////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "geography.states.2")
+    @MemberOrder(sequence = "1")
     public State newState(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
             final @Named("Name") String name, 
             final Country country) {
         final State state = newTransientInstance();
         return createState(reference, name, country, state);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Other", sequence = "2")
+    public List<State> allStates() {
+        return allInstances();
     }
 
     // //////////////////////////////////////

@@ -20,18 +20,13 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
@@ -144,12 +139,6 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "99")
-    public List<InvoiceItemForLease> allInvoiceItems() {
-        return allInstances();
-    }
 
     @Programmatic
     public InvoiceItemForLease createUnapprovedInvoiceItem(

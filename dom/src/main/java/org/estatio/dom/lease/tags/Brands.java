@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(menuOrder = "99", repositoryFor = Brand.class)
+@DomainService(repositoryFor = Brand.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.9"
+)
 public class Brands extends EstatioDomainService<Brand> {
 
     public Brands() {
@@ -35,7 +40,7 @@ public class Brands extends EstatioDomainService<Brand> {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "Other", sequence = "brands.1.2")
+    @MemberOrder(sequence = "1")
     public Brand newBrand(final @Named("Brand name") String name) {
         Brand brand;
         brand = newTransientInstance(Brand.class);
@@ -47,7 +52,7 @@ public class Brands extends EstatioDomainService<Brand> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Other", sequence = "brands.1.1")
+    @MemberOrder(sequence = "2")
     public List<Brand> allBrands() {
         return allInstances();
     }

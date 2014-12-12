@@ -26,7 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
-@DomainService(menuOrder = "80", repositoryFor = Currency.class)
+@DomainService(repositoryFor = Currency.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.4"
+)
 public class Currencies extends EstatioDomainService<Currency> {
 
     public Currencies() {
@@ -35,19 +40,21 @@ public class Currencies extends EstatioDomainService<Currency> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Other", sequence = "currencies.1")
-    public List<Currency> allCurrencies() {
-        return allInstances();
-    }
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Other", sequence = "currencies.2")
+    @MemberOrder(sequence = "1")
     public List<Currency> newCurrency(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") @Optional String name) {
         findOrCreateCurrency(reference, name);
         return allCurrencies();
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<Currency> allCurrencies() {
+        return allInstances();
     }
 
     // //////////////////////////////////////

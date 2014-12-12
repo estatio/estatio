@@ -25,6 +25,7 @@ import javax.jdo.Query;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -32,7 +33,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(menuOrder = "99", repositoryFor = UnitSize.class)
+@DomainService(repositoryFor = UnitSize.class)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.10"
+)
 public class UnitSizes extends EstatioDomainService<UnitSize> {
 
     public UnitSizes() {
@@ -40,7 +46,7 @@ public class UnitSizes extends EstatioDomainService<UnitSize> {
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Other", sequence = "unitSizes.1.2")
+    @MemberOrder(sequence = "1")
     public UnitSize newUnitSize(final @Named("Unit size name") String name) {
         UnitSize unitSize = newTransientInstance(UnitSize.class);
         unitSize.setName(name);
@@ -51,7 +57,7 @@ public class UnitSizes extends EstatioDomainService<UnitSize> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Other", sequence = "unitSizes.1.1")
+    @MemberOrder(sequence = "2")
     public List<UnitSize> allUnitSizes() {
         return allInstances();
     }
