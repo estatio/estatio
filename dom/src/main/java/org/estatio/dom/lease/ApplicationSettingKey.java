@@ -21,7 +21,7 @@ package org.estatio.dom.lease;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.joda.time.LocalDate;
-import org.estatio.dom.ApplicationSettingCreator;
+import org.estatio.services.settings.ApplicationSettingCreator;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
     foo(LocalDate.class, "Lease's foo", new LocalDate(2013,4,1));

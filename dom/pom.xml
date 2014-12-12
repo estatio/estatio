@@ -117,8 +117,14 @@ language governing permissions and limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-applib</artifactId>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-base</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -139,40 +145,20 @@ language governing permissions and limitations under the License.
             <optional>true</optional>
         </dependency>
 
-        <!-- download:  
-             $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar 
-             install to ~/.m2/repo using: 
-             $ mvn install:install-file \
-                 -Dfile=rfc2445-4Mar2011.jar \
-                 -DgroupId=com.google \
-                 -DartifactId=rfc-2445 \
-                 -Dversion=0.0.20110304 \
-                 -Dpackaging=jar
-         -->
-        <dependency>
-            <groupId>com.google</groupId>
-            <artifactId>rfc-2445</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
         </dependency>
 
         <!-- QUARTZ -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jobs</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
+        </dependency>
 
         <!-- GMAP3 -->
         <dependency>

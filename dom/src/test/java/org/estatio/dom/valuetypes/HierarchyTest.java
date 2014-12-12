@@ -1,11 +1,11 @@
-package org.estatio.dom.instance;
+package org.estatio.dom.valuetypes;
 
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 public class HierarchyTest {
 
@@ -16,8 +16,8 @@ public class HierarchyTest {
     public static class ParentOf_and_ChildOf extends HierarchyTest {
 
         static void assertXxxOf(String target, String candidate, boolean expected) {
-            assertThat(ih(target).parentOf(ih(candidate)), is(expected));
-            assertThat(ih(candidate).childOf(ih(target)), is(expected));
+            Assert.assertThat(ih(target).parentOf(ih(candidate)), is(expected));
+            Assert.assertThat(ih(candidate).childOf(ih(target)), is(expected));
         }
 
         @Test
@@ -49,8 +49,8 @@ public class HierarchyTest {
             final Hierarchy ih = ih("/");
             final Hierarchy ih2 = ih("/a/bb");
 
-            assertThat(ih.parentOf(ih), is(false));
-            assertThat(ih2.parentOf(ih2), is(false));
+            Assert.assertThat(ih.parentOf(ih), is(false));
+            Assert.assertThat(ih2.parentOf(ih2), is(false));
         }
 
         @Test
@@ -62,12 +62,12 @@ public class HierarchyTest {
 
         @Test
         public void sadCase_parentOf_whenNull() throws Exception {
-            assertThat(ih("/").parentOf(null), is(false));
+            Assert.assertThat(ih("/").parentOf(null), is(false));
         }
 
         @Test
         public void sadCase_childOf_whenNull() throws Exception {
-            assertThat(ih("/").childOf(null), is(false));
+            Assert.assertThat(ih("/").childOf(null), is(false));
         }
     }
 
@@ -77,16 +77,16 @@ public class HierarchyTest {
         public void happyCase() throws Exception {
             final List<String> parts = ih("/a/bb").getParts();
 
-            assertThat(parts.size(), is(2));
-            assertThat(parts.get(0), is("a"));
-            assertThat(parts.get(1), is("bb"));
+            Assert.assertThat(parts.size(), is(2));
+            Assert.assertThat(parts.get(0), is("a"));
+            Assert.assertThat(parts.get(1), is("bb"));
         }
 
         @Test
         public void root() throws Exception {
             final List<String> parts = ih("/").getParts();
 
-            assertThat(parts.size(), is(0));
+            Assert.assertThat(parts.size(), is(0));
         }
     }
 
@@ -94,12 +94,12 @@ public class HierarchyTest {
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(ih("/a/bb").parent().toString(), is("/a"));
+            Assert.assertThat(ih("/a/bb").parent().toString(), is("/a"));
         }
 
         @Test
         public void root() throws Exception {
-            assertThat(ih("/").parent(), is(nullValue()));
+            Assert.assertThat(ih("/").parent(), is(nullValue()));
         }
     }
 

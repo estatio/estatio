@@ -28,7 +28,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.estatio.dom.ApplicationSettingCreator;
 import org.estatio.dom.EstatioDomainService;
 
 /**
@@ -127,13 +126,13 @@ public class ApplicationSettingsServiceForEstatio extends EstatioDomainService<A
     }
 
     private void installDefaultsIfRequired() {
-        createSettingsIfRequired(org.estatio.dom.ApplicationSettingKey.values());
+        createSettingsIfRequired(ApplicationSettingKey.values());
         createSettingsIfRequired(org.estatio.dom.lease.ApplicationSettingKey.values());
         createSettingsIfRequired(org.estatio.dom.invoice.ApplicationSettingKey.values());
     }
 
     private void createSettingsIfRequired(final ApplicationSettingCreator[] values) {
-        for(org.estatio.dom.ApplicationSettingCreator creator: values) {
+        for(ApplicationSettingCreator creator: values) {
             createIfRequired(creator);
         }
     }

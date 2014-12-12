@@ -18,10 +18,10 @@
  */
 package org.estatio.dom;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
+import org.hamcrest.CoreMatchers;
 import org.apache.isis.core.commons.lang.StringExtensions;
+
+import static org.junit.Assert.assertThat;
 
 public class TitledEnumContractTester<T extends TitledEnum> {
 
@@ -42,7 +42,7 @@ public class TitledEnumContractTester<T extends TitledEnum> {
         for (Enum<?> enumValue: enumValues) {
             final TitledEnum titled = (TitledEnum) enumValue;
             final String enumName = enumValue.name();
-            assertThat(enumValue.getClass().getName()+"#"+enumName, titled.title(), is(StringExtensions.enumTitle(enumName)));
+            assertThat(enumValue.getClass().getName()+"#"+enumName, titled.title(), CoreMatchers.is(StringExtensions.enumTitle(enumName)));
         }
     }
 

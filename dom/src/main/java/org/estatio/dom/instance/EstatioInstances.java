@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.valuetypes.Hierarchy;
 
 @DomainService(repositoryFor = EstatioInstance.class)
 @DomainServiceLayout(

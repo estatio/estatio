@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-project language="java" version="4.1.5501" xml-version="3" flavor="j2se">
+  <property name="parse-archive-in-archive" value="false" />
+  <property name="include-injected-dependency" value="true" />
+  <property name="show-as-module" value="false" />
+  <property name="relative-to" value="const(THIS_FILE)" />
+  <property name="action-set-mod" value="1" />
+  <property name="detail-mode" value="true" />
+  <property name="hide-deprecated" value="false" />
+  <property name="project-excluded" />
+  <property name="show-needs-to-compile" value="false" />
+  <property name="project-type" value="classpath" />
+  <property name="hide-externals" value="true" />
+  <classpath>
+    <classpathentry kind="lib" path="../dom/target/classes" />
+  </classpath>
+  <pom-root-files />
+  <restructuring>
+    <set version="3" name="Model 1" hiview="Codemap" active="true" todo="false" list="0" />
+  </restructuring>
+  <grid-set sep="." version="4.1.5501">
+    <grid name="Diagram 1" enforce="true" locked="true" strict="false" excludes="">
+      <row>
+        <cell name="org" pattern="" vexpanded="true" visibility="public" drill="true">
+          <grid>
+            <row>
+              <cell name="estatio" pattern="" vexpanded="true" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="app" pattern="org.estatio.app.*" vexpanded="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="dom" pattern="org.estatio.dom.*" vexpanded="true" visibility="public" drill="true">
+                      <grid>
+                        <row>
+                          <cell name="guarantee" pattern="org.estatio.dom.guarantee.*" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="leaseassignments" pattern="org.estatio.dom.leaseassignments.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="lease" pattern="org.estatio.dom.lease.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="invoice" pattern="org.estatio.dom.invoice.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="asset" pattern="org.estatio.dom.asset.*" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="bankmandate" pattern="org.estatio.dom.bankmandate.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="agreement" pattern="org.estatio.dom.agreement.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="charge" pattern="org.estatio.dom.charge.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="index" pattern="org.estatio.dom.index.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="instance" pattern="org.estatio.dom.instance.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="currency" pattern="org.estatio.dom.currency.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="event" pattern="org.estatio.dom.event.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="geography" pattern="org.estatio.dom.geography.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="numerator" pattern="org.estatio.dom.numerator.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="tag" pattern="org.estatio.dom.tag.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="utils" pattern="org.estatio.dom.utils.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="dom" pattern="org.estatio.dom.?" vexpanded="false" visibility="public" drill="false">
+                            <grid>
+                              <row>
+                                <cell name="WithIntervalContiguous" pattern="org.estatio.dom.WithIntervalContiguous" vexpanded="false" visibility="public" drill="false" />
+                              </row>
+                              <row>
+                                <cell name="EstatioImmutableObject" pattern="org.estatio.dom.EstatioImmutableObject" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="EstatioMutableObject" pattern="org.estatio.dom.EstatioMutableObject" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithIntervalMutable" pattern="org.estatio.dom.WithIntervalMutable" vexpanded="false" visibility="public" drill="false" />
+                              </row>
+                              <row>
+                                <cell name="ApplicationSettingKey" pattern="org.estatio.dom.ApplicationSettingKey" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="EstatioDomainObject" pattern="org.estatio.dom.EstatioDomainObject" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="EstatioDomainService" pattern="org.estatio.dom.EstatioDomainService" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="TitledEnum" pattern="org.estatio.dom.TitledEnum" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithCodeComparable" pattern="org.estatio.dom.WithCodeComparable" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithCodeUnique" pattern="org.estatio.dom.WithCodeUnique" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithDescriptionComparable" pattern="org.estatio.dom.WithDescriptionComparable" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithDescriptionUnique" pattern="org.estatio.dom.WithDescriptionUnique" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithInterval" pattern="org.estatio.dom.WithInterval" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithNameComparable" pattern="org.estatio.dom.WithNameComparable" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithNameUnique" pattern="org.estatio.dom.WithNameUnique" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithReferenceComparable" pattern="org.estatio.dom.WithReferenceComparable" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithReferenceUnique" pattern="org.estatio.dom.WithReferenceUnique" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithTitleComparable" pattern="org.estatio.dom.WithTitleComparable" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithTitleUnique" pattern="org.estatio.dom.WithTitleUnique" vexpanded="false" visibility="public" drill="false" />
+                              </row>
+                              <row>
+                                <cell name="ApplicationSettingCreator" pattern="org.estatio.dom.ApplicationSettingCreator" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="Chained" pattern="org.estatio.dom.Chained" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="EstatioApplicationException" pattern="org.estatio.dom.EstatioApplicationException" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="EstatioService" pattern="org.estatio.dom.EstatioService" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="EstatioUserRoles" pattern="org.estatio.dom.EstatioUserRoles" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="IsisMultilineLines" pattern="org.estatio.dom.IsisMultilineLines" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="JdoColumnLength" pattern="org.estatio.dom.JdoColumnLength" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="JdoColumnScale" pattern="org.estatio.dom.JdoColumnScale" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="PowerType" pattern="org.estatio.dom.PowerType" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="RegexValidation" pattern="org.estatio.dom.RegexValidation" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="Titled" pattern="org.estatio.dom.Titled" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithCodeGetter" pattern="org.estatio.dom.WithCodeGetter" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithDescriptionGetter" pattern="org.estatio.dom.WithDescriptionGetter" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithNameGetter" pattern="org.estatio.dom.WithNameGetter" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithReferenceGetter" pattern="org.estatio.dom.WithReferenceGetter" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithSequence" pattern="org.estatio.dom.WithSequence" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithStartDate" pattern="org.estatio.dom.WithStartDate" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="WithTitleGetter" pattern="org.estatio.dom.WithTitleGetter" vexpanded="false" visibility="public" drill="false" />
+                              </row>
+                            </grid>
+                          </cell>
+                        </row>
+                        <row>
+                          <cell name="valuetypes" pattern="org.estatio.dom.valuetypes.?" vexpanded="false" visibility="public" drill="false">
+                            <grid>
+                              <row>
+                                <cell name="LocalDateInterval" pattern="org.estatio.dom.valuetypes.LocalDateInterval" vexpanded="false" visibility="public" drill="false" />
+                              </row>
+                              <row>
+                                <cell name="AbstractInterval" pattern="org.estatio.dom.valuetypes.AbstractInterval" vexpanded="false" visibility="public" drill="false" />
+                              </row>
+                            </grid>
+                          </cell>
+                        </row>
+                      </grid>
+                    </cell>
+                  </row>
+                  <row>
+                    <cell name="services" pattern="org.estatio.services.*" vexpanded="true" visibility="public" drill="true">
+                      <grid>
+                        <row>
+                          <cell name="links" pattern="org.estatio.services.links.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="clock" pattern="org.estatio.services.clock.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="documents" pattern="org.estatio.services.documents.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="exceprecog" pattern="org.estatio.services.exceprecog.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="scheduler" pattern="org.estatio.services.scheduler.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="settings" pattern="org.estatio.services.settings.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                      </grid>
+                    </cell>
+                  </row>
+                </grid>
+              </cell>
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <description>Generated from LSM "Model 1"</description>
+    </grid>
+    <grid name="Diagram 2" enforce="true" locked="true" strict="false" excludes="">
+      <row>
+        <cell name="org" pattern="" vexpanded="true" visibility="public" drill="true">
+          <grid>
+            <row>
+              <cell name="estatio" pattern="" vexpanded="true" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="app" pattern="org.estatio.app.*" vexpanded="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="dom" pattern="org.estatio.dom.*" vexpanded="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="services" pattern="org.estatio.services.*" vexpanded="false" visibility="public" drill="true" />
+                  </row>
+                </grid>
+              </cell>
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <description>Generated from LSM "Model 1"</description>
+    </grid>
+  </grid-set>
+</local-project>
+

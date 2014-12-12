@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.instance;
+package org.estatio.dom.valuetypes;
 
 import java.util.List;
 import com.google.common.base.Joiner;

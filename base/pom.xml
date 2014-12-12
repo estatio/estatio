@@ -23,12 +23,12 @@ language governing permissions and limitations under the License.
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>estatio-dom-italy</artifactId>
+    <artifactId>estatio-base</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio DOM Italy</name>
+    <name>Estatio Base</name>
     <description>
-        Italian extensions to the domain object model for Estatio.
+        Base concepts for Estatio domain object model.
     </description>
 
     <properties>
@@ -114,29 +114,40 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-applib</artifactId>
+        </dependency>
+
+        <!-- download:
+             $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
+             install to ~/.m2/repo using:
+             $ mvn install:install-file \
+                 -Dfile=rfc2445-4Mar2011.jar \
+                 -DgroupId=com.google \
+                 -DartifactId=rfc-2445 \
+                 -Dversion=0.0.20110304 \
+                 -Dpackaging=jar
+         -->
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>rfc-2445</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-unittestsupport</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-metamodel</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -188,6 +199,16 @@ language governing permissions and limitations under the License.
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-impl</artifactId>
         </dependency>
 
     </dependencies>
@@ -300,8 +321,6 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
-
-
                 </plugins>
             </build>
         </profile>

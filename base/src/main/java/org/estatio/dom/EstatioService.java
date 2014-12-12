@@ -26,8 +26,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.memento.MementoService;
-import org.apache.isis.core.commons.lang.StringExtensions;
-
+import org.estatio.dom.utils.StringExtensions;
 import org.estatio.services.clock.ClockService;
 
 public abstract class EstatioService<T> extends AbstractService {

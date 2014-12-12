@@ -23,7 +23,7 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.instance.EstatioInstance;
 import org.estatio.dom.instance.EstatioInstances;
-import org.estatio.dom.instance.Hierarchy;
+import org.estatio.dom.valuetypes.Hierarchy;
 
 public abstract class AbstractEstatioInstanceFixtureScript extends FixtureScript {
 

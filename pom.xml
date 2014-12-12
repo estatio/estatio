@@ -547,6 +547,19 @@ language governing permissions and limitations under the License.
             <!-- this project's own modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-base</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-base</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
@@ -612,7 +625,7 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.2</version>
+                <version>2.3</version>
             </dependency>
 
             <dependency>
@@ -915,6 +928,7 @@ language governing permissions and limitations under the License.
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>base</module>
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
@@ -927,6 +941,7 @@ language governing permissions and limitations under the License.
         <profile>
             <id>quicktest</id>
             <modules>
+                <module>base</module>
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
@@ -936,6 +951,7 @@ language governing permissions and limitations under the License.
         <profile>
             <id>extended</id>
             <modules>
+                <module>base</module>
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
@@ -952,6 +968,7 @@ language governing permissions and limitations under the License.
                 <maven.test.skip>true</maven.test.skip>
             </properties>
             <modules>
+                <module>base</module>
                 <module>dom</module>
                 <module>dom-italy</module>
             </modules>

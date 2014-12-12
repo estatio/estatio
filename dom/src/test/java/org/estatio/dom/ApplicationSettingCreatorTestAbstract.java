@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+import org.estatio.services.settings.ApplicationSettingCreator;
 
 
 public class ApplicationSettingCreatorTestAbstract {
