@@ -5,23 +5,18 @@ Estatio is modern and flexible property management software. It offers real esta
 
 ## Screenshots ##
 
-The following screenshots (taken 15 jul 2013) correspond to the business logic in Estatio's [domain object model](
+The following screenshots (taken 13 december 2014) correspond to the business logic in Estatio's [domain object model](
 https://github.com/estatio/estatio/tree/master/dom/src/main/java/org/estatio/dom).
 
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/1.png" width=600"/>
+<img src="https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties.png" width=600"/>
 
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/2.png" width=600"/>
+<img src="https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties-Map.png" width=600"/>
 
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/3.png" width=600"/>
+<img src="https://raw.github.com/estatio/estatio/master/docs/screenshots/Lease.png" width=600"/>
 
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/4.png" width=600"/>
+<img src="https://raw.github.com/estatio/estatio/master/docs/screenshots/LeaseItem.png" width=600"/>
 
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/5.png" width=600"/>
-
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/6.png" width=600"/>
-
-<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/7.png" width=600"/>
-
+<img src="https://raw.github.com/estatio/estatio/master/docs/screenshots/Invoice.png" width=600"/>
 
 ## Building Estatio ##
 
