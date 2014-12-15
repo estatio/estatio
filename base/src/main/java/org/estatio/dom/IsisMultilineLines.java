@@ -23,6 +23,6 @@ public final class IsisMultilineLines {
     private IsisMultilineLines() {
     }
 
-    public final static int DESCRIPTION = 5;
+    public final static int NUMBER_OF_LINES = 5;
 
 }

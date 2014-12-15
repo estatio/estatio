@@ -236,7 +236,7 @@ public class InvoiceItem
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @TypicalLength(JdoColumnLength.NAME)
-    @MultiLine(numberOfLines = IsisMultilineLines.DESCRIPTION)
+    @MultiLine(numberOfLines = IsisMultilineLines.NUMBER_OF_LINES)
     public String getDescription() {
         return description;
     }

@@ -37,8 +37,6 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -106,7 +104,7 @@ public class Charge
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
-    @MultiLine(numberOfLines=IsisMultilineLines.DESCRIPTION)
+    @MultiLine(numberOfLines=IsisMultilineLines.NUMBER_OF_LINES)
     public String getDescription() {
         return description;
     }
