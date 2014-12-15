@@ -125,6 +125,11 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-geography</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.security</groupId>
+            <artifactId>isis-module-security-dom</artifactId>
+            <version>${isis-module-security.version}</version>
+        </dependency>
 
         <!-- testing -->
         <dependency>
