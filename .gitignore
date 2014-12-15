@@ -27,4 +27,6 @@ datanucleus.log
 
 /xml/
 
+/dom-xxx/
+
 rebel.xml

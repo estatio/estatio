@@ -23,12 +23,12 @@ language governing permissions and limitations under the License.
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>estatio-dom</artifactId>
+    <artifactId>estatio-dom-geography</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio App</name>
+    <name>Estatio DOM Geography</name>
     <description>
-        Estatio App services.
+        Geography DOM
     </description>
 
     <properties>
@@ -115,66 +115,8 @@ language governing permissions and limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-lease_invoice</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-guarantee</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party_asset</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom</artifactId>
-        </dependency>
-
-        <!-- GMAP3 -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
-        </dependency>
-
-        <!-- FULLCALENDAR2 -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
-        </dependency>
-
-        <!-- EXCEL -->
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-                
-
-        
-        <!-- QUARTZ -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-applib</artifactId>
         </dependency>
 
         <!-- testing -->
@@ -344,8 +286,6 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
-
-
                 </plugins>
             </build>
         </profile>

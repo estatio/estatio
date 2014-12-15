@@ -560,6 +560,175 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-geography</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-geography</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-instance</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-instance</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+            
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tax</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tax</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-charge</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-charge</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-index</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-index</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-event</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-event</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tag</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tag</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-numerator</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-numerator</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-currency</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-currency</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-party_asset</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-party_asset</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-lease_invoice</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-lease_invoice</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-guarantee</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-guarantee</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-leaseassignments</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-leaseassignments</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
@@ -929,6 +1098,19 @@ language governing permissions and limitations under the License.
             </activation>
             <modules>
                 <module>base</module>
+                <module>dom-geography</module>
+                <module>dom-instance</module>
+                <module>dom-tax</module>
+                <module>dom-charge</module>
+                <module>dom-index</module>
+                <module>dom-event</module>
+                <module>dom-tag</module>
+                <module>dom-numerator</module>
+                <module>dom-currency</module>
+                <module>dom-party_asset</module>
+                <module>dom-lease_invoice</module>
+                <module>dom-guarantee</module>
+                <module>dom-leaseassignments</module>
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
@@ -942,6 +1124,19 @@ language governing permissions and limitations under the License.
             <id>quicktest</id>
             <modules>
                 <module>base</module>
+                <module>dom-geography</module>
+                <module>dom-instance</module>
+                <module>dom-tax</module>
+                <module>dom-charge</module>
+                <module>dom-index</module>
+                <module>dom-event</module>
+                <module>dom-tag</module>
+                <module>dom-numerator</module>
+                <module>dom-currency</module>
+                <module>dom-party_asset</module>
+                <module>dom-lease_invoice</module>
+                <module>dom-guarantee</module>
+                <module>dom-leaseassignments</module>
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
@@ -952,6 +1147,19 @@ language governing permissions and limitations under the License.
             <id>extended</id>
             <modules>
                 <module>base</module>
+                <module>dom-geography</module>
+                <module>dom-instance</module>
+                <module>dom-tax</module>
+                <module>dom-charge</module>
+                <module>dom-index</module>
+                <module>dom-event</module>
+                <module>dom-tag</module>
+                <module>dom-numerator</module>
+                <module>dom-currency</module>
+                <module>dom-party_asset</module>
+                <module>dom-lease_invoice</module>
+                <module>dom-guarantee</module>
+                <module>dom-leaseassignments</module>
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
@@ -969,6 +1177,19 @@ language governing permissions and limitations under the License.
             </properties>
             <modules>
                 <module>base</module>
+                <module>dom-geography</module>
+                <module>dom-instance</module>
+                <module>dom-tax</module>
+                <module>dom-charge</module>
+                <module>dom-index</module>
+                <module>dom-event</module>
+                <module>dom-tag</module>
+                <module>dom-numerator</module>
+                <module>dom-currency</module>
+                <module>dom-party_asset</module>
+                <module>dom-lease_invoice</module>
+                <module>dom-guarantee</module>
+                <module>dom-leaseassignments</module>
                 <module>dom</module>
                 <module>dom-italy</module>
             </modules>

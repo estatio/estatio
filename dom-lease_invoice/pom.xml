@@ -23,12 +23,12 @@ language governing permissions and limitations under the License.
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>estatio-dom</artifactId>
+    <artifactId>estatio-dom-lease_invoice</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio App</name>
+    <name>Estatio DOM Lease &amp; Invoice</name>
     <description>
-        Estatio App services.
+        Lease and Invoice DOM.  Intention to decouple further.
     </description>
 
     <properties>
@@ -127,20 +127,69 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-lease_invoice</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-guarantee</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-party_asset</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-instance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-charge</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-index</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-event</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-tag</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-numerator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-currency</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.security</groupId>
+            <artifactId>isis-module-security-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.settings</groupId>
+            <artifactId>isis-module-settings-dom</artifactId>
+            <!-- avoid polluting the classpath -->
+            <version>${isis-module-settings.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.devutils</groupId>
+            <artifactId>isis-module-devutils-dom</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
+        </dependency>
+
+        <!-- QUARTZ -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
         </dependency>
 
         <!-- GMAP3 -->
@@ -165,18 +214,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-excel-dom</artifactId>
         </dependency>
                 
-
-        
-        <!-- QUARTZ -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
-        </dependency>
-
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
@@ -232,6 +269,16 @@ language governing permissions and limitations under the License.
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-impl</artifactId>
         </dependency>
 
     </dependencies>
@@ -344,8 +391,6 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
-
-
                 </plugins>
             </build>
         </profile>
