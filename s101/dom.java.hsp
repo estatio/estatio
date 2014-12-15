@@ -13,8 +13,12 @@
   <property name="hide-externals" value="true" />
   <classpath>
     <classpathentry kind="lib" path="../dom/target/classes" />
+    <classpathentry kind="lib" path="../dom-italy/target/classes" />
   </classpath>
   <pom-root-files />
+  <excludes>
+    <exclude expression="*.Q*" active="true" />
+  </excludes>
   <restructuring>
     <set version="3" name="Model 1" hiview="Codemap" active="true" todo="false" list="0" />
   </restructuring>

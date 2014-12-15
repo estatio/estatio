@@ -115,8 +115,18 @@ language governing permissions and limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-applib</artifactId>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-base</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-party_asset</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-lease_invoice</artifactId>
         </dependency>
 
         <!-- testing -->

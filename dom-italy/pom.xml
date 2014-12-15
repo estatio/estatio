@@ -115,22 +115,29 @@ language governing permissions and limitations under the License.
 
     <dependencies>
 
+        <!-- TODO: remove start -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <!-- TODO: remove end -->
+
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-base</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
+            <artifactId>estatio-dom-party_asset</artifactId>
         </dependency>
 
         <!-- testing -->
