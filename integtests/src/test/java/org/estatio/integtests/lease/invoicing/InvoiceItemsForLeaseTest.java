@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice;
+package org.estatio.integtests.lease.invoicing;
 
 import java.util.List;
 import javax.inject.Inject;

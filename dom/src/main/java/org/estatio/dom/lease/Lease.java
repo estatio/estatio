@@ -77,14 +77,9 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -684,42 +679,6 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Bulk
-    public Object calculate(
-            final @Named("Run type") InvoiceRunType runType,
-            final @Named("Selection") InvoiceCalculationSelection calculationSelection,
-            final @Named("Invoice due date") LocalDate invoiceDueDate,
-            final @Named("Start due date") LocalDate startDueDate,
-            final @Named("Next due date") LocalDate nextDueDate) {
-        String runId = invoiceCalculationService.calculateAndInvoice(
-                new InvoiceCalculationParameters(
-                        this,
-                        calculationSelection.selectedTypes(),
-                        runType,
-                        invoiceDueDate,
-                        startDueDate,
-                        nextDueDate));
-        if (runId != null) {
-            return invoiceSummaries.findByRunId(runId);
-        }
-        getContainer().informUser("No invoices created");
-        return this;
-    }
-
-    public String validateCalculate(
-            final InvoiceRunType runType,
-            final InvoiceCalculationSelection selection,
-            final LocalDate dueDate,
-            final LocalDate startDate,
-            final LocalDate endDate) {
-        if (endDate != null && endDate.isBefore(startDate)) {
-            return "End date cannot be before start date";
-        }
-        return null;
-    }
-
-    // //////////////////////////////////////
-
     @ActionInteraction(Lease.TerminateEvent.class)
     public Lease terminate(
             final @Named("Termination Date") LocalDate terminationDate,
@@ -1027,12 +986,6 @@ public class Lease
 
     @Inject
     Leases leases;
-
-    @Inject
-    InvoiceCalculationService invoiceCalculationService;
-
-    @Inject
-    InvoiceSummariesForInvoiceRun invoiceSummaries;
 
     @Inject
     AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;

@@ -18,34 +18,65 @@
  */
 package org.estatio.integscenarios.invoice;
 
-import java.math.BigDecimal;
-import java.util.SortedSet;
-import javax.inject.Inject;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.*;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
-import org.estatio.services.settings.EstatioSettingsService;
-import org.junit.*;
-import org.junit.runners.MethodSorters;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.math.BigDecimal;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertyForKal;
+import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
+import org.estatio.fixture.party.PersonForJohnDoe;
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
+import org.estatio.services.settings.EstatioSettingsService;
+
 /**
- * This looks to have been copied-n-pasted from {@link InvoiceCalculationServiceTest_normalRun};
+ * This looks to have been copied-n-pasted from
+ * {@link InvoiceCalculationServiceTest_normalRun};
  * both have ignored tests; not sure which is in the best state to fix up.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegrationTest {
+
+    @Inject
+    private InvoiceService invoiceService;
 
     @BeforeClass
     public static void setupData() {
@@ -53,22 +84,14 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                 executionContext.executeChild(this, new PersonForJohnDoe());
-
                 executionContext.executeChild(this, new PropertyForOxf());
-
                 executionContext.executeChild(this, new PropertyForKal());
-
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
-
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-
                 executionContext.executeChild(this, new LeaseForOxfPret004());
-
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
             }
         });
@@ -91,7 +114,6 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     private LeaseItem leaseTopModelRentItem;
     private LeaseItem leaseTopModelServiceChargeItem;
 
-
     @Before
     public void setup() {
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
@@ -103,7 +125,6 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         Assert.assertNotNull(leaseTopModelRentItem);
         Assert.assertNotNull(leaseTopModelServiceChargeItem);
     }
-
 
     @Test
     public void t141a_leaseTerm_verify_and_calculate() throws Exception {
@@ -121,7 +142,8 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     }
 
     // scenario: invoiceItemsForRentCreated
-    @Ignore // TODO: to un-ignore
+    @Ignore
+    // TODO: to un-ignore
     @Test
     public void t14b_invoiceItemsForRentCreated() throws Exception {
 
@@ -148,7 +170,8 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     }
 
     // scenario: invoiceItemsForServiceChargeCreated
-    @Ignore // TODO: to un-ignore
+    @Ignore
+    // TODO: to un-ignore
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
 
@@ -175,13 +198,14 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 1650.00, false);
     }
 
-    @Ignore // TODO: to un-ignore
+    @Ignore
+    // TODO: to un-ignore
     @Test
     public void t16_bulkLeaseCalculate() throws Exception {
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         // call calculate on leaseTopModel
-        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2010, 10, 1), VT.ld(2010, 10, 1), null);
+        invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2010, 10, 1), VT.ld(2010, 10, 1), null);
         assertThat(leaseTopModelServiceChargeTerm0.getInvoiceItems().size(), is(2));
     }
 
