@@ -516,7 +516,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
 
         /**
          * A {@link Function} that obtains the role's
-         * {@link AgreementRole#getEffectiveEndDate() effective end date}
+         * {@link org.estatio.dom.agreement.AgreementRole#getEffectiveInterval()}  effective end date}
          * attribute.
          */
         public static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
