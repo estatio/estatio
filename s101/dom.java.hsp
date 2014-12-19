@@ -188,6 +188,71 @@
       </row>
       <description>Generated from LSM "Model 1"</description>
     </grid>
+    <grid name="Diagram 3" enforce="true" locked="true" strict="false" excludes="">
+      <row>
+        <cell name="org" pattern="" vexpanded="true" visibility="public" drill="true">
+          <grid>
+            <row>
+              <cell name="estatio" pattern="" vexpanded="true" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="api" pattern="org.estatio.api.?" vexpanded="false" visibility="public" drill="true" />
+                    <cell name="app" pattern="org.estatio.app.*" vexpanded="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="dom" pattern="org.estatio.dom.*" vexpanded="true" visibility="public" drill="true">
+                      <grid>
+                        <row>
+                          <cell name="guarantee" pattern="org.estatio.dom.guarantee.*" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="leaseassignments" pattern="org.estatio.dom.leaseassignments.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="lease" pattern="org.estatio.dom.lease.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="invoice" pattern="org.estatio.dom.invoice.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="asset" pattern="org.estatio.dom.asset.*" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="bankmandate" pattern="org.estatio.dom.bankmandate.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="agreement" pattern="org.estatio.dom.agreement.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="charge" pattern="org.estatio.dom.charge.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="instance" pattern="org.estatio.dom.instance.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                        <row>
+                          <cell name="currency" pattern="org.estatio.dom.currency.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="event" pattern="org.estatio.dom.event.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="geography" pattern="org.estatio.dom.geography.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="index" pattern="org.estatio.dom.index.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="numerator" pattern="org.estatio.dom.numerator.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="tag" pattern="org.estatio.dom.tag.?" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="false" />
+                        </row>
+                      </grid>
+                    </cell>
+                  </row>
+                  <row>
+                    <cell name="services" pattern="org.estatio.services.*" vexpanded="false" visibility="public" drill="true" />
+                  </row>
+                </grid>
+              </cell>
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <description>Generated from LSM "Model 1"</description>
+    </grid>
   </grid-set>
 </local-project>
 

@@ -20,12 +20,16 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 import java.util.SortedSet;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
 import org.estatio.dom.EstatioService;
-import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -42,15 +46,18 @@ import org.estatio.dom.geography.States;
  * {@link #communicationChannels(CommunicationChannelOwner) communication
  * channels} of a particular {@link CommunicationChannelOwner}.
  */
-@DomainService(menuOrder = "70")
-@Hidden
-public class CommunicationChannelContributions extends EstatioService<CommunicationChannelContributions> {
+public abstract class CommunicationChannelContributions extends EstatioService<CommunicationChannelContributions> {
 
     public CommunicationChannelContributions() {
         super(CommunicationChannelContributions.class);
     }
 
-    // //////////////////////////////////////
+    protected CommunicationChannelContributions(Class<? extends EstatioService<CommunicationChannelContributions>> serviceType) {
+        super(serviceType);
+    }
+
+
+// //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "CommunicationChannels", sequence = "1")
@@ -159,28 +166,14 @@ public class CommunicationChannelContributions extends EstatioService<Communicat
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(ActionSemantics.Of.SAFE)
     @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @Render(Type.EAGERLY)
+    @NotContributed(NotContributed.As.ACTION)
+    @Render(Render.Type.EAGERLY)
     public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
         return communicationChannels.findByOwner(owner);
     }
 
-    /**
-     * Hidden if the {@link org.estatio.dom.communicationchannel.CommunicationChannelOwner} is a {@link FixedAsset}.
-     *
-     * <p>
-     * Why? because we intend to remove the ability to associate {@link org.estatio.dom.communicationchannel.CommunicationChannel}s with
-     * {@link org.estatio.dom.asset.FixedAsset}s.  See <a href="https://stromboli.atlassian.net/browse/EST-421">EST-421</a> for
-     * further discussion.
-     * </p>
-     */
-    public boolean hideCommunicationChannels(final CommunicationChannelOwner owner) {
-        return owner instanceof FixedAsset;
-    }
-
-    // //////////////////////////////////////
 
     @NotContributed
     @Programmatic
