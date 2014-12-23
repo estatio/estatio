@@ -117,8 +117,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>dom</module>
-                <module>dom-italy</module>
+                <module>estatioapp/dom</module>
+                <module>estatioapp/dom-italy</module>
             </modules>
         </profile>
     </profiles>

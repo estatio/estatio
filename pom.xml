@@ -1097,77 +1097,83 @@ language governing permissions and limitations under the License.
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>base</module>
-                <module>dom-geography</module>
-                <module>dom-instance</module>
-                <module>dom-tax</module>
-                <module>dom-charge</module>
-                <module>dom-index</module>
-                <module>dom-event</module>
-                <module>dom-tag</module>
-                <module>dom-numerator</module>
-                <module>dom-currency</module>
-                <module>dom-party_asset</module>
-                <module>dom-lease_invoice</module>
-                <module>dom-guarantee</module>
-                <module>dom-leaseassignments</module>
-                <module>dom</module>
-                <module>dom-italy</module>
-                <module>fixture</module>
-                <module>integtests</module>
-                <module>migration</module>
-                <module>migration-integtests</module>
-                <module>webapp</module>
+                <module>udo/agreement/dom</module>
+                <module>udo/base/dom</module>
+                <module>udo/charge/dom</module>
+                <module>udo/communicationchannel/dom</module>
+                <module>udo/currency/dom</module>
+                <module>udo/event/dom</module>
+                <module>udo/geography/dom</module>
+                <module>udo/numerator/dom</module>
+                <module>udo/party/dom</module>
+                <module>udo/tag/dom</module>
+                <module>udo/tax/dom</module>
+                <module>estatioapp/dom-guarantee</module>
+                <module>estatioapp/dom-index</module>
+                <module>estatioapp/dom-instance</module>
+                <module>estatioapp/dom-italy</module>
+                <module>estatioapp/dom-lease_invoice</module>
+                <module>estatioapp/dom-party_asset</module>
+                <module>estatioapp/dom</module>
+                <module>estatioapp/fixture</module>
+                <module>estatioapp/integtests</module>
+                <module>estatioapp/migration</module>
+                <module>estatioapp/migration-integtests</module>
+                <module>estatioapp/webapp</module>
             </modules>
         </profile>
         <profile>
             <id>quicktest</id>
             <modules>
-                <module>base</module>
-                <module>dom-geography</module>
-                <module>dom-instance</module>
-                <module>dom-tax</module>
-                <module>dom-charge</module>
-                <module>dom-index</module>
-                <module>dom-event</module>
-                <module>dom-tag</module>
-                <module>dom-numerator</module>
-                <module>dom-currency</module>
-                <module>dom-party_asset</module>
-                <module>dom-lease_invoice</module>
-                <module>dom-guarantee</module>
-                <module>dom-leaseassignments</module>
-                <module>dom</module>
-                <module>dom-italy</module>
-                <module>fixture</module>
-                <module>integtests</module>
+                <module>udo/agreement/dom</module>
+                <module>udo/base/dom</module>
+                <module>udo/charge/dom</module>
+                <module>udo/communicationchannel/dom</module>
+                <module>udo/currency/dom</module>
+                <module>udo/event/dom</module>
+                <module>udo/geography/dom</module>
+                <module>udo/numerator/dom</module>
+                <module>udo/party/dom</module>
+                <module>udo/tag/dom</module>
+                <module>udo/tax/dom</module>
+                <module>estatioapp/dom-guarantee</module>
+                <module>estatioapp/dom-index</module>
+                <module>estatioapp/dom-instance</module>
+                <module>estatioapp/dom-italy</module>
+                <module>estatioapp/dom-lease_invoice</module>
+                <module>estatioapp/dom-party_asset</module>
+                <module>estatioapp/dom</module>
+                <module>estatioapp/fixture</module>
+                <module>estatioapp/integtests</module>
             </modules>
         </profile>
         <profile>
             <id>extended</id>
             <modules>
-                <module>base</module>
-                <module>dom-geography</module>
-                <module>dom-instance</module>
-                <module>dom-tax</module>
-                <module>dom-charge</module>
-                <module>dom-index</module>
-                <module>dom-event</module>
-                <module>dom-tag</module>
-                <module>dom-numerator</module>
-                <module>dom-currency</module>
-                <module>dom-party_asset</module>
-                <module>dom-lease_invoice</module>
-                <module>dom-guarantee</module>
-                <module>dom-leaseassignments</module>
-                <module>dom</module>
-                <module>dom-italy</module>
-                <module>fixture</module>
-                <module>integspecs</module>
-                <module>integtests</module>
-                <module>migration</module>
-                <module>migration-integtests</module>
-                <module>webapp</module>
+                <module>udo/agreement/dom</module>
+                <module>udo/base/dom</module>
+                <module>udo/charge/dom</module>
+                <module>udo/communicationchannel/dom</module>
+                <module>udo/currency/dom</module>
+                <module>udo/event/dom</module>
+                <module>udo/geography/dom</module>
+                <module>udo/numerator/dom</module>
+                <module>udo/party/dom</module>
+                <module>udo/tag/dom</module>
+                <module>udo/tax/dom</module>
+                <module>estatioapp/dom-guarantee</module>
+                <module>estatioapp/dom-index</module>
+                <module>estatioapp/dom-instance</module>
+                <module>estatioapp/dom-italy</module>
+                <module>estatioapp/dom-lease_invoice</module>
+                <module>estatioapp/dom-party_asset</module>
+                <module>estatioapp/dom</module>
+                <module>estatioapp/fixture</module>
+                <module>estatioapp/integtests</module>
+                <module>estatioapp/integspecs</module>
+                <module>estatioapp/migration</module>
+                <module>estatioapp/migration-integtests</module>
+                <module>estatioapp/webapp</module>
             </modules>
         </profile>
         <profile>
@@ -1176,22 +1182,25 @@ language governing permissions and limitations under the License.
                 <maven.test.skip>true</maven.test.skip>
             </properties>
             <modules>
-                <module>base</module>
-                <module>dom-geography</module>
-                <module>dom-instance</module>
-                <module>dom-tax</module>
-                <module>dom-charge</module>
-                <module>dom-index</module>
-                <module>dom-event</module>
-                <module>dom-tag</module>
-                <module>dom-numerator</module>
-                <module>dom-currency</module>
-                <module>dom-party_asset</module>
-                <module>dom-lease_invoice</module>
-                <module>dom-guarantee</module>
-                <module>dom-leaseassignments</module>
-                <module>dom</module>
-                <module>dom-italy</module>
+                <module>udo/agreement/dom</module>
+                <module>udo/base/dom</module>
+                <module>udo/charge/dom</module>
+                <module>udo/communicationchannel/dom</module>
+                <module>udo/currency/dom</module>
+                <module>udo/event/dom</module>
+                <module>udo/geography/dom</module>
+                <module>udo/invoice/dom</module>
+                <module>udo/numerator/dom</module>
+                <module>udo/party/dom</module>
+                <module>udo/tag/dom</module>
+                <module>udo/tax/dom</module>
+                <module>estatioapp/dom-guarantee</module>
+                <module>estatioapp/dom-index</module>
+                <module>estatioapp/dom-instance</module>
+                <module>estatioapp/dom-italy</module>
+                <module>estatioapp/dom-lease_invoice</module>
+                <module>estatioapp/dom-party_asset</module>
+                <module>estatioapp/dom</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->

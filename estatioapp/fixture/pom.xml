@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Copyright 2012-2014 Eurocommercial Properties NV
+
+Licensed under the Apache License, Version 2.0 (the "License"); 
+you may not use this file except in compliance with the License. 
+You may obtain a copy of the License at 
+
+    http://www.apache.org/licenses/LICENSE-2.0
+     
+Unless required by applicable law or agreed to in writing, 
+software distributed under the License is distributed on an 
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+either express or implied. See the License for the specific
+language governing permissions and limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.estatio</groupId>
+        <artifactId>estatio</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>estatio-fixture</artifactId>
+    <packaging>jar</packaging>
+    
+    <name>Estatio Fixtures</name>
+    <description>
+        Testing/demo fixtures for Estatio.  These can be installed either during
+        bootstrapped or from the admin menu.)
+    </description>
+
+    <properties>
+        <siteBaseDir>..</siteBaseDir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-dom-italy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.security</groupId>
+            <artifactId>isis-module-security-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-metamodel</artifactId>
+        </dependency>
+
+        <!-- GMAP3 -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+     
+    <profiles>
+        <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath (nb: driver must be manually installed to local repo manually using mvn install-file) -->
+        <!--
+        commented out for open source release.
+        
+        <profile>
+            <id>m2e</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.microsoft.sqlserver</groupId>
+                    <artifactId>jdbc</artifactId>
+                    <version>4.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        -->
+    </profiles>
+
+</project>
