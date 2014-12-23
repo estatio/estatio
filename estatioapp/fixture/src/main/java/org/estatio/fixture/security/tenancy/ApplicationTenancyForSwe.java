@@ -18,11 +18,11 @@ package org.estatio.fixture.security.tenancy;
 
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 
-public class EstatioPartitionForGbrOxf extends AbstractEstatioPartitionFixtureScript {
+public class ApplicationTenancyForSwe extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String TENANCY_NAME = "OXF (Great Britain)";
-    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.GBR;
-    public static final String PATH = "/" + COUNTRY_REFERENCE + "/" + "OXF";
+    public static final String TENANCY_NAME = "Sweden";
+    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.SWE;
+    public static final String PATH = "/" + COUNTRY_REFERENCE;
 
     @Override
     protected void execute(ExecutionContext executionContext) {

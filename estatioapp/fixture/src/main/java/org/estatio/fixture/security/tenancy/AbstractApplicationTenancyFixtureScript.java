@@ -20,15 +20,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.instance.EstatioPartition;
-import org.estatio.dom.instance.EstatioPartitionFactory;
 import org.estatio.dom.valuetypes.Hierarchy;
 
-public abstract class AbstractEstatioPartitionFixtureScript extends FixtureScript {
+public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScript {
 
 
-    protected EstatioPartition create(
+    protected ApplicationTenancy create(
             final String name,
             final String path,
             final String countryReference,
@@ -38,30 +35,26 @@ public abstract class AbstractEstatioPartitionFixtureScript extends FixtureScrip
         final Hierarchy parentNode = node != null? node.parent(): null;
         final ApplicationTenancy parentTenancy = applicationTenancies.findTenancyByPath(parentNode != null? parentNode.getPath(): null);
 
-        final EstatioPartition estatioPartition = (EstatioPartition) applicationTenancies.newTenancy(name, path, parentTenancy);
-        final Country country = countries.findCountry(countryReference);
-        estatioPartition.setCountry(country);
+        final ApplicationTenancy applicationTenancy = applicationTenancies.newTenancy(name, path, parentTenancy);
 
         // make available
-        this.estatioPartition = estatioPartition;
-        executionContext.addResult(this, name, estatioPartition);
-        return this.estatioPartition;
+        this.applicationTenancy = applicationTenancy;
+        executionContext.addResult(this, name, applicationTenancy);
+        return this.applicationTenancy;
     }
 
-    private EstatioPartition estatioPartition;
+    private ApplicationTenancy applicationTenancy;
 
     /**
      * The partition created by this fixture
      */
-    public EstatioPartition getEstatioPartition() {
-        return estatioPartition;
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancy;
     }
 
 
     @javax.inject.Inject
     protected ApplicationTenancies applicationTenancies;
-    @javax.inject.Inject
-    protected EstatioPartitionFactory estatioPartitionFactory;
     @javax.inject.Inject
     protected Countries countries;
 

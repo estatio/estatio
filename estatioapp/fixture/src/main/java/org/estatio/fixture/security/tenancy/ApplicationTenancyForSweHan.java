@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 
-public class EstatioPartitionForSweHan extends AbstractEstatioPartitionFixtureScript {
+public class ApplicationTenancyForSweHan extends AbstractApplicationTenancyFixtureScript {
 
     public static final String TENANCY_NAME = "HAN (Sweden)";
     public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.SWE;

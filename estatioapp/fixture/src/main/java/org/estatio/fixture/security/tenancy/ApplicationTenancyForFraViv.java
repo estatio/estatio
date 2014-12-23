@@ -18,11 +18,11 @@ package org.estatio.fixture.security.tenancy;
 
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 
-public class EstatioPartitionForNld extends AbstractEstatioPartitionFixtureScript {
+public class ApplicationTenancyForFraViv extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String TENANCY_NAME = "Netherlands";
-    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.NLD;
-    public static final String PATH = "/" + COUNTRY_REFERENCE;
+    public static final String TENANCY_NAME = "VIV (France)";
+    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.FRA;
+    public static final String PATH = "/" + COUNTRY_REFERENCE + "/" + "VIV";
 
     @Override
     protected void execute(ExecutionContext executionContext) {

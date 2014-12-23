@@ -18,10 +18,10 @@ package org.estatio.fixture.security.tenancy;
 
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 
-public class EstatioPartitionForGbr extends AbstractEstatioPartitionFixtureScript {
+public class ApplicationTenancyForNld extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String TENANCY_NAME = "Great Britain";
-    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.GBR;
+    public static final String TENANCY_NAME = "Netherlands";
+    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.NLD;
     public static final String PATH = "/" + COUNTRY_REFERENCE;
 
     @Override

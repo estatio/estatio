@@ -16,23 +16,23 @@
  */
 package org.estatio.fixture.security.tenancy;
 
-public class AllEstatioPartitions extends AbstractEstatioPartitionFixtureScript {
+public class AllEstatioPartitions extends AbstractApplicationTenancyFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new GlobalEstatioPartition());
+        executionContext.executeChild(this, new GlobalApplicationTenancy());
 
-        executionContext.executeChild(this, new EstatioPartitionForIta());
-        executionContext.executeChild(this, new EstatioPartitionForItaGra());
-        executionContext.executeChild(this, new EstatioPartitionForFra());
-        executionContext.executeChild(this, new EstatioPartitionForFraViv());
-        executionContext.executeChild(this, new EstatioPartitionForSwe());
-        executionContext.executeChild(this, new EstatioPartitionForSweHan());
-        executionContext.executeChild(this, new EstatioPartitionForNld());
-        executionContext.executeChild(this, new EstatioPartitionForNldKal());
-        executionContext.executeChild(this, new EstatioPartitionForGbr());
-        executionContext.executeChild(this, new EstatioPartitionForGbrOxf());
+        executionContext.executeChild(this, new ApplicationTenancyForIta());
+        executionContext.executeChild(this, new ApplicationTenancyForItaGra());
+        executionContext.executeChild(this, new ApplicationTenancyForFra());
+        executionContext.executeChild(this, new ApplicationTenancyForFraViv());
+        executionContext.executeChild(this, new ApplicationTenancyForSwe());
+        executionContext.executeChild(this, new ApplicationTenancyForSweHan());
+        executionContext.executeChild(this, new ApplicationTenancyForNld());
+        executionContext.executeChild(this, new ApplicationTenancyForNldKal());
+        executionContext.executeChild(this, new ApplicationTenancyForGbr());
+        executionContext.executeChild(this, new ApplicationTenancyForGbrOxf());
     }
 
 }

@@ -16,19 +16,15 @@
  */
 package org.estatio.fixture.security.tenancy;
 
-import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
+public class GlobalApplicationTenancy extends AbstractApplicationTenancyFixtureScript {
 
-public class EstatioPartitionForIta extends AbstractEstatioPartitionFixtureScript {
-
-    public static final String TENANCY_NAME = "Italy";
-    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.ITA;
-    public static final String PATH = "/" + COUNTRY_REFERENCE;
-
+    public static final String TENANCY_NAME = "Global";
+    public static final String COUNTRY_REFERENCE = null;
+    public static final String PATH = "/";
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
         create(TENANCY_NAME, PATH, COUNTRY_REFERENCE, executionContext);
     }
-
 
 }
