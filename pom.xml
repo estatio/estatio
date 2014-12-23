@@ -545,6 +545,10 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <!-- UDO modules -->
+            
+            <!-- todo: these will rename to udo-xxx-dom etc in the future -->
+            <!-- todo: still need to add udo-xxx-fixture and udo-xxx-integtests to each -->
+            <!-- todo: eventually, each of these udo modules will be parented by its own udo-xxx parent -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-agreement</artifactId>
