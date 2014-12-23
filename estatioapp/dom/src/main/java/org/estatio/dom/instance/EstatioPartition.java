@@ -21,11 +21,13 @@ package org.estatio.dom.instance;
 import javax.jdo.annotations.InheritanceStrategy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.estatio.dom.geography.Country;
 
 @javax.jdo.annotations.PersistenceCapable()
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
+@ObjectType("EstatioPartition")
 public class EstatioPartition extends ApplicationTenancy {
 
     private Country country;

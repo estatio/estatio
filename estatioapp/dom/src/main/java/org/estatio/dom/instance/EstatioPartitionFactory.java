@@ -21,10 +21,12 @@ package org.estatio.dom.instance;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyFactory;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 @DomainService
 public class EstatioPartitionFactory implements ApplicationTenancyFactory {
 
+    @NotInServiceMenu
     @Override
     public ApplicationTenancy newApplicationTenancy() {
         return new EstatioPartition();
