@@ -544,7 +544,20 @@ language governing permissions and limitations under the License.
                 <version>${isis-module-devutils.version}</version>
             </dependency>
 
-            <!-- this project's own modules -->
+            <!-- UDO modules -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-agreement</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-agreement</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-base</artifactId>
@@ -560,12 +573,171 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-charge</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-charge</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-communicationchannel</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-communicationchannel</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-currency</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-currency</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-event</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-event</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-geography</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-geography</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-invoice</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-invoice</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-numerator</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-numerator</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-party</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-party</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tag</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tag</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tax</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-tax</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            
+            <!-- EstatioApp modules -->
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-guarantee</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-guarantee</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-index</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-index</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -586,103 +758,12 @@ language governing permissions and limitations under the License.
             
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tax</artifactId>
+                <artifactId>estatio-dom-italy</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tax</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-charge</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-charge</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-index</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-index</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-event</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-event</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tag</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tag</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-numerator</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-numerator</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-currency</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-currency</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-party_asset</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-party_asset</artifactId>
+                <artifactId>estatio-dom-italy</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -703,56 +784,19 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-guarantee</artifactId>
+                <artifactId>estatio-dom-party_asset</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-guarantee</artifactId>
+                <artifactId>estatio-dom-party_asset</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
 
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-leaseassignments</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-leaseassignments</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
 
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-italy</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-italy</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
+            
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
