@@ -1,5 +1,7 @@
 /*
- *  Copyright 2014 Dan Haywood
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,18 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.security.tenancy;
+package org.estatio.dom.instance;
 
-import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyFactory;
+import org.apache.isis.applib.annotation.DomainService;
 
-public class FranceEstatioInstance extends AbstractEstatioInstanceFixtureScript {
-
-    public static final String TENANCY_NAME = "france";
-    public static final String PATH = "/fr";
+@DomainService
+public class EstatioPartitionFactory implements ApplicationTenancyFactory {
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
-        create(TENANCY_NAME, PATH, CountriesAndStatesRefData.FRA, executionContext);
+    public ApplicationTenancy newApplicationTenancy() {
+        return new EstatioPartition();
     }
 
 }

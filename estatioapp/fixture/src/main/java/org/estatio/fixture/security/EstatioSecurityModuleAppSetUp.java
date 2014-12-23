@@ -21,7 +21,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.estatio.fixture.security.perms.EstatioAdminRoleAndPermissions;
 import org.estatio.fixture.security.perms.EstatioRolesAndPermissions;
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
-import org.estatio.fixture.security.tenancy.AllTenancies;
+import org.estatio.fixture.security.tenancy.AllEstatioPartitions;
 import org.estatio.fixture.security.userrole.EstatioAdmin_Has_EstatioAdminRole;
 import org.estatio.fixture.security.userrole.EstatioAdmin_Has_IsisSecurityModuleAdminRole;
 import org.estatio.fixture.security.userrole.EstatioUser_Has_EstatioPoweruserRole;
@@ -39,7 +39,7 @@ public class EstatioSecurityModuleAppSetUp extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new EstatioRolesAndPermissions());
         executionContext.executeChild(this, new EstatioAdmin());
         executionContext.executeChild(this, new EstatioUser());
-        executionContext.executeChild(this, new AllTenancies());
+        executionContext.executeChild(this, new AllEstatioPartitions());
 
         // perms (role/features)
         executionContext.executeChild(this, new EstatioUserRoleAndPermissions());

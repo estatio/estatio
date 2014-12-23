@@ -21,6 +21,7 @@ package org.estatio.fixture.asset;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.PersonForJohnDoe;
 
@@ -47,9 +48,9 @@ public class PropertyForOxf extends PropertyAbstract {
         Party owner = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
 
-        Country country = countries.findCountry("GBR");
+        Country greatBritain = countries.findCountry(CountriesAndStatesRefData.GBR);
         createPropertyAndUnits(
-                PROPERTY_REFERENCE, "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25,
+                PROPERTY_REFERENCE, "Oxford Super Mall", "Oxford", greatBritain, PropertyType.SHOPPING_CENTER, 25,
                 ld(1999, 1, 1), ld(2008, 6, 1), owner, manager, "51.74579;-1.24334",
                 executionContext);
     }

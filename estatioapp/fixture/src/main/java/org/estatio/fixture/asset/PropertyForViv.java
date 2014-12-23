@@ -21,6 +21,7 @@ package org.estatio.fixture.asset;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.PersonForJohnDoe;
 
@@ -47,9 +48,9 @@ public class PropertyForViv extends PropertyAbstract {
         Party owner = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
 
-        Country country = countries.findCountry("FRA");
+        Country france = countries.findCountry(CountriesAndStatesRefData.FRA);
         createPropertyAndUnits(
-                PROPERTY_REFERENCE, "Vive les shops", "Paris", country, PropertyType.SHOPPING_CENTER, 5,
+                PROPERTY_REFERENCE, "Vive les shops", "Paris", france, PropertyType.SHOPPING_CENTER, 5,
                 ld(2004, 5, 6), ld(2008, 6, 1), owner, manager, "48.8740002697085;2.326230019708498",
                 executionContext);
     }

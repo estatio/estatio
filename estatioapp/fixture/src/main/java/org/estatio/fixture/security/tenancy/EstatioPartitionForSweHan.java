@@ -18,14 +18,15 @@ package org.estatio.fixture.security.tenancy;
 
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 
-public class SwedenEstatioInstance extends AbstractEstatioInstanceFixtureScript {
+public class EstatioPartitionForSweHan extends AbstractEstatioPartitionFixtureScript {
 
-    public static final String TENANCY_NAME = "sweden";
-    public static final String PATH = "/se";
+    public static final String TENANCY_NAME = "HAN (Sweden)";
+    public static final String COUNTRY_REFERENCE = CountriesAndStatesRefData.SWE;
+    public static final String PATH = "/" + COUNTRY_REFERENCE + "/" + "HAN";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        create(TENANCY_NAME, PATH, CountriesAndStatesRefData.SWE, executionContext);
+        create(TENANCY_NAME, PATH, COUNTRY_REFERENCE, executionContext);
     }
 
 }

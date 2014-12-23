@@ -21,6 +21,7 @@ package org.estatio.fixture.asset;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 import org.estatio.fixture.party.OrganisationForAcme;
 import org.estatio.fixture.party.PersonForJohnDoe;
 
@@ -46,10 +47,10 @@ public class PropertyForKal extends PropertyAbstract {
         // exec
         Party owner = parties.findPartyByReference(OrganisationForAcme.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
-        Country country = countries.findCountry("NLD");
 
+        Country netherlands = countries.findCountry(CountriesAndStatesRefData.NLD);
         createPropertyAndUnits(
-                PROPERTY_REFERENCE, "Kalvertoren", "Amsterdam", country, PropertyType.SHOPPING_CENTER, 40,
+                PROPERTY_REFERENCE, "Kalvertoren", "Amsterdam", netherlands, PropertyType.SHOPPING_CENTER, 40,
                 ld(2003, 12, 1), ld(2003, 12, 1), owner, manager, "52.37597;4.90814",
                 executionContext);
     }

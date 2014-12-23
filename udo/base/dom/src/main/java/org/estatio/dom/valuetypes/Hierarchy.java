@@ -28,8 +28,8 @@ import com.google.common.collect.Lists;
 
 public final class Hierarchy implements Comparable<Hierarchy> {
 
-    public static Hierarchy of(String path) {
-        return new Hierarchy(path);
+    public static Hierarchy of(final String path) {
+        return path != null ? new Hierarchy(path): null;
     }
 
     public Hierarchy(String path) {
