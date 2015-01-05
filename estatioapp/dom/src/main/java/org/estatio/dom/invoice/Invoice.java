@@ -55,7 +55,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.numerator.Numerator;

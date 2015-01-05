@@ -20,22 +20,19 @@ package org.estatio.dom.bankmandate;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
-
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.Person;
 
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
+
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -72,7 +69,7 @@ public class BankMandate extends Agreement {
         return this;
     }
 
-    public List<BankAccount> choices0ChangeBankAccount() {
+    public List<? extends FinancialAccount> choices0ChangeBankAccount() {
         return financialAccounts.findBankAccountsByOwner(getSecondaryParty());
     }
 
@@ -102,12 +99,6 @@ public class BankMandate extends Agreement {
 
     // //////////////////////////////////////
 
-    private FinancialAccounts financialAccounts;
-
-    public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
-        this.financialAccounts = financialAccounts;
-    }
-
     public BankMandate change(
             final @Named("Name") @Optional String name,
             final @Named("Sepa Mandate Identifier") @Optional String SepaMendateIdentifier) {
@@ -123,5 +114,10 @@ public class BankMandate extends Agreement {
     public String default1Change() {
         return getSepaMandateIdentifier();
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private BankAccounts financialAccounts;
 
 }

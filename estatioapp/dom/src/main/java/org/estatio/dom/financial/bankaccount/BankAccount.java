@@ -16,19 +16,10 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial;
+package org.estatio.dom.financial.bankaccount;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.financial.utils.IBANHelper;
-import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.party.Party;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
@@ -36,15 +27,20 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.TypicalLength;
+
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.utils.IBANHelper;
+import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @Bookmarkable
 @Immutable
-
 public class BankAccount extends FinancialAccount {
 
     private Party bank;
@@ -199,6 +195,13 @@ public class BankAccount extends FinancialAccount {
 
     public String default2Change() {
         return getExternalReference();
+    }
+
+    // //////////////////////////////////////
+
+    public BankAccount refresh() {
+        IBANHelper.verifyAndUpdate(this);
+        return this;
     }
 
 }

@@ -66,9 +66,9 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
@@ -278,7 +278,7 @@ public class LeaseTest {
         @Mock
         private AgreementTypes mockAgreementTypes;
         @Mock
-        private FinancialAccounts mockFinancialAccounts;
+        private BankAccounts mockFinancialAccounts;
         @Mock
         private ClockService mockClockService;
 
@@ -489,7 +489,7 @@ public class LeaseTest {
             assertThat(bankAccounts, Matchers.contains(bankAccount));
 
             // and when/then
-            final BankAccount defaultBankAccount = lease.default0NewMandate();
+            final BankAccount defaultBankAccount = (BankAccount) lease.default0NewMandate();
             assertThat(defaultBankAccount, is(bankAccount));
 
             // and when/then

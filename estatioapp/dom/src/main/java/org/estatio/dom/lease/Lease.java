@@ -29,14 +29,7 @@ import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -57,7 +50,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
-
 import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -74,8 +66,9 @@ import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
@@ -83,6 +76,12 @@ import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -591,7 +590,7 @@ public class Lease
         if (tenantRole == null || !tenantRole.isCurrent()) {
             return "Could not determine the tenant (secondary party) of this lease";
         }
-        final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
+        final List<? extends FinancialAccount> validBankAccounts = existingBankAccountsForTenant();
         if (validBankAccounts.isEmpty()) {
             return "There are no bank accounts available for this tenant";
         }
@@ -620,7 +619,7 @@ public class Lease
             final String reference,
             final LocalDate startDate,
             final LocalDate endDate) {
-        final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
+        final List<? extends FinancialAccount> validBankAccounts = existingBankAccountsForTenant();
         if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
         }
@@ -979,7 +978,7 @@ public class Lease
     Occupancies occupanciesRepo;
 
     @Inject
-    FinancialAccounts financialAccounts;
+    BankAccounts financialAccounts;
 
     @Inject
     BankMandates bankMandates;

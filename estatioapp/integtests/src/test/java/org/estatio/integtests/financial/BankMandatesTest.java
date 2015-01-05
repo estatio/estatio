@@ -19,16 +19,20 @@
 package org.estatio.integtests.financial;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandates;
-import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoison;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;

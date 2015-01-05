@@ -1,0 +1,10 @@
+diff a/estatioapp/migration/src/main/java/org/estatio/api/Api.java b/estatioapp/migration/src/main/java/org/estatio/api/Api.java	(rejected hunks)
+@@ -120,8 +119,6 @@ import org.estatio.services.clock.ClockService;
+ @Named("Migration")
+ public class Api extends AbstractFactoryAndRepository {
+ 
+-    private static final Logger LOG = LoggerFactory.getLogger(Api.class);
+-
+     @Override
+     public String getId() {
+         return "api";

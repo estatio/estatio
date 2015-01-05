@@ -20,6 +20,8 @@ package org.estatio.dom.financial;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.geography.Country;
 

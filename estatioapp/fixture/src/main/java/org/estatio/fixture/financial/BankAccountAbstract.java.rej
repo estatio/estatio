@@ -1,0 +1,10 @@
+diff a/estatioapp/fixture/src/main/java/org/estatio/fixture/financial/BankAccountAbstract.java b/estatioapp/fixture/src/main/java/org/estatio/fixture/financial/BankAccountAbstract.java	(rejected hunks)
+@@ -37,7 +38,7 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
+     protected BankAccount createBankAccount(String partyStr, String bankAccountRef, String propertyRef, ExecutionContext executionContext) {
+         Party party = parties.findPartyByReference(partyStr);
+ 
+-        BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
++        BankAccount bankAccount = bankAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
+         executionContext.add(this, bankAccount.getReference(), bankAccount);
+         if (propertyRef != null) {
+             final Property property = properties.findPropertyByReference(propertyRef);

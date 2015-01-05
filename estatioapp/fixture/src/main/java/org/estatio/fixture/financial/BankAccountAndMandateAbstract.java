@@ -19,7 +19,9 @@
 package org.estatio.fixture.financial;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -28,8 +30,8 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandates;
-import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;

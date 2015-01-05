@@ -35,7 +35,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.services.clock.ClockService;

@@ -20,13 +20,15 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
 @DomainService(repositoryFor = FinancialAccount.class)
@@ -45,7 +47,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     public String iconName() {
         return "FinancialAccount";
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -61,45 +63,6 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
         return financialAccount;
     }
 
-    @Programmatic
-    public BankAccount newBankAccount(
-            final @Named("Owner") Party owner,
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name) {
-        final BankAccount bankAccount = newTransientInstance(BankAccount.class);
-        bankAccount.setReference(reference);
-        bankAccount.setName(name);
-        persistIfNotAlready(bankAccount);
-        bankAccount.setOwner(owner);
-        return bankAccount;
-    }
-
-    // //////////////////////////////////////
-
-    @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    public BankAccount newBankAccount(
-            final @Named("Owner") Party owner,
-            final @Named("IBAN") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban) {
-        final BankAccount bankAccount = newTransientInstance(BankAccount.class);
-        bankAccount.setReference(iban);
-        bankAccount.setName(iban);
-        bankAccount.setIban(iban);
-        persistIfNotAlready(bankAccount);
-        bankAccount.setOwner(owner);
-        return bankAccount;
-    }
-
-    public String validateNewBankAccount(
-            final Party owner,
-            final String iban) {
-        if (!IBANValidator.valid(iban)) {
-            return "Not a valid IBAN number";
-        }
-        return null;
-    }
-
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
@@ -110,20 +73,18 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     // //////////////////////////////////////
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Programmatic
-    public List<BankAccount> findBankAccountsByOwner(final Party party) {
-        return (List) allMatches("findByTypeAndOwner",
-                "type", FinancialAccountType.BANK_ACCOUNT,
-                "owner", party);
+    public List<FinancialAccount> findAccountsByOwner(final Party party) {
+        return allMatches("findByOwner", "owner", party);
     }
 
     // //////////////////////////////////////
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Programmatic
-    public List<FinancialAccount> findAccountsByOwner(final Party party) {
-        return (List) allMatches("findByOwner", "owner", party);
+    public List<FinancialAccount> findAccountsByTypeOwner(final FinancialAccountType accountType, final Party party) {
+        return allMatches("findByTypeAndOwner",
+                "type", accountType,
+                "owner", party);
     }
 
     // //////////////////////////////////////

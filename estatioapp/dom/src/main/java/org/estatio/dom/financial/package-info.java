@@ -13,15 +13,15 @@
  * <p>
  * {@link org.estatio.dom.financial.FinancialAccount} is abstract, with 
  * {@link org.estatio.dom.financial.FinancialAccountType} acts as a powertype.  Currently only a single concrete 
- * subtype, {@link org.estatio.dom.financial.BankAccount}, exists.  
+ * subtype, {@link org.estatio.dom.financial.bankaccount.BankAccount}, exists.
  * 
  * <p>
- * {@link org.estatio.dom.financial.BankAccountType} characterises the type of the bank account, for example 
+ * {@link org.estatio.dom.financial.bankaccount.BankAccountType} characterises the type of the bank account, for example
  * <i>CHECKING</i>.
  * 
  * <p>
  * A {@link org.estatio.dom.party.Party} is required to have a 
- * {@link org.estatio.dom.financial.BankAccount} in order that a {@link org.estatio.dom.bankmandate.BankMandate} can
+ * {@link org.estatio.dom.financial.bankaccount.BankAccount} in order that a {@link org.estatio.dom.bankmandate.BankMandate} can
  * be created against it. 
  */
 package org.estatio.dom.financial;

@@ -19,6 +19,7 @@
 package org.estatio.dom.financial;
 
 import org.estatio.dom.PowerType;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.DomainObjectContainer;
