@@ -2,8 +2,11 @@ package org.estatio.dom.party.relationship;
 
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Inject;
+
 import com.google.common.eventbus.Subscribe;
+
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -16,6 +19,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.core.runtime.authentication.standard.RandomCodeGenerator10Chars;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -26,10 +30,9 @@ import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.Persons;
 
 @DomainServiceLayout(
-        named="Parties",
+        named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.4"
-)
+        menuOrder = "20.4")
 @DomainService(repositoryFor = PartyRelationship.class)
 public class PartyRelationships extends EstatioDomainService<PartyRelationship> {
 
@@ -66,6 +69,19 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
                 from == null ? null : from.getClass(),
                 to == null ? null : to.getClass());
     }
+
+    public String validateNewRelationship(
+            final Party from,
+            final Party to,
+            final String relationshipType,
+            final String description) {
+        if (from.equals(to)) {
+            return "Cannot create relationship to itself";
+        }
+        return null;
+    }
+
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotInServiceMenu
@@ -111,10 +127,10 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
 
     @ActionLayout(
             prototype = true
-    )
-    @MemberOrder(sequence = "99")
-    @ActionSemantics(Of.SAFE)
-    public List<PartyRelationship> allRelationships() {
+            )
+            @MemberOrder(sequence = "99")
+            @ActionSemantics(Of.SAFE)
+            public List<PartyRelationship> allRelationships() {
         return allInstances();
     }
 
