@@ -723,45 +723,6 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-guarantee</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-guarantee</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-index</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-index</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-instance</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-instance</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-            
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-italy</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
@@ -773,34 +734,9 @@ language governing permissions and limitations under the License.
                 <type>test-jar</type>
             </dependency>
 
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-lease_invoice</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-lease_invoice</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-party_asset</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-party_asset</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
 
 
-            
+
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
@@ -1156,13 +1092,8 @@ language governing permissions and limitations under the License.
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
-                <module>estatioapp/dom-guarantee</module>
-                <module>estatioapp/dom-index</module>
-                <module>estatioapp/dom-instance</module>
-                <module>estatioapp/dom-italy</module>
-                <module>estatioapp/dom-lease_invoice</module>
-                <module>estatioapp/dom-party_asset</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/dom-italy</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/migration</module>
@@ -1184,13 +1115,8 @@ language governing permissions and limitations under the License.
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
-                <module>estatioapp/dom-guarantee</module>
-                <module>estatioapp/dom-index</module>
-                <module>estatioapp/dom-instance</module>
-                <module>estatioapp/dom-italy</module>
-                <module>estatioapp/dom-lease_invoice</module>
-                <module>estatioapp/dom-party_asset</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/dom-italy</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
             </modules>
@@ -1209,13 +1135,8 @@ language governing permissions and limitations under the License.
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
-                <module>estatioapp/dom-guarantee</module>
-                <module>estatioapp/dom-index</module>
-                <module>estatioapp/dom-instance</module>
-                <module>estatioapp/dom-italy</module>
-                <module>estatioapp/dom-lease_invoice</module>
-                <module>estatioapp/dom-party_asset</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/dom-italy</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
@@ -1242,13 +1163,8 @@ language governing permissions and limitations under the License.
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
-                <module>estatioapp/dom-guarantee</module>
-                <module>estatioapp/dom-index</module>
-                <module>estatioapp/dom-instance</module>
-                <module>estatioapp/dom-italy</module>
-                <module>estatioapp/dom-lease_invoice</module>
-                <module>estatioapp/dom-party_asset</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/dom-italy</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->
