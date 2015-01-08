@@ -19,7 +19,7 @@
         "Dates": {
           "members": {
             "startDate": {},
-            "endDate":{
+            "endDate": {
               "actions": {
                 "changeDates": {}
               }
@@ -36,6 +36,14 @@
               "actions": {
                 "changeAreas": {}
               }
+            }
+          }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
             }
           }
         }

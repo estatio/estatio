@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = UnitSize.class)
 @DomainServiceLayout(
@@ -39,7 +39,7 @@ import org.estatio.dom.EstatioDomainService;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.10"
 )
-public class UnitSizes extends EstatioDomainService<UnitSize> {
+public class UnitSizes extends UdoDomainRepositoryAndFactory<UnitSize> {
 
     public UnitSizes() {
         super(UnitSizes.class, UnitSize.class);

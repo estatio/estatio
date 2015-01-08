@@ -58,7 +58,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
         @Test
         public void givenValidLeaseWithNewInvoiceItems() throws Exception {
             // given
-            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             // when
             List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseAndInvoiceStatus(lease, InvoiceStatus.NEW);
             // then

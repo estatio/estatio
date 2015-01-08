@@ -28,7 +28,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 /**
  * Estatio-specific implementation of {@link ApplicationSettingsServiceRW} 
@@ -36,7 +36,7 @@ import org.estatio.dom.EstatioDomainService;
  * be {@link #find(String) found} and {@link #listAll() retrieved}.
  */
 @DomainService(menuOrder = "99", repositoryFor = ApplicationSettingForEstatio.class)
-public class ApplicationSettingsServiceForEstatio extends EstatioDomainService<ApplicationSettingForEstatio> implements ApplicationSettingsServiceRW {
+public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAndFactory<ApplicationSettingForEstatio> implements ApplicationSettingsServiceRW {
 
     public ApplicationSettingsServiceForEstatio() {
         super(ApplicationSettingsServiceForEstatio.class, ApplicationSettingForEstatio.class);

@@ -20,9 +20,9 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.List;
-
+import javax.inject.Inject;
 import com.google.common.collect.Iterables;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -34,13 +34,15 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.PaymentMethod;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseItem.class)
 @Hidden
-public class LeaseItems extends EstatioDomainService<LeaseItem> {
+public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
 
     public LeaseItems() {
         super(LeaseItems.class, LeaseItem.class);
@@ -56,9 +58,11 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
-            final LocalDate startDate) {
+            final LocalDate startDate,
+            final ApplicationTenancy applicationTenancy) {
         BigInteger nextSequence = nextSequenceFor(lease, type);
         LeaseItem leaseItem = newTransientInstance();
+        leaseItem.setApplicationTenancyPath(applicationTenancy.getPath());
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
         leaseItem.setPaymentMethod(paymentMethod);
@@ -69,6 +73,14 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
         leaseItem.setSequence(nextSequence);
         persistIfNotAlready(leaseItem);
         return leaseItem;
+    }
+
+    public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
+        return estatioApplicationTenancies.localTenanciesFor(lease.getProperty());
+    }
+
+    public ApplicationTenancy default6NewLeaseItem(final Lease lease) {
+        return Dflt.of(choices6NewLeaseItem(lease));
     }
 
     private BigInteger nextSequenceFor(final Lease lease, final LeaseItemType type) {
@@ -105,5 +117,12 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
             final LeaseItemType type) {
         return allMatches("findByLeaseAndType", "lease", lease, "type", type);
     }
+
+
+    // //////////////////////////////////////
+
+    @Inject
+    EstatioApplicationTenancies estatioApplicationTenancies;
+
 
 }

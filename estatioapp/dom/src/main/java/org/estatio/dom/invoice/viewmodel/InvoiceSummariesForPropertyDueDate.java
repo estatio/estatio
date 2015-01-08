@@ -20,7 +20,7 @@ package org.estatio.dom.invoice.viewmodel;
 import java.util.List;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService
 @DomainServiceLayout(
@@ -29,7 +29,7 @@ import org.estatio.dom.EstatioDomainService;
         menuOrder = "50.2"
 )
 @Immutable
-public class InvoiceSummariesForPropertyDueDate extends EstatioDomainService<InvoiceSummaryForPropertyDueDate> {
+public class InvoiceSummariesForPropertyDueDate extends UdoDomainRepositoryAndFactory<InvoiceSummaryForPropertyDueDate> {
 
     public InvoiceSummariesForPropertyDueDate() {
         super(InvoiceSummariesForPropertyDueDate.class, InvoiceSummaryForPropertyDueDate.class);

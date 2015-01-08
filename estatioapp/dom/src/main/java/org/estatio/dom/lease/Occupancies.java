@@ -37,14 +37,14 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class)
 @Hidden
-public class Occupancies extends EstatioDomainService<Occupancy> {
+public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
 
     public Occupancies() {
         super(Occupancies.class, Occupancy.class);

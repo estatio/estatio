@@ -22,7 +22,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 
 @DomainService(repositoryFor = InvoiceItem.class)
@@ -31,7 +31,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.5"
 )
-public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
+public class InvoiceItems extends UdoDomainRepositoryAndFactory<InvoiceItem> {
 
     public InvoiceItems() {
         super(InvoiceItems.class, InvoiceItem.class);

@@ -20,19 +20,19 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.geography.Countries;
-import org.estatio.dom.valuetypes.Hierarchy;
+import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScript {
 
+    static public String ONLY = "_";
 
     protected ApplicationTenancy create(
             final String name,
             final String path,
-            final String countryReference,
             final ExecutionContext executionContext) {
 
-        final Hierarchy node = Hierarchy.of(path);
-        final Hierarchy parentNode = node != null? node.parent(): null;
+        final ApplicationTenancyLevel node = ApplicationTenancyLevel.of(path);
+        final ApplicationTenancyLevel parentNode = node != null? node.parent(): null;
         final ApplicationTenancy parentTenancy = applicationTenancies.findTenancyByPath(parentNode != null? parentNode.getPath(): null);
 
         final ApplicationTenancy applicationTenancy = applicationTenancies.newTenancy(name, path, parentTenancy);

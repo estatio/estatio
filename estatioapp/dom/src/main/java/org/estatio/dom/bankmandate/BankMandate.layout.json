@@ -9,10 +9,10 @@
             "name": {},
             "bankAccount": {
               "actions": {
-              	"changeBankAccount": {}
-              }  
-           	},
-            "sepaMandateIdentifier": {}, 
+                "changeBankAccount": {}
+              }
+            },
+            "sepaMandateIdentifier": {},
             "type": {
               "actions": {
                 "change": {}
@@ -24,6 +24,14 @@
           "members": {
             "primaryParty": {},
             "secondaryParty": {}
+          }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
           }
         }
       }

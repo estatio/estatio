@@ -24,16 +24,17 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Link.class)
 @Hidden
-public class Links extends EstatioDomainService<Link> {
+public class Links extends UdoDomainRepositoryAndFactory<Link> {
     
     /**
      * Cache link count (across sessions), so can quickly know whether any given class has any links for it.
@@ -68,7 +69,7 @@ public class Links extends EstatioDomainService<Link> {
                     public List<Link> call() throws Exception {
 
                         // do we already know that there are no links for this class?
-                        Integer numLinks = linksByClass.get(cls);
+                        final Integer numLinks = linksByClass.get(cls);
                         if(numLinks != null && numLinks == 0) {
                             return Collections.emptyList();
                         }
@@ -79,14 +80,14 @@ public class Links extends EstatioDomainService<Link> {
 
                         // ... find the superclass' links
                         // (taking into account might be at top of the class hierarchy)
-                        List<Link> linksForSuperClass = 
+                        final List<Link> linksForSuperClass =
                                 cls != Object.class 
                                     ? findAllForClassHierarchy(cls.getSuperclass()) 
                                     : Collections.<Link>emptyList();
                         links.addAll(linksForSuperClass);
 
                         // ... and now the class itself
-                        List<Link> linksForClass = findByClassName(cls.getName());
+                        final List<Link> linksForClass = findByClassName(cls.getName());
                         links.addAll(linksForClass);
 
                         // cache for next time
@@ -108,14 +109,23 @@ public class Links extends EstatioDomainService<Link> {
     // //////////////////////////////////////
 
     @Programmatic
-    public Link newLink(Class<?> cls, String name, String urlTemplate) {
-        return newLink(cls.getName(), name, urlTemplate);
+    public Link newLink(
+            final ApplicationTenancy applicationTenancy,
+            final Class<?> cls,
+            final String name,
+            final String urlTemplate) {
+        return newLink(applicationTenancy, cls.getName(), name, urlTemplate);
     }
-    private Link newLink(String className, String name, String urlTemplate) {
-        Link link = newTransientInstance();
+    private Link newLink(
+            final ApplicationTenancy applicationTenancy,
+            final String className,
+            final String name,
+            final String urlTemplate) {
+        final Link link = newTransientInstance();
         link.setName(name);
         link.setUrlTemplate(urlTemplate);
         link.setClassName(className);
+        link.setApplicationTenancyPath(applicationTenancy.getPath());
         persist(link);
         return link;
     }

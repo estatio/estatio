@@ -19,12 +19,20 @@
 package org.estatio.dom.party;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.*;
+import javax.inject.Inject;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-
-import org.estatio.dom.EstatioDomainService;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 @DomainService(repositoryFor = Organisation.class)
 @DomainServiceLayout(
@@ -32,7 +40,7 @@ import org.estatio.dom.RegexValidation;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.2"
 )
-public class Organisations extends EstatioDomainService<Organisation> {
+public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
 
     public Organisations() {
         super(Organisations.class, Organisation.class);
@@ -44,12 +52,22 @@ public class Organisations extends EstatioDomainService<Organisation> {
     @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name) {
+            final @Named("Name") String name,
+            final ApplicationTenancy applicationTenancy) {
         final Organisation organisation = newTransientInstance(Organisation.class);
+        organisation.setApplicationTenancyPath(applicationTenancy.getPath());
         organisation.setReference(reference);
         organisation.setName(name);
         persist(organisation);
         return organisation;
+    }
+
+    public List<ApplicationTenancy> choices2NewOrganisation() {
+        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default2NewOrganisation() {
+        return Dflt.of(choices2NewOrganisation());
     }
 
     // //////////////////////////////////////
@@ -60,5 +78,11 @@ public class Organisations extends EstatioDomainService<Organisation> {
     public List<Organisation> allOrganisations() {
         return allInstances();
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
+
 
 }

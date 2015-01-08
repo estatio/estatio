@@ -21,7 +21,7 @@ package org.estatio.dom.asset.registration;
 import java.util.List;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 
 @DomainService(repositoryFor = FixedAssetRegistration.class)
@@ -30,7 +30,7 @@ import org.estatio.dom.asset.FixedAsset;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.3"
 )
-public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegistration> {
+public class FixedAssetRegistrations extends UdoDomainRepositoryAndFactory<FixedAssetRegistration> {
 
     public FixedAssetRegistrations() {
         super(FixedAssetRegistrations.class, FixedAssetRegistration.class);

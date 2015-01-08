@@ -19,20 +19,21 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -51,11 +52,19 @@ import org.estatio.dom.WithTitleUnique;
 })
 @Immutable
 @Bounded
-public class AgreementType extends EstatioDomainObject<AgreementType> 
-        implements WithTitleComparable<AgreementType>, WithTitleUnique {
+public class AgreementType
+        extends EstatioDomainObject<AgreementType>
+        implements WithTitleComparable<AgreementType>, WithTitleUnique, WithApplicationTenancyGlobal {
 
     public AgreementType() {
         super("title");
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

@@ -20,11 +20,15 @@ package org.estatio.dom.index;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 @DomainService(repositoryFor = Index.class)
 @DomainServiceLayout(
@@ -32,7 +36,7 @@ import org.estatio.dom.RegexValidation;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.2"
 )
-public class Indices extends EstatioDomainService<Index> {
+public class Indices extends UdoDomainRepositoryAndFactory<Index> {
 
     public Indices() {
         super(Indices.class, Index.class);
@@ -43,13 +47,23 @@ public class Indices extends EstatioDomainService<Index> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Index newIndex(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
-            final @Named("Name") String name) {
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
+            final @Named("Name") String name,
+            final ApplicationTenancy applicationTenancy) {
         final Index index = newTransientInstance();
+        index.setApplicationTenancyPath(applicationTenancy.getPath());
         index.setReference(reference);
         index.setName(name);
         persist(index);
         return index;
+    }
+
+    public List<ApplicationTenancy> choices2NewIndex() {
+        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default2NewIndex() {
+        return Dflt.of(choices2NewIndex());
     }
 
     // //////////////////////////////////////
@@ -59,6 +73,7 @@ public class Indices extends EstatioDomainService<Index> {
     public List<Index> allIndices() {
         return allInstances();
     }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -67,12 +82,19 @@ public class Indices extends EstatioDomainService<Index> {
     }
 
     @Programmatic
-    public Index findOrCreateIndex(final String reference, final String name) {
+    public Index findOrCreateIndex(
+            final ApplicationTenancy applicationTenancy,
+            final String reference,
+            final String name) {
         Index index = findIndex(reference);
         if (index == null) {
-            index  = newIndex(reference, name);
+            index  = newIndex(reference, name, applicationTenancy);
         }
         return index;
     }
 
+    // //////////////////////////////////////
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
 }

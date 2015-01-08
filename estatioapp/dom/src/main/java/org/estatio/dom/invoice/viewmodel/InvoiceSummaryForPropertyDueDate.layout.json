@@ -8,6 +8,14 @@
             "property": {},
             "dueDate": {}
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -25,16 +33,16 @@
     {
       "span": 3,
       "memberGroups": {
-      	"Totals": {
+        "Totals": {
           "members": {
             "netAmount": {
-              "typicalLength": { "value": 15 }
+              "typicalLength": {"value": 15}
             },
             "grossAmount": {
-              "typicalLength": { "value": 15 }
+              "typicalLength": {"value": 15}
             }
           }
-      	}
+        }
       }
     },
     {

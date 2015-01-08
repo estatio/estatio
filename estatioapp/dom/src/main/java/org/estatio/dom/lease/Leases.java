@@ -25,7 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -44,13 +44,15 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Property;
@@ -64,8 +66,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @DomainServiceLayout(
         named = "Leases",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "40.1")
-public class Leases extends EstatioDomainService<Lease> {
+        menuOrder = "40.1"
+)
+public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
 
     public Leases() {
         super(Leases.class, Lease.class);
@@ -77,8 +80,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
-            // aggregate value types
+            // CHECKSTYLE:OFF ParameterNumber
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE) String reference,
             final @ParameterLayout(named = "Name") String name,
             final @ParameterLayout(named = "Type") LeaseType leaseType,
@@ -86,12 +88,21 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Duration", describedAs = "Duration in a text format. Example 6y5m2d") String duration,
             final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date", describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
             final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Landlord") Party landlord,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Tentant") Party tenant
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Tenant") Party tenant,
+            final ApplicationTenancy applicationTenancy
             // CHECKSTYLE:ON
-            ) {
+    ) {
 
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
-        return newLease(reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+        return newLease(applicationTenancy, reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+    }
+
+    public List<ApplicationTenancy> choices8NewLease() {
+        return estatioApplicationTenancies.propertyTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default8NewLease() {
+        return Dflt.of(choices8NewLease());
     }
 
     public String validateNewLease(
@@ -103,7 +114,8 @@ public class Leases extends EstatioDomainService<Lease> {
             final String duration,
             final LocalDate endDate,
             final Party landlord,
-            final Party tenant
+            final Party tenant,
+            final ApplicationTenancy applicationTenancy
             // CHECKSTYLE:ON
             ) {
         if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
@@ -124,6 +136,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @Programmatic
     public Lease newLease(
+            final ApplicationTenancy applicationTenancy,
             final String reference,
             final String name,
             final LeaseType leaseType,
@@ -136,6 +149,7 @@ public class Leases extends EstatioDomainService<Lease> {
         Lease lease = newTransientInstance();
         final AgreementType at = agreementTypes.find(LeaseConstants.AT_LEASE);
         lease.setType(at);
+        lease.setApplicationTenancyPath(applicationTenancy.getPath());
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);
@@ -265,9 +279,9 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @PostConstruct
     @Programmatic
-    public void init(Map<String, String> properties) {
+    public void init(final Map<String, String> properties) {
         super.init(properties);
-        AgreementType agreementType = agreementTypes.findOrCreate(LeaseConstants.AT_LEASE);
+        final AgreementType agreementType = agreementTypes.findOrCreate(LeaseConstants.AT_LEASE);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
@@ -310,5 +324,9 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @Inject
     private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
 
 }

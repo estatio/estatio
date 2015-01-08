@@ -28,8 +28,8 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.relationship.PartyRelationshipView;
 import org.estatio.dom.party.relationship.PartyRelationshipViewService;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForTopModel;
-import org.estatio.fixture.party.PersonForGinoVannelli;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -43,12 +43,12 @@ public class PartyrelationshipViewServiceTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new OrganisationForTopModel());
-                executionContext.executeChild(this, new PersonForGinoVannelli());
+                executionContext.executeChild(this, new OrganisationForTopModelGb());
+                executionContext.executeChild(this, new PersonForGinoVannelliGb());
             }
         });
-        org = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
-        person = parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE);
+        org = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+        person = parties.findPartyByReference(PersonForGinoVannelliGb.REF);
     }
 
     private Party org;

@@ -31,13 +31,13 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
-public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
+public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
 
     public LeaseTerms() {
         super(LeaseTerms.class, LeaseTerm.class);
@@ -61,7 +61,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         // item is not updated. Removing code below will fail integration tests
         // too.
         getContainer().flush();
-        isisJdoSupport.refresh(leaseItem);
+        getIsisJdoSupport().refresh(leaseItem);
         return leaseTerm;
     }
 

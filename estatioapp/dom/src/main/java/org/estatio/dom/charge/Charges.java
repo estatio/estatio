@@ -19,6 +19,8 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
+import javax.inject.Inject;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -28,8 +30,9 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
-import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(repositoryFor = Charge.class)
@@ -38,7 +41,7 @@ import org.estatio.dom.tax.Tax;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.3"
 )
-public class Charges extends EstatioDomainService<Charge> {
+public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
 
     public Charges() {
         super(Charges.class, Charge.class);
@@ -50,22 +53,28 @@ public class Charges extends EstatioDomainService<Charge> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Charge newCharge(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
-            final @Named("Name") String name, 
-            final @Named("Description") String description, 
-            final Tax tax, 
+            final ApplicationTenancy applicationTenancy,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
+            final @Named("Name") String name,
+            final @Named("Description") String description,
+            final Tax tax,
             final ChargeGroup chargeGroup) {
-        Charge charge = findCharge(reference);
+        Charge charge = findByReference(reference);
         if (charge == null) {
             charge = newTransientInstance();
             charge.setReference(reference);
             persist(charge);
         }
+        charge.setApplicationTenancyPath(applicationTenancy.getPath());
         charge.setName(name);
         charge.setDescription(description);
         charge.setTax(tax);
         charge.setGroup(chargeGroup);
         return charge;
+    }
+
+    public List<ApplicationTenancy> choices0NewCharge() {
+        return estatioApplicationTenancies.allCountryTenancies();
     }
 
     // //////////////////////////////////////
@@ -79,8 +88,17 @@ public class Charges extends EstatioDomainService<Charge> {
     // //////////////////////////////////////
     
     @Programmatic
-    public Charge findCharge(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+    public Charge findByReference(
+            final String reference) {
+        return firstMatch(
+                "findByReference",
+                "reference", reference);
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
+
 
 }

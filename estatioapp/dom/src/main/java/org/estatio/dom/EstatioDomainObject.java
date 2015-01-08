@@ -19,15 +19,17 @@
 package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
-
+import javax.jdo.annotations.InheritanceStrategy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.apache.isis.applib.annotation.Hidden;
 
 /**
- * A domain object that is mutable and can be changed by multiple users over time,
- * and should therefore have optimistic locking controls in place.
+ * A domain object that is mutable and can be changed by multiple users over
+ * time, and should therefore have optimistic locking controls in place.
  * 
  * <p>
  * Subclasses must be annotated with:
+ * 
  * <pre>
  * @javax.jdo.annotations.DatastoreIdentity(
  *     strategy = IdGeneratorStrategy.NATIVE,
@@ -41,40 +43,47 @@ import org.apache.isis.applib.annotation.Hidden;
  * </pre>
  * 
  * <p>
- * Note however that if a subclass that has a supertype which is annotated 
- * with {@link javax.jdo.annotations.Version} (eg <tt>CommunicationChannel</tt>)
- * then the subtype must not also have a <tt>Version</tt> annotation (otherwise JDO
- * will end up putting a <tt>version</tt> column in both tables, and they are not 
- * kept in sync).
+ * Note however that if a subclass that has a supertype which is annotated with
+ * {@link javax.jdo.annotations.Version} (eg <tt>CommunicationChannel</tt>) then
+ * the subtype must not also have a <tt>Version</tt> annotation (otherwise JDO
+ * will end up putting a <tt>version</tt> column in both tables, and they are
+ * not kept in sync).
  */
-public abstract class EstatioDomainObject<T extends UdoDomainObject<T>> 
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
+public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
         extends UdoDomainObject<T> {
-
 
     public EstatioDomainObject(
             final String keyProperties) {
         super(keyProperties);
     }
 
+
     @Hidden
     public String getId() {
         Object objectId = JDOHelper.getObjectId(this);
-        if(objectId == null) {
+        if (objectId == null) {
             return "";
         }
         String objectIdStr = objectId.toString();
         final String id = objectIdStr.split("\\[OID\\]")[0];
         return id;
     }
-    
-    
+
     // //////////////////////////////////////
+
 
     @Hidden
     public Long getVersionSequence() {
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;
     }
+
+    // //////////////////////////////////////
+
+    @javax.inject.Inject
+    protected ApplicationTenancies applicationTenancies;
 
 
 }

@@ -153,6 +153,13 @@ language governing permissions and limitations under the License.
             <version>991</version>  
         </dependency>
 
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>  
@@ -162,4 +169,12 @@ language governing permissions and limitations under the License.
         </repository>  
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>noTest</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>

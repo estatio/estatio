@@ -18,5 +18,20 @@
  */
 package org.estatio.dom.party;
 
-public final class PartyForTesting extends Party {
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+public class PartyForTesting extends Party {
+
+    private final ApplicationTenancy applicationTenancy;
+
+    public PartyForTesting() {
+        this(null);
+    }
+    public PartyForTesting(final ApplicationTenancy applicationTenancy) {
+        this.applicationTenancy = applicationTenancy;
+    }
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancy;
+    }
+
 }

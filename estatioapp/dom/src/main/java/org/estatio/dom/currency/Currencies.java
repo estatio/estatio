@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
 
 @DomainService(repositoryFor = Currency.class)
@@ -32,7 +32,7 @@ import org.estatio.dom.RegexValidation;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.4"
 )
-public class Currencies extends EstatioDomainService<Currency> {
+public class Currencies extends UdoDomainRepositoryAndFactory<Currency> {
 
     public Currencies() {
         super(Currencies.class, Currency.class);

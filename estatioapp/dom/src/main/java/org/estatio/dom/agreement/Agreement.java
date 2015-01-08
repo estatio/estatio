@@ -21,20 +21,17 @@ package org.estatio.dom.agreement;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
-
+import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
@@ -44,6 +41,7 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -52,7 +50,6 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -119,9 +116,15 @@ public abstract class Agreement
         WithIntervalMutable<Agreement>, Chained<Agreement>,
         WithNameGetter {
 
-    public Agreement() {
+    protected final String primaryRoleTypeTitle;
+    protected final String secondaryRoleTypeTitle;
+
+    public Agreement(final String primaryRoleTypeTitle, final String secondaryRoleTypeTitle) {
         super("reference");
+        this.primaryRoleTypeTitle = primaryRoleTypeTitle;
+        this.secondaryRoleTypeTitle = secondaryRoleTypeTitle;
     }
+
 
     // //////////////////////////////////////
 
@@ -156,15 +159,33 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    public abstract Party getPrimaryParty();
+    @NotPersisted
+    public Party getPrimaryParty() {
+        return findCurrentOrMostRecentParty(primaryRoleTypeTitle);
+    }
 
-    public abstract Party getSecondaryParty();
+    @NotPersisted
+    public Party getSecondaryParty() {
+        return findCurrentOrMostRecentParty(secondaryRoleTypeTitle);
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    protected AgreementRole getPrimaryAgreementRole() {
+        return findCurrentOrMostRecentAgreementRole(primaryRoleTypeTitle);
+    }
+
+    @Programmatic
+    protected AgreementRole getSecondaryAgreementRole() {
+        return findCurrentOrMostRecentAgreementRole(secondaryRoleTypeTitle);
+    }
 
     // //////////////////////////////////////
 
     protected Party findCurrentOrMostRecentParty(final String agreementRoleTypeTitle) {
-        final AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleTypeTitle);
-        return findCurrentOrMostRecentParty(art);
+        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(agreementRoleTypeTitle);
+        return partyOf(currentOrMostRecentRole);
     }
 
     protected Party findCurrentOrMostRecentParty(final AgreementRoleType art) {
@@ -177,7 +198,8 @@ public abstract class Agreement
         return findCurrentOrMostRecentAgreementRole(art);
     }
 
-    protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
+
+    private AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType =
                 Iterables.filter(getRoles(), AgreementRole.Predicates.whetherTypeIs(agreementRoleType));
@@ -377,14 +399,20 @@ public abstract class Agreement
     }
 
     public String validateNewRole(
-            final AgreementRoleType type,
-            final Party party,
+            final AgreementRoleType art,
+            final Party newParty,
             final LocalDate startDate,
             final LocalDate endDate) {
+
+        Party currentParty = findCurrentOrMostRecentParty(art);
+        if(currentParty != null && !Objects.equal(currentParty.getApplicationTenancy(), newParty.getApplicationTenancy())) {
+            return "The application level of the new party must be the same as that of the current party";
+        }
+
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             return "End date cannot be earlier than start date";
         }
-        if (!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
+        if (!Sets.filter(getRoles(), art.matchingRole()).isEmpty()) {
             return "Add a successor/predecessor to existing agreement role";
         }
         return null;

@@ -20,10 +20,14 @@ package org.estatio.dom.geography;
 
 import java.util.List;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
 
 @DomainService(repositoryFor = Country.class)
@@ -32,7 +36,7 @@ import org.estatio.dom.RegexValidation;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.5"
 )
-public class Countries extends EstatioDomainService<Country> {
+public class Countries extends UdoDomainRepositoryAndFactory<Country> {
 
     public Countries() {
         super(Countries.class, Country.class);
@@ -77,6 +81,21 @@ public class Countries extends EstatioDomainService<Country> {
     public Country findCountry(
             final String reference) {
         return firstMatch("findByReference", "reference", reference);
+    }
+
+    @Programmatic
+    public List<Country> countriesFor(final Iterable<String> countryCodes) {
+        List<Country> available = Lists.newArrayList();
+        final ImmutableMap<String, Country> countryByCode = Maps.uniqueIndex(allCountries(), new Function<Country, String>() {
+            @Override
+            public String apply(final Country input) {
+                return input.getName();
+            }
+        });
+        for (String countryCodeForUser : countryCodes) {
+            available.add(countryByCode.get(countryCodeForUser));
+        }
+        return available;
     }
 
 }

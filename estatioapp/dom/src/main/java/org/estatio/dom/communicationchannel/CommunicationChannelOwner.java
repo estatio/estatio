@@ -18,5 +18,7 @@
  */
 package org.estatio.dom.communicationchannel;
 
-public interface CommunicationChannelOwner {
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
+public interface CommunicationChannelOwner extends WithApplicationTenancy {
 }

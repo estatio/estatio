@@ -16,6 +16,12 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 public class CommunicationChannelOwnerForTesting implements CommunicationChannelOwner {
 
+    @Override
+    public ApplicationTenancy getApplicationTenancy() {
+        return null;
+    }
 }

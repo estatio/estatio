@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -38,7 +38,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "50", repositoryFor = InvoiceItemForLease.class)
-public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
+public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {
 
     public InvoiceItemsForLease() {
         super(InvoiceItemsForLease.class, InvoiceItemForLease.class);
@@ -46,7 +46,6 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @Programmatic
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
@@ -55,11 +54,11 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
             final String interactionId) {
         Lease lease = leaseTerm.getLeaseItem().getLease();
         Invoice invoice = invoices.findOrCreateMatchingInvoice(
+                leaseTerm.getApplicationTenancy(),
                 leaseTerm.getLeaseItem().getPaymentMethod(),
                 lease,
                 InvoiceStatus.NEW,
-                dueDate,
-                interactionId);
+                dueDate, interactionId);
         InvoiceItemForLease invoiceItem = newTransientInstance();
         invoiceItem.setInvoice(invoice);
         invoiceItem.setStartDate(interval.startDate());

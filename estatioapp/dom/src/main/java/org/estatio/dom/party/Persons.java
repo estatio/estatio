@@ -20,11 +20,15 @@ package org.estatio.dom.party;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 @DomainService(repositoryFor = Person.class)
 @DomainServiceLayout(
@@ -32,7 +36,7 @@ import org.estatio.dom.RegexValidation;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.3"
 )
-public class Persons extends EstatioDomainService<Person> {
+public class Persons extends UdoDomainRepositoryAndFactory<Person> {
 
     public Persons() {
         super(Persons.class, Person.class);
@@ -43,16 +47,27 @@ public class Persons extends EstatioDomainService<Person> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Person newPerson(
-            final @Named("reference") @Optional @RegEx(validation=RegexValidation.Person.REFERENCE) String reference,
-            final @Named("initials") @Optional @RegEx(validation=RegexValidation.Person.INITIALS) String initials,
+            final @Named("reference") @Optional @RegEx(validation = RegexValidation.Person.REFERENCE) String reference,
+            final @Named("initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
             final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName,
-            final @Named("Gender") PersonGenderType gender) {
+            final @Named("Gender") PersonGenderType gender,
+            final ApplicationTenancy applicationTenancy) {
         final Person person = newTransientInstance(Person.class);
+        person.setApplicationTenancyPath(applicationTenancy.getPath());
         person.setReference(reference);
         person.change(gender, initials, firstName, lastName);
         persist(person);
         return person;
+    }
+
+
+    public List<ApplicationTenancy> choices5NewPerson() {
+        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default5NewPerson() {
+        return Dflt.of(choices5NewPerson());
     }
 
     // //////////////////////////////////////
@@ -63,5 +78,10 @@ public class Persons extends EstatioDomainService<Person> {
     public List<Person> allPersons() {
         return allInstances();
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
 
 }

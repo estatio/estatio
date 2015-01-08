@@ -28,8 +28,8 @@ import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class GuaranteeTest_TODO extends EstatioIntegrationTest {
@@ -45,12 +45,12 @@ public class GuaranteeTest_TODO extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new GuaranteeForOxfTopModel001());
+                    executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
                 }
             }.withTracing());
 
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-            guarantee = guarantees.findByReference(LeaseForOxfTopModel001.LEASE_REFERENCE + "-D");
+            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            guarantee = guarantees.findByReference(_LeaseForOxfTopModel001Gb.REF + "-D");
         }
 
         @Test

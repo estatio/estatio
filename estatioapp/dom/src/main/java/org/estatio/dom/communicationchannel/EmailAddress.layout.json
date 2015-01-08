@@ -14,6 +14,14 @@
               }
             }
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -39,9 +47,9 @@
       "span": 12,
       "collections": {
         "agreements": {
-            "render": {
-                "value": "EAGERLY"
-            }
+          "render": {
+            "value": "EAGERLY"
+          }
         }
       }
     }

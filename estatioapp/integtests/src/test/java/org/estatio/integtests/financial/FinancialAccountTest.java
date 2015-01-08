@@ -32,8 +32,8 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForHelloWorld;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -49,7 +49,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new BankAccountForHelloWorld());
+                    executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
                 }
             });
         }
@@ -63,7 +63,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            party = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
+            party = parties.findPartyByReference(OrganisationForHelloWorldNl.REF);
         }
 
         // this test really just makes an assertion about the fixture.

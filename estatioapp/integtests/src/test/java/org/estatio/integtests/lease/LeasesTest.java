@@ -18,21 +18,13 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.asset.Properties;
@@ -42,15 +34,19 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.LeaseForKalPoison001;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002;
-import org.estatio.fixture.lease.LeaseForOxfMiracl005;
-import org.estatio.fixture.lease.LeaseForOxfPoison003;
-import org.estatio.fixture.lease.LeaseForOxfPret004;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
+import org.estatio.fixture.lease._LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class LeasesTest extends EstatioIntegrationTest {
 
@@ -66,12 +62,12 @@ public class LeasesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003());
-                    executionContext.executeChild(this, new LeaseForKalPoison001());
-                    executionContext.executeChild(this, new LeaseForOxfPret004());
-                    executionContext.executeChild(this, new LeaseForOxfMiracl005());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                    executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMiracl005Gb());
                 }
             });
         }
@@ -98,15 +94,15 @@ public class LeasesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
         }
 
         @Test
         public void whenValidReference() {
-            final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-            Assert.assertEquals(LeaseForOxfTopModel001.LEASE_REFERENCE, lease.getReference());
+            final Lease lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            Assert.assertEquals(_LeaseForOxfTopModel001Gb.REF, lease.getReference());
         }
 
     }
@@ -120,7 +116,7 @@ public class LeasesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -141,12 +137,12 @@ public class LeasesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003());
-                    executionContext.executeChild(this, new LeaseForKalPoison001());
-                    executionContext.executeChild(this, new LeaseForOxfPret004());
-                    executionContext.executeChild(this, new LeaseForOxfMiracl005());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                    executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMiracl005Gb());
                 }
             });
         }
@@ -168,12 +164,12 @@ public class LeasesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003());
-                    executionContext.executeChild(this, new LeaseForKalPoison001());
-                    executionContext.executeChild(this, new LeaseForOxfPret004());
-                    executionContext.executeChild(this, new LeaseForOxfMiracl005());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                    executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMiracl005Gb());
                 }
             });
         }
@@ -184,7 +180,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
             // when
             final List<Lease> matchingLeases = leases.findLeasesByProperty(property);
             // then
@@ -201,7 +197,7 @@ public class LeasesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -212,7 +208,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         @Test
         public void whenValidProperty() {
             // given
-            final Brand brand = brands.findByName(LeaseForOxfTopModel001.BRAND);
+            final Brand brand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
             // when
             final List<Lease> matchingLeases = leases.findByBrand(brand);
             // then
@@ -229,7 +225,7 @@ public class LeasesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -240,7 +236,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
             System.out.println(property);
             // when
             assertThat(leases.findLeasesActiveOnDate(property, new LocalDate(2010, 7, 14)).size(), is(0));
@@ -256,7 +252,7 @@ public class LeasesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
         }

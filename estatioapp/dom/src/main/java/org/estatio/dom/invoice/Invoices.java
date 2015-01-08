@@ -19,6 +19,8 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -31,7 +33,8 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -46,7 +49,7 @@ import org.estatio.services.settings.EstatioSettingsService;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.4"
 )
-public class Invoices extends EstatioDomainService<Invoice> {
+public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     public Invoices() {
         super(Invoices.class, Invoice.class);
@@ -138,22 +141,27 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final @Named("Lease") Lease lease,
             final @Named("Due date") LocalDate dueDate,
             final PaymentMethod paymentMethod,
-            final Currency currency
-            ) {
-        return newInvoice(
+            final Currency currency,
+            final ApplicationTenancy applicationTenancy) {
+        return newInvoice(applicationTenancy,
                 lease.getPrimaryParty(),
                 lease.getSecondaryParty(),
                 paymentMethod,
                 currency,
                 dueDate,
-                lease,
-                null);
+                lease, null);
     }
+
+    public List<ApplicationTenancy> choices4NewInvoiceForLease() {
+        return estatioApplicationTenancies.selfOrChildrenOf(meService.me().getTenancy());
+    }
+
 
     // //////////////////////////////////////
 
     @Programmatic
     public Invoice newInvoice(
+            final ApplicationTenancy applicationTenancy,
             final @Named("Seller") Party seller,
             final @Named("Buyer") Party buyer,
             final PaymentMethod paymentMethod,
@@ -161,8 +169,9 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final @Named("Due date") LocalDate dueDate,
             final Lease lease,
             final String interactionId
-            ) {
+    ) {
         Invoice invoice = newTransientInstance();
+        invoice.setApplicationTenancyPath(applicationTenancy.getPath());
         invoice.setBuyer(buyer);
         invoice.setSeller(seller);
         invoice.setPaymentMethod(paymentMethod);
@@ -185,6 +194,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Programmatic
     public Invoice findOrCreateMatchingInvoice(
+            final ApplicationTenancy applicationTenancy,
             final PaymentMethod paymentMethod,
             final Lease lease,
             final InvoiceStatus invoiceStatus,
@@ -192,7 +202,8 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final String interactionId) {
         Party buyer = lease.getSecondaryParty();
         Party seller = lease.getPrimaryParty();
-        return findOrCreateMatchingInvoice(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate, interactionId);
+        return findOrCreateMatchingInvoice(
+                applicationTenancy, seller, buyer, paymentMethod, lease, invoiceStatus, dueDate, interactionId);
     }
 
     @Programmatic
@@ -213,6 +224,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Programmatic
     public Invoice findOrCreateMatchingInvoice(
+            final ApplicationTenancy applicationTenancy,
             final Party seller,
             final Party buyer,
             final PaymentMethod paymentMethod,
@@ -223,7 +235,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
         final List<Invoice> invoices = findMatchingInvoices(
                 seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         if (invoices == null || invoices.size() == 0) {
-            return newInvoice(seller, buyer, paymentMethod, settings.systemCurrency(), dueDate, lease, interactionId);
+            return newInvoice(applicationTenancy, seller, buyer, paymentMethod, settings.systemCurrency(), dueDate, lease, interactionId);
         }
         return invoices.get(0);
     }
@@ -271,5 +283,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @javax.inject.Inject
     private EstatioSettingsService settings;
+
+    @javax.inject.Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
+
+    @javax.inject.Inject
+    private MeService meService;
+
+
 
 }

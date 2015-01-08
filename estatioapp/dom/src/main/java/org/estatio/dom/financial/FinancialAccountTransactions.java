@@ -34,11 +34,11 @@ import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class)
 @Hidden
-public class FinancialAccountTransactions extends EstatioDomainService<FinancialAccountTransaction> {
+public class FinancialAccountTransactions extends UdoDomainRepositoryAndFactory<FinancialAccountTransaction> {
 
     public FinancialAccountTransactions() {
         super(FinancialAccountTransactions.class, FinancialAccountTransaction.class);

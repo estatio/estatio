@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.ValueUtils;
 
@@ -33,7 +33,7 @@ import org.estatio.dom.utils.ValueUtils;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.2"
 )
-public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
+public class ChargeGroups extends UdoDomainRepositoryAndFactory<ChargeGroup> {
 
     public ChargeGroups() {
         super(ChargeGroups.class, ChargeGroup.class);

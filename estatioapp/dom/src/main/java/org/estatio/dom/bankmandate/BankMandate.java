@@ -19,20 +19,21 @@
 package org.estatio.dom.bankmandate;
 
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
-import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -47,7 +48,42 @@ import org.estatio.dom.party.Party;
                         + "WHERE bankAccount == :bankAccount")
 })
 @Immutable
-public class BankMandate extends Agreement {
+public class BankMandate
+        extends Agreement
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    /**
+     * Primary role is creditor, secondary role is debtor.
+     */
+    public BankMandate() {
+        super(BankMandateConstants.ART_CREDITOR, BankMandateConstants.ART_DEBTOR);
+    }
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+    }
 
     // //////////////////////////////////////
 
@@ -89,15 +125,6 @@ public class BankMandate extends Agreement {
 
     // //////////////////////////////////////
 
-    public Party getPrimaryParty() {
-        return findCurrentOrMostRecentParty(BankMandateConstants.ART_CREDITOR);
-    }
-
-    public Party getSecondaryParty() {
-        return findCurrentOrMostRecentParty(BankMandateConstants.ART_DEBTOR);
-    }
-
-    // //////////////////////////////////////
 
     public BankMandate change(
             final @Named("Name") @Optional String name,

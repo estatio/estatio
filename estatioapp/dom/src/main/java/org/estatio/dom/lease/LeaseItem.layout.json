@@ -9,7 +9,7 @@
             "sequence": {},
             "type": {},
             "status": {
-              "actions" : {
+              "actions": {
                 "suspend": {},
                 "terminate": {},
                 "refreshStatus": {}
@@ -35,6 +35,14 @@
                 "overrideTax": {},
                 "cancelOverrideTax": {}
               }
+            }
+          }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
             }
           }
         }

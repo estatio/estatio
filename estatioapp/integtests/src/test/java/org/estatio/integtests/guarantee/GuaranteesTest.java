@@ -32,7 +32,7 @@ import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -60,12 +60,12 @@ public class GuaranteesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             }.withTracing());
 
 
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
 
             assertThat(lease.getPrimaryParty(), is(not(nullValue())));
             assertThat(lease.getSecondaryParty(), is(not(nullValue())));

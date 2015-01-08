@@ -33,8 +33,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
         // no need to add, because each test will set up its own test fixtures
         // anyway.
-        // withFixtures(new EstatioBaseLineFixture());
-        withLoggingAt(Level.INFO);
+        withLoggingAt(Level.DEBUG);
         with(testConfiguration());
         with(new DataNucleusPersistenceMechanismInstaller());
 

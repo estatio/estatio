@@ -19,12 +19,10 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
-
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -36,10 +34,11 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -63,7 +62,21 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable
-public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
+public class Unit
+        extends FixedAsset<Unit>
+        implements WithIntervalMutable<Unit>, WithApplicationTenancyProperty {
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getProperty().getApplicationTenancy();
+    }
+
+    // //////////////////////////////////////
 
     private UnitType type;
 

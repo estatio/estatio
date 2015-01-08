@@ -27,7 +27,8 @@ import org.estatio.dom.asset.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class FixedAssetRolesTest extends EstatioIntegrationTest {
@@ -41,7 +42,7 @@ public class FixedAssetRolesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PropertyForOxf());
+                    executionContext.executeChild(this, new _PropertyForOxfGb());
                 }
             });
         }
@@ -57,7 +58,7 @@ public class FixedAssetRolesTest extends EstatioIntegrationTest {
         public void withExistingPropertyPartyAndRole() throws Exception {
 
             // given
-            Party party = parties.findPartyByReference("HELLOWORLD");
+            Party party = parties.findPartyByReference(OrganisationForHelloWorldNl.REF);
             Property property = properties.findPropertyByReference("OXF");
 
             // when

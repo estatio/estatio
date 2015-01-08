@@ -24,19 +24,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.ObjectUtils;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
-
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -48,16 +45,15 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
-
 import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -67,6 +63,10 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -138,12 +138,44 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @AutoComplete(repository = Leases.class, action = "autoComplete")
 @Bookmarkable
 public class Lease
-        extends Agreement {
+        extends Agreement
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
+
+    public Lease() {
+        super(LeaseConstants.ART_LANDLORD, LeaseConstants.ART_TENANT);
+    }
 
     // //////////////////////////////////////
 
     public void created() {
         setStatus(LeaseStatus.ACTIVE);
+    }
+
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////
@@ -170,7 +202,7 @@ public class Lease
 
     @Programmatic
     public LeaseStatus getEffectiveStatus() {
-        ArrayList<LeaseItem> all = new ArrayList<LeaseItem>(getItems());
+        List<LeaseItem> all = Lists.newArrayList(getItems());
         int itemCount = getItems().size();
         List<LeaseItemStatus> statusList = Lists.transform(all, LeaseItem.Functions.GET_STATUS);
         int suspensionCount = Collections.frequency(statusList, LeaseItemStatus.SUSPENDED);
@@ -182,33 +214,6 @@ public class Lease
             }
         }
         return null;
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    @NotPersisted
-    @Hidden(where = Where.PARENTED_TABLES)
-    public Party getPrimaryParty() {
-        final AgreementRole ar = getPrimaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Override
-    @NotPersisted
-    public Party getSecondaryParty() {
-        final AgreementRole ar = getSecondaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Programmatic
-    protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_LANDLORD);
-    }
-
-    @Programmatic
-    protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_TENANT);
     }
 
     // //////////////////////////////////////
@@ -409,14 +414,24 @@ public class Lease
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
-            final @Named("Start date") LocalDate startDate) {
-        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
+            final @Named("Start date") LocalDate startDate,
+            final ApplicationTenancy applicationTenancy) {
+        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate, applicationTenancy);
         return leaseItem;
     }
 
     public LocalDate default4NewItem() {
         return getStartDate();
     }
+
+    public List<ApplicationTenancy> choices5NewItem() {
+        return estatioApplicationTenancies.localTenanciesFor(this.getProperty());
+    }
+
+    public ApplicationTenancy default5NewItem() {
+        return Dflt.of(choices5NewItem());
+    }
+
 
     @Hidden
     public LeaseItem findItem(
@@ -595,7 +610,10 @@ public class Lease
         final Party debtor = getSecondaryParty();
 
         final BankMandate bankMandate =
-                bankMandates.newBankMandate(reference, reference, startDate, endDate, debtor, creditor, bankAccount);
+                bankMandates.newBankMandate(
+                        reference, reference,
+                        startDate, endDate,
+                        debtor, creditor, bankAccount);
         paidBy(bankMandate);
         return this;
     }
@@ -807,6 +825,7 @@ public class Lease
             final LocalDate tenancyStartDate,
             final LocalDate tenancyEndDate) {
         Lease newLease = leases.newLease(
+                this.getApplicationTenancy(),
                 reference,
                 name,
                 this.getLeaseType(),
@@ -814,8 +833,7 @@ public class Lease
                 endDate,
                 tenancyStartDate,
                 tenancyEndDate,
-                this.getPrimaryParty(),
-                tenant);
+                this.getPrimaryParty(), tenant);
 
         copyItemsAndTerms(newLease, tenancyStartDate);
         copyOccupancies(newLease, tenancyStartDate);
@@ -832,7 +850,8 @@ public class Lease
                     item.getCharge(),
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
-                    item.getStartDate());
+                    item.getStartDate(),
+                    item.getApplicationTenancy());
             item.copyTerms(startDate, newItem);
         }
     }
@@ -1010,5 +1029,9 @@ public class Lease
 
     @Inject
     CommunicationChannels communicationChannels;
+
+    @Inject
+    EstatioApplicationTenancies estatioApplicationTenancies;
+
 
 }

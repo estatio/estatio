@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = IndexValue.class)
 @DomainServiceLayout(
@@ -35,7 +35,7 @@ import org.estatio.dom.EstatioDomainService;
         menuOrder = "60.4"
 )
 public class IndexValues
-        extends EstatioDomainService<IndexValue> {
+        extends UdoDomainRepositoryAndFactory<IndexValue> {
 
     public IndexValues() {
         super(IndexValues.class, IndexValue.class);

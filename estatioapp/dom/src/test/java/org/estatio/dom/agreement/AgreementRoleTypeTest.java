@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -71,6 +72,7 @@ public class AgreementRoleTypeTest {
             final AgreementRoleType agreementRoleType = new AgreementRoleType();
             newPojoTester()
                     .withFixture(pojos(AgreementType.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(agreementRoleType);
         }
 

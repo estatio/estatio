@@ -19,29 +19,24 @@
 package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
-
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE)
@@ -74,35 +69,25 @@ import org.estatio.dom.party.Party;
 @Bookmarkable
 @Immutable
 public class Guarantee
-        extends Agreement {
+        extends Agreement
+        implements WithApplicationTenancyProperty {
 
-    @Override
-    @NotPersisted
-    @Hidden(where = Where.PARENTED_TABLES)
-    public Party getPrimaryParty() {
-        final AgreementRole ar = getPrimaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Override
-    @NotPersisted
-    @Hidden(where = Where.PARENTED_TABLES)
-    public Party getSecondaryParty() {
-        final AgreementRole ar = getSecondaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Programmatic
-    protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTEE);
-    }
-
-    @Programmatic
-    protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTOR);
+    public Guarantee() {
+        super(GuaranteeConstants.ART_GUARANTEE, GuaranteeConstants.ART_GUARANTOR);
     }
 
     // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getLease().getApplicationTenancy();
+    }
+
+    // //////////////////////////////////////
+
 
     private Lease lease;
 

@@ -18,29 +18,26 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigInteger;
 import java.util.List;
-
 import javax.inject.Inject;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LeaseItemsTest extends EstatioIntegrationTest {
 
@@ -66,7 +63,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class FindLeaseItem extends LeaseItemsTest {
@@ -86,7 +83,8 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             LeaseItem currentItem = leaseItems.findLeaseItem(lease, LeaseItemType.RENT, lease.getStartDate(), BigInteger.valueOf(1));
 
             // when
-            LeaseItem newItem = leaseItems.newLeaseItem(lease, currentItem.getType(), currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1));
+            final ApplicationTenancy firstLocalAppTenancy = lease.getApplicationTenancy().getChildren().first();
+            LeaseItem newItem = leaseItems.newLeaseItem(lease, currentItem.getType(), currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1), firstLocalAppTenancy);
             lease.getItems().add(newItem);
 
             // then

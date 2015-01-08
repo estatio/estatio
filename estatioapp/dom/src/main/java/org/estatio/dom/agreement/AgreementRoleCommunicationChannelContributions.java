@@ -24,11 +24,11 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 @DomainService
-public class AgreementRoleCommunicationChannelContributions extends EstatioDomainService<AgreementRoleCommunicationChannel> {
+public class AgreementRoleCommunicationChannelContributions extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
 
     public AgreementRoleCommunicationChannelContributions() {
         super(AgreementRoleCommunicationChannelContributions.class, AgreementRoleCommunicationChannel.class);

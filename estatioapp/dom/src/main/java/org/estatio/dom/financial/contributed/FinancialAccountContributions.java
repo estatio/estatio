@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
@@ -33,7 +33,7 @@ import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "30")
 @Hidden
-public class FinancialAccountContributions extends EstatioService<FinancialAccountContributions> {
+public class FinancialAccountContributions extends UdoDomainService<FinancialAccountContributions> {
 
     public FinancialAccountContributions() {
         super(FinancialAccountContributions.class);

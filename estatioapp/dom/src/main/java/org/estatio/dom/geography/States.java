@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
 
 @DomainService(repositoryFor = State.class)
@@ -34,7 +34,7 @@ import org.estatio.dom.RegexValidation;
         menuOrder = "80.6"
 )
 public class States
-        extends EstatioDomainService<State> {
+        extends UdoDomainRepositoryAndFactory<State> {
 
     public States() {
         super(States.class, State.class);

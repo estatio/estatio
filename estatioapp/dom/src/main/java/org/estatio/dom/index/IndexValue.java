@@ -19,22 +19,21 @@
 package org.estatio.dom.index;
 
 import java.math.BigDecimal;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
 /**
  * Holds the {@link #getValue() value} of an {@link #getIndexBase() index (base)} from a particular
@@ -67,13 +66,24 @@ import org.estatio.dom.WithStartDate;
         members = { "indexBase", "startDate" })
 public class IndexValue
         extends EstatioDomainObject<IndexValue>
-        implements WithStartDate {
+        implements WithStartDate, WithApplicationTenancyCountry {
 
     public static final int VALUE_SCALE = 4;
 
     public IndexValue() {
         super("indexBase, startDate desc");
     }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getIndexBase().getApplicationTenancy();
+    }
+
 
     // //////////////////////////////////////
 

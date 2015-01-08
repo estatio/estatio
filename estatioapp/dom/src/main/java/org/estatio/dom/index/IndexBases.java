@@ -23,7 +23,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = IndexBase.class)
 @DomainServiceLayout(
@@ -32,7 +32,7 @@ import org.estatio.dom.EstatioDomainService;
         menuOrder = "60.3"
 )
 public class IndexBases
-        extends EstatioDomainService<IndexBase> {
+        extends UdoDomainRepositoryAndFactory<IndexBase> {
 
     public IndexBases() {
         super(IndexBases.class, IndexBase.class);

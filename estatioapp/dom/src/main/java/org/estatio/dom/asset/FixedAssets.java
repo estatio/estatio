@@ -23,12 +23,12 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(menuOrder = "10", repositoryFor = FixedAsset.class)
 @Hidden
-public class FixedAssets extends EstatioDomainService<FixedAsset> {
+public class FixedAssets extends UdoDomainRepositoryAndFactory<FixedAsset> {
 
     public FixedAssets() {
         super(FixedAssets.class, FixedAsset.class);

@@ -21,18 +21,20 @@ package org.estatio.dom.geography;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -59,8 +61,9 @@ import org.estatio.dom.WithReferenceUnique;
 })
 @Immutable
 @Bounded
-public class Country extends EstatioDomainObject<Country> 
-implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique {
+public class Country
+        extends EstatioDomainObject<Country>
+        implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {
 
 
     public Country() {
@@ -72,6 +75,13 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
         setReference(reference);
         setName(name);
         setAlpha2Code(alpha2Code);
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

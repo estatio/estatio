@@ -52,6 +52,7 @@ import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.lease.LeaseConstants;
@@ -79,9 +80,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column = "discriminator")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable
-public class InvoiceItem
+public abstract class InvoiceItem
         extends EstatioDomainObject<InvoiceItem>
-        implements WithInterval<InvoiceItem>, WithDescriptionGetter {
+        implements WithInterval<InvoiceItem>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
     public InvoiceItem() {
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");

@@ -19,6 +19,7 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +39,7 @@ public class FixedAssetRoleTest {
             newPojoTester()
                     .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
                     .withFixture(pojos(Party.class, PartyForTesting.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(pojo);
         }
 

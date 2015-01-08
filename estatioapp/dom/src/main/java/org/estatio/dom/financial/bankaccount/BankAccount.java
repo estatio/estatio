@@ -41,7 +41,8 @@ import org.estatio.dom.party.Party;
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @Bookmarkable
 @Immutable
-public class BankAccount extends FinancialAccount {
+public class BankAccount
+        extends FinancialAccount {
 
     private Party bank;
 

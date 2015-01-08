@@ -12,6 +12,14 @@
             "status": {}
           }
         },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
+        },
         "Dates": {
           "members": {
             "startDate": {},
@@ -23,7 +31,7 @@
           }
         }
       }
-    },
+    }, 
     {
       "span": 4,
       "memberGroups": {

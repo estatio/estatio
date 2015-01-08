@@ -19,15 +19,12 @@
 package org.estatio.dom.asset;
 
 import java.util.SortedSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Function;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -37,14 +34,15 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -104,7 +102,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole
         extends EstatioDomainObject<FixedAssetRole>
-        implements WithIntervalContiguous<FixedAssetRole> {
+        implements WithIntervalContiguous<FixedAssetRole>, WithApplicationTenancyProperty {
 
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =
             new WithIntervalContiguous.Helper<FixedAssetRole>(this);
@@ -113,6 +111,16 @@ public class FixedAssetRole
 
     public FixedAssetRole() {
         super("asset, startDate desc nullsLast, type, party");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getAsset().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

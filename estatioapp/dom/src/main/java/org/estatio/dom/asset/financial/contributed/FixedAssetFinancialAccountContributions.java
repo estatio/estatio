@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -36,7 +36,7 @@ import org.estatio.dom.financial.FinancialAccounts;
 
 @DomainService(menuOrder = "10")
 @Hidden
-public class FixedAssetFinancialAccountContributions extends EstatioService<FixedAssetFinancialAccountContributions> {
+public class FixedAssetFinancialAccountContributions extends UdoDomainService<FixedAssetFinancialAccountContributions> {
 
     public FixedAssetFinancialAccountContributions() {
         super(FixedAssetFinancialAccountContributions.class);

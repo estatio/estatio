@@ -114,6 +114,7 @@ language governing permissions and limitations under the License.
 
         <clover.version>3.1.12</clover.version>
         <maven.clover.licenseLocation>${siteBaseDir}/codequality/clover.license</maven.clover.licenseLocation>
+        <isis-module-security-dom.version>1.8.0-SNAPSHOT</isis-module-security-dom.version>
     </properties>
 
     <repositories>
@@ -528,21 +529,36 @@ language governing permissions and limitations under the License.
                 <version>${isis-module-audit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.isisaddons.module.publishing</groupId>
-                <artifactId>isis-module-publishing-dom</artifactId>
-                <version>${isis-module-publishing.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.isisaddons.module.settings</groupId>
-                <artifactId>isis-module-settings-dom</artifactId>
-                <version>${isis-module-settings.version}</version>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${isis-module-command.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.devutils</groupId>
                 <artifactId>isis-module-devutils-dom</artifactId>
                 <version>${isis-module-devutils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.excel</groupId>
+                <artifactId>isis-module-excel-dom</artifactId>
+                <version>${isis-module-excel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishing</groupId>
+                <artifactId>isis-module-publishing-dom</artifactId>
+                <version>${isis-module-publishing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.security</groupId>
+                <artifactId>isis-module-security-dom</artifactId>
+                <version>${isis-module-security-dom.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.settings</groupId>
+                <artifactId>isis-module-settings-dom</artifactId>
+                <version>${isis-module-settings.version}</version>
+            </dependency>
+
 
             <!-- UDO modules -->
             
@@ -642,12 +658,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-invoice</artifactId>
+                <artifactId>udo-dom-invoice</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-invoice</artifactId>
+                <artifactId>udo-dom-invoice</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -802,15 +818,15 @@ language governing permissions and limitations under the License.
             <!-- testing dependencies -->
 
             <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>0.9.8</version>
-            </dependency>
-
-            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>1.7.1</version>
             </dependency>
 
             <dependency>
@@ -832,21 +848,6 @@ language governing permissions and limitations under the License.
             </dependency>
 
 
-            <dependency>
-                <groupId>org.isisaddons.module.command</groupId>
-                <artifactId>isis-module-command-dom</artifactId>
-                <version>${isis-module-command.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.security</groupId>
-                <artifactId>isis-module-security-dom</artifactId>
-                <version>${isis-module-security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.excel</groupId>
-                <artifactId>isis-module-excel-dom</artifactId>
-                <version>${isis-module-excel.version}</version>
-            </dependency>
 
             <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
             <dependency>
@@ -1088,6 +1089,7 @@ language governing permissions and limitations under the License.
                 <module>udo/currency/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
+                <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
@@ -1111,6 +1113,7 @@ language governing permissions and limitations under the License.
                 <module>udo/currency/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
+                <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
@@ -1131,6 +1134,7 @@ language governing permissions and limitations under the License.
                 <module>udo/currency/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
+                <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>

@@ -26,6 +26,7 @@ import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -49,7 +50,7 @@ public class IndexBasesTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indices.findIndex("ISTAT-FOI");
+            Index index = indices.findIndex(IndexRefData.IT_REF);
             // when
             final IndexBase indexBase = indexBases.findByIndexAndDate(index, VT.ld(2013, 1, 1));
             // then

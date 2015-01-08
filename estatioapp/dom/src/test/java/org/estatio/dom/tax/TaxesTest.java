@@ -58,11 +58,11 @@ public class TaxesTest {
         };
     }
 
-    public static class FindTaxByReference extends TaxesTest {
+    public static class FindTaxByAtPathAndReference extends TaxesTest {
         @Test
-        public void findTaxByReference() {
+        public void happyCase() {
 
-            taxes.findTaxByReference("*REF?1*");
+            taxes.findByReference("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Tax.class));

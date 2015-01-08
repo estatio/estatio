@@ -30,7 +30,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -49,7 +49,7 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
+                    executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
                 }
             });
         }
@@ -60,7 +60,7 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void forAccount() {
             // when
-            FinancialAccount account = financialAccounts.findAccountByReference(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF);
+            FinancialAccount account = financialAccounts.findAccountByReference(BankAccountAndMandateForTopModelGb.REF);
             // then
             assertThat(account, is(notNullValue()));
             Assert.assertThat(account instanceof BankAccount, is(true));

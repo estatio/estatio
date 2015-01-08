@@ -19,7 +19,8 @@
 package org.estatio.fixture.party;
 
 import javax.inject.Inject;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
@@ -41,6 +42,7 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
     protected abstract void execute(ExecutionContext executionContext);
 
     protected Party createOrganisation(
+            String atPath,
             String partyReference,
             String partyName,
             String address1,
@@ -54,7 +56,9 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
             String emailAddress,
             ExecutionContext executionContext) {
 
-        Party party = organisations.newOrganisation(partyReference, partyName);
+        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+
+        Party party = organisations.newOrganisation(partyReference, partyName, applicationTenancy);
 
         createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
 
@@ -134,5 +138,8 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
 
     @Inject
     protected CommunicationChannelContributions communicationChannelContributedActions;
+
+    @Inject
+    protected ApplicationTenancies applicationTenancies;
 
 }

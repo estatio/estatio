@@ -28,6 +28,7 @@ import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
+import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -52,7 +53,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indices.findIndex("ISTAT-FOI");
+            Index index = indices.findIndex(IndexRefData.IT_REF);
             // when, then
             assertThat(indexValues.findIndexValueByIndexAndStartDate(index, VT.ld(2013, 1, 1)).getValue(), is(VT.bd("106.7000")));
             assertThat(indexValues.findIndexValueByIndexAndStartDate(index, VT.ld(2013, 10, 1)).getValue(), is(VT.bd("107.1000")));
@@ -75,7 +76,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Index index = indices.findIndex("ISTAT-FOI");
+            Index index = indices.findIndex(IndexRefData.IT_REF);
             final IndexValue indexValue = indexValues.findLastByIndex(index);
             assertThat(indexValue.getStartDate(), is(VT.ld(2013, 12, 01)));
         }

@@ -58,7 +58,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        Lease lease = leases.newLease(reference, name, null, startDate, null, endDate, landlord, tenant);
+        Lease lease = leases.newLease(reference, name, null, startDate, null, endDate, landlord, tenant, unit.getApplicationTenancy());
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {

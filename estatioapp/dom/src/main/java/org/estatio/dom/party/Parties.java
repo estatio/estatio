@@ -22,7 +22,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Party.class)
@@ -31,7 +31,7 @@ import org.estatio.dom.utils.StringUtils;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.1"
 )
-public class Parties extends EstatioDomainService<Party> {
+public class Parties extends UdoDomainRepositoryAndFactory<Party> {
 
     public Parties() {
         super(Parties.class, Party.class);

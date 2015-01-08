@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class ChargesTest extends EstatioIntegrationTest {
@@ -41,8 +42,10 @@ public class ChargesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenExists() throws Exception {
-            Charge charge = charges.findCharge("RENT");
-            Assert.assertEquals(charge.getReference(), "RENT");
+            // when
+            final Charge charge = charges.findByReference(ChargeRefData.IT_RENT);
+            // then
+            Assert.assertEquals(charge.getReference(), ChargeRefData.IT_RENT);
         }
 
 

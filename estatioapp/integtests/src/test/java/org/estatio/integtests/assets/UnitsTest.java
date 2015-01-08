@@ -26,8 +26,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -44,8 +44,8 @@ public class UnitsTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PropertyForOxf());
-                    executionContext.executeChild(this, new PropertyForKal());
+                    executionContext.executeChild(this, new _PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyForKalNl());
                 }
             });
         }
@@ -55,7 +55,7 @@ public class UnitsTest extends EstatioIntegrationTest {
 
         @Test
         public void findByReference() throws Exception {
-            final Unit unit = units.findUnitByReference(PropertyForOxf.unitReference("001"));
+            final Unit unit = units.findUnitByReference(_PropertyForOxfGb.unitReference("001"));
             // then
             Assert.assertEquals("OXF-001", unit.getReference());
         }

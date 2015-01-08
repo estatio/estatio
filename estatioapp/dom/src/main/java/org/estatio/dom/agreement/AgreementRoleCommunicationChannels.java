@@ -25,12 +25,14 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.estatio.dom.EstatioDomainService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannel.class)
 @Hidden
-public class AgreementRoleCommunicationChannels extends EstatioDomainService<AgreementRoleCommunicationChannel> {
+public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
 
 
     public AgreementRoleCommunicationChannels() {
@@ -55,6 +57,12 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
             final CommunicationChannel communicationChannel) {
         return allMatches("findByCommunicationChannel",
                 "communicationChannel", communicationChannel);
+    }
+
+    @Programmatic
+    public Iterable<? extends EstatioDomainObject<?>> findByAgreement(final Agreement agreement) {
+        return allMatches("findByAgreement",
+                "agreement", agreement);
     }
 
     @Subscribe
@@ -92,4 +100,5 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
     private static List<AgreementRoleCommunicationChannel> getAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev) {
         return (List<AgreementRoleCommunicationChannel>) ev.get(KEY);
     }
+
 }

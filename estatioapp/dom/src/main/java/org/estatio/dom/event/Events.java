@@ -25,11 +25,11 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "85", repositoryFor = Event.class)
 @Hidden
-public class Events extends EstatioDomainService<Event> {
+public class Events extends UdoDomainRepositoryAndFactory<Event> {
 
     public Events() {
         super(Events.class, Event.class);

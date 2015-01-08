@@ -19,13 +19,11 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -34,14 +32,15 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Activities;
 import org.estatio.dom.lease.tags.Activity;
@@ -101,10 +100,22 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 public class Occupancy
         extends EstatioDomainObject<Occupancy>
-        implements WithIntervalMutable<Occupancy>, Taggable {
+        implements WithIntervalMutable<Occupancy>, Taggable, WithApplicationTenancyProperty {
 
     public Occupancy() {
         super("lease, startDate desc nullsLast, unit");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        // could equally have derived from the lease;
+        // they should always be in sync.
+        return getUnit().getApplicationTenancy();
     }
 
     // //////////////////////////////////////
@@ -356,7 +367,7 @@ public class Occupancy
 
     @Programmatic
     public Occupancy setBrandName(final String name) {
-        setBrand(brands.findOrCreate(name));
+        setBrand(brands.findOrCreate(getApplicationTenancy(), name));
         return this;
     }
 

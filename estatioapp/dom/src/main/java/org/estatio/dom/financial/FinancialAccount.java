@@ -19,28 +19,27 @@
 package org.estatio.dom.financial;
 
 import java.math.BigDecimal;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -79,10 +78,20 @@ import org.estatio.dom.party.Party;
 @Immutable
 public class FinancialAccount
         extends EstatioDomainObject<FinancialAccount>
-        implements WithNameGetter, WithReferenceUnique {
+        implements WithNameGetter, WithReferenceUnique,     WithApplicationTenancyCountry {
 
     public FinancialAccount() {
         super("type, reference");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getOwner().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

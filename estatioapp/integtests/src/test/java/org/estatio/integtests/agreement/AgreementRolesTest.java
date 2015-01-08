@@ -18,25 +18,18 @@
  */
 package org.estatio.integtests.agreement;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
 import org.apache.isis.applib.services.wrapper.InvalidException;
-
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -52,9 +45,14 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Party.RemoveEvent;
 import org.estatio.dom.party.Persons;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
-import org.estatio.fixture.party.OrganisationForTopModel;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class AgreementRolesTest extends EstatioIntegrationTest {
 
@@ -79,6 +77,10 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
     @Inject
     AgreementRoleTypes agreementRoleTypes;
 
+    @Inject
+    ApplicationTenancies applicationTenancies;
+
+
     Party party;
     Agreement agreement;
     AgreementType agreementType;
@@ -90,15 +92,15 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
             }
         });
     }
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(LeaseForOxfTopModel001.TENANT_REFERENCE);
-        agreement = agreements.findAgreementByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+        agreement = agreements.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
         agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 
@@ -172,7 +174,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
 
@@ -180,8 +182,10 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            oldParty = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
-            newParty = organisations.newOrganisation("TEST", "Test");
+            oldParty = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+            // EST-467: shouldn't be using global here.
+            ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
+            newParty = organisations.newOrganisation("TEST", "Test", applicationTenancy);
         }
 
         @Test

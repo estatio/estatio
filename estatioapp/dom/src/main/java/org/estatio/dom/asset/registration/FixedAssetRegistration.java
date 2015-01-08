@@ -24,15 +24,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
@@ -40,6 +34,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -62,10 +63,20 @@ import org.apache.isis.applib.annotation.Programmatic;
 @Immutable
 public abstract class FixedAssetRegistration
         extends EstatioDomainObject<FixedAssetRegistration>
-        implements WithIntervalMutable<FixedAssetRegistration>, Chained<FixedAssetRegistration> {
+        implements WithIntervalMutable<FixedAssetRegistration>, Chained<FixedAssetRegistration>, WithApplicationTenancyProperty {
 
     public FixedAssetRegistration() {
         super("subject,type");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getSubject().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

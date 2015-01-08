@@ -19,6 +19,7 @@
 package org.estatio.dom.index;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,7 @@ public class IndexBaseTest {
             newPojoTester()
                     .withFixture(pojos(Index.class))
                     .withFixture(pojos(IndexBase.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new IndexBase());
         }
     }

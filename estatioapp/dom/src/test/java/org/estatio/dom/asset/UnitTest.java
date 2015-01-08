@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.asset;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.junit.Test;
@@ -33,6 +34,7 @@ public class UnitTest {
             newPojoTester()
                     .withFixture(pojos(Property.class))
                     .withFixture(pojos(Location.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Unit() {
                     });
         }

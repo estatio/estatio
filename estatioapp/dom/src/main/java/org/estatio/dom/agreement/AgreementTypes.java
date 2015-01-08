@@ -23,11 +23,11 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementType.class)
 @Hidden
-public class AgreementTypes extends EstatioDomainService<AgreementType> {
+public class AgreementTypes extends UdoDomainRepositoryAndFactory<AgreementType> {
 
     public AgreementTypes() {
         super(AgreementTypes.class, AgreementType.class);

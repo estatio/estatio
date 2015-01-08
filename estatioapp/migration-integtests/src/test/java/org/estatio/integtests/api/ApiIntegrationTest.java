@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.inject.Inject;
 import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.joda.time.LocalDate;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
@@ -51,8 +52,8 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.financial.*;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -75,41 +76,41 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                     protected void execute(ExecutionContext executionContext) {
                         executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                        executionContext.executeChild(this, new PersonForJohnDoe());
-                        executionContext.executeChild(this, new PersonForLinusTorvalds());
+                        executionContext.executeChild(this, new PersonForJohnDoeNl());
+                        executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
 
 
-                        executionContext.executeChild(this, new OrganisationForHelloWorld());
-                        executionContext.executeChild(this, new PropertyForOxf());
-                        executionContext.executeChild(this, new BankAccountForHelloWorld());
+                        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                        executionContext.executeChild(this, new _PropertyForOxfGb());
+                        executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
 
-                        executionContext.executeChild(this, new OrganisationForAcme());
-                        executionContext.executeChild(this, new PropertyForKal());
-                        executionContext.executeChild(this, new BankAccountForAcme());
+                        executionContext.executeChild(this, new OrganisationForAcmeNl());
+                        executionContext.executeChild(this, new PropertyForKalNl());
+                        executionContext.executeChild(this, new BankAccountForAcmeNl());
 
 
-                        executionContext.executeChild(this, new OrganisationForTopModel());
+                        executionContext.executeChild(this, new OrganisationForTopModelGb());
                         executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-                        executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
+                        executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
 
-                        executionContext.executeChild(this, new OrganisationForMediaX());
-                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
-                        executionContext.executeChild(this, new BankAccountForMediaX());
+                        executionContext.executeChild(this, new OrganisationForMediaXGb());
+                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
+                        executionContext.executeChild(this, new BankAccountForMediaXGb());
 
-                        executionContext.executeChild(this, new OrganisationForPoison());
-                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+                        executionContext.executeChild(this, new OrganisationForPoisonNl());
+                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                        executionContext.executeChild(this, new BankAccountAndMandateForPoison());
+                        executionContext.executeChild(this, new _BankAccountAndMandateForPoisonNl());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
-                        executionContext.executeChild(this, new OrganisationForPret());
-                        executionContext.executeChild(this, new LeaseForOxfPret004());
-                        executionContext.executeChild(this, new BankAccountForPret());
+                        executionContext.executeChild(this, new OrganisationForPretGb());
+                        executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                        executionContext.executeChild(this, new BankAccountForPretGb());
 
-                        executionContext.executeChild(this, new OrganisationForMiracle());
-                        executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
-                        executionContext.executeChild(this, new BankAccountForMiracle());
+                        executionContext.executeChild(this, new OrganisationForMiracleGb());
+                        executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
+                        executionContext.executeChild(this, new BankAccountForMiracleGb());
                     }
                 }
         );
@@ -165,6 +166,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
     private ChargeGroups chargeGroups;
     @Inject
     private Charges charges;
+    @Inject
+    private ApplicationTenancies applicationTenancies;
 
     @Test
     public void t00_refData() throws Exception {
@@ -186,23 +189,23 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
         assertThat(state.getName(), is("North Holland"));
         assertThat(state.getCountry(), is(netherlands));
 
-        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21.0), dt(1980, 1, 1), "APITAXEXTRATEREF");
-        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21), dt(1980, 1, 1), "APITAXEXTRATEREF");
+        api.putTax("/nl", "APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21.0), dt(1980, 1, 1), "APITAXEXTRATEREF");
+        api.putTax("/nl", "APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21), dt(1980, 1, 1), "APITAXEXTRATEREF");
 
-        final Tax tax = taxes.findTaxByReference("APITAXREF");
+        final Tax tax = taxes.findByReference("APITAXREF");
         Assert.assertNotNull(tax);
         assertThat(tax.getReference(), is("APITAXREF"));
         assertThat(tax.getName(), is("APITAX Name"));
         Assert.assertNotNull(tax.percentageFor(clockService.now()));
 
-        api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APISORTORDER", "APICHARGEGROUP", "APICHARGEGROUPNAME", "APICHARGEEXTREF");
+        api.putCharge("/nl", "APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APISORTORDER", "APICHARGEGROUP", "APICHARGEGROUPNAME", "APICHARGEEXTREF");
 
         final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
         Assert.assertNotNull(chargeGroup);
         assertThat(chargeGroup.getReference(), is("APICHARGEGROUP"));
         assertThat(chargeGroup.getName(), is("APICHARGEGROUPNAME"));
 
-        final Charge charge = charges.findCharge("APICHARGEREF");
+        final Charge charge = charges.findByReference("APICHARGEREF");
         Assert.assertNotNull(charge);
         assertThat(charge.getReference(), is("APICHARGEREF"));
         assertThat(charge.getName(), is("APICHARGENAME"));
@@ -213,15 +216,15 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t01_putAsset() throws Exception {
-        api.putProperty("APIPROP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT", "APIEXTREF");
-        api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", dt(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
-        Assert.assertThat(properties.findProperties("APIPROP").size(), Is.is(1));
+        api.putProperty("APIP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT", "APIEXTREF", "/nl");
+        api.putUnit("APIUNIT", "APIP", "APIONWER", "Name", "BOUTIQUE", dt(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
+        Assert.assertThat(properties.findProperties("APIP").size(), Is.is(1));
     }
 
     @Test
     public void t02_putOrganisation() {
-        api.putOrganisation("APITENANT", "API Tenant", "vat", "fiscal");
-        api.putOrganisation("APILANDLORD", "API Landlord", "vat", "fiscal");
+        api.putOrganisation("/nl", "APITENANT", "API Tenant", "vat", "fiscal");
+        api.putOrganisation("/nl", "APILANDLORD", "API Landlord", "vat", "fiscal");
         Assert.assertThat(parties.findParties("API*").size(), Is.is(2));
     }
 
@@ -244,7 +247,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", "ACTIVE", START_DATE, dt(2021, 12, 31), null, null, "APIPROP");
+        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", "ACTIVE", START_DATE, dt(2021, 12, 31), null, null, "APIP");
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
@@ -279,13 +282,13 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.ACTIVE.name());
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.ACTIVE.name(), "/nl/APIP/_");
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 
     @Test
     public void t07_putLeaseTermWorks() throws Exception {
-        api.putLeaseTermForIndexableRent(
+        api.putLeaseTermForIndexableRent("/nl",
                 "APILEASE",
                 "APITENANT",
                 "APIUNIT",
@@ -312,9 +315,9 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 null,
                 null,
                 null,
-                null,
-                null);
-        api.putLeaseTermForIndexableRent("APILEASE",
+                null, null);
+        api.putLeaseTermForIndexableRent("/nl",
+                "APILEASE",
                 "APITENANT",
                 "APIUNIT",
                 BigInteger.valueOf(1),
@@ -340,8 +343,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 null,
                 null,
                 null,
-                null,
-                null);
+                null, null);
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
     }

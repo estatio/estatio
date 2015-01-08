@@ -21,17 +21,19 @@ package org.estatio.dom.geography;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 /**
  * Represents a geographic {@link State} {@link #getCountry() within} a {@link Country}.
@@ -63,13 +65,20 @@ import org.estatio.dom.WithReferenceUnique;
 })
 @Immutable
 public class State 
-    extends EstatioDomainObject<State> 
-    implements WithReferenceComparable<State>, WithReferenceUnique, WithNameUnique {
+    extends EstatioDomainObject<State>
+    implements WithReferenceComparable<State>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {
 
     public State() {
         super("reference");
     }
     
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+    }
+
     // //////////////////////////////////////
 
     private String reference;
