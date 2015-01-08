@@ -47,7 +47,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.TypicalLength;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithDescriptionGetter;
@@ -80,7 +80,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable
 public class InvoiceItem
-        extends EstatioMutableObject<InvoiceItem>
+        extends EstatioDomainObject<InvoiceItem>
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {

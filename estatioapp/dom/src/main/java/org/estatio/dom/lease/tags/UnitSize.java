@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
@@ -60,7 +60,7 @@ import org.estatio.dom.guarantee.Guarantee;
 @Bounded
 @Immutable
 public class UnitSize
-        extends EstatioMutableObject<UnitSize>
+        extends EstatioDomainObject<UnitSize>
         implements WithNameUnique, WithNameComparable<UnitSize> {
 
     public UnitSize() {

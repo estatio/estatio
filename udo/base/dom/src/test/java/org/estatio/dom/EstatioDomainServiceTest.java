@@ -35,7 +35,7 @@ public class EstatioDomainServiceTest {
 
         private SomeDomainService someDomainService;
 
-        static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
+        static class SomeDomainObject extends UdoDomainObject<SomeDomainObject> {
             public SomeDomainObject() {
                 super(null);
             }
@@ -147,7 +147,7 @@ public class EstatioDomainServiceTest {
 
         private SomeDomainService someDomainService;
 
-        static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
+        static class SomeDomainObject extends UdoDomainObject<SomeDomainObject> {
             public SomeDomainObject() {
                 super(null);
             }
@@ -186,7 +186,7 @@ public class EstatioDomainServiceTest {
     public static class NewQueryDefault extends EstatioDomainServiceTest {
 
         private SomeDomainService someDomainService;
-        static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
+        static class SomeDomainObject extends UdoDomainObject<SomeDomainObject> {
             public SomeDomainObject() {
                 super(null);
             }

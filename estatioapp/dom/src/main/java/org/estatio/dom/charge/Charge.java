@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -62,7 +62,7 @@ import org.estatio.dom.tax.Tax;
 @Bounded
 @Immutable
 public class Charge
-        extends EstatioMutableObject<Charge>
+        extends EstatioDomainObject<Charge>
         implements WithReferenceUnique, WithNameUnique {
 
     public Charge() {

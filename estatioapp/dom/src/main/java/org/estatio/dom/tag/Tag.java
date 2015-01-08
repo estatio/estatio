@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 
@@ -58,7 +58,7 @@ import org.estatio.dom.WithNameGetter;
 })
 @Immutable
 public class Tag 
-        extends EstatioMutableObject<Tag> 
+        extends EstatioDomainObject<Tag> 
         implements WithNameGetter {
 
     public Tag() {

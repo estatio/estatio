@@ -45,7 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -92,7 +92,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         members = { "role", "startDate", "type", "communicationChannel" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRoleCommunicationChannel
-        extends EstatioMutableObject<AgreementRoleCommunicationChannel>
+        extends EstatioDomainObject<AgreementRoleCommunicationChannel>
         implements WithIntervalContiguous<AgreementRoleCommunicationChannel> {
 
     private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =

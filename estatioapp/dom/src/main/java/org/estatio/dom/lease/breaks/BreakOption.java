@@ -45,7 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventSubject;
@@ -71,7 +71,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
         members = { "lease", "type", "exerciseDate" })
 @Immutable
 public abstract class BreakOption
-        extends EstatioMutableObject<BreakOption>
+        extends EstatioDomainObject<BreakOption>
         implements EventSubject {
 
     public BreakOption() {

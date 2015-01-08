@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
@@ -79,7 +79,7 @@ import org.estatio.dom.WithReferenceComparable;
 @Bounded
 @Immutable
 public class Index
-        extends EstatioMutableObject<Index>
+        extends EstatioDomainObject<Index>
         implements WithReferenceComparable<Index>, WithNameUnique {
 
     public Index() {

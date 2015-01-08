@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
 
 /**
@@ -66,7 +66,7 @@ import org.estatio.dom.WithStartDate;
         name = "IndexValue_indexBase_startDate_IDX",
         members = { "indexBase", "startDate" })
 public class IndexValue
-        extends EstatioMutableObject<IndexValue>
+        extends EstatioDomainObject<IndexValue>
         implements WithStartDate {
 
     public static final int VALUE_SCALE = 4;

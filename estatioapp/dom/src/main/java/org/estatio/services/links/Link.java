@@ -21,12 +21,12 @@ package org.estatio.services.links;
 
 import javax.jdo.annotations.IdentityType;
 
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.JdoColumnLength;
-
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.JdoColumnLength;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE,

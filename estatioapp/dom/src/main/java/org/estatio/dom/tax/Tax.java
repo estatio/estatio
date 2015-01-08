@@ -39,7 +39,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
@@ -67,7 +67,7 @@ import org.estatio.dom.WithReferenceUnique;
 @Bounded
 @Immutable
 public class Tax
-        extends EstatioMutableObject<Tax>
+        extends EstatioDomainObject<Tax>
         implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
 
     public Tax() {

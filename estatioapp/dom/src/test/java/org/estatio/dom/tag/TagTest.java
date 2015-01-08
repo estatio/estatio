@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithNameComparable;
 
 public class TagTest {
@@ -44,7 +44,7 @@ public class TagTest {
 
     public static class CompareTo extends ComparableContractTest_compareTo<Tag> {
 
-        public static class SomeTaggableObject extends EstatioDomainObject<SomeTaggableObject>
+        public static class SomeTaggableObject extends UdoDomainObject<SomeTaggableObject>
                 implements Taggable, WithNameComparable<SomeTaggableObject> {
 
             public SomeTaggableObject() {

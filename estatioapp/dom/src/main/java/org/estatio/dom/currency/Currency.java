@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
@@ -71,7 +71,7 @@ import org.estatio.dom.WithReferenceUnique;
 @Immutable
 @AutoComplete(repository = Currencies.class, action = "autoComplete")
 public class Currency
-        extends EstatioMutableObject<Currency>
+        extends EstatioDomainObject<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique {
 
     public Currency() {

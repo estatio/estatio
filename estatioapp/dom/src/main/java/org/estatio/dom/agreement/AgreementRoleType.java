@@ -27,14 +27,14 @@ import javax.jdo.annotations.Unique;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
-import org.estatio.dom.EstatioImmutableObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithTitleComparable;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithTitleComparable;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -60,7 +60,7 @@ import org.apache.isis.applib.annotation.Title;
 })
 @Immutable
 @Bounded
-public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType>
+public class AgreementRoleType extends EstatioDomainObject<AgreementRoleType>
         implements WithTitleComparable<AgreementRoleType> {
 
     public AgreementRoleType() {

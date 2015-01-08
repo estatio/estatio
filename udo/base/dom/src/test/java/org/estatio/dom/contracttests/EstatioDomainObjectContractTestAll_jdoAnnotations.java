@@ -38,10 +38,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.EstatioImmutableObject;
-import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.TitledEnum;
+import org.estatio.dom.UdoDomainObject;
 
 /**
  * Automatically tests all enums implementing {@link TitledEnum}.
@@ -55,15 +53,14 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
 
         System.out.println("EstatioDomainObjectContractTestAll_jdoAnnotations");
 
-        Set<Class<? extends EstatioDomainObject>> subtypes =
-                reflections.getSubTypesOf(EstatioDomainObject.class);
-        for (Class<? extends EstatioDomainObject> subtype : subtypes) {
+        Set<Class<? extends UdoDomainObject>> subtypes =
+                reflections.getSubTypesOf(UdoDomainObject.class);
+        for (Class<? extends UdoDomainObject> subtype : subtypes) {
             if (subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass() || subtype.getName().endsWith("ForTesting")) {
                 // skip (probably a testing class)
                 continue;
             }
-            if (EstatioImmutableObject.class == subtype || 
-                EstatioMutableObject.class == subtype) {
+            if (UdoDomainObject.class == subtype) {
                 // skip
                 continue;
             }
@@ -113,7 +110,7 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                 
             }
             
-            if (subtype.getSuperclass().equals(EstatioMutableObject.class)) {
+            if (subtype.getSuperclass().equals(UdoDomainObject.class)) {
                 // must have a @Version(..., column="version")
                 final Version version = getAnnotationOfTypeOfItsSupertypes(subtype, Version.class);
                  

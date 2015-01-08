@@ -53,7 +53,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
@@ -139,7 +139,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable
 public abstract class LeaseTerm
-        extends EstatioMutableObject<LeaseTerm>
+        extends EstatioDomainObject<LeaseTerm>
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence, InvoiceSource {
 
     public LeaseTerm() {

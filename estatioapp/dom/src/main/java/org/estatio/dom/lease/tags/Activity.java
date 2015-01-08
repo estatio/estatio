@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.financial.utils.IBANValidator;
@@ -54,7 +54,7 @@ import org.estatio.dom.financial.utils.IBANValidator;
 @Bounded
 @Immutable
 public class Activity
-        extends EstatioMutableObject<Activity>
+        extends EstatioDomainObject<Activity>
         implements WithNameGetter {
 
     public Activity() {

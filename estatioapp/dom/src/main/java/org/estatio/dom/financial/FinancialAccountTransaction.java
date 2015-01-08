@@ -21,7 +21,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.JdoColumnScale;
 
@@ -54,7 +54,7 @@ import org.estatio.dom.JdoColumnScale;
 @Unique(
         name = "FinancialAccountTransaction_financialAccount_transactionDate_sequence_UNQ",
         members = { "financialAccount", "transactionDate" })
-public class FinancialAccountTransaction extends EstatioImmutableObject<FinancialAccountTransaction> {
+public class FinancialAccountTransaction extends EstatioDomainObject<FinancialAccountTransaction> {
 
     public FinancialAccountTransaction() {
         super("financialAccount,transactionDate,description,amount");

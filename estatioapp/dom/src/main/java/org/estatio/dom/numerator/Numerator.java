@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 
 /**
@@ -74,7 +74,7 @@ import org.estatio.dom.JdoColumnLength;
 })
 @Immutable
 public class Numerator
-        extends EstatioMutableObject<Numerator>
+        extends EstatioDomainObject<Numerator>
         implements Comparable<Numerator>, BookmarkHolder {
 
     public Numerator() {

@@ -49,7 +49,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -149,7 +149,7 @@ import org.estatio.dom.party.Party;
 })
 @Bookmarkable
 @Immutable
-public class Invoice extends EstatioMutableObject<Invoice> {
+public class Invoice extends EstatioDomainObject<Invoice> {
 
     public Invoice() {
         super("invoiceNumber, collectionNumber, buyer, dueDate, lease, uuid");

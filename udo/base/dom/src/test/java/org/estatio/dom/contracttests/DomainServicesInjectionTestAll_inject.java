@@ -35,7 +35,7 @@ import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.EstatioDomainService;
 
 
@@ -88,9 +88,9 @@ public class DomainServicesInjectionTestAll_inject{
             }
         }
         
-        Set<Class<? extends EstatioDomainObject>> domainObjectClasses = 
-                reflections.getSubTypesOf(EstatioDomainObject.class);
-        for (final Class<? extends EstatioDomainObject> subtype : domainObjectClasses) {
+        Set<Class<? extends UdoDomainObject>> domainObjectClasses = 
+                reflections.getSubTypesOf(UdoDomainObject.class);
+        for (final Class<? extends UdoDomainObject> subtype : domainObjectClasses) {
             if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
                 continue;
@@ -124,7 +124,7 @@ public class DomainServicesInjectionTestAll_inject{
 
 
             try {
-                final EstatioDomainObject edo = subtype.newInstance();
+                final UdoDomainObject edo = subtype.newInstance();
                 for (final InjectorAndField injector : injectorAndFields) {
                     Predicate<? super Field> injectorFields = new Predicate<Field>() {
                         public boolean apply(Field f) {

@@ -52,7 +52,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithInterval;
@@ -112,7 +112,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable
 @Immutable
 public abstract class Agreement
-        extends EstatioMutableObject<Agreement>
+        extends EstatioDomainObject<Agreement>
         implements WithReferenceComparable<Agreement>,
         WithReferenceUnique,
         WithIntervalMutable<Agreement>, Chained<Agreement>,

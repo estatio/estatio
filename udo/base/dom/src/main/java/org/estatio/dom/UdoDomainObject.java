@@ -24,7 +24,7 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.services.clock.ClockService;
 
-public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> 
+public abstract class UdoDomainObject<T extends UdoDomainObject<T>> 
         extends AbstractDomainObject 
         implements Comparable<T> {
 
@@ -39,7 +39,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
 
     private final String keyProperties;
 
-    public EstatioDomainObject(final String keyProperties) {
+    public UdoDomainObject(final String keyProperties) {
         this.keyProperties = keyProperties;
     }
 

@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
@@ -53,7 +53,7 @@ import org.estatio.dom.WithReferenceComparable;
 @Immutable
 @Bounded
 public class LeaseType
-        extends EstatioImmutableObject<LeaseType>
+        extends EstatioDomainObject<LeaseType>
         implements WithReferenceComparable<LeaseType>,
         WithNameUnique {
 

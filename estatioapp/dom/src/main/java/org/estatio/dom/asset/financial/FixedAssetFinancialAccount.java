@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.FinancialAccount;
 
@@ -58,7 +58,7 @@ import org.estatio.dom.financial.FinancialAccount;
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
 public class FixedAssetFinancialAccount
-        extends EstatioMutableObject<FixedAssetFinancialAccount> {
+        extends EstatioDomainObject<FixedAssetFinancialAccount> {
 
     public FixedAssetFinancialAccount() {
         super("fixedAsset,financialAccount");

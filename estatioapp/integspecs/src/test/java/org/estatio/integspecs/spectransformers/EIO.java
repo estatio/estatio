@@ -16,13 +16,12 @@
  */
 package org.estatio.integspecs.spectransformers;
 
-import cucumber.api.Transformer;
-
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
-import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleTypes;
+
+import cucumber.api.Transformer;
 
 
 /**

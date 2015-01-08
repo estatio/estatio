@@ -27,7 +27,7 @@ import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 
 /**
@@ -62,7 +62,7 @@ import org.estatio.dom.JdoColumnLength;
 })
 @Immutable
 public class Event
-        extends EstatioMutableObject<Event> 
+        extends EstatioDomainObject<Event> 
         implements CalendarEventable {
 
     private static final int NUMBER_OF_LINES = 8;

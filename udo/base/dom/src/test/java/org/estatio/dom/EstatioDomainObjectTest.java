@@ -37,7 +37,7 @@ public class EstatioDomainObjectTest {
         @Mock
         private ClockService mockClockService;
 
-        static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
+        static class SomeDomainObject extends UdoDomainObject<SomeDomainObject> {
             public SomeDomainObject() {
                 super(null);
             }
@@ -114,7 +114,7 @@ public class EstatioDomainObjectTest {
             }
         }
 
-        public static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject>  {
+        public static class SomeDomainObject extends UdoDomainObject<SomeDomainObject>  {
             public SomeDomainObject() {
                 super("withCode,withReference,withName,withDescription,withTitle");
             }

@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Optional;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.lease.Lease;
 
@@ -38,7 +38,7 @@ import org.estatio.dom.lease.Lease;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
-public class LeaseAssignment extends EstatioMutableObject<LeaseAssignment> {
+public class LeaseAssignment extends EstatioDomainObject<LeaseAssignment> {
 
     
     public LeaseAssignment() {

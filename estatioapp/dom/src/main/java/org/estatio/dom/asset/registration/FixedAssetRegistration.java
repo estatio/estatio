@@ -27,7 +27,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -61,7 +61,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 })
 @Immutable
 public abstract class FixedAssetRegistration
-        extends EstatioMutableObject<FixedAssetRegistration>
+        extends EstatioDomainObject<FixedAssetRegistration>
         implements WithIntervalMutable<FixedAssetRegistration>, Chained<FixedAssetRegistration> {
 
     public FixedAssetRegistration() {

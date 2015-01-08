@@ -56,7 +56,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
@@ -125,7 +125,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable
 public class LeaseItem
-        extends EstatioMutableObject<LeaseItem>
+        extends EstatioDomainObject<LeaseItem>
         implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     private static final int PAGE_SIZE = 15;

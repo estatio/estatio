@@ -47,11 +47,11 @@ import org.apache.isis.applib.annotation.Hidden;
  * will end up putting a <tt>version</tt> column in both tables, and they are not 
  * kept in sync).
  */
-public abstract class EstatioMutableObject<T extends EstatioDomainObject<T>> 
-        extends EstatioDomainObject<T> {
+public abstract class EstatioDomainObject<T extends UdoDomainObject<T>> 
+        extends UdoDomainObject<T> {
 
 
-    public EstatioMutableObject(
+    public EstatioDomainObject(
             final String keyProperties) {
         super(keyProperties);
     }

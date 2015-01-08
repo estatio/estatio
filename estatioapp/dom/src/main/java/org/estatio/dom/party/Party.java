@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
 import org.estatio.app.security.EstatioRole;
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameComparable;
@@ -85,7 +85,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 @Bookmarkable
 @Immutable
 public abstract class Party
-        extends EstatioMutableObject<Party>
+        extends EstatioDomainObject<Party>
         implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner, AgreementRoleHolder {
 
     public Party() {

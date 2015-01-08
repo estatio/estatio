@@ -44,7 +44,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
-import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -95,7 +95,7 @@ import org.estatio.dom.WithReferenceGetter;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable
 public abstract class CommunicationChannel
-        extends EstatioMutableObject<CommunicationChannel>
+        extends EstatioDomainObject<CommunicationChannel>
         implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
