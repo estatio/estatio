@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom-currency</artifactId>
+    <artifactId>udo-dom-currency</artifactId>
     <packaging>jar</packaging>
     
     <name>UDO Currency DOM</name>
@@ -117,11 +117,11 @@ language governing permissions and limitations under the License.
     <dependencies>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
+            <artifactId>udo-base</artifactId>
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
+            <artifactId>udo-base</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

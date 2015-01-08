@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-base</artifactId>
+    <artifactId>udo-base</artifactId>
     <packaging>jar</packaging>
     
     <name>UDO Base Dom</name>

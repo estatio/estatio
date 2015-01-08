@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom-tag</artifactId>
+    <artifactId>udo-dom-tag</artifactId>
     <packaging>jar</packaging>
     
     <name>UDO Tag DOM</name>
@@ -117,11 +117,11 @@ language governing permissions and limitations under the License.
     <dependencies>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
+            <artifactId>udo-base</artifactId>
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
+            <artifactId>udo-base</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

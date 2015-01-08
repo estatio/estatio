@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom-agreement</artifactId>
+    <artifactId>udo-dom-agreement</artifactId>
     <packaging>jar</packaging>
     
     <name>UDO Agreement DOM</name>

@@ -551,25 +551,12 @@ language governing permissions and limitations under the License.
             <!-- todo: eventually, each of these udo modules will be parented by its own udo-xxx parent -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-agreement</artifactId>
+                <artifactId>udo-dom-agreement</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-agreement</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-base</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-base</artifactId>
+                <artifactId>udo-dom-agreement</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -577,25 +564,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-charge</artifactId>
+                <artifactId>udo-base</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-charge</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-communicationchannel</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-communicationchannel</artifactId>
+                <artifactId>udo-base</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -603,25 +577,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-currency</artifactId>
+                <artifactId>udo-dom-charge</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-currency</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-event</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-event</artifactId>
+                <artifactId>udo-dom-charge</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -629,12 +590,51 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-geography</artifactId>
+                <artifactId>udo-dom-communicationchannel</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-geography</artifactId>
+                <artifactId>udo-dom-communicationchannel</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-currency</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-currency</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-event</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-event</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-geography</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-geography</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -655,25 +655,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-numerator</artifactId>
+                <artifactId>udo-dom-numerator</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-numerator</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-party</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-party</artifactId>
+                <artifactId>udo-dom-numerator</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -681,12 +668,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tag</artifactId>
+                <artifactId>udo-dom-party</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tag</artifactId>
+                <artifactId>udo-dom-party</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -694,12 +681,25 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tax</artifactId>
+                <artifactId>udo-dom-tag</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-tax</artifactId>
+                <artifactId>udo-dom-tag</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-tax</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-tax</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
