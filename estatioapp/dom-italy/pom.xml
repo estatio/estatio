@@ -136,10 +136,6 @@ language governing permissions and limitations under the License.
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party_asset</artifactId>
-        </dependency>
 
         <!-- testing -->
         <dependency>
