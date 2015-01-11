@@ -27,20 +27,16 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.services.linking.DeepLinkService;
-
-import org.isisaddons.wicket.svg.cpt.applib.InteractiveMap;
-import org.isisaddons.wicket.svg.cpt.applib.InteractiveMapAttribute;
-import org.isisaddons.wicket.svg.cpt.applib.InteractiveMapElement;
-
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.document.InteractiveMapDocument;
 import org.estatio.dom.document.InteractiveMapDocuments;
+import org.isisaddons.wicket.svg.cpt.applib.InteractiveMap;
+import org.isisaddons.wicket.svg.cpt.applib.InteractiveMapAttribute;
+import org.isisaddons.wicket.svg.cpt.applib.InteractiveMapElement;
 
 @DomainService
 public class InteractiveMapForFixedAssetService {
@@ -99,6 +95,11 @@ public class InteractiveMapForFixedAssetService {
 
     public List<InteractiveMapDocument> choices0ShowMap() {
         return documents.allDocuments();
+    }
+
+    public boolean hideShowMap(Property property, InteractiveMapForFixedAssetRepresentation representation) {
+        InteractiveMapDocument document = documents.findByFixedAsset(property);
+        return document == null;
     }
 
     // //////////////////////////////////////
