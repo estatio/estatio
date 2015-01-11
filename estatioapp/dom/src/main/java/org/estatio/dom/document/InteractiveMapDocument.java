@@ -41,7 +41,7 @@ import org.estatio.dom.asset.FixedAsset;
 @javax.jdo.annotations.Query(
         name = "findByFixedAsset", language = "JDOQL",
         value = "SELECT "
-                + "FROM org.estatio.dom.interactivemap.InteractiveMapDocument "
+                + "FROM org.estatio.dom.document.InteractiveMapDocument "
                 + "WHERE fixedAsset == :fixedAsset")
 @Bookmarkable
 @Named("Document")
