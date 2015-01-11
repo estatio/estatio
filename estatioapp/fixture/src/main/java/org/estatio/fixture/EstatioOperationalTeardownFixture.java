@@ -19,8 +19,11 @@
 package org.estatio.fixture;
 
 import javax.inject.Inject;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+
+import org.estatio.dom.document.InteractiveMapDocument;
 
 public class EstatioOperationalTeardownFixture extends FixtureScript {
 
@@ -32,6 +35,8 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
     private void deleteAllDirect() {
         
         deleteFrom("Numerator");
+
+        deleteFrom(InteractiveMapDocument.class.getSimpleName());
 
         deleteFrom("InvoiceItem");
         deleteFrom("Invoice");

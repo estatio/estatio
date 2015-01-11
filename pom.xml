@@ -98,6 +98,7 @@ language governing permissions and limitations under the License.
         <isis-wicket-excel.version>1.8.0-SNAPSHOT</isis-wicket-excel.version>
         <isis-wicket-fullcalendar2.version>1.8.0-SNAPSHOT</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.8.0-SNAPSHOT</isis-wicket-gmap3.version>
+        <isis-wicket-svg.version>1.8.0-SNAPSHOT</isis-wicket-svg.version>
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
@@ -895,6 +896,12 @@ language governing permissions and limitations under the License.
                 <version>${isis-wicket-excel.version}</version>
             </dependency>
 
+            <!-- SVG: https://github.com/jcvanderwal/isis-wicket-svg -->
+            <dependency>
+                <groupId>org.isisaddons.wicket.svg</groupId>
+                <artifactId>isis-wicket-svg-cpt</artifactId>
+                <version>${isis-wicket-svg.version}</version>
+            </dependency>
 
             <!-- domain services -->
 

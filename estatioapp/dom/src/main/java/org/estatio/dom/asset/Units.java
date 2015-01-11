@@ -19,6 +19,7 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -29,16 +30,16 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.RegEx;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Unit.class)
 @DomainServiceLayout(
-        named="Fixed Assets",
+        named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "10.2"
-)
+        menuOrder = "10.2")
 public class Units extends EstatioDomainService<Unit> {
 
     public Units() {
@@ -83,6 +84,12 @@ public class Units extends EstatioDomainService<Unit> {
         return firstMatch("findByReference", "reference", reference);
     }
 
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<Unit> findByProperty(final Property property) {
+        return allMatches("findByProperty", "property", property);
+    }
+
     // //////////////////////////////////////
 
     @Hidden
@@ -93,11 +100,11 @@ public class Units extends EstatioDomainService<Unit> {
     // //////////////////////////////////////
 
     @ActionLayout(
-        prototype = true
-    )
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    public List<Unit> allUnits() {
+            prototype = true
+            )
+            @ActionSemantics(Of.SAFE)
+            @MemberOrder(sequence = "99")
+            public List<Unit> allUnits() {
         return allInstances();
     }
 

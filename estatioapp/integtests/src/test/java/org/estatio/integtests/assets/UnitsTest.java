@@ -18,20 +18,26 @@
  */
 package org.estatio.integtests.assets;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class UnitsTest extends EstatioIntegrationTest {
 
@@ -63,6 +69,34 @@ public class UnitsTest extends EstatioIntegrationTest {
         @Test
         public void findByReferenceOrName() throws Exception {
             assertThat(units.findUnits("*XF*").size(), is(25));
+        }
+
+    }
+
+    public static class FindByProperty extends UnitsTest {
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new PropertyForOxf());
+                }
+            });
+        }
+
+        @Inject
+        private Units units;
+
+        @Inject
+        private Properties properties;
+
+        @Test
+        public void findByProperty() throws Exception {
+            final List<Unit> unitList = units.findByProperty(properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE));
+            // then
+            Assert.assertThat(unitList.size(), is(25));
         }
 
     }
