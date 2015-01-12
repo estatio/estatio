@@ -19,6 +19,7 @@
 package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -42,6 +43,7 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
     public static final String UNIT_REFERENCE = PropertyForOxf.unitReference("001");
     public static final String LANDLORD_REFERENCE = OrganisationForHelloWorld.PARTY_REFERENCE;
     public static final String TENANT_REFERENCE = OrganisationForTopModel.PARTY_REFERENCE;
+    public static final String BRAND = "Topmodel";
 
     @Inject
     private AgreementRoleTypes agreementRoleTypes;
@@ -68,7 +70,7 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
         Lease lease = createLease(
                 LEASE_REFERENCE, "Topmodel Lease",
                 UNIT_REFERENCE,
-                "Topmodel", "FASHION", "WOMEN",
+                BRAND, "FASHION", "WOMEN",
                 LANDLORD_REFERENCE,
                 TENANT_REFERENCE,
                 ld(2010, 7, 15), ld(2022, 7, 14), true, true, manager,

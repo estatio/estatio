@@ -104,7 +104,7 @@ import com.google.common.collect.Lists;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
                         + "WHERE occupancies.contains(lu) "
-                        + "   && (lu.unit.property == :property) "
+                        + "&& (lu.unit.property == :property) "
                         + "VARIABLES "
                         + "org.estatio.dom.lease.Occupancy lu"),
         @javax.jdo.annotations.Query(
@@ -112,8 +112,9 @@ import com.google.common.collect.Lists;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
                         + "WHERE occupancies.contains(lu) "
-                        + "&& (terminationDate == null || terminationDate <= :activeOnDate) "
-                        + "&& (lu.unit == :asset || lu.unit.property == :asset) "
+                        + "&& (tenancyStartDate == null || tenancyStartDate <= :activeOnDate) "
+                        + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
+                        + "&& (lu.unit.property == :asset) "
                         + "VARIABLES "
                         + "org.estatio.dom.lease.Occupancy lu"),
         @javax.jdo.annotations.Query(
@@ -308,7 +309,15 @@ public class Lease
             ) {
         setTenancyStartDate(startDate);
         setTenancyEndDate(endDate);
+        verifyAllOccupancies();
+        
         return this;
+    }
+
+    private void verifyAllOccupancies() {
+        for (Occupancy occupancy : occupancies){
+            occupancy.verify();
+        }
     }
 
     public LocalDate default0ChangeTenancyDates() {

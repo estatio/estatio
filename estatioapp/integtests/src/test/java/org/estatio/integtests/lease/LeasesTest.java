@@ -18,13 +18,13 @@
  */
 package org.estatio.integtests.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
+
 import javax.inject.Inject;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.asset.Properties;
@@ -33,12 +33,20 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
+import org.estatio.fixture.lease.LeaseForKalPoison001;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005;
+import org.estatio.fixture.lease.LeaseForOxfPoison003;
+import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class LeasesTest extends EstatioIntegrationTest {
 
@@ -97,7 +105,6 @@ public class LeasesTest extends EstatioIntegrationTest {
             Assert.assertEquals(LeaseForOxfTopModel001.LEASE_REFERENCE, lease.getReference());
         }
 
-
     }
 
     public static class FindLeases extends LeasesTest {
@@ -126,7 +133,6 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
 
     }
-
 
     public static class FindLeasesByProperty extends LeasesTest {
 
@@ -162,6 +168,33 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     }
 
+    public static class FindLeasesActiveOnDate extends LeasesTest {
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                }
+            });
+        }
+
+        @Inject
+        private Properties properties;
+
+        @Test
+        public void whenValidProperty() {
+            // given
+            final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            System.out.println(property);
+            // when
+            assertThat(leases.findLeasesActiveOnDate(property, new LocalDate(2010, 7, 14)).size(), is(0));
+            assertThat(leases.findLeasesActiveOnDate(property, new LocalDate(2010, 7, 15)).size(), is(1));
+        }
+    }
+
     public static class Renew extends LeasesTest {
 
         @Before
@@ -188,18 +221,13 @@ public class LeasesTest extends EstatioIntegrationTest {
             String newName = lease.default1Renew() + "-2";
             LocalDate newStartDate = lease.default2Renew();
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
-            Lease newLease = lease.renew(
-                    newReference,
-                    newName,
-                    newStartDate,
-                    newEndDate,
-                    true);
+            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate, true);
 
             // Old lease
             assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
 
             //
-            assertThat(newLease.getOccupancies().size(),  is(1));
+            assertThat(newLease.getOccupancies().size(), is(1));
 
             // New lease
             assertThat(newLease.getStartDate(), is(newStartDate));
@@ -210,7 +238,10 @@ public class LeasesTest extends EstatioIntegrationTest {
             //
 
             assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
-//        assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
+            // assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease,
+            // lease.getSecondaryParty(),
+            // agreementRoleTypes.findByTitle("Tenant"),
+            // lease.getStartDate()).getCommunicationChannels().size(), is(2));
 
         }
 
