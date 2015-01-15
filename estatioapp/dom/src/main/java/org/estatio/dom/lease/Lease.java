@@ -24,12 +24,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -76,12 +79,6 @@ import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -316,7 +313,8 @@ public class Lease
 
     private void verifyAllOccupancies() {
         for (Occupancy occupancy : occupancies){
-            occupancy.verify();
+            // TODO: Sander, this broke in commit: efaca56d3cb7238faa2c6674ffe567c082b719c0, but there is no such method on Occupancy... was that file accidentally omitted from the commit?
+            // occupancy.verify();
         }
     }
 
