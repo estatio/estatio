@@ -313,8 +313,7 @@ public class Lease
 
     private void verifyAllOccupancies() {
         for (Occupancy occupancy : occupancies){
-            // TODO: Sander, this broke in commit: efaca56d3cb7238faa2c6674ffe567c082b719c0, but there is no such method on Occupancy... was that file accidentally omitted from the commit?
-            // occupancy.verify();
+             occupancy.verify();
         }
     }
 

@@ -459,4 +459,19 @@ public class Occupancy
 
     }
 
+    public void verify() {
+        Lease verifyLease = getLease();
+        
+        if (verifyLease.getTenancyEndDate() == null) {
+            if (verifyLease.getEndDate() != null && !verifyLease.getEndDate().equals(getEndDate())) {
+                setEndDate(verifyLease.getEndDate());
+            } else if (verifyLease.getEndDate() == null) {
+                setEndDate(null);
+            }
+        } else {
+            if (!verifyLease.getTenancyEndDate().equals(getEndDate())) {
+                setEndDate(verifyLease.getTenancyEndDate());
+            }
+        }
+    }
 }
