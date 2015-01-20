@@ -503,12 +503,6 @@ public abstract class LeaseTerm
         return nextTerm;
     }
 
-    public boolean hideCreateNext(
-            final LocalDate nextStartDate,
-            final LocalDate nextEndDate) {
-        return !valueType().equals(LeaseTermValueType.FIXED);
-    }
-
     public String disableCreateNext(
             final LocalDate nextStartDate,
             final LocalDate nextEndDate) {

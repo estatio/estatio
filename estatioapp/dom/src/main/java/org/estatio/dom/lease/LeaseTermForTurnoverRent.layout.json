@@ -1,27 +1,31 @@
 {
   "columns": [
     {
-      "span": 6,
+      "span": 4,
       "memberGroups": {
         "General": {
           "members": {
             "type": {},
-             "leaseItem": {},
+            "leaseItem": {},
             "frequency": {},
             "sequence": {},
             "status": {}
           }
         },
-        "Related": {
+        "Dates": {
           "members": {
-            "previous": {},
-            "next": {}
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
           }
         }
       }
     },
     {
-      "span": 3,
+      "span": 4,
       "memberGroups": {
         "Turnover Rent": {
           "members": {
@@ -30,7 +34,7 @@
             "auditedTurnover": {},
             "contractualRent": {
               "actions": {
-                "changeValues": {}
+                "changeParameters": {}
               }
             }
           }
@@ -38,25 +42,21 @@
       }
     },
     {
-      "span": 3,
+      "span": 4,
       "memberGroups": {
-      	"Dates": {
-      	  "members": {
-            "startDate": {},
-            "endDate": {
-              "actions": {
-                "changeDates": {}
-              }
-            }
-          }      		
-      	}, 
-      	"Values": {
+        "Values": {
           "members": {
             "budgetedTurnoverRent": {},
             "auditedTurnoverRent": {},
-            "effectiveValue": {
+            "effectiveValue": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {
               "actions": {
-                "changeValues": {}
+                "createNext": {}
               }
             }
           }
@@ -75,9 +75,7 @@
     }
   ],
   "actions": {
-    "createNext": {},
-    "lock": {},
-    "unlock": {},
-    "verify": {}
+    "verify": {},
+    "verifyUntil": {}
   }
 }

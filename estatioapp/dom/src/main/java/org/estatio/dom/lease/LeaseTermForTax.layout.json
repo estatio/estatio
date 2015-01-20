@@ -11,7 +11,7 @@
             "status": {}
           }
         },
-         "Dates": {
+        "Dates": {
           "members": {
             "startDate": {},
             "endDate": {
@@ -32,25 +32,25 @@
             "taxPercentage": {},
             "recoverablePercentage": {
               "actions": {
-                "changeParameters":{}
+                "changeParameters": {}
               }
-          },
+            },
             "taxableValue": {},
             "overrideTaxValue": {},
             "taxValue": {
               "actions": {
-                "overrideTaxValue":{}
+                "overrideTaxValue": {}
               }
             },
             "invoicingDisabled": {
-            	"actions": {
-            	   "disableInvoicing":{},
-            	   "enableInvoicing":{}	
-            	}            
-            },
-            "paymentDate":{
               "actions": {
-                "changePaymentDate":{}
+                "disableInvoicing": {},
+                "enableInvoicing": {}
+              }
+            },
+            "paymentDate": {
+              "actions": {
+                "changePaymentDate": {}
               }
             }
           }
@@ -63,7 +63,7 @@
             "officeName": {},
             "description": {
               "actions": {
-                "changeRegistration":{}
+                "changeRegistration": {}
               }
             }
           }
@@ -84,7 +84,11 @@
         "Related": {
           "members": {
             "previous": {},
-            "next": {}
+            "next": {
+              "actions": {
+                "createNext": {}
+              }
+            }
           }
         }
       }
@@ -101,9 +105,7 @@
     }
   ],
   "actions": {
-    "createNext": {},
-    "lock": {},
-    "unlock": {},
-    "verify": {}
+    "verify": {},
+    "verifyUntil": {}
   }
 }

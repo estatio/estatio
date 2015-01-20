@@ -6,7 +6,7 @@
         "General": {
           "members": {
             "type": {},
-             "leaseItem": {},
+            "leaseItem": {},
             "frequency": {},
             "sequence": {},
             "status": {}
@@ -48,10 +48,14 @@
             "effectiveValue": {}
           }
         },
-         "Related": {
+        "Related": {
           "members": {
             "previous": {},
-            "next": {}
+            "next": {
+              "actions": {
+                "createNext": {}
+              }
+            }
           }
         }
       }
@@ -68,9 +72,9 @@
     }
   ],
   "actions": {
-    "createNext": {},
     "lock": {},
     "unlock": {},
-    "verify": {}
+    "verify": {},
+    "verifyUntil": {}
   }
 }

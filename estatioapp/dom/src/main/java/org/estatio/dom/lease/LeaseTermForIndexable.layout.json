@@ -12,7 +12,7 @@
             "status": {}
           }
         },
-         "Dates": {
+        "Dates": {
           "members": {
             "startDate": {},
             "endDate": {
@@ -39,7 +39,7 @@
             "effectiveDate": {},
             "indexationPercentage": {},
             "levellingPercentage": {
-        	  "actions": {
+              "actions": {
                 "changeParameters": {}
               }
             }
@@ -58,14 +58,18 @@
               "actions": {
                 "changeValues": {}
               },
-            "effectiveValue": {}
+              "effectiveValue": {}
             }
           }
         },
         "Related": {
           "members": {
             "previous": {},
-            "next": {}
+            "next": {
+              "actions": {
+                "createNext": {}
+              }
+            }
           }
         }
       }
@@ -82,9 +86,9 @@
     }
   ],
   "actions": {
-    "createNext": {},
-    "lock": {},
-    "unlock": {},
-    "verify": {}
+    "verify": {},
+    "verifyUntil": {},
+    "approve": {},
+    "remove": {}
   }
 }

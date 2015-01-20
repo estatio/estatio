@@ -11,7 +11,7 @@
             "status": {}
           }
         },
-         "Dates": {
+        "Dates": {
           "members": {
             "startDate": {},
             "endDate": {
@@ -52,7 +52,11 @@
         "Related": {
           "members": {
             "previous": {},
-            "next": {}
+            "next": {
+              "actions": {
+                "createNext": {}
+              }
+            }
           }
         }
       }
@@ -69,9 +73,7 @@
     }
   ],
   "actions": {
-    "createNext": {},
-    "lock": {},
-    "unlock": {},
-    "verify": {}
+    "verify": {},
+    "verifyUntil": {}
   }
 }

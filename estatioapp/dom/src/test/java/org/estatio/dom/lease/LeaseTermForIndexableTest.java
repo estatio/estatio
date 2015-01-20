@@ -18,22 +18,34 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import java.math.BigDecimal;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
-import org.estatio.dom.index.*;
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.IndexBase;
+import org.estatio.dom.index.IndexValue;
+import org.estatio.dom.index.IndexValues;
+import org.estatio.dom.index.IndexationService;
 import org.estatio.services.clock.ClockService;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-public class LeaseTermForIndexableRentTest {
+public class LeaseTermForIndexableTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -128,7 +140,7 @@ public class LeaseTermForIndexableRentTest {
 
     }
 
-    public static class Align extends LeaseTermForIndexableRentTest {
+    public static class Align extends LeaseTermForIndexableTest {
 
         @Test
         public void happyCase() {
@@ -160,7 +172,7 @@ public class LeaseTermForIndexableRentTest {
 
     }
 
-    public static class ValueForDueDate extends LeaseTermForIndexableRentTest {
+    public static class ValueForDueDate extends LeaseTermForIndexableTest {
 
         @Test
         public void happyCase() throws Exception {
@@ -198,7 +210,7 @@ public class LeaseTermForIndexableRentTest {
         }
     }
 
-    public static class DoInitialize extends LeaseTermForIndexableRentTest {
+    public static class DoInitialize extends LeaseTermForIndexableTest {
 
         @Ignore // incomplete, null pointer exception
         @Test
@@ -214,7 +226,7 @@ public class LeaseTermForIndexableRentTest {
 
         }
     }
-
+    
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
         @Test
