@@ -19,11 +19,20 @@ package org.estatio.app.lease.turnoverrent;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
-import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+
+import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseItemType;
@@ -55,10 +64,7 @@ public class LeaseTermForTurnoverRentService extends EstatioService<LeaseTermFor
     public LeaseTermForTurnoverRentManager maintainTurnoverRent(
             final Property property,
             @Named("Start date") final LocalDate startDate) {
-        LeaseTermForTurnoverRentManager template = new LeaseTermForTurnoverRentManager();
-        template.setProperty(property);
-        template.setStartDate(startDate);
-        return template;
+        return new LeaseTermForTurnoverRentManager(property, startDate);
     }
 
     public List<LocalDate> choices1MaintainTurnoverRent(final Property property) {

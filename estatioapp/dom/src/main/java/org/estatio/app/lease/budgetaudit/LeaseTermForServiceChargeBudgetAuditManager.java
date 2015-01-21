@@ -47,6 +47,14 @@ import org.estatio.dom.lease.LeaseTerms;
 @ViewModel
 public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewModel {
 
+    public LeaseTermForServiceChargeBudgetAuditManager() {
+    }
+
+    public LeaseTermForServiceChargeBudgetAuditManager(Property property, LocalDate startDate) {
+        this.property = property;
+        this.startDate = startDate;
+    }
+
     private Property property;
 
     @Title(sequence = "1")
@@ -118,9 +126,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
         return new Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBudgetAuditLineItem>() {
             @Override
             public LeaseTermForServiceChargeBudgetAuditLineItem apply(final LeaseTermForServiceCharge leaseTerm) {
-                LeaseTermForServiceChargeBudgetAuditLineItem template = newTransientInstance(LeaseTermForServiceChargeBudgetAuditLineItem.class);
-                template.modifyLeaseTerm(leaseTerm);
-                return template;
+                return new LeaseTermForServiceChargeBudgetAuditLineItem(leaseTerm);
             }
         };
     }

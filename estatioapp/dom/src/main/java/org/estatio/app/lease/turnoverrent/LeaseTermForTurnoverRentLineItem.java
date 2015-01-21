@@ -27,12 +27,21 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 
 @Paged(Integer.MAX_VALUE)
 @MemberGroupLayout(columnSpans = { 4, 4, 4, 0 }, left = { "Selected" }, right = { "Next" })
 @ViewModel
 public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
+
+    public LeaseTermForTurnoverRentLineItem(LeaseTerm leaseTerm) {
+        this.leaseTerm = (LeaseTermForTurnoverRent) leaseTerm;
+        this.auditedTurnover = getLeaseTerm().getAuditedTurnover();
+    }
+
+    public LeaseTermForTurnoverRentLineItem() {
+    }
 
     private LeaseTermForTurnoverRent leaseTerm;
 
@@ -44,11 +53,6 @@ public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
 
     public void setLeaseTerm(LeaseTermForTurnoverRent leaseTerm) {
         this.leaseTerm = leaseTerm;
-    }
-
-    public void modifyLeaseTerm(LeaseTermForTurnoverRent leaseTerm) {
-        setLeaseTerm(leaseTerm);
-        setAuditedTurnover(leaseTerm.getAuditedTurnover());
     }
 
     // //////////////////////////////////////
@@ -65,10 +69,5 @@ public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
     public void setAuditedTurnover(BigDecimal auditedTurnover) {
         this.auditedTurnover = auditedTurnover;
     }
-
-    // //////////////////////////////////////
-
-    @javax.inject.Inject
-    private LeaseTermForTurnoverRentService auditService;
 
 }

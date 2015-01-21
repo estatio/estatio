@@ -58,10 +58,7 @@ public class LeaseTermForServiceChargeBudgetAuditService extends EstatioService<
     public LeaseTermForServiceChargeBudgetAuditManager maintainServiceCharges(
             final Property property,
             @Named("Start date") final LocalDate startDate) {
-        LeaseTermForServiceChargeBudgetAuditManager template = new LeaseTermForServiceChargeBudgetAuditManager();
-        template.setProperty(property);
-        template.setStartDate(startDate);
-        return template;
+        return new LeaseTermForServiceChargeBudgetAuditManager(property, startDate);
     }
 
     public List<LocalDate> choices1MaintainServiceCharges(final Property property) {

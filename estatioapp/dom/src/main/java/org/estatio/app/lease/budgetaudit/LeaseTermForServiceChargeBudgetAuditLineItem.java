@@ -34,6 +34,19 @@ import org.estatio.dom.lease.LeaseTermForServiceCharge;
 @ViewModel
 public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewModel {
 
+    public LeaseTermForServiceChargeBudgetAuditLineItem() {
+    };
+
+    public LeaseTermForServiceChargeBudgetAuditLineItem(LeaseTermForServiceCharge leaseTerm) {
+        this.leaseTerm = leaseTerm;
+        this.auditedValue = leaseTerm.getAuditedValue();
+        this.budgetedValue = leaseTerm.getBudgetedValue();
+        this.nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
+        if (this.nextLeaseTerm != null) {
+            this.nextBudgetedValue = nextLeaseTerm.getBudgetedValue();
+        }
+    }
+
     private LeaseTermForServiceCharge leaseTerm;
 
     @Title(sequence = "1")
@@ -44,16 +57,6 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewMod
 
     public void setLeaseTerm(LeaseTermForServiceCharge leaseTerm) {
         this.leaseTerm = leaseTerm;
-    }
-
-    public void modifyLeaseTerm(LeaseTermForServiceCharge leaseTerm) {
-        setLeaseTerm(leaseTerm);
-        setAuditedValue(leaseTerm.getAuditedValue());
-        setBudgetedValue(leaseTerm.getBudgetedValue());
-        nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
-        if (nextLeaseTerm != null) {
-            this.setNextBudgetedValue(nextLeaseTerm.getBudgetedValue());
-        }
     }
 
     // //////////////////////////////////////

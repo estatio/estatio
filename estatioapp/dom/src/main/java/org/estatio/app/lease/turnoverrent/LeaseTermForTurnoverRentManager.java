@@ -49,6 +49,16 @@ import org.estatio.dom.lease.LeaseTerms;
 @ViewModel
 public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
 
+    public LeaseTermForTurnoverRentManager() {
+    }
+
+    public LeaseTermForTurnoverRentManager(Property property, LocalDate startDate) {
+        this.property = property;
+        this.startDate = startDate;
+    }
+
+    // //////////////////////////////////////
+
     private Property property;
 
     @Title(sequence = "1")
@@ -122,9 +132,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
         return new Function<LeaseTerm, LeaseTermForTurnoverRentLineItem>() {
             @Override
             public LeaseTermForTurnoverRentLineItem apply(final LeaseTerm leaseTerm) {
-                LeaseTermForTurnoverRentLineItem template = newTransientInstance(LeaseTermForTurnoverRentLineItem.class);
-                template.modifyLeaseTerm((LeaseTermForTurnoverRent) leaseTerm);
-                return template;
+                return new LeaseTermForTurnoverRentLineItem(leaseTerm);
             }
         };
     }
