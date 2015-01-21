@@ -9,10 +9,22 @@
             "relationshipFromTitle": {},
             "to": {},
             "relationshipToTitle": {},
-            "relationshipType":  {},
+            "relationshipType": {},
+            "description": {
+              "actions": {
+                "changeDescription": {}
+              }
+            }
+          }
+        },
+        "Dates": {
+          "members": {
             "startDate": {},
-            "endDate": {},
-            "description": {}
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
           }
         },
         "Communication": {

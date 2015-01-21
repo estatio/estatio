@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.annotation.Ignore;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
 
@@ -95,6 +96,7 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             final List<PartyRelationship> results = relationships.findByParty(parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE));
             assertThat(results.size(), is(1));
         }
+        
     }
 
     public static class NewRelationship extends PartyRelationshipsTest {
@@ -156,5 +158,4 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
         }
 
     }
-
 }

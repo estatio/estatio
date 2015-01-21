@@ -15,7 +15,9 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
@@ -33,6 +35,7 @@ import org.estatio.services.clock.ClockService;
                         + "FROM org.estatio.dom.party.relationship.PartyRelationship "
                         + "WHERE (to == :party || from == :party) ")
 })
+@Immutable
 public class PartyRelationship extends AbstractDomainObject implements WithInterval<PartyRelationship> {
 
     public String title() {
@@ -137,6 +140,29 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
         return getInterval().contains(clockService.now());
     }
 
+    public PartyRelationship changeDates(
+            final @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @ParameterLayout(named = "End date") LocalDate endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate) {
+        if (!new LocalDateInterval(startDate, endDate).isValid()) {
+            return "Start or end date is not valid";
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     private String description;
@@ -148,6 +174,16 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    public PartyRelationship changeDescription(
+            final @ParameterLayout(named = "Description") String description) {
+        setDescription(description);
+        return this;
+    }
+
+    public String default0ChangeDescription() {
+        return getDescription();
     }
 
     // //////////////////////////////////////
