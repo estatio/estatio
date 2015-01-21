@@ -20,12 +20,16 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -37,8 +41,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -49,6 +55,7 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
@@ -56,10 +63,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = Lease.class)
 @DomainServiceLayout(
-        named="Leases",
+        named = "Leases",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "40.1"
-)
+        menuOrder = "40.1")
 public class Leases extends EstatioDomainService<Lease> {
 
     public Leases() {
@@ -167,13 +173,20 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String refOrName) {
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern);
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
+    public List<Lease> findLeasesByBrand(
+            final Brand brand) {
+        return findByBrand(brand);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "5")
     public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset,
             final @Named("Active On Date") LocalDate activeOnDate) {
@@ -233,6 +246,13 @@ public class Leases extends EstatioDomainService<Lease> {
                 "rangeEndDate", rangeEndDate);
     }
 
+    @Programmatic
+    public List<Lease> findByBrand(final Brand brand) {
+        return allMatches(
+                "findByBrand",
+                "brand", brand);
+    }
+
     // //////////////////////////////////////
 
     @Hidden
@@ -260,10 +280,10 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @ActionLayout(
             prototype = true
-    )
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    public List<Lease> allLeases() {
+            )
+            @ActionSemantics(Of.SAFE)
+            @MemberOrder(sequence = "99")
+            public List<Lease> allLeases() {
         return allInstances();
     }
 
@@ -271,10 +291,10 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @ActionLayout(
             prototype = true
-    )
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "98")
-    public String verifyAllLeases() {
+            )
+            @ActionSemantics(Of.IDEMPOTENT)
+            @MemberOrder(sequence = "98")
+            public String verifyAllLeases() {
         DateTime dt = DateTime.now();
         List<Lease> leases = allLeases();
         for (Lease lease : leases) {

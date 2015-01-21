@@ -24,15 +24,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -53,6 +57,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+
 import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -100,20 +105,28 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
-                        + "WHERE occupancies.contains(lu) "
-                        + "&& (lu.unit.property == :property) "
+                        + "WHERE occupancies.contains(occ) "
+                        + "&& (occ.unit.property == :property) "
                         + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy lu"),
+                        + "org.estatio.dom.lease.Occupancy occ"),
+        @javax.jdo.annotations.Query(
+                name = "findByBrand", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Lease "
+                        + "WHERE occupancies.contains(occ) "
+                        + "&& (occ.brand == :brand) "
+                        + "VARIABLES "
+                        + "org.estatio.dom.lease.Occupancy occ"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndActiveOnDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
-                        + "WHERE occupancies.contains(lu) "
+                        + "WHERE occupancies.contains(occ) "
                         + "&& (tenancyStartDate == null || tenancyStartDate <= :activeOnDate) "
                         + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
-                        + "&& (lu.unit.property == :asset) "
+                        + "&& (occ.unit.property == :asset) "
                         + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy lu"),
+                        + "org.estatio.dom.lease.Occupancy occ"),
         @javax.jdo.annotations.Query(
                 name = "findExpireInDateRange", language = "JDOQL",
                 value = "SELECT " +
@@ -307,13 +320,13 @@ public class Lease
         setTenancyStartDate(startDate);
         setTenancyEndDate(endDate);
         verifyAllOccupancies();
-        
+
         return this;
     }
 
     private void verifyAllOccupancies() {
-        for (Occupancy occupancy : occupancies){
-             occupancy.verify();
+        for (Occupancy occupancy : occupancies) {
+            occupancy.verify();
         }
     }
 

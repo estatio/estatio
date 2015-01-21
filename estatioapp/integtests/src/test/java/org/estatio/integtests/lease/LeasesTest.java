@@ -25,12 +25,21 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.lease.LeaseForKalPoison001;
@@ -41,12 +50,6 @@ import org.estatio.fixture.lease.LeaseForOxfPret004;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class LeasesTest extends EstatioIntegrationTest {
 
@@ -168,6 +171,34 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     }
 
+    public static class FindByBrand extends LeasesTest {
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                }
+            });
+        }
+
+        @Inject
+        private Brands brands;
+
+        @Test
+        public void whenValidProperty() {
+            // given
+            final Brand brand = brands.findByName(LeaseForOxfTopModel001.BRAND);
+            // when
+            final List<Lease> matchingLeases = leases.findByBrand(brand);
+            // then
+            assertThat(matchingLeases.size(), is(1));
+        }
+
+    }
+
     public static class FindLeasesActiveOnDate extends LeasesTest {
 
         @Before
@@ -235,14 +266,9 @@ public class LeasesTest extends EstatioIntegrationTest {
             assertThat(newLease.getTenancyStartDate(), is(newStartDate));
             assertThat(newLease.getTenancyEndDate(), is(newEndDate));
 
-            //
-
+            // Then
             assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
-            // assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease,
-            // lease.getSecondaryParty(),
-            // agreementRoleTypes.findByTitle("Tenant"),
-            // lease.getStartDate()).getCommunicationChannels().size(), is(2));
-
+  
         }
 
     }
