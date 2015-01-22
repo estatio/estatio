@@ -25,7 +25,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -39,6 +38,7 @@ import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -151,9 +151,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Guarantee> allGuarantees() {

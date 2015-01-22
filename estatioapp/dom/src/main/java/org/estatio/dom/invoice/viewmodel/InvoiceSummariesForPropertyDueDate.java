@@ -37,9 +37,7 @@ public class InvoiceSummariesForPropertyDueDate extends EstatioDomainService<Inv
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "90")
     public List<InvoiceSummaryForPropertyDueDate> allInvoicesByPropertyDueDate() {

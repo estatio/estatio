@@ -20,17 +20,16 @@ package org.estatio.dom.bankmandate;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.ActionLayout;
+import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
@@ -41,7 +40,6 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 @DomainService(repositoryFor = BankMandate.class)
 @DomainServiceLayout(
@@ -91,9 +89,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Accounts", sequence = "99")
     public List<BankMandate> allBankMandates() {

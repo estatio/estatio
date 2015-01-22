@@ -78,9 +78,7 @@ public class Parties extends EstatioDomainService<Party> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Party> allParties() {

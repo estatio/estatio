@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
@@ -44,8 +45,8 @@ public class EstatioFixtureScripts extends FixtureScripts {
         super("org.estatio");
     }
 
+    @Prototype
     @ActionLayout(
-            prototype = true,
             cssClassFa = "fa-bolt",
             named = "Run Property/Lease Fixture Script"
     )
@@ -62,9 +63,7 @@ public class EstatioFixtureScripts extends FixtureScripts {
         return super.choices0RunFixtureScript();
     }
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @MemberOrder(sequence = "2")
     public List<FixtureResult> createRetroInvoicesForProperty(
             final Property property,
@@ -76,9 +75,9 @@ public class EstatioFixtureScripts extends FixtureScripts {
         return executionContext.getResults();
     }
 
+    @Prototype
     @ActionLayout(
-            cssClassFa = "fa-bolt",
-            prototype = true
+            cssClassFa = "fa-bolt"
     )
     @MemberOrder(sequence = "3")
     public List<FixtureResult> createRetroInvoicesForLease(

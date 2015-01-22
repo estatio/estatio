@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
@@ -44,8 +45,8 @@ public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
         super(EstatioSecurityModuleAppFixturesService.class.getPackage().getName());
     }
 
+    @Prototype
     @ActionLayout(
-            prototype = true,
             cssClassFa = "fa-bolt",
             named = "Run Security Fixture Script"
     )
@@ -74,8 +75,8 @@ public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
     // //////////////////////////////////////
 
     @ActionSemantics(ActionSemantics.Of.NON_IDEMPOTENT)
+    @Prototype
     @ActionLayout(
-            prototype = true,
             cssClassFa = "fa-bolt"
     )
     @MemberOrder(sequence = "20")

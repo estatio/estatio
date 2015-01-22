@@ -57,9 +57,7 @@ public class Persons extends EstatioDomainService<Person> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Person> allPersons() {

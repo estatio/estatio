@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.Property;
@@ -93,18 +94,16 @@ public class InvoiceService extends EstatioService<InvoiceService> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-            )
-            @ActionSemantics(Of.NON_IDEMPOTENT)
-            @MemberOrder(name = "Invoices", sequence = "99")
-            public Object calculateInvoicesForLeases(
-                    final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName,
-                    final @ParameterLayout(named = "Run Type") InvoiceRunType runType,
-                    final @ParameterLayout(named = "Selection") InvoiceCalculationSelection selection,
-                    final @ParameterLayout(named = "Invoice due date") LocalDate invoiceDueDate,
-                    final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
-                    final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
+    @Prototype
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(name = "Invoices", sequence = "99")
+    public Object calculateInvoicesForLeases(
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final @ParameterLayout(named = "Run Type") InvoiceRunType runType,
+            final @ParameterLayout(named = "Selection") InvoiceCalculationSelection selection,
+            final @ParameterLayout(named = "Invoice due date") LocalDate invoiceDueDate,
+            final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
+            final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
         String runId = null;
         final List<Lease> results = leases.findLeases(referenceOrName);
         if (results != null && results.size() > 0) {

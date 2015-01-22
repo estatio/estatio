@@ -66,9 +66,7 @@ public class IndexBases
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<IndexBase> allIndexBases() {

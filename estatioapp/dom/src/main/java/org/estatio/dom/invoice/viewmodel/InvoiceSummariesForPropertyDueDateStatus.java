@@ -51,9 +51,7 @@ public class InvoiceSummariesForPropertyDueDateStatus
         return findInvoicesByStatus(InvoiceStatus.APPROVED);
     }
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<InvoiceSummaryForPropertyDueDateStatus> allInvoicesByPropertyDueDateStatus() {

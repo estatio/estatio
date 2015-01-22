@@ -107,9 +107,7 @@ public class IndexValues
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<IndexValue> allIndexValues() {

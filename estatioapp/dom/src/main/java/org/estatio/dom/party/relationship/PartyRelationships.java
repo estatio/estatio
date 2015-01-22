@@ -2,12 +2,8 @@ package org.estatio.dom.party.relationship;
 
 import java.util.List;
 import java.util.Set;
-
 import javax.inject.Inject;
-
 import com.google.common.eventbus.Subscribe;
-
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -17,9 +13,9 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.core.runtime.authentication.standard.RandomCodeGenerator10Chars;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -125,14 +121,12 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-            )
-            @MemberOrder(sequence = "99")
-            @ActionSemantics(Of.SAFE)
-            public List<PartyRelationship> allRelationships() {
-        return allInstances();
-    }
+    @Prototype
+    @MemberOrder(sequence = "99")
+    @ActionSemantics(Of.SAFE)
+    public List<PartyRelationship> allRelationships() {
+return allInstances();
+}
 
     // //////////////////////////////////////
 

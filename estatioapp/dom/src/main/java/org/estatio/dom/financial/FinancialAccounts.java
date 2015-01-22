@@ -19,8 +19,6 @@
 package org.estatio.dom.financial;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -28,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
@@ -90,9 +89,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @MemberOrder(sequence = "3")
     public List<FinancialAccount> allAccounts() {
         return allInstances();

@@ -54,9 +54,7 @@ public class Organisations extends EstatioDomainService<Organisation> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Organisation> allOrganisations() {

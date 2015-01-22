@@ -20,17 +20,12 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -43,8 +38,8 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -278,23 +273,19 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-            )
-            @ActionSemantics(Of.SAFE)
-            @MemberOrder(sequence = "99")
-            public List<Lease> allLeases() {
-        return allInstances();
-    }
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "99")
+    public List<Lease> allLeases() {
+return allInstances();
+}
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-            )
-            @ActionSemantics(Of.IDEMPOTENT)
-            @MemberOrder(sequence = "98")
-            public String verifyAllLeases() {
+    @Prototype
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "98")
+    public String verifyAllLeases() {
         DateTime dt = DateTime.now();
         List<Lease> leases = allLeases();
         for (Lease lease : leases) {

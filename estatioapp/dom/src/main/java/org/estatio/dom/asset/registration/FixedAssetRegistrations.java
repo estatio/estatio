@@ -59,9 +59,7 @@ public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegi
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @MemberOrder(name = "Fixed Assets", sequence = "99")
     public List<FixedAssetRegistration> allRegistrations() {
         return allInstances();

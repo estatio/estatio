@@ -54,9 +54,7 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     // //////////////////////////////////////
 
-    @ActionLayout(
-            prototype = true
-    )
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "99")
     public List<InvoiceItem> allInvoiceItems() {
