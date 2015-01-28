@@ -29,28 +29,38 @@
       "memberGroups": {
         "Tax": {
           "members": {
+            "taxableValue": {},
             "taxPercentage": {},
+            "payableValue": {},
+            "overridePayableValue": {
+              "actions": {
+                "changeTax": {}
+              }
+            },
+            "paymentDate": {
+              "actions": {
+                "changePaymentDate": {}
+              }
+            }
+          }
+        },
+        "Invoicing": {
+          "members": {
             "recoverablePercentage": {
               "actions": {
                 "changeParameters": {}
               }
             },
-            "taxableValue": {},
-            "overrideTaxValue": {},
-            "taxValue": {
+            "taxValue": {},
+            "overrideTaxValue": {
               "actions": {
-                "overrideTaxValue": {}
+                "changeInvoicing": {}
               }
             },
             "invoicingDisabled": {
               "actions": {
                 "disableInvoicing": {},
                 "enableInvoicing": {}
-              }
-            },
-            "paymentDate": {
-              "actions": {
-                "changePaymentDate": {}
               }
             }
           }

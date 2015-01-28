@@ -23,36 +23,6 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    private boolean invoicingDisabled;
-
-    public boolean isInvoicingDisabled() {
-        return invoicingDisabled;
-    }
-
-    public void setInvoicingDisabled(final boolean disabledForInvoicing) {
-        this.invoicingDisabled = disabledForInvoicing;
-    }
-
-    public LeaseTermForTax disableInvoicing(@Named("Reason") String reason) {
-        setInvoicingDisabled(true);
-        return this;
-    }
-
-    public boolean hideDisableInvoicing() {
-        return isInvoicingDisabled();
-    }
-
-    public LeaseTermForTax enableInvoicing(@Named("Reason") String reason) {
-        setInvoicingDisabled(false);
-        return this;
-    }
-
-    public boolean hideEnableInvoicing() {
-        return !isInvoicingDisabled();
-    }
-
-    // //////////////////////////////////////
-
     private BigDecimal taxableValue;
 
     @Optional
@@ -81,26 +51,6 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    private boolean overrideTaxValue;
-
-    @Optional
-    public boolean isOverrideTaxValue() {
-        return overrideTaxValue;
-    }
-
-    public void setOverrideTaxValue(final boolean overrideTaxValue) {
-        this.overrideTaxValue = overrideTaxValue;
-    }
-
-    public LeaseTermForTax overrideTaxValue(
-            final @Named("Override tax value") BigDecimal overrideTaxValue) {
-        setTaxValue(overrideTaxValue);
-        setOverrideTaxValue(true);
-        return this;
-    }
-
-    // //////////////////////////////////////
-
     private BigDecimal taxPercentage;
 
     @javax.jdo.annotations.Column(scale = 1)
@@ -114,15 +64,45 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    private BigDecimal recoverablePercentage;
+    private BigDecimal payableValue;
 
-    @javax.jdo.annotations.Column(scale = 1)
-    public BigDecimal getRecoverablePercentage() {
-        return recoverablePercentage;
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    public BigDecimal getPayableValue() {
+        return payableValue;
     }
 
-    public void setRecoverablePercentage(final BigDecimal recoverablePercentage) {
-        this.recoverablePercentage = recoverablePercentage;
+    public void setPayableValue(BigDecimal payableValue) {
+        this.payableValue = payableValue;
+    }
+
+    // //////////////////////////////////////
+
+    private boolean overridePayableValue;
+
+    @Optional
+    public boolean isOverridePayableValue() {
+        return overridePayableValue;
+    }
+
+    public void setOverridePayableValue(final boolean overridePayableValue) {
+        this.overridePayableValue = overridePayableValue;
+    }
+
+    public LeaseTermForTax changeTax(
+            final @Named("Tax percentage") BigDecimal taxPercentage,
+            final @Named("Override payable value") @Optional BigDecimal overridePayableValue) {
+        setTaxPercentage(taxPercentage);
+        setPayableValue(overridePayableValue);
+        setOverridePayableValue(overridePayableValue != null);
+        return this;
+    }
+
+    public BigDecimal default0ChangeTax() {
+        return getTaxPercentage();
+    }
+
+    public BigDecimal default1ChangeTax() {
+        return isOverridePayableValue() ? getPayableValue() : null;
     }
 
     // //////////////////////////////////////
@@ -152,20 +132,77 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    public LeaseTermForTax changeParameters(
-            final @Named("Tax percentage") @Optional BigDecimal taxPercentage,
-            final @Named("Recoverable percentage") @Optional BigDecimal recoverablePercentage) {
-        setTaxPercentage(taxPercentage);
+    private BigDecimal recoverablePercentage;
+
+    @javax.jdo.annotations.Column(scale = 1)
+    public BigDecimal getRecoverablePercentage() {
+        return recoverablePercentage;
+    }
+
+    public void setRecoverablePercentage(final BigDecimal recoverablePercentage) {
+        this.recoverablePercentage = recoverablePercentage;
+    }
+
+    // //////////////////////////////////////
+
+    private boolean overrideTaxValue;
+
+    @Optional
+    public boolean isOverrideTaxValue() {
+        return overrideTaxValue;
+    }
+
+    public void setOverrideTaxValue(final boolean overrideTaxValue) {
+        this.overrideTaxValue = overrideTaxValue;
+    }
+
+    // //////////////////////////////////////
+
+    public LeaseTermForTax changeInvoicing(
+            final @Named("Recoverable percentage") BigDecimal recoverablePercentage,
+            final @Named("Override recoverable amount") @Optional BigDecimal overrideTaxValue) {
         setRecoverablePercentage(recoverablePercentage);
+        setTaxValue(overrideTaxValue);
+        setOverrideTaxValue(overrideTaxValue != null);
         return this;
     }
 
-    public BigDecimal default0ChangeParameters() {
+    public BigDecimal default0ChangeInvoicing() {
         return getTaxPercentage();
     }
 
-    public BigDecimal default1ChangeParameters() {
-        return getRecoverablePercentage();
+    public BigDecimal default1ChangeInvoicing() {
+        return isOverrideTaxValue() ? getTaxValue() : null;
+    }
+
+    // //////////////////////////////////////
+
+    private boolean invoicingDisabled;
+
+    public boolean isInvoicingDisabled() {
+        return invoicingDisabled;
+    }
+
+    public void setInvoicingDisabled(final boolean disabledForInvoicing) {
+        this.invoicingDisabled = disabledForInvoicing;
+    }
+
+    public LeaseTermForTax disableInvoicing(@Named("Reason") String reason) {
+        setInvoicingDisabled(true);
+        return this;
+    }
+
+    public boolean hideDisableInvoicing() {
+        return isInvoicingDisabled();
+    }
+
+    public LeaseTermForTax enableInvoicing(@Named("Reason") String reason) {
+        setInvoicingDisabled(false);
+        return this;
+    }
+
+    public boolean hideEnableInvoicing() {
+        return !isInvoicingDisabled();
     }
 
     // //////////////////////////////////////
@@ -309,24 +346,28 @@ public class LeaseTermForTax extends LeaseTerm {
 
     @Override
     protected void doAlign() {
-        LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
-        if (rentItem != null) {
-            setTaxableValue(rentItem.valueForDate(getStartDate()));
-        }
-        // TODO: Disabled the calculation of tax. To be discussed with the users
-
-        if (!isOverrideTaxValue() && getTaxableValue() != null && getTaxPercentage() != null
-        // && getTaxValue() == null //TODO: we must safeguard existing values
-        ) {
-            BigDecimal taxFactor = getTaxPercentage().divide(HUNDRED);
-            BigDecimal recoverableFactor =
-                    getRecoverablePercentage().divide(HUNDRED);
-            BigDecimal taxValue =
-                    getTaxableValue().multiply(taxFactor).multiply(recoverableFactor).setScale(0, RoundingMode.HALF_UP);
-            if (ObjectUtils.compare(taxValue, getTaxValue()) != 0) {
-                setTaxValue(taxValue);
+        if (getPaymentDate() == null) {
+            final BigDecimal newTaxableValue = rentValueForDate();
+            final BigDecimal newTaxPercentage = getTaxPercentage() == null ? BigDecimal.ZERO : getTaxPercentage();
+            final BigDecimal newRecoverablePercentage = getRecoverablePercentage() == null ? BigDecimal.ZERO : getRecoverablePercentage();
+            final BigDecimal newPayableValue = newTaxableValue.multiply(newTaxPercentage.divide(HUNDRED));
+            final BigDecimal newTaxValue = newPayableValue.multiply(newRecoverablePercentage).divide(HUNDRED).setScale(0, RoundingMode.HALF_UP);
+            if (ObjectUtils.compare(getTaxableValue(), newTaxableValue) != 0) {
+                setTaxableValue(newTaxableValue);
+            }
+            if (!isOverrideTaxValue() && ObjectUtils.compare(newTaxValue, getTaxValue()) != 0) {
+                setTaxValue(newTaxValue);
+            }
+            if (!isOverridePayableValue() && ObjectUtils.compare(getPayableValue(), newPayableValue) != 0) {
+                setPayableValue(newPayableValue);
             }
         }
+    }
+
+    BigDecimal rentValueForDate() {
+        LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
+        final BigDecimal rentValueForDate = rentItem == null ? BigDecimal.ZERO : rentItem.valueForDate(getStartDate());
+        return rentValueForDate;
     }
 
     @Override
