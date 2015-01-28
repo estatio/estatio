@@ -33,10 +33,12 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
@@ -80,8 +82,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Occupancy "
                         + "WHERE lease == :lease "
-                        + " && (startDate == null || startDate >= :date) "
-                        + " && (endDate == null || endDate <= :dateAsEndDate"
+                        + " && (startDate == null || startDate <= :date) "
+                        + " && (endDate == null || endDate >= :dateAsEndDate"
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
@@ -89,7 +91,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.Occupancy "
                         + "WHERE lease == :lease "
                         + "&& unit == :unit "
-                        + "&& startDate == :startDate")
+                        + "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByBrand", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Occupancy "
+                        + "WHERE brand == :brand "
+                        + "&& (:includeTerminated || endDate == null || endDate >= :date)")
 })
 public class Occupancy
         extends EstatioDomainObject<Occupancy>
@@ -214,6 +222,23 @@ public class Occupancy
         return getEffectiveInterval().contains(endDate) ? null : "End date is not in range";
     }
 
+    // //////////////////////////////////////
+    
+    public Object remove(
+            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
+        if (confirm) {
+            Lease lease = getLease();
+            getContainer().remove(this);
+            return lease;
+        } else {
+            return this;
+        }
+    }
+    
+    public String disableRemove(boolean confirm) {
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to remove an occupancy" : null;
+    }
+    
     // //////////////////////////////////////
 
     @Override
@@ -461,7 +486,7 @@ public class Occupancy
 
     public void verify() {
         Lease verifyLease = getLease();
-        
+
         if (verifyLease.getTenancyEndDate() == null) {
             if (verifyLease.getEndDate() != null && !verifyLease.getEndDate().equals(getEndDate())) {
                 setEndDate(verifyLease.getEndDate());

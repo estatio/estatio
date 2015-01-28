@@ -20,8 +20,11 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -29,12 +32,16 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class)
@@ -107,4 +114,20 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
                 "startDate", date,
                 "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date));
     }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Occupancy> findByBrand(
+            final Brand brand,
+            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
+        return allMatches(
+                "findByBrand",
+                "brand", brand,
+                "includeTerminated", includeTerminated,
+                "date", clockService.now());
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private ClockService clockService;
 }

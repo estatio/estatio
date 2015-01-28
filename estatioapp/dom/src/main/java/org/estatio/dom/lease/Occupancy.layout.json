@@ -92,6 +92,15 @@
 	
 ],
 "actions":{
+	"terminate":{
+
+	},
+	"verify":{
+
+	},
+	"remove":{
+
+	},
 	"downloadLayout":{
 		
 	},
