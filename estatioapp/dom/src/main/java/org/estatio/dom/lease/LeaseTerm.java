@@ -458,6 +458,7 @@ public abstract class LeaseTerm
             LocalDate endDateExcluding = effectiveInterval != null ? effectiveInterval.endDateExcluding() : date;
             if (getNext() != null && endDateExcluding != null && getNext().getStartDate().compareTo(endDateExcluding) >= 0) {
                 getNext().doRemove();
+                return this;
             }
         }
         align();

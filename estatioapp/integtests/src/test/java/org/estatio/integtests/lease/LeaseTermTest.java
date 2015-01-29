@@ -18,28 +18,6 @@
  */
 package org.estatio.integtests.lease;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.SortedSet;
-import javax.inject.Inject;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.DisabledException;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.*;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioFixtureScript;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.*;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -47,27 +25,73 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertNotNull;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.DisabledException;
+
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.Leases;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005;
+import org.estatio.fixture.lease.LeaseForOxfPoison003;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
+
 public class LeaseTermTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
 
     /**
-     * Fixed lease terms (that is, those that have a {@link org.estatio.dom.lease.LeaseTerm#valueType() value type} of
-     * {@link org.estatio.dom.lease.LeaseTermValueType#FIXED}) are such that the amount to be invoiced is fixed for the
-     * term and is apportioned according to the {@link org.estatio.dom.lease.LeaseTerm}'s parent
-     * {@link org.estatio.dom.lease.LeaseTerm#getLeaseItem() lease item}'s {@link org.estatio.dom.lease.LeaseItem#getInvoicingFrequency() invoicing frequency}.
+     * Fixed lease terms (that is, those that have a
+     * {@link org.estatio.dom.lease.LeaseTerm#valueType() value type} of
+     * {@link org.estatio.dom.lease.LeaseTermValueType#FIXED}) are such that the
+     * amount to be invoiced is fixed for the term and is apportioned according
+     * to the {@link org.estatio.dom.lease.LeaseTerm}'s parent
+     * {@link org.estatio.dom.lease.LeaseTerm#getLeaseItem() lease item}'s
+     * {@link org.estatio.dom.lease.LeaseItem#getInvoicingFrequency() invoicing
+     * frequency}.
      *
      * <p>
-     * Unlike {@link org.estatio.dom.lease.LeaseTermValueType#ANNUAL annual} lease terms (which are potentially open ended),
-     * a fixed lease term must have fixed {@link org.estatio.dom.lease.LeaseTerm#getStartDate() start} and
-     * {@link org.estatio.dom.lease.LeaseTerm#getEndDate() end date}s because the fixed amount is apportioned over that period.
+     * Unlike {@link org.estatio.dom.lease.LeaseTermValueType#ANNUAL annual}
+     * lease terms (which are potentially open ended), a fixed lease term must
+     * have fixed {@link org.estatio.dom.lease.LeaseTerm#getStartDate() start}
+     * and {@link org.estatio.dom.lease.LeaseTerm#getEndDate() end date}s
+     * because the fixed amount is apportioned over that period.
      * </p>
      *
      * <p>
-     * As a slight modification to that rule, we do allow the start and end dates to be changed if no {@link org.estatio.dom.lease.invoicing.InvoiceItemsForLease invoice item}s
-     * have yet been created for the lease term; this allows for corrections to incorrectly entered data prior to the
-     * first invoice run.
+     * As a slight modification to that rule, we do allow the start and end
+     * dates to be changed if no
+     * {@link org.estatio.dom.lease.invoicing.InvoiceItemsForLease invoice item}
+     * s have yet been created for the lease term; this allows for corrections
+     * to incorrectly entered data prior to the first invoice run.
      * </p>
      */
     public static class ValueTypeOfFixed extends LeaseTermTest {
@@ -107,12 +131,12 @@ public class LeaseTermTest extends EstatioIntegrationTest {
              *    a lease term with fixed invoicing frequency (eg LeaseTermForFixed, LeaseTermForTax)
              *    with start and end dates
              *    and with at least one invoice
-             *
+             * 
              *    When
              *    I attempt to change the start dates
              *    Or
              *    I attempt to change the end dates
-             *
+             * 
              *    Then
              *    this is disallowed
              * </pre>
@@ -129,9 +153,10 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                                 runScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
                             }
                         }
-                );
+                        );
 
-                // have to obtain again because runScript commits and so JDO clears out all enlisted objects.
+                // have to obtain again because runScript commits and so JDO
+                // clears out all enlisted objects.
                 lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.DISCOUNT);
 
@@ -150,19 +175,18 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 wrap(leaseTerm).changeDates(newStartDate, lease.getEndDate());
             }
 
-
             /**
              * <pre>
              *    Given
              *     a lease term with fixed invoicing frequency (eg LeaseTermForFixed, LeaseTermForTax)
              *     with start and end dates
              *     and NO invoices
-             *
+             * 
              *     When
              *     I change the start dates
              *     Or
              *     I change the end dates
-             *
+             * 
              *     Then
              *     this is allowed and the date changes accordingly
              *
@@ -196,12 +220,12 @@ public class LeaseTermTest extends EstatioIntegrationTest {
              *     a lease term with some non-fixed invoicing frequency (eg LeaseTermForIndexableRent)
              *     with start and end dates
              *     and at least one invoice
-             *
+             * 
              *     When
              *     I change the start dates
              *     Or
              *     I change the end dates
-             *
+             * 
              *     Then
              *     this is allowed and the date changes accordingly
              * </pre>
@@ -219,7 +243,6 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 // and given
                 assertThat(invoices.findInvoices(lease), not(empty()));
 
-
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);
                 wrap(leaseTerm).changeDates(newStartDate, lease.getEndDate());
@@ -227,7 +250,6 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 // then
                 assertThat(leaseTerm.getStartDate(), is(newStartDate));
             }
-
 
             private LeaseTerm findFirstLeaseTerm(final Lease lease, final LeaseItemType leaseItemType) {
                 final List<LeaseItem> leaseItems = Lists.newArrayList(Iterables.filter(lease.getItems(), LeaseItem.Predicates.ofType(leaseItemType)));
@@ -239,7 +261,6 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
                 return terms.first();
             }
-
 
         }
     }
@@ -353,6 +374,24 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             SortedSet<LeaseTerm> terms = leaseTopModelServiceChargeItem.getTerms();
             assertNotNull(terms.toString(), leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
         }
+
+        @Test
+        public void termsAreBeingRemoved() throws Exception {
+            // given
+            LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
+            Assert.assertNotNull(leaseTopModelServiceChargeItem);
+            leaseTopModelServiceChargeItem.verifyUntil(VT.ld(2014, 1, 1));
+            assertThat(leaseTopModelServiceChargeItem.getTerms().size(), is(4));
+
+            // when
+            leaseTopModelServiceChargeItem.terminate(new LocalDate(2013, 7, 14));
+            leaseTopModelServiceChargeItem.verifyUntil(VT.ld(2014, 1, 1));
+
+            // then
+            assertThat(leaseTopModelServiceChargeItem.getTerms().size(), is(3));
+
+        }
+
     }
 
 }
