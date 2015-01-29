@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -364,10 +365,16 @@ public class LeaseTermForTax extends LeaseTerm {
         }
     }
 
+    @Programmatic
     BigDecimal rentValueForDate() {
         LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
-        final BigDecimal rentValueForDate = rentItem == null ? BigDecimal.ZERO : rentItem.valueForDate(getStartDate());
-        return rentValueForDate;
+        if (rentItem != null) {
+            final BigDecimal valueForDate = rentItem.valueForDate(getStartDate());
+            if (valueForDate != null) {
+                return valueForDate;
+            }
+        }
+        return BigDecimal.ZERO;
     }
 
     @Override

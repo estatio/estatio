@@ -40,14 +40,21 @@ public class LeaseTermForTaxTest {
 
     public static class DoAlign extends LeaseTermForTaxTest {
 
-        private LeaseTermForTax term;
+        private LeaseTermForTax term1;
+        private LeaseTermForTax term2;
 
         @Before
         public void setUp() throws Exception {
-            term = new LeaseTermForTax() {
+            term1 = new LeaseTermForTax() {
                 @Override
                 public BigDecimal rentValueForDate() {
                     return new BigDecimal(20000.00);
+                };
+            };
+            term2 = new LeaseTermForTax() {
+                @Override
+                public BigDecimal rentValueForDate() {
+                    return BigDecimal.ZERO;
                 };
             };
         }
@@ -56,41 +63,59 @@ public class LeaseTermForTaxTest {
         public void nulls() throws Exception {
             // given
             // when
-            term.doAlign();
+            term1.doAlign();
             // then
-            assertThat(term.getTaxableValue(), is(new BigDecimal(20000.00)));
-            assertThat(term.getTaxValue(), is(new BigDecimal(0.00)));
+            assertThat(term1.getTaxableValue(), is(new BigDecimal(20000.00)));
+            assertThat(term1.getTaxValue(), is(new BigDecimal(0.00)));
 
         }
 
         @Test
         public void normal() throws Exception {
             // given
-            term.setTaxPercentage(new BigDecimal(1.00));
-            term.setRecoverablePercentage(new BigDecimal(50.00));
+            term1.setTaxPercentage(new BigDecimal(1.00));
+            term1.setRecoverablePercentage(new BigDecimal(50.00));
             // when
-            term.doAlign();
+            term1.doAlign();
             // then
-            assertThat(term.getTaxableValue(), is(new BigDecimal("20000")));
-            assertThat(term.getPayableValue(), is(new BigDecimal("200.00")));
-            assertThat(term.getTaxValue(), is(new BigDecimal("100")));
+            assertThat(term1.getTaxableValue(), is(new BigDecimal("20000")));
+            assertThat(term1.getPayableValue(), is(new BigDecimal("200.00")));
+            assertThat(term1.getTaxValue(), is(new BigDecimal("100")));
         }
 
         @Test
         public void overrides() throws Exception {
             // given
-            term.setTaxPercentage(new BigDecimal(1.00));
-            term.setRecoverablePercentage(new BigDecimal(50.00));
-            term.setPayableValue(new BigDecimal("222.00"));
-            term.setOverridePayableValue(true);
-            term.setTaxValue(new BigDecimal("111.00"));
-            term.setOverrideTaxValue(true);
+            term1.setTaxPercentage(new BigDecimal(1.00));
+            term1.setRecoverablePercentage(new BigDecimal(50.00));
+            term1.setPayableValue(new BigDecimal("222.00"));
+            term1.setOverridePayableValue(true);
+            term1.setTaxValue(new BigDecimal("111.00"));
+            term1.setOverrideTaxValue(true);
             // then
-            term.doAlign();
+            term1.doAlign();
             // when
-            assertThat(term.getTaxableValue(), is(new BigDecimal("20000")));
-            assertThat(term.getPayableValue(), is(new BigDecimal("222.00")));
-            assertThat(term.getTaxValue(), is(new BigDecimal("111.00")));
+            assertThat(term1.getTaxableValue(), is(new BigDecimal("20000")));
+            assertThat(term1.getPayableValue(), is(new BigDecimal("222.00")));
+            assertThat(term1.getTaxValue(), is(new BigDecimal("111.00")));
+        }
+
+        
+        @Test
+        public void noRent() throws Exception {
+            // given
+            term2.setTaxPercentage(new BigDecimal(1.00));
+            term2.setRecoverablePercentage(new BigDecimal(50.00));
+            term2.setPayableValue(new BigDecimal("222.00"));
+            term2.setOverridePayableValue(true);
+            term2.setTaxValue(new BigDecimal("111.00"));
+            term2.setOverrideTaxValue(true);
+            // then
+            term2.doAlign();
+            // when
+            assertThat(term2.getTaxableValue(), is(new BigDecimal("0")));
+            assertThat(term2.getPayableValue(), is(new BigDecimal("222.00")));
+            assertThat(term2.getTaxValue(), is(new BigDecimal("111.00")));
         }
 
     }
