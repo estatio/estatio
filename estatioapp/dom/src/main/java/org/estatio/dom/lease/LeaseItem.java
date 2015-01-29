@@ -96,14 +96,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndStartDate",
-                language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.LeaseItem "
-                        + "WHERE lease == :lease "
-                        + "   && type == :type "
-                        + "   && startDate == :startDate"),
-        @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndStartDateAndSequence",
                 language = "JDOQL",
                 value = "SELECT "
