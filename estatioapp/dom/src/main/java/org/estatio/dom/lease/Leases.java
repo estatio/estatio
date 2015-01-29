@@ -20,26 +20,30 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -70,19 +74,19 @@ public class Leases extends EstatioDomainService<Lease> {
     // //////////////////////////////////////
 
     @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            final @Named("Reference") @RegEx(validation = RegexValidation.Lease.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name,
-            final @Named("Type") LeaseType leaseType,
-            final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
-            final @Optional @Named("Landlord") Party landlord,
-            final @Optional @Named("Tentant") Party tenant
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Type") LeaseType leaseType,
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Duration", describedAs = "Duration in a text format. Example 6y5m2d") String duration,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date", describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Landlord") Party landlord,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Tentant") Party tenant
             // CHECKSTYLE:ON
             ) {
 
@@ -165,7 +169,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
             final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName) {
@@ -173,18 +177,18 @@ public class Leases extends EstatioDomainService<Lease> {
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeasesByBrand(
             final Brand brand) {
         return findByBrand(brand);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "5")
     public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset,
-            final @Named("Active On Date") LocalDate activeOnDate) {
+            final @ParameterLayout(named = "Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
@@ -198,11 +202,11 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "4")
     public String verifyLeasesUntil(
             final LeaseItemType leaseItemType,
-            final @Named("Until date") LocalDate untilDate) {
+            final @ParameterLayout(named = "Until date") LocalDate untilDate) {
         DateTime start = DateTime.now();
         List<Lease> leases = allLeases();
         for (Lease lease : leases) {
@@ -250,7 +254,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @Hidden
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public List<Lease> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findLeases("*" + searchPhrase + "*")
@@ -273,17 +277,15 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Lease> allLeases() {
-return allInstances();
-}
+        return allInstances();
+    }
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "98")
     public String verifyAllLeases() {
         DateTime dt = DateTime.now();
