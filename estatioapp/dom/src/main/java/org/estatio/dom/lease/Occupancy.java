@@ -26,15 +26,15 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -83,7 +83,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.Occupancy "
                         + "WHERE lease == :lease "
                         + " && (startDate == null || startDate <= :date) "
-                        + " && (endDate == null || endDate >= :dateAsEndDate"
+                        + " && (endDate == null || endDate >= :dateAsEndDate) "
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
@@ -113,8 +113,7 @@ public class Occupancy
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
-    @Disabled
+    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     public Lease getLease() {
         return lease;
     }
@@ -129,8 +128,7 @@ public class Occupancy
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
     @Title(sequence = "2", append = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
-    @Disabled
+    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     public Unit getUnit() {
         return unit;
     }
@@ -144,8 +142,7 @@ public class Occupancy
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Disabled(reason = "Change using action")
-    @Optional
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optional = Optionality.TRUE)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -159,8 +156,7 @@ public class Occupancy
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Disabled(reason = "Change using action")
-    @Optional
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optional = Optionality.TRUE)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -177,11 +173,11 @@ public class Occupancy
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
     @Override
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Occupancy changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date") LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -210,9 +206,9 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Occupancy terminate(
-            final @Named("End Date") LocalDate endDate) {
+            final @ParameterLayout(named = "End Date") LocalDate endDate) {
         setEndDate(endDate);
         return this;
     }
@@ -223,7 +219,7 @@ public class Occupancy
     }
 
     // //////////////////////////////////////
-    
+
     public Object remove(
             final @ParameterLayout(named = "Are you sure?") boolean confirm) {
         if (confirm) {
@@ -234,11 +230,11 @@ public class Occupancy
             return this;
         }
     }
-    
+
     public String disableRemove(boolean confirm) {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to remove an occupancy" : null;
     }
-    
+
     // //////////////////////////////////////
 
     @Override
@@ -267,8 +263,8 @@ public class Occupancy
 
     private UnitSize unitSize;
 
-    @Disabled(reason = "Change using action")
     @javax.jdo.annotations.Column(name = "unitSizeId", allowsNull = "true")
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     public UnitSize getUnitSize() {
         return unitSize;
     }
@@ -281,8 +277,8 @@ public class Occupancy
 
     private Sector sector;
 
-    @Disabled(reason = "Change using action")
     @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "true")
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     public Sector getSector() {
         return sector;
     }
@@ -295,8 +291,8 @@ public class Occupancy
 
     private Activity activity;
 
-    @Disabled(reason = "Change using action")
     @javax.jdo.annotations.Column(name = "activityId", allowsNull = "true")
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     public Activity getActivity() {
         return activity;
     }
@@ -309,8 +305,8 @@ public class Occupancy
 
     private Brand brand;
 
-    @Disabled(reason = "Change using action")
     @javax.jdo.annotations.Column(name = "brandId", allowsNull = "true")
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     public Brand getBrand() {
         return brand;
     }
@@ -321,12 +317,12 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    @DescribedAs("Change unit size, sector, activity and/or brand")
+    @ActionLayout(describedAs = "Change unit size, sector, activity and/or brand")
     public Occupancy changeClassification(
-            final @Named("Unit size") @Optional UnitSize unitSize,
-            final @Named("Sector") @Optional Sector sector,
-            final @Named("Activity") @Optional Activity activity,
-            final @Named("Brand") @Optional Brand brand) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Unit size") UnitSize unitSize,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Sector") Sector sector,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Activity") Activity activity,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Brand") Brand brand) {
         setUnitSize(unitSize);
         setSector(sector);
         setActivity(activity);
@@ -387,8 +383,7 @@ public class Occupancy
     private OccupancyReportingType reportTurnover;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
-    @Disabled(reason = "Change using action")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportTurnover() {
         return reportTurnover;
     }
@@ -402,8 +397,7 @@ public class Occupancy
     private OccupancyReportingType reportRent;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
-    @Disabled(reason = "Change using action")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportRent() {
         return reportRent;
     }
@@ -417,8 +411,7 @@ public class Occupancy
     private OccupancyReportingType reportOCR;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
-    @Disabled(reason = "Change using action")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportOCR() {
         return reportOCR;
     }
@@ -430,9 +423,9 @@ public class Occupancy
     // //////////////////////////////////////
 
     public Occupancy changeReportingOptions(
-            final @Named("Report Turnover") OccupancyReportingType reportTurnover,
-            final @Named("Report Rent") OccupancyReportingType reportRent,
-            final @Named("Report OCR") OccupancyReportingType reportOCR) {
+            final @ParameterLayout(named = "Report Turnover") OccupancyReportingType reportTurnover,
+            final @ParameterLayout(named = "Report Rent") OccupancyReportingType reportRent,
+            final @ParameterLayout(named = "Report OCR") OccupancyReportingType reportOCR) {
         setReportTurnover(reportTurnover);
         setReportRent(reportRent);
         setReportOCR(reportOCR);

@@ -25,8 +25,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -34,8 +33,7 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
@@ -54,7 +52,7 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @NotContributed
     @MemberOrder(name = "Occupancies", sequence = "10")
     public Occupancy newOccupancy(
@@ -72,8 +70,7 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
     // //////////////////////////////////////
 
     @NotInServiceMenu
-    @ActionSemantics(Of.SAFE)
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @MemberOrder(name = "Occupancies", sequence = "10")
     public List<Occupancy> occupancies(Unit unit) {
         return allMatches("findByUnit", "unit", unit);
@@ -82,8 +79,7 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
     // //////////////////////////////////////
 
     @NotInServiceMenu
-    @ActionSemantics(Of.SAFE)
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @NotContributed
     @MemberOrder(name = "Occupancies", sequence = "10")
     public List<Occupancy> occupancies(Lease lease) {
@@ -111,7 +107,7 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
         return allMatches(
                 "findByLeaseAndDate",
                 "lease", lease,
-                "startDate", date,
+                "date", date,
                 "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date));
     }
 
