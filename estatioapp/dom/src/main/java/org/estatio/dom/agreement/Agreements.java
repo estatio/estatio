@@ -19,15 +19,19 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
-@DomainService(menuOrder = "25", repositoryFor = Agreement.class)
+@DomainService(repositoryFor = Agreement.class)
+@DomainServiceLayout(menuOrder = "25")
 @Hidden
 public class Agreements extends EstatioDomainService<Agreement> {
 
@@ -37,13 +41,13 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     public Agreement findAgreementByReference(final String reference) {
         return firstMatch("findByReference",
                 "reference", reference);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @NotContributed
     public List<Agreement> findByTypeAndReferenceOrName(
             final AgreementType agreementType,
@@ -53,21 +57,9 @@ public class Agreements extends EstatioDomainService<Agreement> {
                 "regex", regex);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @NotContributed
     public List<Agreement> findByAgreementTypeAndRoleTypeAndParty(
-            final AgreementType agreementType,
-            final AgreementRoleType agreementRoleType,
-            final Party party) {
-        return allMatches("findByAgreementTypeAndRoleTypeAndParty",
-                "agreementType", agreementType,
-                "roleType", agreementRoleType,
-                "party", party);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public List<Agreement> findByAgreementTypeAndReferenceOrName(
             final AgreementType agreementType,
             final AgreementRoleType agreementRoleType,
             final Party party) {
