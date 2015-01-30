@@ -35,18 +35,20 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -101,8 +103,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Unique(
         name = "AgreementRole_agreement_party_type_startDate_UNQ",
         members = { "agreement", "party", "type", "startDate" })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioDomainObject<AgreementRole>
         implements WithIntervalContiguous<AgreementRole> {
 
@@ -121,7 +123,7 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
 
     @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
+    @Property(hidden = Where.REFERENCES_PARENT)
     public Agreement getAgreement() {
         return agreement;
     }
@@ -136,7 +138,7 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
+    @Property(hidden = Where.REFERENCES_PARENT)
     public Party getParty() {
         return party;
     }
@@ -173,7 +175,7 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
         this.externalReference = externalReference;
     }
 
-    public AgreementRole changeExternalReference(@Named("External reference") String externalReference) {
+    public AgreementRole changeExternalReference(@ParameterLayout(named = "External reference") String externalReference) {
         setExternalReference(externalReference);
         return this;
     }
@@ -187,8 +189,7 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Optional
-    @Disabled
+    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -202,8 +203,7 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Optional
-    @Disabled
+    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -212,11 +212,11 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
         this.endDate = endDate;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public AgreementRole changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date") LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -269,23 +269,19 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @Override
     public AgreementRole getPredecessor() {
         return helper.getPredecessor(getAgreement().getRoles(), getType().matchingRole());
     }
 
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @Override
     public AgreementRole getSuccessor() {
         return helper.getSuccessor(getAgreement().getRoles(), getType().matchingRole());
     }
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @Override
     public SortedSet<AgreementRole> getTimeline() {
         return helper.getTimeline(getAgreement().getRoles(), getType().matchingRole());
@@ -310,8 +306,8 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
 
     public AgreementRole succeededBy(
             final Party party,
-            final @Named("Start date") LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End date") LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
     }
 
@@ -340,8 +336,8 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
 
     public AgreementRole precededBy(
             final Party party,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") LocalDate endDate) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @ParameterLayout(named = "End date") LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }
@@ -375,8 +371,8 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
     private SortedSet<AgreementRoleCommunicationChannel> communicationChannels =
             new TreeSet<AgreementRoleCommunicationChannel>();
 
-    @Disabled
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    @Collection(editing = Editing.DISABLED)
     public SortedSet<AgreementRoleCommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
@@ -388,10 +384,10 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
     // //////////////////////////////////////
 
     public AgreementRole addCommunicationChannel(
-            final @Named("Type") AgreementRoleCommunicationChannelType type,
+            final @ParameterLayout(named = "Type") AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End date") LocalDate endDate) {
         createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, endDate);
         return this;
     }
@@ -516,8 +512,8 @@ public class AgreementRole extends EstatioDomainObject<AgreementRole>
 
         /**
          * A {@link Function} that obtains the role's
-         * {@link org.estatio.dom.agreement.AgreementRole#getEffectiveInterval()}  effective end date}
-         * attribute.
+         * {@link org.estatio.dom.agreement.AgreementRole#getEffectiveInterval()}
+         * effective end date} attribute.
          */
         public static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
             return new Function<AgreementRole, LocalDate>() {

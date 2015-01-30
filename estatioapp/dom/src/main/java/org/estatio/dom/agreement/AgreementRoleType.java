@@ -27,8 +27,8 @@ import javax.jdo.annotations.Unique;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
@@ -58,8 +58,7 @@ import org.estatio.dom.WithTitleComparable;
                         + "FROM org.estatio.dom.agreement.AgreementRoleType "
                         + "WHERE appliesTo == :agreementType && title == :title")
 })
-@Immutable
-@Bounded
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class AgreementRoleType extends EstatioDomainObject<AgreementRoleType>
         implements WithTitleComparable<AgreementRoleType> {
 
