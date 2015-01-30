@@ -21,11 +21,12 @@ package org.estatio.dom.lease;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -50,8 +51,7 @@ import org.estatio.dom.WithReferenceComparable;
                         + "FROM org.estatio.dom.lease.LeaseType "
                         + "WHERE reference == :reference")
 })
-@Immutable
-@Bounded
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class LeaseType
         extends EstatioDomainObject<LeaseType>
         implements WithReferenceComparable<LeaseType>,
@@ -95,8 +95,8 @@ public class LeaseType
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    @MultiLine(numberOfLines = 3)
-    @Optional
+    @Property(optional = Optionality.TRUE)
+    @PropertyLayout(multiLine = 3)
     @MemberOrder(sequence = "1")
     public String getDescription() {
         return description;

@@ -38,7 +38,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTerms;
@@ -66,9 +65,6 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
-
-    @Inject
-    LeaseItems leaseItems;
 
     @Inject
     LeaseTerms leaseTerms;
