@@ -24,13 +24,13 @@ import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
@@ -46,14 +46,14 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @NotContributed
     public AgreementRole newAgreementRole(
             final Agreement agreement,
             final Party party,
             final AgreementRoleType type,
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @ParameterLayout(named = "End Date") LocalDate endDate) {
         AgreementRole agreementRole = newTransientInstance();
         persistIfNotAlready(agreementRole);
         agreementRole.setStartDate(startDate);
@@ -68,7 +68,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @NotContributed
     public AgreementRole findByAgreementAndPartyAndTypeAndContainsDate(
             final Agreement agreement,
@@ -86,7 +86,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @NotContributed
     public AgreementRole findByAgreementAndTypeAndContainsDate(
             final Agreement agreement,
@@ -102,7 +102,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @NotContributed
     public List<AgreementRole> findByParty(
             final Party party) {
@@ -113,7 +113,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @NotContributed
     public List<AgreementRole> findByPartyAndTypeAndContainsDate(
             final Party party,

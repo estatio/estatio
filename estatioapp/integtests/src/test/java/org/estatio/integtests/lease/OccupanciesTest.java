@@ -22,6 +22,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -35,6 +37,7 @@ import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -69,7 +72,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
     @Inject
     Brands brands;
-    
+
     Lease lease;
 
     Unit unit;
@@ -103,19 +106,24 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
     public static class FindByBrand extends OccupanciesTest {
 
-        
         @Test
         public void happyCase() throws Exception {
             Brand brand = brands.findByName(LeaseForOxfTopModel001.BRAND);
             assertNotNull(brand);
-            
+
             assertThat(occupancies.findByBrand(brand, false).size(), is(1));
             assertThat(occupancies.findByBrand(brand, true).size(), is(1));
         }
-        
-        
 
     }
 
+    public static class FindByLeaseAndDate extends OccupanciesTest {
+
+        @Test
+        public void happyCase() throws Exception {
+            List<Occupancy> results = occupancies.findByLeaseAndDate(lease, lease.getStartDate());
+            assertThat(results.size(), is(1));
+        }
+    }
 
 }

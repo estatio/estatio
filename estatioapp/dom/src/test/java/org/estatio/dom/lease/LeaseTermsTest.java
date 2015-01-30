@@ -68,7 +68,7 @@ public class LeaseTermsTest {
         };
     }
 
-    public static class findByLeaseItemAndSequence extends LeaseTermsTest {
+    public static class FindByLeaseItemAndSequence extends LeaseTermsTest {
 
         @Test
         public void happyCase() {

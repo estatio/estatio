@@ -35,19 +35,21 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -60,7 +62,6 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.utils.ValueUtils;
@@ -109,8 +110,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + " && role.party == :party"
                         + " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
-@Bookmarkable
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Agreement
         extends EstatioDomainObject<Agreement>
         implements WithReferenceComparable<Agreement>,
@@ -127,9 +128,9 @@ public abstract class Agreement
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @DescribedAs("Unique reference code for this agreement")
     @Title
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
+    @Property(regexPattern = RegexValidation.REFERENCE)
+    @PropertyLayout(describedAs = "Unique reference code for this agreement")
     public String getReference() {
         return reference;
     }
@@ -143,9 +144,8 @@ public abstract class Agreement
     private String name;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.NAME)
-    @DescribedAs("Optional name for this agreement")
-    @Hidden(where = Where.ALL_TABLES)
-    @Optional
+    @Property(optional = Optionality.TRUE, hidden = Where.ALL_TABLES)
+    @PropertyLayout(describedAs = "Optional name for this agreement")
     public String getName() {
         return name;
     }
@@ -210,8 +210,7 @@ public abstract class Agreement
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Disabled
-    @Optional
+    @Property(editing = Editing.DISABLED, optional = Optionality.TRUE)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -225,8 +224,7 @@ public abstract class Agreement
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Disabled
-    @Optional
+    @Property(editing = Editing.DISABLED, optional = Optionality.TRUE)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -266,11 +264,11 @@ public abstract class Agreement
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public Agreement changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date") LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -302,8 +300,7 @@ public abstract class Agreement
     private AgreementType type;
 
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-    @Hidden
-    @Disabled
+    @Property(hidden = Where.EVERYWHERE, editing = Editing.DISABLED)
     public AgreementType getType() {
         return type;
     }
@@ -318,10 +315,8 @@ public abstract class Agreement
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private Agreement previous;
 
-    @Named("Previous Agreement")
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "Previous Agreement")
     @Override
     public Agreement getPrevious() {
         return previous;
@@ -346,10 +341,8 @@ public abstract class Agreement
     @javax.jdo.annotations.Column(name = "nextAgreementId")
     private Agreement next;
 
-    @Named("Next Agreement")
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "Next Agreement")
     @Override
     public Agreement getNext() {
         return next;
@@ -364,8 +357,8 @@ public abstract class Agreement
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
     @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup = "true")
-    @Disabled
-    @Render(Type.EAGERLY)
+    @Collection(editing = Editing.DISABLED)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<AgreementRole> getRoles() {
         return roles;
     }
@@ -375,10 +368,10 @@ public abstract class Agreement
     }
 
     public Agreement newRole(
-            final @Named("Type") AgreementRoleType type,
+            final @ParameterLayout(named = "Type") AgreementRoleType type,
             final Party party,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End date") LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
     }

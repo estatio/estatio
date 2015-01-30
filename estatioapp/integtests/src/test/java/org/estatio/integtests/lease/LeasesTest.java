@@ -19,6 +19,7 @@
 package org.estatio.integtests.lease;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -108,6 +109,27 @@ public class LeasesTest extends EstatioIntegrationTest {
             Assert.assertEquals(LeaseForOxfTopModel001.LEASE_REFERENCE, lease.getReference());
         }
 
+    }
+
+    public static class FindLeaseByReferenceOrNull extends LeasesTest {
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                }
+            });
+        }
+        
+        @Test
+        public void noResults() {
+            final Lease lease = leases.findLeaseByReferenceElseNull("FAKEREF");
+            assertNull(lease);
+        }
     }
 
     public static class FindLeases extends LeasesTest {
@@ -268,7 +290,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
             // Then
             assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
-  
+
         }
 
     }

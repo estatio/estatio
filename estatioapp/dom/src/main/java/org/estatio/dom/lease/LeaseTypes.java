@@ -19,15 +19,17 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
@@ -35,8 +37,7 @@ import org.estatio.dom.RegexValidation;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.1"
-)
+        menuOrder = "80.1")
 public class LeaseTypes extends EstatioDomainService<LeaseType> {
 
     public LeaseTypes() {
@@ -45,11 +46,11 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public LeaseType newLeaseType(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") @Optional String name) {
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") @Parameter(optional = Optionality.TRUE) String name) {
         final LeaseType leaseType = newTransientInstance();
         leaseType.setReference(reference);
         leaseType.setName(name);
@@ -59,7 +60,7 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<LeaseType> allLeaseTypes() {
         return allInstances();

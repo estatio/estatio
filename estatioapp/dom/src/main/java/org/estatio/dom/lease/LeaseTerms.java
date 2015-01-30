@@ -24,8 +24,12 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.EstatioUserRoles;
@@ -39,8 +43,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         super(LeaseTerms.class, LeaseTerm.class);
     }
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @Hidden
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
     public LeaseTerm newLeaseTerm(
             final LeaseItem leaseItem,
             final LeaseTerm previous,
@@ -63,7 +66,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     }
 
     @Deprecated
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(name = "Leases", sequence = "20")
     public List<LeaseTerm> allLeaseTermsToBeApproved(final LocalDate date) {
         return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
@@ -76,13 +79,12 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     /**
      * Returns terms by LeaseItem and sequence. Used by the API
      */
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public LeaseTerm findByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
         return firstMatch("findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence);
     }
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(name = "Leases", sequence = "99")
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances();
@@ -90,8 +92,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LeaseTerm> findByPropertyAndTypeAndStartDate(
             final Property property,
             final LeaseItemType leaseItemType,
@@ -103,8 +104,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
             final Property property,
             final LocalDate startDate) {
@@ -115,8 +115,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     // //////////////////////////////////////
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndType(
             final Property property,
             final LeaseItemType leaseItemType) {
@@ -127,13 +126,12 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         return startDates;
     }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findServiceChargeDatesByProperty(final Property property) {
         return findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
     }
-    
-    @ActionSemantics(Of.SAFE)
+
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(name = "Leases", sequence = "30")
     public List<LeaseTerm> findTermsWithInvalidInterval() {
         List<LeaseTerm> lts = allLeaseTerms();
@@ -145,7 +143,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
                     returnList.add(lt);
                     continue;
                 }
-                
+
                 if (!ldi.isValid()) {
                     returnList.add(lt);
                     continue;
@@ -155,14 +153,14 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
                 returnList.add(lt);
             }
         }
-        
+
         if (returnList.isEmpty()) {
             return null;
         } else {
             return returnList;
         }
     }
-    
+
     public boolean hideFindTermsWithInvalidInterval() {
         return !getContainer().getUser().hasRole(EstatioUserRoles.ADMIN_ROLE);
     }
