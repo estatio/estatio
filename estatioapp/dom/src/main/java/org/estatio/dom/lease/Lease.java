@@ -63,7 +63,6 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.Dflt;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -421,15 +420,24 @@ public class Lease
     }
 
     public LocalDate default4NewItem() {
-        return getStartDate();
+        return leaseItems.default5NewLeaseItem(this);
     }
 
     public List<ApplicationTenancy> choices5NewItem() {
-        return estatioApplicationTenancies.localTenanciesFor(this.getProperty());
+        return leaseItems.choices6NewLeaseItem(this);
     }
 
     public ApplicationTenancy default5NewItem() {
-        return Dflt.of(choices5NewItem());
+        return leaseItems.default6NewLeaseItem(this);
+    }
+
+    public String validateNewItem(final LeaseItemType type,
+                                   final Charge charge,
+                                   final InvoicingFrequency invoicingFrequency,
+                                   final PaymentMethod paymentMethod,
+                                   final @Named("Start date") LocalDate startDate,
+                                   final ApplicationTenancy applicationTenancy) {
+        return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate, applicationTenancy);
     }
 
 

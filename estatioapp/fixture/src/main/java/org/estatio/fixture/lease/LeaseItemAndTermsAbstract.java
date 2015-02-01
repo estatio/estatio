@@ -217,7 +217,8 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
                 ChargeRefData.IT_TURNOVER_RENT,
-                LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS,
+                LeaseItemType.TURNOVER_RENT,
+                InvoicingFrequency.YEARLY_IN_ARREARS,
                 executionContext);
         final LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseItem.newTerm(startDate, endDate);
 

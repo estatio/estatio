@@ -20,6 +20,7 @@ package org.estatio.fixture.lease;
 
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.index.IndexRefData;
@@ -47,17 +48,20 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
 
         Lease lease = leases.findLeaseByReference(LEASE_REF);
 
-        findOrCreateLeaseItem(
-                LEASE_REF,
-                AT_PATH,
-                CHARGE_REF_IT,
+        final String leaseRef = LEASE_REF;
+        final String leaseItemAtPath = AT_PATH;
+        final String chargeRef = CHARGE_REF_IT;
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef,
+                leaseItemAtPath,
+                chargeRef,
                 LeaseItemType.RENT,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
 
         createLeaseTermForIndexableRent(
-                LEASE_REF,
-                AT_PATH,
+                leaseRef,
+                leaseItemAtPath,
                 lease.getStartDate(),
                 null,
                 bd(150000), null, null, null,

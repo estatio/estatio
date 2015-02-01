@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -79,9 +80,29 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
         return estatioApplicationTenancies.localTenanciesFor(lease.getProperty());
     }
 
+    public LocalDate default5NewLeaseItem(final Lease lease) {
+        return lease.getStartDate();
+    }
+
     public ApplicationTenancy default6NewLeaseItem(final Lease lease) {
         return Dflt.of(choices6NewLeaseItem(lease));
     }
+
+    public String validateNewLeaseItem(final Lease lease,
+                                  final LeaseItemType type,
+                                  final Charge charge,
+                                  final InvoicingFrequency invoicingFrequency,
+                                  final PaymentMethod paymentMethod,
+                                  final @Named("Start date") LocalDate startDate,
+                                  final ApplicationTenancy applicationTenancy) {
+        return !lease.getApplicationTenancy().getChildren().contains(applicationTenancy)
+                ? String.format(
+                "Application tenancy '%s' is not a child app tenancy of this lease",
+                applicationTenancy.getPath(),
+                lease.getApplicationTenancyPath())
+                : null;
+    }
+
 
     private BigInteger nextSequenceFor(final Lease lease, final LeaseItemType type) {
         LeaseItem last = Iterables.getLast(findLeaseItemsByType(lease, type), null);
