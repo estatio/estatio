@@ -17,20 +17,18 @@
 package org.estatio.fixture.security.users;
 
 import java.util.Arrays;
-
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
-
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
 
-public class EstatioUser extends AbstractUserAndRolesFixtureScript {
+public class EstatioUserInFrance extends AbstractUserAndRolesFixtureScript {
 
-    public static final String USER_NAME = "estatio-user";
+    public static final String USER_NAME = "estatio-user-fr";
     public static final String PASSWORD = "pass";
-    public static final String AT_PATH = "/";
+    public static final String AT_PATH = "/fr";
     public static final String EMAIL_ADDRESS = null;
 
-    public EstatioUser() {
+    public EstatioUserInFrance() {
         super(
                 USER_NAME,
                 PASSWORD,
