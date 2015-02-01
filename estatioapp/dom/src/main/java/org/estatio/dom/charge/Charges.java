@@ -99,7 +99,19 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
         return chargesForCountry(countryPath);
     }
 
-    protected List<Charge> chargesForCountry(final String countryPath) {
+    @Programmatic
+    public List<Charge> chargesForCountry(final ApplicationTenancy countryOrLowerLevel) {
+        final ApplicationTenancyLevel level = ApplicationTenancyLevel.of(countryOrLowerLevel);
+        final String countryPath = level.getCountryPath();
+        return chargesForCountry(countryPath);
+    }
+
+    @Programmatic
+    public List<Charge> chargesForCountry(final String countryPath) {
+
+        // assert the path
+        ApplicationTenancyLevel.of(countryPath).getCountryPath();
+
         final List<Charge> charges = allInstances();
         return Lists.newArrayList(
                 Iterables.filter(charges, new Predicate<Charge>() {
@@ -111,13 +123,6 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
                     }
                 })
         );
-    }
-
-    @Programmatic
-    public List<Charge> chargesForCountry(final ApplicationTenancy countryOrLowerLevel) {
-        final ApplicationTenancyLevel level = ApplicationTenancyLevel.of(countryOrLowerLevel);
-        final String countryPath = level.getCountryPath();
-        return chargesForCountry(countryPath);
     }
 
     // //////////////////////////////////////

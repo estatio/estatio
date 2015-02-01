@@ -24,12 +24,24 @@ import javax.inject.Inject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -110,6 +122,42 @@ public class LeaseItemTest extends EstatioIntegrationTest {
 
 
     }
+
+
+    public static class Copy extends LeaseItemTest {
+
+        @Inject
+        private Charges charges;
+
+        @Ignore("EST-467")
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
+            final Charge charge = charges.findByReference(ChargeRefData.GB_RENT);
+
+            // when
+            final LeaseItem newLeaseItem = leaseTopModelServiceChargeItem.copy(VT.ld(2011, 7, 15), InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, charge);
+
+            // then
+            // to complete
+
+
+
+//            Oddities..
+//
+//            LeaseItem#copy(...)
+//            ... seems really wierd, no constraints on charge for given LeaseItemType?
+//
+//            similarly...
+//
+//            Lease#newItem(...) ... why doesn't the LeaseItemType constrain the available charges?
+//
+        }
+
+    }
+
 
     public static class GetTerms extends LeaseItemTest {
 

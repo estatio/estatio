@@ -359,6 +359,8 @@ public class LeaseItem
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
+    // //////////////////////////////////////
+
     public LeaseItem copy(
             final @Named("Start date") LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
@@ -371,6 +373,25 @@ public class LeaseItem
         this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;
     }
+
+    public List<Charge> choices3Copy() {
+        return charges.chargesForCountry(this.getApplicationTenancy());
+    }
+
+    public String validateCopy(
+            final LocalDate startDate,
+            final InvoicingFrequency invoicingFrequency,
+            final PaymentMethod paymentMethod,
+            final Charge charge
+            ) {
+        if(!choices3Copy().contains(charge)) {
+            return "Charge (with app tenancy '%s') is not valid for this lease item";
+        }
+        return null;
+    }
+    
+
+    // //////////////////////////////////////
 
     public LeaseItem terminate(
             final @Named("End date") LocalDate endDate) {

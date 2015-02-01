@@ -167,7 +167,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
 
             expectedExceptions.expect(InvalidException.class);
-            expectedExceptions.expectMessage(containsString("not valid for the app tenancy of this lease"));
+            expectedExceptions.expectMessage(containsString("not valid for this lease"));
 
             // when
             wrap(leaseItems).newLeaseItem(

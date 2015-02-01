@@ -101,7 +101,7 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
         final List<Charge> validCharges = choices2NewLeaseItem(lease);
         if(!validCharges.contains(charge)) {
             return String.format(
-                    "Charge (with app tenancy '%s') is not valid for the app tenancy of this lease",
+                    "Charge (with app tenancy level '%s') is not valid for this lease",
                     charge.getApplicationTenancyPath());
         }
 
