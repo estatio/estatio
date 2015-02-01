@@ -102,30 +102,32 @@ public class ChargeRefData extends EstatioFixtureScript {
 
         for (final ApplicationTenancy countryTenancy : countryTenancies) {
 
-            final String countryAbbrev = countryTenancy.getPath().substring(1).toUpperCase();
-            final String countryName = " (" + countryAbbrev + ")";
+            final String country2AlphaCode = countryTenancy.getPath().substring(1).toUpperCase();
+            final String countryName = " (" + country2AlphaCode + ")";
 
-            createCharge(chargeGroupRent, countryAbbrev + CHARGE_SUFFIX_RENT,
+            final String taxReference = TaxRefData.vatStdFor(country2AlphaCode);
+
+            createCharge(chargeGroupRent, country2AlphaCode + CHARGE_SUFFIX_RENT,
                     "Rent" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
-            createCharge(chargeGroupServiceCharge, countryAbbrev + CHARGE_SUFFIX_SERVICE_CHARGE,
+                    taxReference, executionContext);
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE,
                     "Service Charge" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
-            createCharge(chargeGroupTurnoverRent, countryAbbrev + CHARGE_SUFFIX_TURNOVER_RENT,
+                    taxReference, executionContext);
+            createCharge(chargeGroupTurnoverRent, country2AlphaCode + CHARGE_SUFFIX_TURNOVER_RENT,
                     "Turnover Rent" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
-            createCharge(chargeGroupDiscount, countryAbbrev + CHARGE_SUFFIX_DISCOUNT,
+                    taxReference, executionContext);
+            createCharge(chargeGroupDiscount, country2AlphaCode + CHARGE_SUFFIX_DISCOUNT,
                     "Discount" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
-            createCharge(chargeGroupEntryFee, countryAbbrev + CHARGE_SUFFIX_ENTRY_FEE,
+                    taxReference, executionContext);
+            createCharge(chargeGroupEntryFee, country2AlphaCode + CHARGE_SUFFIX_ENTRY_FEE,
                     "Entry Fee" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
-            createCharge(chargeGroupTax, countryAbbrev + CHARGE_SUFFIX_TAX,
+                    taxReference, executionContext);
+            createCharge(chargeGroupTax, country2AlphaCode + CHARGE_SUFFIX_TAX,
                     "Tax" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
-            createCharge(chargeGroupServiceChargeIndexable, countryAbbrev + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE,
+                    taxReference, executionContext);
+            createCharge(chargeGroupServiceChargeIndexable, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE,
                     "Service Charge Indexable" + countryName,
-                    TaxRefData.IT_VATSTD, executionContext);
+                    taxReference, executionContext);
         }
     }
 
@@ -153,7 +155,6 @@ public class ChargeRefData extends EstatioFixtureScript {
         final Charge charge = charges.newCharge(
                 taxApplicationTenancy, chargeReference, description, code, tax, chargeGroup);
 
-        charge.setGroup(chargeGroup);
         return executionContext.addResult(this, charge.getReference(), charge);
     }
 

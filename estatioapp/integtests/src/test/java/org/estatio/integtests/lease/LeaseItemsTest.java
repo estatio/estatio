@@ -123,7 +123,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given
-            final Charge charge = charges.findByReference(ChargeRefData.IT_DISCOUNT);
+            final Charge charge = charges.findByReference(ChargeRefData.GB_DISCOUNT);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
             final ApplicationTenancy firstChildAppTenancy = leaseAppTenancy.getChildren().first();
 
@@ -147,7 +147,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
         public void invalidAppTenancy() throws Exception {
 
             // given
-            final Charge charge = charges.findByReference(ChargeRefData.IT_DISCOUNT);
+            final Charge charge = charges.findByReference(ChargeRefData.GB_DISCOUNT);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
 
             expectedExceptions.expect(InvalidException.class);
@@ -158,8 +158,23 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
                     leasePoison, LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate(), leaseAppTenancy);
         }
-    }
 
+        @Test
+        public void invalidCharge() throws Exception {
+
+            // given
+            final Charge charge = charges.findByReference(ChargeRefData.IT_DISCOUNT);
+            final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
+
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage(containsString("not valid for the app tenancy of this lease"));
+
+            // when
+            wrap(leaseItems).newLeaseItem(
+                    leasePoison, LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
+                    leasePoison.getStartDate(), leaseAppTenancy);
+        }
+    }
 
 
 }

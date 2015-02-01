@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import com.google.common.collect.Iterables;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
@@ -34,11 +33,11 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.Dflt;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseItem.class)
@@ -76,8 +75,8 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
         return leaseItem;
     }
 
-    public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
-        return estatioApplicationTenancies.localTenanciesFor(lease.getProperty());
+    public List<Charge> choices2NewLeaseItem(final Lease lease) {
+        return charges.chargesForCountry(lease.getApplicationTenancy());
     }
 
     public LocalDate default5NewLeaseItem(final Lease lease) {
@@ -88,6 +87,10 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
         return Dflt.of(choices6NewLeaseItem(lease));
     }
 
+    public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
+        return estatioApplicationTenancies.localTenanciesFor(lease.getProperty());
+    }
+
     public String validateNewLeaseItem(final Lease lease,
                                   final LeaseItemType type,
                                   final Charge charge,
@@ -95,12 +98,21 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
                                   final PaymentMethod paymentMethod,
                                   final @Named("Start date") LocalDate startDate,
                                   final ApplicationTenancy applicationTenancy) {
-        return !lease.getApplicationTenancy().getChildren().contains(applicationTenancy)
-                ? String.format(
-                "Application tenancy '%s' is not a child app tenancy of this lease",
-                applicationTenancy.getPath(),
-                lease.getApplicationTenancyPath())
-                : null;
+        final List<Charge> validCharges = choices2NewLeaseItem(lease);
+        if(!validCharges.contains(charge)) {
+            return String.format(
+                    "Charge (with app tenancy '%s') is not valid for the app tenancy of this lease",
+                    charge.getApplicationTenancyPath());
+        }
+
+        if (!lease.getApplicationTenancy().getChildren().contains(applicationTenancy)) {
+            return String.format(
+                    "Application tenancy '%s' is not a child app tenancy of this lease",
+                    applicationTenancy.getPath(),
+                    lease.getApplicationTenancyPath());
+        }
+
+        return null;
     }
 
 
@@ -144,6 +156,9 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
 
     @Inject
     EstatioApplicationTenancies estatioApplicationTenancies;
+
+    @Inject
+    private Charges charges;
 
 
 }

@@ -36,6 +36,10 @@ public class TaxRefData extends EstatioFixtureScript {
 
     private static final String SUFFIX_VATSTD = "-VATSTD";
 
+    public static final String vatStdFor(final String country2AlphaCode) {
+        return country2AlphaCode.toUpperCase() + SUFFIX_VATSTD;
+    }
+
     public static final String IT_VATSTD = "IT-VATSTD";
     public static final String NL_VATSTD = "NL-VATSTD";
     public static final String GB_VATSTD = "GB-VATSTD";
@@ -49,12 +53,12 @@ public class TaxRefData extends EstatioFixtureScript {
 
         for (final ApplicationTenancy countryTenancy : countryTenancies) {
 
-            final String countryCode = countryTenancy.getPath().substring(1).toUpperCase();
+            final String country2AlphaCode = countryTenancy.getPath().substring(1).toUpperCase();
 
-            final String reference = countryCode + SUFFIX_VATSTD;
+            final String reference = country2AlphaCode + SUFFIX_VATSTD;
             final Tax tax = taxes.newTax(
                     reference,
-                    "Value Added Tax (Standard)",
+                    "Value Added Tax (Standard, " + country2AlphaCode + ")",
                     countryTenancy);
             executionContext.addResult(this, tax.getReference(), tax);
 

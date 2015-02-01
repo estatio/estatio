@@ -20,6 +20,9 @@ package org.estatio.dom.charge;
 
 import java.util.List;
 import javax.inject.Inject;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -33,7 +36,9 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.geography.Country;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 @DomainService(repositoryFor = Charge.class)
 @DomainServiceLayout(
@@ -86,7 +91,37 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
     }
 
     // //////////////////////////////////////
-    
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2.1")
+    public List<Charge> chargesForCountry(final Country country) {
+        final String countryPath = "/" + country.getAlpha2Code();
+        return chargesForCountry(countryPath);
+    }
+
+    protected List<Charge> chargesForCountry(final String countryPath) {
+        final List<Charge> charges = allInstances();
+        return Lists.newArrayList(
+                Iterables.filter(charges, new Predicate<Charge>() {
+                    @Override
+                    public boolean apply(final Charge charge) {
+                        final ApplicationTenancyLevel chargeLevel = ApplicationTenancyLevel.of(charge);
+                        return chargeLevel.isRoot() ||
+                                chargeLevel.isCountry() && chargeLevel.getPath().equalsIgnoreCase(countryPath);
+                    }
+                })
+        );
+    }
+
+    @Programmatic
+    public List<Charge> chargesForCountry(final ApplicationTenancy countryOrLowerLevel) {
+        final ApplicationTenancyLevel level = ApplicationTenancyLevel.of(countryOrLowerLevel);
+        final String countryPath = level.getCountryPath();
+        return chargesForCountry(countryPath);
+    }
+
+    // //////////////////////////////////////
+
     @Programmatic
     public Charge findByReference(
             final String reference) {

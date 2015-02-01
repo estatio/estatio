@@ -22,7 +22,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
@@ -62,7 +61,6 @@ import org.estatio.dom.tax.Tax;
                         + "FROM org.estatio.dom.charge.Charge "
                         + "WHERE reference == :reference")
 })
-@Bounded
 @Immutable
 public class Charge
         extends EstatioDomainObject<Charge>

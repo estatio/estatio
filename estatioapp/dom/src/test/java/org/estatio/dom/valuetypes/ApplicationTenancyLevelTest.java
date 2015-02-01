@@ -9,7 +9,9 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -211,6 +213,34 @@ public class ApplicationTenancyLevelTest {
             Assert.assertThat(atl("/fr/car").isPropertyOf(atl("/it")), is(false));
             Assert.assertThat(atl("/it/car/_").isPropertyOf(atl("/it")), is(false));
             Assert.assertThat(atl("/it/car/ta").isPropertyOf(atl("/it")), is(false));
+        }
+
+    }
+
+    public static class GetCountryPath extends ApplicationTenancyLevelTest {
+
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
+        @Test
+        public void whenRoot() throws Exception {
+            expectedException.expectMessage("root");
+            atl("/").getCountryPath();
+        }
+
+        @Test
+        public void whenRootOther() throws Exception {
+            expectedException.expectMessage("root other");
+            atl("/_").getCountryPath();
+        }
+
+        @Test
+        public void whenNonRoot() throws Exception {
+            Assert.assertThat(atl("/it").getCountryPath(), is("/it"));
+            Assert.assertThat(atl("/it/_").getCountryPath(), is("/it"));
+            Assert.assertThat(atl("/it/car").getCountryPath(), is("/it"));
+            Assert.assertThat(atl("/it/car/_").getCountryPath(), is("/it"));
+            Assert.assertThat(atl("/it/car/ta").getCountryPath(), is("/it"));
         }
 
     }

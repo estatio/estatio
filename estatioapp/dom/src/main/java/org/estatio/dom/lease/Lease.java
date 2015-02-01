@@ -419,6 +419,10 @@ public class Lease
         return leaseItem;
     }
 
+    public List<Charge> choices1NewItem() {
+        return leaseItems.choices2NewLeaseItem(this);
+    }
+
     public LocalDate default4NewItem() {
         return leaseItems.default5NewLeaseItem(this);
     }

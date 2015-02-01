@@ -142,6 +142,7 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
         return getParts().size() == 1 && !isRootOther();
     }
 
+
     public boolean isCountryOther() {
         // /it/_
         return getParts().size() == 2 && "_".equals(getParts().get(1));
@@ -170,6 +171,20 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
 
 
     //endregion
+
+    //region > getCountryPath
+
+    public String getCountryPath() {
+        if(isRoot()) {
+            throw new IllegalArgumentException("Tenancy level is 'root'.");
+        }
+        if(isRootOther()) {
+            throw new IllegalArgumentException("Tenancy level is 'root other'.");
+        }
+        return "/" + getParts().get(0);
+    }
+    //endregion
+
 
     //region > equals, hashCode
     @Override
@@ -201,7 +216,6 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
     public String toString() {
         return path;
     }
-
     //endregion
 
 
