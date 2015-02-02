@@ -804,7 +804,7 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
-                <version>0.9.8</version>
+                <version>0.9.9</version>
             </dependency>
 
             <dependency>

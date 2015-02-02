@@ -18,20 +18,23 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class LeasesTest {
 
@@ -116,9 +119,12 @@ public class LeasesTest {
             assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
 
-            // REVIEW: Don't see the real benefit of these tests since the application
-            // won't compile if you change the code without refactoring. The only
-            // fragile part in the finder is the relation between the query in the
+            // REVIEW: Don't see the real benefit of these tests since the
+            // application
+            // won't compile if you change the code without refactoring. The
+            // only
+            // fragile part in the finder is the relation between the query in
+            // the
             // finder and the query in the class since these are all strings.
 
         }

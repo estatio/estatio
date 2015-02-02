@@ -33,10 +33,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
 import org.junit.Test;
+import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 
-import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainObject;
 
 
 /**
@@ -111,7 +112,7 @@ public class DomainServicesInjectionTestAll_inject{
                     return true;
                 }
             };
-            final Set<Method> injectorMethods = Reflections.getAllMethods(subtype, injectors);
+            final Set<Method> injectorMethods = ReflectionUtils.getAllMethods(subtype, injectors);
             if(injectorMethods.isEmpty()) {
                 continue;
             }
@@ -131,7 +132,7 @@ public class DomainServicesInjectionTestAll_inject{
                             return f.getType() == injector.m.getParameterTypes()[0];
                         }
                     };
-                    final Set<Field> fields = Reflections.getAllFields(subtype, injectorFields);
+                    final Set<Field> fields = ReflectionUtils.getAllFields(subtype, injectorFields);
                     if(fields.size() != 1) {
                         continue;
                     }
