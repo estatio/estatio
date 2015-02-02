@@ -472,6 +472,9 @@ public class LeaseItem
         return charges.allCharges();
     }
 
+
+    // //////////////////////////////////////
+
     public LeaseItem changeCharge(final Charge charge) {
         setCharge(charge);
         return this;

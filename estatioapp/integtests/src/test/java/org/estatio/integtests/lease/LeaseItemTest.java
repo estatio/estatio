@@ -19,12 +19,14 @@
 package org.estatio.integtests.lease;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.SortedSet;
 import javax.inject.Inject;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.charge.Charge;
@@ -129,31 +131,31 @@ public class LeaseItemTest extends EstatioIntegrationTest {
         @Inject
         private Charges charges;
 
-        @Ignore("EST-467")
         @Test
         public void happyCase() throws Exception {
 
             // given
-            LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
-            final Charge charge = charges.findByReference(ChargeRefData.GB_RENT);
+            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
+            final Charge charge = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
 
             // when
-            final LeaseItem newLeaseItem = leaseTopModelServiceChargeItem.copy(VT.ld(2011, 7, 15), InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, charge);
+            final LocalDate startDate = VT.ld(2011, 7, 15);
+            final LeaseItem newLeaseItem = wrap(leaseItem).copy(startDate, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, charge);
 
             // then
-            // to complete
+            Assertions.assertThat(newLeaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
+            Assertions.assertThat(newLeaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
+            Assertions.assertThat(newLeaseItem.getStartDate()).isEqualTo(startDate);
+            Assertions.assertThat(newLeaseItem.getCharge()).isEqualTo(charge);
 
+            final BigInteger nextSequenceNumber = leaseItem.getSequence().add(VT.bi(1));
+            Assertions.assertThat(newLeaseItem.getSequence()).isEqualTo(nextSequenceNumber);
 
+            final String atPath = leaseItem.getApplicationTenancyPath();
+            Assertions.assertThat(newLeaseItem.getApplicationTenancyPath()).isEqualTo(atPath);
 
-//            Oddities..
-//
-//            LeaseItem#copy(...)
-//            ... seems really wierd, no constraints on charge for given LeaseItemType?
-//
-//            similarly...
-//
-//            Lease#newItem(...) ... why doesn't the LeaseItemType constrain the available charges?
-//
+            Assertions.assertThat(newLeaseItem.getTerms().size()).isEqualTo(leaseItem.getTerms().size());
+            Assertions.assertThat(newLeaseItem.getEndDate()).isNull();
         }
 
     }
