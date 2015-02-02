@@ -6,7 +6,11 @@
         "General": {
           "members": {
             "role": {},
-            "type": {},
+            "type": {
+              "actions": {
+                "changeType": {}
+              }
+            },
             "communicationChannel": {}
           }
         },
