@@ -94,7 +94,7 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2.1")
-    public List<Charge> chargesForCountry(final Country country) {
+    public List<Charge> findChargesForCountry(final Country country) {
         final String countryPath = "/" + country.getAlpha2Code();
         return chargesForCountry(countryPath);
     }
@@ -107,10 +107,10 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
     }
 
     @Programmatic
-    public List<Charge> chargesForCountry(final String countryPath) {
+    public List<Charge> chargesForCountry(final String applicationTenancyPath) {
 
-        // assert the path
-        ApplicationTenancyLevel.of(countryPath).getCountryPath();
+        // assert the path (must not be root)
+        final String countryPath = ApplicationTenancyLevel.of(applicationTenancyPath).getCountryPath();
 
         final List<Charge> charges = allInstances();
         return Lists.newArrayList(

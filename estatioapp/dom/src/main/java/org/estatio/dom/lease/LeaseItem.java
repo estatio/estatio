@@ -57,6 +57,7 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
@@ -484,6 +485,11 @@ public class LeaseItem
         return getCharge();
     }
 
+    public List<Charge> choices0ChangeCharge() {
+        return charges.chargesForCountry(getApplicationTenancyPath());
+    }
+
+
     // //////////////////////////////////////
 
     public LeaseItem changePaymentMethod(
@@ -747,5 +753,9 @@ public class LeaseItem
 
     @Inject
     LeaseTerms leaseTerms;
+
+    @Inject
+    EstatioApplicationTenancies estatioApplicationTenancies;
+
 
 }
