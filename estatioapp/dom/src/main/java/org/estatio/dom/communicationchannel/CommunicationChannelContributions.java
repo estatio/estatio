@@ -20,15 +20,19 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 import java.util.SortedSet;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
@@ -56,23 +60,23 @@ public abstract class CommunicationChannelContributions extends EstatioService<C
         super(serviceType);
     }
 
+    // //////////////////////////////////////
 
-// //////////////////////////////////////
-
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "CommunicationChannels", sequence = "1")
-    @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     // CHECKSTYLE.OFF: ParameterNumber - Wicket viewer does not support
     // aggregate value types
     public CommunicationChannelOwner newPostal(
-            final @Named("Owner") CommunicationChannelOwner owner,
-            final @Named("Type") CommunicationChannelType type,
+            final @ParameterLayout(named = "Owner") CommunicationChannelOwner owner,
+            final @ParameterLayout(named = "Type") CommunicationChannelType type,
             final Country country,
-            final @Optional State state,
-            final @Named("Address line 1") String address1,
-            final @Named("Address line 2") @Optional String address2,
-            final @Named("Address line 3") @Optional String address3,
-            final @Named("Postal Code") String postalCode, final @Named("City") String city
+            final @Parameter(optionality = Optionality.OPTIONAL) State state,
+            final @ParameterLayout(named = "Address line 1") String address1,
+            final @ParameterLayout(named = "Address line 2") @Parameter(optionality = Optionality.OPTIONAL) String address2,
+            final @ParameterLayout(named = "Address line 3") @Parameter(optionality = Optionality.OPTIONAL) String address3,
+            final @ParameterLayout(named = "Postal Code") String postalCode,
+            final @ParameterLayout(named = "City") String city
             ) {
         communicationChannels.newPostal(owner, type, address1, address2, null, postalCode, city, state, country);
         return owner;
@@ -107,13 +111,13 @@ public abstract class CommunicationChannelContributions extends EstatioService<C
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "CommunicationChannels", sequence = "2")
-    @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newEmail(
-            final @Named("Owner") CommunicationChannelOwner owner,
-            final @Named("Type") CommunicationChannelType type,
-            final @Named("Address") String address) {
+            final @ParameterLayout(named = "Owner") CommunicationChannelOwner owner,
+            final @ParameterLayout(named = "Type") CommunicationChannelType type,
+            final @ParameterLayout(named = "Address") String address) {
         communicationChannels.newEmail(owner, type, address);
         return owner;
     }
@@ -136,14 +140,13 @@ public abstract class CommunicationChannelContributions extends EstatioService<C
 
     // //////////////////////////////////////
 
-    @Named("New Phone/Fax")
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "CommunicationChannels", sequence = "3")
-    @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(named = "New Phone/Fax", contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newPhoneOrFax(
-            final @Named("Owner") CommunicationChannelOwner owner,
-            final @Named("Type") CommunicationChannelType type,
-            final @Named("Number") String number) {
+            final @ParameterLayout(named = "Owner") CommunicationChannelOwner owner,
+            final @ParameterLayout(named = "Type") CommunicationChannelType type,
+            final @ParameterLayout(named = "Number") String number) {
         communicationChannels.newPhoneOrFax(owner, type, number);
         return owner;
     }
@@ -166,17 +169,15 @@ public abstract class CommunicationChannelContributions extends EstatioService<C
 
     // //////////////////////////////////////
 
-    @ActionSemantics(ActionSemantics.Of.SAFE)
-    @NotInServiceMenu
-    @NotContributed(NotContributed.As.ACTION)
-    @Render(Render.Type.EAGERLY)
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
         return communicationChannels.findByOwner(owner);
     }
 
-
-    @NotContributed
     @Programmatic
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public CommunicationChannel findCommunicationChannelForType(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type) {

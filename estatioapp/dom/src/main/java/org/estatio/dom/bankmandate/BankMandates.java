@@ -20,17 +20,21 @@ package org.estatio.dom.bankmandate;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -45,8 +49,7 @@ import org.estatio.dom.party.Party;
 @DomainServiceLayout(
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "30.2"
-)
+        menuOrder = "30.2")
 public class BankMandates extends EstatioDomainService<BankMandate> {
 
     public BankMandates() {
@@ -62,7 +65,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     public BankMandate newBankMandate(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
+            @Parameter(regexPattern = RegexValidation.REFERENCE) final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
@@ -89,15 +92,14 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(name = "Accounts", sequence = "99")
     public List<BankMandate> allBankMandates() {
         return allInstances();
     }
 
     @Programmatic
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     public List<BankMandate> findBankMandatesFor(final BankAccount bankAccount) {
         return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
     }

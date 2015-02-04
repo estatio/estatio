@@ -2,20 +2,24 @@ package org.estatio.dom.party.relationship;
 
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Inject;
+
 import com.google.common.eventbus.Subscribe;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.core.runtime.authentication.standard.RandomCodeGenerator10Chars;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -41,14 +45,14 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
         return allMatches("findByParty", "party", party);
     }
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public PartyRelationship newRelationship(
-            final @Named("From party") Party from,
-            final @Named("To party") Party to,
-            final @Named("Relationship type") String relationshipType,
-            final @Named("Description") @Optional String description) {
+            final @ParameterLayout(named = "From party") Party from,
+            final @ParameterLayout(named = "To party") Party to,
+            final @ParameterLayout(named = "Relationship type") String relationshipType,
+            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description) {
         PartyRelationship relationship = getContainer().injectServicesInto(PartyRelationshipType.createWithToTitle(from, to, relationshipType));
         relationship.setFrom(from);
         relationship.setTo(to);
@@ -79,18 +83,19 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @Named("Reference") @Optional @RegEx(validation = RegexValidation.Person.REFERENCE) String reference,
-            final @Named("Initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
-            final @Named("First name") @Optional String firstName,
-            final @Named("Last name") String lastName,
-            final @Named("Gender") PersonGenderType gender,
-            final @Named("Relationship type") String relationshipType,
-            final @Named("Description") @Optional String description,
-            final @Named("Phone number") @Optional @RegEx(validation = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber, final @Named("Email address") @Optional @RegEx(validation = RegexValidation.CommunicationChannel.EMAIL) String emailAddress
+            final @ParameterLayout(named = "Reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE) String reference,
+            final @ParameterLayout(named = "Initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
+            final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
+            final @ParameterLayout(named = "Last name") String lastName,
+            final @ParameterLayout(named = "Gender") PersonGenderType gender,
+            final @ParameterLayout(named = "Relationship type") String relationshipType,
+            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description,
+            final @ParameterLayout(named = "Phone number") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber,
+            final @ParameterLayout(named = "Email address") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL) String emailAddress
             ) {
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
@@ -121,12 +126,11 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
 
     // //////////////////////////////////////
 
-    @Prototype
     @MemberOrder(sequence = "99")
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<PartyRelationship> allRelationships() {
-return allInstances();
-}
+        return allInstances();
+    }
 
     // //////////////////////////////////////
 

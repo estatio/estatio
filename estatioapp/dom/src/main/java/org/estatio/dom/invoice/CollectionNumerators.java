@@ -19,12 +19,16 @@
 package org.estatio.dom.invoice;
 
 import java.math.BigInteger;
-import org.apache.isis.applib.annotation.ActionSemantics;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
@@ -34,10 +38,9 @@ import org.estatio.services.settings.EstatioSettingsService;
 
 @DomainService
 @DomainServiceLayout(
-        named="Administration",
+        named = "Administration",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "120.2"
-)
+        menuOrder = "120.2")
 public class CollectionNumerators extends EstatioService<CollectionNumerators> {
 
     public CollectionNumerators() {
@@ -46,7 +49,7 @@ public class CollectionNumerators extends EstatioService<CollectionNumerators> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(ActionSemantics.Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public Numerator findCollectionNumberNumerator() {
         return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
@@ -54,12 +57,12 @@ public class CollectionNumerators extends EstatioService<CollectionNumerators> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(ActionSemantics.Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "2")
-    @NotContributed
     public Numerator createCollectionNumberNumerator(
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
+            final @ParameterLayout(named = "Format") String format,
+            final @ParameterLayout(named = "Last value") BigInteger lastIncrement) {
 
         return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
     }
@@ -74,9 +77,9 @@ public class CollectionNumerators extends EstatioService<CollectionNumerators> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(ActionSemantics.Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "3")
-    @NotContributed
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset) {
         return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset);
@@ -84,13 +87,13 @@ public class CollectionNumerators extends EstatioService<CollectionNumerators> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(ActionSemantics.Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "4")
-    @NotContributed
     public Numerator createInvoiceNumberNumerator(
             final Property property,
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
+            final @ParameterLayout(named = "Format") String format,
+            final @ParameterLayout(named = "Last value") BigInteger lastIncrement) {
         return numerators.createScopedNumerator(
                 Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
     }

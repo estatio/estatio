@@ -18,6 +18,12 @@
  */
 package org.estatio.integtests.financial;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.Assert;
@@ -27,35 +33,43 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
+import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.integtests.EstatioIntegrationTest;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 public class FinancialAccountsTest extends EstatioIntegrationTest {
 
+    @Before
+    public void setupData() {
+        runScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
+                executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
+            }
+        });
+    }
+
+    @Inject
+    FinancialAccounts financialAccounts;
+
+    @Inject
+    Parties parties;
+
+    Party party;
+
+    @Before
+    public void setup() throws Exception {
+        party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+    }
 
     public static class FindAccountByReference extends FinancialAccountsTest {
-
-        @Before
-        public void setupData() {
-            runScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
-                }
-            });
-        }
-
-        @Inject
-        private FinancialAccounts financialAccounts;
 
         @Test
         public void forAccount() {
@@ -67,5 +81,31 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
             final BankAccount bankAccount = (BankAccount) account;
         }
 
+    }
+
+    public static class FindAccountsByOwner extends FinancialAccountsTest {
+
+        @Test
+        public void findAccountsByOwner() throws Exception {
+            // when
+            List<FinancialAccount> accounts = financialAccounts.findAccountsByOwner(party);
+            assertThat(accounts.size(), is(1));
+
+            // then
+            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF));
+        }
+    }
+
+    public static class FindAccountsByTypeOwner extends FinancialAccountsTest {
+
+        @Test
+        public void findAccountsByTypeOwner() throws Exception {
+            // when
+            List<FinancialAccount> accounts = financialAccounts.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
+            assertThat(accounts.size(), is(1));
+
+            // then
+            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF));
+        }
     }
 }

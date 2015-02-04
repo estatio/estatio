@@ -21,24 +21,31 @@ package org.estatio.dom.asset;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -59,13 +66,13 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.asset.Property "
                         + "WHERE reference == :reference")
 })
-@AutoComplete(repository = Properties.class)
-@Bookmarkable
+@DomainObject(autoCompleteRepository = Properties.class)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Property extends FixedAsset implements Locatable {
 
     private String fullName;
 
-    @Optional
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL)
     public String getFullName() {
         return fullName;
     }
@@ -174,9 +181,7 @@ public class Property extends FixedAsset implements Locatable {
     private Location location;
 
     @Override
-    @Disabled
-    @Optional
-    @Hidden(where = Where.ALL_TABLES)
+    @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     public Location getLocation() {
         return location;
     }
@@ -185,10 +190,10 @@ public class Property extends FixedAsset implements Locatable {
         this.location = location;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    @Named("Lookup")
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Lookup")
     public FixedAsset lookupLocation(
-            final @Named("Address") @DescribedAs("Example: Herengracht 469, Amsterdam, NL") String address) {
+            final @ParameterLayout(named = "Address", describedAs = "Example: Herengracht 469, Amsterdam, NL") String address) {
         if (locationLookupService != null) {
             // TODO: service does not seem to be loaded in tests
             setLocation(locationLookupService.lookup(address));
@@ -201,12 +206,12 @@ public class Property extends FixedAsset implements Locatable {
     @javax.jdo.annotations.Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();
 
-    @Render(Render.Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @Deprecated
     public SortedSet<Unit> getUnits() {
         return units;
     }
-    
+
     @Deprecated
     public void setUnits(final SortedSet<Unit> units) {
         this.units = units;
@@ -219,10 +224,10 @@ public class Property extends FixedAsset implements Locatable {
      */
     @Programmatic
     public FixedAssetRole addRoleIfDoesNotExist(
-            final @Named("party") Party party,
-            final @Named("type") FixedAssetRoleType type,
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "party") Party party,
+            final @ParameterLayout(named = "type") FixedAssetRoleType type,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
 
         FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
         if (role == null) {
@@ -232,15 +237,15 @@ public class Property extends FixedAsset implements Locatable {
     }
 
     @Programmatic
-    public Unit newUnit(final String reference, final String name, final UnitType type){
+    public Unit newUnit(final String reference, final String name, final UnitType type) {
         return unitsRepo.newUnit(this, reference, name, type);
     }
-    
+
     // //////////////////////////////////////
 
     public Property dispose(
-            final @Named("Disposal date") LocalDate disposalDate,
-            final @Named("Are you sure?") boolean confirm) {
+            final @ParameterLayout(named = "Disposal date") LocalDate disposalDate,
+            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
         if (confirm) {
             setDisposalDate(disposalDate);
         }

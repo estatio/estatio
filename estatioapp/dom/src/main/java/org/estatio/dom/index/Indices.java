@@ -20,18 +20,23 @@ package org.estatio.dom.index;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 
 @DomainService(repositoryFor = Index.class)
 @DomainServiceLayout(
-        named="Indices",
+        named = "Indices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "60.2"
-)
+        menuOrder = "60.2")
 public class Indices extends EstatioDomainService<Index> {
 
     public Indices() {
@@ -40,11 +45,11 @@ public class Indices extends EstatioDomainService<Index> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Index newIndex(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
-            final @Named("Name") String name) {
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name) {
         final Index index = newTransientInstance();
         index.setReference(reference);
         index.setName(name);
@@ -53,16 +58,17 @@ public class Indices extends EstatioDomainService<Index> {
     }
 
     // //////////////////////////////////////
-    
-    @ActionSemantics(Of.SAFE)
+
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Index> allIndices() {
         return allInstances();
     }
+
     // //////////////////////////////////////
 
     @Programmatic
-    public Index findIndex(final @Named("Reference") String reference) {
+    public Index findIndex(final @ParameterLayout(named = "Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
@@ -70,7 +76,7 @@ public class Indices extends EstatioDomainService<Index> {
     public Index findOrCreateIndex(final String reference, final String name) {
         Index index = findIndex(reference);
         if (index == null) {
-            index  = newIndex(reference, name);
+            index = newIndex(reference, name);
         }
         return index;
     }

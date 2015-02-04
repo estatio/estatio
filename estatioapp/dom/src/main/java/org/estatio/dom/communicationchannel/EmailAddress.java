@@ -20,21 +20,24 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Mandatory;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
-    @javax.jdo.annotations.Index(
-            name="EmailAddress_emailAddress_IDX", members={"emailAddress"})
+        @javax.jdo.annotations.Index(
+                name = "EmailAddress_emailAddress_IDX", members = { "emailAddress" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -44,17 +47,16 @@ import org.estatio.dom.RegexValidation;
                         + "WHERE owner == :owner "
                         + "&& emailAddress == :emailAddress")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class EmailAddress extends CommunicationChannel {
-
 
     // //////////////////////////////////////
 
     private String emailAddress;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.EMAIL_ADDRESS)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.EMAIL_ADDRESS)
     @Title
-    @Mandatory
+    @Property(optionality = Optionality.MANDATORY)
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -64,7 +66,7 @@ public class EmailAddress extends CommunicationChannel {
     }
 
     public EmailAddress changeEmailAddress(
-            final @Named("Email Address") @RegEx(validation = RegexValidation.CommunicationChannel.EMAIL) String address) {
+            final @ParameterLayout(named = "Email Address") @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL) String address) {
         setEmailAddress(address);
 
         return this;

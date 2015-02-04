@@ -25,16 +25,17 @@ import javax.inject.Inject;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.TypicalLength;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.JdoColumnLength;
@@ -46,7 +47,7 @@ import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "30", repositoryFor = FinancialAccount.class)
-@Named("Accounts")
+@DomainServiceLayout(named = "Accounts")
 public class BankAccounts extends EstatioDomainService<BankAccount> {
 
     public BankAccounts() {
@@ -60,11 +61,11 @@ public class BankAccounts extends EstatioDomainService<BankAccount> {
 
     // //////////////////////////////////////
 
-    @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public BankAccount newBankAccount(
-            final @Named("Owner") Party owner,
-            final @Named("IBAN") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban) {
+            final @ParameterLayout(named = "Owner") Party owner,
+            final @ParameterLayout(named = "IBAN", typicalLength = JdoColumnLength.BankAccount.IBAN) String iban) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
         bankAccount.setReference(iban);
         bankAccount.setName(iban);
@@ -88,9 +89,9 @@ public class BankAccounts extends EstatioDomainService<BankAccount> {
 
     @Programmatic
     public BankAccount newBankAccount(
-            final @Named("Owner") Party owner,
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name) {
+            final @ParameterLayout(named = "Owner") Party owner,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
         bankAccount.setReference(reference);
         bankAccount.setName(name);
@@ -108,10 +109,14 @@ public class BankAccounts extends EstatioDomainService<BankAccount> {
                         BankAccount.class));
     }
 
+    @Programmatic
+    public BankAccount findBankAccountByReference(final String reference) {
+        return (BankAccount) financialAccounts.findAccountByReference(reference);
+    }
+
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Prototype
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<BankAccount> allBankAccounts() {
         return allInstances();

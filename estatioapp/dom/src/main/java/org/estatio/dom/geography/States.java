@@ -21,8 +21,14 @@ package org.estatio.dom.geography;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
@@ -31,8 +37,7 @@ import org.estatio.dom.RegexValidation;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.6"
-)
+        menuOrder = "80.6")
 public class States
         extends EstatioDomainService<State> {
 
@@ -42,11 +47,11 @@ public class States
 
     // //////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public State newState(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
-            final @Named("Name") String name, 
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name,
             final Country country) {
         final State state = newTransientInstance();
         return createState(reference, name, country, state);
@@ -54,14 +59,14 @@ public class States
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "2")
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(name = "Other", sequence = "2")
     public List<State> allStates() {
         return allInstances();
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public State createState(final String reference, final String name, final Country country, final State state) {
         state.setReference(reference);
@@ -72,14 +77,13 @@ public class States
     }
 
     @Programmatic
-    public State findState(final @Named("Reference") String reference) {
+    public State findState(final @ParameterLayout(named = "Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     @Programmatic
     public List<State> findStatesByCountry(final Country country) {
-        return country != null? allMatches("findByCountry", "country", country): Collections.<State>emptyList();
+        return country != null ? allMatches("findByCountry", "country", country) : Collections.<State> emptyList();
     }
-
 
 }

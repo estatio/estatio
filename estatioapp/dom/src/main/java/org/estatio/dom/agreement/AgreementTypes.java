@@ -18,11 +18,12 @@
  */
 package org.estatio.dom.agreement;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementType.class)
@@ -35,7 +36,7 @@ public class AgreementTypes extends EstatioDomainService<AgreementType> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     public AgreementType find(final String title) {
         return firstMatch("findByTitle", "title", title);
     }

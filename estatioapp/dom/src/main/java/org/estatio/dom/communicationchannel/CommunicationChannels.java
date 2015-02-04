@@ -20,17 +20,23 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 import java.util.SortedSet;
+
 import com.google.common.collect.Sets;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
+
 //import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "70", repositoryFor = CommunicationChannel.class)
@@ -43,8 +49,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @Hidden
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
     public PostalAddress newPostal(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
@@ -75,8 +80,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @Hidden
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
     public EmailAddress newEmail(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
@@ -91,8 +95,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @Hidden
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
     public PhoneOrFaxNumber newPhoneOrFax(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
@@ -107,15 +110,15 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
-    @Prototype
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public List<CommunicationChannel> allCommunicationChannels() {
         return allInstances(CommunicationChannel.class);
     }
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public CommunicationChannel findByReferenceAndType(
             final String reference, final CommunicationChannelType type) {
         return firstMatch("findByReferenceAndType", "reference", reference, "type", type);
@@ -135,7 +138,6 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     public SortedSet<CommunicationChannel> findOtherByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type, CommunicationChannel exclude) {
         return Sets.newTreeSet(allMatches("findOtherByOwnerAndType", "owner", owner, "type", type, "exclude", exclude));
     }
-
 
     // //////////////////////////////////////
 

@@ -22,17 +22,29 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Title;
+
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 
 /**
- * An event that has or is scheduled to occur at some point in time, pertaining to
- * an {@link EventSubject}.
+ * An event that has or is scheduled to occur at some point in time, pertaining
+ * to an {@link EventSubject}.
  */
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -42,27 +54,27 @@ import org.estatio.dom.JdoColumnLength;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findBySubject", language = "JDOQL",
-            value = "SELECT " +
-                    "FROM org.estatio.dom.event.Event " +
-                    "WHERE subject == :subject "),
-    @javax.jdo.annotations.Query(
-            name = "findBySubjectAndSubjectEventType", language = "JDOQL",
-            value = "SELECT " +
-                    "FROM org.estatio.dom.event.Event " +
-                    "WHERE subject == :subject " +
-                    "   && subjectEventType == :subjectEventType"),
-    @javax.jdo.annotations.Query(
-            name = "findInDateRange", language = "JDOQL",
-            value = "SELECT " +
-                    "FROM org.estatio.dom.event.Event " +
-                    "WHERE date >= :rangeStartDate &&" +
-                    "date <= :rangeEndDate")
+        @javax.jdo.annotations.Query(
+                name = "findBySubject", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.event.Event " +
+                        "WHERE subject == :subject "),
+        @javax.jdo.annotations.Query(
+                name = "findBySubjectAndSubjectEventType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.event.Event " +
+                        "WHERE subject == :subject " +
+                        "   && subjectEventType == :subjectEventType"),
+        @javax.jdo.annotations.Query(
+                name = "findInDateRange", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.event.Event " +
+                        "WHERE date >= :rangeStartDate &&" +
+                        "date <= :rangeEndDate")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class Event
-        extends EstatioDomainObject<Event> 
+        extends EstatioDomainObject<Event>
         implements CalendarEventable {
 
     private static final int NUMBER_OF_LINES = 8;
@@ -76,8 +88,7 @@ public class Event
     private LocalDate date;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Mandatory
-    //@Disabled
+    @Property(optionality = Optionality.MANDATORY)
     public LocalDate getDate() {
         return date;
     }
@@ -89,7 +100,7 @@ public class Event
     // //////////////////////////////////////
 
     private EventSubject subject;
-    
+
     /**
      * Polymorphic association to (any implementation of) {@link EventSubject}.
      */
@@ -102,11 +113,11 @@ public class Event
                             key = "implementation-classes",
                             value = "org.estatio.dom.lease.breaks.BreakOption") })
     @javax.jdo.annotations.Columns({
-        @javax.jdo.annotations.Column(name = "subjectBreakOptionId", allowsNull="true")
+            @javax.jdo.annotations.Column(name = "subjectBreakOptionId", allowsNull = "true")
     })
-    @Optional // not really, but to be compatible with JDO 
-    @Disabled
-    @Title(sequence="1")
+    // not really, but to be compatible with JDO
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Title(sequence = "1")
     public EventSubject getSubject() {
         return subject;
     }
@@ -123,19 +134,23 @@ public class Event
      * The name of the &quot;calendar&quot; to which this event belongs.
      * 
      * <p>
-     * The &quot;calendar&quot; is a string identifier that indicates the nature of this event.  These are expected
-     * to be uniquely identifiable for all and any events that might be created.  They therefore typically (always?)
-     * include information relating to the type/class of the event's {@link #getSubject() subject}.
+     * The &quot;calendar&quot; is a string identifier that indicates the nature
+     * of this event. These are expected to be uniquely identifiable for all and
+     * any events that might be created. They therefore typically (always?)
+     * include information relating to the type/class of the event's
+     * {@link #getSubject() subject}.
      * 
      * <p>
-     * For example, an event whose subject is a lease's <tt>FixedBreakOption</tt> has three dates: the 
-     * <i>break date</i>, the <i>exercise date</i> and the <i>reminder date</i>.  These therefore correspond to three 
-     * different calendar names, respectively <i>Fixed break</i>, <i>Fixed break exercise</i> and 
-     * <i>Fixed break exercise reminder</i>.
+     * For example, an event whose subject is a lease's
+     * <tt>FixedBreakOption</tt> has three dates: the <i>break date</i>, the
+     * <i>exercise date</i> and the <i>reminder date</i>. These therefore
+     * correspond to three different calendar names, respectively <i>Fixed
+     * break</i>, <i>Fixed break exercise</i> and <i>Fixed break exercise
+     * reminder</i>.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.Event.CALENDAR_NAME)
-    @Disabled
-    @Title(prepend=": ", sequence="2")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Event.CALENDAR_NAME)
+    @Title(prepend = ": ", sequence = "2")
+    @Property(editing = Editing.DISABLED)
     public String getCalendarName() {
         return calendarName;
     }
@@ -148,8 +163,8 @@ public class Event
 
     private String notes;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.NOTES)
-    @MultiLine(numberOfLines=NUMBER_OF_LINES)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NOTES)
+    @PropertyLayout(multiLine = NUMBER_OF_LINES)
     public String getNotes() {
         return notes;
     }
@@ -169,22 +184,25 @@ public class Event
     // //////////////////////////////////////
 
     public final static class Functions {
-        private Functions(){}
+        private Functions() {
+        }
 
         public final static Function<Event, CalendarEvent> TO_CALENDAR_EVENT = new Function<Event, CalendarEvent>() {
             @Override
             public CalendarEvent apply(final Event input) {
                 return input.toCalendarEvent();
-            }};
+            }
+        };
         public final static Function<Event, String> GET_CALENDAR_NAME = new Function<Event, String>() {
             @Override
             public String apply(final Event input) {
                 return input.getCalendarName();
-            }};
+            }
+        };
     }
-    
-    public Event changeNotes(final @Named("Notes") @MultiLine(numberOfLines=NUMBER_OF_LINES) String notes) {
-            setNotes(notes);
+
+    public Event changeNotes(final @ParameterLayout(named = "Notes", multiLine = NUMBER_OF_LINES) String notes) {
+        setNotes(notes);
 
         return this;
     }

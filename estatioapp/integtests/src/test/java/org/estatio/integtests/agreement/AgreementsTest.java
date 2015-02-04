@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
@@ -75,6 +76,9 @@ public class AgreementsTest extends EstatioIntegrationTest {
     AgreementTypes agreementTypes;
 
     @Inject
+    AgreementRoleTypes agreementRoleTypes;
+
+    @Inject
     Leases leases;
 
     Lease lease;
@@ -82,7 +86,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
     public static class FindByTypeAndReferenceOrName extends AgreementsTest {
 
         @Test
-        public void whenPresent() {
+        public void whenPresent() throws Exception {
             final AgreementType type = agreementTypes.find("Lease");
             assertNotNull(type);
             final List<Agreement> results = agreements.findByTypeAndReferenceOrName(type, ".*OXF.*");
@@ -93,7 +97,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
     public static class FindAgreementByReference extends AgreementsTest {
 
         @Test
-        public void happyCase() {
+        public void happyCase() throws Exception {
             Agreement agreement = agreements.findAgreementByReference(lease.getReference());
             assertThat(agreement.getName(), is(lease.getName()));
         }

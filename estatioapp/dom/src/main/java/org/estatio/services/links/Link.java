@@ -30,32 +30,32 @@ import org.estatio.dom.JdoColumnLength;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        table="Link")
-@javax.jdo.annotations.Queries({ 
-     @javax.jdo.annotations.Query(
-             name = "findByClassName", language = "JDOQL", 
-             value = "SELECT "
-                     + "FROM org.estatio.services.links.Link "
-                     + "WHERE className == :className")
+        table = "Link")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByClassName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.services.links.Link "
+                        + "WHERE className == :className")
 })
-@javax.jdo.annotations.Unique(members={"className","name"}) 
-@MemberGroupLayout(columnSpans={12,0,0,12})
-public class Link extends EstatioDomainObject<Link>{
+@javax.jdo.annotations.Unique(members = { "className", "name" })
+@MemberGroupLayout(columnSpans = { 12, 0, 0, 12 })
+public class Link extends EstatioDomainObject<Link> {
 
     public Link() {
         super("name");
     }
 
     // //////////////////////////////////////
-    
-    private String className ;
-    
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.FQCN)
-    @MemberOrder(sequence="1")
+
+    private String className;
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FQCN)
+    @MemberOrder(sequence = "1")
     public String getClassName() {
         return className;
     }
-    
+
     public void setClassName(final String className) {
         this.className = className;
     }
@@ -64,8 +64,8 @@ public class Link extends EstatioDomainObject<Link>{
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
-    @MemberOrder(sequence="2")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @MemberOrder(sequence = "2")
     @Title
     public String getName() {
         return name;
@@ -77,10 +77,10 @@ public class Link extends EstatioDomainObject<Link>{
 
     // //////////////////////////////////////
 
-    private String urlTemplate ;
+    private String urlTemplate;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Link.URL_TEMPLATE)
-    @MemberOrder(sequence="3")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Link.URL_TEMPLATE)
+    @MemberOrder(sequence = "3")
     public String getUrlTemplate() {
         return urlTemplate;
     }
@@ -89,5 +89,4 @@ public class Link extends EstatioDomainObject<Link>{
         this.urlTemplate = urlTemplate;
     }
 
-    
 }

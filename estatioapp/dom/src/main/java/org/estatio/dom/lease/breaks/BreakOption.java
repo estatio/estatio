@@ -33,14 +33,15 @@ import com.google.common.collect.Maps;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -76,7 +77,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.breaks.BreakOption "
                         + "WHERE lease == :lease") })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public abstract class BreakOption
         extends EstatioDomainObject<BreakOption>
         implements EventSubject {
@@ -91,7 +92,7 @@ public abstract class BreakOption
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
+    @Property(hidden = Where.REFERENCES_PARENT)
     public Lease getLease() {
         return lease;
     }
@@ -209,8 +210,7 @@ public abstract class BreakOption
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    @Optional
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
     public String getDescription() {
         return description;
     }
@@ -222,9 +222,9 @@ public abstract class BreakOption
     // //////////////////////////////////////
 
     public BreakOption change(
-            final @Named("Type") BreakType breakType,
-            final @Named("Exercise Type") BreakExerciseType breakExerciseType,
-            final @Named("Description") @Optional String description) {
+            final @ParameterLayout(named = "Type") BreakType breakType,
+            final @ParameterLayout(named = "Exercise Type") BreakExerciseType breakExerciseType,
+            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description) {
         setType(breakType);
         setExerciseType(breakExerciseType);
         setDescription(description);
@@ -250,8 +250,8 @@ public abstract class BreakOption
     }
 
     public BreakOption changeDates(
-            final @Named("Break date") LocalDate newBreakDate,
-            final @Named("Excercise date") LocalDate newExcerciseDate) {
+            final @ParameterLayout(named = "Break date") LocalDate newBreakDate,
+            final @ParameterLayout(named = "Excercise date") LocalDate newExcerciseDate) {
         setBreakDate(newBreakDate);
         setExerciseDate(newExcerciseDate);
         // remove existing events
@@ -273,7 +273,7 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    public Lease remove(final @Named("Reason") String reason) {
+    public Lease remove(final @ParameterLayout(named = "Reason") String reason) {
         Lease lease = getLease();
         doRemove();
         return lease;
@@ -304,8 +304,8 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @NotPersisted
-    @Render(Type.EAGERLY)
+    @Property(notPersisted = true)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public List<Event> getEvents() {
         return events.findEventsBySubject(this);
     }

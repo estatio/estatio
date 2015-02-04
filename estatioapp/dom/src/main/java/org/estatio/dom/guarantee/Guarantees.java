@@ -21,27 +21,31 @@ package org.estatio.dom.guarantee;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -61,8 +65,7 @@ import org.estatio.dom.utils.StringUtils;
 @DomainServiceLayout(
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "30.3"
-)
+        menuOrder = "30.3")
 public class Guarantees extends EstatioDomainService<Guarantee> {
 
     @Override
@@ -76,18 +79,18 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Guarantee newGuarantee(
             final Lease lease,
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name,
             final GuaranteeType guaranteeType,
-            final @Named("Start date") LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate,
-            final @Named("Description") String description,
-            final @Named("Contractual amount") @Optional BigDecimal contractualAmount,
-            final @Named("Start amount") BigDecimal startAmount
+            final @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
+            final @ParameterLayout(named = "Description") String description,
+            final @ParameterLayout(named = "Contractual amount") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal contractualAmount,
+            final @ParameterLayout(named = "Start amount") BigDecimal startAmount
             ) {
 
         AgreementRoleType artGuarantee = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE);
@@ -134,10 +137,10 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Guarantee> findGuarantees(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String refOrName) {
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern);
     }
@@ -151,8 +154,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Guarantee> allGuarantees() {
         return allInstances();
@@ -160,10 +162,10 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @Render(Type.EAGERLY)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public List<FinancialAccountTransaction> transactions(Guarantee guarantee) {
         return financialAccountTransactions.transactions(guarantee.getFinancialAccount());
     }
@@ -173,9 +175,9 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
     @NotInServiceMenu
     public Guarantee newTransaction(
             final Guarantee guarantee,
-            final @Named("Transaction date") LocalDate transactionDate,
-            final @Named("Description") String description,
-            final @Named("Amount") BigDecimal amount) {
+            final @ParameterLayout(named = "Transaction date") LocalDate transactionDate,
+            final @ParameterLayout(named = "Description") String description,
+            final @ParameterLayout(named = "Amount") BigDecimal amount) {
 
         financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
         return guarantee;
@@ -187,9 +189,9 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
-    @NotContributed(As.ACTION)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Guarantee> guarantees(Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
@@ -203,7 +205,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
-    @Hidden
+    @CollectionLayout(hidden = Where.EVERYWHERE)
     public List<Guarantee> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findGuarantees("*" + searchPhrase + "*")

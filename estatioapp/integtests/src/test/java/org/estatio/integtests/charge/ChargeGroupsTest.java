@@ -16,36 +16,37 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.financial;
+package org.estatio.integtests.charge;
+
+import static org.junit.Assert.assertNotNull;
 
 import javax.inject.Inject;
+
 import org.junit.Before;
-import org.junit.Ignore;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.financial.FinancialAccountTransactions;
+import org.junit.Test;
+
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class FinancialAccountTransactionsTest_TODO extends EstatioIntegrationTest {
+public class ChargeGroupsTest extends EstatioIntegrationTest {
 
-    public static class FindByFinancialAccount extends FinancialAccountTransactionsTest_TODO {
+    public static class FindChargeGroup extends ChargeGroupsTest {
 
         @Before
         public void setupData() {
-            runScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-                }
-            });
+            runScript(new EstatioBaseLineFixture());
         }
 
         @Inject
-        private FinancialAccountTransactions financialAccountTransactions;
+        private ChargeGroups chargeGroups;
 
-        @Ignore
-        public void forAccount() {
-            // then
+        @Test
+        public void whenExists() throws Exception {
+            ChargeGroup chargeGroup = chargeGroups.findChargeGroup(ChargeAndChargeGroupRefData.CHARGE_GROUP_REFERENCE_RENT);
+            assertNotNull(chargeGroup);
         }
 
     }

@@ -18,11 +18,17 @@
  */
 package org.estatio.integtests.communicationchannel;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+
 import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -31,8 +37,6 @@ import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.integtests.EstatioIntegrationTest;
-
-import static org.hamcrest.CoreMatchers.is;
 
 public class CommunicationChannelsTest extends EstatioIntegrationTest {
 
@@ -59,7 +63,6 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
     public void setUp() throws Exception {
         party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
     }
-
 
     public static class FindByOwner extends CommunicationChannelsTest {
         @Test

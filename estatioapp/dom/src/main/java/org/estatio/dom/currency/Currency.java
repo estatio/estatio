@@ -22,10 +22,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -67,9 +66,7 @@ import org.estatio.dom.WithReferenceUnique;
                         + "WHERE reference.matches(:searchArg) "
                         + "|| description.matches(:searchArg)")
 })
-@Bounded
-@Immutable
-@AutoComplete(repository = Currencies.class, action = "autoComplete")
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Currencies.class, autoCompleteAction = "autoComplete", bounded = true)
 public class Currency
         extends EstatioDomainObject<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique {
@@ -83,7 +80,7 @@ public class Currency
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @RegEx(validation = RegexValidation.Currency.REFERENCE, caseSensitive = true)
+    @Property(regexPattern = RegexValidation.Currency.REFERENCE)
     @Title(sequence = "1")
     public String getReference() {
         return reference;

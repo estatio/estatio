@@ -19,17 +19,23 @@
 package org.estatio.dom.asset.registration;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 
 @DomainService(repositoryFor = FixedAssetRegistration.class)
 @DomainServiceLayout(
-        named="Fixed Assets",
+        named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "10.3"
-)
+        menuOrder = "10.3")
 public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegistration> {
 
     public FixedAssetRegistrations() {
@@ -58,8 +64,7 @@ public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegi
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Prototype
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(name = "Fixed Assets", sequence = "99")
     public List<FixedAssetRegistration> allRegistrations() {
         return allInstances();

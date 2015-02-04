@@ -16,13 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
 package org.estatio.dom.asset.financial.contributed;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.FixedAsset;
@@ -34,16 +40,15 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 
-@DomainService(menuOrder = "10")
-@Hidden
+@DomainServiceLayout(menuOrder = "10")
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class FixedAssetFinancialAccountContributions extends EstatioService<FixedAssetFinancialAccountContributions> {
 
     public FixedAssetFinancialAccountContributions() {
         super(FixedAssetFinancialAccountContributions.class);
     }
 
-    @NotInServiceMenu
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "Accounts", sequence = "13")
     public FixedAssetFinancialAccount newAccount(
             final FixedAsset fixedAsset,
@@ -63,9 +68,8 @@ public class FixedAssetFinancialAccountContributions extends EstatioService<Fixe
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(name = "Accounts", sequence = "13.5")
     public List<FixedAssetFinancialAccount> accounts(final FixedAsset fixedAsset) {
         return fixedAssetFinancialAccounts.findByFixedAsset(fixedAsset);
@@ -73,9 +77,8 @@ public class FixedAssetFinancialAccountContributions extends EstatioService<Fixe
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(name = "FinancialAccounts", sequence = "13.5")
     public List<FixedAssetFinancialAccount> fixedAssets(final FinancialAccount fixedAsset) {
         return fixedAssetFinancialAccounts.findByFinancialAccount(fixedAsset);

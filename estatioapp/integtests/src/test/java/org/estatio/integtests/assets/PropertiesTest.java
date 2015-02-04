@@ -18,22 +18,26 @@
  */
 package org.estatio.integtests.assets;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
+
 import javax.inject.Inject;
-import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 public class PropertiesTest extends EstatioIntegrationTest {
 
@@ -106,7 +110,20 @@ public class PropertiesTest extends EstatioIntegrationTest {
             final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
 
             // then
-            Assert.assertThat(property.getReference(), is(PropertyForOxf.PROPERTY_REFERENCE));
+            assertThat(property.getReference(), is(PropertyForOxf.PROPERTY_REFERENCE));
+        }
+    }
+
+    public static class FindPropertyByReferenceElseNull extends PropertiesTest {
+
+        @Test
+        public void withReference() throws Exception {
+
+            // when
+            final Property property = properties.findPropertyByReferenceElseNull("FAKEREF");
+
+            // then
+            assertNull(property);
         }
     }
 }

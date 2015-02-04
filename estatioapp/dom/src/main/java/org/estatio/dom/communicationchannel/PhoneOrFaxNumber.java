@@ -20,40 +20,42 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Mandatory;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
-    @javax.jdo.annotations.Index(
-            name="PhoneNumber_phoneNumber_IDX", members={"phoneNumber"})
+        @javax.jdo.annotations.Index(
+                name = "PhoneNumber_phoneNumber_IDX", members = { "phoneNumber" })
 })
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByPhoneNumber", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.communicationchannel.PhoneOrFaxNumber " 
-                    + "WHERE owner == :owner "
-                    + "&& phoneNumber == :phoneNumber")
+        @javax.jdo.annotations.Query(
+                name = "findByPhoneNumber", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.communicationchannel.PhoneOrFaxNumber "
+                        + "WHERE owner == :owner "
+                        + "&& phoneNumber == :phoneNumber")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class PhoneOrFaxNumber extends CommunicationChannel {
-
 
     private String phoneNumber;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PHONE_NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PHONE_NUMBER)
     @Title()
-    @Mandatory
+    @Property(optionality = Optionality.MANDATORY)
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -61,12 +63,12 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
     public void setPhoneNumber(final String number) {
         this.phoneNumber = number;
     }
-    
-    @Named("Change Number")
+
+    @ActionLayout(named = "Change Number")
     public PhoneOrFaxNumber changePhoneOrFaxNumber(
-            final @Named("Phone Number") @RegEx(validation = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber) {
+            final @ParameterLayout(named = "Phone Number") @Parameter(regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber) {
         setPhoneNumber(phoneNumber);
-        
+
         return this;
     }
 

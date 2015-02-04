@@ -15,7 +15,8 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -35,7 +36,7 @@ import org.estatio.services.clock.ClockService;
                         + "FROM org.estatio.dom.party.relationship.PartyRelationship "
                         + "WHERE (to == :party || from == :party) ")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class PartyRelationship extends AbstractDomainObject implements WithInterval<PartyRelationship> {
 
     public String title() {

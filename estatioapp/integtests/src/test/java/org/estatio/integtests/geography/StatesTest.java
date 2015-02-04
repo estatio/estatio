@@ -18,10 +18,15 @@
  */
 package org.estatio.integtests.geography;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -29,26 +34,24 @@ import org.estatio.dom.geography.States;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 public class StatesTest extends EstatioIntegrationTest {
 
+    @Before
+    public void setupData() {
+        runScript(new EstatioBaseLineFixture());
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        countries = service(Countries.class);
+        states = service(States.class);
+    }
+
+    Countries countries;
+
+    States states;
+
     public static class FindStatesByCountry extends StatesTest {
-
-        @Before
-        public void setupData() {
-            runScript(new EstatioBaseLineFixture());
-        }
-
-        private Countries countries;
-        private States states;
-
-        @Before
-        public void setUp() throws Exception {
-            countries = service(Countries.class);
-            states = service(States.class);
-        }
 
         @Test
         public void whenCountryWithStates() throws Exception {
@@ -61,6 +64,21 @@ public class StatesTest extends EstatioIntegrationTest {
             for (State state : statesInCountry) {
                 assertThat(state.getCountry(), is(country));
             }
+        }
+    }
+
+    public static class FindState extends StatesTest {
+
+        @Test
+        public void findState() throws Exception {
+            // given
+            final Country country = countries.findCountry("NLD");
+
+            // when
+            final State state = states.findState("NL-DRN");
+
+            // then
+            assertThat(state.getCountry(), is(country));
         }
     }
 }

@@ -22,18 +22,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.ViewModelLayout;
 
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 
-@Named("Dashboard")
 @ViewModel
+@ViewModelLayout(named = "Dashboard")
 public class EstatioAppDashboard extends EstatioViewModel {
 
     private static final int MONTHS = 3;
@@ -48,14 +48,12 @@ public class EstatioAppDashboard extends EstatioViewModel {
 
     // //////////////////////////////////////
 
-    @Named("Leases about to expire")
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY, named = "Leases about to expire")
     public List<Lease> getLeasesAboutToExpire() {
         return leases.findExpireInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
     }
 
-    @Named("Upcoming events")
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY, named = "Upcoming events")
     public List<Event> getUpcomingEvents() {
         return events.findEventsInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
     }

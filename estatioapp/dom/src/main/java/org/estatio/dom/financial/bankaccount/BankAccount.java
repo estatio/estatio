@@ -21,13 +21,16 @@ package org.estatio.dom.financial.bankaccount;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.TypicalLength;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.financial.FinancialAccount;
@@ -39,8 +42,8 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@Bookmarkable
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class BankAccount extends FinancialAccount {
 
     private Party bank;
@@ -59,7 +62,7 @@ public class BankAccount extends FinancialAccount {
     private BankAccountType bankAccountType;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     public BankAccountType getBankAccountType() {
         return bankAccountType;
     }
@@ -101,7 +104,8 @@ public class BankAccount extends FinancialAccount {
     }
 
     // //////////////////////////////////////
-    @Hidden
+
+    @Action(hidden = Where.EVERYWHERE)
     public BankAccount verifyIban() {
         IBANHelper.verifyAndUpdate(this);
         return this;
@@ -165,13 +169,15 @@ public class BankAccount extends FinancialAccount {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
     public BankAccount change(
-            final @Named("Iban") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban,
-            final @Named("Name") String name,
-            final @Named("External Reference") @Optional String externalReference) {
+            final @ParameterLayout(named = "Iban", typicalLength = JdoColumnLength.BankAccount.IBAN) String iban,
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
         setIban(iban);
         setName(name);
         setExternalReference(externalReference);
-        //TODO: Changing references is not really a good thing. in this case there's no harm but we should come up with a pattern where we archvice 
+        // TODO: Changing references is not really a good thing. in this case
+        // there's no harm but we should come up with a pattern where we
+        // archvice
         setReference(iban);
 
         return this;

@@ -22,8 +22,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -34,42 +35,43 @@ import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
 /**
- * Represents a geographic {@link State} {@link #getCountry() within} a {@link Country}.
+ * Represents a geographic {@link State} {@link #getCountry() within} a
+ * {@link Country}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Geography_reference_UNQ", members="reference"),
-    @javax.jdo.annotations.Unique(
-            name = "Geography_name_UNQ", members="name")
+        @javax.jdo.annotations.Unique(
+                name = "Geography_reference_UNQ", members = "reference"),
+        @javax.jdo.annotations.Unique(
+                name = "Geography_name_UNQ", members = "name")
 })
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByCountry", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.geography.State "
-                    + "WHERE country == :country"),
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.geography.State "
-                    + "WHERE reference == :reference")
+        @javax.jdo.annotations.Query(
+                name = "findByCountry", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.geography.State "
+                        + "WHERE country == :country"),
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.geography.State "
+                        + "WHERE reference == :reference")
 })
-@Immutable
-public class State 
-    extends EstatioDomainObject<State> 
-    implements WithReferenceComparable<State>, WithReferenceUnique, WithNameUnique {
+@DomainObject(editing = Editing.DISABLED)
+public class State
+        extends EstatioDomainObject<State>
+        implements WithReferenceComparable<State>, WithReferenceUnique, WithNameUnique {
 
     public State() {
         super("reference");
     }
-    
+
     // //////////////////////////////////////
 
     private String reference;
@@ -81,8 +83,8 @@ public class State
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.State.REFERENCE)
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive=true)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.State.REFERENCE)
+    @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -91,12 +93,11 @@ public class State
         this.reference = reference;
     }
 
-
     // //////////////////////////////////////
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -105,12 +106,12 @@ public class State
     public void setName(final String name) {
         this.name = name;
     }
-    
+
     // //////////////////////////////////////
 
     private Country country;
 
-    @javax.jdo.annotations.Column(name="countryId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "countryId", allowsNull = "false")
     public Country getCountry() {
         return country;
     }
@@ -118,6 +119,5 @@ public class State
     public void setCountry(final Country country) {
         this.country = country;
     }
-
 
 }

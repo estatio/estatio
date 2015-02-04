@@ -19,14 +19,17 @@
 package org.estatio.fixture.guarantee;
 
 import java.math.BigDecimal;
+
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.joda.time.LocalDate;
 
 public abstract class GuaranteeAbstract extends EstatioFixtureScript {
 

@@ -18,13 +18,14 @@
  */
 package org.estatio.dom.asset;
 
-import java.util.Collection;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
@@ -39,15 +40,7 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
     // //////////////////////////////////////
 
     @NotContributed
-    @ActionSemantics(Of.SAFE)
-    public FixedAssetRole findRole(
-            final FixedAsset asset) {
-        return firstMatch("findByAsset",
-                "asset", asset);
-    }
-
-    @NotContributed
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     public FixedAssetRole findRole(
             final FixedAsset asset,
             final FixedAssetRoleType type) {
@@ -55,33 +48,11 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
                 "asset", asset,
                 "type", type);
     }
-    
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public Collection<FixedAssetRole> findRole(
-            final Party party) {
-        return allMatches("findByParty",
-                "party", party);
-    }
 
     // //////////////////////////////////////
 
     @NotContributed
-    @ActionSemantics(Of.SAFE)
-    public FixedAssetRole findRole(
-            final FixedAsset asset,
-            final Party party,
-            final FixedAssetRoleType type) {
-        return firstMatch("findByAssetAndPartyAndType",
-                "asset", asset,
-                "party", party,
-                "type", type);
-    }
-
-    @NotContributed
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     public FixedAssetRole findRole(
             final FixedAsset asset,
             final Party party,

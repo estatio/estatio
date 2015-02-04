@@ -22,9 +22,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -34,21 +34,20 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
-
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Country_reference_UNQ", members="reference"),
-    @javax.jdo.annotations.Unique(
-            name = "Country_name_UNQ", members="name"),
-    @javax.jdo.annotations.Unique(
-            name = "Country_alpha2Code_UNQ", members = "alpha2Code")
+        @javax.jdo.annotations.Unique(
+                name = "Country_reference_UNQ", members = "reference"),
+        @javax.jdo.annotations.Unique(
+                name = "Country_name_UNQ", members = "name"),
+        @javax.jdo.annotations.Unique(
+                name = "Country_alpha2Code_UNQ", members = "alpha2Code")
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -57,11 +56,9 @@ import org.estatio.dom.WithReferenceUnique;
                         + "FROM org.estatio.dom.geography.Country "
                         + "WHERE reference == :reference")
 })
-@Immutable
-@Bounded
-public class Country extends EstatioDomainObject<Country> 
-implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique {
-
+@DomainObject(editing = Editing.DISABLED, bounded = true)
+public class Country extends EstatioDomainObject<Country>
+        implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique {
 
     public Country() {
         super("reference");
@@ -85,8 +82,8 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive=true)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -95,12 +92,11 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
         this.reference = reference;
     }
 
-
     // //////////////////////////////////////
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -109,15 +105,15 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
     public void setName(final String name) {
         this.name = name;
     }
-    
-    
+
     // //////////////////////////////////////
 
-    // not possible to make this unique because Country is rolled-up to Geography.
+    // not possible to make this unique because Country is rolled-up to
+    // Geography.
     @javax.jdo.annotations.Index(unique = "false")
     private String alpha2Code;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.Country.ALPHA2CODE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Country.ALPHA2CODE)
     @Title
     public String getAlpha2Code() {
         return alpha2Code;

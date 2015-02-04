@@ -22,8 +22,17 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
@@ -32,10 +41,9 @@ import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Property.class)
 @DomainServiceLayout(
-        named="Fixed Assets",
+        named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "10.1"
-)
+        menuOrder = "10.1")
 public class Properties extends EstatioDomainService<Property> {
 
     public Properties() {
@@ -44,15 +52,15 @@ public class Properties extends EstatioDomainService<Property> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Property newProperty(
-            final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Property.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name,
             final PropertyType propertyType,
-            final @Named("City") @Optional String city,
-            final @Optional Country country,
-            final @Named("Acquire date") @Optional LocalDate acquireDate) {
+            final @ParameterLayout(named = "City") @Parameter(optionality = Optionality.OPTIONAL) String city,
+            final @Parameter(optionality = Optionality.OPTIONAL) Country country,
+            final @ParameterLayout(named = "Acquire date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate acquireDate) {
         final Property property = newTransientInstance();
 
         property.setReference(reference);
@@ -77,17 +85,15 @@ public class Properties extends EstatioDomainService<Property> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Property> findProperties(
-            @Named("Reference or Name") final String referenceOrName) {
+            @ParameterLayout(named = "Reference or Name") final String referenceOrName) {
         return allMatches("findByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Property> allProperties() {
         return allInstances();
@@ -97,17 +103,17 @@ public class Properties extends EstatioDomainService<Property> {
 
     @Programmatic
     public Property findPropertyByReference(final String reference) {
-        return mustMatch("findByReference","reference", reference);
+        return mustMatch("findByReference", "reference", reference);
     }
 
     @Programmatic
     public Property findPropertyByReferenceElseNull(final String reference) {
-        return firstMatch("findByReference","reference", reference);
+        return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////
 
-    @Hidden
+    @CollectionLayout(hidden = Where.EVERYWHERE)
     public List<Property> autoComplete(final String searchPhrase) {
         return findProperties("*".concat(searchPhrase).concat("*"));
     }

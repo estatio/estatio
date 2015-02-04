@@ -19,14 +19,16 @@
 package org.estatio.dom.financial;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
@@ -34,8 +36,7 @@ import org.estatio.dom.party.Party;
 @DomainServiceLayout(
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "30.1"
-)
+        menuOrder = "30.1")
 public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     public FinancialAccounts() {
@@ -64,9 +65,9 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public FinancialAccount findAccountByReference(final @Named("Reference") String reference) {
+    public FinancialAccount findAccountByReference(final @ParameterLayout(named = "Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
@@ -88,8 +89,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Prototype
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "3")
     public List<FinancialAccount> allAccounts() {
         return allInstances();

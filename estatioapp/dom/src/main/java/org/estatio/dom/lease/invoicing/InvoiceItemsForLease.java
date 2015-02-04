@@ -20,13 +20,16 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
@@ -46,7 +49,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @Programmatic
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
@@ -79,8 +82,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<InvoiceItemForLease> findByLeaseTermAndInterval(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval) {
@@ -91,21 +93,20 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
                 "endDate", interval.endDate());
     }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<InvoiceItemForLease> findByLeaseTermAndIntervalAndInvoiceStatus(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
             final InvoiceStatus invoiceStatus) {
         return allMatches(
-                "findByLeaseTermAndInterval",
+                "findByLeaseTermAndIntervalAndInvoiceStatus",
                 "leaseTerm", leaseTerm,
                 "startDate", interval.startDate(),
-                "endDate", interval.endDate());
+                "endDate", interval.endDate(),
+                "invoiceStatus", invoiceStatus);
     }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<InvoiceItemForLease> findByLeaseAndInvoiceStatus(
             final Lease lease,
             final InvoiceStatus invoiceStatus) {
@@ -115,8 +116,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
                 "invoiceStatus", invoiceStatus);
     }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<InvoiceItemForLease> findByLeaseItemAndInvoiceStatus(
             final LeaseItem leaseItem,
             final InvoiceStatus invoiceStatus) {
@@ -126,8 +126,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
                 "invoiceStatus", invoiceStatus);
     }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<InvoiceItemForLease> findByLeaseTermAndInvoiceStatus(
             final LeaseTerm leaseTerm,
             final InvoiceStatus invoiceStatus) {
@@ -138,7 +137,6 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     }
 
     // //////////////////////////////////////
-
 
     @Programmatic
     public InvoiceItemForLease createUnapprovedInvoiceItem(

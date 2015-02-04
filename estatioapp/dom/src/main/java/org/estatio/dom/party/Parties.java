@@ -19,18 +19,26 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+
 import com.google.common.collect.Lists;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Party.class)
 @DomainServiceLayout(
-        named="Parties",
+        named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.1"
-)
+        menuOrder = "20.1")
 public class Parties extends EstatioDomainService<Party> {
 
     public Parties() {
@@ -39,37 +47,33 @@ public class Parties extends EstatioDomainService<Party> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public List<Party> findParties(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
-            String referenceOrName) {
-        return allMatches("matchByReferenceOrName", 
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName) {
+        return allMatches("matchByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
-    @Hidden
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public Party matchPartyByReferenceOrName(final String referenceOrName) {
-        return firstMatch("matchByReferenceOrName", 
+        return firstMatch("matchByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
-    @Hidden
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public Party findPartyByReference(final String reference) {
         return mustMatch("findByReference", "reference", reference);
     }
 
-    @Hidden
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public Party findPartyByReferenceOrNull(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public List<Party> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findParties("*" + searchPhrase + "*")
@@ -78,8 +82,7 @@ public class Parties extends EstatioDomainService<Party> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Party> allParties() {
         return allInstances();

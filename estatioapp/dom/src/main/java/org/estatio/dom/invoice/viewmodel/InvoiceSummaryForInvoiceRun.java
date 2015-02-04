@@ -24,13 +24,16 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.TypicalLength;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.invoice.Invoice;
 
@@ -78,9 +81,9 @@ import org.estatio.dom.invoice.Invoice;
                         "runId == :runId ")
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Bookmarkable
-@Immutable
 @ViewModel
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     public String iconName() {
@@ -95,7 +98,7 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     private String runId;
 
-    @TypicalLength(100)
+    @PropertyLayout(typicalLength = 100)
     @javax.jdo.annotations.Column(allowsNull = "false")
     public String getRunId() {
         return runId;
@@ -121,7 +124,7 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     private BigDecimal vatAmount;
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -156,7 +159,7 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     // //////////////////////////////////////
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public List<Invoice> getInvoices() {
         List<Invoice> findInvoicesByRunId = invoicesService.findInvoicesByRunId(runId);
         return findInvoicesByRunId;

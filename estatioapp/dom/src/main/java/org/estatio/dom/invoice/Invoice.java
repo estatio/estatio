@@ -34,19 +34,21 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -147,8 +149,8 @@ import org.estatio.dom.party.Party;
         @Index(name = "Invoice_invoiceNumber_IDX",
                 members = { "invoiceNumber" })
 })
-@Bookmarkable
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Invoice extends EstatioDomainObject<Invoice> {
 
     public Invoice() {
@@ -157,8 +159,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     private String uuid;
 
-    @Hidden
-    @Optional
+    @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     public String getUuid() {
         return uuid;
     }
@@ -181,7 +182,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Hidden(where = Where.OBJECT_FORMS)
+    @Property(hidden = Where.OBJECT_FORMS)
     public String getNumber() {
         return ObjectUtils.firstNonNull(
                 getInvoiceNumber(),
@@ -194,7 +195,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private Party buyer;
 
     @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     public Party getBuyer() {
         return buyer;
 
@@ -209,8 +210,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private Party seller;
 
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
-    @Disabled
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED)
     public Party getSeller() {
         return seller;
     }
@@ -224,8 +224,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private String collectionNumber;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
-    @Disabled
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED)
     public String getCollectionNumber() {
         return collectionNumber;
     }
@@ -239,8 +238,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private String invoiceNumber;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
-    @Disabled
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED)
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -253,9 +251,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     private String runId;
 
-    @Disabled
-    @Optional
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public String getRunId() {
         return runId;
     }
@@ -269,8 +265,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "true")
-    @Optional
-    @Disabled
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public Lease getLease() {
         return lease;
     }
@@ -285,7 +280,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private LocalDate invoiceDate;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -300,7 +295,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private LocalDate dueDate;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -310,7 +305,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     }
 
     public void changeDueDate(
-            final @Named("Due date") LocalDate dueDate) {
+            final @ParameterLayout(named = "Due date") LocalDate dueDate) {
         setDueDate(dueDate);
     }
 
@@ -332,7 +327,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private InvoiceStatus status;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -347,8 +342,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // REVIEW: invoice generation is not populating this field.
     @javax.jdo.annotations.Column(name = "currencyId", allowsNull = "true")
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
+    @Property(editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     public Currency getCurrency() {
         return currency;
     }
@@ -372,7 +366,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     public Invoice changePaymentMethod(
             final PaymentMethod paymentMethod,
-            final @Named("Reason") String reason) {
+            final @ParameterLayout(named = "Reason") String reason) {
         setPaymentMethod(paymentMethod);
         return this;
     }
@@ -392,8 +386,8 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")
     private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
 
-    @Disabled
-    @Render(Type.EAGERLY)
+    @Property(editing = Editing.DISABLED)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<InvoiceItem> getItems() {
         return items;
     }
@@ -408,7 +402,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     private BigInteger lastItemSequence;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public BigInteger getLastItemSequence() {
         return lastItemSequence;
     }
@@ -428,7 +422,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @NotPersisted
+    @Property(notPersisted = true)
     public BigDecimal getNetAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -437,8 +431,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
         return total;
     }
 
-    @Hidden(where = Where.ALL_TABLES)
-    @NotPersisted
+    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getVatAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -447,7 +440,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
         return total;
     }
 
-    @NotPersisted
+    @Property(notPersisted = true)
     public BigDecimal getGrossAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -458,7 +451,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public Invoice approve() {
         doApprove();
         return this;
@@ -483,9 +476,9 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public Invoice collect(
-            final @Named("Are you sure?") Boolean confirm
+            final @ParameterLayout(named = "Are you sure?") Boolean confirm
             ) {
         return doCollect();
     }
@@ -544,14 +537,14 @@ public class Invoice extends EstatioDomainObject<Invoice> {
     // //////////////////////////////////////
 
     public Invoice invoice(
-            final @Named("Invoice date") LocalDate invoiceDate,
-            final @Named("Are you sure?") Boolean confirm) {
+            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate,
+            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
         return doInvoice(invoiceDate);
     }
 
     @Programmatic
     public Invoice doInvoice(
-            final @Named("Invoice date") LocalDate invoiceDate) {
+            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
         // bulk action, so need these guards
         if (disableInvoice(invoiceDate, true) != null) {
             return this;
@@ -589,7 +582,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     @Programmatic
     boolean validInvoiceDate(LocalDate invoiceDate) {
-        if (getDueDate() != null  && getDueDate().compareTo(invoiceDate) < 0){
+        if (getDueDate() != null && getDueDate().compareTo(invoiceDate) < 0) {
             return false;
         }
         final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
@@ -609,10 +602,10 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     public InvoiceItem newItem(
             final Charge charge,
-            final @Named("Quantity") BigDecimal quantity,
-            final @Named("Net amount") BigDecimal netAmount,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Quantity") BigDecimal quantity,
+            final @ParameterLayout(named = "Net amount") BigDecimal netAmount,
+            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
         invoiceItem.setQuantity(quantity);
         invoiceItem.setCharge(charge);
@@ -666,10 +659,9 @@ public class Invoice extends EstatioDomainObject<Invoice> {
      * that they relate to the same fixed asset.
      */
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
-    @Named("Property")
     // for the moment, might be generalized (to the user) in the future
-    @Disabled
+    @Property(editing = Editing.DISABLED, hidden = Where.PARENTED_TABLES)
+    @PropertyLayout(named = "Property")
     public FixedAsset getFixedAsset() {
         return fixedAsset;
     }
@@ -695,9 +687,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
      * that they relate to the same bank mandate (if they are to be paid by bank
      * mandate).
      */
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     public BankMandate getPaidBy() {
         return paidBy;
     }
@@ -708,8 +698,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Bulk
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public Invoice submitToCoda() {
         doCollect();
         return this;
@@ -723,7 +712,7 @@ public class Invoice extends EstatioDomainObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public void remove() {
         // Can be called as bulk so have a safeguard
         if (disableRemove() == null) {

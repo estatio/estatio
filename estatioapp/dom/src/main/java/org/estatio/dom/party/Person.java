@@ -20,19 +20,20 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 
-@Immutable
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@DomainObject(editing = Editing.DISABLED)
 public class Person extends Party {
 
     private String initials;
@@ -111,10 +112,10 @@ public class Person extends Party {
     }
 
     public Person change(
-            final @Named("Gender") PersonGenderType gender,
-            final @Named("initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
-            final @Named("First name") String firstName,
-            final @Named("Last name") String lastName) {
+            final @ParameterLayout(named = "Gender") PersonGenderType gender,
+            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
+            final @ParameterLayout(named = "First name") String firstName,
+            final @ParameterLayout(named = "Last name") String lastName) {
         setGender(gender);
         setInitials(initials);
         setFirstName(firstName);

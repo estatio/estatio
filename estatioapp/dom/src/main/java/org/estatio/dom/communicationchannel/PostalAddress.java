@@ -22,12 +22,15 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.JdoColumnLength;
@@ -53,7 +56,7 @@ import org.estatio.dom.geography.States;
                         + "&& city == :city "
                         + "&& country == :country ")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class PostalAddress extends CommunicationChannel {
 
     public String title() {
@@ -69,10 +72,10 @@ public class PostalAddress extends CommunicationChannel {
     private String address1;
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
-    @Mandatory
-    @Named("Address line 1")
+    @Property(optionality = Optionality.MANDATORY)
+    @PropertyLayout(named = "Address line 1")
     public String getAddress1() {
         return address1;
     }
@@ -86,7 +89,7 @@ public class PostalAddress extends CommunicationChannel {
     private String address2;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
-    @Named("Address line 2")
+    @PropertyLayout(named = "Address line 2")
     public String getAddress2() {
         return address2;
     }
@@ -100,8 +103,8 @@ public class PostalAddress extends CommunicationChannel {
     private String address3;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
-    @Optional
-    @Named("Address line 3")
+    @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(named = "Address line 3")
     public String getAddress3() {
         return address3;
     }
@@ -115,7 +118,7 @@ public class PostalAddress extends CommunicationChannel {
     private String postalCode;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.POSTAL_CODE)
-    @Mandatory
+    @Property(optionality = Optionality.MANDATORY)
     public String getPostalCode() {
         return postalCode;
     }
@@ -129,7 +132,7 @@ public class PostalAddress extends CommunicationChannel {
     private String city;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
-    @Mandatory
+    @Property(optionality = Optionality.MANDATORY)
     public String getCity() {
         return city;
     }
@@ -144,8 +147,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
     @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
-    @Mandatory
-    @Disabled(reason = "Update using action")
+    @Property(optionality = Optionality.MANDATORY, editing = Editing.DISABLED, editingDisabledReason = "Update using action")
     public Country getCountry() {
         return country;
     }
@@ -160,7 +162,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
     @javax.jdo.annotations.Column(name = "stateId", allowsNull = "true")
-    @Disabled(reason = "Update using action")
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Update using Action")
     public State getState() {
         return state;
     }
@@ -175,7 +177,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // //////////////////////////////////////
 
-    @Named("Update")
+    @ActionLayout(named = "Update")
     @MemberOrder(sequence = "1")
     public PostalAddress updateCountryAndState(
             final Country country,
@@ -213,11 +215,11 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     public PostalAddress changePostalAddress(
-            final @Named("Address Line 1") String address1,
-            final @Named("Address Line 2") @Optional String address2,
-            final @Named("Address Line 3") @Optional String address3,
-            final @Named("City") String city,
-            final @Named("Postal Code") String postalCode) {
+            final @ParameterLayout(named = "Address Line 1") String address1,
+            final @ParameterLayout(named = "Address Line 2") @Parameter(optionality = Optionality.OPTIONAL) String address2,
+            final @ParameterLayout(named = "Address Line 3") @Parameter(optionality = Optionality.OPTIONAL) String address3,
+            final @ParameterLayout(named = "City") String city,
+            final @ParameterLayout(named = "Postal Code") String postalCode) {
         setAddress1(address1);
         setAddress2(address2);
         setAddress3(address3);

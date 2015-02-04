@@ -41,6 +41,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 
 public class GuaranteeTest extends EstatioIntegrationTest {
 
@@ -72,7 +73,9 @@ public class GuaranteeTest extends EstatioIntegrationTest {
     public void setUp() {
         lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         guaranteeWithFinancialAccount = guarantees.findByReference(LeaseForOxfTopModel001.LEASE_REFERENCE + "-D");
-        guaranteeWithoutFinancialAccount = guarantees.findByReference(LeaseForOxfTopModel001.LEASE_REFERENCE + "-E");
+        GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
+        guaranteeWithoutFinancialAccount = guarantees.newGuarantee(
+                lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld("20120101"), null, "", VT.bd(1000), null);
     }
 
     public static class ChangeGuaranteeType extends GuaranteeTest {

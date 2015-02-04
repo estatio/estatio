@@ -19,18 +19,26 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 
 @DomainService(repositoryFor = InvoiceItem.class)
 @DomainServiceLayout(
-        named="Invoices",
+        named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "50.5"
-)
+        menuOrder = "50.5")
 public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     public InvoiceItems() {
@@ -39,11 +47,11 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @Programmatic
     public InvoiceItem newInvoiceItem(
             final Invoice invoice,
-            final @Named("Due date") LocalDate dueDate) {
+            final @ParameterLayout(named = "Due date") LocalDate dueDate) {
         InvoiceItem invoiceItem = newTransientInstance(InvoiceItemForLease.class);
         invoiceItem.setInvoice(invoice);
         invoiceItem.setDueDate(dueDate);
@@ -54,8 +62,7 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(name = "Invoices", sequence = "99")
     public List<InvoiceItem> allInvoiceItems() {
         return allInstances();

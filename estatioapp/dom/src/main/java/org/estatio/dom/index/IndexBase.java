@@ -28,11 +28,13 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.Chained;
@@ -41,30 +43,31 @@ import org.estatio.dom.WithStartDate;
 import org.estatio.dom.utils.MathUtils;
 
 /**
- * Represents the periodic rebasing of an {@link Index}, and {@link #getValues() holds} the {@link IndexValue value}s
- * until the {@link #getNext() next} rebasing. 
+ * Represents the periodic rebasing of an {@link Index}, and
+ * {@link #getValues() holds} the {@link IndexValue value}s until the
+ * {@link #getNext() next} rebasing.
  * 
  * @see Index
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByIndexAndDate", language = "JDOQL",
-            value = "SELECT "+
-                    "FROM org.estatio.dom.index.IndexBase "+
-                    "WHERE index == :index " +
-                    "&& startDate <= :date " +
-                    "ORDER BY startDate DESC ")
+        @javax.jdo.annotations.Query(
+                name = "findByIndexAndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.index.IndexBase " +
+                        "WHERE index == :index " +
+                        "&& startDate <= :date " +
+                        "ORDER BY startDate DESC ")
 })
-@Immutable
-public class IndexBase 
-        extends EstatioDomainObject<IndexBase> 
+@DomainObject(editing = Editing.DISABLED)
+public class IndexBase
+        extends EstatioDomainObject<IndexBase>
         implements WithStartDate, Chained<IndexBase> {
 
     public static final int FACTOR_SCALE = 4;
@@ -72,12 +75,12 @@ public class IndexBase
     public IndexBase() {
         super("index, startDate desc");
     }
-    
+
     // //////////////////////////////////////
 
     private Index index;
-    
-    @javax.jdo.annotations.Column(name="indexId", allowsNull="false")
+
+    @javax.jdo.annotations.Column(name = "indexId", allowsNull = "false")
     @Title(sequence = "1", append = ", ")
     public Index getIndex() {
         return index;
@@ -92,7 +95,7 @@ public class IndexBase
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
@@ -118,14 +121,13 @@ public class IndexBase
         setStartDate(null);
     }
 
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(scale = FACTOR_SCALE)
     private BigDecimal factor;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public BigDecimal getFactor() {
         return factor;
     }
@@ -138,21 +140,21 @@ public class IndexBase
         if (getPrevious() == null) {
             return null;
         }
-        return MathUtils.isZeroOrNull(factor)  
-            ? "Factor is mandatory when there is a previous base" 
-            : null;
+        return MathUtils.isZeroOrNull(factor)
+                ? "Factor is mandatory when there is a previous base"
+                : null;
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="previousIndexBaseId")
+    @javax.jdo.annotations.Column(name = "previousIndexBaseId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private IndexBase previous;
 
     /**
      * @see #getNext()
      */
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public IndexBase getPrevious() {
         return previous;
     }
@@ -160,7 +162,7 @@ public class IndexBase
     public void setPrevious(final IndexBase previous) {
         this.previous = previous;
     }
-    
+
     public void modifyPrevious(final IndexBase previous) {
         setPrevious(previous);
         if (previous != null) {
@@ -170,13 +172,13 @@ public class IndexBase
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="nextIndexBaseId")
+    @javax.jdo.annotations.Column(name = "nextIndexBaseId")
     private IndexBase next;
 
     /**
      * @see #getPrevious()
      */
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public IndexBase getNext() {
         return next;
     }
@@ -190,7 +192,7 @@ public class IndexBase
     @javax.jdo.annotations.Persistent(mappedBy = "indexBase")
     private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<IndexValue> getValues() {
         return values;
     }
@@ -217,13 +219,12 @@ public class IndexBase
         getValues().remove(value);
     }
 
-
     // //////////////////////////////////////
 
     @Programmatic
     public BigDecimal factorForDate(final LocalDate date) {
-        return date.isBefore(getStartDate()) 
-                ? getFactor().multiply(getPrevious().factorForDate(date)) 
+        return date.isBefore(getStartDate())
+                ? getFactor().multiply(getPrevious().factorForDate(date))
                 : BigDecimal.ONE;
     }
 

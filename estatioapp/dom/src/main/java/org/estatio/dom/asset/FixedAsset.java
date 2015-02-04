@@ -30,16 +30,18 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -77,9 +79,8 @@ import org.estatio.dom.party.Party;
                         + "WHERE reference.matches(:regex) "
                         + "|| name.matches(:regex) ")
 })
-@Bookmarkable
-@Immutable
-@AutoComplete(repository = FixedAssets.class, action = "autoComplete")
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = FixedAssets.class, autoCompleteAction = "autoComplete")
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class FixedAsset
         extends EstatioDomainObject<FixedAsset>
         implements WithNameComparable<FixedAsset>, WithReferenceUnique, CommunicationChannelOwner {
@@ -90,12 +91,12 @@ public abstract class FixedAsset
 
     // //////////////////////////////////////
 
-    private String reference; 
+    private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
+    @Property(regexPattern = RegexValidation.REFERENCE)
+    @PropertyLayout(describedAs = "Unique reference code for this asset")
     public String getReference() {
         return reference;
     }
@@ -127,8 +128,8 @@ public abstract class FixedAsset
     private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
+    @PropertyLayout(describedAs = "Unique name for this property")
     public String getName() {
         return name;
     }
@@ -141,8 +142,8 @@ public abstract class FixedAsset
 
     private String externalReference;
 
-    @Optional
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    @Property(optionality = Optionality.OPTIONAL)
     public String getExternalReference() {
         return externalReference;
     }
@@ -156,7 +157,7 @@ public abstract class FixedAsset
     @javax.jdo.annotations.Persistent(mappedBy = "asset")
     private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<FixedAssetRole> getRoles() {
         return roles;
     }
@@ -166,10 +167,10 @@ public abstract class FixedAsset
     }
 
     public FixedAsset newRole(
-            final @Named("Type") FixedAssetRoleType type,
+            final @ParameterLayout(named = "Type") FixedAssetRoleType type,
             final Party party,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End date") LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
     }

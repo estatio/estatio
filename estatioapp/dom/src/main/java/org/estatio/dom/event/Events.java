@@ -23,12 +23,12 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -42,25 +42,8 @@ public class Events extends EstatioDomainService<Event> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public List<Event> findEventsBySubject(final EventSubject eventSubject) {
-        return allMatches("findBySubject", "subject", eventSubject);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public Event findEventsBySubjectAndSubjectEventType(
-            final EventSubject eventSubject,
-            final String subjectEventType) {
-        return firstMatch(
-                "findBySubjectAndSubjectEventType",
-                "subject", eventSubject,
-                "subjectEventType", subjectEventType);
-    }
-
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @NotContributed
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public Event newEvent(final LocalDate date, final EventSubject subject, final String calendarName) {
         final Event event = newTransientInstance(Event.class);
         event.setDate(date);
@@ -70,8 +53,25 @@ public class Events extends EstatioDomainService<Event> {
         return event;
     }
 
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
+    public List<Event> findEventsBySubject(final EventSubject eventSubject) {
+        return allMatches("findBySubject", "subject", eventSubject);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
+    public Event findEventsBySubjectAndSubjectEventType(
+            final EventSubject eventSubject,
+            final String subjectEventType) {
+        return firstMatch(
+                "findBySubjectAndSubjectEventType",
+                "subject", eventSubject,
+                "subjectEventType", subjectEventType);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public List<Event> findEventsInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
         return allMatches("findInDateRange", "rangeStartDate", rangeStartDate, "rangeEndDate", rangeEndDate);
     }

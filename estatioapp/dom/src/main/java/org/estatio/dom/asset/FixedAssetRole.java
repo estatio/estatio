@@ -28,17 +28,18 @@ import com.google.common.base.Function;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -62,11 +63,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByAsset", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
-                        + "WHERE asset == :asset "),
-        @javax.jdo.annotations.Query(
                 name = "findByAssetAndType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.FixedAssetRole "
@@ -78,30 +74,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.asset.FixedAssetRole "
                         + "WHERE asset == :asset "
                         + "&& party == :party "
-                        + "&& type == :type"),
-        @javax.jdo.annotations.Query(
-                name = "findByAssetAndPartyAndTypeAndStartDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
-                        + "WHERE asset == :asset "
-                        + "&& party == :party "
-                        + "&& type == :type "
-                        + "&& startDate == :startDate"),
-        @javax.jdo.annotations.Query(
-                name = "findByAssetAndPartyAndTypeAndEndDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
-                        + "WHERE asset == :asset "
-                        + "&& party == :party "
-                        + "&& type == :type "
-                        + "&& endDate == :endDate"),
-        @javax.jdo.annotations.Query(
-                name = "findByParty", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
-                        + "WHERE party == :party ")
+                        + "&& type == :type")
 })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole
         extends EstatioDomainObject<FixedAssetRole>
         implements WithIntervalContiguous<FixedAssetRole> {
@@ -121,8 +96,7 @@ public class FixedAssetRole
 
     @javax.jdo.annotations.Column(name = "assetId", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
-    @Disabled
+    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     public FixedAsset getAsset() {
         return asset;
     }
@@ -137,8 +111,7 @@ public class FixedAssetRole
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
-    @Hidden(where = Where.REFERENCES_PARENT)
-    @Disabled
+    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     public Party getParty() {
         return party;
     }
@@ -152,7 +125,7 @@ public class FixedAssetRole
     private FixedAssetRoleType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     @Title(sequence = "1")
     public FixedAssetRoleType getType() {
         return type;
@@ -166,8 +139,7 @@ public class FixedAssetRole
 
     private LocalDate startDate;
 
-    @Optional
-    @Disabled
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -181,8 +153,7 @@ public class FixedAssetRole
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Optional
-    @Disabled
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -193,11 +164,11 @@ public class FixedAssetRole
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public FixedAssetRole changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -251,23 +222,19 @@ public class FixedAssetRole
 
     // //////////////////////////////////////
 
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @Override
     public FixedAssetRole getPredecessor() {
         return helper.getPredecessor(getAsset().getRoles(), getType().matchingRole());
     }
 
-    @Hidden(where = Where.ALL_TABLES)
-    @Disabled
-    @Optional
+    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @Override
     public FixedAssetRole getSuccessor() {
         return helper.getSuccessor(getAsset().getRoles(), getType().matchingRole());
     }
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @Override
     public SortedSet<FixedAssetRole> getTimeline() {
         return helper.getTimeline(getAsset().getRoles(), getType().matchingRole());
@@ -292,8 +259,8 @@ public class FixedAssetRole
 
     public FixedAssetRole succeededBy(
             final Party party,
-            final @Named("Start date") LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
     }
 
@@ -322,8 +289,8 @@ public class FixedAssetRole
 
     public FixedAssetRole precededBy(
             final Party party,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") LocalDate endDate) {
+            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End date") LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }

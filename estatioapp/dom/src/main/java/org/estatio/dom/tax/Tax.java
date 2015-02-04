@@ -28,15 +28,15 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -64,8 +64,7 @@ import org.estatio.dom.WithReferenceUnique;
                         + "FROM org.estatio.dom.tax.Tax "
                         + "WHERE reference == :reference")
 })
-@Bounded
-@Immutable
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Tax
         extends EstatioDomainObject<Tax>
         implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
@@ -80,7 +79,7 @@ public class Tax
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
+    @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -107,8 +106,8 @@ public class Tax
 
     private String externalReference;
 
-    @Optional
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @Property(optionality = Optionality.OPTIONAL)
     public String getExternalReference() {
         return externalReference;
     }
@@ -121,9 +120,9 @@ public class Tax
 
     private String description;
 
-    @Optional
-    @MultiLine(numberOfLines = 3)
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(multiLine = 3)
     public String getDescription() {
         return description;
     }
@@ -137,7 +136,7 @@ public class Tax
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<TaxRate> getRates() {
         return rates;
     }
@@ -149,8 +148,8 @@ public class Tax
     // //////////////////////////////////////
 
     public TaxRate newRate(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("Percentage") BigDecimal percentage) {
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @ParameterLayout(named = "Percentage") BigDecimal percentage) {
         return taxRates.newRate(this, startDate, percentage);
     }
 

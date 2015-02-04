@@ -20,8 +20,15 @@ package org.estatio.dom.party;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
@@ -30,8 +37,7 @@ import org.estatio.dom.RegexValidation;
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.3"
-)
+        menuOrder = "20.3")
 public class Persons extends EstatioDomainService<Person> {
 
     public Persons() {
@@ -40,14 +46,14 @@ public class Persons extends EstatioDomainService<Person> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Person newPerson(
-            final @Named("reference") @Optional @RegEx(validation=RegexValidation.Person.REFERENCE) String reference,
-            final @Named("initials") @Optional @RegEx(validation=RegexValidation.Person.INITIALS) String initials,
-            final @Named("First name") @Optional String firstName,
-            final @Named("Last name") String lastName,
-            final @Named("Gender") PersonGenderType gender) {
+            final @ParameterLayout(named = "reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE) String reference,
+            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
+            final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
+            final @ParameterLayout(named = "Last name") String lastName,
+            final @ParameterLayout(named = "Gender") PersonGenderType gender) {
         final Person person = newTransientInstance(Person.class);
         person.setReference(reference);
         person.change(gender, initials, firstName, lastName);
@@ -57,8 +63,7 @@ public class Persons extends EstatioDomainService<Person> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Person> allPersons() {
         return allInstances();

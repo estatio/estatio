@@ -76,23 +76,6 @@ public class FixedAssetRolesTest {
         };
     }
 
-    public static class FindRole_3Args extends FixedAssetRolesTest {
-
-        @Test
-        public void findRole() {
-
-            fixedAssetRoles.findRole(asset, party, type);
-
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAssetRole.class));
-            assertThat(finderInteraction.getQueryName(), is("findByAssetAndPartyAndType"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("asset"), is((Object) asset));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
-        }
-    }
-
     public static class FindRole_5Args extends FixedAssetRolesTest {
 
         @Test

@@ -19,14 +19,18 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(menuOrder = "10", repositoryFor = FixedAsset.class)
+@DomainService(repositoryFor = FixedAsset.class)
+@DomainServiceLayout(menuOrder = "10")
 @Hidden
 public class FixedAssets extends EstatioDomainService<FixedAsset> {
 
@@ -36,16 +40,15 @@ public class FixedAssets extends EstatioDomainService<FixedAsset> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @CollectionLayout(hidden = Where.EVERYWHERE)
     public List<FixedAsset> matchAssetsByReferenceOrName(final String searchPhrase) {
-        return allMatches("matchByReferenceOrName", 
+        return allMatches("matchByReferenceOrName",
                 "regex", StringUtils.wildcardToCaseInsensitiveRegex(searchPhrase));
     }
-    
+
     // //////////////////////////////////////
 
-    @Hidden
+    @CollectionLayout(hidden = Where.EVERYWHERE)
     public List<FixedAsset> autoComplete(final String searchPhrase) {
         return matchAssetsByReferenceOrName("*".concat(searchPhrase).concat("*"));
     }

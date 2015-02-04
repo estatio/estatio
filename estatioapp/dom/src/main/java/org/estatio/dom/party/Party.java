@@ -27,17 +27,18 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.ActionInteraction;
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
@@ -81,9 +82,8 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Party "
                         + "WHERE reference == :reference") })
-@AutoComplete(repository = Parties.class, action = "autoComplete")
-@Bookmarkable
-@Immutable
+@DomainObject(editing = Editing.DISABLED, autoCompleteAction = "autoComplete", autoCompleteRepository = Parties.class)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Party
         extends EstatioDomainObject<Party>
         implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner, AgreementRoleHolder {
@@ -97,8 +97,7 @@ public abstract class Party
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = false)
-    @Disabled
+    @Property(editing = Editing.DISABLED, regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -133,7 +132,7 @@ public abstract class Party
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public SortedSet<AgreementRole> getAgreements() {
         return agreements;
     }
@@ -147,7 +146,7 @@ public abstract class Party
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public SortedSet<PartyRegistration> getRegistrations() {
         return registrations;
     }
@@ -158,7 +157,7 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    public static class RemoveEvent extends ActionInteractionEvent<Party> {
+    public static class RemoveEvent extends ActionDomainEvent<Party> {
         private static final long serialVersionUID = 1L;
 
         public RemoveEvent(
@@ -173,13 +172,13 @@ public abstract class Party
         }
     }
 
-    @ActionInteraction(Party.RemoveEvent.class)
+    @Action(domainEvent = Party.RemoveEvent.class)
     public void remove() {
         removeAndReplace(null);
     }
 
-    @ActionInteraction(Party.RemoveEvent.class)
-    public void removeAndReplace(@Named("Replace with") @Optional Party replacement) {
+    @Action(domainEvent = Party.RemoveEvent.class)
+    public void removeAndReplace(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Party replacement) {
         getContainer().remove(this);
         getContainer().flush();
     }
@@ -187,9 +186,9 @@ public abstract class Party
     public boolean hideRemoveAndReplace(Party party) {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
-    
+
     public String validateRemoveAndReplace(final Party party) {
         return party != this ? null : "Cannot replace a party with itself";
-   }
+    }
 
 }

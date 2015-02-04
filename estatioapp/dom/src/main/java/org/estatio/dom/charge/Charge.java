@@ -22,13 +22,13 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -59,8 +59,7 @@ import org.estatio.dom.tax.Tax;
                         + "FROM org.estatio.dom.charge.Charge "
                         + "WHERE reference == :reference")
 })
-@Bounded
-@Immutable
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Charge
         extends EstatioDomainObject<Charge>
         implements WithReferenceUnique, WithNameUnique {
@@ -74,9 +73,8 @@ public class Charge
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
     @Title(sequence = "1")
-    @Disabled
+    @Property(regexPattern = RegexValidation.REFERENCE, editing = Editing.DISABLED)
     public String getReference() {
         return reference;
     }
@@ -104,7 +102,7 @@ public class Charge
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
-    @MultiLine(numberOfLines=IsisMultilineLines.NUMBER_OF_LINES)
+    @PropertyLayout(multiLine = IsisMultilineLines.NUMBER_OF_LINES)
     public String getDescription() {
         return description;
     }
@@ -117,8 +115,8 @@ public class Charge
 
     private String externalReference;
 
-    @Optional
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @Property(optionality = Optionality.OPTIONAL)
     public String getExternalReference() {
         return externalReference;
     }
@@ -157,8 +155,8 @@ public class Charge
 
     private String sortOrder;
 
-    @Optional
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    @Property(optionality = Optionality.OPTIONAL)
     public String getSortOrder() {
         return sortOrder;
     }
@@ -166,14 +164,14 @@ public class Charge
     public void setSortOrder(final String sortOrder) {
         this.sortOrder = sortOrder;
     }
-    
+
     public Charge change(
-            final @Named("Name") String name,
-            final @Named("Tax") @Optional Tax tax,
-            final @Named("Description") String description,
-            final @Named("Group") ChargeGroup group,
-            final @Named("External Reference") @Optional String externalReference,
-            final @Named("Sort Order") @Optional String sortOrder) {
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Tax") @Parameter(optionality = Optionality.OPTIONAL) Tax tax,
+            final @ParameterLayout(named = "Description") String description,
+            final @ParameterLayout(named = "Group") ChargeGroup group,
+            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference,
+            final @ParameterLayout(named = "Sort Order") @Parameter(optionality = Optionality.OPTIONAL) String sortOrder) {
 
         setName(name);
         setTax(tax);
@@ -191,15 +189,15 @@ public class Charge
     public Tax default1Change() {
         return getTax();
     }
-    
+
     public String default2Change() {
         return getDescription();
     }
-    
+
     public ChargeGroup default3Change() {
         return getGroup();
     }
-    
+
     public String default4Change() {
         return getExternalReference();
     }

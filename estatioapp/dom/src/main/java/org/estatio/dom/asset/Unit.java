@@ -216,9 +216,10 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
         return changeDates;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Unit changeDates(
+
             final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);

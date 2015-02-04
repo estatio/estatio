@@ -31,20 +31,20 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.TypicalLength;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -77,8 +77,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class InvoiceItem
         extends EstatioDomainObject<InvoiceItem>
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
@@ -91,8 +91,7 @@ public class InvoiceItem
     // different source (leaseTerm)
     private String uuid;
 
-    @Hidden
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.EVERYWHERE)
     public String getUuid() {
         return uuid;
     }
@@ -106,7 +105,7 @@ public class InvoiceItem
     /**
      * Optional, for subclasses to indicate their source (UI purposes only)
      */
-    @Hidden(where = Where.REFERENCES_PARENT)
+    @Property(hidden = Where.REFERENCES_PARENT)
     public InvoiceSource getSource() {
         return null;
     }
@@ -116,7 +115,7 @@ public class InvoiceItem
     private BigInteger sequence;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public BigInteger getSequence() {
         return sequence;
     }
@@ -130,8 +129,8 @@ public class InvoiceItem
     private Invoice invoice;
 
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
-    @Render(Type.EAGERLY)
-    @Hidden(where = Where.REFERENCES_PARENT)
+    @Property(hidden = Where.REFERENCES_PARENT)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @Title(sequence = "1", append = ":")
     public Invoice getInvoice() {
         return invoice;
@@ -194,7 +193,7 @@ public class InvoiceItem
     private BigDecimal vatAmount;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES)
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -221,7 +220,7 @@ public class InvoiceItem
     private Tax tax;
 
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES)
     public Tax getTax() {
         return tax;
     }
@@ -235,8 +234,7 @@ public class InvoiceItem
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    @TypicalLength(JdoColumnLength.NAME)
-    @MultiLine(numberOfLines = IsisMultilineLines.NUMBER_OF_LINES)
+    @PropertyLayout(typicalLength = JdoColumnLength.NAME, multiLine = IsisMultilineLines.NUMBER_OF_LINES)
     public String getDescription() {
         return description;
     }
@@ -246,7 +244,7 @@ public class InvoiceItem
     }
 
     public InvoiceItem changeDescription(
-            final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
+            final @ParameterLayout(named = "Description", multiLine = 3) String description) {
         setDescription(description);
         return this;
     }
@@ -269,7 +267,7 @@ public class InvoiceItem
     private LocalDate dueDate;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -283,8 +281,7 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Optional
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -298,8 +295,7 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Optional
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -313,7 +309,7 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate effectiveStartDate;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public LocalDate getEffectiveStartDate() {
         return this.effectiveStartDate;
     }
@@ -325,7 +321,7 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate effectiveEndDate;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public LocalDate getEffectiveEndDate() {
         return effectiveEndDate;
     }
@@ -335,8 +331,8 @@ public class InvoiceItem
     }
 
     public InvoiceItem changeEffectiveDates(
-            final @Named("Effective start date") LocalDate effectiveStartDate,
-            final @Named("Effective end date") LocalDate effectiveEndDate) {
+            final @ParameterLayout(named = "Effective start date") LocalDate effectiveStartDate,
+            final @ParameterLayout(named = "Effective end date") LocalDate effectiveEndDate) {
         setEffectiveStartDate(effectiveStartDate);
         setEffectiveEndDate(effectiveEndDate);
         return this;
@@ -376,7 +372,7 @@ public class InvoiceItem
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public InvoiceItem verify() {
         calculateTax();
         return this;
@@ -384,7 +380,7 @@ public class InvoiceItem
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public void remove() {
         if (getInvoice().getStatus().equals(InvoiceStatus.NEW)) {
             getContainer().remove(this);

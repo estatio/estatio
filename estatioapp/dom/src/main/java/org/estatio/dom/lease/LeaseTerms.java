@@ -27,6 +27,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -83,6 +84,11 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @Action(hidden = Where.EVERYWHERE)
     public LeaseTerm findByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
         return firstMatch("findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence);
+    }
+
+    @Programmatic
+    public LeaseTerm findByLeaseItemAndStartDate(final LeaseItem leaseItem, final LocalDate startDate) {
+        return firstMatch("findByLeaseItemAndStartDate", "leaseItem", leaseItem, "startDate", startDate);
     }
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)

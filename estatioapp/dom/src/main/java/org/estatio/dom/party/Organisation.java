@@ -20,25 +20,27 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 
-@Immutable
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
+@DomainObject(editing = Editing.DISABLED)
 public class Organisation extends Party {
 
     private String fiscalCode;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.FISCAL_CODE)
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     @MemberOrder(sequence = "1")
     public String getFiscalCode() {
         return fiscalCode;
@@ -53,7 +55,7 @@ public class Organisation extends Party {
     private String vatCode;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.VAT_CODE)
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     @MemberOrder(sequence = "1")
     public String getVatCode() {
         return vatCode;
@@ -65,11 +67,11 @@ public class Organisation extends Party {
 
     // //////////////////////////////////////
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public Organisation change(
-            final @Named("Name") String name,
-            final @Named("Vat Code") @Optional @RegEx(validation = RegexValidation.REFERENCE) String vatCode,
-            final @Named("Fiscal Code") @Optional @RegEx(validation = RegexValidation.REFERENCE) String fiscalCode) {
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Vat Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE) String vatCode,
+            final @ParameterLayout(named = "Fiscal Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE) String fiscalCode) {
         setName(name);
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);

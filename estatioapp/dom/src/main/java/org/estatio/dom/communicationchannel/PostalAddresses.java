@@ -39,7 +39,7 @@ public class PostalAddresses
     // //////////////////////////////////////
 
     @Programmatic
-    public CommunicationChannel findByAddress(
+    public PostalAddress findByAddress(
             final CommunicationChannelOwner owner, 
             final String address1, 
             final String postalCode, 

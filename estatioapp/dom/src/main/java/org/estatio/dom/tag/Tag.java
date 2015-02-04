@@ -25,9 +25,10 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -45,20 +46,20 @@ import org.estatio.dom.WithNameGetter;
  * class name of <tt>LeaseUnit</tt>, and the tag's {@link #getName()} is set to
  * &quot;brand&quot;.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Tag_taggable_name_UNQ", members = { "taggable", "name" })
+        @javax.jdo.annotations.Unique(
+                name = "Tag_taggable_name_UNQ", members = { "taggable", "name" })
 })
-@Immutable
-public class Tag 
-        extends EstatioDomainObject<Tag> 
+@DomainObject(editing = Editing.DISABLED)
+public class Tag
+        extends EstatioDomainObject<Tag>
         implements WithNameGetter {
 
     public Tag() {
@@ -84,8 +85,8 @@ public class Tag
                             key = "mapping-strategy",
                             value = "per-implementation") })
     private Taggable taggable;
-    
-    @Mandatory
+
+    @Property(optionality = Optionality.MANDATORY)
     public Taggable getTaggable() {
         return taggable;
     }
@@ -97,13 +98,13 @@ public class Tag
     // //////////////////////////////////////
 
     private String objectType;
-    
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.FQCN)
-    @Disabled
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FQCN)
+    @Property(editing = Editing.DISABLED)
     public String getObjectType() {
         return objectType;
     }
-    
+
     public void setObjectType(final String objectType) {
         this.objectType = objectType;
     }
@@ -120,8 +121,8 @@ public class Tag
      * The combination of ({@link #getObjectType() objectType},
      * {@link #getName() name}) is unique.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
-    @Disabled
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @Property(editing = Editing.DISABLED)
     public String getName() {
         return name;
     }
@@ -131,7 +132,6 @@ public class Tag
     }
 
     // //////////////////////////////////////
-
 
     private String value;
 
@@ -144,7 +144,5 @@ public class Tag
     public void setValue(final String value) {
         this.value = value;
     }
-
-
 
 }

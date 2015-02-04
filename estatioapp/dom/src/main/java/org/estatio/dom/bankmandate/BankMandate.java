@@ -23,9 +23,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
@@ -46,7 +49,7 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.bankmandate.BankMandate "
                         + "WHERE bankAccount == :bankAccount")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class BankMandate extends Agreement {
 
     // //////////////////////////////////////
@@ -77,7 +80,7 @@ public class BankMandate extends Agreement {
 
     private String sepaMandateIdentifier;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(length = JdoColumnLength.BankMandate.SEPA_MANDATE_IDENTIFIER)
     public String getSepaMandateIdentifier() {
         return sepaMandateIdentifier;
@@ -100,8 +103,8 @@ public class BankMandate extends Agreement {
     // //////////////////////////////////////
 
     public BankMandate change(
-            final @Named("Name") @Optional String name,
-            final @Named("Sepa Mandate Identifier") @Optional String SepaMendateIdentifier) {
+            final @ParameterLayout(named = "Name") @Parameter(optionality = Optionality.OPTIONAL) String name,
+            final @ParameterLayout(named = "Sepa Mandate Identifier") @Parameter(optionality = Optionality.OPTIONAL) String SepaMendateIdentifier) {
         setName(name);
         setSepaMandateIdentifier(SepaMendateIdentifier);
         return this;

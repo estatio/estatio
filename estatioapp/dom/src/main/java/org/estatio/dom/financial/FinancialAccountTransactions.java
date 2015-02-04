@@ -24,15 +24,15 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -70,8 +70,7 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Prototype
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<FinancialAccountTransaction> allTransactions() {
         return allInstances();
@@ -79,35 +78,33 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Prototype
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "99")
+    public FinancialAccountTransaction findTransaction(
+            final FinancialAccount financialAccount,
+            final LocalDate transactionDate,
+            final BigInteger sequence) {
+        return firstMatch("findByFinancialAccountAndTransactionDateAndSequence",
+                "financialAccount", financialAccount,
+                "transactionDate", transactionDate,
+                "sequence", sequence);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public FinancialAccountTransaction findTransaction(
             final FinancialAccount financialAccount,
             final LocalDate transactionDate) {
-        return firstMatch("findByFinancialAccountAndTransactionDateAndSequence",
+        return firstMatch("findByFinancialAccountAndTransactionDate",
                 "financialAccount", financialAccount,
                 "transactionDate", transactionDate);
     }
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @Prototype
     @MemberOrder(sequence = "99")
-    public List<FinancialAccountTransaction> findTransactions(
-            final FinancialAccount financialAccount,
-            final LocalDate transactionDate) {
-        return allMatches("findByFinancialAccountAndTransactionDate",
-                "financialAccount", financialAccount,
-                "transactionDate", transactionDate);
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    @NotContributed(As.ACTION)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<FinancialAccountTransaction> transactions(
             final FinancialAccount financialAccount) {
         return allMatches("findByFinancialAccount", "financialAccount", financialAccount);
@@ -115,7 +112,7 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     public BigDecimal balance(FinancialAccount financialAccount) {
         BigDecimal balance = BigDecimal.ZERO;
         for (FinancialAccountTransaction transaction : transactions(financialAccount)) {

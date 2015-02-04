@@ -19,18 +19,23 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
@@ -42,10 +47,9 @@ import org.estatio.services.settings.EstatioSettingsService;
 
 @DomainService(repositoryFor = Invoice.class)
 @DomainServiceLayout(
-        named="Invoices",
+        named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "50.4"
-)
+        menuOrder = "50.4")
 public class Invoices extends EstatioDomainService<Invoice> {
 
     public Invoices() {
@@ -55,25 +59,25 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @NotInServiceMenu
-    @Named("Invoices")
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(named = "Invoices")
     public List<Invoice> findInvoices(final Lease lease) {
         return allMatches("findByLease",
                 "lease", lease);
     }
 
     @NotInServiceMenu
-    @Named("Invoices")
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(named = "Invoices")
     public List<Invoice> findInvoices(final Party party) {
         return allMatches("findByBuyer",
                 "buyer", party);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Invoice> findInvoicesByInvoiceNumber(
-            final @Named("Invoice number") String invoiceNumber) {
+            final @ParameterLayout(named = "Invoice number") String invoiceNumber) {
         return allMatches("findByInvoiceNumber",
                 "invoiceNumber", StringUtils.wildcardToCaseInsensitiveRegex(invoiceNumber));
     }
@@ -111,12 +115,12 @@ public class Invoices extends EstatioDomainService<Invoice> {
                 "dueDate", dueDate);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Invoice> findInvoices(
             final FixedAsset fixedAsset,
-            final @Named("Due Date") @Optional LocalDate dueDate,
-            final @Optional InvoiceStatus status) {
+            final @ParameterLayout(named = "Due Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate dueDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) InvoiceStatus status) {
         if (status == null) {
             return findInvoices(fixedAsset, dueDate);
         } else if (dueDate == null) {
@@ -132,11 +136,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Invoice newInvoiceForLease(
-            final @Named("Lease") Lease lease,
-            final @Named("Due date") LocalDate dueDate,
+            final @ParameterLayout(named = "Lease") Lease lease,
+            final @ParameterLayout(named = "Due date") LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency
             ) {
@@ -154,11 +158,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Programmatic
     public Invoice newInvoice(
-            final @Named("Seller") Party seller,
-            final @Named("Buyer") Party buyer,
+            final @ParameterLayout(named = "Seller") Party seller,
+            final @ParameterLayout(named = "Buyer") Party buyer,
             final PaymentMethod paymentMethod,
             final Currency currency,
-            final @Named("Due date") LocalDate dueDate,
+            final @ParameterLayout(named = "Due date") LocalDate dueDate,
             final Lease lease,
             final String interactionId
             ) {
@@ -248,15 +252,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "98")
     public List<Invoice> allInvoices() {
         return allInstances();
     }
 
     // //////////////////////////////////////
-
 
     @Programmatic
     public void removeRuns(InvoiceCalculationParameters parameters) {
@@ -267,7 +269,6 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     // //////////////////////////////////////
-
 
     @javax.inject.Inject
     private EstatioSettingsService settings;

@@ -24,11 +24,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -93,7 +95,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 members = { "leaseTerm", "startDate", "endDate" }),
 
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class InvoiceItemForLease extends InvoiceItem {
 
     @Override
@@ -106,7 +108,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
     public Lease getLease() {
         return lease;
@@ -121,7 +123,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     private LeaseTerm leaseTerm;
 
     @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
     }
@@ -135,8 +137,8 @@ public class InvoiceItemForLease extends InvoiceItem {
     private FixedAsset fixedAsset;
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
-    @Named("Unit")
+    @Property(hidden = Where.PARENTED_TABLES)
+    @PropertyLayout(named = "Unit")
     // for the moment, might be generalized (to the user) in the future
     public FixedAsset getFixedAsset() {
         return fixedAsset;
@@ -150,7 +152,7 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     private Boolean adjustment;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public Boolean isAdjustment() {
         return adjustment;
     }
@@ -169,7 +171,7 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public void remove() {
         // no safeguard, assuming being called with precaution
         setLeaseTerm(null);

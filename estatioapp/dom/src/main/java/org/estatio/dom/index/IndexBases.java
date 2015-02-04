@@ -20,17 +20,26 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 
 @DomainService(repositoryFor = IndexBase.class)
 @DomainServiceLayout(
-        named="Indices",
+        named = "Indices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "60.3"
-)
+        menuOrder = "60.3")
 public class IndexBases
         extends EstatioDomainService<IndexBase> {
 
@@ -40,14 +49,14 @@ public class IndexBases
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public IndexBase newIndexBase(
-            final @Named("Index") Index index,
-            final @Named("Previous Base") IndexBase previousBase,
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("Factor") BigDecimal factor) {
+            final @ParameterLayout(named = "Index") Index index,
+            final @ParameterLayout(named = "Previous Base") IndexBase previousBase,
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @ParameterLayout(named = "Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance();
         indexBase.modifyPrevious(previousBase);
         indexBase.setStartDate(startDate);
@@ -66,8 +75,7 @@ public class IndexBases
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<IndexBase> allIndexBases() {
         return allInstances();

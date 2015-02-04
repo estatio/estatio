@@ -29,12 +29,13 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -76,7 +77,7 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.financial.FinancialAccount "
                         + "WHERE owner == :owner")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class FinancialAccount
         extends EstatioDomainObject<FinancialAccount>
         implements WithNameGetter, WithReferenceUnique {
@@ -90,7 +91,7 @@ public class FinancialAccount
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FinancialAccount.REFERENCE)
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
+    @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -118,7 +119,7 @@ public class FinancialAccount
     private FinancialAccountType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public FinancialAccountType getType() {
         return type;
     }
@@ -144,7 +145,7 @@ public class FinancialAccount
 
     private String externalReference;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     public String getExternalReference() {
         return externalReference;
@@ -153,26 +154,26 @@ public class FinancialAccount
     public void setExternalReference(final String externalReference) {
         this.externalReference = externalReference;
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Programmatic
-    public BigDecimal getBalance(){
+    public BigDecimal getBalance() {
         return financialAccountTransactions.balance(this);
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
     public void newTransaction(
-            final LocalDate transactionDate, 
-            final String description, 
-            final BigDecimal amount){
+            final LocalDate transactionDate,
+            final String description,
+            final BigDecimal amount) {
         financialAccountTransactions.newTransaction(this, transactionDate, description, amount);
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Inject
     private FinancialAccountTransactions financialAccountTransactions;
 }

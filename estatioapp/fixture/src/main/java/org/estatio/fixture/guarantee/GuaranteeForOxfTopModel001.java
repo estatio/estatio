@@ -18,7 +18,11 @@
  */
 package org.estatio.fixture.guarantee;
 
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
 import javax.inject.Inject;
+
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeConstants;
@@ -28,9 +32,6 @@ import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.party.OrganisationForDagoBank;
-
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
 
 public class GuaranteeForOxfTopModel001 extends GuaranteeAbstract {
 
@@ -50,18 +51,11 @@ public class GuaranteeForOxfTopModel001 extends GuaranteeAbstract {
 
         final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         String reference = lease.getReference() + "-D";
-        String referenceNoFinancialAccount = lease.getReference() + "-E";
 
         final Guarantee guarantee = newGuarantee(
                 lease, reference, reference, GuaranteeType.BANK_GUARANTEE,
                 ld(2014, 1, 1), ld(2015, 1, 1), "Description", bd(50000),
                 executionContext);
-
-        final Guarantee guaranteeNoFinancialAccount = newGuarantee(
-                lease, referenceNoFinancialAccount, referenceNoFinancialAccount, GuaranteeType.UNKNOWN,
-                ld(2014, 1, 1), ld(2015, 1, 1), "Description", null,
-                executionContext);
-
         guarantee.createRole(
                 agreementRoleTypes.findByTitle(GuaranteeConstants.ART_BANK),
                 parties.findPartyByReference(OrganisationForDagoBank.PARTY_REFERENCE),
@@ -74,5 +68,4 @@ public class GuaranteeForOxfTopModel001 extends GuaranteeAbstract {
 
     @Inject
     Parties parties;
-
 }

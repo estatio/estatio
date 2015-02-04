@@ -26,15 +26,16 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -42,8 +43,6 @@ import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -60,21 +59,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.tax.TaxRate "
                         + "WHERE tax == :tax"
                         + "  && startDate <= :date"
-                        + "  && (endDate == null || endDate >= :date)"),
-        @javax.jdo.annotations.Query(
-                name = "findByTaxAndStartDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.tax.TaxRate "
-                        + "WHERE tax == :tax "
-                        + "&& startDate == :startDate"),
-        @javax.jdo.annotations.Query(
-                name = "findByTaxAndEndDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.tax.TaxRate "
-                        + "WHERE tax == :tax "
-                        + "&& endDate == :endDate")
+                        + "  && (endDate == null || endDate >= :date)")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class TaxRate
         extends EstatioDomainObject<TaxRate>
         implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
@@ -101,8 +88,7 @@ public class TaxRate
 
     private LocalDate startDate;
 
-    @Optional
-    @Disabled
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -113,8 +99,7 @@ public class TaxRate
 
     private LocalDate endDate;
 
-    @Optional
-    @Disabled
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -127,8 +112,8 @@ public class TaxRate
 
     private String externalReference;
 
-    @Optional
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @Property(optionality = Optionality.OPTIONAL)
     public String getExternalReference() {
         return externalReference;
     }
@@ -145,11 +130,11 @@ public class TaxRate
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
     @Override
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public TaxRate changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -220,11 +205,9 @@ public class TaxRate
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private TaxRate previous;
 
-    @Hidden(where = Where.ALL_TABLES)
-    @Named("Previous Rate")
-    @Disabled
-    @Optional
     @Override
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "Previous Rate")
     public TaxRate getPrevious() {
         return previous;
     }
@@ -238,11 +221,9 @@ public class TaxRate
     @javax.jdo.annotations.Column(name = "nextTaxRateId")
     private TaxRate next;
 
-    @Hidden(where = Where.ALL_TABLES)
-    @Named("Next Rate")
-    @Disabled
-    @Optional
     @Override
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "Next Rate")
     public TaxRate getNext() {
         return next;
     }
@@ -273,8 +254,8 @@ public class TaxRate
     // //////////////////////////////////////
 
     public TaxRate newRate(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("Percentage") BigDecimal percentage) {
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @ParameterLayout(named = "Percentage") BigDecimal percentage) {
         TaxRate rate = this.getTax().newRate(startDate, percentage);
         setNext(rate);
         rate.setPrevious(this);
@@ -282,9 +263,9 @@ public class TaxRate
     }
 
     public TaxRate change(
-            final @Named("Tax") Tax tax,
-            final @Named("Percentage") @Optional BigDecimal percentage,
-            final @Named("External Reference") @Optional String externalReference) {
+            final @ParameterLayout(named = "Tax") Tax tax,
+            final @ParameterLayout(named = "Percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal percentage,
+            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
 
         setTax(tax);
         setPercentage(percentage);

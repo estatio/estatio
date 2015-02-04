@@ -18,16 +18,19 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
 
 public class AgreementTypesTest {
 
@@ -59,7 +62,6 @@ public class AgreementTypesTest {
             }
         };
     }
-
 
     public static class findAgreementByTitle extends AgreementTypesTest {
 

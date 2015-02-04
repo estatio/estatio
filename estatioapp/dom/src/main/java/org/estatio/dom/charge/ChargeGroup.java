@@ -25,11 +25,11 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -38,16 +38,16 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "ChargeGroup_reference_UNQ", members="reference")
+        @javax.jdo.annotations.Unique(
+                name = "ChargeGroup_reference_UNQ", members = "reference")
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -56,8 +56,7 @@ import org.estatio.dom.WithReferenceUnique;
                         + "FROM org.estatio.dom.charge.ChargeGroup "
                         + "WHERE reference == :reference")
 })
-@Immutable
-@Bounded
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class ChargeGroup
         extends EstatioDomainObject<ChargeGroup>
         implements WithReferenceComparable<ChargeGroup>, WithReferenceUnique {
@@ -65,14 +64,14 @@ public class ChargeGroup
     public ChargeGroup() {
         super("reference");
     }
-    
+
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive=true)
+    @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -85,7 +84,7 @@ public class ChargeGroup
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title(sequence = "2", prepend = "-")
     public String getName() {
         return name;
@@ -100,7 +99,7 @@ public class ChargeGroup
     @javax.jdo.annotations.Persistent(mappedBy = "group")
     private SortedSet<Charge> charges = new TreeSet<Charge>();
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<Charge> getCharges() {
         return charges;
     }

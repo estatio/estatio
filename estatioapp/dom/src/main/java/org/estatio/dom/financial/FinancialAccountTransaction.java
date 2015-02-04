@@ -17,8 +17,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -39,7 +39,14 @@ import org.estatio.dom.JdoColumnScale;
                 language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
                         + "WHERE financialAccount == :financialAccount && "
-                        + "transactionDate == :transactionDate")
+                        + "transactionDate == :transactionDate"),
+        @Query(
+                name = "findByFinancialAccountAndTransactionDateAndSequence",
+                language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
+                        + "WHERE financialAccount == :financialAccount && "
+                        + "transactionDate == :transactionDate && "
+                        + "sequence == :sequence")
 })
 @Index(
         name = "FinancialAccountTransaction_financialAccount_transactionDate_IDX",
@@ -81,11 +88,25 @@ public class FinancialAccountTransaction extends EstatioDomainObject<FinancialAc
 
     // //////////////////////////////////////
 
+    private BigInteger sequence;
+
+    @Column(allowsNull = "false")
+    @Property(hidden = Where.EVERYWHERE)
+    public BigInteger getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(final BigInteger sequence) {
+        this.sequence = sequence;
+    }
+
+    // //////////////////////////////////////
+
     String description;
 
     @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @MemberOrder(sequence = "4")
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES)
     public String getDescription() {
         return description;
     }

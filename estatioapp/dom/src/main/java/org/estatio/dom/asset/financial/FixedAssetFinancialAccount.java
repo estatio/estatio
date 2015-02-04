@@ -22,9 +22,10 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -75,10 +76,10 @@ public class FixedAssetFinancialAccount
     private FixedAsset fixedAsset;
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
-    @Disabled
     @MemberOrder(sequence = "1")
     @Title(sequence = "1")
-    @Named("Property")
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(named = "Property")
     public FixedAsset getFixedAsset() {
         return fixedAsset;
     }
@@ -92,10 +93,10 @@ public class FixedAssetFinancialAccount
     private FinancialAccount financialAccount;
 
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "false")
-    @Disabled
     @MemberOrder(sequence = "1")
     @Title(sequence = "2")
-    @Named("Bank account")
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(named = "Bank account")
     public FinancialAccount getFinancialAccount() {
         return financialAccount;
     }

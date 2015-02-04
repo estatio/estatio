@@ -19,15 +19,18 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.tax.Tax;
@@ -36,24 +39,23 @@ import org.estatio.dom.tax.Tax;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.3"
-)
+        menuOrder = "80.3")
 public class Charges extends EstatioDomainService<Charge> {
 
     public Charges() {
         super(Charges.class, Charge.class);
     }
-    
+
     // //////////////////////////////////////
 
-    @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "1")
     public Charge newCharge(
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
-            final @Named("Name") String name, 
-            final @Named("Description") String description, 
-            final Tax tax, 
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Description") String description,
+            final Tax tax,
             final ChargeGroup chargeGroup) {
         Charge charge = findCharge(reference);
         if (charge == null) {
@@ -70,14 +72,14 @@ public class Charges extends EstatioDomainService<Charge> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Charge> allCharges() {
         return allInstances();
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public Charge findCharge(final String reference) {
         return firstMatch("findByReference", "reference", reference);

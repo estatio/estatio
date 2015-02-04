@@ -30,19 +30,19 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.ActionInteraction;
+import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -92,8 +92,8 @@ import org.estatio.dom.WithReferenceGetter;
                         + "WHERE owner == :owner && type == :type && this != :exclude")
 
 })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel
         extends EstatioDomainObject<CommunicationChannel>
         implements WithNameGetter, WithReferenceGetter {
@@ -109,7 +109,7 @@ public abstract class CommunicationChannel
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "2")
-    @Hidden(where = Where.OBJECT_FORMS)
+    @Property(hidden = Where.OBJECT_FORMS)
     public String getName() {
         return getContainer().titleOf(this);
     }
@@ -137,9 +137,7 @@ public abstract class CommunicationChannel
             @javax.jdo.annotations.Column(name = "ownerPartyId"),
             @javax.jdo.annotations.Column(name = "ownerFixedAssetId")
     })
-    @Optional
-    @Hidden(where = Where.PARENTED_TABLES)
-    @Disabled
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
     public CommunicationChannelOwner getOwner() {
         return owner;
     }
@@ -154,7 +152,7 @@ public abstract class CommunicationChannel
 
     @MemberOrder(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Hidden()
+    @Property(hidden = Where.EVERYWHERE)
     public CommunicationChannelType getType() {
         return type;
     }
@@ -171,7 +169,7 @@ public abstract class CommunicationChannel
      * For import purposes only
      */
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public String getReference() {
         return reference;
     }
@@ -185,9 +183,8 @@ public abstract class CommunicationChannel
     private String description;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.DESCRIPTION)
-    @Hidden(where = Where.ALL_TABLES)
-    @MultiLine(numberOfLines = 3)
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
+    @PropertyLayout(multiLine = 3)
     public String getDescription() {
         return description;
     }
@@ -213,7 +210,7 @@ public abstract class CommunicationChannel
 
     private CommunicationChannelPurposeType purpose;
 
-    @Column(allowsNull="true", length=JdoColumnLength.TYPE_ENUM)
+    @Column(allowsNull = "true", length = JdoColumnLength.TYPE_ENUM)
     public CommunicationChannelPurposeType getPurpose() {
         return purpose;
     }
@@ -225,9 +222,9 @@ public abstract class CommunicationChannel
     // //////////////////////////////////////
 
     public CommunicationChannel change(
-            final @Named("Description") @Optional @MultiLine(numberOfLines = 3) String description,
-            final @Named("Legal") @Optional boolean legal,
-            final @Named("Purpose") @Optional CommunicationChannelPurposeType purpose) {
+            final @ParameterLayout(named = "Description", multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description,
+            final @ParameterLayout(named = "Legal") @Parameter(optionality = Optionality.OPTIONAL) boolean legal,
+            final @ParameterLayout(named = "Purpose") @Parameter(optionality = Optionality.OPTIONAL) CommunicationChannelPurposeType purpose) {
         setLegal(legal);
         setPurpose(purpose);
         setDescription(description);
@@ -248,7 +245,7 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    public static class RemoveEvent extends ActionInteractionEvent<CommunicationChannel> {
+    public static class RemoveEvent extends ActionDomainEvent<CommunicationChannel> {
         private static final long serialVersionUID = 1L;
 
         public RemoveEvent(
@@ -263,8 +260,8 @@ public abstract class CommunicationChannel
         }
     }
 
-    @ActionInteraction(CommunicationChannel.RemoveEvent.class)
-    public void remove(@Named("Replace with") @Optional CommunicationChannel replacement) {
+    @Action(domainEvent = CommunicationChannel.RemoveEvent.class)
+    public void remove(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) CommunicationChannel replacement) {
         getContainer().remove(this);
     }
 

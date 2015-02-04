@@ -18,21 +18,38 @@
  */
 package org.estatio.integtests.invoice;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigInteger;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.*;
+import org.estatio.dom.invoice.CollectionNumerators;
+import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.numerator.Numerator;
@@ -49,10 +66,6 @@ import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class InvoicesTest extends EstatioIntegrationTest {
 
@@ -72,7 +85,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
                 }
             });
         }
-
 
         @Test
         public void createThenFind() throws Exception {
@@ -137,7 +149,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             // when
             numerator = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
 
-            //then
+            // then
             Assert.assertNotNull(numerator);
             assertThat(numerator.getName(), is(Constants.INVOICE_NUMBER_NUMERATOR_NAME));
             assertThat(numerator.getObjectType(), is(propertyOxfBookmark.getObjectType()));
@@ -186,7 +198,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     }
 
-
     public static class FindInvoiceNumberNumerator extends InvoicesTest {
 
         @Before
@@ -211,7 +222,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
             propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
         }
 
-
         @Test
         public void whenNone() throws Exception {
             // when
@@ -219,7 +229,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
             // then
             Assert.assertNull(numerator);
         }
-
 
     }
 
@@ -249,11 +258,17 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Inject
         private Properties properties;
 
+        Lease lease;
+
+        Party buyer;
+
+        Party seller;
+        
         @Before
         public void setUp() throws Exception {
-            Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.SELLER_PARTY);
-            Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.BUYER_PARTY);
-            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE);
+            seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.SELLER_PARTY);
+            buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.BUYER_PARTY);
+            lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE);
 
             propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
 
@@ -264,6 +279,24 @@ public class InvoicesTest extends EstatioIntegrationTest {
                     null);
             invoice.setRunId(runId);
             Assert.assertNotNull(invoice);
+        }
+
+        @Test
+        public void byLease() {
+            List<Invoice> invoiceList = invoices.findInvoices(lease);
+            assertThat(invoiceList.size(), is(1));
+        }
+
+        @Test
+        public void byParty() {
+            List<Invoice> invoiceList = invoices.findInvoices(buyer);
+            assertThat(invoiceList.size(), is(2));
+        }
+
+        @Test
+        public void byPropertyAndStatus() {
+            List<Invoice> invoiceList = invoices.findInvoices(propertyKal, InvoiceStatus.NEW);
+            assertThat(invoiceList.size(), is(1));
         }
 
         @Test
@@ -284,6 +317,11 @@ public class InvoicesTest extends EstatioIntegrationTest {
             assertThat(invoiceList.size(), is(1));
         }
 
+        @Test
+        public void bySellerBuyerPaymentMethodLeaseInvoiceStatusDueDate() {
+            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease));
+            assertNotNull(invoice);
+        }
     }
 
     public static class FindInvoicesByRunId extends InvoicesTest {
@@ -309,7 +347,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
         private Parties parties;
         @Inject
         private Leases leases;
-
 
         @Before
         public void setUp() throws Exception {
@@ -339,7 +376,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
     public static class FindOrCreateMatchingInvoice extends InvoicesTest {
 
-
         @Before
         public void setupData() {
             runScript(new FixtureScript() {
@@ -351,7 +387,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
                 }
             });
         }
-
 
         @Inject
         private Parties parties;

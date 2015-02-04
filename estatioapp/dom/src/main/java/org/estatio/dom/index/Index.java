@@ -28,12 +28,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
@@ -76,8 +76,7 @@ import org.estatio.dom.WithReferenceComparable;
                         + "FROM org.estatio.dom.index.Index "
                         + "WHERE reference == :reference")
 })
-@Bounded
-@Immutable
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Index
         extends EstatioDomainObject<Index>
         implements WithReferenceComparable<Index>, WithNameUnique {
@@ -91,7 +90,7 @@ public class Index
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
+    @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
     }
@@ -119,7 +118,7 @@ public class Index
     @javax.jdo.annotations.Persistent(mappedBy = "index")
     private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<IndexBase> getIndexBases() {
         return indexBases;
     }
