@@ -142,7 +142,7 @@ public class Occupancy
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optional = Optionality.TRUE)
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -156,7 +156,7 @@ public class Occupancy
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optional = Optionality.TRUE)
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -176,8 +176,8 @@ public class Occupancy
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Occupancy changeDates(
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -319,10 +319,10 @@ public class Occupancy
 
     @ActionLayout(describedAs = "Change unit size, sector, activity and/or brand")
     public Occupancy changeClassification(
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Unit size") UnitSize unitSize,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Sector") Sector sector,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Activity") Activity activity,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Brand") Brand brand) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Unit size") UnitSize unitSize,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Sector") Sector sector,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Activity") Activity activity,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Brand") Brand brand) {
         setUnitSize(unitSize);
         setSector(sector);
         setActivity(activity);

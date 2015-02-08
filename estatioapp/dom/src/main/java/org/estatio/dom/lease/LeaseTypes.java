@@ -50,7 +50,7 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
     @MemberOrder(sequence = "1")
     public LeaseType newLeaseType(
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
-            final @ParameterLayout(named = "Name") @Parameter(optional = Optionality.TRUE) String name) {
+            final @ParameterLayout(named = "Name") @Parameter(optionality = Optionality.OPTIONAL) String name) {
         final LeaseType leaseType = newTransientInstance();
         leaseType.setReference(reference);
         leaseType.setName(name);

@@ -95,7 +95,7 @@ public class LeaseType
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    @Property(optional = Optionality.TRUE)
+    @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
     @MemberOrder(sequence = "1")
     public String getDescription() {

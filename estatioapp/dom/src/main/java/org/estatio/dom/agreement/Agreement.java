@@ -144,7 +144,7 @@ public abstract class Agreement
     private String name;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.NAME)
-    @Property(optional = Optionality.TRUE, hidden = Where.ALL_TABLES)
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(describedAs = "Optional name for this agreement")
     public String getName() {
         return name;
@@ -210,7 +210,7 @@ public abstract class Agreement
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Property(editing = Editing.DISABLED, optional = Optionality.TRUE)
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -224,7 +224,7 @@ public abstract class Agreement
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Property(editing = Editing.DISABLED, optional = Optionality.TRUE)
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -267,8 +267,8 @@ public abstract class Agreement
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public Agreement changeDates(
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -315,7 +315,7 @@ public abstract class Agreement
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private Agreement previous;
 
-    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @PropertyLayout(named = "Previous Agreement")
     @Override
     public Agreement getPrevious() {
@@ -341,7 +341,7 @@ public abstract class Agreement
     @javax.jdo.annotations.Column(name = "nextAgreementId")
     private Agreement next;
 
-    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @PropertyLayout(named = "Next Agreement")
     @Override
     public Agreement getNext() {
@@ -370,8 +370,8 @@ public abstract class Agreement
     public Agreement newRole(
             final @ParameterLayout(named = "Type") AgreementRoleType type,
             final Party party,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End date") LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
     }

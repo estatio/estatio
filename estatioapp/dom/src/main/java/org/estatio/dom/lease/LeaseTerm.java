@@ -158,7 +158,7 @@ public abstract class LeaseTerm
 
     private BigInteger sequence;
 
-    @Property(hidden = Where.EVERYWHERE, optional = Optionality.TRUE)
+    @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     public BigInteger getSequence() {
         return sequence;
     }
@@ -172,7 +172,7 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED)
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -197,7 +197,7 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Property(optional = Optionality.TRUE, editing = Editing.DISABLED)
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -223,8 +223,8 @@ public abstract class LeaseTerm
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTerm changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optional = Optionality.TRUE) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optional = Optionality.TRUE) LocalDate endDate) {
+            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         getChangeDates().changeDates(startDate, endDate);
 
         // TODO: need to align the predecessor and successor
@@ -345,7 +345,7 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private LeaseTerm previous;
 
-    @Property(hidden = Where.ALL_TABLES, optional = Optionality.TRUE)
+    @Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
     @PropertyLayout(named = "Previous Term")
     @Override
     public LeaseTerm getPrevious() {
@@ -361,7 +361,7 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Column(name = "nextLeaseTermId")
     private LeaseTerm next;
 
-    @Property(hidden = Where.ALL_TABLES, optional = Optionality.TRUE)
+    @Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
     @PropertyLayout(named = "Next Term")
     @Override
     public LeaseTerm getNext() {
@@ -468,7 +468,7 @@ public abstract class LeaseTerm
 
     public LeaseTerm createNext(
             final @ParameterLayout(named = "Start date") LocalDate nextStartDate,
-            final @ParameterLayout(named = "End date") @Parameter(optional = Optionality.TRUE) LocalDate nextEndDate) {
+            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate nextEndDate) {
         LeaseTerm nextTerm = getNext();
         if (nextTerm != null) {
             return nextTerm;
