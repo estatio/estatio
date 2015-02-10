@@ -63,15 +63,14 @@ public final class RegexValidation {
     public static final class Lease {
         private Lease() {
         }
-        
-        /* Maximum 15 characters, 3 letter property, tenant name, unit name */
-        public static final String REFERENCE = "^(?!.{16,})([A-Z]{3}-[A-Z,0-9]+-[A-Z,0-9]+)$";
+
+        public static final String REFERENCE = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,7})-[A-Z,0-9,\\&+=_/-]{3,7})";
     }
-    
+
     public static final class Unit {
         private Unit() {
         }
-        
-        public static final String REFERENCE = "([A-Z]{3}-[A-Z,0-9,/,+,-]{3,})";
+
+        public static final String REFERENCE = "(?=.{7,17})([A-Z]{1}-)?([A-Z]{3}-[A-Z,0-9,/,+,-]{3,11})";
     }
 }

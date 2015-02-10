@@ -19,16 +19,17 @@ package org.estatio.dom;
  *  under the License.
  */
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.core.metamodel.facetapi.FacetHolder;
 import org.apache.isis.core.metamodel.facets.object.regex.annotation.RegExFacetOnTypeAnnotation;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class RegexValidationTest {
 
@@ -50,8 +51,18 @@ public class RegexValidationTest {
 
     @Test
     public void testUnitReference() {
-        tester(RegexValidation.Unit.REFERENCE, "ABC-123", true);
-        tester(RegexValidation.Unit.REFERENCE, "ABC- 123", false);
+        tester(RegexValidation.Unit.REFERENCE, "AAA-XXXXXXXXXXX", true);
+        tester(RegexValidation.Unit.REFERENCE, "AAA-A0A0A0A0A0A", true);
+        tester(RegexValidation.Unit.REFERENCE, "AAA-A0A0A0A0", true);
+        tester(RegexValidation.Unit.REFERENCE, "AAA-A+23A2-1", true);
+        tester(RegexValidation.Unit.REFERENCE, "AA-A0A0A0A0", false);
+        tester(RegexValidation.Unit.REFERENCE, "AAA-A0", false);
+
+        tester(RegexValidation.Unit.REFERENCE, "A-AAA-A0A0A0A0A0A", true);
+        tester(RegexValidation.Unit.REFERENCE, "A-AAA-A0A0A0A0", true);
+        tester(RegexValidation.Unit.REFERENCE, "A-AAA-A+23A2-1", true);
+        tester(RegexValidation.Unit.REFERENCE, "A-AAA-A0", false);
+        tester(RegexValidation.Unit.REFERENCE, "A-AA-A0A0A0A0", false);
     }
 
     @Test
@@ -60,7 +71,7 @@ public class RegexValidationTest {
         tester(RegexValidation.CommunicationChannel.PHONENUMBER, "00316-57201234", true);
         tester(RegexValidation.CommunicationChannel.PHONENUMBER, "asd", false);
     }
-    
+
     @Test
     public void testEmailAddress() {
         tester(RegexValidation.CommunicationChannel.EMAIL, "asd@@asd.com", false);
@@ -68,6 +79,27 @@ public class RegexValidationTest {
         tester(RegexValidation.CommunicationChannel.EMAIL, "a sd@asd.com", false);
         tester(RegexValidation.CommunicationChannel.EMAIL, "asd@asd", false);
         tester(RegexValidation.CommunicationChannel.EMAIL, "asd", false);
+    }
+
+    @Test
+    public void testLeaseReference() {
+        tester(RegexValidation.Lease.REFERENCE, "AAA-A0A-A1&+=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0-/A/1&+", true);
+        tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A-=_-//", true);
+        tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0-A1&+", true);
+        tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0A-=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "AA-A0A0A0A-=_-", false);
+        tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "AA--A0A0A0A-=-", false);
+
+        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A-A1&+=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0-/A1&/+", true);
+        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A-=_-//", true);
+        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A0-A1&+", true);
+        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A0A-=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "A--AA--A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "AA-AAA-A0A0A0A-=-", false);
     }
 
     private void tester(String regex, String pattern, boolean expected) {
