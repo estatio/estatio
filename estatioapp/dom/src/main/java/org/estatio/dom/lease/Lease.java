@@ -29,7 +29,6 @@ import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -44,7 +43,6 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
@@ -78,9 +76,8 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
-import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -463,65 +460,6 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public Lease newBreakOption(
-            final @Named("Break date") LocalDate breakDate,
-            final @Named("Notification period") @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
-            final BreakExerciseType breakExerciseType,
-            final BreakType breakType,
-            final @Named("Description") @Optional String description
-            ) {
-        final BreakOption breakOption = newTransientInstance(breakType.getFactoryClass());
-        breakOption.setType(breakType);
-        breakOption.setLease(this);
-        breakOption.setExerciseType(breakExerciseType);
-        final LocalDate date = breakDate;
-        breakOption.setBreakDate(date);
-        breakOption.setNotificationPeriod(notificationPeriodStr);
-        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
-        final LocalDate excersiseDate = date.minus(notificationPeriodJoda);
-        breakOption.setExerciseDate(excersiseDate);
-        persist(breakOption);
-        return this;
-    }
-
-    public LocalDate default0NewBreakOption() {
-        // REVIEW: this is just a guess as to a reasonable default
-        return getClockService().now().plusYears(2);
-    }
-
-    public String default1NewBreakOption() {
-        return "3m";
-    }
-
-    public BreakExerciseType default2NewBreakOption() {
-        return BreakExerciseType.TENANT;
-    }
-
-    public String validateNewBreakOption(
-            final LocalDate breakDate,
-            final String notificationPeriodStr,
-            final BreakExerciseType breakExerciseType,
-            final BreakType breakType,
-            final String description) {
-
-        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
-        if (notificationPeriodJoda == null) {
-            return "Notification period format not recognized";
-        }
-        final LocalDate notificationDate = breakDate.minus(notificationPeriodJoda);
-        return checkNewBreakOptionDuplicate(BreakType.FIXED, notificationDate);
-    }
-
-    private String checkNewBreakOptionDuplicate(final BreakType breakType, final LocalDate breakDate) {
-        final Iterable<BreakOption> duplicates =
-                Iterables.filter(getBreakOptions(),
-                        BreakOption.Predicates.whetherTypeAndBreakDate(breakType, breakDate));
-        return duplicates.iterator().hasNext() ?
-                "This lease already has a " + breakType + " break option for this date" : null;
-    }
-
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Column(name = "paidByBankMandateId")
     private BankMandate paidBy;
 
@@ -819,7 +757,7 @@ public class Lease
 
         copyItemsAndTerms(newLease, tenancyStartDate);
         copyOccupancies(newLease, tenancyStartDate);
-        copyBreakOptions(newLease, tenancyStartDate);
+        breakOptionsService.copyBreakOptions(this, newLease, tenancyStartDate);
         copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
         this.setNext(newLease);
         return newLease;
@@ -862,19 +800,6 @@ public class Lease
                         newRole.addCommunicationChannel(agreementRoleCommunicationChannel.getType(), agreementRoleCommunicationChannel.getCommunicationChannel());
                     }
                 }
-            }
-        }
-    }
-
-    private void copyBreakOptions(final Lease newLease, final LocalDate startDate) {
-        for (BreakOption option : getBreakOptions()) {
-            if (option.getBreakDate().isAfter(startDate)) {
-                newLease.newBreakOption(
-                        option.getBreakDate(),
-                        option.getNotificationPeriod(),
-                        option.getExerciseType(),
-                        option.getType(),
-                        option.getDescription());
             }
         }
     }
@@ -1010,5 +935,8 @@ public class Lease
 
     @Inject
     CommunicationChannels communicationChannels;
+
+    @Inject
+    BreakOptions breakOptionsService;
 
 }

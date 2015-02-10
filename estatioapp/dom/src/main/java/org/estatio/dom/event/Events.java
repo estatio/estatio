@@ -19,12 +19,17 @@
 package org.estatio.dom.event;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.RestrictTo;
+
 import org.estatio.dom.EstatioDomainService;
 
 @DomainService(menuOrder = "85", repositoryFor = Event.class)
@@ -69,6 +74,11 @@ public class Events extends EstatioDomainService<Event> {
     @NotContributed
     public List<Event> findEventsInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
         return allMatches("findInDateRange", "rangeStartDate", rangeStartDate, "rangeEndDate", rangeEndDate);
+    }
+
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    public List<Event> allEvents() {
+        return allInstances();
     }
 
 }

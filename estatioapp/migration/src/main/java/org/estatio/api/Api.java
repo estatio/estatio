@@ -22,13 +22,21 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -96,6 +104,7 @@ import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.Occupancy.OccupancyReportingType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Organisations;
@@ -113,10 +122,6 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Hidden
 public class Api extends AbstractFactoryAndRepository {
@@ -1076,12 +1081,20 @@ public class Api extends AbstractFactoryAndRepository {
             Period period = new Period(notificationDate, breakDate);
             notificationPeriodStr = JodaPeriodUtils.asSimpleString(period);
         }
-        if (lease.validateNewBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description) == null) {
-            lease.newBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description);
-        }
+        wrapperFactory.wrap(breakOptions.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description));
+
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private WrapperFactory wrapperFactory;
+
+    @Inject
+    private DomainObjectContainer container;
+
+    @Inject
+    private BreakOptions breakOptions;
 
     @Inject
     private Agreements agreements;

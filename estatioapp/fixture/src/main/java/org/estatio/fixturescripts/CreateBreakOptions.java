@@ -18,14 +18,19 @@
  */
 package org.estatio.fixturescripts;
 
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.services.clock.ClockService;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 public class CreateBreakOptions extends DiscoverableFixtureScript {
 
@@ -43,10 +48,10 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext fixtureResults) {
         final Lease lease = leases.findLeaseByReference(reference);
         final LocalDate now = clockService.now();
-        lease.newBreakOption(now.plusMonths(6), "3m", BreakExerciseType.LANDLORD, BreakType.FIXED, null);
-        lease.newBreakOption(now.plusMonths(12), "3m", BreakExerciseType.MUTUAL, BreakType.FIXED, null);
-        lease.newBreakOption(now.plusMonths(24), "3m", BreakExerciseType.TENANT, BreakType.FIXED, null);
-        lease.newBreakOption(now.plusMonths(24), "3m", BreakExerciseType.TENANT, BreakType.ROLLING, null);
+        breakOptions.newBreakOption(lease, now.plusMonths(6), "3m", BreakType.FIXED, BreakExerciseType.LANDLORD, null);
+        breakOptions.newBreakOption(lease, now.plusMonths(12), "3m", BreakType.FIXED, BreakExerciseType.MUTUAL, null);
+        breakOptions.newBreakOption(lease, now.plusMonths(24), "3m", BreakType.FIXED, BreakExerciseType.TENANT, null);
+        breakOptions.newBreakOption(lease, now.plusMonths(24), "3m", BreakType.ROLLING, BreakExerciseType.TENANT, null);
         fixtureResults.addResult(this, "lease", lease);
     }
 
@@ -57,6 +62,9 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     public final void injectLeases(final Leases leases) {
         this.leases = leases;
     }
+
+    @Inject
+    private BreakOptions breakOptions;
 
     private ClockService clockService;
 

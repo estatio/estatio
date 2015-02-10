@@ -25,7 +25,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
@@ -44,6 +43,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -69,13 +70,19 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 @javax.jdo.annotations.Unique(
         name = "BreakOption_lease_type_exerciseDate_UNQ",
         members = { "lease", "type", "exerciseDate" })
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByLease", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.breaks.BreakOption "
+                        + "WHERE lease == :lease") })
 @Immutable
 public abstract class BreakOption
         extends EstatioDomainObject<BreakOption>
         implements EventSubject {
 
     public BreakOption() {
-        super("lease, type, exerciseDate");
+        super("lease, type, exerciseType, breakDate, exerciseDate");
     }
 
     // //////////////////////////////////////
@@ -215,8 +222,10 @@ public abstract class BreakOption
     // //////////////////////////////////////
 
     public BreakOption change(
+            final @Named("Type") BreakType breakType,
             final @Named("Exercise Type") BreakExerciseType breakExerciseType,
             final @Named("Description") @Optional String description) {
+        setType(breakType);
         setExerciseType(breakExerciseType);
         setDescription(description);
         // remove existing events
@@ -228,19 +237,23 @@ public abstract class BreakOption
         return this;
     }
 
-    public BreakExerciseType default0Change() {
+    public BreakType default0Change() {
+        return getType();
+    }
+
+    public BreakExerciseType default1Change() {
         return getExerciseType();
     }
 
-    public String default1Change() {
+    public String default2Change() {
         return getDescription();
     }
 
     public BreakOption changeDates(
-            final @Named("Break date") LocalDate breakDate,
-            final @Named("Excercise date") LocalDate excerciseDate) {
-        setBreakDate(breakDate);
-        setExerciseDate(exerciseDate);
+            final @Named("Break date") LocalDate newBreakDate,
+            final @Named("Excercise date") LocalDate newExcerciseDate) {
+        setBreakDate(newBreakDate);
+        setExerciseDate(newExcerciseDate);
         // remove existing events
         for (Event event : getEvents()) {
             getContainer().remove(event);

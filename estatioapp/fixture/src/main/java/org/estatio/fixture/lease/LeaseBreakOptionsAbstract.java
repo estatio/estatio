@@ -19,12 +19,15 @@
 package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.joda.time.LocalDate;
 
 public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
 
@@ -33,16 +36,16 @@ public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
 
     protected Lease newBreakOptionPlusYears(Lease lease, int years, String notificationPeriodStr, BreakType breakType, BreakExerciseType exerciseType, String description, ExecutionContext executionContext) {
         final LocalDate breakDate = lease.getStartDate().plusYears(years);
-        return  newBreakOption(lease, notificationPeriodStr, exerciseType, breakType, description, breakDate, executionContext);
+        return newBreakOption(lease, breakDate, notificationPeriodStr, exerciseType, breakType, description, executionContext);
     }
 
     protected Lease newBreakOptionAtEndDate(Lease lease, String notificationPeriodStr, BreakType breakType, BreakExerciseType breakExerciseType, String description, ExecutionContext executionContext) {
         final LocalDate breakDate = lease.getInterval().endDateExcluding();
-        return newBreakOption(lease, notificationPeriodStr, breakExerciseType, breakType, description, breakDate, executionContext);
+        return newBreakOption(lease, breakDate, notificationPeriodStr, breakExerciseType, breakType, description, executionContext);
     }
 
-    protected Lease newBreakOption(Lease lease, String notificationPeriodStr, BreakExerciseType exerciseType, BreakType breakType, String description, LocalDate breakDate, ExecutionContext executionContext) {
-        final Lease breakOption = lease.newBreakOption(breakDate, notificationPeriodStr, exerciseType, breakType, description);
+    protected Lease newBreakOption(Lease lease, LocalDate breakDate, String notificationPeriodStr, BreakExerciseType exerciseType, BreakType breakType, String description, ExecutionContext executionContext) {
+        final Lease breakOption = breakOptions.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, exerciseType, description);
         return executionContext.addResult(this, breakOption);
     }
 
@@ -50,5 +53,8 @@ public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Leases leases;
+
+    @Inject
+    protected BreakOptions breakOptions;
 
 }
