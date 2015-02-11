@@ -19,28 +19,33 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
+
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Unit.class)
 @DomainServiceLayout(
-        named="Fixed Assets",
+        named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "10.2"
-)
+        menuOrder = "10.2")
 public class Units extends EstatioDomainService<Unit> {
+
+    @Inject
+    ClockService clockService;
 
     public Units() {
         super(Units.class, Unit.class);
@@ -48,11 +53,11 @@ public class Units extends EstatioDomainService<Unit> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Unit newUnit(
             final Property property,
-            final @RegEx(validation = RegexValidation.Unit.REFERENCE, caseSensitive = true) String reference,
+            final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE) String reference,
             final String name,
             final UnitType type) {
         final Unit unit = newTransientInstance();
@@ -70,31 +75,31 @@ public class Units extends EstatioDomainService<Unit> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Unit> findUnits(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
         return allMatches("findByReferenceOrName",
-                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName),
+                "includeTerminated", includeTerminated,
+                "date", clockService.now());
     }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public Unit findUnitByReference(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Collection(hidden = Where.EVERYWHERE)
     public List<Unit> autoComplete(final String searchPhrase) {
-        return findUnits("*".concat(searchPhrase).concat("*"));
+        return findUnits("*".concat(searchPhrase).concat("*"), false);
     }
 
     // //////////////////////////////////////
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Unit> allUnits() {
         return allInstances();

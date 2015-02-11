@@ -25,17 +25,16 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
@@ -53,16 +52,16 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.Unit "
                         + "WHERE (reference.matches(:referenceOrName) "
-                        + "   || name.matches(:referenceOrName))"),
+                        + "   || name.matches(:referenceOrName)) "
+                        + "&& (:includeTerminated || endDate == null || endDate >= :date)"),
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.Unit "
                         + "WHERE reference.matches(:reference)")
 })
-@AutoComplete(repository = Units.class)
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
-@Immutable
+@DomainObject(autoCompleteRepository = Units.class, editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
 
     private UnitType type;
@@ -94,7 +93,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     private BigDecimal storageArea;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -108,7 +107,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     private BigDecimal salesArea;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -122,7 +121,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     private BigDecimal mezzanineArea;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -136,7 +135,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     private BigDecimal dehorsArea;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     public BigDecimal getDehorsArea() {
         return dehorsArea;
     }
@@ -150,9 +149,8 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     private Property property;
 
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
-    @Disabled
-    public Property getProperty() {
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES, editing = Editing.DISABLED)
+    public org.estatio.dom.asset.Property getProperty() {
         return property;
     }
 
@@ -166,8 +164,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     private LocalDate startDate;
 
     @Override
-    @Disabled
-    @Optional
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -180,8 +177,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Optional
-    @Disabled
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     public LocalDate getEndDate() {
         return this.endDate;
     }
@@ -220,11 +216,11 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public Unit changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -254,9 +250,9 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     // //////////////////////////////////////
 
     public Unit changeAsset(
-            final @Named("Name") String name,
-            final @Named("Type") UnitType type,
-            final @Named("External Reference") @Optional String externalReference) {
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Type") UnitType type,
+            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
         setName(name);
         setExternalReference(externalReference);
         return this;
@@ -277,11 +273,11 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     // ///////////////////////////////////////
 
     public Unit changeAreas(
-            final @Named("Area") @Optional BigDecimal area,
-            final @Named("Storage Area") @Optional BigDecimal storageArea,
-            final @Named("Sales Area") @Optional BigDecimal salesArea,
-            final @Named("Mezzanine Area") @Optional BigDecimal mezzanineArea,
-            final @Named("Dehors Area") @Optional BigDecimal dehorsArea) {
+            final @ParameterLayout(named = "Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal area,
+            final @ParameterLayout(named = "Storage Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal storageArea,
+            final @ParameterLayout(named = "Sales Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal salesArea,
+            final @ParameterLayout(named = "Mezzanine Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal mezzanineArea,
+            final @ParameterLayout(named = "Dehors Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal dehorsArea) {
         setArea(area);
         setStorageArea(storageArea);
         setSalesArea(salesArea);

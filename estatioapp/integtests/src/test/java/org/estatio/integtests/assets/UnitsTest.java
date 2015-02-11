@@ -19,10 +19,14 @@
 package org.estatio.integtests.assets;
 
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -62,7 +66,16 @@ public class UnitsTest extends EstatioIntegrationTest {
 
         @Test
         public void findByReferenceOrName() throws Exception {
-            assertThat(units.findUnits("*XF*").size(), is(25));
+            // given
+            assertThat(units.findUnits("*XF*", false).size(), is(25));
+
+            // when
+            Unit unit = units.findUnitByReference(PropertyForOxf.unitReference("001"));
+            unit.setEndDate(new LocalDate(2014, 1, 1));
+
+            // then
+            assertThat(units.findUnits("*XF*", false).size(), is(24));
+            assertThat(units.findUnits("*XF*", true).size(), is(25));
         }
 
     }
