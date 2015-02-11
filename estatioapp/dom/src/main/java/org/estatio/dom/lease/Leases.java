@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
@@ -172,16 +173,18 @@ public class Leases extends EstatioDomainService<Lease> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName) {
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName,
+            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
-        return allMatches("matchByReferenceOrName", "referenceOrName", pattern);
+        return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeasesByBrand(
-            final Brand brand) {
-        return findByBrand(brand);
+            final Brand brand,
+            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
+        return findByBrand(brand, includeTerminated);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -246,10 +249,12 @@ public class Leases extends EstatioDomainService<Lease> {
     }
 
     @Programmatic
-    public List<Lease> findByBrand(final Brand brand) {
+    public List<Lease> findByBrand(final Brand brand, final boolean includeTerminated) {
         return allMatches(
                 "findByBrand",
-                "brand", brand);
+                "brand", brand,
+                "includeTerminated", includeTerminated,
+                "date", clockService.now());
     }
 
     // //////////////////////////////////////
@@ -257,7 +262,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<Lease> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
-                ? findLeases("*" + searchPhrase + "*")
+                ? findLeases("*" + searchPhrase + "*", false)
                 : Lists.<Lease> newArrayList();
     }
 
@@ -310,5 +315,8 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @Inject
     private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+
+    @Inject 
+    ClockService clockService;
 
 }

@@ -21,6 +21,7 @@ package org.estatio.integtests.lease;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class LeasesTest extends EstatioIntegrationTest {
                 }
             });
         }
-        
+
         @Test
         public void noResults() {
             final Lease lease = leases.findLeaseByReferenceElseNull("FAKEREF");
@@ -153,8 +154,19 @@ public class LeasesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenWildcard() {
-            final List<Lease> matchingLeases = leases.findLeases("OXF*");
+            // Given
+            final List<Lease> matchingLeases = leases.findLeases("OXF*", false);
             assertThat(matchingLeases.size(), is(5));
+
+            // When
+            // terminate one lease...
+            Lease oxfTop = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+            oxfTop.terminate(new LocalDate(2014, 1, 1), true);
+
+            // Then
+            assertThat(oxfTop.getTenancyEndDate(), is(new LocalDate(2014, 1, 1)));
+            assertThat(leases.findLeases("OXF*", false).size(), is(4));
+            assertThat(leases.findLeases("OXF*", true).size(), is(5));
         }
 
     }
@@ -213,12 +225,19 @@ public class LeasesTest extends EstatioIntegrationTest {
         public void whenValidProperty() {
             // given
             final Brand brand = brands.findByName(LeaseForOxfTopModel001.BRAND);
-            // when
-            final List<Lease> matchingLeases = leases.findByBrand(brand);
-            // then
+            final List<Lease> matchingLeases = leases.findByBrand(brand, false);
             assertThat(matchingLeases.size(), is(1));
-        }
 
+            // when
+            Lease oxfTop = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+            oxfTop.terminate(new LocalDate(2014, 1, 1), true);
+            final List<Lease> matchingLeases2 = leases.findByBrand(brand, false);
+
+            // then
+            assertTrue(matchingLeases2.isEmpty());
+            final List<Lease> matchingLeases3 = leases.findByBrand(brand, true);
+            assertThat(matchingLeases3.size(), is(1));
+        }
     }
 
     public static class FindLeasesActiveOnDate extends LeasesTest {

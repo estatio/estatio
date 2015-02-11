@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,7 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
+import org.estatio.services.clock.ClockService;
 
 public class LeasesTest {
 
@@ -75,6 +77,7 @@ public class LeasesTest {
                 return null;
             }
         };
+        leases.clockService = new ClockService();
     }
 
     public static class FindLeaseByReference extends LeasesTest {
@@ -96,13 +99,13 @@ public class LeasesTest {
         @Test
         public void byReferenceWildcard() {
 
-            leases.findLeases("*REF?1*");
+            leases.findLeases("*REF?1*", false);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
             assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object) "(?i).*REF.1.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
         }
     }
 

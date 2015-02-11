@@ -105,7 +105,7 @@ public class InvoiceService extends EstatioService<InvoiceService> {
             final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
             final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
         String runId = null;
-        final List<Lease> results = leases.findLeases(referenceOrName);
+        final List<Lease> results = leases.findLeases(referenceOrName, false);
         if (results != null && results.size() > 0) {
             runId = invoiceCalculationService.calculateAndInvoice(
                     new InvoiceCalculationParameters(
