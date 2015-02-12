@@ -48,6 +48,7 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
@@ -189,6 +190,19 @@ public class AgreementRoleCommunicationChannel extends
 	public void setEndDate(final LocalDate localDate) {
 		this.endDate = localDate;
 	}
+	
+	// //////////////////////////////////////
+	
+    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
+        if (confirm) {
+            doRemove();
+        }
+    }
+	
+    @Programmatic
+    public void doRemove() {
+        getContainer().remove(this);
+    }
 
 	// //////////////////////////////////////
 
