@@ -27,21 +27,20 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioDomainObject;
@@ -79,7 +78,8 @@ import com.google.common.collect.Lists;
 				+ "WHERE communicationChannel == :communicationChannel ") })
 @Unique(name = "AgreementRoleCommunicationChannel_role_startDate_type_communicationChannel_UNQ", members = {
 		"role", "startDate", "type", "communicationChannel" })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
+@DomainObject(editing = Editing.DISABLED)
 public class AgreementRoleCommunicationChannel extends
 		EstatioDomainObject<AgreementRoleCommunicationChannel> implements
 		WithIntervalContiguous<AgreementRoleCommunicationChannel> {
@@ -98,9 +98,7 @@ public class AgreementRoleCommunicationChannel extends
 	private AgreementRole role;
 
 	@javax.jdo.annotations.Column(name = "agreementRoleId", allowsNull = "false")
-	@Title(sequence = "2")
-	@Hidden(where = Where.REFERENCES_PARENT)
-	@Disabled
+	@Property(hidden = Where.REFERENCES_PARENT)
 	public AgreementRole getRole() {
 		return role;
 	}
@@ -131,8 +129,7 @@ public class AgreementRoleCommunicationChannel extends
 
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
 	@javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-	@Title(sequence = "1", append = ":")
-	@Disabled
+	@Title(sequence = "1")
 	public AgreementRoleCommunicationChannelType getType() {
 		return type;
 	}
@@ -147,8 +144,6 @@ public class AgreementRoleCommunicationChannel extends
 
 	@javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
 	@javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
-	@Title(sequence = "3", prepend = ",")
-	@Disabled
 	public CommunicationChannel getCommunicationChannel() {
 		return communicationChannel;
 	}
@@ -163,8 +158,7 @@ public class AgreementRoleCommunicationChannel extends
 	@javax.jdo.annotations.Persistent
 	private LocalDate startDate;
 
-	@Optional
-	@Disabled
+	@Property(optional = Optionality.TRUE)
 	@Override
 	public LocalDate getStartDate() {
 		return startDate;
@@ -178,8 +172,7 @@ public class AgreementRoleCommunicationChannel extends
 	@javax.jdo.annotations.Persistent
 	private LocalDate endDate;
 
-	@Optional
-	@Disabled
+	@Property(optional = Optionality.TRUE)
 	@Override
 	public LocalDate getEndDate() {
 		return endDate;
@@ -194,7 +187,7 @@ public class AgreementRoleCommunicationChannel extends
 
 	public AgreementRole remove(
 			@ParameterLayout(named = "Are you sure?") Boolean confirm) {
-		AgreementRole agreementRole = this.getRole(); 
+		AgreementRole agreementRole = this.getRole();
 		if (confirm) {
 			doRemove();
 		}
@@ -208,11 +201,11 @@ public class AgreementRoleCommunicationChannel extends
 
 	// //////////////////////////////////////
 
-	@ActionSemantics(Of.IDEMPOTENT)
+	@Action(semantics = SemanticsOf.IDEMPOTENT)
 	@Override
 	public AgreementRoleCommunicationChannel changeDates(
-			final @Named("Start Date") @Optional LocalDate startDate,
-			final @Named("End Date") @Optional LocalDate endDate) {
+			final @ParameterLayout(named = "Start Date") @Parameter(optional = Optionality.TRUE) LocalDate startDate,
+			final @ParameterLayout(named = "End Date") @Parameter(optional = Optionality.TRUE) LocalDate endDate) {
 		helper.changeDates(startDate, endDate);
 		return this;
 	}
@@ -264,25 +257,21 @@ public class AgreementRoleCommunicationChannel extends
 
 	// //////////////////////////////////////
 
-	@Hidden(where = Where.ALL_TABLES)
-	@Disabled
-	@Optional
+	@Property(optional = Optionality.TRUE, hidden = Where.ALL_TABLES)
 	@Override
 	public AgreementRoleCommunicationChannel getPredecessor() {
 		return helper.getPredecessor(getRole().getCommunicationChannels(),
 				getType().matchingCommunicationChannel());
 	}
 
-	@Hidden(where = Where.ALL_TABLES)
-	@Disabled
-	@Optional
+	@Property(hidden = Where.ALL_TABLES, optional = Optionality.TRUE)
 	@Override
 	public AgreementRoleCommunicationChannel getSuccessor() {
 		return helper.getSuccessor(getRole().getCommunicationChannels(),
 				getType().matchingCommunicationChannel());
 	}
 
-	@Render(Type.EAGERLY)
+	@CollectionLayout(render = RenderType.EAGERLY)
 	@Override
 	public SortedSet<AgreementRoleCommunicationChannel> getTimeline() {
 		return helper.getTimeline(getRole().getCommunicationChannels(),
@@ -312,8 +301,8 @@ public class AgreementRoleCommunicationChannel extends
 
 	public AgreementRoleCommunicationChannel succeededBy(
 			final CommunicationChannel communicationChannel,
-			final @Named("Start date") LocalDate startDate,
-			final @Named("End date") @Optional LocalDate endDate) {
+			final @ParameterLayout(named = "Start date") LocalDate startDate,
+			final @ParameterLayout(named = "End date") @Parameter(optional = Optionality.TRUE) LocalDate endDate) {
 		return helper.succeededBy(startDate, endDate, new SiblingFactory(this,
 				communicationChannel));
 	}
@@ -358,8 +347,8 @@ public class AgreementRoleCommunicationChannel extends
 
 	public AgreementRoleCommunicationChannel precededBy(
 			final CommunicationChannel communicationChannel,
-			final @Named("Start date") @Optional LocalDate startDate,
-			final @Named("End date") LocalDate endDate) {
+			final @ParameterLayout(named = "Start date") @Parameter(optional = Optionality.TRUE) LocalDate startDate,
+			final @ParameterLayout(named = "End date") LocalDate endDate) {
 
 		return helper.precededBy(startDate, endDate, new SiblingFactory(this,
 				communicationChannel));
