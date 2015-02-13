@@ -18,18 +18,22 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigInteger;
 import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class LeaseTermsTest {
 
@@ -40,8 +44,7 @@ public class LeaseTermsTest {
     LeaseItem leaseItem;
     BigInteger sequence = BigInteger.TEN;
 
-    LocalDate date = new LocalDate(2013,4,1);;
-
+    LocalDate date = new LocalDate(2013, 4, 1);;
 
     @Before
     public void setup() {
@@ -55,11 +58,13 @@ public class LeaseTermsTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<LeaseTerm> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
@@ -115,4 +120,5 @@ public class LeaseTermsTest {
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }
     }
+
 }

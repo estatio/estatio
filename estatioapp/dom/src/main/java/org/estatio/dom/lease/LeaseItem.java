@@ -393,6 +393,7 @@ public class LeaseItem
         this.invoicingFrequency = invoicingFrequency;
     }
 
+    
     // //////////////////////////////////////
 
     private PaymentMethod paymentMethod;

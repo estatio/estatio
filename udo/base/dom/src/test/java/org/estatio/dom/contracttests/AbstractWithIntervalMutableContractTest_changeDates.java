@@ -51,20 +51,6 @@ public abstract class AbstractWithIntervalMutableContractTest_changeDates<T exte
     
     protected abstract T doCreateWithIntervalMutable(WithIntervalMutable.Helper<T> mockChangeDates);
 
-    
-    @Test
-    public void changeDates() {
-        final LocalDate startDate = new LocalDate(2013,4,1);
-        final LocalDate endDate = new LocalDate(2013,7,1);
-        context.checking(new Expectations() {
-            {
-                oneOf(mockChangeDates).changeDates(startDate, endDate);
-                will(returnValue(withIntervalMutable));
-            }
-        });
-        assertThat(withIntervalMutable.changeDates(startDate, endDate), is(withIntervalMutable));
-    }
-
     @Test
     public void default0ChangeDates() {
         final LocalDate localDate = new LocalDate(2013,7,1);

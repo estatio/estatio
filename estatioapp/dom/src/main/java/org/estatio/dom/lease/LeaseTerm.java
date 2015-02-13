@@ -183,9 +183,9 @@ public abstract class LeaseTerm
         this.startDate = startDate;
     }
 
-    public void modifyStartDate(final LocalDate startDate) {
-        if (ObjectUtils.notEqual(getStartDate(), startDate)) {
-            setStartDate(startDate);
+    public void modifyStartDate(final LocalDate newStartDate) {
+        if (ObjectUtils.notEqual(getStartDate(), newStartDate)) {
+            setStartDate(newStartDate);
             if (getPrevious() != null) {
                 getPrevious().align();
             }
@@ -206,9 +206,9 @@ public abstract class LeaseTerm
         this.endDate = endDate;
     }
 
-    public void modifyEndDate(final LocalDate endDate) {
-        if (ObjectUtils.notEqual(getEndDate(), endDate)) {
-            setEndDate(endDate);
+    public void modifyEndDate(final LocalDate newEndDate) {
+        if (ObjectUtils.notEqual(getEndDate(), newEndDate)) {
+            setEndDate(newEndDate);
         }
     }
 
@@ -223,12 +223,10 @@ public abstract class LeaseTerm
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTerm changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        getChangeDates().changeDates(startDate, endDate);
-
-        // TODO: need to align the predecessor and successor
-        // nb: only if contiguous semantics, eg for Rent, but not for Discount
+            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate newStartDate,
+            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate newEndDate) {
+        modifyStartDate(newStartDate);
+        modifyEndDate(newEndDate);
         return this;
     }
 
@@ -255,21 +253,18 @@ public abstract class LeaseTerm
 
     @Override
     public String validateChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
-        String changeDatesReasonIfAny = getChangeDates().validateChangeDates(startDate, endDate);
+            final LocalDate newStartDate,
+            final LocalDate newEndDate) {
+        String changeDatesReasonIfAny = getChangeDates().validateChangeDates(newStartDate, newEndDate);
         if (changeDatesReasonIfAny != null) {
             return changeDatesReasonIfAny;
         }
-
-        // TODO: now check that the start date is not before the predecessor's
-        // start date
-        // ...
-
-        // TODO: now check that the end date is not after the successor's end
-        // date
-        // ...
-
+        if (getPrevious() != null && newStartDate.isBefore(getPrevious().getStartDate())) {
+            return "New start date can't be before start date of previous term";
+        }
+        if (getNext() != null && ObjectUtils.notEqual(newEndDate, getEndDate())) {
+            return "The end date of this term is set by the start date of the next term";
+        }
         return null;
     }
 

@@ -18,9 +18,16 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+
 import org.hamcrest.Description;
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
@@ -28,10 +35,16 @@ import org.jmock.api.Action;
 import org.jmock.api.Invocation;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.WithIntervalMutable;
@@ -42,12 +55,6 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class LeaseTermTest {
 
@@ -113,12 +120,12 @@ public class LeaseTermTest {
                 LocalDate startDate = (LocalDate) invocation.getParameter(2);
                 LocalDate endDate = (LocalDate) invocation.getParameter(3);
                 LeaseTermForTesting ltt = new LeaseTermForTesting();
-                //relationships
+                // relationships
                 ltt.setLeaseItem(leaseItem);
                 leaseItem.getTerms().add(ltt);
                 ltt.setPrevious(leaseTerm);
                 leaseTerm.setNext(ltt);
-                //set values
+                // set values
                 ltt.modifyStartDate(startDate);
                 ltt.modifyEndDate(endDate);
                 ltt.injectClockService(mockClockService);
@@ -218,7 +225,7 @@ public class LeaseTermTest {
                 String itemStartDate,
                 String itemEndDate,
                 String termStartDate, String termEndDate
-        ) {
+                ) {
 
             Lease lease = new Lease();
             lease.setStartDate(parseDate(leaseStartDate));
@@ -279,12 +286,12 @@ public class LeaseTermTest {
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
-            return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
+            return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[]) LeaseTermStatus.values());
         }
 
     }
 
-    public static class ChangeDates extends AbstractWithIntervalMutableContractTest_changeDates<LeaseTerm> {
+    public static class ChangeDatesDelegate extends AbstractWithIntervalMutableContractTest_changeDates<LeaseTerm> {
 
         private LeaseTerm leaseTerm;
 
@@ -361,15 +368,14 @@ public class LeaseTermTest {
                             newLeaseTerm(leaseItem1, 1),
                             newLeaseTerm(leaseItem1, 1),
                             newLeaseTerm(leaseItem1, 2)
-                    )
-            );
+                    ));
         }
 
         private LeaseTerm newLeaseTerm(
                 LeaseItem leaseItem, Integer sequence) {
             final LeaseTerm lt = new LeaseTermForTesting();
             lt.setLeaseItem(leaseItem);
-            lt.setSequence(sequence != null? BigInteger.valueOf(sequence.longValue()): null);
+            lt.setSequence(sequence != null ? BigInteger.valueOf(sequence.longValue()) : null);
             return lt;
         }
 
@@ -384,33 +390,79 @@ public class LeaseTermTest {
             term.setEndDate(new LocalDate(2014, 8, 31));
         }
 
-
         @Test
         public void happy() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014,7,1), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 7, 1), null), is(nullValue()));
         }
 
         @Test
         public void canStartOnStartDateAsThis() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014,6,1), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 6, 1), null), is(nullValue()));
         }
 
         @Test
         public void canEndOnEndDateAsThis() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014,8,31), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 8, 31), null), is(nullValue()));
         }
 
         @Test
         public void tooEarly() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014,5,31), null), is("Cannot start before this start date"));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 5, 31), null), is("Cannot start before this start date"));
         }
 
         @Test
         public void canStartAfterThisEnds() throws Exception {
             // because the action itself will auto-align
-            assertThat(term.validateCreateNext(new LocalDate(2014,9,1), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 9, 1), null), is(nullValue()));
         }
 
+    }
+
+    public static class ChangeDates extends LeaseTermTest {
+
+        private LeaseTerm term, prev, next;
+
+        @Before
+        public void setUp() throws Exception {
+            term = new LeaseTermForTesting(null, new LocalDate(2010, 1, 1), new LocalDate(2010, 12, 31), null) {
+                @Override
+                public LeaseTerm getPrevious() {
+                    return prev;
+                }
+
+                @Override
+                public LeaseTerm getNext() {
+                    return next;
+                }
+            };
+            prev = new LeaseTermForTesting(null, new LocalDate(2009, 1, 1), new LocalDate(2009, 12, 31), null) {
+                @Override
+                public LeaseTerm getNext() {
+                    return term;
+                }
+            };
+            next = new LeaseTermForTesting(null, new LocalDate(2011, 1, 1), new LocalDate(2011, 12, 31), null);
+
+        }
+
+        @Test
+        public void validate() throws Exception {
+            // Before start date prev
+            assertThat(term.validateChangeDates(new LocalDate(2008, 12, 31), new LocalDate(2010, 12, 31)), is("New start date can't be before start date of previous term"));
+            // Invalid interval
+            assertThat(term.validateChangeDates(new LocalDate(2011, 1, 2), new LocalDate(2010, 12, 31)), is("End date must be after start date"));
+            // Can't change end date when there's a next term
+            assertThat(term.validateChangeDates(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1)), is("The end date of this term is set by the start date of the next term"));
+        }
+
+        @Test
+        public void changeEndDateOfPreviousTerm() throws Exception {
+            // Given, when
+            term.changeDates(term.getStartDate().plusMonths(1), term.getEndDate());
+            // then
+            assertThat(prev.getEndDate(), is(LocalDateInterval.endDateFromStartDate(term.getStartDate())));
+
+        }
 
     }
 
