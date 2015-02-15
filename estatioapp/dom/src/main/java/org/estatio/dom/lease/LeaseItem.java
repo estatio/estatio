@@ -38,23 +38,23 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.ActionInteraction;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Paged;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -114,8 +114,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "ORDER BY sequence ")
 })
 @Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = { "lease", "type", "startDate", "sequence" })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
         extends EstatioDomainObject<LeaseItem>
         implements WithIntervalMutable<LeaseItem>, WithSequence {
@@ -149,8 +149,8 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @ActionInteraction(LeaseItem.SuspendEvent.class)
-    public LeaseItem suspend(final @Named("Reason") String reason) {
+    @Action(domainEvent = LeaseItem.SuspendEvent.class)
+    public LeaseItem suspend(final @ParameterLayout(named = "Reason") String reason) {
         setStatus(LeaseItemStatus.SUSPENDED);
         return this;
     }
@@ -159,8 +159,8 @@ public class LeaseItem
         return getStatus().equals(LeaseItemStatus.SUSPENDED);
     }
 
-    @ActionInteraction(LeaseItem.ResumeEvent.class)
-    public LeaseItem resume(final @Named("Reason") String reason) {
+    @Action(domainEvent = LeaseItem.ResumeEvent.class)
+    public LeaseItem resume(final @ParameterLayout(named = "Reason") String reason) {
         return this;
     }
 
@@ -175,7 +175,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    public Object remove(@Named("Are you sure?") Boolean confirm) {
+    public Object remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
         Lease tmpLease = getLease();
         if (confirm && doRemove()) {
             return tmpLease;
@@ -201,7 +201,7 @@ public class LeaseItem
     private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
     public Lease getLease() {
         return lease;
@@ -215,8 +215,8 @@ public class LeaseItem
 
     private Tax tax;
 
-    @Hidden(where = Where.ALL_TABLES)
-    @DescribedAs("When left empty the tax of the charge will be used")
+    @Property(hidden = Where.ALL_TABLES)
+    @PropertyLayout(describedAs = "When left empty the tax of the charge will be used")
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
     public Tax getTax() {
         return tax;
@@ -236,7 +236,7 @@ public class LeaseItem
     private BigInteger sequence;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     @Override
     public BigInteger getSequence() {
         return sequence;
@@ -285,7 +285,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -302,11 +302,11 @@ public class LeaseItem
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public LeaseItem changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -334,7 +334,7 @@ public class LeaseItem
     }
 
     public LeaseItem copy(
-            final @Named("Start date") LocalDate startDate,
+            final @ParameterLayout(named = "Start date") LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final Charge charge
@@ -346,7 +346,7 @@ public class LeaseItem
     }
 
     public LeaseItem terminate(
-            final @Named("End date") LocalDate endDate) {
+            final @ParameterLayout(named = "End date") LocalDate endDate) {
         this.changeDates(getStartDate(), endDate);
         return this;
     }
@@ -384,7 +384,7 @@ public class LeaseItem
     private InvoicingFrequency invoicingFrequency;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.INVOICING_FREQUENCY_ENUM)
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
     }
@@ -399,7 +399,7 @@ public class LeaseItem
     private PaymentMethod paymentMethod;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES)
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
@@ -438,7 +438,7 @@ public class LeaseItem
 
     public LeaseItem changePaymentMethod(
             final PaymentMethod paymentMethod,
-            final @Named("Reason") String reason) {
+            final @ParameterLayout(named = "Reason") String reason) {
         setPaymentMethod(paymentMethod);
         return this;
     }
@@ -454,14 +454,14 @@ public class LeaseItem
 
     public LeaseItem overrideTax(
             final Tax tax,
-            final @Named("Reason") String reason) {
+            final @ParameterLayout(named = "Reason") String reason) {
         setTax(tax);
         return this;
     }
 
     public Tax default0OverrideTax(
             final Tax tax,
-            final @Named("Reason") String reason) {
+            final @ParameterLayout(named = "Reason") String reason) {
         return getTax();
     }
 
@@ -472,7 +472,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseItem cancelOverrideTax(
-            final @Named("Reason") String reason) {
+            final @ParameterLayout(named = "Reason") String reason) {
         setTax(null);
         return this;
     }
@@ -486,8 +486,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent
     private LocalDate nextDueDate;
 
-    @Optional
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
     public LocalDate getNextDueDate() {
         return nextDueDate;
     }
@@ -501,8 +500,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent
     private LocalDate epochDate;
 
-    @Optional
-    @Hidden
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.EVERYWHERE)
     public LocalDate getEpochDate() {
         return epochDate;
     }
@@ -513,7 +511,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     public BigDecimal getValue() {
         return valueForDate(getClockService().now());
     }
@@ -539,8 +537,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent(mappedBy = "leaseItem")
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
-    @Render(Type.EAGERLY)
-    @Paged(PAGE_SIZE)
+    @CollectionLayout(render = RenderType.EAGERLY, paged = PAGE_SIZE)
     public SortedSet<LeaseTerm> getTerms() {
         return terms;
     }
@@ -562,8 +559,8 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseTerm newTerm(
-            final @Named("Start date") LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
+            final @ParameterLayout(named = "Start date") LocalDate startDate,
+            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         LeaseTerm term;
         if (getType().autoCreateTerms() && !getTerms().isEmpty()) {
             LeaseTerm lastTerm = getTerms().last();
@@ -600,13 +597,13 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseItem verify() {
         verifyUntil(ObjectUtils.min(getEffectiveInterval().endDateExcluding(), getClockService().now()));
         return this;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseItem verifyUntil(final LocalDate date) {
         if (!getTerms().isEmpty()) {
             getTerms().first().verifyUntil(date);
@@ -666,7 +663,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    public static class SuspendEvent extends ActionInteractionEvent<LeaseItem> {
+    public static class SuspendEvent extends ActionDomainEvent<LeaseItem> {
         private static final long serialVersionUID = 1L;
 
         public SuspendEvent(
@@ -679,7 +676,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    public static class ResumeEvent extends ActionInteractionEvent<LeaseItem> {
+    public static class ResumeEvent extends ActionDomainEvent<LeaseItem> {
         private static final long serialVersionUID = 1L;
 
         public ResumeEvent(

@@ -5,18 +5,70 @@
       "memberGroups": {
         "General": {
           "members": {
-            "reference": {},
-            "name": {},
+            "id": {
+              "disabled": {},
+              "hidden": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "type": {
+              "disabled": {},
+              "hidden": {
+                "where": "EVERYWHERE"
+              }
+            },
+            "versionSequence": {
+              "disabled": {},
+              "hidden": {},
+              "typicalLength": {
+                "value": 18
+              }
+            },
+            "reference": {
+              "describedAs": {
+                "value": "Unique reference code for this agreement"
+              },
+              "disabled": {},
+              "hidden": {
+                "where": "NOWHERE"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "name": {
+              "describedAs": {
+                "value": "Optional name for this agreement"
+              },
+              "disabled": {},
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
             "leaseType": {
               "actions": {
                 "change": {}
+              },
+              "disabled": {}
+            },
+            "property": {
+              "disabled": {},
+              "hidden": {
+                "where": "PARENTED_TABLES"
               }
             },
-            "property": {},
             "paidBy": {
               "actions": {
                 "newMandate": {},
                 "paidBy": {}
+              },
+              "disabled": {},
+              "hidden": {
+                "where": "ALL_TABLES"
               }
             }
           }
@@ -31,22 +83,48 @@
                 "suspendAll": {},
                 "resumeAll": {},
                 "refreshStatus": {}
+              },
+              "disabled": {},
+              "typicalLength": {
+                "value": 19
               }
             }
           }
         },
         "Parties": {
           "members": {
-            "primaryParty": {},
-            "secondaryParty": {}
+            "primaryParty": {
+              "disabled": {},
+              "hidden": {
+                "where": "PARENTED_TABLES"
+              }
+            },
+            "secondaryParty": {
+              "disabled": {}
+            }
           }
         },
         "Related": {
           "members": {
-            "previous": {},
+            "previous": {
+              "named": {
+                "value": "Previous Agreement"
+              },
+              "disabled": {},
+              "hidden": {
+                "where": "ALL_TABLES"
+              }
+            },
             "next": {
               "actions": {
                 "changePrevious": {}
+              },
+              "named": {
+                "value": "Next Agreement"
+              },
+              "disabled": {},
+              "hidden": {
+                "where": "ALL_TABLES"
               }
             }
           }
@@ -59,17 +137,39 @@
         "Dates": {
           "members": {
             "startDate": {
-            "labelAt":{"value":"TOP" }},
-            "endDate": {"labelAt":{"value":"TOP" },
-              "actions": {
-                "changeDates": {}
+              "propertyLayout": {
+                "hidden": "ALL_TABLES",
+                "typicalLength": 12
               }
             },
-            "tenancyStartDate": {"labelAt":{"value":"TOP" }},
-            "tenancyEndDate": {"labelAt":{"value":"TOP" }},
-            "tenancyDuration": {"labelAt":{"value":"TOP" },
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              },
+              "propertyLayout": {
+                "hidden": "ALL_TABLES",
+                "typicalLength": 12
+              }
+            },
+            "tenancyStartDate": {
+              "propertyLayout": {
+                "hidden": "NOWHERE",
+                "typicalLength": 12
+              }
+            },
+            "tenancyEndDate": {
+              "propertyLayout": {
+                "hidden": "NOWHERE",
+                "typicalLength": 12
+              }
+            },
+            "tenancyDuration": {
               "actions": {
                 "changeTenancyDates": {}
+              },
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
               }
             }
           }
@@ -86,41 +186,169 @@
         "items": {
           "actions": {
             "newItem": {}
+          },
+          "disabled": {},
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
           }
         },
         "roles": {
           "actions": {
             "newRole": {}
+          },
+          "disabled": {},
+          "hidden": {
+            "where": "NOWHERE"
+          },
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
           }
         },
         "occupancies": {
           "actions": {
             "newOccupancy": {}
+          },
+          "disabled": {},
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
           }
         },
         "breakOptions": {
           "actions": {
             "newBreakOption": {}
-          }
-        },
-        "guarantees": {
-          "actions": {
-            "newGuarantee": {}
-          }
-        },
-        "findInvoices": {
-          "actions": {
-            "findInvoices": {}
+          },
+          "disabled": {},
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
           }
         }
       }
     }
   ],
   "actions": {
-    "downloadLayout": {},
-    "refreshLayout": {},
-    "verify": {},
-    "verifyUntil": {},
-    "calculate": {}
+    "approveAllTermsOfThisLease": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Approve All Terms Of This Lease"
+      }
+    },
+    "createRetroInvoicesForLease": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Create Retro Invoices For Lease"
+      }
+    },
+    "downloadLayout": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "verify": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Verify"
+      }
+    },
+    "verifyUntil": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Verify Until"
+      }
+    },
+    "findItem": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Find Item"
+      }
+    },
+    "remove": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Remove"
+      }
+    },
+    "newGuarantee": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "New Guarantee"
+      }
+    },
+    "findLeaseItem": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Find Lease Item"
+      }
+    },
+    "findLeaseItemsByType": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Find Lease Items By Type"
+      }
+    },
+    "findInvoices": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Invoices"
+      }
+    },
+    "calculate": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Calculate"
+      }
+    },
+    "recentChanges": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "cssClass": {
+        "value": "btn-primary"
+      },
+      "named": {
+        "value": "Reports"
+      }
+    }
   }
 }
