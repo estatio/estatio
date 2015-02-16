@@ -26,20 +26,22 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -59,7 +61,7 @@ import org.apache.isis.applib.annotation.Programmatic;
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
                         + "WHERE subject == :subject")
 })
-@Immutable
+@DomainObject()
 public abstract class FixedAssetRegistration
         extends EstatioDomainObject<FixedAssetRegistration>
         implements WithIntervalMutable<FixedAssetRegistration>, Chained<FixedAssetRegistration> {
@@ -73,7 +75,6 @@ public abstract class FixedAssetRegistration
     private FixedAsset subject;
 
     @javax.jdo.annotations.Column(name = "subjectId", allowsNull = "false")
-    @Disabled
     @MemberOrder(sequence = "1")
     public FixedAsset getSubject() {
         return subject;
@@ -139,12 +140,12 @@ public abstract class FixedAssetRegistration
     }
 
     public FixedAssetRegistration changeDates(
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("End date") @Optional LocalDate endDate) {
-        if (getPrevious()!=null){
+            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+        if (getPrevious() != null) {
             getPrevious().getChangeDates().changeDates(getPrevious().getStartDate(), startDate.minusDays(1));
         }
-        
+
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -187,8 +188,6 @@ public abstract class FixedAssetRegistration
     @Column(name = "previousFixedAssetRegistrationId", allowsNull = "true")
     private FixedAssetRegistration previous;
 
-    @Hidden
-    @Optional
     public FixedAssetRegistration getPrevious() {
         return previous;
     }
@@ -202,14 +201,27 @@ public abstract class FixedAssetRegistration
     @Column(name = "nextFixedAssetRegistrationId", allowsNull = "true")
     private FixedAssetRegistration next;
 
-    @Hidden
-    @Optional
     public FixedAssetRegistration getNext() {
         return next;
     }
 
     public void setNext(FixedAssetRegistration next) {
         this.next = next;
+    }
+
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public FixedAsset remove(final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+        FixedAsset fixedAsset = getSubject();
+        doRemove();
+        return fixedAsset;
+    }
+
+    @Programmatic
+    public void doRemove() {
+        getContainer().remove(this);
+        getContainer().flush();
     }
 
 }
