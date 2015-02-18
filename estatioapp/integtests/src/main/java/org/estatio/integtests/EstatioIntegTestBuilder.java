@@ -40,18 +40,10 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
         withServicesIn(
                 "org.estatio",
-                "org.isisaddons",
-                "org.apache.isis.core.wrapper",
-                "org.apache.isis.applib",
-                "org.apache.isis.core.metamodel.services",
-                "org.apache.isis.core.runtime.services",
-                "org.apache.isis.objectstore.jdo.datanucleus.service.support", // IsisJdoSupportImpl
-                "org.apache.isis.objectstore.jdo.datanucleus.service.eventbus" // EventBusServiceJdo
+                "org.isisaddons"
         );
 
         withServices(
-// now picked up automatically...
-//                new FakeExcelService(),
                 new ExceptionRecognizerCompositeForJdoObjectStore());
     }
 
