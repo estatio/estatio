@@ -3,21 +3,24 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Immutable
+@DomainObject
 public class LeaseTermForTax extends LeaseTerm {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
@@ -26,7 +29,6 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private BigDecimal taxableValue;
 
-    @Optional
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     public BigDecimal getTaxableValue() {
         return taxableValue;
@@ -40,7 +42,6 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private BigDecimal taxValue;
 
-    @Optional
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     public BigDecimal getTaxValue() {
         return taxValue;
@@ -80,7 +81,6 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private boolean overridePayableValue;
 
-    @Optional
     public boolean isOverridePayableValue() {
         return overridePayableValue;
     }
@@ -90,8 +90,8 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     public LeaseTermForTax changeTax(
-            final @Named("Tax percentage") BigDecimal taxPercentage,
-            final @Named("Override payable value") @Optional BigDecimal overridePayableValue) {
+            final @ParameterLayout(named = "Tax percentage") BigDecimal taxPercentage,
+            final @ParameterLayout(named = "Override payable value") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overridePayableValue) {
         setTaxPercentage(taxPercentage);
         setPayableValue(overridePayableValue);
         setOverridePayableValue(overridePayableValue != null);
@@ -111,7 +111,7 @@ public class LeaseTermForTax extends LeaseTerm {
     @Persistent
     private LocalDate paymentDate;
 
-    @Optional
+    @Column(allowsNull = "true")
     public LocalDate getPaymentDate() {
         return paymentDate;
     }
@@ -121,8 +121,8 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     public LeaseTermForTax changePaymentDate(
-            final @Named("Payment date") LocalDate paymentDate,
-            final @Named("Are you sure?") Boolean confirm) {
+            final @ParameterLayout(named = "Payment date") LocalDate paymentDate,
+            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
         setPaymentDate(paymentDate);
         return this;
     }
@@ -148,7 +148,6 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private boolean overrideTaxValue;
 
-    @Optional
     public boolean isOverrideTaxValue() {
         return overrideTaxValue;
     }
@@ -160,8 +159,8 @@ public class LeaseTermForTax extends LeaseTerm {
     // //////////////////////////////////////
 
     public LeaseTermForTax changeInvoicing(
-            final @Named("Recoverable percentage") BigDecimal recoverablePercentage,
-            final @Named("Override recoverable amount") @Optional BigDecimal overrideTaxValue) {
+            final @ParameterLayout(named = "Recoverable percentage") BigDecimal recoverablePercentage,
+            final @ParameterLayout(named = "Override recoverable amount") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideTaxValue) {
         setRecoverablePercentage(recoverablePercentage);
         setTaxValue(overrideTaxValue);
         setOverrideTaxValue(overrideTaxValue != null);
@@ -188,7 +187,7 @@ public class LeaseTermForTax extends LeaseTerm {
         this.invoicingDisabled = disabledForInvoicing;
     }
 
-    public LeaseTermForTax disableInvoicing(@Named("Reason") String reason) {
+    public LeaseTermForTax disableInvoicing(@ParameterLayout(named = "Reason") String reason) {
         setInvoicingDisabled(true);
         return this;
     }
@@ -197,7 +196,7 @@ public class LeaseTermForTax extends LeaseTerm {
         return isInvoicingDisabled();
     }
 
-    public LeaseTermForTax enableInvoicing(@Named("Reason") String reason) {
+    public LeaseTermForTax enableInvoicing(@ParameterLayout(named = "Reason") String reason) {
         setInvoicingDisabled(false);
         return this;
     }
@@ -210,7 +209,7 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private String officeName;
 
-    @Optional
+    @Column(allowsNull = "true")
     public String getOfficeName() {
         return officeName;
     }
@@ -223,7 +222,7 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private String officeCode;
 
-    @Optional
+    @Column(allowsNull = "true")
     public String getOfficeCode() {
         return officeCode;
     }
@@ -237,7 +236,7 @@ public class LeaseTermForTax extends LeaseTerm {
     @Persistent
     private LocalDate registrationDate;
 
-    @Optional
+    @Column(allowsNull = "true")
     public LocalDate getRegistrationDate() {
         return registrationDate;
     }
@@ -250,7 +249,7 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private String registrationNumber;
 
-    @Optional
+    @Column(allowsNull = "true")
     public String getRegistrationNumber() {
         return registrationNumber;
     }
@@ -263,8 +262,8 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private String description;
 
-    @Optional
-    @MultiLine(numberOfLines = 3)
+    @Column(allowsNull = "true")
+    @PropertyLayout(multiLine = 3)
     public String getDescription() {
         return description;
     }
@@ -276,11 +275,11 @@ public class LeaseTermForTax extends LeaseTerm {
     // //////////////////////////////////////
 
     public LeaseTermForTax changeRegistration(
-            final @Named("Registration date") @Optional LocalDate registrationDate,
-            final @Named("Registration number") @Optional String registrationNumber,
-            final @Named("Office code") @Optional String officeCode,
-            final @Named("Office name") @Optional String officeName,
-            final @Named("Description") @Optional @MultiLine(numberOfLines = 3) String description
+            final @ParameterLayout(named = "Registration date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate registrationDate,
+            final @ParameterLayout(named = "Registration number") @Parameter(optionality = Optionality.OPTIONAL) String registrationNumber,
+            final @ParameterLayout(named = "Office code") @Parameter(optionality = Optionality.OPTIONAL) String officeCode,
+            final @ParameterLayout(named = "Office name") @Parameter(optionality = Optionality.OPTIONAL) String officeName,
+            final @ParameterLayout(named = "Description", multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description
             ) {
         setRegistrationDate(registrationDate);
         setRegistrationNumber(registrationNumber);
@@ -366,15 +365,13 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     @Programmatic
-    BigDecimal rentValueForDate() {
-        LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
-        if (rentItem != null) {
-            final BigDecimal valueForDate = rentItem.valueForDate(getStartDate());
-            if (valueForDate != null) {
-                return valueForDate;
-            }
+    public BigDecimal rentValueForDate() {
+        BigDecimal rentValue = BigDecimal.ZERO;
+        for (LeaseItem leaseItem : leaseItems.findLeaseItemsByType(getLeaseItem().getLease(), LeaseItemType.RENT)) {
+            final BigDecimal valueForDate = leaseItem.valueForDate(getStartDate());
+            rentValue = rentValue.add(valueForDate == null ? BigDecimal.ZERO : valueForDate);
         }
-        return BigDecimal.ZERO;
+        return rentValue;
     }
 
     @Override
@@ -390,5 +387,10 @@ public class LeaseTermForTax extends LeaseTerm {
         t.setRecoverablePercentage(getRecoverablePercentage());
         t.setTaxPercentage(getTaxPercentage());
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private LeaseItems leaseItems;
 
 }
