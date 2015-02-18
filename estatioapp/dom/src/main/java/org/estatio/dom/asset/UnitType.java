@@ -35,6 +35,7 @@ public enum UnitType implements TitledEnum {
     TECHNICAL_ROOM,
     VIRTUAL,
     LAND,
+    PARKING,
     ELECTRICAL_SUBSTATION;
 
     public String title() {
