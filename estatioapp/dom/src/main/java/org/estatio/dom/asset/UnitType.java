@@ -33,10 +33,12 @@ public enum UnitType implements TitledEnum {
     SERVICES,
     STORAGE,
     TECHNICAL_ROOM,
-    VIRTUAL;
+    VIRTUAL,
+    LAND,
+    ELECTRICAL_SUBSTATION;
 
     public String title() {
-        return StringUtils.enumTitle(name());
+        return StringUtils.enumTitle(this.name());
     }
 
 }
