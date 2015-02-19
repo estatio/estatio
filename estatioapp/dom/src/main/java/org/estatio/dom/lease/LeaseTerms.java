@@ -53,6 +53,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.modifyStartDate(startDate);
         leaseTerm.modifyEndDate(endDate);
+        leaseTerm.setStatus(LeaseTermStatus.NEW);
         persistIfNotAlready(leaseTerm);
         if (previous != null) {
             previous.setNext(leaseTerm);

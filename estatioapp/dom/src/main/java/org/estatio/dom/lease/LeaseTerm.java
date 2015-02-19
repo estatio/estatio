@@ -54,6 +54,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 
+import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -310,10 +311,6 @@ public abstract class LeaseTerm
         this.status = status;
     }
 
-    public void created() {
-        setStatus(LeaseTermStatus.NEW);
-    }
-
     // //////////////////////////////////////
 
     private LeaseTermFrequency frequency;
@@ -566,6 +563,19 @@ public abstract class LeaseTerm
             setStatus(LeaseTermStatus.APPROVED);
         }
         return this;
+    }
+
+    public String disableApprove() {
+        return getStatus().equals(LeaseTermStatus.APPROVED) ? "Already approved" : null;
+    }
+
+    public LeaseTerm changeStatus(final LeaseTermStatus newStatus) {
+        setStatus(newStatus);
+        return this;
+    }
+
+    public boolean hideChangeStatus(final LeaseTermStatus newStatus) {
+        return !getUser().hasRole(EstatioRole.ADMINISTRATOR.roleName());
     }
 
     // //////////////////////////////////////
