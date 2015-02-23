@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -91,6 +92,11 @@ public class Units extends EstatioDomainService<Unit> {
         return firstMatch("findByReference", "reference", reference);
     }
 
+    @Programmatic
+    public List<Unit> findActiveByProperty(final Property property) {
+        return allMatches("findByActiveOnDate", "unitProperty", property, "activeOnDate", clockService.now());
+    }
+    
     // //////////////////////////////////////
 
     @Collection(hidden = Where.EVERYWHERE)

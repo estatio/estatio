@@ -65,6 +65,7 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.Units;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandates;
@@ -79,6 +80,7 @@ import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -370,11 +372,19 @@ public class Lease
      * @return
      */
     public Occupancy newOccupancy(
-            final @ParameterLayout(named = "Unit") Unit unit,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate) {
+            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "Unit") Unit unit) {
         Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
         return occupancy;
+    }
+
+    public LocalDate default0NewOccupancy() {
+        return getTenancyStartDate();
+    }
+
+    public List<Unit> choices1NewOccupancy(final LocalDate startDate) {
+        return units.findActiveByProperty(getProperty());
     }
 
     // //////////////////////////////////////
@@ -770,7 +780,7 @@ public class Lease
     private void copyOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : getOccupancies()) {
             if (occupancy.getInterval().contains(startDate)) {
-                Occupancy newOccupancy = newLease.newOccupancy(occupancy.getUnit(), startDate);
+                Occupancy newOccupancy = newLease.newOccupancy(startDate, occupancy.getUnit());
                 newOccupancy.setActivity(occupancy.getActivity());
                 newOccupancy.setBrand(occupancy.getBrand());
                 newOccupancy.setSector(occupancy.getSector());
@@ -923,6 +933,9 @@ public class Lease
     Leases leases;
 
     @Inject
+    Units units;
+
+    @Inject
     AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
 
     @Inject
@@ -930,5 +943,8 @@ public class Lease
 
     @Inject
     BreakOptions breakOptionsService;
+
+    @Inject
+    ClockService clockService;
 
 }

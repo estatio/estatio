@@ -18,6 +18,11 @@
  */
 package org.estatio.integtests.assets;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -27,6 +32,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -34,28 +41,28 @@ import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 public class UnitsTest extends EstatioIntegrationTest {
 
+    @Before
+    public void setupData() {
+        runScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                executionContext.executeChild(this, new PropertyForOxf());
+                executionContext.executeChild(this, new PropertyForKal());
+            }
+        });
+    }
+
+    @Inject
+    Units units;
+
+    @Inject
+    Properties properties;
+
     public static class FindUnitByReference extends UnitsTest {
-
-        @Before
-        public void setupData() {
-            runScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new PropertyForOxf());
-                    executionContext.executeChild(this, new PropertyForKal());
-                }
-            });
-        }
-
-        @Inject
-        private Units units;
 
         @Test
         public void findByReference() throws Exception {
@@ -78,5 +85,22 @@ public class UnitsTest extends EstatioIntegrationTest {
             assertThat(units.findUnits("*XF*", true).size(), is(25));
         }
 
+    }
+
+    public static class FindActiveByProperty extends UnitsTest {
+
+        @Test
+        public void findActiveByProperty() throws Exception {
+            // given
+            Property propertyForOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            List<Unit> results = units.findActiveByProperty(propertyForOxf);
+            assertThat(results.size(), is(25));
+
+            // when
+            results.get(0).setEndDate(new LocalDate(2013, 1, 1));
+
+            // then
+            assertThat(units.findActiveByProperty(propertyForOxf).size(), is(24));
+        }
     }
 }
