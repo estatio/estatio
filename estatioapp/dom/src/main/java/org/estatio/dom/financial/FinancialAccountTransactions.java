@@ -58,14 +58,12 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
             final String description,
             final BigDecimal amount
             ) {
-        final BigInteger sequence = nextSequenceFor(financialAccount, transactionDate);
 
         final FinancialAccountTransaction transaction = newTransientInstance(FinancialAccountTransaction.class);
         transaction.setFinancialAccount(financialAccount);
         transaction.setTransactionDate(transactionDate);
         transaction.setDescription(description);
         transaction.setAmount(amount);
-        transaction.setSequence(sequence);
         persistIfNotAlready(transaction);
         return transaction;
     }
@@ -81,29 +79,15 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
 
     // //////////////////////////////////////
 
-    private BigInteger nextSequenceFor(final FinancialAccount financialAccount, final LocalDate transactionDate) {
-        BigInteger sequence = BigInteger.ONE;
-        do {
-            if (findTransaction(financialAccount, transactionDate, sequence) == null) {
-                return sequence;
-            }
-            sequence = sequence.add(BigInteger.ONE);
-        } while (true);
-
-    }
-
-    // //////////////////////////////////////
     @ActionSemantics(Of.SAFE)
     @Prototype
     @MemberOrder(sequence = "99")
     public FinancialAccountTransaction findTransaction(
             final FinancialAccount financialAccount,
-            final LocalDate transactionDate,
-            final BigInteger sequence) {
-        return uniqueMatch("findByFinancialAccountAndTransactionDateAndSequence",
+            final LocalDate transactionDate) {
+        return firstMatch("findByFinancialAccountAndTransactionDateAndSequence",
                 "financialAccount", financialAccount,
-                "transactionDate", transactionDate,
-                "sequence", sequence);
+                "transactionDate", transactionDate);
     }
 
     // //////////////////////////////////////

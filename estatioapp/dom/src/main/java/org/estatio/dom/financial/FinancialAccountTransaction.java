@@ -39,20 +39,10 @@ import org.estatio.dom.JdoColumnScale;
                 language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
                         + "WHERE financialAccount == :financialAccount && "
-                        + "transactionDate == :transactionDate"),
-        @Query(
-                name = "findByFinancialAccountAndTransactionDateAndSequence",
-                language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
-                        + "WHERE financialAccount == :financialAccount && "
-                        + "transactionDate == :transactionDate && "
-                        + "sequence == :sequence")
+                        + "transactionDate == :transactionDate")
 })
 @Index(
         name = "FinancialAccountTransaction_financialAccount_transactionDate_IDX",
-        members = { "financialAccount", "transactionDate" })
-@Unique(
-        name = "FinancialAccountTransaction_financialAccount_transactionDate_sequence_UNQ",
         members = { "financialAccount", "transactionDate" })
 public class FinancialAccountTransaction extends EstatioDomainObject<FinancialAccountTransaction> {
 
@@ -87,20 +77,6 @@ public class FinancialAccountTransaction extends EstatioDomainObject<FinancialAc
 
     public void setTransactionDate(final LocalDate transactionDate) {
         this.transactionDate = transactionDate;
-    }
-
-    // //////////////////////////////////////
-
-    private BigInteger sequence;
-
-    @Column(allowsNull = "false")
-    @Hidden
-    public BigInteger getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(final BigInteger sequence) {
-        this.sequence = sequence;
     }
 
     // //////////////////////////////////////
