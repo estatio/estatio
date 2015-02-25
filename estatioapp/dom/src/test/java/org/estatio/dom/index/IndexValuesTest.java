@@ -18,9 +18,15 @@
  */
 package org.estatio.dom.index;
 
+import static org.apache.isis.core.commons.matchers.IsisMatchers.classEqualTo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -32,16 +38,13 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-
-import static org.apache.isis.core.commons.matchers.IsisMatchers.classEqualTo;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class IndexValuesTest {
 
@@ -63,7 +66,7 @@ public class IndexValuesTest {
     public void setup() {
 
         index = new Index();
-        startDate = new LocalDate(2013,4,1);
+        startDate = new LocalDate(2013, 4, 1);
 
         indexValues = new IndexValues() {
 
@@ -72,11 +75,13 @@ public class IndexValuesTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<IndexValue> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
@@ -93,14 +98,16 @@ public class IndexValuesTest {
         public void happyCase() {
 
             // given
-            context.checking(new Expectations() {{
-                oneOf(mockQueryResultsCache).execute(
-                        with(any(Callable.class)),
-                        with(classEqualTo(IndexValues.class)),
-                        with(equalTo("findIndexValueByIndexAndStartDate")),
-                        with(arrayOf(index, startDate)));
-                will(executeCallableAndReturn());
-            }});
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockQueryResultsCache).execute(
+                            with(any(Callable.class)),
+                            with(classEqualTo(IndexValues.class)),
+                            with(equalTo("findIndexValueByIndexAndStartDate")),
+                            with(arrayOf(index, startDate)));
+                    will(executeCallableAndReturn());
+                }
+            });
 
             // when
             indexValues.findIndexValueByIndexAndStartDate(index, startDate);
@@ -109,8 +116,8 @@ public class IndexValuesTest {
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), classEqualTo(IndexValue.class));
             assertThat(finderInteraction.getQueryName(), is("findByIndexAndStartDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("index"), is((Object)index));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object)startDate));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("index"), is((Object) index));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
         }
 
@@ -145,14 +152,4 @@ public class IndexValuesTest {
 
     }
 
-    public static class AllIndexValues extends IndexValuesTest {
-
-        @Test
-        public void happyCase() {
-
-            indexValues.allIndexValues();
-
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
-        }
-    }
 }

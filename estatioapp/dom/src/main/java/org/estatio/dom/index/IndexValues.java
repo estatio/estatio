@@ -19,21 +19,32 @@
 package org.estatio.dom.index;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.concurrent.Callable;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+
 import org.estatio.dom.EstatioDomainService;
 
-@DomainService(repositoryFor = IndexValue.class)
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,
+        repositoryFor = IndexValue.class)
 @DomainServiceLayout(
-        named="Indices",
+        named = "Indices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "60.4"
-)
+        menuOrder = "60.4")
 public class IndexValues
         extends EstatioDomainService<IndexValue> {
 
@@ -43,13 +54,11 @@ public class IndexValues
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @NotInServiceMenu
-    @MemberOrder(sequence = "1")
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public IndexValue newIndexValue(
-            final @Named("Index Base") IndexBase indexBase,
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("Value") BigDecimal value) {
+            final @ParameterLayout(named = "Index Base") IndexBase indexBase,
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @ParameterLayout(named = "Value") BigDecimal value) {
         IndexValue indexValue = findIndexValueByIndexAndStartDate(indexBase.getIndex(), startDate);
         if (indexValue == null) {
             indexValue = newTransientInstance();
@@ -58,16 +67,16 @@ public class IndexValues
             persistIfNotAlready(indexValue);
         }
         indexValue.setValue(value);
+        eventBusService.post(new IndexValue.UpdateEvent(indexValue, null, (Object[]) null));
         return indexValue;
     }
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public IndexValue newIndexValue(
-            final @Named("Index") Index index,
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("Value") BigDecimal value) {
+            final @ParameterLayout(named = "Index") Index index,
+            final @ParameterLayout(named = "Start Date") LocalDate startDate,
+            final @ParameterLayout(named = "Value") BigDecimal value) {
         IndexBase indexBase = indexBases.findByIndexAndDate(index, startDate);
         return newIndexValue(indexBase, startDate, value);
     }
@@ -80,11 +89,10 @@ public class IndexValues
         return last == null ? null : last.getStartDate().plusMonths(1);
     }
 
-    @ActionSemantics(Of.SAFE)
     @Programmatic
     public IndexValue findIndexValueByIndexAndStartDate(
             final Index index,
-            final @Named("Start Date") LocalDate startDate) {
+            final @ParameterLayout(named = "Start Date") LocalDate startDate) {
         return queryResultsCache.execute(
                 new Callable<IndexValue>() {
                     @Override
@@ -97,21 +105,11 @@ public class IndexValues
                 IndexValues.class, "findIndexValueByIndexAndStartDate", index, startDate);
     }
 
-    @ActionSemantics(Of.SAFE)
     @Programmatic
     public IndexValue findLastByIndex(
             final Index index) {
         return firstMatch("findLastByIndex",
                 "index", index);
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    public List<IndexValue> allIndexValues() {
-        return allInstances();
     }
 
     // //////////////////////////////////////
@@ -125,4 +123,6 @@ public class IndexValues
     @Inject
     QueryResultsCache queryResultsCache;
 
+    @Inject
+    EventBusService eventBusService;
 }

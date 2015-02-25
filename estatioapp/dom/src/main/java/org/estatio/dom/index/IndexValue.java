@@ -26,19 +26,21 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.Identifier;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
 
 /**
- * Holds the {@link #getValue() value} of an {@link #getIndexBase() index (base)} from a particular
- * {@link #getStartDate() point in time} (until succeeded by some other value).
+ * Holds the {@link #getValue() value} of an {@link #getIndexBase() index
+ * (base)} from a particular {@link #getStartDate() point in time} (until
+ * succeeded by some other value).
  */
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -61,7 +63,6 @@ import org.estatio.dom.WithStartDate;
                         + "WHERE indexBase.index == :index "
                         + "ORDER BY startDate DESC")
 })
-@Immutable
 @javax.jdo.annotations.Unique(
         name = "IndexValue_indexBase_startDate_IDX",
         members = { "indexBase", "startDate" })
@@ -82,7 +83,6 @@ public class IndexValue
 
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
-    @Disabled
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -98,9 +98,8 @@ public class IndexValue
     private IndexBase indexBase;
 
     @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @PropertyLayout(hidden = Where.PARENTED_TABLES)
     @Title(sequence = "1")
-    @Disabled
     public IndexBase getIndexBase() {
         return indexBase;
     }
@@ -130,7 +129,6 @@ public class IndexValue
     private BigDecimal value;
 
     @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull = "false")
-    @Disabled
     public BigDecimal getValue() {
         return value;
     }
@@ -141,9 +139,23 @@ public class IndexValue
 
     // //////////////////////////////////////
 
-    @Prototype
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, domainEvent = UpdateEvent.class)
     public void remove() {
         getContainer().remove(this);
+    }
+
+    // //////////////////////////////////////
+
+    public static class UpdateEvent extends ActionDomainEvent<IndexValue> {
+        private static final long serialVersionUID = 1L;
+
+        public UpdateEvent(
+                final IndexValue source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+
     }
 
 }

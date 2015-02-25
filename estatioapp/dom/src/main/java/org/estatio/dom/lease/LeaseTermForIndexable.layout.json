@@ -57,9 +57,9 @@
             "settledValue": {
               "actions": {
                 "changeValues": {}
-              },
-              "effectiveValue": {}
-            }
+              }
+            },
+            "effectiveValue": {}
           }
         },
         "Related": {
