@@ -64,13 +64,13 @@ public final class RegexValidation {
         private Lease() {
         }
 
-        public static final String REFERENCE = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,7})-[A-Z,0-9,\\&+=_/-]{3,7})";
+        public static final String REFERENCE = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\\&+=_/-]{1,7})";
     }
 
     public static final class Unit {
         private Unit() {
         }
 
-        public static final String REFERENCE = "(?=.{7,17})([A-Z]{1}-)?([A-Z]{3}-[A-Z,0-9,/,+,-]{3,11})";
+        public static final String REFERENCE = "(?=.{5,17})([A-Z]{1}-)?([A-Z]{3}-[A-Z,0-9,/,+,-]{1,11})";
     }
 }
