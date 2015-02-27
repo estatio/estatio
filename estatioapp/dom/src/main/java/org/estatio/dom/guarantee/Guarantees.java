@@ -46,8 +46,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
@@ -66,7 +66,7 @@ import org.estatio.dom.utils.StringUtils;
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "30.3")
-public class Guarantees extends EstatioDomainService<Guarantee> {
+public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     @Override
     public String iconName() {

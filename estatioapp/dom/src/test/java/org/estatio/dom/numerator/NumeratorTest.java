@@ -19,6 +19,7 @@
 package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -87,6 +88,7 @@ public class NumeratorTest {
         public void test() {
             newPojoTester()
                     .withFixture(pojos(Property.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Numerator());
         }
 

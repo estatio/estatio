@@ -19,33 +19,29 @@
 package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE)
@@ -77,33 +73,26 @@ import org.estatio.dom.party.Party;
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Guarantees.class, autoCompleteAction = "autoComplete")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Guarantee
-        extends Agreement {
+        extends Agreement
+        implements WithApplicationTenancyProperty {
 
-    @Override
-    @Property(hidden = Where.PARENTED_TABLES, notPersisted = true)
-    public Party getPrimaryParty() {
-        final AgreementRole ar = getPrimaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Override
-    @Property(hidden = Where.PARENTED_TABLES, notPersisted = true)
-    public Party getSecondaryParty() {
-        final AgreementRole ar = getSecondaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Programmatic
-    protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTEE);
-    }
-
-    @Programmatic
-    protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTOR);
+    @Hidden(where = Where.PARENTED_TABLES)
+    public Guarantee() {
+        super(GuaranteeConstants.ART_GUARANTEE, GuaranteeConstants.ART_GUARANTOR);
     }
 
     // //////////////////////////////////////
+    @Hidden(where = Where.PARENTED_TABLES)
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getLease().getApplicationTenancy();
+    }
+
+    // //////////////////////////////////////
+
 
     private Lease lease;
 

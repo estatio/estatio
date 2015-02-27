@@ -18,20 +18,20 @@
  */
 package org.estatio.dom.asset;
 
+import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "10", repositoryFor = FixedAssetRole.class)
 @Hidden
-public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
+public class FixedAssetRoles extends UdoDomainRepositoryAndFactory<FixedAssetRole> {
 
     public FixedAssetRoles() {
         super(FixedAssetRoles.class, FixedAssetRole.class);
@@ -42,6 +42,13 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
     @NotContributed
     @Action(semantics = SemanticsOf.SAFE)
     public FixedAssetRole findRole(
+                "asset", asset);
+    }
+
+    @Programmatic
+    public List<FixedAssetRole> findByAsset(
+            final FixedAsset asset) {
+        return allMatches("findByAsset",
             final FixedAsset asset,
             final FixedAssetRoleType type) {
         return firstMatch("findByAssetAndType",

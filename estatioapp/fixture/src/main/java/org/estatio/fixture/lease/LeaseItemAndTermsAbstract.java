@@ -20,11 +20,11 @@ package org.estatio.fixture.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
 import javax.inject.Inject;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
@@ -43,31 +43,47 @@ import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
+import org.estatio.fixture.charge.ChargeRefData;
 
 public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
     protected LeaseItem findOrCreateLeaseItem(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final String chargeReference,
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
-            ExecutionContext executionContext) {
-        final Charge charge = charges.findCharge(chargeReference);
-        return findOrCreateLeaseItem(lease, charge, leaseItemType, invoicingFrequency, executionContext);
+            final ExecutionContext executionContext) {
+
+        final Lease lease = leases.findLeaseByReference(leaseRef);
+        final ApplicationTenancy leaseApplicationTenancy = lease.getApplicationTenancy();
+        final ApplicationTenancy countryApplicationTenancy = leaseApplicationTenancy.getParent();
+
+        if(!ApplicationTenancyLevel.of(countryApplicationTenancy).isCountry()) {
+            // not expected to happen...
+            throw new IllegalStateException("Lease '" + leaseRef + "' has an app tenancy '" + leaseApplicationTenancy.getName() + "' whose parent is not at the country level");
+        }
+
+        final Charge charge = charges.findByReference(chargeReference);
+        return findOrCreateLeaseItem(leaseRef, leaseItemAtPath, charge, leaseItemType, invoicingFrequency, executionContext);
     }
 
     protected LeaseItem findOrCreateLeaseItem(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final Charge charge,
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
-            ExecutionContext executionContext) {
+            final ExecutionContext executionContext) {
+
+        final Lease lease = leases.findLeaseByReference(leaseRef);
+        final ApplicationTenancy leaseItemApplicationTenancy = applicationTenancies.findTenancyByPath(leaseItemAtPath);
 
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
-            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
+            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate(), leaseItemApplicationTenancy);
             li.setType(leaseItemType);
             li.setStatus(LeaseItemStatus.ACTIVE);
             li.setEndDate(lease.getEndDate());
@@ -80,18 +96,20 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     protected LeaseTerm createLeaseTermForIndexableRent(
-            Lease lease,
-            LocalDate startDate,
-            LocalDate endDate,
-            BigDecimal baseValue,
-            LocalDate baseIndexStartDate,
-            LocalDate nextIndexStartDate,
-            LocalDate effectiveDate,
-            String indexReference,
-            ExecutionContext executionContext) {
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal baseValue,
+            final LocalDate baseIndexStartDate,
+            final LocalDate nextIndexStartDate,
+            final LocalDate effectiveDate,
+            final String indexReference,
+            final ExecutionContext executionContext) {
+
         return createLeaseTermForIndexable(
-                lease, 
-                startDate, 
+                leaseRef, leaseItemAtPath,
+                startDate,
                 endDate, 
                 baseValue, 
                 baseIndexStartDate, 
@@ -99,23 +117,25 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 effectiveDate, 
                 indexReference, 
                 LeaseItemType.RENT, 
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_RENT, 
+                ChargeRefData.IT_RENT,
                 executionContext);
     }
 
     protected LeaseTerm createLeaseTermForIndexableServiceCharge(
-            Lease lease,
-            LocalDate startDate,
-            LocalDate endDate,
-            BigDecimal baseValue,
-            LocalDate baseIndexStartDate,
-            LocalDate nextIndexStartDate,
-            LocalDate effectiveDate,
-            String indexReference,
-            ExecutionContext executionContext) {
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal baseValue,
+            final LocalDate baseIndexStartDate,
+            final LocalDate nextIndexStartDate,
+            final LocalDate effectiveDate,
+            final String indexReference,
+            final ExecutionContext executionContext) {
+
         return createLeaseTermForIndexable(
-                lease, 
-                startDate, 
+                leaseRef, leaseItemAtPath,
+                startDate,
                 endDate, 
                 baseValue, 
                 baseIndexStartDate, 
@@ -123,30 +143,32 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 effectiveDate, 
                 indexReference, 
                 LeaseItemType.SERVICE_CHARGE_INDEXABLE, 
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_SERVICE_CHARGE_INDEXABLE, 
+                ChargeRefData.IT_SERVICE_CHARGE_INDEXABLE,
                 executionContext);
     }
 
     private LeaseTerm createLeaseTermForIndexable(
-            Lease lease, 
-            LocalDate startDate, 
-            LocalDate endDate, 
-            BigDecimal baseValue, 
-            LocalDate baseIndexStartDate, 
-            LocalDate nextIndexStartDate, 
-            LocalDate effectiveDate, 
-            String indexReference, 
-            LeaseItemType rent, 
-            String chargeReference,
-            ExecutionContext executionContext) {
-        LeaseItem leaseItem = findOrCreateLeaseItem(
-                lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal baseValue,
+            final LocalDate baseIndexStartDate,
+            final LocalDate nextIndexStartDate,
+            final LocalDate effectiveDate,
+            final String indexReference,
+            final LeaseItemType rent,
+            final String chargeReference,
+            final ExecutionContext executionContext) {
+
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
                 chargeReference,
                 rent, 
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
 
-        LeaseTermForIndexable leaseTerm = (LeaseTermForIndexable) leaseItem.newTerm(startDate, endDate);
+        final LeaseTermForIndexable leaseTerm = (LeaseTermForIndexable) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setBaseValue(baseValue);
         leaseTerm.setBaseIndexStartDate(baseIndexStartDate);
         leaseTerm.setNextIndexStartDate(nextIndexStartDate);
@@ -161,20 +183,21 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     protected LeaseTerm createLeaseTermForServiceCharge(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
-                lease,
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_SERVICE_CHARGE,
+        final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_SERVICE_CHARGE,
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
 
-        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItemServiceCharge.newTerm(startDate, endDate);
+        final LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItemServiceCharge.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setBudgetedValue(budgetedValue);
 
@@ -184,18 +207,20 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     protected LeaseTerm createLeaseTermForTurnoverRent(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
             final String turnoverRentRule,
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(
-                lease,
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_TURNOVER_RENT,
-                LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS,
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_TURNOVER_RENT,
+                LeaseItemType.TURNOVER_RENT,
+                InvoicingFrequency.YEARLY_IN_ARREARS,
                 executionContext);
-        LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseItem.newTerm(startDate, endDate);
+        final LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setTurnoverRentRule(turnoverRentRule);
@@ -206,19 +231,20 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     protected LeaseTerm createLeaseTermForDiscount(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal value, // typical value bd(-20000), a negative
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(
-                lease,
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_DISCOUNT,
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_DISCOUNT,
                 LeaseItemType.DISCOUNT, InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
 
-        LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
+        final LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setValue(value);
 
@@ -228,19 +254,20 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     protected LeaseTerm createLeaseTermForEntryFee(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal value, // typical value bd(20000)
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(
-                lease,
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_ENTRY_FEE,
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_ENTRY_FEE,
                 LeaseItemType.ENTRY_FEE,
                 InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
-        LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
+        final LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
 
@@ -252,7 +279,8 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     protected LeaseTerm createLeaseTermForTax(
-            final Lease lease,
+            final String leaseRef,
+            final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal taxPercentage, // typical value bd(1)
@@ -260,13 +288,13 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final boolean taxable,
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(
-                lease,
-                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_TAX,
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_TAX,
                 LeaseItemType.TAX,
                 InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
-        LeaseTermForTax leaseTerm = (LeaseTermForTax) leaseItem.newTerm(startDate, endDate);
+        final LeaseTermForTax leaseTerm = (LeaseTermForTax) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
 
@@ -304,4 +332,12 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Charges charges;
+
+    @Inject
+    protected ApplicationTenancies applicationTenancies;
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
+
+
 }

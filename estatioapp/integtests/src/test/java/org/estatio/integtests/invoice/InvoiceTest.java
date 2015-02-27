@@ -21,6 +21,8 @@ package org.estatio.integtests.invoice;
 import java.util.List;
 import javax.inject.Inject;
 import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,14 +43,15 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
-import org.estatio.fixture.party.OrganisationForPoison;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.party.OrganisationForPoisonNl;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -63,6 +66,13 @@ public class InvoiceTest extends EstatioIntegrationTest {
     Parties parties;
     @Inject
     Leases leases;
+    @Inject
+    Currencies currencies;
+    @Inject
+    Charges charges;
+    @Inject
+    ApplicationTenancies applicationTenancies;
+
 
     Party seller;
     Party buyer;
@@ -78,24 +88,22 @@ public class InvoiceTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003());
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }
             });
         }
 
-        @Inject
-        private Currencies currencies;
-        @Inject
-        private Charges charges;
-
+        private ApplicationTenancy applicationTenancy;
         private Currency currency;
         private Charge charge;
 
         @Before
         public void setUp() throws Exception {
-            seller = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
-            buyer = parties.findPartyByReference(OrganisationForPoison.PARTY_REFERENCE);
-            lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
+            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
+
+            seller = parties.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            buyer = parties.findPartyByReference(OrganisationForPoisonNl.REF);
+            lease = leases.findLeaseByReference(_LeaseForOxfPoison003Gb.REF);
 
             charge = charges.allCharges().get(0);
             currency = currencies.allCurrencies().get(0);
@@ -104,13 +112,13 @@ public class InvoiceTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
+            Invoice invoice = invoices.newInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
 
             // when
             invoice.newItem(charge, VT.bd(1), VT.bd("10000.123"), null, null);
 
             // then
-            Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
+            Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
             assertThat(foundInvoice.getNetAmount(), is(VT.bd("10000.123")));
 
             // and also
@@ -135,22 +143,22 @@ public class InvoiceTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForLinusTorvalds());
+                    executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
 
-                    executionContext.executeChild(this, new PropertyForOxf());
-                    executionContext.executeChild(this, new PropertyForKal());
+                    executionContext.executeChild(this, new _PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyForKalNl());
 
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
-                    executionContext.executeChild(this, new LeaseForOxfPret004());
+                    executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
                 }
             });
         }
@@ -159,9 +167,9 @@ public class InvoiceTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.SELLER_PARTY);
-            buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.BUYER_PARTY);
-            lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+            seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
+            buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
+            lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }
 

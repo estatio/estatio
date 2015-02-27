@@ -18,25 +18,17 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
 import org.apache.isis.applib.services.wrapper.InvalidException;
-
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.Lease;
@@ -47,11 +39,15 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brand.RemoveEvent;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class OccupanciesTest extends EstatioIntegrationTest {
 
@@ -64,8 +60,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }
         });
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        unit = units.findUnitByReference(PropertyForOxf.unitReference("001"));
+        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        unit = units.findUnitByReference(_PropertyForOxfGb.unitReference("001"));
     }
 
     @Inject
@@ -115,7 +111,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Brand brand = brands.findByName(LeaseForOxfTopModel001.BRAND);
+            Brand brand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
             assertNotNull(brand);
 
             assertThat(occupancies.findByBrand(brand, false).size(), is(1));

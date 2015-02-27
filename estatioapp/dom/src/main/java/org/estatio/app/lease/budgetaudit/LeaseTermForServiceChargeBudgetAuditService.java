@@ -25,13 +25,13 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseTerms;
 
 @DomainService(menuOrder = "00")
 @Immutable
-public class LeaseTermForServiceChargeBudgetAuditService extends EstatioService<LeaseTermForServiceChargeBudgetAuditService> {
+public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainService<LeaseTermForServiceChargeBudgetAuditService> {
 
     public LeaseTermForServiceChargeBudgetAuditService() {
         super(LeaseTermForServiceChargeBudgetAuditService.class);

@@ -21,18 +21,20 @@ package org.estatio.dom.geography;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -57,8 +59,9 @@ import org.estatio.dom.WithReferenceUnique;
                         + "WHERE reference == :reference")
 })
 @DomainObject(editing = Editing.DISABLED, bounded = true)
-public class Country extends EstatioDomainObject<Country>
-        implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique {
+public class Country
+        extends EstatioDomainObject<Country>
+        implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {
 
     public Country() {
         super("reference");
@@ -69,6 +72,13 @@ public class Country extends EstatioDomainObject<Country>
         setReference(reference);
         setName(name);
         setAlpha2Code(alpha2Code);
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

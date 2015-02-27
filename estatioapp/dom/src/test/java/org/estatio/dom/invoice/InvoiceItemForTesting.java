@@ -19,6 +19,12 @@
 package org.estatio.dom.invoice;
 
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 public class InvoiceItemForTesting extends InvoiceItem {
+
+    public ApplicationTenancy getApplicationTenancy() {
+        return null;
+    }
 
 }

@@ -8,6 +8,14 @@
             "reference": {},
             "description": {}
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },

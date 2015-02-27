@@ -87,7 +87,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
             LocalDateInterval interval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
 
             // when
-            List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTermAndInterval(term, interval);
+            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
 
             // then
             assertThat(invoiceItems.size(), is(1));

@@ -44,7 +44,8 @@ import org.estatio.dom.party.Party;
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-public class BankAccount extends FinancialAccount {
+public class BankAccount
+        extends FinancialAccount {
 
     private Party bank;
 

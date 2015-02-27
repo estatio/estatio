@@ -21,22 +21,24 @@ package org.estatio.dom.charge;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -59,13 +61,39 @@ import org.estatio.dom.tax.Tax;
                         + "FROM org.estatio.dom.charge.Charge "
                         + "WHERE reference == :reference")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@Bounded
 public class Charge
         extends EstatioDomainObject<Charge>
-        implements WithReferenceUnique, WithNameUnique {
+        implements WithReferenceUnique, WithNameUnique, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Charge() {
         super("reference");
+    }
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

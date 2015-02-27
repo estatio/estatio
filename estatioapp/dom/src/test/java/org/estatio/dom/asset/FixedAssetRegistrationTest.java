@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.asset;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
@@ -69,6 +70,7 @@ public class FixedAssetRegistrationTest {
                     .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
                     .withFixture(pojos(FixedAssetRegistrationType.class))
                     .withFixture(pojos(FixedAssetRegistration.class, FixedAssetRegistrationForTesting.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(pojo);
         }
 

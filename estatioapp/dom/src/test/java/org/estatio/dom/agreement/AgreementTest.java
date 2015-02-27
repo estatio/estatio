@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.Sequence;
 import org.jmock.auto.Mock;
@@ -37,7 +38,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
+import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
@@ -63,11 +64,12 @@ public class AgreementTest {
             newPojoTester()
                     .withFixture(pojos(Agreement.class, AgreementForTesting.class))
                     .withFixture(pojos(AgreementType.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(agreement);
         }
     }
 
-    public static class ChangeDates extends AbstractWithIntervalMutableContractTest_changeDates<Agreement> {
+    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<Agreement> {
 
         private Agreement agreement;
 
@@ -211,15 +213,14 @@ public class AgreementTest {
 
         public static class AgreementForSubtypeTesting extends Agreement {
 
-            @Override
-            public Party getPrimaryParty() {
+            public AgreementForSubtypeTesting() {
+                super(null, null);
+            }
+
+            public ApplicationTenancy getApplicationTenancy() {
                 return null;
             }
 
-            @Override
-            public Party getSecondaryParty() {
-                return null;
-            }
         }
 
         @Before
@@ -576,6 +577,9 @@ public class AgreementTest {
             @Mock
             private DomainObjectContainer mockContainer;
 
+            @Mock
+            private ClockService mockClockService;
+
             private AgreementRoleType art;
             private AgreementRoleType artOther;
             private Party party;
@@ -653,6 +657,13 @@ public class AgreementTest {
             @Test
             public void validateNewRole_invalid_nullStartAnd_existingRolesDoesContainType() {
                 final AgreementRole existingRole = new AgreementRole();
+                existingRole.injectClockService(mockClockService);
+
+                context.checking(new Expectations() {{
+                    allowing(mockClockService).now();
+                    will(returnValue(new LocalDate(2013,4,2)));
+                }});
+
                 existingRole.setType(art);
                 agreement.getRoles().add(existingRole);
                 assertThat(

@@ -19,12 +19,14 @@
 package org.estatio.fixture;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
-import org.estatio.fixture.currency.refdata.CurrenciesRefData;
-import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
-import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
-import org.estatio.fixture.link.refdata.LinksRefData;
-import org.estatio.fixture.tax.refdata.TaxesAndTaxRatesRefData;
+import org.estatio.fixture.charge.ChargeGroupRefData;
+import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.currency.CurrenciesRefData;
+import org.estatio.fixture.geography.CountriesRefData;
+import org.estatio.fixture.geography.StatesRefData;
+import org.estatio.fixture.index.IndexRefData;
+import org.estatio.fixture.link.LinksRefData;
+import org.estatio.fixture.tax.TaxRefData;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
@@ -34,11 +36,14 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
         executionContext.executeChild(this, "currencies", new CurrenciesRefData());
-        executionContext.executeChild(this, "countries", new CountriesAndStatesRefData());
-        executionContext.executeChild(this, "tax-refdata", new TaxesAndTaxRatesRefData());
-        executionContext.executeChild(this, "charge-refdata", new ChargeAndChargeGroupRefData());
-        executionContext.executeChild(this, "index-refdata", new IndexAndIndexBaseAndIndexValueRefData());
+        executionContext.executeChild(this, "countries", new CountriesRefData());
+        executionContext.executeChild(this, "states", new StatesRefData());
+        executionContext.executeChild(this, "taxes", new TaxRefData());
+        executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
+        executionContext.executeChild(this, "charges", new ChargeRefData());
+        executionContext.executeChild(this, "indexs", new IndexRefData());
         executionContext.executeChild(this, "links", new LinksRefData());
     }
 }

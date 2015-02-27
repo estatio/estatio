@@ -21,6 +21,7 @@ package org.estatio.dom.invoice;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -148,7 +149,7 @@ public class InvoicesTest {
                     return Arrays.<Invoice>asList();
                 }
                 @Override
-                public Invoice newInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease, String interactionId) {
+                public Invoice newInvoice(final ApplicationTenancy applicationTenancy, Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease, String interactionId) {
                     return null;
                 }
             };
@@ -238,7 +239,6 @@ public class InvoicesTest {
             });
             collectionNumerators.createInvoiceNumberNumerator(mockProperty, format, lastIncrement);
         }
-
 
 
     }

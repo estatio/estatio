@@ -23,12 +23,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannelType.class)
 @Hidden
 public class AgreementRoleCommunicationChannelTypes
-        extends EstatioDomainService<AgreementRoleCommunicationChannelType> {
+        extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannelType> {
 
     public AgreementRoleCommunicationChannelTypes() {
         super(AgreementRoleCommunicationChannelTypes.class, AgreementRoleCommunicationChannelType.class);

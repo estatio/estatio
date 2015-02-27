@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -130,6 +131,7 @@ public class LeaseTermForServiceChargeTest {
                     .withFixture(pojos(LeaseItem.class))
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
                     .withFixture(statii())
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new LeaseTermForServiceCharge());
         }
 

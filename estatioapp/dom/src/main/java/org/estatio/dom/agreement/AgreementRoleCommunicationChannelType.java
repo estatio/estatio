@@ -19,20 +19,20 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -58,10 +58,18 @@ import org.estatio.dom.JdoColumnLength;
 @Immutable
 @Bounded
 public class AgreementRoleCommunicationChannelType 
-        extends EstatioDomainObject<AgreementRoleCommunicationChannelType> {
+        extends EstatioDomainObject<AgreementRoleCommunicationChannelType>
+        implements WithApplicationTenancyGlobal {
 
     public AgreementRoleCommunicationChannelType() {
         super("title");
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

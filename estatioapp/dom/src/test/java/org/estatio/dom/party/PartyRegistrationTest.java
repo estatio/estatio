@@ -21,14 +21,14 @@ package org.estatio.dom.party;
 import org.junit.Before;
 import org.junit.Test;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
+import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PartyRegistrationTest {
 
-    public static class ChangeDates extends AbstractWithIntervalMutableContractTest_changeDates<PartyRegistration> {
+    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<PartyRegistration> {
 
         private PartyRegistration partyRegistration;
 

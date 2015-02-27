@@ -22,6 +22,8 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -65,12 +67,27 @@ public class IndexValueMaintLineItem {
 
     // //////////////////////////////////////
 
+    private String atPath;
+
+    @Title(prepend = "(", sequence = "2", append = ")")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ApplicationTenancy.MAX_LENGTH_PATH)
+    @MemberOrder(name = "Index", sequence = "1")
+    public String getAtPath() {
+        return atPath;
+    }
+
+    public void setAtPath(final String atPath) {
+        this.atPath = atPath;
+    }
+
+    // //////////////////////////////////////
+
     private String reference;
 
     // @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     @Title(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @MemberOrder(name = "Index", sequence = "1")
+    @MemberOrder(name = "Index", sequence = "1.5")
     public String getReference() {
         return reference;
     }
@@ -195,25 +212,25 @@ public class IndexValueMaintLineItem {
             }
         }
 
-        Index index = (Index) scratchpad.get("index"); // only null on first
-                                                       // pass, then populated
-        IndexBase previousBase = (IndexBase) scratchpad.get("previousBase"); // only
-                                                                             // null
-                                                                             // on
-                                                                             // first
-                                                                             // pass,
-                                                                             // and
-                                                                             // then
-                                                                             // only
-                                                                             // if
-                                                                             // !existingIndex
-
-        final String reference = getReference();
-        if (index == null) {
-            index = indices.newIndex(reference, reference);
-            scratchpad.put("index", index);
+        // only null on first pass, then populated
+        ApplicationTenancy applicationTenancy = (ApplicationTenancy) scratchpad.get("applicationTenancy");
+        if(applicationTenancy == null) {
+            final String atPath = getAtPath();
+            applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+            scratchpad.put("applicationTenancy", applicationTenancy);
         }
-        setIndex(index);
+
+        // only null on first pass, then populated
+        Index index = (Index) scratchpad.get("index");
+        if (index == null) {
+            final String reference = getReference();
+            index = indices.newIndex(reference, reference, applicationTenancy);
+            scratchpad.put("index", index);
+            setIndex(index);
+        }
+
+        // only null on first pass, then populated, and only if !existingIndex
+        IndexBase previousBase = (IndexBase) scratchpad.get("previousBase");
 
         final LocalDate baseStartDate = getBaseStartDate();
         final BigDecimal baseFactor = getBaseFactor();
@@ -223,8 +240,7 @@ public class IndexValueMaintLineItem {
             indexBase = indexBases.newIndexBase(index, previousBase, baseStartDate, baseFactor);
         }
         setIndexBase(indexBase);
-        scratchpad.put("previousBase", indexBase); // for next time need to
-                                                   // create
+        scratchpad.put("previousBase", indexBase); // for next time need to create
 
         final LocalDate valueStartDate = getValueStartDate();
         final BigDecimal value = getValue();
@@ -339,6 +355,9 @@ public class IndexValueMaintLineItem {
     }
 
     // //////////////////////////////////////
+
+    @javax.inject.Inject
+    private ApplicationTenancies applicationTenancies;
 
     @javax.inject.Inject
     private Indices indices;

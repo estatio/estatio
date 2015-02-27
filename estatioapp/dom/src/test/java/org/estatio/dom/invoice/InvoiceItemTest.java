@@ -20,6 +20,7 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -47,6 +48,7 @@ public class InvoiceItemTest {
                     .withFixture(pojos(Charge.class))
                     .withFixture(pojos(Tax.class))
                     .withFixture(pojos(Invoice.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new InvoiceItemForTesting());
         }
     }
@@ -139,7 +141,11 @@ public class InvoiceItemTest {
                     will(returnValue(new BigDecimal("17.5")));
                 }
             });
-            invoiceItem = new InvoiceItem();
+            invoiceItem = new InvoiceItem(){
+                public ApplicationTenancy getApplicationTenancy() {
+                    return null;
+                }
+            };
             invoiceItem.setTax(mockTax);
 
         }

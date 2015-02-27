@@ -33,14 +33,14 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerms;
 
 @DomainService(menuOrder = "00")
 @Immutable
-public class LeaseTermForTurnoverRentService extends EstatioService<LeaseTermForTurnoverRentService> {
+public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermForTurnoverRentService> {
 
     public LeaseTermForTurnoverRentService() {
         super(LeaseTermForTurnoverRentService.class);

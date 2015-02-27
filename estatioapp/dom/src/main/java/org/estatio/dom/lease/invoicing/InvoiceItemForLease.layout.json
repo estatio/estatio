@@ -21,6 +21,14 @@
               }
             }
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -34,8 +42,8 @@
             "endDate": {},
             "effectiveStartDate": {},
             "effectiveEndDate": {
-              "actions":{
-                "changeEffectiveDates":{}
+              "actions": {
+                "changeEffectiveDates": {}
               }
             },
             "adjustment": {}

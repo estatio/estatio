@@ -21,20 +21,17 @@ package org.estatio.dom.agreement;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
@@ -46,15 +43,16 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Party;
@@ -69,6 +67,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByAgreement", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE agreement == :agreement "),
         @javax.jdo.annotations.Query(
                 name = "findByParty", language = "JDOQL",
                 value = "SELECT " +
@@ -105,11 +108,22 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         members = { "agreement", "party", "type", "startDate" })
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioDomainObject<AgreementRole>
-        implements WithIntervalContiguous<AgreementRole> {
+public class AgreementRole
+        extends EstatioDomainObject<AgreementRole>
+        implements WithIntervalContiguous<AgreementRole>, WithApplicationTenancyProperty {
 
     private final WithIntervalContiguous.Helper<AgreementRole> helper =
             new WithIntervalContiguous.Helper<AgreementRole>(this);
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getAgreement().getApplicationTenancy();
+    }
 
     // //////////////////////////////////////
 

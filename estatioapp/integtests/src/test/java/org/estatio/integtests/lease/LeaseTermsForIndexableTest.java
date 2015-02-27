@@ -39,7 +39,7 @@ import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermsForIndexable;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
+import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -76,7 +76,7 @@ public class LeaseTermsForIndexableTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            index = indexes.findIndex(IndexAndIndexBaseAndIndexValueRefData.ISTAT_FOI);
+            index = indexes.findIndex(IndexRefData.IT_REF);
         }
 
         @Test

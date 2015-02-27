@@ -28,12 +28,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValue;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = LeaseTermForIndexable.class)
-public class LeaseTermsForIndexable extends EstatioDomainService<LeaseTermForIndexable> {
+public class LeaseTermsForIndexable extends UdoDomainRepositoryAndFactory<LeaseTermForIndexable> {
 
     public LeaseTermsForIndexable() {
         super(LeaseTermsForIndexable.class, LeaseTermForIndexable.class);

@@ -23,7 +23,7 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 
@@ -39,7 +39,7 @@ import org.estatio.dom.currency.Currency;
  */
 @DomainService(menuOrder = "99")
 @Hidden
-public class EstatioSettingsService extends EstatioService<EstatioSettingsService> {
+public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
 
     public EstatioSettingsService() {
         super(EstatioSettingsService.class);

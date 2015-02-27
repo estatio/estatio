@@ -18,11 +18,9 @@
  */
 package org.estatio.fixture.party;
 
-import java.util.Collections;
-import java.util.List;
-
 import javax.inject.Inject;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
@@ -40,17 +38,22 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
     protected abstract void execute(ExecutionContext executionContext);
 
     protected Party createPerson(
+            final String atPath,
             final String reference,
             final String initials,
             final String firstName,
             final String lastName,
             final PersonGenderType gender,
             final ExecutionContext executionContext) {
-        Party party = persons.newPerson(reference, initials, firstName, lastName, gender);
+
+        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+
+        Party party = persons.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
         return executionContext.addResult(this, party.getReference(), party);
     }
 
     protected Party createPerson(
+            final String atPath,
             final String reference,
             final String initials,
             final String firstName,
@@ -61,8 +64,10 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
             final String fromPartyStr,
             final String relationshipType,
             final ExecutionContext executionContext) {
+
+        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
         // new person
-        Party party = persons.newPerson(reference, initials, firstName, lastName, gender);
+        Party party = persons.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
         communicationChannelContributedActions.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
         communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         // associate person
@@ -71,10 +76,6 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
         return executionContext.addResult(this, party.getReference(), party);
     }
 
-    public List<String> choices7CreatePerson() {
-        return Collections.emptyList(); // TODO: return list of choices for
-                                        // argument N
-    }
 
     // //////////////////////////////////////
 
@@ -95,5 +96,8 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
 
     @Inject
     protected PartyRelationships partyRelationships;
+
+    @Inject
+    protected ApplicationTenancies applicationTenancies;
 
 }

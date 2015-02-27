@@ -29,8 +29,8 @@ import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -45,8 +45,8 @@ public class NumeratorTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxf());
-                executionContext.executeChild(this, new PropertyForKal());
+                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForKalNl());
             }
         });
     }
@@ -61,8 +61,8 @@ public class NumeratorTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
-        propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
+        propertyOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+        propertyKal = properties.findPropertyByReference(PropertyForKalNl.REF);
     }
 
 

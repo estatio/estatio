@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -56,10 +57,15 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -118,7 +124,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
         extends EstatioDomainObject<LeaseItem>
-        implements WithIntervalMutable<LeaseItem>, WithSequence {
+        implements WithIntervalMutable<LeaseItem>, WithSequence, WithApplicationTenancyPropertyLocal, WithApplicationTenancyPathPersisted {
 
     private static final int PAGE_SIZE = 15;
 
@@ -133,6 +139,33 @@ public class LeaseItem
     public LeaseItem() {
         super("lease, type, sequence");
     }
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+    }
+
 
     // //////////////////////////////////////
 
@@ -333,17 +366,39 @@ public class LeaseItem
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
+    // //////////////////////////////////////
+
     public LeaseItem copy(
             final @ParameterLayout(named = "Start date") LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final Charge charge
             ) {
-        LeaseItem newItem = getLease().newItem(this.getType(), charge, invoicingFrequency, paymentMethod, startDate);
+        final LeaseItem newItem = getLease().newItem(
+                this.getType(), charge, invoicingFrequency, paymentMethod, startDate, getApplicationTenancy());
         this.copyTerms(startDate, newItem);
         this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;
     }
+
+    public List<Charge> choices3Copy() {
+        return charges.chargesForCountry(this.getApplicationTenancy());
+    }
+
+    public String validateCopy(
+            final LocalDate startDate,
+            final InvoicingFrequency invoicingFrequency,
+            final PaymentMethod paymentMethod,
+            final Charge charge
+            ) {
+        if(!choices3Copy().contains(charge)) {
+            return "Charge (with app tenancy '%s') is not valid for this lease item";
+        }
+        return null;
+    }
+    
+
+    // //////////////////////////////////////
 
     public LeaseItem terminate(
             final @ParameterLayout(named = "End date") LocalDate endDate) {
@@ -425,6 +480,9 @@ public class LeaseItem
         return charges.allCharges();
     }
 
+
+    // //////////////////////////////////////
+
     public LeaseItem changeCharge(final Charge charge) {
         setCharge(charge);
         return this;
@@ -433,6 +491,11 @@ public class LeaseItem
     public Charge default0ChangeCharge() {
         return getCharge();
     }
+
+    public List<Charge> choices0ChangeCharge() {
+        return charges.chargesForCountry(getApplicationTenancyPath());
+    }
+
 
     // //////////////////////////////////////
 
@@ -694,5 +757,9 @@ public class LeaseItem
 
     @Inject
     LeaseTerms leaseTerms;
+
+    @Inject
+    EstatioApplicationTenancies estatioApplicationTenancies;
+
 
 }

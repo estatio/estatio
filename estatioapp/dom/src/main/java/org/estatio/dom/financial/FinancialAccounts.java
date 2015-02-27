@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
 @DomainService(repositoryFor = FinancialAccount.class)
@@ -37,7 +37,7 @@ import org.estatio.dom.party.Party;
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "30.1")
-public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
+public class FinancialAccounts extends UdoDomainRepositoryAndFactory<FinancialAccount> {
 
     public FinancialAccounts() {
         super(FinancialAccounts.class, FinancialAccount.class);

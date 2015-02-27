@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -164,6 +165,7 @@ public class LeaseTermForTurnoverRentTest {
                     .withFixture(pojos(LeaseItem.class))
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
                     .withFixture(statii())
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new LeaseTermForTurnoverRent());
         }
 

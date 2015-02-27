@@ -233,6 +233,14 @@ language governing permissions and limitations under the License.
                 </plugins>
             </build>
         </profile>
-    </profiles>  
+<!--
+        <profile>
+            <id>noTest</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+-->
+    </profiles>
 
 </project>

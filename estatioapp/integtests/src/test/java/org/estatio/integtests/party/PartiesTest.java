@@ -26,9 +26,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
-import org.estatio.fixture.party.OrganisationForTopModel;
-import org.estatio.fixture.party.PersonForJohnDoe;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,8 +51,8 @@ public class PartiesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForJohnDoe());
-                    executionContext.executeChild(this, new OrganisationForHelloWorld());
+                    executionContext.executeChild(this, new PersonForJohnDoeNl());
+                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
                 }
             });
         }
@@ -93,16 +93,16 @@ public class PartiesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForJohnDoe());
-                    executionContext.executeChild(this, new OrganisationForHelloWorld());
-                    executionContext.executeChild(this, new OrganisationForTopModel());
+                    executionContext.executeChild(this, new PersonForJohnDoeNl());
+                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, new OrganisationForTopModelGb());
                 }
             });
         }
 
         @Test
         public void happyCase() throws Exception {
-            Party party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+            Party party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
             assertThat(party, is(notNullValue()));
         }
 
@@ -123,14 +123,14 @@ public class PartiesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new OrganisationForHelloWorld());
+                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
                 }
             });
         }
 
         @Test
         public void happyCase() throws Exception {
-            Assert.assertNotNull(parties.matchPartyByReferenceOrName("HELLOWORLD"));
+            Assert.assertNotNull(parties.matchPartyByReferenceOrName(OrganisationForHelloWorldNl.REF));
         }
 
         @Test

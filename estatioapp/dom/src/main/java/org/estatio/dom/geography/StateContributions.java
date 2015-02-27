@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 
 /**
  * Decouples {@link Country} from {@link State}s.
@@ -32,7 +32,7 @@ import org.estatio.dom.EstatioService;
  */
 @DomainService(menuOrder = "80")
 @Hidden
-public class StateContributions extends EstatioService<StateContributions> {
+public class StateContributions extends UdoDomainService<StateContributions> {
 
     public StateContributions() {
         super(StateContributions.class);

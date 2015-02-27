@@ -19,6 +19,7 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -66,13 +67,13 @@ public class ChargesTest {
     }
 
 
-    public static class FindByReference extends ChargesTest {
+    public static class FindByAtPathAndReference extends ChargesTest {
 
 
         @Test
         public void happyCase() {
 
-            charges.findCharge("*REF?1*");
+            charges.findByReference("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Charge.class));
@@ -117,7 +118,7 @@ public class ChargesTest {
 
             charges = new Charges() {
                 @Override
-                public Charge findCharge(String reference) {
+                public Charge findByReference(String reference) {
                     return existingCharge;
                 }
             };
@@ -139,7 +140,7 @@ public class ChargesTest {
                 }
             });
 
-            final Charge newCharge = charges.newCharge("CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
+            final Charge newCharge = charges.newCharge(newApplicationTenancy("/it"), "CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
             assertThat(newCharge.getReference(), is("CG-REF"));
             assertThat(newCharge.getName(), is("CG-Name"));
             assertThat(newCharge.getDescription(), is("CG-Description"));
@@ -151,8 +152,14 @@ public class ChargesTest {
         public void newCharge_whenDoesExist() {
             existingCharge = new Charge();
 
-            final Charge newCharge = charges.newCharge("CG-REF", "Some other description", "Some other code", null, null);
+            final Charge newCharge = charges.newCharge(newApplicationTenancy("/it"), "CG-REF", "Some other description", "Some other code", null, null);
             assertThat(newCharge, is(existingCharge));
+        }
+
+        private ApplicationTenancy newApplicationTenancy(final String path) {
+            ApplicationTenancy applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath(path);
+            return applicationTenancy;
         }
 
     }

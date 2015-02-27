@@ -29,10 +29,10 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "80", repositoryFor = Tag.class)
-public class Tags extends EstatioDomainService<Tag> {
+public class Tags extends UdoDomainRepositoryAndFactory<Tag> {
 
     public Tags() {
         super(Tags.class, Tag.class);

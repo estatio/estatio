@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
@@ -41,7 +41,7 @@ import org.estatio.services.settings.EstatioSettingsService;
         named = "Administration",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "120.2")
-public class CollectionNumerators extends EstatioService<CollectionNumerators> {
+public class CollectionNumerators extends UdoDomainService<CollectionNumerators> {
 
     public CollectionNumerators() {
         super(CollectionNumerators.class);

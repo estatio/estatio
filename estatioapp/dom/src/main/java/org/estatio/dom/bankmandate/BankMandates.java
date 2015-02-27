@@ -35,8 +35,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -50,7 +50,7 @@ import org.estatio.dom.party.Party;
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "30.2")
-public class BankMandates extends EstatioDomainService<BankMandate> {
+public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
 
     public BankMandates() {
         super(BankMandates.class, BankMandate.class);
@@ -65,7 +65,8 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     public BankMandate newBankMandate(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            @Parameter(regexPattern = RegexValidation.REFERENCE) final String reference,
+            @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
+            final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
@@ -73,7 +74,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
             final Party creditor,
             final BankAccount bankAccount
             // CHECKSTYLE:ON
-            ) {
+    ) {
         BankMandate mandate = newTransientInstance();
         mandate.setType(agreementTypes.find(BankMandateConstants.AT_MANDATE));
         mandate.setReference(reference);
@@ -81,6 +82,10 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
         mandate.setStartDate(startDate);
         mandate.setEndDate(endDate);
         mandate.setBankAccount(bankAccount);
+
+        // app tenancy derived from the debtor
+        mandate.setApplicationTenancyPath(debtor.getApplicationTenancy().getPath());
+
         persistIfNotAlready(mandate);
 
         final AgreementRoleType artCreditor = agreementRoleTypes.findByTitle(BankMandateConstants.ART_CREDITOR);

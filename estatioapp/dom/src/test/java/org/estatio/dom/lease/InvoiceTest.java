@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
@@ -43,6 +44,7 @@ public class InvoiceTest {
                     .withFixture(pojos(Lease.class))
                     .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
                     .withFixture(pojos(BankMandate.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Invoice());
         }
 

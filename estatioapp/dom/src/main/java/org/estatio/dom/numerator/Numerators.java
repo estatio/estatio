@@ -21,10 +21,15 @@ package org.estatio.dom.numerator;
 import java.math.BigInteger;
 import java.util.List;
 import org.apache.isis.applib.RecoverableException;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "80", repositoryFor = Numerator.class)
 @DomainServiceLayout(
@@ -32,7 +37,7 @@ import org.estatio.dom.EstatioDomainService;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "120.1"
 )
-public class Numerators extends EstatioDomainService<Numerator> {
+public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
 
     public Numerators() {
         super(Numerators.class, Numerator.class);
@@ -79,7 +84,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
 
     @Programmatic
     public Numerator createGlobalNumerator(
-            final String numeratorName, 
+            final String numeratorName,
             final String format,
             final BigInteger lastIncrement) {
 
@@ -88,7 +93,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
 
     @Programmatic
     public Numerator createScopedNumerator(
-            final String numeratorName, 
+            final String numeratorName,
             final Object scopedTo,
             final String format,
             final BigInteger lastIncrement) {
@@ -97,9 +102,9 @@ public class Numerators extends EstatioDomainService<Numerator> {
     }
 
     private Numerator findOrCreateNumerator(
-            final String numeratorName, 
-            final Object scopedToIfAny, 
-            final String format, 
+            final String numeratorName,
+            final Object scopedToIfAny,
+            final String format,
             final BigInteger lastIncrement) {
 
         // validate
@@ -125,9 +130,9 @@ public class Numerators extends EstatioDomainService<Numerator> {
     }
 
     private Numerator createNumerator(
-            final String numeratorName, 
-            final Object scopedToIfAny, 
-            final String format, 
+            final String numeratorName,
+            final Object scopedToIfAny,
+            final String format,
             final BigInteger lastIncrement) {
         final Numerator numerator = newTransientInstance();
         numerator.setName(numeratorName);

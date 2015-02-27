@@ -20,13 +20,16 @@
 package org.estatio.services.links;
 
 import javax.jdo.annotations.IdentityType;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -40,10 +43,38 @@ import org.estatio.dom.JdoColumnLength;
 })
 @javax.jdo.annotations.Unique(members = { "className", "name" })
 @MemberGroupLayout(columnSpans = { 12, 0, 0, 12 })
-public class Link extends EstatioDomainObject<Link> {
+public class Link
+        extends EstatioDomainObject<Link>
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Link() {
         super("name");
+    }
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

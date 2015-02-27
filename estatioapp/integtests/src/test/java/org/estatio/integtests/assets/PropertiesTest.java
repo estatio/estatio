@@ -26,17 +26,25 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import javax.inject.Inject;
+import org.assertj.core.api.Assertions;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyType;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class PropertiesTest extends EstatioIntegrationTest {
@@ -45,11 +53,11 @@ public class PropertiesTest extends EstatioIntegrationTest {
     public void setupData() {
         runScript(new FixtureScript() {
             @Override
-            protected void execute(ExecutionContext executionContext) {
+            protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxf());
-                executionContext.executeChild(this, new PropertyForKal());
+                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForKalNl());
             }
         });
     }
@@ -62,7 +70,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // when
-            List<Property> allProperties = properties.allProperties();
+            final List<Property> allProperties = properties.allProperties();
 
             // then
             assertThat(allProperties.size(), is(2));
@@ -107,23 +115,52 @@ public class PropertiesTest extends EstatioIntegrationTest {
         public void withReference() throws Exception {
 
             // when
-            final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // then
-            assertThat(property.getReference(), is(PropertyForOxf.PROPERTY_REFERENCE));
+            Assert.assertThat(property.getReference(), is(PropertyForOxf.PROPERTY_REFERENCE));
         }
     }
 
-    public static class FindPropertyByReferenceElseNull extends PropertiesTest {
+
+        @Inject
+        private Countries countries;
+
+        @Inject
+        private EstatioApplicationTenancies estatioApplicationTenancies;
+        @Inject
+        private ApplicationTenancies applicationTenancies;
 
         @Test
-        public void withReference() throws Exception {
+
+            // given
+            final ApplicationTenancy countryAppTenancy = applicationTenancies.findTenancyByPath("/gb");
+
+            final Country gbrCountry = countries.findCountry(CountriesRefData.GBR);
+
+            Assertions.assertThat(countryAppTenancy).isNotNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/gb/ARN")).isNull();
+
 
             // when
-            final Property property = properties.findPropertyByReferenceElseNull("FAKEREF");
 
             // then
-            assertNull(property);
+            Assertions.assertThat(property.getName()).isEqualTo("Arndale");
+            Assertions.assertThat(property.getType()).isEqualTo(PropertyType.RETAIL_PARK);
+            Assertions.assertThat(property.getCountry()).isEqualTo(gbrCountry);
+            Assertions.assertThat(property.getCity()).isEqualTo("Manchester");
+            Assertions.assertThat(property.getAcquireDate()).isEqualTo(new LocalDate(2014, 4, 1));
+
+            final ApplicationTenancy propertyAppTenancy = applicationTenancies.findTenancyByPath("/gb/ARN");
+            Assertions.assertThat(propertyAppTenancy).isNotNull();
+
+            Assertions.assertThat(property.getApplicationTenancy()).isEqualTo(propertyAppTenancy);
+            Assertions.assertThat(propertyAppTenancy.getParent()).isEqualTo(countryAppTenancy);
+
+            // and also
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/gb/ARN/_")).isNotNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/gb/ARN/ta")).isNotNull();
+
         }
     }
 }

@@ -30,8 +30,8 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
-import org.estatio.fixture.party.OrganisationForTopModel;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -48,7 +48,7 @@ public class CommunicationChannelTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -67,7 +67,7 @@ public class CommunicationChannelTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+            party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
             final SortedSet<CommunicationChannel> postalAddresses = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
             assertThat(postalAddresses.size(), is(2));
             communicationChannel = postalAddresses.first();

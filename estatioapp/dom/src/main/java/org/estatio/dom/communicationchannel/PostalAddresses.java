@@ -21,7 +21,7 @@ package org.estatio.dom.communicationchannel;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.geography.Country;
 
 /**
@@ -30,7 +30,7 @@ import org.estatio.dom.geography.Country;
 @DomainService(menuOrder = "70", repositoryFor = PostalAddress.class)
 @Hidden
 public class PostalAddresses 
-        extends EstatioDomainService<PostalAddress> {
+        extends UdoDomainRepositoryAndFactory<PostalAddress> {
 
     public PostalAddresses() {
         super(PostalAddresses.class, PostalAddress.class);

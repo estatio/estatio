@@ -19,7 +19,6 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.SortedSet;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -28,7 +27,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
@@ -43,11 +42,11 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
 /**
  * Represents a mechanism for communicating with its
@@ -96,14 +95,26 @@ import org.estatio.dom.WithReferenceGetter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel
         extends EstatioDomainObject<CommunicationChannel>
-        implements WithNameGetter, WithReferenceGetter {
+        implements WithNameGetter, WithReferenceGetter, WithApplicationTenancyCountry {
 
     public CommunicationChannel() {
         super("type, legal, id");
     }
 
+    // //////////////////////////////////////
+
     public String iconName() {
         return getType().title().replace(" ", "");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getOwner().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

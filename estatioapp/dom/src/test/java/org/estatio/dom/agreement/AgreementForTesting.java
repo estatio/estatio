@@ -18,18 +18,17 @@
  */
 package org.estatio.dom.agreement;
 
-import org.estatio.dom.party.Party;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 public class AgreementForTesting extends Agreement {
 
-    @Override
-    public Party getPrimaryParty() {
+    public AgreementForTesting() {
+        super(null, null);
+    }
+
+    public ApplicationTenancy getApplicationTenancy() {
         return null;
     }
 
-    @Override
-    public Party getSecondaryParty() {
-        return null;
-    }
 
 }

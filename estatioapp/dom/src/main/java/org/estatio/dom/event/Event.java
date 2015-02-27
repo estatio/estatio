@@ -34,13 +34,22 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 
 /**
  * An event that has or is scheduled to occur at some point in time, pertaining
@@ -75,12 +84,22 @@ import org.estatio.dom.JdoColumnLength;
 @DomainObject(editing = Editing.DISABLED)
 public class Event
         extends EstatioDomainObject<Event>
-        implements CalendarEventable {
+        implements CalendarEventable, WithApplicationTenancyProperty {
 
     private static final int NUMBER_OF_LINES = 8;
 
     public Event() {
         super("date, subject, calendarName");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getSubject().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

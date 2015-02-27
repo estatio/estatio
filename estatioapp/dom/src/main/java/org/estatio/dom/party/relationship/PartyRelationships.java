@@ -20,8 +20,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.core.runtime.authentication.standard.RandomCodeGenerator10Chars;
 
-import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
@@ -34,7 +34,7 @@ import org.estatio.dom.party.Persons;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.4")
 @DomainService(repositoryFor = PartyRelationship.class)
-public class PartyRelationships extends EstatioDomainService<PartyRelationship> {
+public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelationship> {
 
     public PartyRelationships() {
         super(PartyRelationships.class, PartyRelationship.class);
@@ -100,7 +100,7 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
         String newReference = reference == null ? generator.generateRandomCode().toUpperCase() : reference;
-        Person person = persons.newPerson(newReference, initials, firstName, lastName, gender);
+        Person person = persons.newPerson(newReference, initials, firstName, lastName, gender, party.getApplicationTenancy());
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             communicationChannels.newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         }

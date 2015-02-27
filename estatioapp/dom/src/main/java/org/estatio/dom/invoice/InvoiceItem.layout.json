@@ -1,66 +1,74 @@
 {
-    "columns": [
-        {
-            "span": 4,
-            "memberGroups": {
-                "General": {
-                    "members": {
-                        "invoice": {},
-                        "sequence": {},
-                        "current": {}
-                    }
-                },
-                "Details": {
-                    "members": {
-                        "charge": {},
-                        "quantity": {},
-                        "description": {
-                            "actions": {
-                               "changeDescription": {}
-                            }
-                        }
-                    }
-                }
-            }
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "invoice": {},
+            "sequence": {},
+            "current": {}
+          }
         },
-        {
-            "span": 4,
-            "memberGroups": {
-                "Dates": {
-                    "members": {
-                        "dueDate": {},
-                        "startDate": {},
-                        "endDate": {},
-                        "effectiveStartDate": {},
-                        "effectiveEndDate": {},
-                        "adjustment": {}
-                    }
-                },
-                "Source": {
-                    "members": {
-                        "lease": {},
-                        "source": {},
-                        "fixedAsset": {}
-                    }
-                }
+        "Details": {
+          "members": {
+            "charge": {},
+            "quantity": {},
+            "description": {
+              "actions": {
+                "changeDescription": {}
+              }
             }
+          }
         },
-        {
-            "span": 4,
-            "memberGroups": {
-                "Amounts": {
-                    "members": {
-                        "netAmount": {},
-                        "vatAmount": {},
-                        "tax": {},
-                        "grossAmount": {}
-                    }
-                }
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
             }
-        },
-        {
-            "span": 12,
-            "collections": {}
+          }
         }
-    ]
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Dates": {
+          "members": {
+            "dueDate": {},
+            "startDate": {},
+            "endDate": {},
+            "effectiveStartDate": {},
+            "effectiveEndDate": {},
+            "adjustment": {}
+          }
+        },
+        "Source": {
+          "members": {
+            "lease": {},
+            "source": {},
+            "fixedAsset": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Amounts": {
+          "members": {
+            "netAmount": {},
+            "vatAmount": {},
+            "tax": {},
+            "grossAmount": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 12,
+      "collections": {}
+    }
+  ]
 }

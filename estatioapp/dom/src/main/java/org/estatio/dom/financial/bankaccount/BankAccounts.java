@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.financial.FinancialAccount;
@@ -48,7 +48,7 @@ import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "30", repositoryFor = FinancialAccount.class)
 @DomainServiceLayout(named = "Accounts")
-public class BankAccounts extends EstatioDomainService<BankAccount> {
+public class BankAccounts extends UdoDomainRepositoryAndFactory<BankAccount> {
 
     public BankAccounts() {
         super(BankAccounts.class, BankAccount.class);

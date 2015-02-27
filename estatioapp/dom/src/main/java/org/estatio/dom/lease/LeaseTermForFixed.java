@@ -33,7 +33,8 @@ import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-public class LeaseTermForFixed extends LeaseTerm {
+public class LeaseTermForFixed
+        extends LeaseTerm {
 
     private BigDecimal value;
 

@@ -19,11 +19,15 @@
 package org.estatio.dom.lease.tags;
 
 import java.util.List;
+import javax.inject.Inject;
 import javax.jdo.Query;
 import com.google.common.collect.Lists;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Brand.class)
@@ -32,7 +36,7 @@ import org.estatio.dom.utils.StringUtils;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.9"
 )
-public class Brands extends EstatioDomainService<Brand> {
+public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
 
     public Brands() {
         super(Brands.class, Brand.class);
@@ -41,13 +45,27 @@ public class Brands extends EstatioDomainService<Brand> {
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "1")
-    public Brand newBrand(final @Named("Brand name") String name) {
+    public Brand newBrand(
+            final @Named("Brand name") String name,
+            final @Named("Global or Country") ApplicationTenancy applicationTenancy) {
         Brand brand;
         brand = newTransientInstance(Brand.class);
         brand.setName(name);
+        brand.setApplicationTenancyPath(applicationTenancy.getPath());
         persist(brand);
         return brand;
     }
+
+    public List<ApplicationTenancy> choices1NewBrand() {
+        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default1NewBrand() {
+        return Dflt.of(choices1NewBrand());
+    }
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
 
     // //////////////////////////////////////
 
@@ -76,13 +94,13 @@ public class Brands extends EstatioDomainService<Brand> {
     }
 
     @Programmatic
-    public Brand findOrCreate(final String name) {
+    public Brand findOrCreate(final ApplicationTenancy applicationTenancy, final String name) {
         if (name == null) {
             return null;
         }
         Brand brand = findByName(name);
         if (brand == null) {
-            brand = newBrand(name);
+            brand = newBrand(name, applicationTenancy);
         }
         return brand;
     }

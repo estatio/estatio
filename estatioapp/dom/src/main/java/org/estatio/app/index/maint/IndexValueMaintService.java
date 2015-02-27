@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import com.google.common.collect.Lists;
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -29,7 +30,9 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.value.Blob;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 
 @DomainService
@@ -38,7 +41,7 @@ import org.estatio.dom.EstatioService;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.1"
 )
-public class IndexValueMaintService extends EstatioService<IndexValueMaintService> {
+public class IndexValueMaintService extends UdoDomainService<IndexValueMaintService> {
 
     public IndexValueMaintService() {
         super(IndexValueMaintService.class);
@@ -69,14 +72,31 @@ public class IndexValueMaintService extends EstatioService<IndexValueMaintServic
     @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(sequence="2")
     public List<IndexValueMaintLineItem> uploadIndexValues(
-            final @Named("Excel spreadsheet") Blob spreadsheet) {
+            final @Named("Excel spreadsheet") Blob spreadsheet,
+            final ApplicationTenancy applicationTenancy) {
         List<IndexValueMaintLineItem> lineItems = 
                 excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class);
+        for (IndexValueMaintLineItem lineItem : lineItems) {
+            lineItem.setAtPath(applicationTenancy.getPath());
+        }
         return lineItems;
     }
+
+    public List<ApplicationTenancy> choices1UploadIndexValues() {
+        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default1UploadIndexValues() {
+        return Dflt.of(choices1UploadIndexValues());
+    }
+
 
     // //////////////////////////////////////
 
     @javax.inject.Inject
     private ExcelService excelService;
+
+    @javax.inject.Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
+
 }

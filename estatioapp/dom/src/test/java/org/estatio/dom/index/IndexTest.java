@@ -20,6 +20,7 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -148,6 +149,7 @@ public class IndexTest {
         @Test
         public void test() {
             newPojoTester()
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Index());
         }
     }

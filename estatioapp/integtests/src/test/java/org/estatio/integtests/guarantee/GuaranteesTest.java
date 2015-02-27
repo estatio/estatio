@@ -45,7 +45,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModel;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -86,7 +86,8 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
 
             assertThat(lease.getPrimaryParty(), is(not(nullValue())));
             assertThat(lease.getSecondaryParty(), is(not(nullValue())));

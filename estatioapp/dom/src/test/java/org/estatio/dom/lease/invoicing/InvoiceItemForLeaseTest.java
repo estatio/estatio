@@ -19,6 +19,7 @@
 package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -54,6 +55,7 @@ public class InvoiceItemForLeaseTest {
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
                     .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
                     .withFixture(pojos(Lease.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new InvoiceItemForLease());
         }
 

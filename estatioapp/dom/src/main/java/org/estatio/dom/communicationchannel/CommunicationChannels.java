@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
@@ -41,7 +41,7 @@ import org.estatio.dom.geography.State;
 
 @DomainService(menuOrder = "70", repositoryFor = CommunicationChannel.class)
 @Hidden
-public class CommunicationChannels extends EstatioDomainService<CommunicationChannel> {
+public class CommunicationChannels extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
     public CommunicationChannels() {
         super(CommunicationChannels.class, CommunicationChannel.class);

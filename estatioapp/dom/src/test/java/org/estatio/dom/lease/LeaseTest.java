@@ -18,23 +18,15 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import com.google.common.collect.Lists;
-
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -42,14 +34,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.agreement.Agreement;
@@ -73,6 +63,14 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LeaseTest {
 
@@ -130,6 +128,7 @@ public class LeaseTest {
                     .withFixture(pojos(LeaseType.class))
                     .withFixture(pojos(BankMandate.class))
                     .withFixture(statii())
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Lease());
         }
 
@@ -257,10 +256,15 @@ public class LeaseTest {
                 }
             });
 
-            final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
+            final ApplicationTenancy leaseItemApplicationTenancy = new ApplicationTenancy();
+            leaseItemApplicationTenancy.setPath("/it/XXX/_");
+
+            final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null, leaseItemApplicationTenancy);
             assertThat(newItem, is(leaseItem));
             assertThat(leaseItem.getLease(), is(lease));
             assertThat(leaseItem.getSequence(), is(BigInteger.ONE));
+            assertThat(leaseItem.getApplicationTenancyPath(), is("/it/XXX/_"));
+
 
             // this assertion not true for unit tests, because we rely on JDO
             // to manage the bidir relationship for us.
@@ -372,7 +376,15 @@ public class LeaseTest {
                 }
             });
 
-            tenant = new PartyForTesting();
+            final ApplicationTenancy tenantApplicationTenancy = new ApplicationTenancy();
+            tenantApplicationTenancy.setPath("/it");
+            tenant = new PartyForTesting() {
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    return tenantApplicationTenancy;
+                }
+            };
+
             tenantAgreementRole = new AgreementRole();
             tenantAgreementRole.setParty(tenant);
             tenantAgreementRole.setType(tenantAgreementRoleType);
@@ -402,6 +414,8 @@ public class LeaseTest {
 
             // the main class under test
             lease = new Lease();
+            lease.setApplicationTenancyPath("/it");
+
             lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
             lease.injectAgreementRoles(mockAgreementRoles);
             lease.injectAgreementTypes(mockAgreementTypes);
@@ -489,7 +503,7 @@ public class LeaseTest {
             assertThat(bankAccounts, Matchers.contains(bankAccount));
 
             // and when/then
-            final BankAccount defaultBankAccount = (BankAccount) lease.default0NewMandate();
+            final BankAccount defaultBankAccount = lease.default0NewMandate();
             assertThat(defaultBankAccount, is(bankAccount));
 
             // and when/then
@@ -527,6 +541,7 @@ public class LeaseTest {
             assertThat(returned, is(lease));
 
             assertThat(lease.getPaidBy(), is(bankMandate));
+            Assertions.assertThat(lease.getPaidBy().getApplicationTenancyPath()).isEqualTo(lease.getApplicationTenancyPath());
             assertThat(bankMandate.getType(), is(bankMandateAgreementType));
             assertThat(bankMandate.getBankAccount(), is((FinancialAccount) bankAccount));
             assertThat(bankMandate.getStartDate(), is(startDate));

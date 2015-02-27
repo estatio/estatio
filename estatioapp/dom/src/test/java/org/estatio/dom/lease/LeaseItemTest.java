@@ -22,6 +22,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -37,7 +38,7 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
+import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.tax.Tax;
 import org.estatio.services.clock.ClockService;
 
@@ -198,6 +199,7 @@ public class LeaseItemTest {
                     .withFixture(pojos(Lease.class))
                     .withFixture(statii())
                     .withFixture(pojos(Tax.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new LeaseItem());
         }
 
@@ -207,7 +209,7 @@ public class LeaseItemTest {
         }
     }
 
-    public static class ChangeDates extends AbstractWithIntervalMutableContractTest_changeDates<LeaseItem> {
+    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<LeaseItem> {
 
         private LeaseItem leaseItem;
 

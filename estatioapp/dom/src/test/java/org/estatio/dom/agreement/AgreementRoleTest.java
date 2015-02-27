@@ -19,6 +19,7 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -47,6 +48,7 @@ public class AgreementRoleTest  {
                     .withFixture(pojos(AgreementRoleType.class))
                     .withFixture(pojos(Agreement.class, AgreementForTesting.class))
                     .withFixture(pojos(Party.class, PartyForTesting.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(agreement);
         }
     }

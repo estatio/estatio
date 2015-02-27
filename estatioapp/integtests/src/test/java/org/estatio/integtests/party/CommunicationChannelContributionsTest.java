@@ -27,7 +27,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -42,7 +42,7 @@ public class CommunicationChannelContributionsTest extends EstatioIntegrationTes
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new OrganisationForHelloWorld());
+                    executionContext.executeChild(this, new OrganisationForHelloWorldGb());
                 }
             });
         }
@@ -56,7 +56,7 @@ public class CommunicationChannelContributionsTest extends EstatioIntegrationTes
 
         @Before
         public void setUp() throws Exception {
-            partyHelloWorld = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
+            partyHelloWorld = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
         }
 
         @Test

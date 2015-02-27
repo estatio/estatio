@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = IndexBase.class)
 @DomainServiceLayout(
@@ -41,7 +41,7 @@ import org.estatio.dom.EstatioDomainService;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.3")
 public class IndexBases
-        extends EstatioDomainService<IndexBase> {
+        extends UdoDomainRepositoryAndFactory<IndexBase> {
 
     public IndexBases() {
         super(IndexBases.class, IndexBase.class);

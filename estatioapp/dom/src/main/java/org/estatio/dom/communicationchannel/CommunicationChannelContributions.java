@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -50,13 +50,13 @@ import org.estatio.dom.geography.States;
  * {@link #communicationChannels(CommunicationChannelOwner) communication
  * channels} of a particular {@link CommunicationChannelOwner}.
  */
-public abstract class CommunicationChannelContributions extends EstatioService<CommunicationChannelContributions> {
+public abstract class CommunicationChannelContributions extends UdoDomainService<CommunicationChannelContributions> {
 
     public CommunicationChannelContributions() {
         super(CommunicationChannelContributions.class);
     }
 
-    protected CommunicationChannelContributions(Class<? extends EstatioService<CommunicationChannelContributions>> serviceType) {
+    protected CommunicationChannelContributions(Class<? extends UdoDomainService<CommunicationChannelContributions>> serviceType) {
         super(serviceType);
     }
 

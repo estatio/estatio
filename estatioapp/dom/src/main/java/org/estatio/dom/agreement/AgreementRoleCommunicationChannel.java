@@ -20,13 +20,12 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 import java.util.SortedSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -38,6 +37,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -75,14 +76,19 @@ import com.google.common.collect.Lists;
 				+ "&& (endDate == null || endDate > :date) "),
 		@javax.jdo.annotations.Query(name = "findByCommunicationChannel", language = "JDOQL", value = "SELECT "
 				+ "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
-				+ "WHERE communicationChannel == :communicationChannel ") })
+                        + "WHERE communicationChannel == :communicationChannel ")
+        @javax.jdo.annotations.Query(
+                name = "findByAgreement", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
+                        + "WHERE agreement == :agreement ")
 @Unique(name = "AgreementRoleCommunicationChannel_role_startDate_type_communicationChannel_UNQ", members = {
 		"role", "startDate", "type", "communicationChannel" })
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 @DomainObject(editing = Editing.DISABLED)
 public class AgreementRoleCommunicationChannel extends
 		EstatioDomainObject<AgreementRoleCommunicationChannel> implements
-		WithIntervalContiguous<AgreementRoleCommunicationChannel> {
+        implements WithIntervalContiguous<AgreementRoleCommunicationChannel> {
 
 	private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper = new WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel>(
 			this);
@@ -91,6 +97,16 @@ public class AgreementRoleCommunicationChannel extends
 
 	public AgreementRoleCommunicationChannel() {
 		super("role, startDate desc nullsLast, type, communicationChannel");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getRole().getApplicationTenancy();
 	}
 
 	// //////////////////////////////////////

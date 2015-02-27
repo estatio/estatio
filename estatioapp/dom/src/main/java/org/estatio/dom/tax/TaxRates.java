@@ -30,14 +30,14 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = TaxRate.class)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.8")
-public class TaxRates extends EstatioDomainService<TaxRate> {
+public class TaxRates extends UdoDomainRepositoryAndFactory<TaxRate> {
 
     public TaxRates() {
         super(TaxRates.class, TaxRate.class);

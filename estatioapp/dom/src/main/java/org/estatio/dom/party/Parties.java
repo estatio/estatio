@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Party.class)
@@ -39,7 +39,7 @@ import org.estatio.dom.utils.StringUtils;
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.1")
-public class Parties extends EstatioDomainService<Party> {
+public class Parties extends UdoDomainRepositoryAndFactory<Party> {
 
     public Parties() {
         super(Parties.class, Party.class);

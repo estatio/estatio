@@ -27,7 +27,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.registration.LandRegister;
 import org.estatio.dom.asset.registration.LandRegisters;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 
 public class LandRegisterForOxfordUnit001 extends EstatioFixtureScript {
 
@@ -35,10 +35,10 @@ public class LandRegisterForOxfordUnit001 extends EstatioFixtureScript {
     protected void execute(ExecutionContext executionContext) {
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PropertyForOxf());
+            executionContext.executeChild(this, new _PropertyForOxfGb());
         }
 
-        Unit unit = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE).getUnits().first();
+        Unit unit = properties.findPropertyByReference(_PropertyForOxfGb.REF).getUnits().first();
 
         LandRegister landRegister = landRegisters.newRegistration(
                 unit,

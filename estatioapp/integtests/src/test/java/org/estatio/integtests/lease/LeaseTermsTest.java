@@ -18,23 +18,16 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
@@ -43,10 +36,13 @@ import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseTermsTest extends EstatioIntegrationTest {
@@ -73,7 +69,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class AllLeaseTerms extends LeaseTermsTest {

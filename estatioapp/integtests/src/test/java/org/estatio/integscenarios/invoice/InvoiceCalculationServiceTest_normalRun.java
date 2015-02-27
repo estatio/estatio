@@ -18,25 +18,17 @@
  */
 package org.estatio.integscenarios.invoice;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 import java.util.SortedSet;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
-
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -54,18 +46,22 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.estatio.services.settings.EstatioSettingsService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * This looks to have been copied-n-pasted from
@@ -81,15 +77,15 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new PersonForLinusTorvalds());
-                executionContext.executeChild(this, new PropertyForOxf());
-                executionContext.executeChild(this, new PropertyForKal());
+                executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
+                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForKalNl());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-                executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
-                executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                executionContext.executeChild(this, new LeaseForOxfPret004());
-                executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
+                executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
             }
         });
     }

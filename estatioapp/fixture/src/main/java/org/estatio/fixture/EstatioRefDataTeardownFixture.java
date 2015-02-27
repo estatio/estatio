@@ -19,6 +19,8 @@
 package org.estatio.fixture;
 
 import javax.inject.Inject;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
@@ -35,8 +37,6 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.services.links.Link;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 
 /**
@@ -74,6 +74,7 @@ public class EstatioRefDataTeardownFixture extends FixtureScript {
     }
 
     private void tearDownSQL() {
+
         isisJdoSupport.executeUpdate("DELETE FROM \"State\"");
         isisJdoSupport.executeUpdate("DELETE FROM \"Country\"");
         

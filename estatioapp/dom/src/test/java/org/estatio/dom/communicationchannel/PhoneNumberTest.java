@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
@@ -30,6 +31,7 @@ public class PhoneNumberTest {
         public void test() {
             newPojoTester()
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new PhoneOrFaxNumber());
         }
 

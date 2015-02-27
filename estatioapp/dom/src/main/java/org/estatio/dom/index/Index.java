@@ -21,26 +21,27 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 /**
  * Represents an externally-defined index (eg the retail price index) which
@@ -65,9 +66,9 @@ import org.estatio.dom.WithReferenceComparable;
         column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "Index_reference_UNQ", members = "reference"),
+                name = "Index_reference_UNQ", members = {"atPath","reference"}),
         @javax.jdo.annotations.Unique(
-                name = "Index_name_UNQ", members = "name")
+                name = "Index_name_UNQ", members = {"name"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -79,10 +80,36 @@ import org.estatio.dom.WithReferenceComparable;
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Index
         extends EstatioDomainObject<Index>
-        implements WithReferenceComparable<Index>, WithNameUnique {
+        implements WithReferenceComparable<Index>, WithNameUnique, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
     public Index() {
         super("reference");
+    }
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

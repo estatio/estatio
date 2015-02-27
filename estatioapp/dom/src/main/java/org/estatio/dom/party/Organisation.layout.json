@@ -24,6 +24,14 @@
             "emailAddresses": {},
             "phoneNumbers": {}
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -51,14 +59,14 @@
           }
         },
         "currentLeases": {
-            "actions": {
-                "allLeases": {}
-            }
+          "actions": {
+            "allLeases": {}
+          }
         },
         "currentBankMandates": {
-            "actions": {
-                "allBankMandates": {}
-            }
+          "actions": {
+            "allBankMandates": {}
+          }
         },
         "financialAccounts": {
           "actions": {}

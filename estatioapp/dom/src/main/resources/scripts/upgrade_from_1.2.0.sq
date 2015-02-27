@@ -1,0 +1,136 @@
+
+
+alter table IsisSecurityApplicationTenancy
+   alter column path varchar(30)
+   
+alter table IsisSecurityApplicationTenancy
+   alter column parentPath varchar(30)
+
+   
+   
+   
+alter table IsisSecurityApplicationUser
+   alter column tenancyId varchar(30)                   // TODO: fix isis-module-security and re-release with as "atPath" instead
+   
+
+
+alter table IsisSecurityApplicationUserRoles
+   add primary key (userId,roleId)
+   
+   
+   
+   
+alter table Link
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Link
+    alter column atPath drop default
+	
+
+	
+
+alter table Tax
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Tax
+    alter column atPath drop default
+
+	
+	
+
+	
+alter table Charge
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Charge
+    alter column atPath drop default
+
+	
+	
+	
+alter table Organisation
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Organisation
+    alter column atPath drop default
+
+
+	
+	
+alter table Person
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Person
+    alter column atPath drop default
+
+	
+	
+	
+alter table Property
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Property
+    alter column atPath drop default
+
+	
+	
+	
+
+alter table BankMandate
+    add column atPath varchar(30) not null default "/it"
+	
+alter table BankMandate
+    alter column atPath drop default
+
+	
+	
+alter table Lease
+    add column atPath varchar(30) not null default "/it"
+	
+update Lease 
+   set atPath = "/it/" + (select p.ref from Occupancy o join Property p on o.assetId = p.id where o.leaseId = l.id)
+  from Lease l
+
+alter table Lease
+    alter column atPath drop default
+
+	
+	
+	
+
+	
+alter table Invoice
+    add column atPath varchar(30) not null default "/it/_"
+	
+alter table Invoice
+    alter column atPath drop default
+
+
+alter table LeaseItem
+    add column atPath varchar(30) not null default "/it/CAR/_"
+	
+alter table LeaseItem
+    alter column atPath drop default
+
+
+	
+	
+alter table LeaseAssignment
+    add column atPath varchar(30) not null default "/it"
+	
+alter table LeaseAssignment
+    alter column atPath drop default
+
+	
+	
+
+	
+	
+alter table Tag
+    add column atPath varchar(30) not null default "/it"
+	
+alter table Tag
+    alter column atPath drop default
+
+	
+	

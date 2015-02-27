@@ -27,7 +27,7 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -35,27 +35,28 @@ import static org.junit.Assert.assertThat;
 
 public class PropertyTest extends EstatioIntegrationTest {
 
+    @Before
+    public void setupData() {
+        runScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                executionContext.executeChild(this, new _PropertyForOxfGb());
+            }
+        });
+    }
+
+    @Inject
+    Properties properties;
+
+
     public static class GetUnits extends PropertyTest {
-
-        @Before
-        public void setupData() {
-            runScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new PropertyForOxf());
-                }
-            });
-        }
-
-        @Inject
-        private Properties properties;
 
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // given
-            Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // when
             Set<Unit> units = property.getUnits();
@@ -63,6 +64,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             // then
             assertThat(units.size(), is(25));
         }
-
     }
+
+
 }

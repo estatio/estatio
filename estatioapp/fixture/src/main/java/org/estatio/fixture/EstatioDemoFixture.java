@@ -21,29 +21,29 @@ package org.estatio.fixture;
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.fixture.asset.PropertyForGra;
-import org.estatio.fixture.asset.PropertyForHan;
-import org.estatio.fixture.asset.PropertyForViv;
-import org.estatio.fixture.financial.BankAccountAndMandateForPoison;
-import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
-import org.estatio.fixture.financial.BankAccountForAcme;
-import org.estatio.fixture.financial.BankAccountForHelloWorld;
-import org.estatio.fixture.financial.BankAccountForMediaX;
-import org.estatio.fixture.financial.BankAccountForMiracle;
-import org.estatio.fixture.financial.BankAccountForPret;
-import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
+import org.estatio.fixture.asset._PropertyForGraIt;
+import org.estatio.fixture.asset._PropertyForHanSe;
+import org.estatio.fixture.asset._PropertyForVivFr;
+import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
+import org.estatio.fixture.financial.BankAccountForAcmeNl;
+import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
+import org.estatio.fixture.financial.BankAccountForMediaXGb;
+import org.estatio.fixture.financial.BankAccountForMiracleGb;
+import org.estatio.fixture.financial.BankAccountForPretGb;
+import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.interactivemap.InteractiveMapDocumentForOxf;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
-import org.estatio.fixture.party.PersonForGinoVannelli;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.party.PersonForGinoVannelliGb;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
@@ -55,39 +55,39 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext executionContext) {
         executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-        executionContext.executeChild(this, new PersonForLinusTorvalds());
+        executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
 
-        executionContext.executeChild(this, new BankAccountForAcme());
+        executionContext.executeChild(this, new BankAccountForAcmeNl());
 
-        executionContext.executeChild(this, new BankAccountForHelloWorld());
+        executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
 
-        executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
+        executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 
-        executionContext.executeChild(this, new BankAccountForMediaX());
-        executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
+        executionContext.executeChild(this, new BankAccountForMediaXGb());
+        executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
 
-        executionContext.executeChild(this, new BankAccountForPret());
-        executionContext.executeChild(this, new LeaseForOxfPret004());
+        executionContext.executeChild(this, new BankAccountForPretGb());
+        executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
 
-        executionContext.executeChild(this, new BankAccountForMiracle());
-        executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
+        executionContext.executeChild(this, new BankAccountForMiracleGb());
+        executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
 
-        executionContext.executeChild(this, new BankAccountAndMandateForPoison());
-        executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+        executionContext.executeChild(this, new _BankAccountAndMandateForPoisonNl());
+        executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
 
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
 
-        executionContext.executeChild(this, new GuaranteeForOxfTopModel001());
+        executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
 
-        executionContext.executeChild(this, new PersonForGinoVannelli());
+        executionContext.executeChild(this, new PersonForGinoVannelliGb());
 
-        executionContext.executeChild(this, new PropertyForGra());
-        executionContext.executeChild(this, new PropertyForViv());
-        executionContext.executeChild(this, new PropertyForHan());
+        executionContext.executeChild(this, new _PropertyForGraIt());
+        executionContext.executeChild(this, new _PropertyForVivFr());
+        executionContext.executeChild(this, new _PropertyForHanSe());
 
         executionContext.executeChild(this, new InteractiveMapDocumentForOxf());
         

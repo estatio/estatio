@@ -19,17 +19,31 @@
 package org.estatio.integtests.lease;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.SortedSet;
 import javax.inject.Inject;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -59,7 +73,7 @@ public class LeaseItemTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
     }
 
 
@@ -110,6 +124,65 @@ public class LeaseItemTest extends EstatioIntegrationTest {
 
 
     }
+
+
+    public static class Copy extends LeaseItemTest {
+
+        @Inject
+        private Charges charges;
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
+            final Charge charge = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+
+            // when
+            final LocalDate startDate = VT.ld(2011, 7, 15);
+            final LeaseItem newLeaseItem = wrap(leaseItem).copy(startDate, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, charge);
+
+            // then
+            Assertions.assertThat(newLeaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
+            Assertions.assertThat(newLeaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
+            Assertions.assertThat(newLeaseItem.getStartDate()).isEqualTo(startDate);
+            Assertions.assertThat(newLeaseItem.getCharge()).isEqualTo(charge);
+
+            final BigInteger nextSequenceNumber = leaseItem.getSequence().add(VT.bi(1));
+            Assertions.assertThat(newLeaseItem.getSequence()).isEqualTo(nextSequenceNumber);
+
+            final String atPath = leaseItem.getApplicationTenancyPath();
+            Assertions.assertThat(newLeaseItem.getApplicationTenancyPath()).isEqualTo(atPath);
+
+            Assertions.assertThat(newLeaseItem.getTerms().size()).isEqualTo(leaseItem.getTerms().size());
+            Assertions.assertThat(newLeaseItem.getEndDate()).isNull();
+        }
+
+    }
+
+    public static class ChangeCharge extends LeaseItemTest {
+
+        @Inject
+        private Charges charges;
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
+            final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
+            Assertions.assertThat(leaseItem.getCharge()).isEqualTo(charge);
+
+            // when
+            final Charge newCharge = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            final LeaseItem leaseItemReturned = wrap(leaseItem).changeCharge(newCharge);
+
+            // then
+            Assertions.assertThat(leaseItem.getCharge()).isEqualTo(newCharge);
+            Assertions.assertThat(leaseItemReturned).isSameAs(leaseItem);
+        }
+    }
+
 
     public static class GetTerms extends LeaseItemTest {
 

@@ -24,11 +24,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.HomePage;
 
-import org.estatio.dom.EstatioService;
-
 @DomainService(menuOrder = "90")
 @Hidden
-public class EstatioAppHomePageService extends EstatioService<EstatioAppHomePageService> {
+public class EstatioAppHomePageService extends UdoDomainService<EstatioAppHomePageService> {
 
     public EstatioAppHomePageService() {
         super(EstatioAppHomePageService.class);
