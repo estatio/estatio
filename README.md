@@ -26,23 +26,6 @@ Estatio runs on Java and is built with [Maven](http://maven.apache.org).  The so
 
 If you don't already have them installed, install Java (JDK 6 or later), Maven (3.0.4 or later), and git.
 
-### Download and install RFC2445 ###
-
-This open source library is not available via Maven central repo, so must be installed manually.
-
-Download from the command line using:
-
-    curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
-
-Install into your local Maven repo using:
-
-    mvn install:install-file \
-                 -Dfile=rfc2445-4Mar2011.jar \
-                 -DgroupId=com.google \
-                 -DartifactId=rfc-2445 \
-                 -Dversion=0.0.20110304 \
-                 -Dpackaging=jar
-
 ### Download and build Apache Isis ###
 
 Estatio currently uses the snapshot version of [Apache Isis](http://isis.apache.org), and so Isis must be built from source.
