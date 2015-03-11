@@ -18,12 +18,21 @@
  */
 package org.estatio.integtests.guarantee;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.guarantee.Guarantee;
@@ -32,14 +41,18 @@ import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
 public class GuaranteesTest extends EstatioIntegrationTest {
+
+    @Inject
+    Leases leases;
+
+    @Inject
+    Guarantees guarantees;
 
     public static class NewGuarantee extends GuaranteesTest {
 
@@ -64,7 +77,6 @@ public class GuaranteesTest extends EstatioIntegrationTest {
                 }
             }.withTracing());
 
-
             lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
 
             assertThat(lease.getPrimaryParty(), is(not(nullValue())));
@@ -77,12 +89,6 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             description = "some description";
             maximumAmount = VT.bd(12300.12);
         }
-
-        @Inject
-        private Leases leases;
-
-        @Inject
-        private Guarantees guarantees;
 
         @Test
         public void whenBankGuarantee() throws Exception {
@@ -133,7 +139,6 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             assertThat(financialAccount.getType(), is(FinancialAccountType.GUARANTEE_DEPOSIT));
         }
 
-
         @Test
         public void whenCompanyGuarantee() throws Exception {
 
@@ -146,7 +151,6 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             FinancialAccount financialAccount = guarantee.getFinancialAccount();
             assertThat(financialAccount, is(nullValue()));
         }
-
 
         @Test
         public void whenNone() throws Exception {
@@ -161,5 +165,54 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             assertThat(financialAccount, is(nullValue()));
         }
 
+        @Test
+        public void whenUnknown() throws Exception {
+
+            guaranteeType = GuaranteeType.UNKNOWN;
+
+            // when
+            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
+
+            // then
+            FinancialAccount financialAccount = guarantee.getFinancialAccount();
+            assertThat(financialAccount, is(nullValue()));
+        }
+    }
+
+    public static class FindGuarantee extends GuaranteesTest {
+
+        private Lease lease;
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new GuaranteeForOxfTopModel001());
+                }
+            }.withTracing());
+
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        }
+
+        @Test
+        public void happyCase1() throws Exception {
+            // when
+            Guarantee guarantee = guarantees.findByReference(LeaseForOxfTopModel001.LEASE_REFERENCE + "-D");
+
+            // then
+            assertThat(guarantee.getReference(), is(LeaseForOxfTopModel001.LEASE_REFERENCE + "-D"));
+        }
+
+        @Test
+        public void happyCase2() throws Exception {
+            // when
+            Guarantee guarantee = guarantees.findByReference(LeaseForOxfTopModel001.LEASE_REFERENCE + "-E");
+
+            // then
+            assertThat(guarantee.getReference(), is(LeaseForOxfTopModel001.LEASE_REFERENCE + "-E"));
+        }
     }
 }

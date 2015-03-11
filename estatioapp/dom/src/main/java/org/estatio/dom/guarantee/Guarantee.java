@@ -20,6 +20,7 @@ package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -40,6 +41,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 
@@ -143,6 +146,29 @@ public class Guarantee
         this.guaranteeType = guaranteeType;
     }
 
+    public void changeGuaranteeType(GuaranteeType guaranteeType) {
+        FinancialAccountType financialAccountType = guaranteeType.getFinancialAccountType();
+        if (financialAccountType != null) {
+            FinancialAccount financialAccount = financialAccounts.newFinancialAccount(
+                    financialAccountType,
+                    this.getReference(),
+                    this.getName(),
+                    this.getSecondaryParty());
+            this.setFinancialAccount(financialAccount);
+        }
+
+        this.setGuaranteeType(guaranteeType);
+    }
+
+    public GuaranteeType default0ChangeGuaranteeType() {
+        return this.getGuaranteeType();
+    }
+
+    public String disableChangeGuaranteeType(GuaranteeType guaranteeType) {
+        return (getGuaranteeType() == GuaranteeType.COMPANY_GUARANTEE ||
+                getGuaranteeType() == GuaranteeType.NONE || getGuaranteeType() == GuaranteeType.UNKNOWN) ? null : "Bank guarantees and deposits cannot be changed";
+    }
+
     // //////////////////////////////////////
 
     private String description;
@@ -242,4 +268,7 @@ public class Guarantee
     public String default2Change() {
         return getComments();
     }
+
+    @Inject
+    FinancialAccounts financialAccounts;
 }

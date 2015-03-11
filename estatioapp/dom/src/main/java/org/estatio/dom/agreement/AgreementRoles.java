@@ -139,7 +139,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         case VALIDATE:
             final List<AgreementRole> agreementRoles = findByParty(sourceParty);
 
-            if (agreementRoles.size() > 0 && replacementParty == null) {
+            if (replacementParty == null && agreementRoles.size() > 0) {
                 ev.invalidate("Party is being used in an agreement role: remove roles or provide a replacement");
             }
 

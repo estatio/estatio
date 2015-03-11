@@ -7,7 +7,8 @@ public enum GuaranteeType {
     BANK_GUARANTEE(FinancialAccountType.BANK_GUARANTEE),
     DEPOSIT(FinancialAccountType.GUARANTEE_DEPOSIT),
     COMPANY_GUARANTEE(null),
-    NONE(null);
+    NONE(null),
+    UNKNOWN(null);
 
     private GuaranteeType(FinancialAccountType financialAccountType) {
         this.financialAccountType = financialAccountType;

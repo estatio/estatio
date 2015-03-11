@@ -50,10 +50,16 @@ public class GuaranteeForOxfTopModel001 extends GuaranteeAbstract {
 
         final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         String reference = lease.getReference() + "-D";
+        String referenceNoFinancialAccount = lease.getReference() + "-E";
 
         final Guarantee guarantee = newGuarantee(
                 lease, reference, reference, GuaranteeType.BANK_GUARANTEE,
                 ld(2014, 1, 1), ld(2015, 1, 1), "Description", bd(50000),
+                executionContext);
+
+        final Guarantee guaranteeNoFinancialAccount = newGuarantee(
+                lease, referenceNoFinancialAccount, referenceNoFinancialAccount, GuaranteeType.UNKNOWN,
+                ld(2014, 1, 1), ld(2015, 1, 1), "Description", null,
                 executionContext);
 
         guarantee.createRole(
