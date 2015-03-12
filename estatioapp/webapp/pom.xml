@@ -302,7 +302,7 @@ language governing permissions and limitations under the License.
         http://www.microsoft.com/en-us/download/confirmation.aspx?id=11774
         
         mvn install:install-file -DgroupId=com.microsoft.sqlserver \
-                         -DartifactId=jdbc4 \
+                         -DartifactId=sqljdbc4 \
                          -Dversion=4.0 \
                          -Dpackaging=jar \
                          -Dfile=jdbc4.jar
