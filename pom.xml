@@ -84,16 +84,16 @@ language governing permissions and limitations under the License.
 
     <properties>
         <isis.version>1.9.0-SNAPSHOT</isis.version>
-        <isis-viewer-wicket.version>1.9.0-SNAPSHOT</isis-viewer-wicket.version>
 
-        <isis-module-audit.version>1.8.0-SNAPSHOT</isis-module-audit.version>
-        <isis-module-command.version>1.8.0-SNAPSHOT</isis-module-command.version>
-        <isis-module-devutils.version>1.8.0-SNAPSHOT</isis-module-devutils.version>
-        <isis-module-excel.version>1.8.0-SNAPSHOT</isis-module-excel.version>
-        <isis-module-publishing.version>1.8.0-SNAPSHOT</isis-module-publishing.version>
-        <isis-module-security.version>1.8.0-SNAPSHOT</isis-module-security.version>
-        <isis-module-settings.version>1.8.0-SNAPSHOT</isis-module-settings.version>
-        <isis-module-stringinterpolator.version>1.8.0-SNAPSHOT</isis-module-stringinterpolator.version>
+        <isis-module-audit.version>1.8.1</isis-module-audit.version>
+        <isis-module-command.version>1.8.1</isis-module-command.version>
+        <isis-module-devutils.version>1.8.0</isis-module-devutils.version>
+        <isis-module-excel.version>1.8.0</isis-module-excel.version>
+        <isis-module-publishing.version>1.8.0</isis-module-publishing.version>
+        <isis-module-security.version>1.8.0</isis-module-security.version>
+        <isis-module-sessionlogger.version>1.8.2</isis-module-sessionlogger.version>
+        <isis-module-settings.version>1.8.0</isis-module-settings.version>
+        <isis-module-stringinterpolator.version>1.8.0</isis-module-stringinterpolator.version>
 
         <isis-wicket-excel.version>1.8.0-SNAPSHOT</isis-wicket-excel.version>
         <isis-wicket-fullcalendar2.version>1.8.0-SNAPSHOT</isis-wicket-fullcalendar2.version>
@@ -515,7 +515,7 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>org.apache.isis.viewer</groupId>
                 <artifactId>isis-viewer-wicket</artifactId>
-                <version>${isis-viewer-wicket.version}</version>
+                <version>${isis.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -542,6 +542,11 @@ language governing permissions and limitations under the License.
                 <groupId>org.isisaddons.module.devutils</groupId>
                 <artifactId>isis-module-devutils-dom</artifactId>
                 <version>${isis-module-devutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.sessionlogger</groupId>
+                <artifactId>isis-module-sessionlogger-dom</artifactId>
+                <version>${isis-module-sessionlogger.version}</version>
             </dependency>
 
             <!-- UDO modules -->
