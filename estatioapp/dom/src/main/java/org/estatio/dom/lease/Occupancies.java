@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.eventbus.Subscribe;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -38,8 +40,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class)
@@ -120,6 +124,46 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
                 "brand", brand,
                 "includeTerminated", includeTerminated,
                 "date", clockService.now());
+    }
+
+    // //////////////////////////////////////
+
+    @Subscribe
+    @Programmatic
+    public void on(final Brand.RemoveEvent ev) {
+        Brand sourceBrand = (Brand) ev.getSource();
+        Brand replacementBrand = ev.getReplacement();
+
+        switch (ev.getPhase()) {
+        case VALIDATE:
+            final List<Occupancy> occ = findByBrand(sourceBrand, true);
+
+            if (replacementBrand == null && occ.size() > 0) {
+                ev.invalidate("Brand is being used in an occupanciy: remove occupancy or provide a replacement");
+            }
+
+            putOccupancy(ev, occ);
+            break;
+        case EXECUTING:
+            for (Occupancy occupancy : getOccupancies(ev)) {
+                occupancy.setBrand(replacementBrand);
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    // //////////////////////////////////////
+
+    private static final String KEY = Occupancy.class.getName() + ".occupancies";
+
+    private static void putOccupancy(Brand.RemoveEvent ev, List<Occupancy> occupancies) {
+        ev.put(KEY, occupancies);
+    }
+
+    private static List<Occupancy> getOccupancies(Brand.RemoveEvent ev) {
+        return (List<Occupancy>) ev.get(KEY);
     }
 
     // //////////////////////////////////////

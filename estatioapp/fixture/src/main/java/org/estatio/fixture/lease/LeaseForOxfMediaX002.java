@@ -32,6 +32,7 @@ public class LeaseForOxfMediaX002 extends LeaseAbstract {
     public static final String UNIT_REFERENCE = PropertyForOxf.unitReference("002");
     public static final String LANDLORD_REFERENCE = OrganisationForHelloWorld.PARTY_REFERENCE;
     public static final String TENANT_REFERENCE = OrganisationForMediaX.PARTY_REFERENCE;
+    public static final String BRAND = "Mediax";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -49,7 +50,7 @@ public class LeaseForOxfMediaX002 extends LeaseAbstract {
         createLease(
                 LEASE_REFERENCE, "Mediax Lease",
                 UNIT_REFERENCE,
-                "Mediax", "ELECTRIC", "ELECTRIC",
+                BRAND, "ELECTRIC", "ELECTRIC",
                 LANDLORD_REFERENCE,
                 TENANT_REFERENCE,
                 ld(2008, 1, 1), ld(2017, 12, 31), true, true, manager,

@@ -24,16 +24,27 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.wicket.markup.parser.XmlTag.TagType;
+
+import org.apache.isis.applib.Identifier;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionInteraction;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 
@@ -96,4 +107,37 @@ public class Brand
         return getName();
     }
 
+    // //////////////////////////////////////
+    
+    public static class RemoveEvent extends ActionInteractionEvent<Brand> {
+        private static final long serialVersionUID = 1L;
+
+        public RemoveEvent(
+                final Brand source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+
+        public Brand getReplacement() {
+            return (Brand) (this.getArguments().isEmpty() ? null : getArguments().get(0));
+        }
+    }
+
+    @Action(domainEvent = Brand.RemoveEvent.class)
+    public void remove() {
+        removeAndReplace(null);
+    }
+
+    @Action(domainEvent = Brand.RemoveEvent.class)
+    public void removeAndReplace(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement) {
+        getContainer().remove(this);
+        getContainer().flush();
+    }
+    
+    public String validateRemoveAndReplace(final Brand brand) {
+        return brand != this ? null : "Cannot replace a brand with itself";
+   }
+    
+    
 }

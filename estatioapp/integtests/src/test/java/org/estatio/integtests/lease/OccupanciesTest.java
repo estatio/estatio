@@ -21,6 +21,7 @@ package org.estatio.integtests.lease;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -28,9 +29,13 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
@@ -39,9 +44,11 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.Brand.RemoveEvent;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -124,6 +131,71 @@ public class OccupanciesTest extends EstatioIntegrationTest {
             List<Occupancy> results = occupancies.findByLeaseAndDate(lease, lease.getStartDate());
             assertThat(results.size(), is(1));
         }
+    }
+
+    public static class OnBrandRemoveEvent extends OccupanciesTest {
+
+        Brand oldBrand;
+        Brand newBrand;
+
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
+                }
+            });
+
+        }
+
+        @Before
+        public void setUp() throws Exception {
+            oldBrand = brands.findByName(LeaseForOxfTopModel001.BRAND);
+            newBrand = brands.findByName(LeaseForOxfMediaX002.BRAND);            
+        }
+
+        @Test
+        public void invalidBecauseNoReplacement() throws Exception {
+            // when
+            Brand.RemoveEvent event = new RemoveEvent(oldBrand, null, (Object[]) null);
+            event.setPhase(Phase.VALIDATE);
+            occupancies.on(event);
+
+            // then
+            assertTrue(event.isInvalid());
+        }
+
+        @Test
+        public void executingReplacesBrand() throws Exception {
+            // when
+            Brand.RemoveEvent event = new RemoveEvent(oldBrand, null, newBrand);
+            event.setPhase(Phase.VALIDATE);
+            occupancies.on(event);
+            event.setPhase(Phase.EXECUTING);
+            occupancies.on(event);
+
+            /* then Topmodel brand should be adopted by the MEDIAX brand. So, there should be 2 
+             * MEDIAX occupancies and 0 TOPMODEL occupancies.
+             */ 
+            assertThat(occupancies.findByBrand(oldBrand, false).size(), is(0));
+            assertThat(occupancies.findByBrand(newBrand, false).size(), is(2));
+        }
+
+        @Test
+        public void whenVetoingSubscriber() {
+            // then
+            expectedException.expect(InvalidException.class);
+
+            // when
+            wrap(oldBrand).remove();
+        }
+
     }
 
 }
