@@ -47,7 +47,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
 
         @Before
         public void setupData() {
-            runScript(new EstatioBaseLineFixture());
+            runFixtureScript(new EstatioBaseLineFixture());
         }
 
         @Test
@@ -65,7 +65,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
 
         @Before
         public void setupData() {
-            runScript(
+            runFixtureScript(
                     // tearing down because of a failure which suggests that one of the other tests is creating new index values...
                     // (not sure which one though :-( )
                     new EstatioOperationalTeardownFixture(),

@@ -28,6 +28,7 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
@@ -36,8 +37,10 @@ import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.LandRegister;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 import org.estatio.dom.document.Document;
 import org.estatio.dom.event.Event;
+import org.estatio.dom.event.EventSourceLink;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -49,6 +52,8 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.breaks.BreakOption;
+import org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption;
+import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRegistration;
@@ -59,7 +64,7 @@ import org.estatio.dom.tag.Tag;
 public class EstatioOperationalTeardownFixture extends FixtureScript {
 
     @Override
-    protected void execute(ExecutionContext fixtureResults) {
+    protected void execute(final ExecutionContext executionContext) {
         deleteAllDirect();
     }
 
@@ -74,7 +79,10 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(Tag.class);
 
+        deleteFrom(EventSourceLinkForBreakOption.class);
+        deleteFrom(EventSourceLink.class);
         deleteFrom(Event.class);
+
         deleteFrom(BreakOption.class);
         deleteFrom(LeaseTerm.class);
         deleteFrom(LeaseItem.class);
@@ -94,6 +102,9 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(Agreement.class);
 
+        deleteFrom(CommunicationChannelOwnerLinkForFixedAsset.class);
+        deleteFrom(CommunicationChannelOwnerLinkForParty.class);
+        deleteFrom(CommunicationChannelOwnerLink.class);
         deleteFrom(CommunicationChannel.class);
 
         deleteFrom(Unit.class);

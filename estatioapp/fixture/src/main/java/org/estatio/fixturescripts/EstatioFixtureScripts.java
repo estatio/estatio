@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+import org.estatio.EstatioModule;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 
@@ -42,7 +43,7 @@ import org.estatio.dom.lease.Lease;
 public class EstatioFixtureScripts extends FixtureScripts {
 
     public EstatioFixtureScripts() {
-        super("org.estatio");
+        super(EstatioModule.class.getPackage().getName());
     }
 
     @Prototype
@@ -55,7 +56,8 @@ public class EstatioFixtureScripts extends FixtureScripts {
     public List<FixtureResult> runFixtureScript(
             final FixtureScript fixtureScript,
             final String parameters) {
-        return super.runFixtureScript(fixtureScript, parameters);
+
+        return super.runFixtureScript(fixtureScript.withTracing(null) , parameters);
     }
 
     @Override

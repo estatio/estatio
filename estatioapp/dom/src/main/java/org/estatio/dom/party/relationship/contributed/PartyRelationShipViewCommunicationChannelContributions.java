@@ -1,13 +1,11 @@
 package org.estatio.dom.party.relationship.contributed;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
-
 import javax.inject.Inject;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -17,7 +15,6 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.TypicalLength;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -32,7 +29,7 @@ public class PartyRelationShipViewCommunicationChannelContributions {
     @NotContributed(As.ACTION)
     @Hidden(where = Where.OBJECT_FORMS)
     @TypicalLength(JdoColumnLength.PHONE_NUMBER)
-    public String phoneNumbers(PartyRelationshipView prv) {
+    public String phoneNumbers(final PartyRelationshipView prv) {
         return StringUtils.join(channelTitles(prv, CommunicationChannelType.PHONE_NUMBER), ", ");
     }
 
@@ -40,17 +37,13 @@ public class PartyRelationShipViewCommunicationChannelContributions {
     @NotContributed(As.ACTION)
     @Hidden(where = Where.OBJECT_FORMS)
     @TypicalLength(JdoColumnLength.EMAIL_ADDRESS)
-    public String emailAddresses(PartyRelationshipView prv) {
+    public String emailAddresses(final PartyRelationshipView prv) {
         return StringUtils.join(channelTitles(prv, CommunicationChannelType.EMAIL_ADDRESS), ", ");
     }
 
-    private List<String> channelTitles(PartyRelationshipView prv, final CommunicationChannelType type) {
+    private List<String> channelTitles(final PartyRelationshipView prv, final CommunicationChannelType type) {
         final SortedSet<CommunicationChannel> results = communicationChannels.findByOwnerAndType(prv.getTo(), type);
-        ArrayList<String> titles = new ArrayList<String>();
-        for (CommunicationChannel communicationChannel : results) {
-            titles.add(container.titleOf(communicationChannel));
-        }
-        return titles;
+        return Lists.newArrayList(Iterables.transform(results, DomainObjectContainerFunctions.titleOfUsing(container)));
     }
 
     @Inject

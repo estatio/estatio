@@ -28,6 +28,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -38,6 +39,9 @@ import org.estatio.dom.event.Event;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
+@DomainObject(
+        objectType = "lease.FixedBreakOption"
+)
 public class FixedBreakOption
         extends BreakOption {
 
@@ -104,7 +108,7 @@ public class FixedBreakOption
 
     /**
      * Creates/updates/deletes a corresponding {@link Event} with a
-     * {@link Event#getCalendarName() subject event type} of
+     * {@link Event#getCalendarName() calendar name} of
      * {@link #CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER}.
      */
     @Named("Update")
@@ -113,7 +117,7 @@ public class FixedBreakOption
             @DescribedAs("Reminder to exercise (or leave blank to clear)") LocalDate reminderDate) {
         setReminderDate(reminderDate);
         final Event reminderEvent =
-                events.findEventsBySubjectAndSubjectEventType(this, CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);
+                events.findBySourceAndCalendarName(this, CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);
         if (reminderDate != null) {
             if (reminderEvent == null) {
                 // create...
@@ -156,7 +160,7 @@ public class FixedBreakOption
     // //////////////////////////////////////
 
     @Override
-    public void persisting() {
+    protected void createEvents() {
         createEvent(getBreakDate(), this, CALENDAR_NAME_FIXED_BREAK);
         createEvent(getExerciseDate(), this, CALENDAR_NAME_FIXED_BREAK_EXERCISE);
     }

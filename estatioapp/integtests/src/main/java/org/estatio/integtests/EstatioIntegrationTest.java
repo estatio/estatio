@@ -18,8 +18,8 @@
  */
 package org.estatio.integtests;
 
+import javax.inject.Inject;
 import com.google.common.base.Throwables;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -27,8 +27,9 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
 
@@ -66,8 +67,29 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
 
     // //////////////////////////////////////
 
-    protected static void runScript(FixtureScript... fixtureScripts) {
-        scenarioExecution().install(fixtureScripts);
+    /**
+     * Replacement for the deprecated {@link #runScript(org.apache.isis.applib.fixturescripts.FixtureScript...)}.
+     */
+    protected void runFixtureScript(final FixtureScript... fixtureScriptList) {
+        if(fixtureScriptList.length == 1) {
+            fixtureScripts.runFixtureScript(fixtureScriptList[0], null);
+        } else {
+            fixtureScripts.runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext executionContext) {
+                    for (FixtureScript fixtureScript : fixtureScriptList) {
+                        executionContext.executeChild(this, fixtureScript);
+                    }
+                }
+            }, null);
+        }
+        nextTransaction();
+    }
+
+    // //////////////////////////////////////
+
+    protected FixtureClock getFixtureClock() {
+        return ((FixtureClock)FixtureClock.getInstance());
     }
 
     // //////////////////////////////////////
@@ -92,6 +114,9 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
             }
         };
     }
+
+    @Inject
+    protected FixtureScripts fixtureScripts;
 
 }
 

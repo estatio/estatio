@@ -22,12 +22,10 @@ import java.util.SortedSet;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
@@ -39,9 +37,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
@@ -73,23 +75,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
                 value = "SELECT "
                         + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
                         + "WHERE reference == :reference "
-                        + "&& type == :type"),
-        @javax.jdo.annotations.Query(
-                name = "findByOwner", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
-                        + "WHERE owner == :owner "),
-        @javax.jdo.annotations.Query(
-                name = "findByOwnerAndType", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
-                        + "WHERE owner == :owner && type == :type"),
-        @javax.jdo.annotations.Query(
-                name = "findOtherByOwnerAndType", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
-                        + "WHERE owner == :owner && type == :type && this != :exclude")
-
+                        + "&& type == :type")
 })
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
@@ -127,34 +113,32 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    private CommunicationChannelOwner owner;
-
-    /**
-     * nb: annotated as <tt>@Optional</tt>, but this is a workaround because
-     * cannot set <tt>@Column(allowNulls="false")</tt> for a polymorphic
-     * relationship.
-     */
-    @javax.jdo.annotations.Persistent(
-            extensions = {
-                    @Extension(vendorName = "datanucleus",
-                            key = "mapping-strategy",
-                            value = "per-implementation"),
-                    @Extension(vendorName = "datanucleus",
-                            key = "implementation-classes",
-                            value = "org.estatio.dom.party.Party"
-                                    + ",org.estatio.dom.asset.FixedAsset")
-            })
-    @javax.jdo.annotations.Columns({
-            @javax.jdo.annotations.Column(name = "ownerPartyId"),
-            @javax.jdo.annotations.Column(name = "ownerFixedAssetId")
-    })
-    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
+    @Property(
+            notPersisted = true,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(hidden = Where.PARENTED_TABLES)
     public CommunicationChannelOwner getOwner() {
-        return owner;
+        final CommunicationChannelOwnerLink link = getOwnerLink();
+        return link != null? link.getPolymorphicReference(): null;
     }
 
+    @Programmatic
     public void setOwner(final CommunicationChannelOwner owner) {
-        this.owner = owner;
+        removeOwnerLink();
+        final CommunicationChannelOwnerLink link = communicationChannelOwnerLinks.createLink(this, owner);
+    }
+
+
+    private void removeOwnerLink() {
+        final CommunicationChannelOwnerLink ownerLink = getOwnerLink();
+        if(ownerLink != null) {
+            getContainer().remove(ownerLink);
+        }
+    }
+
+    private CommunicationChannelOwnerLink getOwnerLink() {
+        return communicationChannelOwnerLinks.findByCommunicationChannel(this);
     }
 
     // //////////////////////////////////////
@@ -273,8 +257,10 @@ public abstract class CommunicationChannel
 
     @Action(domainEvent = CommunicationChannel.RemoveEvent.class)
     public void remove(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) CommunicationChannel replacement) {
+        removeOwnerLink();
         getContainer().remove(this);
     }
+
 
     public SortedSet<CommunicationChannel> choices0Remove() {
         return communicationChannels.findOtherByOwnerAndType(getOwner(), getType(), this);
@@ -282,5 +268,7 @@ public abstract class CommunicationChannel
 
     @Inject
     CommunicationChannels communicationChannels;
+    @Inject
+    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
 
 }

@@ -74,6 +74,11 @@ language governing permissions and limitations under the License.
             <artifactId>isis-core-metamodel</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+        </dependency>
+
         <!-- GMAP3 -->
         <dependency>
             <groupId>org.isisaddons.wicket.gmap3</groupId>
@@ -90,14 +95,46 @@ language governing permissions and limitations under the License.
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-junit4</artifactId>
+            <version>2.6.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit-dep</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>2.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
-     
+
     <profiles>
         <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath (nb: driver must be manually installed to local repo manually using mvn install-file) -->
         <!--
         commented out for open source release.
-        
+
         <profile>
             <id>m2e</id>
             <activation>

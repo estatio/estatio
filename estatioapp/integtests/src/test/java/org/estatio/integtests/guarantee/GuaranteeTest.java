@@ -18,9 +18,6 @@
  */
 package org.estatio.integtests.guarantee;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +36,10 @@ import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 public class GuaranteeTest extends EstatioIntegrationTest {
 
     @Inject
@@ -55,7 +56,7 @@ public class GuaranteeTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());

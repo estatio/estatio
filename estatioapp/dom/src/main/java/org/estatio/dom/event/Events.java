@@ -19,21 +19,16 @@
 package org.estatio.dom.event;
 
 import java.util.List;
-
+import javax.inject.Inject;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "85", repositoryFor = Event.class)
-@Hidden
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Event.class)
 public class Events extends UdoDomainRepositoryAndFactory<Event> {
 
     public Events() {
@@ -42,43 +37,54 @@ public class Events extends UdoDomainRepositoryAndFactory<Event> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public Event newEvent(final LocalDate date, final EventSubject subject, final String calendarName) {
+    @Programmatic
+    public List<Event> findBySource(final EventSource eventSource) {
+        final List<EventSourceLink> links = eventSourceLinks.findBySource(eventSource);
+        return Lists.newArrayList(
+                Iterables.transform(links, EventSourceLink.Functions.event()));
+    }
+
+    @Programmatic
+    public Event findBySourceAndCalendarName(
+            final EventSource eventSource,
+            final String calendarName) {
+        final EventSourceLink link = eventSourceLinks.findBySourceAndCalendarName(eventSource, calendarName);
+        return link != null? link.getEvent(): null;
+    }
+
+    @Programmatic
+    public Event newEvent(final LocalDate date, final EventSource eventSource, final String calendarName) {
         final Event event = newTransientInstance(Event.class);
         event.setDate(date);
-        event.setSubject(subject);
         event.setCalendarName(calendarName);
+        event.setSource(eventSource);
         persistIfNotAlready(event);
+
         return event;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public List<Event> findEventsBySubject(final EventSubject eventSubject) {
-        return allMatches("findBySubject", "subject", eventSubject);
+
+    @Programmatic
+    public void remove(Event event) {
+        final EventSourceLink link = eventSourceLinks.findByEvent(event);
+        removeIfNotAlready(link);
+        getContainer().flush();
+        removeIfNotAlready(event);
+        getContainer().flush();
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public Event findEventsBySubjectAndSubjectEventType(
-            final EventSubject eventSubject,
-            final String subjectEventType) {
-        return firstMatch(
-                "findBySubjectAndSubjectEventType",
-                "subject", eventSubject,
-                "subjectEventType", subjectEventType);
-    }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
+    @Programmatic
     public List<Event> findEventsInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
         return allMatches("findInDateRange", "rangeStartDate", rangeStartDate, "rangeEndDate", rangeEndDate);
     }
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    @Programmatic
     public List<Event> allEvents() {
         return allInstances();
     }
 
+
+    @Inject
+    private EventSourceLinks eventSourceLinks;
 }

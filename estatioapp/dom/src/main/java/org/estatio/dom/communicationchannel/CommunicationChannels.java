@@ -20,7 +20,8 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 import java.util.SortedSet;
-
+import javax.inject.Inject;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.annotation.Action;
@@ -126,19 +127,33 @@ public class CommunicationChannels extends UdoDomainRepositoryAndFactory<Communi
 
     @Programmatic
     public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
-        return Sets.newTreeSet(allMatches("findByOwner", "owner", owner));
+        final List<CommunicationChannelOwnerLink> links = communicationChannelOwnerLinks.findByOwner(owner);
+        return Sets.newTreeSet(
+                Iterables.transform(links, CommunicationChannelOwnerLink.Functions.communicationChannel()));
     }
 
     @Programmatic
-    public SortedSet<CommunicationChannel> findByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type) {
-        return Sets.newTreeSet(allMatches("findByOwnerAndType", "owner", owner, "type", type));
+    public SortedSet<CommunicationChannel> findByOwnerAndType(
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type) {
+        final List<CommunicationChannelOwnerLink> links =
+                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, type);
+        return Sets.newTreeSet(Iterables.transform(
+                links, CommunicationChannelOwnerLink.Functions.communicationChannel()));
     }
 
     @Programmatic
-    public SortedSet<CommunicationChannel> findOtherByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type, CommunicationChannel exclude) {
-        return Sets.newTreeSet(allMatches("findOtherByOwnerAndType", "owner", owner, "type", type, "exclude", exclude));
+    public SortedSet<CommunicationChannel> findOtherByOwnerAndType(
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type,
+            final CommunicationChannel exclude) {
+        final SortedSet<CommunicationChannel> communicationChannels = findByOwnerAndType(owner, type);
+        communicationChannels.remove(exclude);
+        return communicationChannels;
     }
 
     // //////////////////////////////////////
 
+    @Inject
+    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
 }

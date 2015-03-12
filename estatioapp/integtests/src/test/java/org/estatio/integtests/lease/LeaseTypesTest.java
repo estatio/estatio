@@ -20,7 +20,7 @@ public class LeaseTypesTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());

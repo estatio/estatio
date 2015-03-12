@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
+import java.util.SortedSet;
 import javax.inject.Inject;
-
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -84,7 +84,8 @@ public class _LeaseForOxfTopModel001Gb extends LeaseAbstract {
     private void createAddress(Lease lease, String addressType) {
         AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(addressType);
-        final CommunicationChannel postalAddress = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS).first();
+        final SortedSet<CommunicationChannel> channels = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
+        final CommunicationChannel postalAddress = channels.first();
         agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress);
     }
 

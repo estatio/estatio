@@ -26,11 +26,15 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@DomainObject(
+        objectType = "lease.RollingBreakOption"
+)
 public class RollingBreakOption
         extends BreakOption {
 
@@ -72,9 +76,8 @@ public class RollingBreakOption
     // //////////////////////////////////////
 
     @Override
-    public void persisting() {
-        // don't create an 'break date' event, since changes on a day-by-day
-        // basis
+    protected void createEvents() {
+        // don't create an 'break date' event, since changes on a day-by-day basis
         createEvent(getExerciseDate(), this, CALENDAR_NAME_ROLLING_BREAK_EXERCISE);
     }
 

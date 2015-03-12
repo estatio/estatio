@@ -22,6 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester;
 
 public class FaxNumberTest {
 
@@ -32,7 +33,7 @@ public class FaxNumberTest {
             newPojoTester()
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
                     .withFixture(pojos(ApplicationTenancy.class))
-                    .exercise(new PhoneOrFaxNumber());
+                    .exercise(new PhoneOrFaxNumber(), PojoTester.FilterSet.excluding("owner"));
         }
 
     }

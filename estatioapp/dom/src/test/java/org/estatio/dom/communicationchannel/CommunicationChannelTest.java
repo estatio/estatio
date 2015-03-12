@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester;
 
 public class CommunicationChannelTest {
 
@@ -34,7 +35,7 @@ public class CommunicationChannelTest {
             newPojoTester()
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
                     .withFixture(pojos(ApplicationTenancy.class))
-                    .exercise(new CommunicationChannelForTesting());
+                    .exercise(new CommunicationChannelForTesting(), PojoTester.FilterSet.excluding("owner"));
         }
     }
 

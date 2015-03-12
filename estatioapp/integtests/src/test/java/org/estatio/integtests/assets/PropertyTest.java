@@ -20,16 +20,21 @@ package org.estatio.integtests.assets;
 
 import java.util.Set;
 import javax.inject.Inject;
+import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertyBuilder;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
-
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -37,7 +42,7 @@ public class PropertyTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+            runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
@@ -66,5 +71,107 @@ public class PropertyTest extends EstatioIntegrationTest {
         }
     }
 
+    public static class Dispose extends PropertyTest {
 
+        private PropertyBuilder fs;
+
+        @Before
+        public void setupData() {
+            fs = new PropertyBuilder();
+
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, fs);
+                }
+            });
+        }
+
+        @Inject
+        private Properties properties;
+        @Inject
+        private ClockService clockService;
+
+        @Test
+        public void happyCase() throws Exception {
+
+            //
+            // given
+            //
+            final Property property = fs.getProperty();
+            Assertions.assertThat(property.getDisposalDate()).isNull();
+
+            //
+            // when
+            //
+            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10,20));
+            wrap(property).dispose(disposalDate, true);
+
+            //
+            // then
+            //
+            Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
+        }
+
+        @Test
+        public void whenDontConfirm() throws Exception {
+
+            //
+            // given
+            //
+            final Property property = fs.getProperty();
+            Assertions.assertThat(property.getDisposalDate()).isNull();
+
+            //
+            // when
+            //
+            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10,20));
+            wrap(property).dispose(disposalDate, false);
+
+            //
+            // then
+            //
+            Assertions.assertThat(property.getDisposalDate()).isNull();
+        }
+
+        @Test
+        public void whenAlreadyDisposed() throws Exception {
+
+            //
+            // given
+            //
+            final Property property = fs.getProperty();
+
+            //
+            // and given
+            //
+            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10,20));
+            wrap(property).dispose(disposalDate, true);
+
+            Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
+
+
+            //
+            // expect
+            //
+            expectedExceptions.expect(DisabledException.class);
+            expectedExceptions.expectMessage(containsString("already disposed"));
+
+
+            //
+            // when
+            //
+            final LocalDate disposalDate2 = clockService.now().plusDays(fs.faker().values().anInt(30,40));
+            wrap(property).dispose(disposalDate, true);
+
+
+            //
+            // then
+            //
+            Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
+
+        }
+
+    }
 }

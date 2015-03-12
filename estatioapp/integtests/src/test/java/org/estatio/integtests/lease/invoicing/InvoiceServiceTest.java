@@ -24,10 +24,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValues;
@@ -65,6 +62,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 public class InvoiceServiceTest extends EstatioIntegrationTest {
 
     @Inject
@@ -73,14 +74,32 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     @Inject
     InvoiceService invoiceService;
 
-    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
+
+    @Inject
+    Invoices invoices;
+    @Inject
+    CollectionNumerators collectionNumerators;
+    @Inject
+    Indices indices;
+    @Inject
+    IndexValues indexValues;
+    @Inject
+    InvoiceItemsForLease invoiceItemsForLease;
+
+    Lease lease;
+    LeaseItem rItem;
+    LeaseItem sItem;
+    LeaseItem tItem;
+
+
     public static class Lifecycle extends InvoiceServiceTest {
 
-        @BeforeClass
-        public static void setupTransactionalData() {
-            runScript(new FixtureScript() {
+        @Before
+        public void setupTransactionalData() {
+            runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(ExecutionContext executionContext) {
+                protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new PersonForJohnDoeNl());
                     executionContext.executeChild(this, new _PropertyForOxfGb());
@@ -94,30 +113,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
                 }
             });
-        }
 
-        private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
-
-        @Inject
-        private Leases leases;
-        @Inject
-        private Invoices invoices;
-        @Inject
-        private CollectionNumerators collectionNumerators;
-        @Inject
-        private Indices indices;
-        @Inject
-        private IndexValues indexValues;
-        @Inject
-        private InvoiceItemsForLease invoiceItemsForLease;
-
-        private Lease lease;
-        private LeaseItem rItem;
-        private LeaseItem sItem;
-        private LeaseItem tItem;
-
-        @Before
-        public void setup() throws NoSuchFieldException, IllegalAccessException {
             lease = leases.findLeaseByReference("OXF-MIRACL-005");
             rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
             sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
@@ -125,6 +121,16 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         @Test
+        public void fullLifecycle() throws Exception {
+            step1_verify();
+            step2_calculate();
+            step3_approveInvoice();
+            step4_indexation();
+            step5_normalInvoice();
+            step6_retroInvoice();
+            step7_terminate();
+        }
+
         public void step1_verify() throws Exception {
             // when
             lease.verifyUntil(VT.ld(2015, 1, 1));
@@ -133,8 +139,8 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(sItem.getTerms().size(), is(2));
             assertThat(tItem.getTerms().size(), is(2));
 
-            LeaseTermForIndexable last = (LeaseTermForIndexable) rItem.getTerms().last();
-            LeaseTermForIndexable first = (LeaseTermForIndexable) rItem.getTerms().first();
+            final LeaseTermForIndexable last = (LeaseTermForIndexable) rItem.getTerms().last();
+            final LeaseTermForIndexable first = (LeaseTermForIndexable) rItem.getTerms().first();
             assertNotNull(last.getPrevious());
             assertThat(last.getBaseValue(), is(VT.bd(150000).setScale(2)));
             assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
@@ -142,7 +148,6 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(invoices.findInvoices(lease).size(), is(0));
         }
 
-        @Test
         public void step2_calculate() throws Exception {
             assertThat("Before calculation", rItem.getTerms().size(), is(2));
             invoiceService.calculate(
@@ -157,40 +162,36 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(invoices.findInvoices(lease).size(), is(1));
         }
 
-        @Test
         public void step3_approveInvoice() throws Exception {
             collectionNumerators.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO);
-            List<Invoice> allInvoices = invoices.allInvoices();
-            Invoice invoice = allInvoices.get(allInvoices.size() - 1);
+            final List<Invoice> allInvoices = invoices.allInvoices();
+            final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             invoice.approve();
             invoice.doInvoice(VT.ld(2013, 11, 7));
             assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
 
-        @Test
         public void step4_indexation() throws Exception {
-            Index index = indices.findIndex(IndexRefData.IT_REF);
+            Index index = indices.findIndex("ISTAT-FOI");
             indexValues.newIndexValue(index, VT.ld(2013, 11, 1), VT.bd(110));
             indexValues.newIndexValue(index, VT.ld(2014, 12, 1), VT.bd(115));
 
             nextTransaction();
 
             lease.verifyUntil(VT.ld(2015, 3, 31));
-            LeaseTermForIndexable term = (LeaseTermForIndexable) rItem.findTerm(VT.ld(2015, 1, 1));
+            final LeaseTermForIndexable term = (LeaseTermForIndexable) rItem.findTerm(VT.ld(2015, 1, 1));
             assertThat(term.getIndexationPercentage(), is(VT.bd(4.5)));
             assertThat(term.getIndexedValue(), is(VT.bd("156750.00")));
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
         }
 
-        @Test
         public void step5_normalInvoice() throws Exception {
             invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             approveInvoicesFor(lease);
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
         }
 
-        @Test
         public void step6_retroInvoice() throws Exception {
             invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             // (156750 - 150000) / = 1687.5 added
@@ -199,27 +200,26 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48").add(VT.bd("1687.50"))));
         }
 
-        @Test
         public void step7_terminate() throws Exception {
             lease.terminate(VT.ld(2014, 6, 30), true);
         }
 
         // //////////////////////////////////////
 
-        private BigDecimal totalApprovedOrInvoicedForItem(LeaseItem leaseItem) {
+        private BigDecimal totalApprovedOrInvoicedForItem(final LeaseItem leaseItem) {
             BigDecimal total = BigDecimal.ZERO;
-            InvoiceStatus[] allowed = { InvoiceStatus.APPROVED, InvoiceStatus.INVOICED };
-            for (InvoiceStatus invoiceStatus : allowed) {
-                List<InvoiceItemForLease> items = invoiceItemsForLease.findByLeaseItemAndInvoiceStatus(leaseItem, invoiceStatus);
-                for (InvoiceItemForLease item : items) {
+            final InvoiceStatus[] allowed = { InvoiceStatus.APPROVED, InvoiceStatus.INVOICED };
+            for (final InvoiceStatus invoiceStatus : allowed) {
+                final List<InvoiceItemForLease> items = invoiceItemsForLease.findByLeaseItemAndInvoiceStatus(leaseItem, invoiceStatus);
+                for (final InvoiceItemForLease item : items) {
                     total = total.add(item.getNetAmount());
                 }
             }
             return total;
         }
 
-        private void approveInvoicesFor(Lease lease) {
-            for (Invoice invoice : invoices.findInvoices(lease)) {
+        private void approveInvoicesFor(final Lease lease) {
+            for (final Invoice invoice : invoices.findInvoices(lease)) {
                 invoice.approve();
             }
         }

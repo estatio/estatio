@@ -22,11 +22,7 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import javax.inject.Inject;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -63,32 +59,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 /**
  * This looks to have been copied-n-pasted from
  * {@link InvoiceCalculationServiceTest_normalRun_COPY};
  * both have ignored tests; not sure which is in the best state to fix up.
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationTest {
 
-    @BeforeClass
-    public static void setupData() {
-        runScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-                executionContext.executeChild(this, new _PropertyForOxfGb());
-                executionContext.executeChild(this, new PropertyForKalNl());
-                executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-                executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
-                executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
-                executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
-                executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
-            }
-        });
-    }
 
     @Inject
     private Leases leases;
@@ -115,8 +96,26 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     private LeaseItem leaseTopModelRentItem;
     private LeaseItem leaseTopModelServiceChargeItem;
 
+//    @BeforeClass
+//    public static void setupData() {
     @Before
-    public void setup() {
+    public void setupData() {
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
+                executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
+                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForKalNl());
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
+                executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
+                executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
+            }
+        });
+
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
         assertThat(lease.getItems().size(), is(6));
 
@@ -128,6 +127,22 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     }
 
     @Test
+    public void normalRun() throws Exception {
+        whenLeaseTermApproved();
+
+        // TODO: to un-ignore
+        // t14b_invoiceItemsForRentCreated();
+
+        // TODO: to un-ignore
+        // t15_invoiceItemsForServiceChargeCreated();
+
+        // TODO: to un-ignore
+        // t15_invoiceItemsForServiceChargeCreatedWithEpochDate();
+
+        // TODO: to un-ignore
+        // t16_bulkLeaseCalculate();
+    }
+
     public void whenLeaseTermApproved() throws Exception {
 
         // given
@@ -144,9 +159,6 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     }
 
     // scenario: invoiceItemsForRentCreated
-    @Ignore
-    // TODO: to un-ignore
-    @Test
     public void t14b_invoiceItemsForRentCreated() throws Exception {
 
         estatioSettingsService.updateEpochDate(null);
@@ -170,9 +182,6 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     }
 
     // scenario: invoiceItemsForServiceChargeCreated
-    @Ignore
-    // TODO: to un-ignore
-    @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
 
         estatioSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
@@ -188,9 +197,6 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         // reconcile with mock date
     }
 
-    @Ignore
-    // TODO: to un-ignore
-    @Test
     public void t15_invoiceItemsForServiceChargeCreatedWithEpochDate() throws Exception {
         estatioSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
@@ -204,9 +210,6 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         estatioSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
     }
 
-    @Ignore
-    // TODO: to un-ignore
-    @Test
     public void t16_bulkLeaseCalculate() throws Exception {
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();

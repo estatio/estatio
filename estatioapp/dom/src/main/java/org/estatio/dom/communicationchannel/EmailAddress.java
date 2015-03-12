@@ -18,8 +18,9 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.Objects;
 import javax.jdo.annotations.InheritanceStrategy;
-
+import com.google.common.base.Predicate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -27,7 +28,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 
@@ -38,14 +38,6 @@ import org.estatio.dom.RegexValidation;
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "EmailAddress_emailAddress_IDX", members = { "emailAddress" })
-})
-@javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
-                name = "findByEmailAddress", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.EmailAddress "
-                        + "WHERE owner == :owner "
-                        + "&& emailAddress == :emailAddress")
 })
 @DomainObject(editing = Editing.DISABLED)
 public class EmailAddress extends CommunicationChannel {
@@ -75,4 +67,21 @@ public class EmailAddress extends CommunicationChannel {
     public String default0ChangeEmailAddress() {
         return getEmailAddress();
     }
+
+    // //////////////////////////////////////
+
+    public static class Predicates {
+        private Predicates(){}
+
+        public static Predicate<EmailAddress> equalTo(
+                final String emailAddress) {
+            return new Predicate<EmailAddress>() {
+                @Override
+                public boolean apply(final EmailAddress input) {
+                    return Objects.equals(emailAddress, input.getEmailAddress());
+                }
+            };
+        }
+    }
+
 }

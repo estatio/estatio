@@ -27,8 +27,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -43,13 +42,14 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.event.Event;
-import org.estatio.dom.event.EventSubject;
+import org.estatio.dom.event.EventSource;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
@@ -79,7 +79,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 @DomainObject(editing = Editing.DISABLED)
 public abstract class BreakOption
         extends EstatioDomainObject<BreakOption>
-        implements EventSubject, WithApplicationTenancyProperty {
+        implements EventSource, WithApplicationTenancyProperty {
 
     public BreakOption() {
         super("lease, type, exerciseType, breakDate, exerciseDate");
@@ -237,13 +237,19 @@ public abstract class BreakOption
         setType(breakType);
         setExerciseType(breakExerciseType);
         setDescription(description);
-        // remove existing events
-        for (Event event : getEvents()) {
-            getContainer().remove(event);
-        }
+
         // re-create events
-        persisting();
+        removeExistingEvents();
+        createEvents();
+
         return this;
+    }
+
+    private void removeExistingEvents() {
+        // remove existing events
+        for (final Event event : findEvents()) {
+            events.remove(event);
+        }
     }
 
     public BreakType default0Change() {
@@ -263,12 +269,11 @@ public abstract class BreakOption
             final @ParameterLayout(named = "Excercise date") LocalDate newExcerciseDate) {
         setBreakDate(newBreakDate);
         setExerciseDate(newExcerciseDate);
-        // remove existing events
-        for (Event event : getEvents()) {
-            getContainer().remove(event);
-        }
+
         // re-create events
-        persisting();
+        removeExistingEvents();
+        createEvents();
+
         return this;
     }
 
@@ -290,7 +295,7 @@ public abstract class BreakOption
 
     @Programmatic
     public void doRemove() {
-        for (Event event : getEvents()) {
+        for (Event event : findEvents()) {
             getContainer().remove(event);
         }
         getContainer().remove(this);
@@ -313,11 +318,6 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @Property(notPersisted = true)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<Event> getEvents() {
-        return events.findEventsBySubject(this);
-    }
 
     /**
      * to display in fullcalendar2
@@ -327,8 +327,12 @@ public abstract class BreakOption
     @Override
     public ImmutableMap<String, CalendarEventable> getCalendarEvents() {
         final ImmutableMap eventsByCalendarName = Maps.uniqueIndex(
-                getEvents(), Event.Functions.GET_CALENDAR_NAME);
+                findEvents(), Event.Functions.GET_CALENDAR_NAME);
         return eventsByCalendarName;
+    }
+
+    private List<Event> findEvents() {
+        return events.findBySource(this);
     }
 
     // //////////////////////////////////////
@@ -337,7 +341,7 @@ public abstract class BreakOption
      * For subclasses to call, eg in their <tt>persisting()</tt> callback
      * methods.
      */
-    protected Event createEvent(final LocalDate date, final EventSubject subject, final String subjectEventType) {
+    protected Event createEvent(final LocalDate date, final EventSource subject, final String subjectEventType) {
         return events.newEvent(date, subject, subjectEventType);
     }
 
@@ -374,8 +378,12 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    public void persisting() {
-        throw new IllegalAccessError("Should be called on subclass");
+    public void persisted() {
+        createEvents();
+    }
+
+    protected void createEvents() {
+        throw new IllegalAccessError("Subclass must override");
     }
 
     // //////////////////////////////////////
