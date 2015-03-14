@@ -16,9 +16,11 @@
  */
 package org.estatio.fixture.security.tenancy;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
@@ -32,26 +34,19 @@ public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScr
             final ExecutionContext executionContext) {
 
         final ApplicationTenancyLevel node = ApplicationTenancyLevel.of(path);
-        final ApplicationTenancyLevel parentNode = node != null? node.parent(): null;
-        final ApplicationTenancy parentTenancy = applicationTenancies.findTenancyByPath(parentNode != null? parentNode.getPath(): null);
+        final ApplicationTenancyLevel parentNode = node != null ? node.parent() : null;
+        final ApplicationTenancy parentTenancy = applicationTenancies.findTenancyByPath(parentNode != null ? parentNode.getPath() : null);
 
-        final ApplicationTenancy applicationTenancy = applicationTenancies.newTenancy(name, path, parentTenancy);
-
-        // make available
-        this.applicationTenancy = applicationTenancy;
-        executionContext.addResult(this, name, applicationTenancy);
-        return this.applicationTenancy;
+        ApplicationTenancy existingApplicationTenancy = applicationTenancies.findTenancyByPath(path);
+        if (existingApplicationTenancy != null) {
+            executionContext.addResult(this, name, existingApplicationTenancy);
+            return existingApplicationTenancy;
+        } else {
+            final ApplicationTenancy applicationTenancy = applicationTenancies.newTenancy(name, path, parentTenancy);
+            executionContext.addResult(this, name, applicationTenancy);
+            return applicationTenancy;
+        }
     }
-
-    private ApplicationTenancy applicationTenancy;
-
-    /**
-     * The partition created by this fixture
-     */
-    public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancy;
-    }
-
 
     @javax.inject.Inject
     protected ApplicationTenancies applicationTenancies;

@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForGb extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/gb";
+    public static final String PATH = "/GBR";
     public static final String NAME = "Great Britain";
 
     @Override

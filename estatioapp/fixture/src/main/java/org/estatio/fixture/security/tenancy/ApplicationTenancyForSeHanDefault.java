@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForSeHanDefault extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/se/HAN/_";
+    public static final String PATH = ApplicationTenancyForSe.PATH+"/HAN/_";
     public static final String NAME = "Handla (Sweden) only";
 
     @Override

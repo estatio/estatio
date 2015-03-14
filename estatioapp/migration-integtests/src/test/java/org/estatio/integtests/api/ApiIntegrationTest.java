@@ -189,8 +189,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
         assertThat(state.getName(), is("North Holland"));
         assertThat(state.getCountry(), is(netherlands));
 
-        api.putTax("/nl", "APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21.0), dt(1980, 1, 1), "APITAXEXTRATEREF");
-        api.putTax("/nl", "APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21), dt(1980, 1, 1), "APITAXEXTRATEREF");
+        api.putTax("/NLD", "APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21.0), dt(1980, 1, 1), "APITAXEXTRATEREF");
+        api.putTax("/NLD", "APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21), dt(1980, 1, 1), "APITAXEXTRATEREF");
 
         final Tax tax = taxes.findByReference("APITAXREF");
         Assert.assertNotNull(tax);
@@ -198,7 +198,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
         assertThat(tax.getName(), is("APITAX Name"));
         Assert.assertNotNull(tax.percentageFor(clockService.now()));
 
-        api.putCharge("/nl", "APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APISORTORDER", "APICHARGEGROUP", "APICHARGEGROUPNAME", "APICHARGEEXTREF");
+        api.putCharge("/NLD", "APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APISORTORDER", "APICHARGEGROUP", "APICHARGEGROUPNAME", "APICHARGEEXTREF");
 
         final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
         Assert.assertNotNull(chargeGroup);
@@ -216,15 +216,15 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t01_putAsset() throws Exception {
-        api.putProperty("APIP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT", "APIEXTREF", "/nl");
+        api.putProperty("APIP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT", "APIEXTREF", "/NLD");
         api.putUnit("APIUNIT", "APIP", "APIONWER", "Name", "BOUTIQUE", dt(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
         Assert.assertThat(properties.findProperties("APIP").size(), Is.is(1));
     }
 
     @Test
     public void t02_putOrganisation() {
-        api.putOrganisation("/nl", "APITENANT", "API Tenant", "vat", "fiscal");
-        api.putOrganisation("/nl", "APILANDLORD", "API Landlord", "vat", "fiscal");
+        api.putOrganisation("/NLD", "APITENANT", "API Tenant", "vat", "fiscal");
+        api.putOrganisation("/NLD", "APILANDLORD", "API Landlord", "vat", "fiscal");
         Assert.assertThat(parties.findParties("API*").size(), Is.is(2));
     }
 
@@ -247,7 +247,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", "ACTIVE", START_DATE, dt(2021, 12, 31), null, null, "APIP");
+        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", START_DATE, dt(2021, 12, 31), null, null, "APIP");
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
@@ -282,13 +282,13 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.ACTIVE.name(), "/nl/APIP/_");
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.ACTIVE.name(), "/NLD/APIP/_");
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 
     @Test
     public void t07_putLeaseTermWorks() throws Exception {
-        api.putLeaseTermForIndexableRent("/nl",
+        api.putLeaseTermForIndexableRent(
                 "APILEASE",
                 "APITENANT",
                 "APIUNIT",
@@ -315,8 +315,9 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 null,
                 null,
                 null,
-                null, null);
-        api.putLeaseTermForIndexableRent("/nl",
+                null, 
+                null);
+        api.putLeaseTermForIndexableRent(
                 "APILEASE",
                 "APITENANT",
                 "APIUNIT",

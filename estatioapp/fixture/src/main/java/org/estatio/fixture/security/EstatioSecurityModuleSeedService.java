@@ -34,7 +34,7 @@ public class EstatioSecurityModuleSeedService {
     @PostConstruct
     @Programmatic
     public void init() {
-        fixtureScripts.runFixtureScript(new EstatioSecurityModuleAppSetUp(), null);
+        fixtureScripts.runFixtureScript(new EstatioSecurityModuleSeedFixture(), null);
     }
 
     @Inject

@@ -39,10 +39,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "20.2"
 )
-public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
+public class EstatioSecurityModuleFixturesService extends FixtureScripts {
 
-    public EstatioSecurityModuleAppFixturesService() {
-        super(EstatioSecurityModuleAppFixturesService.class.getPackage().getName());
+    public EstatioSecurityModuleFixturesService() {
+        super(EstatioSecurityModuleFixturesService.class.getPackage().getName());
     }
 
     @Prototype
@@ -60,7 +60,7 @@ public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
 
     @Override
     public FixtureScript default0RunFixtureScript() {
-        return findFixtureScriptFor(EstatioSecurityModuleAppSetUp.class);
+        return findFixtureScriptFor(EstatioSecurityModuleSeedFixture.class);
     }
 
     /**
@@ -81,7 +81,7 @@ public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
     )
     @MemberOrder(sequence = "20")
     public Object installFixturesAndReturnFirstRole() {
-        final List<FixtureResult> fixtureResultList = findFixtureScriptFor(EstatioSecurityModuleAppSetUp.class).run(null);
+        final List<FixtureResult> fixtureResultList = findFixtureScriptFor(EstatioSecurityModuleSeedFixture.class).run(null);
         for (FixtureResult fixtureResult : fixtureResultList) {
             final Object object = fixtureResult.getObject();
             if (object instanceof ApplicationRole) {

@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForGbOxf extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/gb/OXF";
+    public static final String PATH = ApplicationTenancyForGb.PATH+"/OXF";
     public static final String NAME = "Oxford (GB)";
 
     @Override

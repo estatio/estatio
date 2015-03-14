@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForFrViv extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/fr/VIV";
+    public static final String PATH = ApplicationTenancyForFr.PATH+"/VIV";
     public static final String NAME = "Vive (France)";
 
     @Override

@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForFrOther extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/fr/_";
+    public static final String PATH = ApplicationTenancyForFr.PATH+"/_";
     public static final String NAME = "France Other";
 
     @Override

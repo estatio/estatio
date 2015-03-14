@@ -19,16 +19,21 @@
 package org.estatio.integtests.charge;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class ChargesTest extends EstatioIntegrationTest {
@@ -91,7 +96,7 @@ public class ChargesTest extends EstatioIntegrationTest {
         @Test
         public void forCountry() throws Exception {
             // when
-            final List<Charge> chargeList = charges.chargesForCountry("/gb");
+            final List<Charge> chargeList = charges.chargesForCountry("/"+CountriesRefData.GBR);
 
             // then
             Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
@@ -100,7 +105,7 @@ public class ChargesTest extends EstatioIntegrationTest {
         @Test
         public void forProperty() throws Exception {
             // when
-            final List<Charge> chargeList = charges.chargesForCountry("/gb/OXF");
+            final List<Charge> chargeList = charges.chargesForCountry("/"+CountriesRefData.GBR+"/OXF");
 
             // then
             Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
@@ -109,7 +114,7 @@ public class ChargesTest extends EstatioIntegrationTest {
         @Test
         public void forLocal() throws Exception {
             // when
-            final List<Charge> chargeList = charges.chargesForCountry("/gb/OXF/ta");
+            final List<Charge> chargeList = charges.chargesForCountry("/"+CountriesRefData.GBR+"/OXF/ta");
 
             // then
             Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));

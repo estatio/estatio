@@ -38,7 +38,7 @@ import org.estatio.fixture.security.users.EstatioUserInItaly;
 import org.estatio.fixture.security.users.EstatioUserInNetherlands;
 import org.estatio.fixture.security.users.EstatioUserInSweden;
 
-public class EstatioSecurityModuleAppSetUp extends DiscoverableFixtureScript {
+public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

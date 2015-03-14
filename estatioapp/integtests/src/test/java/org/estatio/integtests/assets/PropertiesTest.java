@@ -134,12 +134,12 @@ public class PropertiesTest extends EstatioIntegrationTest {
         @Test
 
             // given
-            final ApplicationTenancy countryAppTenancy = applicationTenancies.findTenancyByPath("/gb");
+            final ApplicationTenancy countryAppTenancy = applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR);
 
             final Country gbrCountry = countries.findCountry(CountriesRefData.GBR);
 
             Assertions.assertThat(countryAppTenancy).isNotNull();
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/gb/ARN")).isNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN")).isNull();
 
 
             // when
@@ -151,15 +151,15 @@ public class PropertiesTest extends EstatioIntegrationTest {
             Assertions.assertThat(property.getCity()).isEqualTo("Manchester");
             Assertions.assertThat(property.getAcquireDate()).isEqualTo(new LocalDate(2014, 4, 1));
 
-            final ApplicationTenancy propertyAppTenancy = applicationTenancies.findTenancyByPath("/gb/ARN");
+            final ApplicationTenancy propertyAppTenancy = applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN");
             Assertions.assertThat(propertyAppTenancy).isNotNull();
 
             Assertions.assertThat(property.getApplicationTenancy()).isEqualTo(propertyAppTenancy);
             Assertions.assertThat(propertyAppTenancy.getParent()).isEqualTo(countryAppTenancy);
 
             // and also
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/gb/ARN/_")).isNotNull();
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/gb/ARN/ta")).isNotNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN/_")).isNotNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN/ta")).isNotNull();
 
         }
     }

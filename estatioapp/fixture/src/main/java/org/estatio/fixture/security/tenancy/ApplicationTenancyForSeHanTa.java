@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForSeHanTa extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/se/HAN/ta";
+    public static final String PATH = ApplicationTenancyForSe.PATH+"/HAN/ta";
     public static final String NAME = "Handla (Sweden) Tenants Association";
 
     @Override

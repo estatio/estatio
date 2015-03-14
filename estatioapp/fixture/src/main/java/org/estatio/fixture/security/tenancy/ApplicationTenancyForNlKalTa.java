@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForNlKalTa extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/nl/KAL/ta";
+    public static final String PATH = ApplicationTenancyForIt.PATH+"/KAL/ta";
     public static final String NAME = "Kalvertoren (NL) Tenants Association";
 
     @Override

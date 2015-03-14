@@ -201,7 +201,7 @@ public class EstatioApplicationTenanciesTest {
     public void testFindOrCreateCountryTenancy_whenExists() throws Exception {
         // given
         Country country = new Country();
-        country.setAlpha2Code("it");
+        country.setReference("it");
 
         // when
         ApplicationTenancy countryTenancy = estatioApplicationTenancies.findOrCreateCountryTenancy(country);
@@ -214,13 +214,14 @@ public class EstatioApplicationTenanciesTest {
     public void testFindOrCreateCountryTenancy_whenDoesNotExist() throws Exception {
         // given
         final Country country = new Country();
+        country.setReference("GBR");
         country.setAlpha2Code("uk");
         country.setName("United Kingdom");
 
         // expect
         final ApplicationTenancy newlyCreatedTenancy = new ApplicationTenancy();
         context.checking(new Expectations() {{
-            oneOf(mockApplicationTenancies).newTenancy("United Kingdom", "/uk", global);
+            oneOf(mockApplicationTenancies).newTenancy("United Kingdom", "/GBR", global);
             will(returnValue(newlyCreatedTenancy));
         }});
 

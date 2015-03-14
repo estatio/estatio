@@ -80,7 +80,7 @@ public class EstatioApplicationTenancies {
     public ApplicationTenancy findOrCreateCountryTenancy(final Country country) {
 
         final List<ApplicationTenancy> countryTenancies = allCountryTenancies();
-        final String countryPath = String.format("/%s", country.getAlpha2Code().toLowerCase());
+        final String countryPath = String.format("/%s", country.getReference());
 
         for (final ApplicationTenancy countryTenancy : countryTenancies) {
             if(countryTenancy.getPath().equals(countryPath)) {

@@ -43,45 +43,45 @@ public class ChargeRefData extends EstatioFixtureScript {
     private static final String CHARGE_SUFFIX_TAX = "_TAX";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE = "_SVC_CHG_INDEXABLE";
 
-    public static final String IT_RENT = CountriesRefData.ITA_2 + CHARGE_SUFFIX_RENT;
-    public static final String IT_SERVICE_CHARGE = CountriesRefData.ITA_2 + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String IT_TURNOVER_RENT = CountriesRefData.ITA_2 + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String IT_DISCOUNT = CountriesRefData.ITA_2 + CHARGE_SUFFIX_DISCOUNT;
-    public static final String IT_ENTRY_FEE = CountriesRefData.ITA_2 + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String IT_TAX = CountriesRefData.ITA_2 + CHARGE_SUFFIX_TAX;
-    public static final String IT_SERVICE_CHARGE_INDEXABLE = CountriesRefData.ITA_2 + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String IT_RENT = CountriesRefData.ITA + CHARGE_SUFFIX_RENT;
+    public static final String IT_SERVICE_CHARGE = CountriesRefData.ITA + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String IT_TURNOVER_RENT = CountriesRefData.ITA + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String IT_DISCOUNT = CountriesRefData.ITA + CHARGE_SUFFIX_DISCOUNT;
+    public static final String IT_ENTRY_FEE = CountriesRefData.ITA + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String IT_TAX = CountriesRefData.ITA + CHARGE_SUFFIX_TAX;
+    public static final String IT_SERVICE_CHARGE_INDEXABLE = CountriesRefData.ITA + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String NL_RENT = CountriesRefData.NLD_2 + CHARGE_SUFFIX_RENT;
-    public static final String NL_SERVICE_CHARGE = CountriesRefData.NLD_2 + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String NL_TURNOVER_RENT = CountriesRefData.NLD_2 + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String NL_DISCOUNT = CountriesRefData.NLD_2 + CHARGE_SUFFIX_DISCOUNT;
-    public static final String NL_ENTRY_FEE = CountriesRefData.NLD_2 + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String NL_TAX = CountriesRefData.NLD_2 + CHARGE_SUFFIX_TAX;
-    public static final String NL_SERVICE_CHARGE_INDEXABLE = CountriesRefData.NLD_2 + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String NL_RENT = CountriesRefData.NLD + CHARGE_SUFFIX_RENT;
+    public static final String NL_SERVICE_CHARGE = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String NL_TURNOVER_RENT = CountriesRefData.NLD + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String NL_DISCOUNT = CountriesRefData.NLD + CHARGE_SUFFIX_DISCOUNT;
+    public static final String NL_ENTRY_FEE = CountriesRefData.NLD + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String NL_TAX = CountriesRefData.NLD + CHARGE_SUFFIX_TAX;
+    public static final String NL_SERVICE_CHARGE_INDEXABLE = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String SE_RENT = CountriesRefData.SWE_2 + CHARGE_SUFFIX_RENT;
-    public static final String SE_SERVICE_CHARGE = CountriesRefData.SWE_2 + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String SE_TURNOVER_RENT = CountriesRefData.SWE_2 + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String SE_DISCOUNT = CountriesRefData.SWE_2 + CHARGE_SUFFIX_DISCOUNT;
-    public static final String SE_ENTRY_FEE = CountriesRefData.SWE_2 + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String SE_TAX = CountriesRefData.SWE_2 + CHARGE_SUFFIX_TAX;
-    public static final String SE_SERVICE_CHARGE_INDEXABLE = CountriesRefData.SWE_2 + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String SE_RENT = CountriesRefData.SWE + CHARGE_SUFFIX_RENT;
+    public static final String SE_SERVICE_CHARGE = CountriesRefData.SWE + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String SE_TURNOVER_RENT = CountriesRefData.SWE + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String SE_DISCOUNT = CountriesRefData.SWE + CHARGE_SUFFIX_DISCOUNT;
+    public static final String SE_ENTRY_FEE = CountriesRefData.SWE + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String SE_TAX = CountriesRefData.SWE + CHARGE_SUFFIX_TAX;
+    public static final String SE_SERVICE_CHARGE_INDEXABLE = CountriesRefData.SWE + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String FR_RENT = CountriesRefData.FRA_2 + CHARGE_SUFFIX_RENT;
-    public static final String FR_SERVICE_CHARGE = CountriesRefData.FRA_2 + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String FR_TURNOVER_RENT = CountriesRefData.FRA_2 + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String FR_DISCOUNT = CountriesRefData.FRA_2 + CHARGE_SUFFIX_DISCOUNT;
-    public static final String FR_ENTRY_FEE = CountriesRefData.FRA_2 + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String FR_TAX = CountriesRefData.FRA_2 + CHARGE_SUFFIX_TAX;
-    public static final String FR_SERVICE_CHARGE_INDEXABLE = CountriesRefData.FRA_2 + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String FR_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_RENT;
+    public static final String FR_SERVICE_CHARGE = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String FR_TURNOVER_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String FR_DISCOUNT = CountriesRefData.FRA + CHARGE_SUFFIX_DISCOUNT;
+    public static final String FR_ENTRY_FEE = CountriesRefData.FRA + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String FR_TAX = CountriesRefData.FRA + CHARGE_SUFFIX_TAX;
+    public static final String FR_SERVICE_CHARGE_INDEXABLE = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String GB_RENT = CountriesRefData.GBR_2 + CHARGE_SUFFIX_RENT;
-    public static final String GB_SERVICE_CHARGE = CountriesRefData.GBR_2 + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String GB_TURNOVER_RENT = CountriesRefData.GBR_2 + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String GB_DISCOUNT = CountriesRefData.GBR_2 + CHARGE_SUFFIX_DISCOUNT;
-    public static final String GB_ENTRY_FEE = CountriesRefData.GBR_2 + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String GB_TAX = CountriesRefData.GBR_2 + CHARGE_SUFFIX_TAX;
-    public static final String GB_SERVICE_CHARGE_INDEXABLE = CountriesRefData.GBR_2 + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String GB_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_RENT;
+    public static final String GB_SERVICE_CHARGE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String GB_TURNOVER_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String GB_DISCOUNT = CountriesRefData.GBR + CHARGE_SUFFIX_DISCOUNT;
+    public static final String GB_ENTRY_FEE = CountriesRefData.GBR + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String GB_TAX = CountriesRefData.GBR + CHARGE_SUFFIX_TAX;
+    public static final String GB_SERVICE_CHARGE_INDEXABLE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

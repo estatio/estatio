@@ -19,7 +19,7 @@ package org.estatio.fixture.security;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-public class EstatioSecurityModuleAppTearDown extends FixtureScript {
+public class EstatioSecurityModuleTearDown extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

@@ -18,7 +18,7 @@ package org.estatio.fixture.security.tenancy;
 
 public class ApplicationTenancyForItGraDefault extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/it/GRA/_";
+    public static final String PATH = ApplicationTenancyForIt.PATH+"/GRA/_";
     public static final String NAME = "Grande (Italy) only";
 
     @Override

@@ -18,10 +18,10 @@ package org.estatio.api;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import javax.inject.Inject;
+
 import org.apache.commons.lang3.ObjectUtils;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.slf4j.Logger;
@@ -35,7 +35,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
@@ -90,7 +95,6 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForFixed;
 import org.estatio.dom.lease.LeaseTermForIndexable;
@@ -219,7 +223,7 @@ public class Api extends AbstractFactoryAndRepository {
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
 
         final Tax tax = taxes.findOrCreate(taxReference, taxReference, applicationTenancy);
-        final Charge charge = charges.newCharge(applicationTenancy , reference, name, description, tax, chargeGroup);
+        final Charge charge = charges.newCharge(applicationTenancy, reference, name, description, tax, chargeGroup);
 
         charge.setExternalReference(externalReference);
         charge.setSortOrder(sortOrder);
@@ -242,7 +246,6 @@ public class Api extends AbstractFactoryAndRepository {
         chargeGroup.setName(name);
         return chargeGroup;
     }
-
 
     // //////////////////////////////////////
 
@@ -272,7 +275,6 @@ public class Api extends AbstractFactoryAndRepository {
         }
         return applicationTenancy;
     }
-
 
     // //////////////////////////////////////
 
@@ -364,7 +366,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("ownerReference") @Optional final String ownerReference,
             @Named("numeratorFormat") @Optional final String numeratorFormat,
             @Named("externalReference") @Optional final String externalReference,
-            @Named("countryAtPath") final String countryAtPath) {
+            @Named("atPath") final String countryAtPath) {
         final Party owner = fetchParty(ownerReference);
         final Country country = fetchCountry(countryCode);
         final ApplicationTenancy countryAppTenancy = fetchApplicationTenancy(countryAtPath);
@@ -397,7 +399,6 @@ public class Api extends AbstractFactoryAndRepository {
         }
         return property;
     }
-
 
     // //////////////////////////////////////
 
@@ -646,7 +647,6 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("tenantReference") final String tenantReference,
             @Named("landlordReference") final String landlordReference,
             @Named("type") final String type,
-            @Named("status") final String statusStr,
             @Named("startDate") @Optional final LocalDate startDate,
             @Named("endDate") @Optional final LocalDate endDate,
             @Named("tenancyStartDate") @Optional final LocalDate tenancyStartDate,
@@ -657,7 +657,6 @@ public class Api extends AbstractFactoryAndRepository {
         final Party landlord = fetchParty(landlordReference);
         Lease lease = leases.findLeaseByReferenceElseNull(reference);
         final LeaseType leaseType = leaseTypes.findOrCreate(type, null);
-        final LeaseStatus status = LeaseStatus.valueOf(statusStr);
         final Property property = fetchProperty(propertyReference, null, false);
 
         if (lease == null) {
@@ -665,7 +664,6 @@ public class Api extends AbstractFactoryAndRepository {
         }
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
-        lease.setStatus(status);
     }
 
     private Lease fetchLease(final String leaseReference) {
@@ -731,7 +729,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("chargeReference") @Optional final String chargeReference,
             @Named("nextDueDate") @Optional final LocalDate nextDueDate,
             @Named("invoicingFrequency") @Optional final String invoicingFrequency,
-            @Named("paymentMethod") @Optional final String paymentMethod,
+            @Named("paymentMethod") final String paymentMethod,
             @Named("status") @Optional final String status,
             @Named("atPath") final String leaseItemAtPath) {
         final Lease lease = fetchLease(leaseReference);
@@ -743,12 +741,15 @@ public class Api extends AbstractFactoryAndRepository {
         final Charge charge = fetchCharge(chargeReference);
 
         ApplicationTenancy leaseApplicationTenancy = lease.getApplicationTenancy();
-        final ApplicationTenancy leaseItemApplicationTenancy = fetchApplicationTenancy(leaseItemAtPath);
+        final ApplicationTenancy leaseItemApplicationTenancy = leaseApplicationTenancy;
+        // TODO: removed fetchApplicationTenancy(leaseItemAtPath);
 
-        if(!leaseApplicationTenancy.getChildren().contains(leaseItemApplicationTenancy)) {
-            throw new ApplicationException(
-                    String.format("Lease item's appTenancy '%s' not child of lease's appTenancy '%s'.", leaseApplicationTenancy.getName(), leaseItemAtPath));
-        }
+        // if(!leaseApplicationTenancy.getChildren().contains(leaseItemApplicationTenancy))
+        // {
+        // throw new ApplicationException(
+        // String.format("Lease item's appTenancy '%s' not child of lease's appTenancy '%s'.",
+        // leaseApplicationTenancy.getName(), leaseItemAtPath));
+        // }
 
         //
         final LeaseItemType itemType = fetchLeaseItemType(leaseItemTypeName);
@@ -805,13 +806,12 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForIndexableRent(
             // start generic fields
-            @Named("atPath") final String atPath,
             @Named("leaseReference") final String leaseReference,
             @Named("tenantReference") final String tenantReference,
             @Named("unitReference") @Optional final String unitReference,
             @Named("itemSequence") final BigInteger itemSequence,
             @Named("itemType") final String itemType,
-            @Named("itemStartDate") final LocalDate itemStartDate,
+            @Named("itemStartDate") @Parameter(optionality = Optionality.OPTIONAL) final LocalDate itemStartDate,
             @Named("sequence") final BigInteger sequence,
             @Named("startDate") @Optional final LocalDate startDate,
             @Named("endDate") @Optional final LocalDate endDate,
@@ -824,8 +824,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("settledValue") @Optional final BigDecimal settledValue,
             @Named("levellingValue") @Optional final BigDecimal levellingValue,
             @Named("levellingPercentage") @Optional final BigDecimal levellingPercentage,
-            @Named("indexReference") @Optional final String indexReference,
-            @Named("indexationFrequency") @Optional final String indexationFrequency,
+            @Named("indexReference") final String indexReference,
+            @Named("indexationFrequency") final String indexationFrequency,
             @Named("indexationPercentage") @Optional final BigDecimal indexationPercentage,
             @Named("baseIndexReference") @Optional final String baseIndexReference,
             @Named("baseIndexStartDate") @Optional final LocalDate baseIndexStartDate,
@@ -845,8 +845,10 @@ public class Api extends AbstractFactoryAndRepository {
                 endDate,
                 sequence,
                 statusStr);
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-        final Index index = indices.findOrCreateIndex(applicationTenancy , indexReference, indexReference);
+        final ApplicationTenancy applicationTenancy = term.getLeaseItem().getApplicationTenancy();
+
+        // TODO: applicationTenancies.findTenancyByPath(atPath);
+        final Index index = indices.findOrCreateIndex(applicationTenancy, indexReference, indexReference);
         final LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
         term.setIndex(index);
         term.setFrequency(indexationFreq);
@@ -1094,7 +1096,8 @@ public class Api extends AbstractFactoryAndRepository {
             bankMandate.setName(name);
 
             // EST-467, previously was:
-            // bankMandate = bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
+            // bankMandate = bankMandates.newBankMandate(reference, name,
+            // startDate, endDate, debtor, creditor, bankAccount);
         }
 
         // upsert
@@ -1281,6 +1284,5 @@ public class Api extends AbstractFactoryAndRepository {
 
     @Inject
     private EstatioApplicationTenancies estatioApplicationTenancies;
-
 
 }
