@@ -18,22 +18,15 @@
  */
 package org.estatio.dom.lease.tags;
 
-import java.math.BigDecimal;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.wicket.markup.parser.XmlTag.TagType;
-
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionInteraction;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -44,13 +37,10 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.NATIVE, 
+        strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
@@ -86,7 +76,7 @@ public class Brand
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -108,7 +98,7 @@ public class Brand
     }
 
     // //////////////////////////////////////
-    
+
     public static class RemoveEvent extends ActionInteractionEvent<Brand> {
         private static final long serialVersionUID = 1L;
 
@@ -126,18 +116,27 @@ public class Brand
 
     @Action(domainEvent = Brand.RemoveEvent.class)
     public void remove() {
-        removeAndReplace(null);
+        removeAndReplace(null, true);
     }
 
     @Action(domainEvent = Brand.RemoveEvent.class)
-    public void removeAndReplace(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement) {
+    public Object removeAndReplace(
+            final @ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement,
+            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
         getContainer().remove(this);
         getContainer().flush();
+
+        return replacement;
     }
-    
-    public String validateRemoveAndReplace(final Brand brand) {
-        return brand != this ? null : "Cannot replace a brand with itself";
-   }
-    
-    
+
+    public String validateRemoveAndReplace(final Brand brand, final boolean confirm) {
+        if (brand == this) {
+            return "Cannot replace a brand with itself";
+        } else if (confirm == false) {
+            return "Please confirm this replacement";
+        } else {
+            return null;
+        }
+    }
+
 }

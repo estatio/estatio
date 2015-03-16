@@ -139,7 +139,7 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
             final List<Occupancy> occ = findByBrand(sourceBrand, true);
 
             if (replacementBrand == null && occ.size() > 0) {
-                ev.invalidate("Brand is being used in an occupanciy: remove occupancy or provide a replacement");
+                ev.invalidate("Brand is being used in an occupancy. Remove occupancy or provide a replacement");
             }
 
             putOccupancy(ev, occ);
