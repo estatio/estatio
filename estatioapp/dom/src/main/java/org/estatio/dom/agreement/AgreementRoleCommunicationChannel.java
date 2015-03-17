@@ -158,7 +158,7 @@ public class AgreementRoleCommunicationChannel extends
 	@javax.jdo.annotations.Persistent
 	private LocalDate startDate;
 
-	@Property(optional = Optionality.TRUE)
+	@Property(optionality = Optionality.OPTIONAL)
 	@Override
 	public LocalDate getStartDate() {
 		return startDate;
@@ -172,7 +172,7 @@ public class AgreementRoleCommunicationChannel extends
 	@javax.jdo.annotations.Persistent
 	private LocalDate endDate;
 
-	@Property(optional = Optionality.TRUE)
+	@Property(optionality = Optionality.OPTIONAL)
 	@Override
 	public LocalDate getEndDate() {
 		return endDate;
@@ -204,8 +204,8 @@ public class AgreementRoleCommunicationChannel extends
 	@Action(semantics = SemanticsOf.IDEMPOTENT)
 	@Override
 	public AgreementRoleCommunicationChannel changeDates(
-			final @ParameterLayout(named = "Start Date") @Parameter(optional = Optionality.TRUE) LocalDate startDate,
-			final @ParameterLayout(named = "End Date") @Parameter(optional = Optionality.TRUE) LocalDate endDate) {
+			final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+			final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
 		helper.changeDates(startDate, endDate);
 		return this;
 	}
@@ -257,14 +257,14 @@ public class AgreementRoleCommunicationChannel extends
 
 	// //////////////////////////////////////
 
-	@Property(optional = Optionality.TRUE, hidden = Where.ALL_TABLES)
+	@Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
 	@Override
 	public AgreementRoleCommunicationChannel getPredecessor() {
 		return helper.getPredecessor(getRole().getCommunicationChannels(),
 				getType().matchingCommunicationChannel());
 	}
 
-	@Property(hidden = Where.ALL_TABLES, optional = Optionality.TRUE)
+	@Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
 	@Override
 	public AgreementRoleCommunicationChannel getSuccessor() {
 		return helper.getSuccessor(getRole().getCommunicationChannels(),
@@ -302,7 +302,7 @@ public class AgreementRoleCommunicationChannel extends
 	public AgreementRoleCommunicationChannel succeededBy(
 			final CommunicationChannel communicationChannel,
 			final @ParameterLayout(named = "Start date") LocalDate startDate,
-			final @ParameterLayout(named = "End date") @Parameter(optional = Optionality.TRUE) LocalDate endDate) {
+			final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
 		return helper.succeededBy(startDate, endDate, new SiblingFactory(this,
 				communicationChannel));
 	}
@@ -347,7 +347,7 @@ public class AgreementRoleCommunicationChannel extends
 
 	public AgreementRoleCommunicationChannel precededBy(
 			final CommunicationChannel communicationChannel,
-			final @ParameterLayout(named = "Start date") @Parameter(optional = Optionality.TRUE) LocalDate startDate,
+			final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
 			final @ParameterLayout(named = "End date") LocalDate endDate) {
 
 		return helper.precededBy(startDate, endDate, new SiblingFactory(this,
@@ -412,7 +412,7 @@ public class AgreementRoleCommunicationChannel extends
 
 	@ActionLayout(describedAs = "Change Communication Channel Type")
 	public AgreementRoleCommunicationChannel changeType(
-			final @Parameter(optional = Optionality.TRUE) @ParameterLayout(named = "Type") AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType) {
+			final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Type") AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType) {
 		setType(agreementRoleCommunicationChannelType);
 		return this;
 	}
