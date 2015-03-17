@@ -4,6 +4,7 @@
 db/
 target/
 target-ide/
+bin/
 logs/
 .clover/
 .settings/
@@ -14,7 +15,7 @@ datanucleus.log
 .idea
 *.log
 *.lck
-.checkstyle-cachefile
+.checkstyle-ncachefile
 
 
 # os specific files
