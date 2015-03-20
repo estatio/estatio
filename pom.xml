@@ -95,9 +95,9 @@ language governing permissions and limitations under the License.
         <isis-module-settings.version>1.8.0</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.8.0</isis-module-stringinterpolator.version>
 
-        <isis-wicket-excel.version>1.8.0-SNAPSHOT</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.8.0-SNAPSHOT</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.8.0-SNAPSHOT</isis-wicket-gmap3.version>
+        <isis-wicket-excel.version>1.8.0</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.8.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.9.0-SNAPSHOT</isis-wicket-gmap3.version>
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
