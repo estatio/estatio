@@ -262,7 +262,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<Lease> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
-                ? findLeases("*" + searchPhrase + "*", false)
+                ? findLeases("*" + searchPhrase + "*", true)
                 : Lists.<Lease> newArrayList();
     }
 
