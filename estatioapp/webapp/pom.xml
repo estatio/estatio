@@ -203,6 +203,7 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-servlet_3.0_spec</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
