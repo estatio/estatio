@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainService;
@@ -37,6 +39,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = Unit.class)
 @DomainServiceLayout(
@@ -93,10 +96,26 @@ public class Units extends EstatioDomainService<Unit> {
     }
 
     @Programmatic
-    public List<Unit> findActiveByProperty(final Property property) {
-        return allMatches("findByActiveOnDate", "unitProperty", property, "activeOnDate", clockService.now());
+    public List<Unit> findByProperty(final Property property) {
+        return allMatches("findByProperty", "property", property);
     }
-    
+
+    @Programmatic
+    public List<Unit> findByActiveOnDate(LocalDate date) {
+        return allMatches("findByActiveOnDate", "startDate", date, "endDate", LocalDateInterval.endDateFromStartDate(date));
+    }
+
+    @Programmatic
+    public List<Unit> findByPropertyAndActiveNow(final Property property) {
+        LocalDate now = clockService.now();
+        return findByPropertyAndActiveOnDate(property, now);
+    }
+
+    @Programmatic
+    public List<Unit> findByPropertyAndActiveOnDate(final Property property, LocalDate date) {
+        return allMatches("findByPropertyAndActiveOnDate", "property", property, "date", date);
+    }
+
     // //////////////////////////////////////
 
     @Collection(hidden = Where.EVERYWHERE)

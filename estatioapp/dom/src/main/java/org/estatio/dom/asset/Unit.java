@@ -63,9 +63,20 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 name = "findByActiveOnDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.Unit "
-                        + "WHERE (property == :unitProperty) "
-                        + "&& (startDate == null || startDate <= :activeOnDate) "
-                        + "&& (endDate == null || endDate >= :activeOnDate)")
+                        + "WHERE (startDate == null || startDate <= :startDate) "
+                        + "&& (endDate == null || endDate >= :endDate)"),
+        @javax.jdo.annotations.Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.Unit "
+                        + "WHERE (property == :property) "),
+        @javax.jdo.annotations.Query(
+                name = "findByPropertyAndActiveOnDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.Unit "
+                        + "WHERE (property == :property) "
+                        + "&& (startDate == null || startDate <= :date) "
+                        + "&& (endDate == null || endDate >= :date)")
 })
 @DomainObject(autoCompleteRepository = Units.class, editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)

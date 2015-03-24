@@ -384,7 +384,12 @@ public class Lease
     }
 
     public List<Unit> choices1NewOccupancy(final LocalDate startDate) {
-        return units.findActiveByProperty(getProperty());
+        Property property = getProperty();
+        if (property != null) {
+            return units.findByPropertyAndActiveOnDate(property, startDate);
+        } else {
+            return units.findByActiveOnDate(startDate);
+        }
     }
 
     // //////////////////////////////////////

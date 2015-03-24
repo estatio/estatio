@@ -21,8 +21,6 @@ package org.estatio.integtests.assets;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -87,20 +85,36 @@ public class UnitsTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindActiveByProperty extends UnitsTest {
+    public static class FindByPropertyAndActiveOnDate extends UnitsTest {
 
         @Test
         public void findActiveByProperty() throws Exception {
             // given
             Property propertyForOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
-            List<Unit> results = units.findActiveByProperty(propertyForOxf);
-            assertThat(results.size(), is(25));
 
             // when
-            results.get(0).setEndDate(new LocalDate(2013, 1, 1));
+            Unit unit = units.findUnitByReference(PropertyForOxf.PROPERTY_REFERENCE + "-001");
+            LocalDate startDate = new LocalDate(2013, 1, 1);
+            LocalDate endDate = new LocalDate(2013, 12, 31);
+            unit.setEndDate(endDate);
+            unit.setStartDate(startDate);
 
             // then
-            assertThat(units.findActiveByProperty(propertyForOxf).size(), is(24));
+            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, startDate).size(), is(25));
+            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, startDate.minusDays(1)).size(), is(24));
+            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, endDate).size(), is(25));
+            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, endDate.plusDays(1)).size(), is(24));
+        }
+    }
+
+    public static class FindByProperty extends UnitsTest {
+
+        @Test
+        public void findActiveByProperty() throws Exception {
+            // given, when
+            Property propertyForOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            // then
+            assertThat(units.findByProperty(propertyForOxf).size(), is(25));
         }
     }
 }
