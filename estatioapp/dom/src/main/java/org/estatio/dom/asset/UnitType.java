@@ -33,6 +33,7 @@ public enum UnitType implements TitledEnum {
     SERVICES,
     STORAGE,
     TECHNICAL_ROOM,
+    COMMON_AREA,
     VIRTUAL,
     LAND,
     PARKING,
