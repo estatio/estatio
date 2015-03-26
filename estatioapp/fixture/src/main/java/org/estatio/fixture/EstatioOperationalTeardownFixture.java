@@ -19,8 +19,42 @@
 package org.estatio.fixture;
 
 import javax.inject.Inject;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+
+import org.estatio.dom.JdoColumnLength.Numerator;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
+import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.dom.asset.registration.LandRegister;
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.document.Document;
+import org.estatio.dom.event.Event;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountTransaction;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.breaks.BreakOption;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRegistration;
+import org.estatio.dom.party.Person;
+import org.estatio.dom.party.relationship.PartyRelationship;
+import org.estatio.dom.tag.Tag;
 
 public class EstatioOperationalTeardownFixture extends FixtureScript {
 
@@ -30,50 +64,56 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
     }
 
     private void deleteAllDirect() {
-        
-        deleteFrom("Numerator");
 
-        deleteFrom("InvoiceItem");
-        deleteFrom("Invoice");
-        
-        deleteFrom("Tag");
-        
-        deleteFrom("Event");
-        deleteFrom("BreakOption");
-        deleteFrom("LeaseTerm");
-        deleteFrom("LeaseItem");
-        deleteFrom("Occupancy");
+        deleteFrom(Numerator.class);
 
-        deleteFrom("AgreementRoleCommunicationChannel");
-        deleteFrom("AgreementRole");
+        deleteFrom(Document.class);
 
-        deleteFrom("Guarantee");
-        deleteFrom("BankMandate");
-        deleteFrom("Lease");
+        deleteFrom(InvoiceItem.class);
+        deleteFrom(Invoice.class);
 
-        deleteFrom("FinancialAccountTransaction");
-        deleteFrom("BankAccount");
-        deleteFrom("FixedAssetFinancialAccount");
-        deleteFrom("FinancialAccount");
-        
-        deleteFrom("Agreement");
-        
-        deleteFrom("CommunicationChannel");
-        
-        deleteFrom("Unit");
-        deleteFrom("Property");
-        deleteFrom("FixedAssetRole");
-        deleteFrom("LandRegister");
-        deleteFrom("FixedAssetRegistration");
-        deleteFrom("FixedAsset");
-        
-        deleteFrom("PartyRegistration");
-        deleteFrom("PartyRelationship");
-        deleteFrom("Organisation");
-        deleteFrom("Person");
-        deleteFrom("Party");
+        deleteFrom(Tag.class);
+
+        deleteFrom(Event.class);
+        deleteFrom(BreakOption.class);
+        deleteFrom(LeaseTerm.class);
+        deleteFrom(LeaseItem.class);
+        deleteFrom(Occupancy.class);
+
+        deleteFrom(AgreementRoleCommunicationChannel.class);
+        deleteFrom(AgreementRole.class);
+
+        deleteFrom(Guarantee.class);
+        deleteFrom(BankMandate.class);
+        deleteFrom(Lease.class);
+
+        deleteFrom(FinancialAccountTransaction.class);
+        deleteFrom(BankAccount.class);
+        deleteFrom(FixedAssetFinancialAccount.class);
+        deleteFrom(FinancialAccount.class);
+
+        deleteFrom(Agreement.class);
+
+        deleteFrom(CommunicationChannel.class);
+
+        deleteFrom(Unit.class);
+        deleteFrom(Property.class);
+        deleteFrom(FixedAssetRole.class);
+        deleteFrom(LandRegister.class);
+        deleteFrom(FixedAssetRegistration.class);
+        deleteFrom(FixedAsset.class);
+
+        deleteFrom(PartyRegistration.class);
+        deleteFrom(PartyRelationship.class);
+        deleteFrom(Organisation.class);
+        deleteFrom(Person.class);
+        deleteFrom(Party.class);
     }
- 
+
+    private void deleteFrom(final Class cls) {
+        deleteFrom(cls.getSimpleName());
+    }
+
     private void deleteFrom(final String table) {
         isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
     }

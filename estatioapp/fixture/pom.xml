@@ -37,6 +37,25 @@ language governing permissions and limitations under the License.
         <siteBaseDir>..</siteBaseDir>
     </properties>
 
+	<build>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -59,6 +78,14 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.wicket.gmap3</groupId>
             <artifactId>isis-wicket-gmap3-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
+        </dependency>
+
+        <!-- SVG -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.svg</groupId>
+            <artifactId>isis-wicket-svg-cpt</artifactId>
             <!-- avoid polluting the classpath -->
             <optional>true</optional>
         </dependency>

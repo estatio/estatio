@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
@@ -104,6 +105,22 @@ public class LeaseType
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LeaseType change(
+            @ParameterLayout(named = "Name") final String name,
+            @ParameterLayout(named = "Description") final String description) {
+        setName(name);
+        setDescription(description);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public String default1Change() {
+        return getDescription();
     }
 
 }

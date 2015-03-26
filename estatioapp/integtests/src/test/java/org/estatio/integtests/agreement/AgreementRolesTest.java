@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent.Phase;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.agreement.Agreement;
@@ -188,7 +188,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
         public void invalidBecauseNoReplacement() throws Exception {
             // when
             Party.RemoveEvent event = new RemoveEvent(oldParty, null, (Object[]) null);
-            event.setPhase(Phase.VALIDATE);
+            event.setEventPhase(Phase.VALIDATE);
             agreementRoles.on(event);
 
             // then
@@ -199,9 +199,9 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
         public void executingReplacesParty() throws Exception {
             // when
             Party.RemoveEvent event = new RemoveEvent(oldParty, null, newParty);
-            event.setPhase(Phase.VALIDATE);
+            event.setEventPhase(Phase.VALIDATE);
             agreementRoles.on(event);
-            event.setPhase(Phase.EXECUTING);
+            event.setEventPhase(Phase.EXECUTING);
             agreementRoles.on(event);
 
             // then

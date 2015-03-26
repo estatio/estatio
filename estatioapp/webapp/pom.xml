@@ -241,6 +241,25 @@ language governing permissions and limitations under the License.
             <artifactId>isis-wicket-excel-cpt</artifactId>
         </dependency>
 
+        <!-- SVG maps -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.svg</groupId>
+            <artifactId>isis-wicket-svg-cpt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>${apache-batik.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>${apache-batik.version}</version>
+        </dependency>
+        <!-- SVG maps -->
+
         <!-- isis addons (modules) -->
         <dependency>
             <groupId>org.isisaddons.module.excel</groupId>

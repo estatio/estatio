@@ -20,6 +20,7 @@ package org.estatio.fixture;
 
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
 import org.estatio.fixture.asset.PropertyForGra;
 import org.estatio.fixture.asset.PropertyForHan;
 import org.estatio.fixture.asset.PropertyForViv;
@@ -31,6 +32,7 @@ import org.estatio.fixture.financial.BankAccountForMediaX;
 import org.estatio.fixture.financial.BankAccountForMiracle;
 import org.estatio.fixture.financial.BankAccountForPret;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
+import org.estatio.fixture.interactivemap.InteractiveMapDocumentForOxf;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -87,6 +89,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new PropertyForViv());
         executionContext.executeChild(this, new PropertyForHan());
 
+        executionContext.executeChild(this, new InteractiveMapDocumentForOxf());
+        
+        
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
         fixtureClock.reset();
 
