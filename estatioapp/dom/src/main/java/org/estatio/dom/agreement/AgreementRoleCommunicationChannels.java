@@ -19,19 +19,22 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+
 import com.google.common.eventbus.Subscribe;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannel.class)
 @Hidden
 public class AgreementRoleCommunicationChannels extends EstatioDomainService<AgreementRoleCommunicationChannel> {
-
 
     public AgreementRoleCommunicationChannels() {
         super(AgreementRoleCommunicationChannels.class, AgreementRoleCommunicationChannel.class);
@@ -62,33 +65,34 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
         CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
         CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
 
-        switch (ev.getPhase()) {
-            case VALIDATE:
-                final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
+        switch (ev.getEventPhase()) {
+        case VALIDATE:
+            final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
 
-                if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
-                    ev.invalidate("Communication channel is being used: provide a replacement");
-                }
+            if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
+                ev.invalidate("Communication channel is being used: provide a replacement");
+            }
 
-                putAgreementRoleCommunicationChannels(ev, communicationChannels);
-                break;
-            case EXECUTING:
-                for (AgreementRoleCommunicationChannel arcc : getAgreementRoleCommunicationChannels(ev)) {
-                    arcc.setCommunicationChannel(replacementCommunicationChannel);
-                }
-                break;
+            putAgreementRoleCommunicationChannels(ev, communicationChannels);
+            break;
+        case EXECUTING:
+            for (AgreementRoleCommunicationChannel arcc : findByCommunicationChannel(sourceCommunicationChannel)) {
+                arcc.setCommunicationChannel(replacementCommunicationChannel);
+            }
+            break;
         default:
             break;
         }
-
     }
 
     // //////////////////////////////////////
 
     private static final String KEY = AgreementRoleCommunicationChannel.class.getName() + ".communicationChannels";
+
     private static void putAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev, List<AgreementRoleCommunicationChannel> communicationChannels) {
         ev.put(KEY, communicationChannels);
     }
+
     private static List<AgreementRoleCommunicationChannel> getAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev) {
         return (List<AgreementRoleCommunicationChannel>) ev.get(KEY);
     }

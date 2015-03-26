@@ -135,7 +135,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             final List<AgreementRole> agreementRoles = findByParty(sourceParty);
 
@@ -146,7 +146,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
             putAgreementRole(ev, agreementRoles);
             break;
         case EXECUTING:
-            for (AgreementRole agreementRole : getAgreementRoles(ev)) {
+            for (AgreementRole agreementRole : findByParty(sourceParty)) {
                 agreementRole.setParty(replacementParty);
             }
             break;
