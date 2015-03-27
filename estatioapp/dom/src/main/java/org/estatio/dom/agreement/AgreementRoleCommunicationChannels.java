@@ -19,7 +19,8 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
+import java.util.UUID;
+import javax.inject.Inject;
 import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
@@ -28,7 +29,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-
+import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
@@ -65,18 +66,19 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
         CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
         CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
 
+        List<AgreementRoleCommunicationChannel> communicationChannels;
         switch (ev.getEventPhase()) {
         case VALIDATE:
-            final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
-
+            communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
             if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
                 ev.invalidate("Communication channel is being used: provide a replacement");
+            } else {
+                scratchpad.put(onCommunicationChannelRemoveScratchpadKey = UUID.randomUUID(), communicationChannels);
             }
-
-            putAgreementRoleCommunicationChannels(ev, communicationChannels);
             break;
         case EXECUTING:
-            for (AgreementRoleCommunicationChannel arcc : findByCommunicationChannel(sourceCommunicationChannel)) {
+                communicationChannels = (List<AgreementRoleCommunicationChannel>) scratchpad.get(onCommunicationChannelRemoveScratchpadKey);
+                for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
                 arcc.setCommunicationChannel(replacementCommunicationChannel);
             }
             break;
@@ -85,15 +87,13 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
         }
     }
 
+    private transient UUID onCommunicationChannelRemoveScratchpadKey;
+
     // //////////////////////////////////////
 
-    private static final String KEY = AgreementRoleCommunicationChannel.class.getName() + ".communicationChannels";
 
-    private static void putAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev, List<AgreementRoleCommunicationChannel> communicationChannels) {
-        ev.put(KEY, communicationChannels);
-    }
 
-    private static List<AgreementRoleCommunicationChannel> getAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev) {
-        return (List<AgreementRoleCommunicationChannel>) ev.get(KEY);
-    }
+
+    @Inject
+    private Scratchpad scratchpad;
 }

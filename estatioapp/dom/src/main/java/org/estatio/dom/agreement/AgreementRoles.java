@@ -19,7 +19,9 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+import java.util.UUID;
 
+import javax.inject.Inject;
 import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
@@ -31,6 +33,7 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
@@ -135,18 +138,20 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();
 
+        List<AgreementRole> agreementRoles;
         switch (ev.getEventPhase()) {
         case VALIDATE:
-            final List<AgreementRole> agreementRoles = findByParty(sourceParty);
+            agreementRoles = findByParty(sourceParty);
 
             if (replacementParty == null && agreementRoles.size() > 0) {
                 ev.invalidate("Party is being used in an agreement role: remove roles or provide a replacement");
+            } else {
+                scratchpad.put(onPartyRemoveScratchpadKey = UUID.randomUUID(), agreementRoles);
             }
-
-            putAgreementRole(ev, agreementRoles);
             break;
         case EXECUTING:
-            for (AgreementRole agreementRole : findByParty(sourceParty)) {
+            agreementRoles = (List<AgreementRole>) scratchpad.get(onPartyRemoveScratchpadKey);
+            for (AgreementRole agreementRole : agreementRoles) {
                 agreementRole.setParty(replacementParty);
             }
             break;
@@ -155,16 +160,14 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         }
     }
 
+
+    private transient UUID onPartyRemoveScratchpadKey;
+
     // //////////////////////////////////////
 
-    private static final String KEY = AgreementRole.class.getName() + ".agreementRoles";
 
-    private static void putAgreementRole(Party.RemoveEvent ev, List<AgreementRole> communicationChannels) {
-        ev.put(KEY, communicationChannels);
-    }
+    @Inject
+    private Scratchpad scratchpad;
 
-    private static List<AgreementRole> getAgreementRoles(Party.RemoveEvent ev) {
-        return (List<AgreementRole>) ev.get(KEY);
-    }
 
 }

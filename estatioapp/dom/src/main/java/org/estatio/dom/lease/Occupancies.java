@@ -19,13 +19,10 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
-
+import java.util.UUID;
 import javax.inject.Inject;
-
 import com.google.common.eventbus.Subscribe;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -38,12 +35,10 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-
+import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class)
@@ -134,18 +129,21 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
         Brand sourceBrand = (Brand) ev.getSource();
         Brand replacementBrand = ev.getReplacement();
 
+        List<Occupancy> occupancies;
         switch (ev.getPhase()) {
         case VALIDATE:
-            final List<Occupancy> occ = findByBrand(sourceBrand, true);
+            occupancies = findByBrand(sourceBrand, true);
 
-            if (replacementBrand == null && occ.size() > 0) {
+            if (replacementBrand == null && occupancies.size() > 0) {
                 ev.invalidate("Brand is being used in an occupancy. Remove occupancy or provide a replacement");
+            } else {
+                scratchpad.put(onBrandRemoveScratchpadKey = UUID.randomUUID(), occupancies);
             }
 
-            putOccupancy(ev, occ);
             break;
         case EXECUTING:
-            for (Occupancy occupancy : getOccupancies(ev)) {
+            occupancies = (List<Occupancy>) scratchpad.get(onBrandRemoveScratchpadKey);
+            for (Occupancy occupancy : occupancies) {
                 occupancy.setBrand(replacementBrand);
             }
             break;
@@ -156,17 +154,10 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
 
     // //////////////////////////////////////
 
-    private static final String KEY = Occupancy.class.getName() + ".occupancies";
+    private transient UUID onBrandRemoveScratchpadKey;
 
-    private static void putOccupancy(Brand.RemoveEvent ev, List<Occupancy> occupancies) {
-        ev.put(KEY, occupancies);
-    }
-
-    private static List<Occupancy> getOccupancies(Brand.RemoveEvent ev) {
-        return (List<Occupancy>) ev.get(KEY);
-    }
-
-    // //////////////////////////////////////
+    @Inject
+    private Scratchpad scratchpad;
 
     @Inject
     private ClockService clockService;

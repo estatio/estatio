@@ -137,7 +137,7 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
     @Subscribe
     @Programmatic
     public void on(final Party.RemoveEvent ev) {
-        Party sourceParty = (Party) ev.getSource();
+        Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 
         switch (ev.getPhase()) {
@@ -161,19 +161,6 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
         default:
             break;
         }
-    }
-
-    // //////////////////////////////////////
-
-    private static final String KEY = PartyRelationship.class.getName() + ".partyRelationships";
-
-    private static void putPartyRelationships(Party.RemoveEvent ev, List<PartyRelationship> partyRelationships) {
-        ev.put(KEY, partyRelationships);
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    private static List<PartyRelationship> getPartyRelationships(Party.RemoveEvent ev) {
-        return (List<PartyRelationship>) ev.get(KEY);
     }
 
     // //////////////////////////////////////

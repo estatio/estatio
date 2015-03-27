@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.communicationchannelparty;
 
-import java.util.List;
 import javax.inject.Inject;
 import com.google.common.eventbus.Subscribe;
 import org.apache.isis.applib.annotation.DomainService;
@@ -41,7 +40,7 @@ public class CommunicationChannelSubscriptions extends EstatioDomainService<Comm
     @Subscribe
     @Programmatic
     public void on(final Party.RemoveEvent ev) {
-        Party sourceParty = (Party) ev.getSource();
+        Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 
         switch (ev.getPhase()) {
@@ -60,17 +59,6 @@ public class CommunicationChannelSubscriptions extends EstatioDomainService<Comm
         default:
             break;
         }
-    }
-
-    private static final String KEY = CommunicationChannel.class.getName() + ".communicationChannels";
-
-    private static void put(Party.RemoveEvent ev, List<CommunicationChannel> communicationChannels) {
-        ev.put(KEY, communicationChannels);
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    private static List<CommunicationChannel> getCommunicationChannels(Party.RemoveEvent ev) {
-        return (List<CommunicationChannel>) ev.get(KEY);
     }
 
 
