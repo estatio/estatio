@@ -21,25 +21,24 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.MathUtils;
 
 /**
@@ -68,12 +67,22 @@ import org.estatio.dom.utils.MathUtils;
 @DomainObject(editing = Editing.DISABLED)
 public class IndexBase
         extends EstatioDomainObject<IndexBase>
-        implements WithStartDate, Chained<IndexBase> {
+        implements WithStartDate, Chained<IndexBase>, WithApplicationTenancyCountry {
 
     public static final int FACTOR_SCALE = 4;
 
     public IndexBase() {
         super("index, startDate desc");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getIndex().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

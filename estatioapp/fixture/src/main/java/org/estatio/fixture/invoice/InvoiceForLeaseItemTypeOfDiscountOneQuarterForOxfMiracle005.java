@@ -18,31 +18,35 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.apache.isis.core.commons.ensure.Ensure;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.fixture.currency.refdata.CurrenciesRefData;
-import org.estatio.fixture.lease.LeaseForOxfMiracl005;
-import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005;
-import org.estatio.fixture.party.OrganisationForAcme;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
-import org.estatio.fixture.party.OrganisationForMiracle;
+import org.estatio.fixture.currency.CurrenciesRefData;
+import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
+import org.estatio.fixture.party.OrganisationForAcmeNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.party.OrganisationForMiracleGb;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
 import static org.estatio.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
 
 public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {
 
-    public static final String SELLER_PARTY = OrganisationForHelloWorld.PARTY_REFERENCE;
-    public static final String BUYER_PARTY = OrganisationForMiracle.PARTY_REFERENCE;
-    public static final String LEASE = LeaseForOxfMiracl005.LEASE_REFERENCE;
+    public static final String PARTY_REF_SELLER = OrganisationForHelloWorldNl.REF;
+    public static final String PARTY_REF_BUYER = OrganisationForMiracleGb.REF;
+    public static final String LEASE_REF = _LeaseForOxfMiracl005Gb.REF;
+
+    public static final String AT_PATH = ApplicationTenancyForGbOxf.PATH;
 
     // simply within the lease's start/end date
-    public static LocalDate startDateFor(Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(LEASE));
+    public static LocalDate startDateFor(final Lease lease) {
+        Ensure.ensureThatArg(lease.getReference(), is(LEASE_REF));
         return lease.getStartDate().plusYears(1);
     }
 
@@ -50,27 +54,33 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
         this(null, null);
     }
 
-    public InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(String friendlyName, String localName) {
+    public InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(final String friendlyName, final String localName) {
         super(friendlyName, localName);
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForAcme());
-            executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005());
+            executionContext.executeChild(this, new OrganisationForAcmeNl());
+            executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE);
+        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
+        final Lease lease = leases.findLeaseByReference(LEASE_REF);
         final LocalDate invoiceStartDate = startDateFor(lease);
 
         final Invoice invoice = createInvoice(
-                lease, SELLER_PARTY, BUYER_PARTY,
-                PaymentMethod.DIRECT_DEBIT, CurrenciesRefData.EUR,
-                invoiceStartDate, executionContext);
+                applicationTenancy,
+                lease,
+                PARTY_REF_SELLER,
+                PARTY_REF_BUYER,
+                PaymentMethod.DIRECT_DEBIT,
+                CurrenciesRefData.EUR,
+                invoiceStartDate,
+                executionContext);
 
         createInvoiceItemsForTermsOfFirstLeaseItemOfType(
                 invoice, LeaseItemType.DISCOUNT,

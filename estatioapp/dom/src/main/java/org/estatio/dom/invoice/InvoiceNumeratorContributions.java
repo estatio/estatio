@@ -21,13 +21,13 @@ package org.estatio.dom.invoice;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
 
 @DomainService(menuOrder = "50")
 @Hidden
-public class InvoiceNumeratorContributions extends EstatioService<InvoiceNumeratorContributions> {
+public class InvoiceNumeratorContributions extends UdoDomainService<InvoiceNumeratorContributions> {
 
     public InvoiceNumeratorContributions() {
         super(InvoiceNumeratorContributions.class);

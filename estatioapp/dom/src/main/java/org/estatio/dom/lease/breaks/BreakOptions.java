@@ -36,12 +36,12 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class BreakOptions extends EstatioDomainService<BreakOption> {
+public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
 
     public BreakOptions() {
         super(BreakOptions.class, BreakOption.class);

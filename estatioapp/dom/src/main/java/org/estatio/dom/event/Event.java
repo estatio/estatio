@@ -22,11 +22,8 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Function;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -35,12 +32,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 
 /**
  * An event that has or is scheduled to occur at some point in time, pertaining
@@ -75,12 +72,22 @@ import org.estatio.dom.JdoColumnLength;
 @DomainObject(editing = Editing.DISABLED)
 public class Event
         extends EstatioDomainObject<Event>
-        implements CalendarEventable {
+        implements CalendarEventable, WithApplicationTenancyProperty {
 
     private static final int NUMBER_OF_LINES = 8;
 
     public Event() {
         super("date, subject, calendarName");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getSubject().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

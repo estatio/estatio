@@ -21,15 +21,17 @@ package org.estatio.dom.asset.financial;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
-
+import com.google.common.base.Function;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.financial.FinancialAccount;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -59,7 +61,8 @@ import org.estatio.dom.financial.FinancialAccount;
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
 public class FixedAssetFinancialAccount
-        extends EstatioDomainObject<FixedAssetFinancialAccount> {
+        extends EstatioDomainObject<FixedAssetFinancialAccount>
+        implements WithApplicationTenancyProperty {
 
     public FixedAssetFinancialAccount() {
         super("fixedAsset,financialAccount");
@@ -69,6 +72,16 @@ public class FixedAssetFinancialAccount
         super("fixedAsset,financialAccount");
         setFinancialAccount(financialAccount);
         setFixedAsset(fixedAsset);
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getFixedAsset().getApplicationTenancy();
     }
 
     // //////////////////////////////////////
@@ -103,6 +116,40 @@ public class FixedAssetFinancialAccount
 
     public void setFinancialAccount(final FinancialAccount financialAccount) {
         this.financialAccount = financialAccount;
+     }
+
+    // //////////////////////////////////////
+
+    public final static class Functions {
+
+        private Functions() {
+        }
+
+        /**
+         * A {@link com.google.common.base.Function} that obtains the {@link FixedAssetFinancialAccount#getFinancialAccount() account}.
+         */
+        public static <T extends FinancialAccount> Function<FixedAssetFinancialAccount, T> financialAccountOf() {
+            return new Function<FixedAssetFinancialAccount, T>() {
+                @SuppressWarnings("unchecked")
+                public T apply(final FixedAssetFinancialAccount fixedAssetFinancialAccount) {
+                    return (T) (fixedAssetFinancialAccount != null ? fixedAssetFinancialAccount.getFinancialAccount() : null);
+                }
+            };
+        }
+
+        /**
+         * A {@link Function} that obtains the {@link FixedAssetRole#getAsset() asset}..
+         */
+        public static <T extends FixedAsset> Function<FixedAssetRole, T> assetOf() {
+            return new Function<FixedAssetRole, T>() {
+                @SuppressWarnings("unchecked")
+                public T apply(final FixedAssetRole fixedAssetRole) {
+                    return (T) (fixedAssetRole != null ? fixedAssetRole.getAsset() : null);
+                }
+            };
+        }
     }
+
+
 
 }

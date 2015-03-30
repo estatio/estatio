@@ -34,14 +34,14 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 
 @DomainService(menuOrder = "91")
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.TERTIARY,
         menuOrder = "40"
 )
-public class EstatioOtherServices extends EstatioService<EstatioOtherServices> {
+public class EstatioOtherServices extends UdoDomainService<EstatioOtherServices> {
 
     public EstatioOtherServices() {
         super(EstatioOtherServices.class);

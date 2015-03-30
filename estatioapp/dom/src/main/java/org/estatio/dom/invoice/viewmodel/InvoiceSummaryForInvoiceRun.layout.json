@@ -7,6 +7,14 @@
           "members": {
             "runId": {}
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -23,12 +31,12 @@
     {
       "span": 2,
       "memberGroups": {
-      	"Totals": {
+        "Totals": {
           "members": {
             "netAmount": {},
             "grossAmount": {}
           }
-      	}
+        }
       }
     },
     {

@@ -21,23 +21,18 @@ package org.estatio.integtests.assets.registration;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
@@ -49,7 +44,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxf());
+                executionContext.executeChild(this, new _PropertyForOxfGb());
             }
         });
     }
@@ -69,7 +64,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
         @Test
         public void findBySubject() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(PropertyForOxf.PROPERTY_REFERENCE);
+            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

@@ -32,10 +32,10 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 
 @DomainService(menuOrder = "95")
-public class EstatioAuditingContributions extends EstatioService<EstatioAuditingContributions> {
+public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditingContributions> {
 
     public EstatioAuditingContributions() {
         super(EstatioAuditingContributions.class);

@@ -19,12 +19,13 @@
 package org.estatio.dom.tag;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.UdoDomainObject;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithNameComparable;
 
 public class TagTest {
@@ -37,6 +38,7 @@ public class TagTest {
                     .withFixture(Taggable.class, new Taggable() {
                     }, new Taggable() {
                     })
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Tag());
         }
 
@@ -44,8 +46,13 @@ public class TagTest {
 
     public static class CompareTo extends ComparableContractTest_compareTo<Tag> {
 
-        public static class SomeTaggableObject extends UdoDomainObject<SomeTaggableObject>
+        public static class SomeTaggableObject extends EstatioDomainObject<SomeTaggableObject>
                 implements Taggable, WithNameComparable<SomeTaggableObject> {
+
+            public ApplicationTenancy getApplicationTenancy() {
+                return null;
+            }
+
 
             public SomeTaggableObject() {
                 super("name");

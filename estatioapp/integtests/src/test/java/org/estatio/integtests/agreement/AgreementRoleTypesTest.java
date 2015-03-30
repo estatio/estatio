@@ -1,18 +1,10 @@
 package org.estatio.integtests.agreement;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -23,8 +15,12 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class AgreementRoleTypesTest extends EstatioIntegrationTest {
 
@@ -51,15 +47,15 @@ public class AgreementRoleTypesTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
             }
         });
     }
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(LeaseForOxfTopModel001.TENANT_REFERENCE);
-        agreement = agreements.findAgreementByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+        agreement = agreements.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
         agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 

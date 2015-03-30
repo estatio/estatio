@@ -23,14 +23,14 @@ import com.google.common.eventbus.Subscribe;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 
 @DomainService
 @Hidden
-public class CommunicationChannelSubscriptions extends EstatioDomainService<CommunicationChannel> {
+public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
     public CommunicationChannelSubscriptions() {
         super(CommunicationChannelSubscriptions.class, CommunicationChannel.class);

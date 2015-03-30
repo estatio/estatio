@@ -19,14 +19,11 @@
 package org.estatio.app;
 
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.ViewModelLayout;
-
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;

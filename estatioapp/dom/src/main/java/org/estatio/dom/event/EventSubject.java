@@ -20,10 +20,11 @@ package org.estatio.dom.event;
 
 import java.util.List;
 
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
 
 
-public interface EventSubject extends Calendarable {
+public interface EventSubject extends Calendarable, WithApplicationTenancy {
 
     /**
      * The {@link Event}s that pertain to this object; each of those events 

@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -42,8 +43,8 @@ public class CountriesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenExists() throws Exception {
-            final Country country = countries.findCountry("NLD");
-            assertThat(country.getReference(), is("NLD"));
+            final Country country = countries.findCountry(CountriesRefData.NLD);
+            assertThat(country.getReference(), is(CountriesRefData.NLD));
         }
 
     }

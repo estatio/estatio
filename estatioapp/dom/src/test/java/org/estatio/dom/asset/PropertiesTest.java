@@ -19,6 +19,8 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+import org.assertj.core.api.Assertions;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -30,6 +32,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -127,6 +130,8 @@ public class PropertiesTest {
 
         @Mock
         private DomainObjectContainer mockContainer;
+        @Mock
+        private EstatioApplicationTenancies mockEstatioApplicationTenancies;
 
         Properties properties;
 
@@ -134,14 +139,30 @@ public class PropertiesTest {
         public void setup() {
             properties = new Properties();
             properties.setContainer(mockContainer);
+            properties.estatioApplicationTenancies = mockEstatioApplicationTenancies;
         }
 
 
         @Test
         public void newProperty() {
+            // given
+            final ApplicationTenancy countryApplicationTenancy = new ApplicationTenancy();
+            countryApplicationTenancy.setPath("/it");
+
             final Property property = new Property();
+            final ApplicationTenancy propertyApplicationTenancy = new ApplicationTenancy();
+            propertyApplicationTenancy.setPath("/it/REF-1");
+            propertyApplicationTenancy.setName("REF-1 (Italy)");
+
+            // expect
             context.checking(new Expectations() {
                 {
+                    oneOf(mockEstatioApplicationTenancies).findOrCreatePropertyTenancy(countryApplicationTenancy, "REF-1");
+                    will(returnValue(propertyApplicationTenancy));
+
+                    oneOf(mockEstatioApplicationTenancies).findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
+                    oneOf(mockEstatioApplicationTenancies).findOrCreateLocalTaTenancy(propertyApplicationTenancy);
+
                     oneOf(mockContainer).newTransientInstance(Property.class);
                     will(returnValue(property));
 
@@ -149,10 +170,15 @@ public class PropertiesTest {
                 }
             });
 
-            final Property newProperty = properties.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null);
-            assertThat(newProperty.getReference(), is("REF-1"));
-            assertThat(newProperty.getName(), is("Name-1"));
-            assertThat(newProperty.getType(), is(PropertyType.CINEMA));
+            // when
+            final Property newProperty = properties.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null, countryApplicationTenancy);
+
+            // then
+            Assertions.assertThat(newProperty.getReference()).isEqualTo("REF-1");
+            Assertions.assertThat(newProperty.getName()).isEqualTo("Name-1");
+            Assertions.assertThat(newProperty.getType()).isEqualTo(PropertyType.CINEMA);
+            Assertions.assertThat(newProperty.getCountry()).isNull();
+            Assertions.assertThat(newProperty.getApplicationTenancyPath()).isEqualTo("/it/REF-1");
         }
 
         @Test

@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -236,6 +236,7 @@ public class LeaseTermForIndexableTest {
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
                     .withFixture(pojos(Index.class))
                     .withFixture(statii())
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new LeaseTermForIndexable());
         }
 

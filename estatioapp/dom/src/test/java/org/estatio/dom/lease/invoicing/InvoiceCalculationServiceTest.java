@@ -165,7 +165,7 @@ public class InvoiceCalculationServiceTest {
             taxRate.setPercentage(BigDecimal.valueOf(21));
 
             charge = new Charge();
-            charge.setReference("RENT");
+            charge.setReference("IT_RENT");
             charge.setTax(tax);
 
             invoiceItemForLease = new InvoiceItemForLease();

@@ -27,13 +27,13 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
 @DomainService(repositoryFor = Agreement.class)
 @DomainServiceLayout(menuOrder = "25")
 @Hidden
-public class Agreements extends EstatioDomainService<Agreement> {
+public class Agreements extends UdoDomainRepositoryAndFactory<Agreement> {
 
     public Agreements() {
         super(Agreements.class, Agreement.class);

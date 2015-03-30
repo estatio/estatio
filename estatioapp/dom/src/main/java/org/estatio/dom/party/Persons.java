@@ -20,6 +20,8 @@ package org.estatio.dom.party;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -30,15 +32,17 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 @DomainService(repositoryFor = Person.class)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.3")
-public class Persons extends EstatioDomainService<Person> {
+public class Persons extends UdoDomainRepositoryAndFactory<Person> {
 
     public Persons() {
         super(Persons.class, Person.class);
@@ -53,12 +57,23 @@ public class Persons extends EstatioDomainService<Person> {
             final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
             final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final @ParameterLayout(named = "Last name") String lastName,
-            final @ParameterLayout(named = "Gender") PersonGenderType gender) {
+            final @ParameterLayout(named = "Gender") PersonGenderType gender,
+            final ApplicationTenancy applicationTenancy) {
         final Person person = newTransientInstance(Person.class);
+        person.setApplicationTenancyPath(applicationTenancy.getPath());
         person.setReference(reference);
         person.change(gender, initials, firstName, lastName);
         persist(person);
         return person;
+    }
+
+
+    public List<ApplicationTenancy> choices5NewPerson() {
+        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+    }
+
+    public ApplicationTenancy default5NewPerson() {
+        return Dflt.of(choices5NewPerson());
     }
 
     // //////////////////////////////////////
@@ -68,5 +83,10 @@ public class Persons extends EstatioDomainService<Person> {
     public List<Person> allPersons() {
         return allInstances();
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private EstatioApplicationTenancies estatioApplicationTenancies;
 
 }

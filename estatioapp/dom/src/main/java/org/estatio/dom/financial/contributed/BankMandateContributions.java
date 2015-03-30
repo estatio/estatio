@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Render.Type;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
@@ -54,7 +54,7 @@ import org.estatio.dom.bankmandate.BankMandateConstants;
  */
 @DomainService(menuOrder = "30")
 @Hidden
-public class BankMandateContributions extends EstatioService<BankMandateContributions> {
+public class BankMandateContributions extends UdoDomainService<BankMandateContributions> {
 
     public BankMandateContributions() {
         super(BankMandateContributions.class);

@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,
@@ -46,7 +46,7 @@ import org.estatio.dom.EstatioDomainService;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.4")
 public class IndexValues
-        extends EstatioDomainService<IndexValue> {
+        extends UdoDomainRepositoryAndFactory<IndexValue> {
 
     public IndexValues() {
         super(IndexValues.class, IndexValue.class);

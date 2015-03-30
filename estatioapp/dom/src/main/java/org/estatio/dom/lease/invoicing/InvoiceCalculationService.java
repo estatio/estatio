@@ -33,7 +33,7 @@ import org.joda.time.LocalDateTime;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -45,7 +45,7 @@ import org.estatio.services.settings.EstatioSettingsService;
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50")
 @Hidden
-public class InvoiceCalculationService extends EstatioService<InvoiceCalculationService> {
+public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculationService> {
 
     public InvoiceCalculationService() {
         super(InvoiceCalculationService.class);

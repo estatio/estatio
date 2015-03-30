@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 
 @DomainService(repositoryFor = FixedAssetRegistration.class)
@@ -36,7 +36,7 @@ import org.estatio.dom.asset.FixedAsset;
         named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.3")
-public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegistration> {
+public class FixedAssetRegistrations extends UdoDomainRepositoryAndFactory<FixedAssetRegistration> {
 
     public FixedAssetRegistrations() {
         super(FixedAssetRegistrations.class, FixedAssetRegistration.class);

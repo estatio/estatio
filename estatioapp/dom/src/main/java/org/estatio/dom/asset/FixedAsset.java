@@ -20,16 +20,12 @@ package org.estatio.dom.asset;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.collect.Sets;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -43,10 +39,9 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
-
-import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
@@ -81,9 +76,9 @@ import org.estatio.dom.party.Party;
 })
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = FixedAssets.class, autoCompleteAction = "autoComplete")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-public abstract class FixedAsset
-        extends EstatioDomainObject<FixedAsset>
-        implements WithNameComparable<FixedAsset>, WithReferenceUnique, CommunicationChannelOwner {
+public abstract class FixedAsset<X extends FixedAsset<X>>
+        extends EstatioDomainObject<X>
+        implements WithNameComparable<X>, WithReferenceUnique, CommunicationChannelOwner {
 
     public FixedAsset() {
         super("name");

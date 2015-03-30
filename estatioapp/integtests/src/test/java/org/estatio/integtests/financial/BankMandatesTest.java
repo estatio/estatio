@@ -34,9 +34,9 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountAndMandateForPoison;
-import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
-import org.estatio.fixture.financial.BankAccountForPoison;
+import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
+import org.estatio.fixture.financial._BankAccountForPoisonNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -53,8 +53,8 @@ public class BankMandatesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
-                    executionContext.executeChild(this, new BankAccountAndMandateForPoison());
+                    executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
+                    executionContext.executeChild(this, new _BankAccountAndMandateForPoisonNl());
                 }
             });
         }
@@ -69,7 +69,7 @@ public class BankMandatesTest extends EstatioIntegrationTest {
         public void forAccountWithMandate() {
 
             // given
-            FinancialAccount account = financialAccounts.findAccountByReference(BankAccountForPoison.BANK_ACCOUNT_REF);
+            FinancialAccount account = financialAccounts.findAccountByReference(_BankAccountForPoisonNl.REF);
             Assert.assertThat(account instanceof BankAccount, is(true));
             final BankAccount bankAccount = (BankAccount) account;
 

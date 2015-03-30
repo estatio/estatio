@@ -27,11 +27,15 @@ public class EstatioUser extends AbstractUserAndRolesFixtureScript {
 
     public static final String USER_NAME = "estatio-user";
     public static final String PASSWORD = "pass";
+    public static final String AT_PATH = "/";
+    public static final String EMAIL_ADDRESS = null;
 
     public EstatioUser() {
         super(
                 USER_NAME,
                 PASSWORD,
+                EMAIL_ADDRESS,
+                AT_PATH,
                 AccountType.LOCAL,
                 Arrays.asList(EstatioUserRoleAndPermissions.ROLE_NAME));
     }

@@ -22,21 +22,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
 import org.apache.isis.applib.services.wrapper.InvalidException;
-
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.Lease;
@@ -47,10 +42,10 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brand.RemoveEvent;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class OccupanciesTest extends EstatioIntegrationTest {
@@ -64,8 +59,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }
         });
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        unit = units.findUnitByReference(PropertyForOxf.unitReference("001"));
+        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        unit = units.findUnitByReference(_PropertyForOxfGb.unitReference("001"));
     }
 
     @Inject
@@ -115,7 +110,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Brand brand = brands.findByName(LeaseForOxfTopModel001.BRAND);
+            Brand brand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
             assertNotNull(brand);
 
             assertThat(occupancies.findByBrand(brand, false).size(), is(1));
@@ -147,8 +142,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
                 }
             });
 
@@ -156,8 +151,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            oldBrand = brands.findByName(LeaseForOxfTopModel001.BRAND);
-            newBrand = brands.findByName(LeaseForOxfMediaX002.BRAND);            
+            oldBrand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
+            newBrand = brands.findByName(_LeaseForOxfMediaX002Gb.BRAND);
         }
 
         @Test
@@ -180,9 +175,11 @@ public class OccupanciesTest extends EstatioIntegrationTest {
             event.setPhase(Phase.EXECUTING);
             occupancies.on(event);
 
-            /* then Topmodel brand should be adopted by the MEDIAX brand. So, there should be 2 
+            /*
+             * then Topmodel brand should be adopted by the MEDIAX brand. So,
+             * there should be 2
              * MEDIAX occupancies and 0 TOPMODEL occupancies.
-             */ 
+             */
             assertThat(occupancies.findByBrand(oldBrand, false).size(), is(0));
             assertThat(occupancies.findByBrand(newBrand, false).size(), is(2));
         }

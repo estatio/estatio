@@ -25,11 +25,11 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRoleType.class)
 @Hidden
-public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> {
+public class AgreementRoleTypes extends UdoDomainRepositoryAndFactory<AgreementRoleType> {
 
     public AgreementRoleTypes() {
         super(AgreementRoleTypes.class, AgreementRoleType.class);

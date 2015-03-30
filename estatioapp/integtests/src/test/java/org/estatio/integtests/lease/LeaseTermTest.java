@@ -18,30 +18,18 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.assertNotNull;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.SortedSet;
-
 import javax.inject.Inject;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
-
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -55,13 +43,20 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.LeaseForOxfMiracl005;
-import org.estatio.fixture.lease.LeaseForOxfPoison003;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertNotNull;
 
 public class LeaseTermTest extends EstatioIntegrationTest {
 
@@ -104,7 +99,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         executionContext.executeChild(this, new EstatioBaseLineFixture());
-                        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005());
+                        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     }
                 });
@@ -118,7 +113,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
             @Before
             public void setup() {
-                lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
+                lease = leases.findLeaseByReference(_LeaseForOxfMiracl005Gb.REF);
                 leaseTopModelRentItem = lease.getItems().first();
                 assertNotNull(leaseTopModelRentItem);
                 assertNotNull(leaseTopModelRentItem.getStartDate());
@@ -157,7 +152,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
                 // have to obtain again because runScript commits and so JDO
                 // clears out all enlisted objects.
-                lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
+                lease = leases.findLeaseByReference(_LeaseForOxfMiracl005Gb.REF);
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.DISCOUNT);
 
                 // and given
@@ -234,7 +229,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             public void allowedIfLeaseHasInvoiceForNonFixedInvoicingFrequencyTerm() throws Exception {
 
                 // given
-                lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
+                lease = leases.findLeaseByReference(_LeaseForOxfPoison003Gb.REF);
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.TURNOVER_RENT);
 
                 // and given
@@ -284,7 +279,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
             leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
             assertNotNull(leaseTopModelRentItem);
         }
@@ -330,7 +325,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
             Assert.assertThat(lease.getItems().size(), is(6));
         }
 

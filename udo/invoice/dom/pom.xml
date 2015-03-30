@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom-invoice</artifactId>
+    <artifactId>udo-dom-invoice</artifactId>
     <packaging>jar</packaging>
     
     <name>UDO Invoice DOM</name>
@@ -115,10 +115,6 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-lease_invoice</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>

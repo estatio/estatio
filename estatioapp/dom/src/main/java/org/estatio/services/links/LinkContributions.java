@@ -31,11 +31,11 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @DomainService(menuOrder = "99")
-public class LinkContributions extends EstatioService<LinkContributions> {
+public class LinkContributions extends UdoDomainService<LinkContributions> {
 
     public LinkContributions() {
         super(LinkContributions.class);
@@ -57,15 +57,19 @@ public class LinkContributions extends EstatioService<LinkContributions> {
         return new URL(urlStr);
     }
     
-    public boolean hideOpenLink(Object domainObject, Link link) {
-         return links.findAllForClassHierarchy(domainObject).isEmpty();
+    public boolean hideOpenLink(final Object domainObject, final Link link) {
+         return allForClassHierarchyOf(domainObject).isEmpty();
     }
 
-    public List<Link> choices1OpenLink(Object domainObject, Link link) {
+    public List<Link> choices1OpenLink(final Object domainObject, final Link link) {
+        return allForClassHierarchyOf(domainObject);
+    }
+
+    private List<Link> allForClassHierarchyOf(final Object domainObject) {
         return links.findAllForClassHierarchy(domainObject);
     }
-    
-    
+
+
     // //////////////////////////////////////
 
     @javax.inject.Inject

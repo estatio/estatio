@@ -24,6 +24,8 @@ import org.estatio.dom.lease.breaks.BreakType;
 
 public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstract {
 
+    public static final String LEASE_REF = _LeaseForOxfTopModel001Gb.REF;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
@@ -33,9 +35,11 @@ public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstrac
         }
 
         // exec
-        final Lease leaseTopModel001 = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        newBreakOptionPlusYears(leaseTopModel001, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
-        newBreakOptionAtEndDate(leaseTopModel001, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
+        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        newBreakOptionPlusYears(
+                lease, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
+        newBreakOptionAtEndDate(
+                lease, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
     }
 
 }

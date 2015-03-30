@@ -20,19 +20,21 @@ package org.estatio.dom.asset.registration;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -53,12 +55,20 @@ import org.estatio.dom.utils.ClassUtils;
 @Immutable
 @Bounded
 public class FixedAssetRegistrationType 
-        extends EstatioDomainObject<FixedAssetRegistrationType> 
+        extends EstatioDomainObject<FixedAssetRegistrationType>
         implements WithTitleComparable<FixedAssetRegistrationType>, 
-                   WithTitleUnique, PowerType<FixedAssetRegistration> {
+                   WithTitleUnique, PowerType<FixedAssetRegistration>,
+                   WithApplicationTenancyProperty {
 
     public FixedAssetRegistrationType() {
         super("title");
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

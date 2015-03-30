@@ -20,19 +20,25 @@ package org.estatio.fixture.invoice;
 
 import java.util.SortedSet;
 import javax.inject.Inject;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.joda.time.LocalDate;
 
 /**
  * Creates {@link org.estatio.dom.invoice.Invoice} and associated {@link org.estatio.dom.invoice.InvoiceItem}s.
@@ -43,14 +49,22 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
         super(friendlyName, localName);
     }
 
-    protected Invoice createInvoice(Lease lease, String sellerStr, String buyerStr, PaymentMethod paymentMethod, String currencyStr, LocalDate startDate, ExecutionContext executionContext) {
+    protected Invoice createInvoice(
+            final ApplicationTenancy applicationTenancy,
+            Lease lease,
+            String sellerStr,
+            String buyerStr,
+            PaymentMethod paymentMethod,
+            String currencyStr,
+            LocalDate startDate,
+            ExecutionContext executionContext) {
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);
         final Currency currency = currencies.findCurrency(currencyStr);
 
         final String interactionId = null;
 
-        final Invoice invoice = invoices.newInvoice(seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
+        final Invoice invoice = invoices.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
 
         return executionContext.addResult(this, invoice);
@@ -90,5 +104,8 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Leases leases;
+
+    @Inject
+    protected ApplicationTenancies applicationTenancies;
 
 }

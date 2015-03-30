@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
@@ -34,6 +35,7 @@ public class AgreementRoleCommunicationChannelTypeTest {
             final AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = new AgreementRoleCommunicationChannelType();
             newPojoTester()
                     .withFixture(pojos(AgreementType.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(agreementRoleCommunicationChannelType);
         }
 

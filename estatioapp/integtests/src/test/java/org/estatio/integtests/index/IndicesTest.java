@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -43,8 +44,8 @@ public class IndicesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenExists() throws Exception {
-            final Index index = indices.findIndex("ISTAT-FOI");
-            assertThat(index.getReference(), is("ISTAT-FOI"));
+            final Index index = indices.findIndex(IndexRefData.IT_REF);
+            assertThat(index.getReference(), is(IndexRefData.IT_REF));
         }
 
     }

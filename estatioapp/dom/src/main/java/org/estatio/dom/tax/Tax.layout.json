@@ -9,6 +9,14 @@
             "name": {},
             "externalReference": {}
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -24,9 +32,9 @@
       "span": 8,
       "collections": {
         "rates": {
-            "actions": {
-                "newRate": {}
-            }
+          "actions": {
+            "newRate": {}
+          }
         }
       }
     }

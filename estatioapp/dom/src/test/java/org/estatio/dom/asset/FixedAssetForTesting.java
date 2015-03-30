@@ -19,7 +19,13 @@
 package org.estatio.dom.asset;
 
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 public class FixedAssetForTesting extends FixedAsset {
+
+    public ApplicationTenancy getApplicationTenancy() {
+        return null;
+    }
 
 
 }

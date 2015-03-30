@@ -20,19 +20,20 @@ package org.estatio.dom.lease.tags;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -58,10 +59,17 @@ import org.estatio.dom.WithNameUnique;
 @Immutable
 public class Sector
         extends EstatioDomainObject<Sector>
-        implements WithNameUnique, WithNameComparable<Sector> {
+        implements WithNameUnique, WithNameComparable<Sector>, WithApplicationTenancyGlobal {
 
     public Sector() {
         super("name");
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

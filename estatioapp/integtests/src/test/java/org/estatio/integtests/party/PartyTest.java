@@ -32,10 +32,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForAcme;
-import org.estatio.fixture.party.OrganisationForTopModel;
-import org.estatio.fixture.party.PersonForGinoVannelli;
-import org.estatio.fixture.party.PersonForJohnDoe;
+import org.estatio.fixture.party.OrganisationForAcmeNl;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.fixture.party.PersonForGinoVannelliGb;
+import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class PartyTest extends EstatioIntegrationTest {
@@ -55,21 +55,21 @@ public class PartyTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
                     // linked together:
-                    executionContext.executeChild(this, new OrganisationForTopModel());
-                    executionContext.executeChild(this, new PersonForGinoVannelli());
+                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, new PersonForGinoVannelliGb());
                     // only relationship
-                    executionContext.executeChild(this, new PersonForJohnDoe());
+                    executionContext.executeChild(this, new PersonForJohnDoeNl());
                     // only comm channels
-                    executionContext.executeChild(this, new OrganisationForAcme());
+                    executionContext.executeChild(this, new OrganisationForAcmeNl());
                 }
             });
         }
 
         @Test
         public void happyCase() {
-            Party party = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
             wrap(party).remove();
-            assertNull(parties.findPartyByReferenceOrNull(PersonForJohnDoe.PARTY_REFERENCE));
+            assertNull(parties.findPartyByReferenceOrNull(PersonForJohnDoeNl.REF));
         }
 
     }

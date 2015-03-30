@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.PersonForJohnDoe;
+import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class PersonTest extends EstatioIntegrationTest {
@@ -39,7 +39,7 @@ public class PersonTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForJohnDoe());
+                    executionContext.executeChild(this, new PersonForJohnDoeNl());
                 }
             });
         }

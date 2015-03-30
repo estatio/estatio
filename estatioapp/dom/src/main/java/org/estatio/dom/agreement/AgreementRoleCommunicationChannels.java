@@ -22,20 +22,20 @@ import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
 import com.google.common.eventbus.Subscribe;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannel.class)
 @Hidden
-public class AgreementRoleCommunicationChannels extends EstatioDomainService<AgreementRoleCommunicationChannel> {
+public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
 
     public AgreementRoleCommunicationChannels() {
         super(AgreementRoleCommunicationChannels.class, AgreementRoleCommunicationChannel.class);
@@ -59,6 +59,12 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
             final CommunicationChannel communicationChannel) {
         return allMatches("findByCommunicationChannel",
                 "communicationChannel", communicationChannel);
+    }
+
+    @Programmatic
+    public Iterable<? extends EstatioDomainObject<?>> findByAgreement(final Agreement agreement) {
+        return allMatches("findByAgreement",
+                "agreement", agreement);
     }
 
     @Subscribe
@@ -96,4 +102,5 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
 
     @Inject
     private Scratchpad scratchpad;
+
 }

@@ -24,6 +24,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
+import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
 
 /**
  * Will reset to a fixed baseline of the {@link org.estatio.fixture.EstatioRefDataSetupFixture reference data}
@@ -48,6 +49,8 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
             return;
         }
         executionContext.executeChild(this, new EstatioRefDataSetupFixture());
+        executionContext.executeChild(this, new EstatioSecurityModuleDemoFixture());
+
     }
 
     /**

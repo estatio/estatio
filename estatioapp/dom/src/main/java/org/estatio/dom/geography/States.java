@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
 
 @DomainService(repositoryFor = State.class)
@@ -39,7 +39,7 @@ import org.estatio.dom.RegexValidation;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.6")
 public class States
-        extends EstatioDomainService<State> {
+        extends UdoDomainRepositoryAndFactory<State> {
 
     public States() {
         super(States.class, State.class);

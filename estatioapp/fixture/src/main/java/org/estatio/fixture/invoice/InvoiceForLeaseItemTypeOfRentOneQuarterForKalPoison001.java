@@ -18,31 +18,34 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+import org.apache.isis.core.commons.ensure.Ensure;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.fixture.currency.refdata.CurrenciesRefData;
-import org.estatio.fixture.lease.LeaseForKalPoison001;
+import org.estatio.fixture.currency.CurrenciesRefData;
+import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.fixture.party.OrganisationForAcme;
-import org.estatio.fixture.party.OrganisationForPoison;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.core.commons.ensure.Ensure;
+import org.estatio.fixture.party.OrganisationForAcmeNl;
+import org.estatio.fixture.party.OrganisationForPoisonNl;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlKal;
 
 import static org.estatio.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
-    public static final String SELLER_PARTY = OrganisationForAcme.PARTY_REFERENCE;
-    public static final String BUYER_PARTY = OrganisationForPoison.PARTY_REFERENCE;
-    public static final String LEASE = LeaseForKalPoison001.LEASE_REFERENCE;
+    public static final String PARTY_REF_SELLER = OrganisationForAcmeNl.REF;
+    public static final String PARTY_REF_BUYER = OrganisationForPoisonNl.REF;
+    public static final String LEASE_REF = LeaseForKalPoison001Nl.REF;
+
+    public static final String AT_PATH = ApplicationTenancyForNlKal.PATH;
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(LEASE));
+        Ensure.ensureThatArg(lease.getReference(), is(LEASE_REF));
         return lease.getStartDate().plusYears(1);
     }
 
@@ -58,21 +61,22 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForAcme());
+        executionContext.executeChild(this, new OrganisationForAcmeNl());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
 
         // exec
-
-        final Lease lease = leases.findLeaseByReference(LEASE);
+        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
+        final Lease lease = leases.findLeaseByReference(LEASE_REF);
 
         // simply within the lease's start/end date
         final LocalDate startDate = startDateFor(lease);
 
         final Invoice invoice = createInvoice(
-                lease, SELLER_PARTY, BUYER_PARTY,
-                PaymentMethod.DIRECT_DEBIT, CurrenciesRefData.EUR,
-                startDate,
-                executionContext);
+                applicationTenancy,
+                lease, PARTY_REF_SELLER,
+                PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,
+                CurrenciesRefData.EUR,
+                startDate, executionContext);
 
         createInvoiceItemsForTermsOfFirstLeaseItemOfType(
                 invoice, LeaseItemType.RENT,

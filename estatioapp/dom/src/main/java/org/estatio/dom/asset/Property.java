@@ -21,12 +21,9 @@ package org.estatio.dom.asset;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -34,19 +31,22 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
-
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
@@ -68,7 +68,37 @@ import org.estatio.dom.party.Party;
 })
 @DomainObject(autoCompleteRepository = Properties.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-public class Property extends FixedAsset implements Locatable {
+public class Property
+        extends FixedAsset<Property>
+        implements Locatable, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+    }
+
+    // //////////////////////////////////////
 
     private String fullName;
 

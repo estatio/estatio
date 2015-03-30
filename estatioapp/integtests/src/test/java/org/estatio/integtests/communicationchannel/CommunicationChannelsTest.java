@@ -35,7 +35,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForTopModel;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class CommunicationChannelsTest extends EstatioIntegrationTest {
@@ -46,7 +46,7 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new OrganisationForTopModel());
+                executionContext.executeChild(this, new OrganisationForTopModelGb());
             }
         });
     }
@@ -61,7 +61,7 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+        party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
     }
 
     public static class FindByOwner extends CommunicationChannelsTest {

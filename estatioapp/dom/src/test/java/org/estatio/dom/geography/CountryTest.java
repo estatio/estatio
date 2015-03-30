@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.geography;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
@@ -29,6 +30,7 @@ public class CountryTest {
         @Test
         public void test() {
             newPojoTester()
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Country());
         }
 

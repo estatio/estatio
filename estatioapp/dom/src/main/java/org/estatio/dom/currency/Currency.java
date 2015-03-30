@@ -21,18 +21,20 @@ package org.estatio.dom.currency;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
 /**
  * Represents the {@link Currency} of some amount of money.
@@ -69,10 +71,20 @@ import org.estatio.dom.WithReferenceUnique;
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Currencies.class, autoCompleteAction = "autoComplete", bounded = true)
 public class Currency
         extends EstatioDomainObject<Currency>
-        implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique {
+        implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {
 
     public Currency() {
         super("reference");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

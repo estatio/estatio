@@ -115,6 +115,14 @@
               }
             }
           }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
         }
       }
     },
@@ -157,13 +165,12 @@
               "typicalLength": {
                 "value": 12
               },
-              "actions":{
-                "changeContractualAmount":{}
+              "actions": {
+                "changeContractualAmount": {}
               }
             }
           }
         }
-        
       }
     },
     {
@@ -181,7 +188,7 @@
             "value": "EAGERLY"
           },
           "actions": {
-          	"newrole":{}
+            "newrole": {}
           },
           "disabled": {}
         },
@@ -193,10 +200,10 @@
             "value": "EAGERLY"
           },
           "actions": {
-          	"newTransaction":{}
+            "newTransaction": {}
           },
           "disabled": {}
-		}        
+        }
       }
     }
   ],

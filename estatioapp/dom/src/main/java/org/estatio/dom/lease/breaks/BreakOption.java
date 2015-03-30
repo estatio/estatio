@@ -19,20 +19,18 @@
 package org.estatio.dom.lease.breaks;
 
 import java.util.List;
-
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -40,15 +38,16 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventSubject;
 import org.estatio.dom.event.Events;
@@ -80,10 +79,20 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 @DomainObject(editing = Editing.DISABLED)
 public abstract class BreakOption
         extends EstatioDomainObject<BreakOption>
-        implements EventSubject {
+        implements EventSubject, WithApplicationTenancyProperty {
 
     public BreakOption() {
         super("lease, type, exerciseType, breakDate, exerciseDate");
+    }
+
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Inherited from Lease; determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getLease().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

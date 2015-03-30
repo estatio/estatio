@@ -20,27 +20,29 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.List;
-
+import javax.inject.Inject;
 import com.google.common.collect.Iterables;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseItem.class)
 @Hidden
-public class LeaseItems extends EstatioDomainService<LeaseItem> {
+public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
 
     public LeaseItems() {
         super(LeaseItems.class, LeaseItem.class);
@@ -56,9 +58,11 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
-            final LocalDate startDate) {
+            final LocalDate startDate,
+            final ApplicationTenancy applicationTenancy) {
         BigInteger nextSequence = nextSequenceFor(lease, type);
         LeaseItem leaseItem = newTransientInstance();
+        leaseItem.setApplicationTenancyPath(applicationTenancy.getPath());
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
         leaseItem.setPaymentMethod(paymentMethod);
@@ -70,6 +74,47 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
         persistIfNotAlready(leaseItem);
         return leaseItem;
     }
+
+    public List<Charge> choices2NewLeaseItem(final Lease lease) {
+        return charges.chargesForCountry(lease.getApplicationTenancy());
+    }
+
+    public LocalDate default5NewLeaseItem(final Lease lease) {
+        return lease.getStartDate();
+    }
+
+    public ApplicationTenancy default6NewLeaseItem(final Lease lease) {
+        return Dflt.of(choices6NewLeaseItem(lease));
+    }
+
+    public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
+        return estatioApplicationTenancies.localTenanciesFor(lease.getProperty());
+    }
+
+    public String validateNewLeaseItem(final Lease lease,
+                                  final LeaseItemType type,
+                                  final Charge charge,
+                                  final InvoicingFrequency invoicingFrequency,
+                                  final PaymentMethod paymentMethod,
+                                  final @Named("Start date") LocalDate startDate,
+                                  final ApplicationTenancy applicationTenancy) {
+        final List<Charge> validCharges = choices2NewLeaseItem(lease);
+        if(!validCharges.contains(charge)) {
+            return String.format(
+                    "Charge (with app tenancy level '%s') is not valid for this lease",
+                    charge.getApplicationTenancyPath());
+        }
+
+        if (!lease.getApplicationTenancy().getChildren().contains(applicationTenancy)) {
+            return String.format(
+                    "Application tenancy '%s' is not a child app tenancy of this lease",
+                    applicationTenancy.getPath(),
+                    lease.getApplicationTenancyPath());
+        }
+
+        return null;
+    }
+
 
     private BigInteger nextSequenceFor(final Lease lease, final LeaseItemType type) {
         LeaseItem last = Iterables.getLast(findLeaseItemsByType(lease, type), null);
@@ -105,5 +150,15 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
             final LeaseItemType type) {
         return allMatches("findByLeaseAndType", "lease", lease, "type", type);
     }
+
+
+    // //////////////////////////////////////
+
+    @Inject
+    EstatioApplicationTenancies estatioApplicationTenancies;
+
+    @Inject
+    private Charges charges;
+
 
 }

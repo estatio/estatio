@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
@@ -34,6 +35,7 @@ public class PostalAddressTest {
                     .withFixture(pojos(Country.class))
                     .withFixture(pojos(State.class))
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new PostalAddress());
         }
     }

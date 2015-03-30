@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.financial;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ public class BankAccountTest {
                     .withFixture(pojos(Country.class))
                     .withFixture(pojos(Party.class, PartyForTesting.class))
                     .withFixture(pojos(Property.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new BankAccount());
         }
     }

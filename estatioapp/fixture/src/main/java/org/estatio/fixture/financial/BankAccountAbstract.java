@@ -31,19 +31,26 @@ import org.estatio.fixture.EstatioFixtureScript;
 
 public abstract class BankAccountAbstract extends EstatioFixtureScript {
 
-    protected BankAccountAbstract(String friendlyName, String localName) {
+    protected BankAccountAbstract(final String friendlyName, final String localName) {
         super(friendlyName, localName);
     }
 
-    protected BankAccount createBankAccount(String partyStr, String bankAccountRef, String propertyRef, ExecutionContext executionContext) {
-        Party party = parties.findPartyByReference(partyStr);
+    protected BankAccount createBankAccountAndOptionallyFixedAssetFinancialAsset(
+            final String partyStr,
+            final String bankAccountRef,
+            final String propertyRef,
+            final ExecutionContext executionContext) {
 
-        BankAccount bankAccount = bankAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
+        final Party party = parties.findPartyByReference(partyStr);
+
+        final BankAccount bankAccount = bankAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
         executionContext.addResult(this, bankAccount.getReference(), bankAccount);
+
         if (propertyRef != null) {
             final Property property = properties.findPropertyByReference(propertyRef);
             fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);
         }
+
         return bankAccount;
     }
 

@@ -19,6 +19,7 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
@@ -32,6 +33,7 @@ public class CommunicationChannelTest {
         public void test() {
             newPojoTester()
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new CommunicationChannelForTesting());
         }
     }

@@ -21,30 +21,31 @@ package org.estatio.dom.tax;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -55,7 +56,7 @@ import org.estatio.dom.WithReferenceUnique;
         column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "Tax_reference_UNQ", members = "reference")
+                name = "Tax_reference_UNQ", members = {"reference"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -67,10 +68,37 @@ import org.estatio.dom.WithReferenceUnique;
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Tax
         extends EstatioDomainObject<Tax>
-        implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
+        implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique,
+                   WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
     public Tax() {
         super("reference");
+    }
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

@@ -21,13 +21,15 @@ package org.estatio.dom.lease.assignment;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optional;
-
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.lease.Lease;
 
 //TODO: is this in scope?
@@ -38,12 +40,40 @@ import org.estatio.dom.lease.Lease;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
-public class LeaseAssignment extends EstatioDomainObject<LeaseAssignment> {
+public class LeaseAssignment
+        extends EstatioDomainObject<LeaseAssignment>
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     
     public LeaseAssignment() {
         // TODO: I made this up...
         super("nextLease,assignmentDate");
+    }
+
+    // //////////////////////////////////////
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

@@ -19,22 +19,54 @@
 package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.util.TitleBuffer;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(editing = Editing.DISABLED)
-public class Person extends Party {
+public class Person
+        extends Party
+        implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
+
+    private String applicationTenancyPath;
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Hidden
+    public String getApplicationTenancyPath() {
+        return applicationTenancyPath;
+    }
+
+    public void setApplicationTenancyPath(final String applicationTenancyPath) {
+        this.applicationTenancyPath = applicationTenancyPath;
+    }
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+    }
+
+
+    // //////////////////////////////////////
 
     private String initials;
 

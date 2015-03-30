@@ -26,13 +26,13 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = FixedAsset.class)
 @DomainServiceLayout(menuOrder = "10")
 @Hidden
-public class FixedAssets extends EstatioDomainService<FixedAsset> {
+public class FixedAssets extends UdoDomainRepositoryAndFactory<FixedAsset> {
 
     public FixedAssets() {
         super(FixedAssets.class, FixedAsset.class);

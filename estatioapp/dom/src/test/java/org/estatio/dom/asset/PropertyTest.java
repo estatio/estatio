@@ -18,26 +18,24 @@
  */
 package org.estatio.dom.asset;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.geography.Country;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class PropertyTest {
 
@@ -51,6 +49,7 @@ public class PropertyTest {
             newPojoTester()
                     .withFixture(pojos(Country.class))
                     .withFixture(pojos(Location.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Property());
         }
 

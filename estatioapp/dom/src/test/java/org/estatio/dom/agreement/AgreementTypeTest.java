@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
@@ -30,6 +31,7 @@ public class AgreementTypeTest extends AbstractBeanPropertiesTest {
         public void test() {
             final AgreementType agreementType = new AgreementType();
             newPojoTester()
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(agreementType);
         }
 

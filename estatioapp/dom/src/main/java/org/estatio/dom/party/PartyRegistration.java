@@ -21,9 +21,8 @@ package org.estatio.dom.party;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -32,10 +31,11 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 // REVIEW: is this in scope?
@@ -65,13 +65,22 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
         extends EstatioDomainObject<PartyRegistration>
-        implements WithIntervalMutable<PartyRegistration> {
+        implements WithIntervalMutable<PartyRegistration>, WithApplicationTenancyCountry {
 
     public PartyRegistration() {
         // TODO: I made this up...
         super("party, startDate desc nullsLast");
     }
 
+    // //////////////////////////////////////
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return getParty().getApplicationTenancy();
+    }
 
     // //////////////////////////////////////
 

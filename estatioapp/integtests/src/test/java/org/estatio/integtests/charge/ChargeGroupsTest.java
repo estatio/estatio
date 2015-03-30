@@ -19,16 +19,13 @@
 package org.estatio.integtests.charge;
 
 import static org.junit.Assert.assertNotNull;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
+import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class ChargeGroupsTest extends EstatioIntegrationTest {
@@ -45,7 +42,7 @@ public class ChargeGroupsTest extends EstatioIntegrationTest {
 
         @Test
         public void whenExists() throws Exception {
-            ChargeGroup chargeGroup = chargeGroups.findChargeGroup(ChargeAndChargeGroupRefData.CHARGE_GROUP_REFERENCE_RENT);
+            ChargeGroup chargeGroup = chargeGroups.findChargeGroup(ChargeGroupRefData.REF_RENT);
             assertNotNull(chargeGroup);
         }
 

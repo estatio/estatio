@@ -45,10 +45,12 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
+import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
@@ -281,6 +283,7 @@ public class LeaseTermTest {
                     .withFixture(pojos(LeaseItem.class))
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
                     .withFixture(statii())
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new LeaseTermForTesting());
         }
 
@@ -291,7 +294,7 @@ public class LeaseTermTest {
 
     }
 
-    public static class ChangeDatesDelegate extends AbstractWithIntervalMutableContractTest_changeDates<LeaseTerm> {
+    public static class ChangeDatesDelegate extends WithIntervalMutableContractTestAbstract_changeDates<LeaseTerm> {
 
         private LeaseTerm leaseTerm;
 

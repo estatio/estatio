@@ -19,6 +19,7 @@
 package org.estatio.dom.tax;
 
 import java.util.List;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
+import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -42,11 +43,12 @@ public class TaxRateTest {
             newPojoTester()
                     .withFixture(pojos(Tax.class))
                     .withFixture(pojos(TaxRate.class))
+                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new TaxRate());
         }
     }
 
-    public static class ChangeDates extends AbstractWithIntervalMutableContractTest_changeDates<TaxRate> {
+    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<TaxRate> {
 
         private TaxRate taxRate;
 

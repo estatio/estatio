@@ -39,7 +39,7 @@ import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class BreakOptionTest extends EstatioIntegrationTest {
@@ -73,7 +73,7 @@ public class BreakOptionTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
         }
 
         @Test

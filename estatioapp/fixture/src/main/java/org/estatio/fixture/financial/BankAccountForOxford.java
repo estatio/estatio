@@ -18,8 +18,9 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+
 
 public class BankAccountForOxford extends BankAccountAbstract {
 
@@ -38,12 +39,13 @@ public class BankAccountForOxford extends BankAccountAbstract {
 
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PropertyForOxf());
-            executionContext.executeChild(this, new OrganisationForHelloWorld());
+            executionContext.executeChild(this, new _PropertyForOxfGb());
+            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
         }
 
         // exec
-        createBankAccount(OrganisationForHelloWorld.PARTY_REFERENCE, BANK_ACCOUNT_REF, PropertyForOxf.PROPERTY_REFERENCE, executionContext);
+        createBankAccountAndOptionallyFixedAssetFinancialAsset(OrganisationForHelloWorldGb.REF, BANK_ACCOUNT_REF, _PropertyForOxfGb.REF, executionContext);
+        
     }
 
 }

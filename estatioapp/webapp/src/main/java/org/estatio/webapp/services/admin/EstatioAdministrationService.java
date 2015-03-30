@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
@@ -32,7 +32,7 @@ import org.estatio.services.settings.EstatioSettingsService;
         menuBar = DomainServiceLayout.MenuBar.TERTIARY,
         menuOrder = "10.1"
 )
-public class EstatioAdministrationService extends EstatioService<EstatioAdministrationService> {
+public class EstatioAdministrationService extends UdoDomainService<EstatioAdministrationService> {
 
     public EstatioAdministrationService() {
         super(EstatioAdministrationService.class);

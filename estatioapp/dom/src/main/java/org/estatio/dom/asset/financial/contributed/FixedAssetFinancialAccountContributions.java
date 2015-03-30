@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.EstatioService;
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -42,7 +42,7 @@ import org.estatio.dom.financial.FinancialAccounts;
 
 @DomainServiceLayout(menuOrder = "10")
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class FixedAssetFinancialAccountContributions extends EstatioService<FixedAssetFinancialAccountContributions> {
+public class FixedAssetFinancialAccountContributions extends UdoDomainService<FixedAssetFinancialAccountContributions> {
 
     public FixedAssetFinancialAccountContributions() {
         super(FixedAssetFinancialAccountContributions.class);

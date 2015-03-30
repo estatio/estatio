@@ -27,11 +27,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 
 @DomainService(menuOrder = "10", repositoryFor = LandRegister.class)
-public class LandRegisters extends EstatioDomainService<LandRegister> {
+public class LandRegisters extends UdoDomainRepositoryAndFactory<LandRegister> {
 
     public LandRegisters() {
         super(LandRegisters.class, LandRegister.class);
