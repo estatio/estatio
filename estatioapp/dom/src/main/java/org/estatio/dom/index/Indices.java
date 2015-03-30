@@ -19,9 +19,7 @@
 package org.estatio.dom.index;
 
 import java.util.List;
-
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -30,10 +28,10 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.RegexValidation;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
+import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 
 @DomainService(repositoryFor = Index.class)
@@ -53,7 +51,7 @@ public class Indices extends UdoDomainRepositoryAndFactory<Index> {
     @MemberOrder(sequence = "1")
     public Index newIndex(
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
-            final @Named("Name") String name) {
+            final @ParameterLayout(named = "Name") String name,
             final ApplicationTenancy applicationTenancy) {
         final Index index = newTransientInstance();
         index.setApplicationTenancyPath(applicationTenancy.getPath());
@@ -93,7 +91,7 @@ public class Indices extends UdoDomainRepositoryAndFactory<Index> {
             final String name) {
         Index index = findIndex(reference);
         if (index == null) {
-            index  = newIndex(reference, name, applicationTenancy);
+            index = newIndex(reference, name, applicationTenancy);
         }
         return index;
     }

@@ -18,15 +18,21 @@
  */
 package org.estatio.integtests.api;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.inject.Inject;
 import org.hamcrest.core.Is;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.joda.time.LocalDate;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -38,13 +44,25 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.*;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.EmailAddresses;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
+import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
@@ -54,16 +72,32 @@ import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset._PropertyForOxfGb;
-import org.estatio.fixture.financial.*;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
+import org.estatio.fixture.financial.BankAccountForAcmeNl;
+import org.estatio.fixture.financial.BankAccountForMediaXGb;
+import org.estatio.fixture.financial.BankAccountForMiracleGb;
+import org.estatio.fixture.financial.BankAccountForPretGb;
+import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
+import org.estatio.fixture.party.OrganisationForAcmeNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.party.OrganisationForMediaXGb;
+import org.estatio.fixture.party.OrganisationForMiracleGb;
+import org.estatio.fixture.party.OrganisationForPoisonNl;
+import org.estatio.fixture.party.OrganisationForPretGb;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTestForMigration;
 import org.estatio.services.clock.ClockService;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
@@ -282,7 +316,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.ACTIVE.name(), "/NLD/APIP/_");
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.ACTIVE.name(), "/nl/APIP/_");
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 

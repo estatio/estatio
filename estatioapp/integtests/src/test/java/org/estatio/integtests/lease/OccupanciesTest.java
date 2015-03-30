@@ -18,6 +18,9 @@
  */
 package org.estatio.integtests.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
 import javax.inject.Inject;
@@ -40,14 +43,10 @@ import org.estatio.dom.lease.tags.Brand.RemoveEvent;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset._PropertyForOxfGb;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease._LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 public class OccupanciesTest extends EstatioIntegrationTest {
 
@@ -143,8 +142,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
                 }
             });
 
@@ -152,8 +151,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            oldBrand = brands.findByName(LeaseForOxfTopModel001.BRAND);
-            newBrand = brands.findByName(LeaseForOxfMediaX002.BRAND);            
+            oldBrand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
+            newBrand = brands.findByName(_LeaseForOxfMediaX002Gb.BRAND);
         }
 
         @Test
@@ -176,9 +175,11 @@ public class OccupanciesTest extends EstatioIntegrationTest {
             event.setPhase(Phase.EXECUTING);
             occupancies.on(event);
 
-            /* then Topmodel brand should be adopted by the MEDIAX brand. So, there should be 2 
+            /*
+             * then Topmodel brand should be adopted by the MEDIAX brand. So,
+             * there should be 2
              * MEDIAX occupancies and 0 TOPMODEL occupancies.
-             */ 
+             */
             assertThat(occupancies.findByBrand(oldBrand, false).size(), is(0));
             assertThat(occupancies.findByBrand(newBrand, false).size(), is(2));
         }

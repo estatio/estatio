@@ -21,15 +21,11 @@ package org.estatio.integtests.guarantee;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
-
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
@@ -38,8 +34,8 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
+import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -63,7 +59,7 @@ public class GuaranteeTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new GuaranteeForOxfTopModel001());
+                executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
             }
         }.withTracing());
 
@@ -71,8 +67,8 @@ public class GuaranteeTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        guaranteeWithFinancialAccount = guarantees.findByReference(LeaseForOxfTopModel001.LEASE_REFERENCE + "-D");
+        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        guaranteeWithFinancialAccount = guarantees.findByReference(_LeaseForOxfTopModel001Gb.REF + "-D");
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
         guaranteeWithoutFinancialAccount = guarantees.newGuarantee(
                 lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld("20120101"), null, "", VT.bd(1000), null);

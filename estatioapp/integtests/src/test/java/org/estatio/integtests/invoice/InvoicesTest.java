@@ -25,24 +25,20 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
 import java.math.BigInteger;
 import java.util.List;
-
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.CollectionNumerators;
@@ -61,19 +57,15 @@ import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
 public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
@@ -92,7 +84,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
     BookmarkService bookmarkService;
-
 
     public static class CreateCollectionNumberNumerator extends InvoicesTest {
 
@@ -246,8 +237,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     public static class FindInvoices extends InvoicesTest {
 
-        private Property propertyKal;
-
         @Before
         public void setupData() {
             runScript(new FixtureScript() {
@@ -263,33 +252,44 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         private static String runId = "2014-02-16T02:30:03.156 - OXF - [OXF-TOPMODEL-001] - [RENT, SERVICE_CHARGE, TURNOVER_RENT, TAX] - 2012-01-01 - 2012-01-01/2012-01-02";
 
-        Lease lease;
+        private Property propertyKal;
 
-        Party buyer;
+        private Lease lease;
 
-        Party seller;
-        
+        private Party buyer;
+
+        private Party seller;
+
+        ApplicationTenancy applicationTenancy;
+
         @Before
         public void setUp() throws Exception {
-            ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForNl.PATH);
-            Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.SELLER_PARTY);
-            Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.BUYER_PARTY);
-            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE);
+            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForNl.PATH);
+            seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_SELLER);
+            buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
+            lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
             propertyKal = properties.findPropertyByReference(PropertyForKalNl.REF);
 
             Invoice invoice = invoices.findOrCreateMatchingInvoice(
                     applicationTenancy,
-                    seller, buyer,
-                    PaymentMethod.DIRECT_DEBIT, lease,
+                    seller,
+                    buyer,
+                    PaymentMethod.DIRECT_DEBIT,
+                    lease,
                     InvoiceStatus.NEW,
-                    InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease), null);
+                    InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease),
+                    null);
             invoice.setRunId(runId);
             Assert.assertNotNull(invoice);
         }
 
         @Test
         public void byLease() {
+            List<Lease> allLeases = leases.allLeases();
+
+            assertThat(invoices.allInvoices().size(), is(2));
+
             List<Invoice> invoiceList = invoices.findInvoices(lease);
             assertThat(invoiceList.size(), is(1));
         }
@@ -379,7 +379,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
     public static class FindOrCreateMatchingInvoice extends InvoicesTest {
-
 
         @Before
         public void setupData() {

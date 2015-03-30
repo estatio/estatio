@@ -21,13 +21,9 @@ package org.estatio.dom.asset;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -35,6 +31,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -43,11 +40,10 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;

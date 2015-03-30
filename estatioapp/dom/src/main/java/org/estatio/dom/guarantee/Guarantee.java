@@ -23,19 +23,19 @@ import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
@@ -76,7 +76,6 @@ public class Guarantee
         extends Agreement
         implements WithApplicationTenancyProperty {
 
-    @Hidden(where = Where.PARENTED_TABLES)
     public Guarantee() {
         super(GuaranteeConstants.ART_GUARANTEE, GuaranteeConstants.ART_GUARANTOR);
     }
@@ -86,13 +85,12 @@ public class Guarantee
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
-    )
-    public ApplicationTenancy getApplicationTenancy() {
+            )
+            public ApplicationTenancy getApplicationTenancy() {
         return getLease().getApplicationTenancy();
     }
 
     // //////////////////////////////////////
-
 
     private Lease lease;
 

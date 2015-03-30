@@ -57,7 +57,7 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
     @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
-            final @Named("Name") String name) {
+            final @Named("Name") String name,
             final ApplicationTenancy applicationTenancy) {
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setApplicationTenancyPath(applicationTenancy.getPath());

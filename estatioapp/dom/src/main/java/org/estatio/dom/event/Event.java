@@ -22,11 +22,8 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Function;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -34,19 +31,10 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-
+import org.apache.isis.applib.annotation.Title;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
-
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Mandatory;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;

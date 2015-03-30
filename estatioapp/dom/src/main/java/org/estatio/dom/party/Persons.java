@@ -57,7 +57,7 @@ public class Persons extends UdoDomainRepositoryAndFactory<Person> {
             final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
             final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final @ParameterLayout(named = "Last name") String lastName,
-            final @Named("Gender") PersonGenderType gender),
+            final @ParameterLayout(named = "Gender") PersonGenderType gender,
             final ApplicationTenancy applicationTenancy) {
         final Person person = newTransientInstance(Person.class);
         person.setApplicationTenancyPath(applicationTenancy.getPath());

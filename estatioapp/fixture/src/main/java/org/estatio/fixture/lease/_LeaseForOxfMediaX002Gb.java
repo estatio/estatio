@@ -23,7 +23,6 @@ import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
-
 import static org.estatio.integtests.VT.ld;
 
 public class _LeaseForOxfMediaX002Gb extends LeaseAbstract {
@@ -33,6 +32,8 @@ public class _LeaseForOxfMediaX002Gb extends LeaseAbstract {
     public static final String UNIT_REF = _PropertyForOxfGb.unitReference("002");
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldNl.REF;
     public static final String PARTY_REF_TENANT = OrganisationForMediaXGb.REF;
+
+    public static final String BRAND = "Mediax";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -46,7 +47,7 @@ public class _LeaseForOxfMediaX002Gb extends LeaseAbstract {
         }
 
         // exec
-        Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
+        Party manager = parties.findPartyByReference(PersonForJohnDoeNl.REF);
         createLease(
                 REF,
                 "Mediax Lease",

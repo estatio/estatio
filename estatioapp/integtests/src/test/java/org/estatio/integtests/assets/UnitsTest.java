@@ -20,16 +20,12 @@ package org.estatio.integtests.assets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
@@ -48,8 +44,8 @@ public class UnitsTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _PropertyForOxfGb());
-                    executionContext.executeChild(this, new PropertyForKalNl());
+                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForKalNl());
             }
         });
     }
@@ -90,10 +86,10 @@ public class UnitsTest extends EstatioIntegrationTest {
         @Test
         public void findActiveByProperty() throws Exception {
             // given
-            Property propertyForOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            Property propertyForOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // when
-            Unit unit = units.findUnitByReference(PropertyForOxf.PROPERTY_REFERENCE + "-001");
+            Unit unit = units.findUnitByReference(_PropertyForOxfGb.REF + "-001");
             LocalDate startDate = new LocalDate(2013, 1, 1);
             LocalDate endDate = new LocalDate(2013, 12, 31);
             unit.setEndDate(endDate);
@@ -112,7 +108,7 @@ public class UnitsTest extends EstatioIntegrationTest {
         @Test
         public void findActiveByProperty() throws Exception {
             // given, when
-            Property propertyForOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+            Property propertyForOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
             // then
             assertThat(units.findByProperty(propertyForOxf).size(), is(25));
         }

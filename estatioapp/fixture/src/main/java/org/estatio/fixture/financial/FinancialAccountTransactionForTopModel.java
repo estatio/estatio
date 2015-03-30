@@ -19,10 +19,8 @@
 package org.estatio.fixture.financial;
 
 import java.math.BigDecimal;
-
 import org.joda.time.LocalDate;
-
-import org.estatio.fixture.party.OrganisationForTopModel;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
 
 public class FinancialAccountTransactionForTopModel extends FinancialAccountTransactionAbstract {
 
@@ -39,11 +37,11 @@ public class FinancialAccountTransactionForTopModel extends FinancialAccountTran
 
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new BankAccountForTopModel());
+            executionContext.executeChild(this, new BankAccountForTopModelGb());
         }
 
         // exec
-        createFinancialAccountTransaction(OrganisationForTopModel.PARTY_REFERENCE, new LocalDate(2014, 7, 1), new BigDecimal(1000), executionContext);
-        createFinancialAccountTransaction(OrganisationForTopModel.PARTY_REFERENCE, new LocalDate(2014, 7, 2), new BigDecimal(2000), executionContext);
+        createFinancialAccountTransaction(OrganisationForTopModelGb.REF, new LocalDate(2014, 7, 1), new BigDecimal(1000), executionContext);
+        createFinancialAccountTransaction(OrganisationForTopModelGb.REF, new LocalDate(2014, 7, 2), new BigDecimal(2000), executionContext);
     }
 }

@@ -21,19 +21,13 @@ package org.estatio.integtests.financial;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactions;
@@ -41,9 +35,9 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.FinancialAccountTransactionForTopModel;
-import org.estatio.fixture.party.OrganisationForTopModel;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class FinancialAccountTransactionsTest extends EstatioIntegrationTest {
@@ -54,7 +48,7 @@ public class FinancialAccountTransactionsTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
+                executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
                 executionContext.executeChild(this, new FinancialAccountTransactionForTopModel());
             }
         });
@@ -75,7 +69,7 @@ public class FinancialAccountTransactionsTest extends EstatioIntegrationTest {
 
     @Before
     public void setup() throws Exception {
-        party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+        party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
         List<FinancialAccount> accounts = financialAccounts.findAccountsByOwner(party);
         assertThat(accounts.size(), is(1));
         financialAccount = accounts.get(0);

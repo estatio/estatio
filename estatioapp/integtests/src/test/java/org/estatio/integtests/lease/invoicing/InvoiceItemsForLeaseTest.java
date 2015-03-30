@@ -20,17 +20,12 @@ package org.estatio.integtests.lease.invoicing;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
@@ -61,7 +56,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() {
-        lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+        lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
     }
 
     @Inject
@@ -87,7 +82,8 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
             LocalDateInterval interval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
 
             // when
-            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+            Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
+            List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTermAndInterval(term, interval);
 
             // then
             assertThat(invoiceItems.size(), is(1));

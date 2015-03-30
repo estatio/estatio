@@ -17,17 +17,15 @@
 package org.estatio.dom.document;
 
 import java.util.List;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService()
 @DomainServiceLayout(named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "80.10")
-public class Documents extends EstatioDomainService<Document> {
+public class Documents extends UdoDomainRepositoryAndFactory<Document> {
 
     public Documents()
     {

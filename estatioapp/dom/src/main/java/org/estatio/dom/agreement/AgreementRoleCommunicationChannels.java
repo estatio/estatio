@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
 import com.google.common.eventbus.Subscribe;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;

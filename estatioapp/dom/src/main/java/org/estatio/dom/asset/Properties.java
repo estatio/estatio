@@ -66,12 +66,12 @@ public class Properties extends UdoDomainRepositoryAndFactory<Property> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Property newProperty(
-            final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String propertyReference,
             final @ParameterLayout(named = "Name") String name,
             final PropertyType propertyType,
             final @ParameterLayout(named = "City") @Parameter(optionality = Optionality.OPTIONAL) String city,
             final @Parameter(optionality = Optionality.OPTIONAL) Country country,
-            final @Named("Acquire date") @Optional LocalDate acquireDate) {
+            final @Named("Acquire date") @Optional LocalDate acquireDate,
             final @Named("Country-level Application Tenancy") ApplicationTenancy countryApplicationTenancy) {
         final Property property = newTransientInstance();
 

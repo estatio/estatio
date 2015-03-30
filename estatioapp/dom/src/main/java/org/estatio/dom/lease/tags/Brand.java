@@ -21,23 +21,24 @@ package org.estatio.dom.lease.tags;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
-import org.estatio.dom.tax.TaxRate;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)

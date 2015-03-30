@@ -20,17 +20,13 @@ package org.estatio.integtests.currency;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.estatio.fixture.currency.refdata.CurrenciesRefData;
+import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class CurrenciesTest extends EstatioIntegrationTest {

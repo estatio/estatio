@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.HomePage;
+import org.estatio.dom.UdoDomainService;
 
 @DomainService(menuOrder = "90")
 @Hidden

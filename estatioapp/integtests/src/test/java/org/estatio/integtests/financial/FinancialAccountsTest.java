@@ -21,17 +21,12 @@ package org.estatio.integtests.financial;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -40,7 +35,7 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
-import org.estatio.fixture.party.OrganisationForTopModel;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class FinancialAccountsTest extends EstatioIntegrationTest {
@@ -66,7 +61,7 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
 
     @Before
     public void setup() throws Exception {
-        party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+        party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
     }
 
     public static class FindAccountByReference extends FinancialAccountsTest {
@@ -92,7 +87,8 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
             assertThat(accounts.size(), is(1));
 
             // then
-            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF));
+            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModelGb.REF));
+            
         }
     }
 
@@ -105,7 +101,7 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
             assertThat(accounts.size(), is(1));
 
             // then
-            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF));
+            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModelGb.REF));
         }
     }
 }

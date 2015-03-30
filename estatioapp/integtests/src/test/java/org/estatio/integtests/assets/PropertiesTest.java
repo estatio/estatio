@@ -20,22 +20,16 @@ package org.estatio.integtests.assets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
 import org.assertj.core.api.Assertions;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
@@ -118,31 +112,31 @@ public class PropertiesTest extends EstatioIntegrationTest {
             final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // then
-            Assert.assertThat(property.getReference(), is(PropertyForOxf.PROPERTY_REFERENCE));
+            Assertions.assertThat(property.getReference()).isEqualTo(_PropertyForOxfGb.REF);
         }
     }
 
+    public static class NewProperty extends PropertiesTest {
 
         @Inject
         private Countries countries;
 
         @Inject
-        private EstatioApplicationTenancies estatioApplicationTenancies;
-        @Inject
         private ApplicationTenancies applicationTenancies;
 
         @Test
+        public void happyCase() throws Exception {
 
             // given
-            final ApplicationTenancy countryAppTenancy = applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR);
+            final ApplicationTenancy countryAppTenancy = applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR);
 
             final Country gbrCountry = countries.findCountry(CountriesRefData.GBR);
 
             Assertions.assertThat(countryAppTenancy).isNotNull();
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN")).isNull();
-
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN")).isNull();
 
             // when
+            final Property property = properties.newProperty("ARN", "Arndale", PropertyType.RETAIL_PARK, "Manchester", gbrCountry, new LocalDate(2014,4,1), countryAppTenancy);
 
             // then
             Assertions.assertThat(property.getName()).isEqualTo("Arndale");
@@ -151,15 +145,15 @@ public class PropertiesTest extends EstatioIntegrationTest {
             Assertions.assertThat(property.getCity()).isEqualTo("Manchester");
             Assertions.assertThat(property.getAcquireDate()).isEqualTo(new LocalDate(2014, 4, 1));
 
-            final ApplicationTenancy propertyAppTenancy = applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN");
+            final ApplicationTenancy propertyAppTenancy = applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN");
             Assertions.assertThat(propertyAppTenancy).isNotNull();
 
             Assertions.assertThat(property.getApplicationTenancy()).isEqualTo(propertyAppTenancy);
             Assertions.assertThat(propertyAppTenancy.getParent()).isEqualTo(countryAppTenancy);
 
             // and also
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN/_")).isNotNull();
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/"+CountriesRefData.GBR+"/ARN/ta")).isNotNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN/_")).isNotNull();
+            Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN/ta")).isNotNull();
 
         }
     }

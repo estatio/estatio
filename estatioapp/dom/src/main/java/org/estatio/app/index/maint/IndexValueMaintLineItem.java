@@ -19,13 +19,8 @@ package org.estatio.app.index.maint;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import com.google.common.base.Objects;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -37,7 +32,8 @@ import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
-
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
