@@ -329,7 +329,6 @@ language governing permissions and limitations under the License.
         -->
         <!--
         commented out for open source release.
-        -->
         <profile>
             <id>m2e</id>
             <activation>
@@ -346,6 +345,7 @@ language governing permissions and limitations under the License.
                 </dependency>
             </dependencies>
         </profile>
+        -->
 
         <profile>
             <id>intellij</id>
