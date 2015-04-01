@@ -83,16 +83,17 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.9.0-SNAPSHOT</isis.version>
+        <isis.version>1.9.0_dn4-SNAPSHOT</isis.version>
 
-        <isis-module-audit.version>1.8.1</isis-module-audit.version>
-        <isis-module-command.version>1.8.1</isis-module-command.version>
-        <isis-module-devutils.version>1.8.0</isis-module-devutils.version>
-        <isis-module-excel.version>1.8.0</isis-module-excel.version>
-        <isis-module-publishing.version>1.8.0</isis-module-publishing.version>
-        <isis-module-security.version>1.8.0</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.9.0-SNAPSHOT</isis-module-sessionlogger.version>
-        <isis-module-settings.version>1.8.0</isis-module-settings.version>
+        <isis-module-audit.version>1.9.0_dn4-SNAPSHOT</isis-module-audit.version>
+        <isis-module-command.version>1.9.0_dn4-SNAPSHOT</isis-module-command.version>
+        <isis-module-publishing.version>1.9.0_dn4-SNAPSHOT</isis-module-publishing.version>
+        <isis-module-security.version>1.9.0_dn4-SNAPSHOT</isis-module-security.version>
+        <isis-module-sessionlogger.version>1.9.0_dn4-SNAPSHOT</isis-module-sessionlogger.version>
+        <isis-module-settings.version>1.9.0_dn4-SNAPSHOT</isis-module-settings.version>
+
+        <isis-module-devutils.version>1.9.0-SNAPSHOT</isis-module-devutils.version>
+        <isis-module-excel.version>1.9.0-SNAPSHOT</isis-module-excel.version>
         <isis-module-stringinterpolator.version>1.9.0-SNAPSHOT</isis-module-stringinterpolator.version>
 
         <isis-module-poly.version>1.9.0-SNAPSHOT</isis-module-poly.version>
@@ -104,8 +105,9 @@ language governing permissions and limitations under the License.
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
-        <!-- must be consistent with the versions defined by the JDO Objectstore -->
-        <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
+        <datanucleus-accessplatform-jdo-rdbms.version>4.0.4</datanucleus-accessplatform-jdo-rdbms.version>
+        <datanucleus-jodatime.version>4.0.4</datanucleus-jodatime.version>
+        <datanucleus-maven-plugin.version>4.0.0-release</datanucleus-maven-plugin.version>
 
         <apache-batik.version>1.7</apache-batik.version>
 
