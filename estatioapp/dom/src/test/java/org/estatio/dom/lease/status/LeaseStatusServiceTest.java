@@ -42,7 +42,7 @@ public class LeaseStatusServiceTest {
                 new LocalDate(2014, 1, 1), new LocalDate(2014, 3, 31), testItem(null, LeaseItemStatus.ACTIVE));
     }
 
-    @Ignore //
+    @Ignore // ignoring while upgrade to DN4, but also failing with DN3
     @Test
     public void active() {
         tester(
