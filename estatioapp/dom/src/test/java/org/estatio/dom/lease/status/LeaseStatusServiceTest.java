@@ -28,7 +28,13 @@ public class LeaseStatusServiceTest {
     public void setUp() throws Exception {
         lease = new Lease();
         service = new LeaseStatusService();
-        service.clockService = new ClockService();
+        service.clockService = new ClockService() {
+            @Override
+            public LocalDate now() {
+                // TODO Auto-generated method stub
+                return new LocalDate(2014, 4, 1);
+            }
+        };
 
     }
 
@@ -45,7 +51,7 @@ public class LeaseStatusServiceTest {
                 LeaseStatus.ACTIVE,
                 new LocalDate(2014, 1, 1), new LocalDate(2015, 3, 31), testItem(null, LeaseItemStatus.ACTIVE));
     }
-    
+
     @Test
     public void partiallySuspended() {
         tester(
@@ -62,7 +68,6 @@ public class LeaseStatusServiceTest {
                 LeaseStatus.SUSPENDED,
                 new LocalDate(2014, 1, 1), new LocalDate(2015, 3, 31), testItem(null, LeaseItemStatus.SUSPENDED), testItem(null, LeaseItemStatus.SUSPENDED));
     }
-    
 
     void tester(LeaseStatus expectedStatus, LocalDate tenancyStartDate, LocalDate tenancyEndDate, LeaseItem... items) {
         lease.setTenancyStartDate(tenancyStartDate);
