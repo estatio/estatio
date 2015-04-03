@@ -18,6 +18,9 @@
  */
 package org.estatio.integtests.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
 import javax.inject.Inject;
@@ -44,10 +47,6 @@ import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class LeasesTest extends EstatioIntegrationTest {
 
@@ -284,27 +283,47 @@ public class LeasesTest extends EstatioIntegrationTest {
 
         @Test
         public void renew() {
+            // Given
             Lease lease = leases.allLeases().get(0);
             String newReference = lease.default0Renew() + "-2";
             String newName = lease.default1Renew() + "-2";
             LocalDate newStartDate = lease.default2Renew();
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
+
+            // When
             Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate, true);
 
-            // Old lease
+            // Then
             assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
 
-            //
             assertThat(newLease.getOccupancies().size(), is(1));
-
-            // New lease
             assertThat(newLease.getStartDate(), is(newStartDate));
             assertThat(newLease.getEndDate(), is(newEndDate));
             assertThat(newLease.getTenancyStartDate(), is(newStartDate));
             assertThat(newLease.getTenancyEndDate(), is(newEndDate));
 
             // Then
-            assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
+            assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size(), is(2));
+            assertThat(newLease.getOccupancies().size(), is(1));
+
+        }
+
+        
+        @Test
+        public void reneWithTerminatedOccupancies() {
+            // Given
+            Lease lease = leases.allLeases().get(0);
+            String newReference = lease.default0Renew() + "-2";
+            String newName = lease.default1Renew() + "-2";
+            LocalDate newStartDate = lease.default2Renew();
+            LocalDate newEndDate = new LocalDate(2030, 12, 31);
+
+            // When
+            lease.getOccupancies().first().setEndDate(lease.getTenancyEndDate());
+            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate, true);
+
+            // Then
+            assertThat(newLease.getOccupancies().size(), is(1));
 
         }
 

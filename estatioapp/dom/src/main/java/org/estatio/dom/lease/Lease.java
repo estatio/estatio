@@ -850,8 +850,8 @@ public class Lease
     }
 
     private void copyOccupancies(final Lease newLease, final LocalDate startDate) {
-        for (Occupancy occupancy : getOccupancies()) {
-            if (occupancy.getInterval().contains(startDate)) {
+        for (Occupancy occupancy : this.getOccupancies()) {
+            if (occupancy.getInterval().contains(startDate) || occupancy.getInterval().endDateExcluding().equals(startDate)) {
                 Occupancy newOccupancy = newLease.newOccupancy(startDate, occupancy.getUnit());
                 newOccupancy.setActivity(occupancy.getActivity());
                 newOccupancy.setBrand(occupancy.getBrand());
