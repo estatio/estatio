@@ -66,7 +66,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
         column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "Index_reference_UNQ", members = {"atPath","reference"}),
+                name = "Index_reference_UNQ", members = {"applicationTenancyPath","reference"}),
         @javax.jdo.annotations.Unique(
                 name = "Index_name_UNQ", members = {"name"})
 })
