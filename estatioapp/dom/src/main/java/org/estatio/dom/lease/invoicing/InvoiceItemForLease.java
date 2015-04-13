@@ -21,8 +21,9 @@ package org.estatio.dom.lease.invoicing;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.collect.Ordering;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -32,6 +33,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
@@ -99,16 +101,6 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Override
     public InvoiceSource getSource() {
         return getLeaseTerm();
-    }
-
-    // //////////////////////////////////////
-
-    @PropertyLayout(
-            named = "Application Level",
-            describedAs = "Determines those users for whom this object is available to view and/or modify."
-    )
-    public ApplicationTenancy getApplicationTenancy() {
-        return getLeaseTerm().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

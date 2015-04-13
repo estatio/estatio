@@ -47,6 +47,8 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
@@ -442,4 +444,7 @@ public abstract class InvoiceItem
         this.charges = charges;
     }
 
+    @Override public ApplicationTenancy getApplicationTenancy() {
+        return getInvoice().getApplicationTenancy();
+    }
 }
