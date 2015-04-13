@@ -105,8 +105,6 @@ language governing permissions and limitations under the License.
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
-        <datanucleus-accessplatform-jdo-rdbms.version>4.0.4</datanucleus-accessplatform-jdo-rdbms.version>
-        <datanucleus-jodatime.version>4.0.4</datanucleus-jodatime.version>
         <datanucleus-maven-plugin.version>4.0.0-release</datanucleus-maven-plugin.version>
 
         <apache-batik.version>1.7</apache-batik.version>

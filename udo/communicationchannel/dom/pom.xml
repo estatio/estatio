@@ -59,39 +59,6 @@ language governing permissions and limitations under the License.
                 </excludes>
             </resource>
         </resources>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.datanucleus
-                                        </groupId>
-                                        <artifactId>
-                                            datanucleus-maven-plugin
-                                        </artifactId>
-                                        <versionRange>[${datanucleus-maven-plugin.version},)</versionRange>
-                                        <goals>
-                                            <goal>enhance</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
     <dependencies>
@@ -176,6 +143,35 @@ language governing permissions and limitations under the License.
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.datanucleus</groupId>
+                                                <artifactId>datanucleus-maven-plugin</artifactId>
+                                                <versionRange>[${datanucleus-maven-plugin.version},)</versionRange>
+                                                <goals>
+                                                    <goal>enhance</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore></ignore>
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>org.datanucleus</groupId>
@@ -202,6 +198,10 @@ language governing permissions and limitations under the License.
                 <dependency>
                     <groupId>org.datanucleus</groupId>
                     <artifactId>datanucleus-core</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.datanucleus</groupId>
+                    <artifactId>datanucleus-jodatime</artifactId>
                 </dependency>
                 <dependency>
                     <groupId>org.datanucleus</groupId>
