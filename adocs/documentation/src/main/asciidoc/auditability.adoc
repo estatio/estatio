@@ -43,12 +43,12 @@ When an `InvoiceItem` is generated the system looks for an `Invoice` to attach i
 The figure below shows these concepts, where "now" is somewhere in Q3 and the `LeaseTerm`s and `InvoiceItem`s have been generated for that period:
 
 .`LeaseTerm`s generate `InvoiceItem`s
-image:LeaseTermAndInvoiceItems.png[LeaseTerms, scaledwidth="75%"]
+image:images/LeaseTermAndInvoiceItems.png[LeaseTerms, scaledwidth="75%"]
 
 The Estatio UI also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding `InvoiceItem`s:
 
 .Estatio UI showing a `LeaseTerm` with corresponding `InvoiceItem`s
-image:effective value vs invoice items.png[InvoiceItems, scaledwidth="75%"]
+image:images/effective value vs invoice items.png[InvoiceItems, scaledwidth="75%"]
 
 
 ### Idempotency and Immutability of Invoice Calculation
@@ -62,7 +62,7 @@ However, if there has been an after-the-fact change in some contract data, then 
 The figure below shows this:
 
 .Retro-run creates new `InvoiceItem`s if existing is approved
-image:LeaseTermAndInvoiceItems.png[Retrorun, scaledwidth="75%"]
+image:images/LeaseTermAndInvoiceItems.png[Retrorun, scaledwidth="75%"]
 
 For Q2, because the `Invoice` (and its items) is approved and therefore immutable, we see a new `InvoiceItem` (and containing `Invoice`) is created for the delta.  For Q3, because the `Invoice` is not yet approved, the system simply updates the existing `InvoiceItem`.
 
@@ -124,12 +124,12 @@ Also, Estatio's idempotent design (discussed above) means that the system is to 
 The diagrams below show how this is exposed in the UI to an Estatio administrator (not to regular users).  For any given object the administrator can request to view recent changes:
 
 .Estatio UI showing the "Recent Changes" action for an entity
-image:recent changes.png[RecentChanges, scaledwidth="75%"]
+image:images/recent changes.png[RecentChanges, scaledwidth="75%"]
 
 This then returns a list of changes; note how each command (cause) is followed by audit entries (effect):
 
 .Estatio UI showing the recent changes (commands and audit records) for an entity
-image:recent changes - cause and effect.png[CauseAndEffect, scaledwidth="75%"]
+image:images/recent changes - cause and effect.png[CauseAndEffect, scaledwidth="75%"]
 
 
 
