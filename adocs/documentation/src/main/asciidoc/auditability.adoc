@@ -34,18 +34,18 @@ The key concepts in Estatio are `Lease`, `LeaseItem`, `LeaseTerm`, `InvoiceItem`
 * a `LeaseItem` is a component part of the `Lease`, for example for the tenant to pay rent, or service charges.  There are (currently) 5 different types of `LeaseItem`;
 * a `LeaseTerm` are created as required as the `Lease` continues over time, one per `LeaseItem` of the `Lease`, typically one per year.  It is the `LeaseTerm` that acts as the source of the invoices;
 * an `InvoiceItem` is the amount of money calculated as due to be paid by the tenant for a particular `LeaseTerm` pro-rata for a particular period;
-* an `Invoice` aggregates all `InvoiceItem`s for a given `Lease` and period.
+* an `Invoice` aggregates all ``InvoiceItem``s for a given `Lease` and period.
 
 `Lease`, `LeaseItem` and `LeaseTerm` are the contract data.  The `Lease` relates back to a `Party` as the tenant, and also captures the payment method.  The `Lease` also specifies the `Unit` (fixed asset) that the tenant occupies.
 
-When an `InvoiceItem` is generated the system looks for an `Invoice` to attach it to (for that period).  If none exists, one is created on the fly; subsequent `InvoiceItem`s from other `LeaseTerm`s are attached to that same invoice.
+When an `InvoiceItem` is generated the system looks for an `Invoice` to attach it to (for that period).  If none exists, one is created on the fly; subsequent ``InvoiceItem``s from other ``LeaseTerm``s are attached to that same invoice.
 
-The figure below shows these concepts, where "now" is somewhere in Q3, the `LeaseTerm` exists for the year, and an `InvoiceItem`s has been generated for the Q3 period:
+The figure below shows these concepts, where "now" is somewhere in Q3, the `LeaseTerm` exists for the year, and an ``InvoiceItem``s has been generated for the Q3 period:
 
 .LeaseTerms generate InvoiceItems
 image:images/LeaseTermAndInvoiceItems.png[LeaseTerms, scaledwidth="75%"]
 
-The Estatio UI also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding `InvoiceItem`s:
+The Estatio UI also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding ``InvoiceItem``s:
 
 .Estatio UI showing a LeaseTerm with corresponding InvoiceItems
 image:images/effective value vs invoice items.png[InvoiceItems, scaledwidth="75%"]
@@ -53,11 +53,11 @@ image:images/effective value vs invoice items.png[InvoiceItems, scaledwidth="75%
 
 ### Idempotency and Immutability of Invoice Calculation
 
-Once an `Invoice` has been approved, then it and all of its `InvoiceItem`s are immutable; they can no longer change.  The system also ensures that none of the source contract data (the `LeaseTerm`s) can be deleted.
+Once an `Invoice` has been approved, then it and all of its ``InvoiceItem``s are immutable; they can no longer change.  The system also ensures that none of the source contract data (the ``LeaseTerm``s) can be deleted.
 
-A "retro-run" allows the business user to recalculate the amounts to be paid for previous periods.  And of course if there have been no changes in any of the contract data, then no new `InvoiceItem`s are generated; nothing additional needs to be paid.  Invoice generation is therefore an idempotent operation.
+A "retro-run" allows the business user to recalculate the amounts to be paid for previous periods.  And of course if there have been no changes in any of the contract data, then no new ``InvoiceItem``s are generated; nothing additional needs to be paid.  `Invoice` generation is therefore an idempotent operation.
 
-However, if there has been an after-the-fact change in some contract data, then the `InvoiceItem` amounts previously generated will be incorrect with respect to the updated contract data.  One particular case where this happens routinely is with indexable rents.  Here the updated indexes may only be made available _after_ the period to which they apply.  So, when those updated indexes are eventually uploaded, a retro-run will end up creating additional `InvoiceItem`s, being the delta of what was invoiced versus what is now determined to be owed.
+However, if there has been an after-the-fact change in some contract data, then the `InvoiceItem` amounts previously generated will be incorrect with respect to the updated contract data.  One particular case where this happens routinely is with indexable rents.  Here the updated indexes may only be made available _after_ the period to which they apply.  So, when those updated indexes are eventually uploaded, a retro-run will end up creating additional ``InvoiceItem``s, being the delta of what was invoiced versus what is now determined to be owed.
 
 The figure below shows this:
 
