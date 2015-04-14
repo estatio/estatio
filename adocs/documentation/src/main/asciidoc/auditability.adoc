@@ -1,0 +1,168 @@
+= Auditability
+:Notice: (c) 2015 Eurocommercial Properties Ltd.  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+:toc: right
+:numbered:
+:_basedir: ./
+
+## Introduction
+
+Estatio is designed to be auditable both from a business- and technical- perspective.
+
+* from a business perspective, all invoices generated can be traced back to their underlying source, for example a `LeaseTermForIndexableRent`.  If there is change in that source data, then invoices can be regenerated either for the current period or retrospectively for a period in the past.
+
+* from a technical perspective, all changes made to the system are tracked by end-user.
+
+Moreover Estatio is built on open source technologies, and is itself open source, and has an comprehensive test suite.  This means that the algorithms encoded within the application are fully accessible to be inspected and verified.
+
+## Business-level Auditability
+
+Within the business, we need to distinguish between:
+
+. what should be invoiced, as per the agreed contract with the tenant
+. what has been invoiced for the current and previous periods
+. what has been paid by the tenant.
+
+At its heart Estatio is an invoice calculation engine, and thus is responsible for the first two points: what should be invoiced, and what has been invoiced.  The responsibility for keeping track of what the tenant has paid meanwhile is that of the General Ledger system; Estatio plays no part in sending out direct debit requests and so forth.
+
+What this means is that Estatio is considered to be the "source of truth" so far as lease contracts and invoices are concerned.  In particular, if the business user asks to recalculate invoices are previous periods in a "Retro run" (eg because of changes to indexation), then Estatio never asks the General Ledger for any information.
+
+### Traceability from Contract Data to Invoice Data
+
+The key concepts in Estatio are `Lease`, `LeaseItem`, `LeaseTerm`, `InvoiceItem` and `Invoice`:
+
+* a `Lease` is an agreement for a tenant to pay while occupying a unit, normally agreed over several years.
+* a `LeaseItem` is a component part of the `Lease`, for example for the tenant to pay rent, or service charges.  There are (currently) 5 different types of `LeaseItem`
+* a `LeaseTerm` are created as required as the `Lease` continues over time, one per `LeaseItem` of the `Lease` and for a given period (typically a quarter).  It is the `LeaseTerm` that acts as the source of the invoices
+* an `InvoiceItem` is the amount of money calculated as due to be paid by the tenant for a particular `LeaseTerm`
+* an `Invoice` aggregates all `InvoiceItem`s for a given `Lease` and period.
+
+`Lease`, `LeaseItem` and `LeaseTerm` are the contract data.  The `Lease` relates back to a `Party` as the tenant, and also captures the payment method.  The `Lease` also specifies the `Unit` (fixed asset) that the tenant occupies.
+
+When an `InvoiceItem` is generated the system looks for an `Invoice` to attach it to (for that period).  If none exists, one is created on the fly; subsequent `InvoiceItem`s from other `LeaseTerm`s are attached to that same invoice.
+
+The figure below shows these concepts, where "now" is somewhere in Q3 and the `LeaseTerm`s and `InvoiceItem`s have been generated for that period:
+
+.`LeaseTerm`s generate `InvoiceItem`s
+image:LeaseTermAndInvoiceItems.png[LeaseTerms, scaledwidth="75%"]
+
+The Estatio UI also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding `InvoiceItem`s:
+
+.Estatio UI showing a `LeaseTerm` with corresponding `InvoiceItem`s
+image:effective value vs invoice items.png[InvoiceItems, scaledwidth="75%"]
+
+
+### Idempotency and Immutability of Invoice Calculation
+
+Once an `Invoice` has been approved, then it and all of its `InvoiceItem`s are immutable; they can no longer change.  The system also ensures that none of the source contract data (the `LeaseTerm`s) can be deleted.
+
+A "retro-run" allows the business user to recalculate the amounts to be paid for previous periods.  And of course if there have been no changes in any of the contract data, then no new `InvoiceItem`s are generated; nothing additional needs to be paid.  Invoice generation is therefore an idempotent operation.
+
+However, if there has been an after-the-fact change in some contract data, then the `InvoiceItem` amounts previously generated will be incorrect with respect to the updated contract data.  One particular case where this happens routinely is with indexable rents.  Here the updated indexes may only be made available _after_ the period to which they apply.  So, when those updated indexes are eventually uploaded, a retro-run will end up creating additional `InvoiceItem`s, being the delta of what was invoiced versus what is now determined to be owed.
+
+The figure below shows this:
+
+.Retro-run creates new `InvoiceItem`s if existing is approved
+image:LeaseTermAndInvoiceItems.png[Retrorun, scaledwidth="75%"]
+
+For Q2, because the `Invoice` (and its items) is approved and therefore immutable, we see a new `InvoiceItem` (and containing `Invoice`) is created for the delta.  For Q3, because the `Invoice` is not yet approved, the system simply updates the existing `InvoiceItem`.
+
+The only things that trigger an invoice to be paid are:
+
+- change a contract
+- change in indexation (after the fact)
+- "time passes", ie the next period becomes due
+
+What DOESN'T trigger an invoice generation is payment
+
+
+### Idempotency of interface to General Ledger
+
+Estatio sends invoices to be paid to the General Ledger system.  This is currently implemented as a number of remote database procedure calls (though the implementation is scheduled to change during 2015).
+
+Estatio assigns each invoice a collection number (this happens to be sequential upon the property, eg "XXX-001", "XXX-002", but any unique identifier would have sufficed).  The important point here is that it is safe to submit the same invoice to the General Ledger system more than once, because Estatio will always ensure that the collection number assigns is unchanging.
+
+If an invoice is received by the General Ledger system from Estatio and has not previously been collected, then the GL system can do its payment collection processing (send out direct debit files etc).  But the GL system can also exploit the fact that the collection number is unchanging; if an invoice is received that has already been sent, then the GL system can either ignore the invoice or it could send out a new payment demand, according to where in the payment processing it is.
+
+In any case, whatever amount is collected from the tenant in any given quarter, the GL system keeps track of moneys paid and received, completely independently from the calculations of Estatio.
+
+Estatio went live on the 1st April 2014.  Dummy ("stub") invoices for all of 2013 were created in the General Ledger system) so that retro-runs could safely be performed for any date after 1 Jan 2013.  If in the future it turns out that there is a requirement to perform a retro-run prior to this date, then additional stub invoices will need to be created in the GL system.
+
+
+## System-level Auditability
+
+From a system perspective, auditability is one of a number of inter-related security concerns, including:
+
+* authentication ("who are you?")
+* authorization ("what can you do?")
+* auditing ("what did you do?")
+
+To address each of these in turn.
+
+### Authentication
+
+Estatio is deployed on an internal network (*not* on the internet), and so the company's existing LDAP system is used for user credentials (just user and password).
+
+Estatio leverages http://isis.apache.org[Apache Isis]' http://github.com/isisaddons/isis-module-security[Security module], which maps each LDAP account to a corresponding Estatio account (a so-called "delegated" account).
+
+### Authorization
+
+Each Estatio account in turn maps to roles.  There are currently just two roles: _estatio_admin_, and _estatio_user_.  The admin role is for system administration; all business users are mapped to the _estatio_user_ role.
+
+What this means is we do not distinguish between job roles within the business; there is no complex approval workflow for example.  Instead, we trust the users by granting them access to all (business functionality).
+
+### Auditing
+
+On the other hand we also audit every operation performed by every user:
+
+* each business action (command in the terminology of the system) is captured; eg user X updated the renewal date of lease Y"
+* all objects changed by a business action/command are associated with audited.
+
+That is, the auditing captures both the cause of the change to the system and the corresponding effect of that change.
+
+Also, Estatio's idempotent design (discussed above) means that the system is to some extent "self-healing"; if a mistake is made then a subsequent retro-run can correct the error.
+
+The diagrams below show how this is exposed in the UI to an Estatio administrator (not to regular users).  For any given object the administrator can request to view recent changes:
+
+.Estatio UI showing the "Recent Changes" action for an entity
+image:recent changes.png[RecentChanges, scaledwidth="75%"]
+
+This then returns a list of changes; note how each command (cause) is followed by audit entries (effect):
+
+.Estatio UI showing the recent changes (commands and audit records) for an entity
+image:recent changes - cause and effect.png[CauseAndEffect, scaledwidth="75%"]
+
+
+
+### Other security concerns
+
+Other security concerns include:
+
+* non-repudiation ("you can't deny you did it")
+* confidentality ("the data has not been read by an unauthorized party")
+* integrity ("the data hasn't been tampered with by an unauthorized party")
+
+To some extent these topics are out of scope for this document, however we can note that Estatio is deployed over `https`, which to a large extent addresses confidentiality and integrity concerns for messages.
+
+Other than the audit log (which is not editable through the application), Estatio does *not* have any support for non-repudation.
+
+Ensuring data is not tampered with once in the database, and that the system is only accessible via https and not through any backdoor etc, is not in scope of this document, straying more into sysadmin territory.
+
+### Multi-Tenancy
+
+Estatio has recently been refactored to exploit the multi-tenancy ("app tenancy") capabilities of the Apache Isis http://github.com/isisaddons/isis-module-security[Security module].  Different entities in the system (`Lease`, `LeaseTerm`, `Invoice`, `Party`, `Property` and so on) can be associated either globally, or with a given country, or a particular property within a country.
+
+Similarly, each user can be associated at these different levels (eg a global user, or an Italian user).  A user can therefore view and edit data for their app tenancy, and can view data "above" them, but cannot access data of a peer app tenancy.  In other words, an Italian user can work on Italian data and use global reference data (eg `Party` or `Brand`), but could not access French or Swedish data.
+
+This functionality is enforced by the underlying http://isis.apache.org[Apache Isis] framework.
+
+
+## Other Concerns (Technology Risk)
+
+Estatio is a bespoke custom application, which could be considered as a potential technology risk.
+
+However, it should be noted that Estatio is implemented on top of http://isis.apache.org[Apache Isis] open source framework, a small but healthy community whose governance is mandated by the well respected http://www.apache.org[Apache Software Foundation].  It is licensed under the business-friendly Apache v2 Software License.
+
+Estatio itself is open source, hosted on http://github.com/estatio/estatio[github], and is also licensed under Apache v2 Software License.
+
+Also, Estatio has a comprehensive test suite, as does Apache Isis.  Leveraging the Isis framework in particular means that the amount of code to maintain is kept to an absolute minimum (in essence: just the business logic).
+

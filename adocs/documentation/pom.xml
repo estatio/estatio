@@ -60,18 +60,8 @@
                                 <sourceHighlighter>coderay</sourceHighlighter>
                                 <backend>html5</backend>
                                 <preserveDirectories>true</preserveDirectories>
-                                <!--
-                                use this if wish to generate content for a website eg using bootstrap
-                                (Isis' template has been added as a starting point)
-                                <templateDir>../template</templateDir>
-                                -->
                                 <attributes>
-                                    <!--
-                                   in essence unsets the imagesdir attribute (the mojo hardcodes it to "images") but
-                                   (unfortunately) has side-effect of preventing the docs from overriding with own value.
-                                   We therefore use our own custom '_imagesdir' attribute
-                                   -->
-                                    <imagesdir/>
+                                    <imagesdir>images</imagesdir>
                                     <icons>font</icons>
                                 </attributes>
                             </configuration>
@@ -85,6 +75,9 @@
                             <configuration>
                                 <backend>docbook</backend>
                                 <doctype>book</doctype>
+                                <attributes>
+                                    <imagesdir>images</imagesdir>
+                                </attributes>
                             </configuration>
                         </execution>
                         <execution>
@@ -95,13 +88,13 @@
                             </goals>
                             <configuration>
                                 <backend>pdf</backend>
-                                <!-- WARNING callout bullets don't yet work with CodeRay -->
                                 <sourceHighlighter>coderay</sourceHighlighter>
                                 <attributes>
                                     <pagenums/>
                                     <toc/>
                                     <idprefix/>
                                     <idseparator>-</idseparator>
+                                    <imagesdir>images</imagesdir>
                                 </attributes>
                             </configuration>
                         </execution>
