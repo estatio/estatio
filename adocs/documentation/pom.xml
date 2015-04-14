@@ -61,7 +61,7 @@
                                 <backend>html5</backend>
                                 <preserveDirectories>true</preserveDirectories>
                                 <attributes>
-                                    <imagesdir>images</imagesdir>
+                                    <imagesdir/>
                                     <icons>font</icons>
                                 </attributes>
                             </configuration>
@@ -76,7 +76,7 @@
                                 <backend>docbook</backend>
                                 <doctype>book</doctype>
                                 <attributes>
-                                    <imagesdir>images</imagesdir>
+                                    <imagesdir/>
                                 </attributes>
                             </configuration>
                         </execution>
@@ -94,7 +94,7 @@
                                     <toc/>
                                     <idprefix/>
                                     <idseparator>-</idseparator>
-                                    <imagesdir>images</imagesdir>
+                                    <imagesdir/>
                                 </attributes>
                             </configuration>
                         </execution>
