@@ -110,7 +110,7 @@ Each Estatio account in turn maps to roles.  There are currently just two roles:
 
 What this means is we do not distinguish between job roles within the business; there is no complex approval workflow for example.  Instead, we trust the users by granting them access to all (business functionality).
 
-### Auditing
+### Audit Log
 
 On the other hand we also audit every operation performed by every user:
 
@@ -166,3 +166,103 @@ Estatio itself is open source, hosted on http://github.com/estatio/estatio[githu
 
 Also, Estatio has a comprehensive test suite, as does Apache Isis.  Leveraging the Isis framework in particular means that the amount of code to maintain is kept to an absolute minimum (in essence: just the business logic).
 
+## Suggested Tests/Checks for External Auditors
+
+Any organization deploying Estatio may wish or require that the system is checked by external auditors.  The following are ideas for tests/checks that an external auditor may wish to use to help verify the system's suitability.
+
+...
+
+### Typical Lifecycle of a Lease
+
+Use the system to create a `Lease` and generate ``Invoice``s from it over a period of time.  Ideally this should include a retro-run to demonstrate the idempotency characteristic of the system.
+
+#### Create a Lease
+
+* choose an existing property (any will do)
+
+* choose an existing party to act as the tenant with valid bank details (any will do); identify the party to act as the landlord (usually the operating company)
+
+* create a Lease for the tenant and landlord
++
+image:images/0.1-Create new lease.png[]
+
+* create an Occupancy for the Lease, eg starting Q2 (1-Apr)
++
+image:images/0.2-Create new occupancy.png[]
+
+* create a new item, eg (indexable) rent
++
+image:images/0.3-Create new Item.png[]
+
+* create a new term for the first year, eg starting Q2 (1-Apr)
++
+image:images/0.4-Create new term.png[]
+
+* change the parameters on the term, specifying the index to use, with an effective date set to beginning of Q3 (1-Jul)
++
+image:images/0.5-Change parameters.png[]
+
+#### Normal Run and Retro Run
+
+* change the (base) value of the term
++
+image:images/0.6-Change values.png[]
+
+* on the lease, perform a (normal) calculate, eg for just Q2 (1-Apr to 1-Jul)
++
+image:images/1.1-Calculate 2nd quarter.png[]
+
+* on the generated invoice run, all the "temporary" draft (status=new) invoices are listed for the period over which the calculation was performed
+
+* approve all invoices; the invoice is shown for the lease, with a single invoice item (for Q2)
++
+image:images/1.2-Approve the results.png[]
+
+* on the lease, perform a retro run for the period for Q2 and Q3
++
+image:images/1.3-Calculate 3rd quarter including retro run.png[]
+
+* a new "temporary" draft (new) invoice is created, with two invoice items; one for Q3 and a delta for Q2.
++
+image:images/1.4-Approve the results.png[]
+
+
+#### Pro Rata Reconciliation after Lease Termination
+
+Normally leases are set to terminate in the future.  However, if a `Lease` terminated in the past but this was not recorded, then Estatio would have created invoices when in fact none was actually due.
+
+* Terminate the lease in the past
++
+image:images/2.1-Terminate the lease prematurely.png[]
+
+* Recalculate the lease's invoices using a retro run
++
+image:images/2.2-Calculate 3rd quarter including retro run.png[]
+
+* The approved "temporary" draft (new) invoice should have invoice items that credit the tenant.
++
+image:images/2.3-Approve the results.png[]
+
+End users may also have their own user guides/cheatsheets that can be used to crib from.
+
+### Command/Auditing Log
+
+As discussed in <<Audit Log>>, every action performed by an end user is persisted as a command (cause) and corresponding audit entries (effect).
+
+For the scenario described above (or one similar), use the "Changes" action to query the command log and inspect those commands.  Note that this requires the __estatio_admin__ role.
+
+
+### Random Data Check / End-to-end test
+
+Estatio's core concepts (`Lease`, `Property`, `Invoice` and so on) map almost 1:1 with underlying database tables, easily queryable using a SQL client.
+
+Therefore select a `Lease` at random, and (for one or more of its ``LeaseItem``s), build "clean room" spreadsheets that perform the rent calculations.  Confirm at each stage that the data stored in the database maps to the spreadsheet; as a further check confirm that the invoice posted to the GL system matches those of the spreadsheets.
+
+End users may also have their own spreadsheets which can be used as a starting point for those "clean room" spreadsheets.
+
+
+### Code and Automated Test Review
+
+Estatio's source code resides on link:https://github.com/estatio/estatio[github], specifically the link:https://github.com/estatio/estatio/tree/master/estatioapp/dom["dom"] (domain object model) and link:https://github.com/estatio/estatio/tree/master/estatioapp/dom-italy["dom-italy"] modules.
+
+Estatio's end-to-end integration tests are also part of the same code repository, in the link:https://github.com/estatio/estatio/tree/master/estatioapp/integtests[integtests] module; specifically the tests reside in the link:https://github.com/estatio/estatio/tree/master/estatioapp/integtests/src/test/java/org/estatio/integtests[src/test/java] directory.
