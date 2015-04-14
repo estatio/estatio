@@ -130,6 +130,30 @@ You are free to adapt or extend Estatio to your needs.  If you would like assist
 
 You can find plenty of help on using Apache Isis at the [Isis mailing lists](http://isis.apache.org/support.html).  There is also extensive [online documentation](http://isis.apache.org/documentation.html).
 
+## How to generate the AsciiDoc pages
+
+Just run:
+
+<pre>
+    cd adocs/documentation
+    mvn site
+</pre>
+
+The `.html` will be generated in `target/site`.  It should be possible to load the HTML straight from the directory.  Alternatively, load from a webserver, eg:
+
+<pre>
+    python -m SimpleHTTPServer
+</pre>
+
+and browse to http://localhost:8000.
+
+The mvn script also generates docbook XML and PDF, but there are some caveats:
+
+* the PDF currently does not include images at all.
+
+* Using [asciidoctor-fopub](https://github.com/asciidoctor/asciidoctor-fopub) the XML can be converted to PDF; however there are currently some issues with images being scaled correctly.
+
+
 ## Thanks
 
 Thanks to
@@ -139,7 +163,7 @@ Thanks to
 
 ## Legal Stuff ##
 
-Copyright 2012-2014 [Eurocommercial Properties NV](http://www.eurocommercialproperties.com) 
+Copyright 2012-2015 [Eurocommercial Properties NV](http://www.eurocommercialproperties.com) 
 
 Licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
