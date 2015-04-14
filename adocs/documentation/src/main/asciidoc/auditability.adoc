@@ -12,7 +12,7 @@ Estatio is designed to be auditable both from a business- and technical- perspec
 
 * from a technical perspective, all changes made to the system are tracked by end-user.
 
-Moreover Estatio is built on open source technologies, and is itself open source, and has an comprehensive test suite.  This means that the algorithms encoded within the application are fully accessible to be inspected and verified.
+Moreover Estatio is built on open source technologies, and is itself open source, and has a comprehensive test suite.  This means that the algorithms encoded within the application are fully accessible to be inspected and verified.
 
 ## Business-level Auditability
 
@@ -24,30 +24,30 @@ Within the business, we need to distinguish between:
 
 At its heart Estatio is an invoice calculation engine, and thus is responsible for the first two points: what should be invoiced, and what has been invoiced.  The responsibility for keeping track of what the tenant has paid meanwhile is that of the General Ledger system; Estatio plays no part in sending out direct debit requests and so forth.
 
-What this means is that Estatio is considered to be the "source of truth" so far as lease contracts and invoices are concerned.  In particular, if the business user asks to recalculate invoices are previous periods in a "Retro run" (eg because of changes to indexation), then Estatio never asks the General Ledger for any information.
+What this means is that, so far as lease contracts and invoices are concerned, Estatio is considered to be the "source of truth" .  In particular, if the business user asks to recalculate invoices are previous periods in a "retro run" (for example because of changes to indexation), then Estatio never asks the General Ledger for any information.
 
 ### Traceability from Contract Data to Invoice Data
 
 The key concepts in Estatio are `Lease`, `LeaseItem`, `LeaseTerm`, `InvoiceItem` and `Invoice`:
 
-* a `Lease` is an agreement for a tenant to pay while occupying a unit, normally agreed over several years.
-* a `LeaseItem` is a component part of the `Lease`, for example for the tenant to pay rent, or service charges.  There are (currently) 5 different types of `LeaseItem`
-* a `LeaseTerm` are created as required as the `Lease` continues over time, one per `LeaseItem` of the `Lease` and for a given period (typically a quarter).  It is the `LeaseTerm` that acts as the source of the invoices
-* an `InvoiceItem` is the amount of money calculated as due to be paid by the tenant for a particular `LeaseTerm`
+* a `Lease` is an agreement for a tenant to pay while occupying a unit, normally agreed to last many years;
+* a `LeaseItem` is a component part of the `Lease`, for example for the tenant to pay rent, or service charges.  There are (currently) 5 different types of `LeaseItem`;
+* a `LeaseTerm` are created as required as the `Lease` continues over time, one per `LeaseItem` of the `Lease`, typically one per year.  It is the `LeaseTerm` that acts as the source of the invoices;
+* an `InvoiceItem` is the amount of money calculated as due to be paid by the tenant for a particular `LeaseTerm` pro-rata for a particular period;
 * an `Invoice` aggregates all `InvoiceItem`s for a given `Lease` and period.
 
 `Lease`, `LeaseItem` and `LeaseTerm` are the contract data.  The `Lease` relates back to a `Party` as the tenant, and also captures the payment method.  The `Lease` also specifies the `Unit` (fixed asset) that the tenant occupies.
 
 When an `InvoiceItem` is generated the system looks for an `Invoice` to attach it to (for that period).  If none exists, one is created on the fly; subsequent `InvoiceItem`s from other `LeaseTerm`s are attached to that same invoice.
 
-The figure below shows these concepts, where "now" is somewhere in Q3 and the `LeaseTerm`s and `InvoiceItem`s have been generated for that period:
+The figure below shows these concepts, where "now" is somewhere in Q3, the `LeaseTerm` exists for the year, and an `InvoiceItem`s has been generated for the Q3 period:
 
-.`LeaseTerm`s generate `InvoiceItem`s
+.LeaseTerms generate InvoiceItems
 image:images/LeaseTermAndInvoiceItems.png[LeaseTerms, scaledwidth="75%"]
 
 The Estatio UI also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding `InvoiceItem`s:
 
-.Estatio UI showing a `LeaseTerm` with corresponding `InvoiceItem`s
+.Estatio UI showing a LeaseTerm with corresponding InvoiceItems
 image:images/effective value vs invoice items.png[InvoiceItems, scaledwidth="75%"]
 
 
@@ -61,7 +61,7 @@ However, if there has been an after-the-fact change in some contract data, then 
 
 The figure below shows this:
 
-.Retro-run creates new `InvoiceItem`s if existing is approved
+.Retro-run creates new InvoiceItems if existing is approved
 image:images/LeaseTermAndInvoiceItems.png[Retrorun, scaledwidth="75%"]
 
 For Q2, because the `Invoice` (and its items) is approved and therefore immutable, we see a new `InvoiceItem` (and containing `Invoice`) is created for the delta.  For Q3, because the `Invoice` is not yet approved, the system simply updates the existing `InvoiceItem`.
