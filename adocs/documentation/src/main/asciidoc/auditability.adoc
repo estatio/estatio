@@ -62,7 +62,7 @@ However, if there has been an after-the-fact change in some contract data, then 
 The figure below shows this:
 
 .Retro-run creates new InvoiceItems if existing is approved
-image:images/LeaseTermAndInvoiceItems.png[Retrorun, scaledwidth="75%"]
+image:images/LeaseTermAndInvoiceItemsRetroRun.png[Retrorun, scaledwidth="75%"]
 
 For Q2, because the `Invoice` (and its items) is approved and therefore immutable, we see a new `InvoiceItem` (and containing `Invoice`) is created for the delta.  For Q3, because the `Invoice` is not yet approved, the system simply updates the existing `InvoiceItem`.
 
