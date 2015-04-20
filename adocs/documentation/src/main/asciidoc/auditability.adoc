@@ -31,7 +31,7 @@ What this means is that, so far as lease contracts and invoices are concerned, E
 The key concepts in Estatio are `Lease`, `LeaseItem`, `LeaseTerm`, `InvoiceItem` and `Invoice`:
 
 * a `Lease` is an agreement for a tenant to pay while occupying a unit, normally agreed to last many years;
-* a `LeaseItem` is a component part of the `Lease`, for example for the tenant to pay rent, or service charges.  There are (currently) 5 different types of `LeaseItem`;
+* a `LeaseItem` is a component part of the `Lease`, for example for the tenant to pay rent, or service charges.  There are (currently) 8 different types of `LeaseItem`;
 * a `LeaseTerm` are created as required as the `Lease` continues over time, one per `LeaseItem` of the `Lease`, typically one per year.  It is the `LeaseTerm` that acts as the source of the invoices;
 * an `InvoiceItem` is the amount of money calculated as due to be paid by the tenant for a particular `LeaseTerm` pro-rata for a particular period;
 * an `Invoice` aggregates all ``InvoiceItem``s for a given `Lease` and period.
@@ -45,15 +45,15 @@ The figure below shows these concepts, where "now" is somewhere in Q3, the `Leas
 .LeaseTerms generate InvoiceItems
 image:images/LeaseTermAndInvoiceItems.png[LeaseTerms, scaledwidth="75%"]
 
-The Estatio UI also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding ``InvoiceItem``s:
+The Estatio user interface also shows the linkage between these concepts; the diagram below shows a `LeaseTerm` object and corresponding ``InvoiceItem``s:
 
-.Estatio UI showing a LeaseTerm with corresponding InvoiceItems
+.Estatio user interface showing a LeaseTerm with corresponding InvoiceItems
 image:images/effective value vs invoice items.png[InvoiceItems, scaledwidth="75%"]
 
 
-### Idempotency and Immutability of Invoice Calculation
+### Idempotency and Immutability of an Invoice
 
-Once an `Invoice` has been approved, then it and all of its ``InvoiceItem``s are immutable; they can no longer change.  The system also ensures that none of the source contract data (the ``LeaseTerm``s) can be deleted.
+Once an `Invoice` has been finalised, eg an invoice number has been assigned, then it and all of its ``InvoiceItem``s are immutable; they can no longer change.  The system also ensures that none of the source contract data (the ``LeaseTerm``s) can be deleted.
 
 A "retro-run" allows the business user to recalculate the amounts to be paid for previous periods.  And of course if there have been no changes in any of the contract data, then no new ``InvoiceItem``s are generated; nothing additional needs to be paid.  `Invoice` generation is therefore an idempotent operation.
 
@@ -100,7 +100,7 @@ To address each of these in turn.
 
 ### Authentication
 
-Estatio is deployed on an internal network (*not* on the internet), and so the company's existing LDAP system is used for user credentials (just user and password).
+Estatio is deployed on an internal network (*not* on the internet), and so the company's existing user directory (through the LDAP protocol) is used for user credentials (just user and password).
 
 Estatio leverages http://isis.apache.org[Apache Isis]' http://github.com/isisaddons/isis-module-security[Security module], which maps each LDAP account to a corresponding Estatio account (a so-called "delegated" account).
 
@@ -121,14 +121,14 @@ That is, the auditing captures both the cause of the change to the system and th
 
 Also, Estatio's idempotent design (discussed above) means that the system is to some extent "self-healing"; if a mistake is made then a subsequent retro-run can correct the error.
 
-The diagrams below show how this is exposed in the UI to an Estatio administrator (not to regular users).  For any given object the administrator can request to view recent changes:
+The diagrams below show how this is exposed in the user interface to an Estatio administrator (not to regular users).  For any given object the administrator can request to view recent changes:
 
-.Estatio UI showing the "Recent Changes" action for an entity
+.Estatio user interface showing the "Recent Changes" action for an entity
 image:images/recent changes.png[RecentChanges, scaledwidth="75%"]
 
 This then returns a list of changes; note how each command (cause) is followed by audit entries (effect):
 
-.Estatio UI showing the recent changes (commands and audit records) for an entity
+.Estatio user interface showing the recent changes (commands and audit records) for an entity
 image:images/recent changes - cause and effect.png[CauseAndEffect, scaledwidth="75%"]
 
 
@@ -147,7 +147,7 @@ The audit log (which is not editable through the application) provides some guar
 
 Ensuring data is not tampered with once in the database, and that the system is only accessible via https and not through any backdoor etc, is not in scope of this document, straying more into sysadmin territory.
 
-### Multi-Tenancy
+### Multi-Tenancy (work in progress)
 
 Estatio has recently been refactored to exploit the multi-tenancy ("app tenancy") capabilities of the Apache Isis http://github.com/isisaddons/isis-module-security[Security module].  Different entities in the system (`Lease`, `LeaseTerm`, `Invoice`, `Party`, `Property` and so on) can be associated either globally, or with a given country, or a particular property within a country.
 
