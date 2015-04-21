@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -126,8 +127,8 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
                     name,
                     leaseSecondaryParty);
             guarantee.setFinancialAccount(financialAccount);
-            if (startAmount != null) {
-                newTransaction(guarantee, startDate, null, contractualAmount);
+            if (ObjectUtils.compare(startAmount, BigDecimal.ZERO) > 0) {
+                newTransaction(guarantee, startDate, null, startAmount);
             }
         }
 
