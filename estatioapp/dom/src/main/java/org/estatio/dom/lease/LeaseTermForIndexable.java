@@ -50,6 +50,13 @@ import org.estatio.dom.utils.MathUtils;
 })
 public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
+    //TODO: Eventually the indexation method must be persisted. Currently returning the default.
+    public IndexationMethod getIndexationMethod() {
+        return IndexationMethod.LAST_KNOWN_INDEX;
+    }
+
+    // //////////////////////////////////////
+
     private Index index;
 
     @javax.jdo.annotations.Column(name = "indexId", allowsNull = "true")
@@ -153,7 +160,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
             final @ParameterLayout(named = "Next index date") LocalDate nextIndexDate,
             final @ParameterLayout(named = "Levelling percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal levellingPercentage,
             final @ParameterLayout(named = "Effective date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate effectiveDate
-            ) {
+    ) {
         setIndex(index);
         setBaseIndexStartDate(baseIndexDate);
         setNextIndexStartDate(nextIndexDate);
@@ -306,12 +313,14 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     @Override
     @Programmatic
     public void doInitialize() {
+
         final LeaseTermForIndexable previousTerm = (LeaseTermForIndexable) getPrevious();
         if (previousTerm != null) {
+            //setIndexationMethod(previousTerm.getIndexationMethod());
+            getIndexationMethod().doInitialze(this);
             LeaseTermFrequency frequency = previousTerm.getFrequency();
             if (frequency != null) {
                 setIndex(previousTerm.getIndex());
-                setBaseIndexStartDate(previousTerm.getNextIndexStartDate());
                 setNextIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
                 setEffectiveDate(frequency.nextDate(previousTerm.getEffectiveDate()));
                 setBaseValue(previousTerm.getSettledValue());
@@ -334,16 +343,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     @Override
     protected void doAlign() {
-        LeaseTermForIndexable previousTerm = (LeaseTermForIndexable) getPrevious();
-        if (previousTerm != null) {
-            BigDecimal newBaseValue = MathUtils.firstNonZero(
-                    previousTerm.getSettledValue(),
-                    previousTerm.getIndexedValue(),
-                    previousTerm.getBaseValue());
-            if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
-                setBaseValue(newBaseValue);
-            }
-        }
+        getIndexationMethod().doAlign(this);
         if (isIndexable()) {
             indexationService.indexate(this);
         }
