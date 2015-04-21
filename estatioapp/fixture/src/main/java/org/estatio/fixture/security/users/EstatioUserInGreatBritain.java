@@ -20,12 +20,13 @@ import java.util.Arrays;
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
 public class EstatioUserInGreatBritain extends AbstractUserAndRolesFixtureScript {
 
     public static final String USER_NAME = "estatio-user-gb";
     public static final String PASSWORD = "pass";
-    public static final String AT_PATH = "/gb";
+    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
     public static final String EMAIL_ADDRESS = null;
 
     public EstatioUserInGreatBritain() {
@@ -37,5 +38,6 @@ public class EstatioUserInGreatBritain extends AbstractUserAndRolesFixtureScript
                 AccountType.LOCAL,
                 Arrays.asList(EstatioUserRoleAndPermissions.ROLE_NAME));
     }
+    
 
 }

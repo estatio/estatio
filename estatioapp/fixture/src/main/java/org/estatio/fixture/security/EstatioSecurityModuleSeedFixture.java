@@ -16,12 +16,25 @@
  */
 package org.estatio.fixture.security;
 
-import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
+import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
+
 import org.estatio.fixture.security.perms.EstatioAdminRoleAndPermissions;
 import org.estatio.fixture.security.perms.EstatioRolesAndPermissions;
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
-import org.estatio.fixture.security.tenancy.AllEstatioApplicationTenancies;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForFrOther;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOther;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobalOnly;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForItOther;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlOther;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForSe;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForSeOther;
 import org.estatio.fixture.security.userrole.EstatioAdmin_Has_EstatioAdminRole;
 import org.estatio.fixture.security.userrole.EstatioAdmin_Has_IsisSecurityModuleAdminRole;
 import org.estatio.fixture.security.userrole.EstatioUserInFrance_Has_IsisSecurityModuleRegularRole;
@@ -47,7 +60,18 @@ public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript 
         executionContext.executeChild(this, new SeedUsersAndRolesFixtureScript());
 
         // estatio app tenancy, users, roles etc
-        executionContext.executeChild(this, new AllEstatioApplicationTenancies());
+        executionContext.executeChild(this, new ApplicationTenancyForGlobal());
+        executionContext.executeChild(this, new ApplicationTenancyForGlobalOnly());
+        executionContext.executeChild(this, new ApplicationTenancyForFr());
+        executionContext.executeChild(this, new ApplicationTenancyForFrOther());
+        executionContext.executeChild(this, new ApplicationTenancyForIt());
+        executionContext.executeChild(this, new ApplicationTenancyForItOther());
+        executionContext.executeChild(this, new ApplicationTenancyForNl());
+        executionContext.executeChild(this, new ApplicationTenancyForNlOther());
+        executionContext.executeChild(this, new ApplicationTenancyForSe());
+        executionContext.executeChild(this, new ApplicationTenancyForSeOther());
+        executionContext.executeChild(this, new ApplicationTenancyForGb());
+        executionContext.executeChild(this, new ApplicationTenancyForGbOther());
 
         executionContext.executeChild(this, new EstatioRolesAndPermissions());
         executionContext.executeChild(this, new EstatioAdmin());

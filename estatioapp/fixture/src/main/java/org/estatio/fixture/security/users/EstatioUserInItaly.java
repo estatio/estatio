@@ -20,12 +20,13 @@ import java.util.Arrays;
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
 public class EstatioUserInItaly extends AbstractUserAndRolesFixtureScript {
 
     public static final String USER_NAME = "estatio-user-it";
     public static final String PASSWORD = "pass";
-    public static final String AT_PATH = "/it";
+    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
     public static final String EMAIL_ADDRESS = null;
 
     public EstatioUserInItaly() {
