@@ -177,17 +177,22 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.settings</groupId>
             <artifactId>isis-module-settings-dom</artifactId>
-            <version>${isis-module-settings.version}</version>
         </dependency>
-
-        <!-- Isisaddons modules -->
         <dependency>
             <groupId>org.isisaddons.module.command</groupId>
             <artifactId>isis-module-command-dom</artifactId>
         </dependency>
         <dependency>
-                <groupId>org.isisaddons.module.security</groupId>
+            <groupId>org.isisaddons.module.security</groupId>
             <artifactId>isis-module-security-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.sessionlogger</groupId>
+            <artifactId>isis-module-sessionlogger-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.excel</groupId>
+            <artifactId>isis-module-excel-dom</artifactId>
         </dependency>
 
 
@@ -260,12 +265,7 @@ language governing permissions and limitations under the License.
         </dependency>
         <!-- SVG maps -->
 
-        <!-- isis addons (modules) -->
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-
+        <!-- Other dependencies -->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
