@@ -34,6 +34,8 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
 
 @DomainService()
 @DomainServiceLayout(
@@ -68,8 +70,17 @@ public class EstatioUpgradeService extends UdoDomainService<EstatioUpgradeServic
         getContainer().informUser("Upgrade Properties done");
     }
 
+    void upgradeLease() {
+        for (Lease lease : leases.allLeases()) {
+            lease.setApplicationTenancyPath(appTenancies.findOrCreateLeaseTenancy(lease).getPath());
+        }
+        getContainer().informUser("Upgrade Properties done");
+    }
+
     @Inject
     private Properties properties;
+
+    @Inject Leases leases;
 
     @Inject
     private EstatioApplicationTenancies appTenancies;
