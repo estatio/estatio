@@ -28,7 +28,8 @@ public enum PropertyType implements TitledEnum {
     RESIDENTIAL,
     RETAIL_PARK,
     MIXED,
-    CINEMA;
+    CINEMA,
+    OFFICE;
     
     public String title() {
         return StringUtils.enumTitle(this.toString());

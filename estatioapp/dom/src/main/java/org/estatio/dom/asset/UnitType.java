@@ -37,7 +37,8 @@ public enum UnitType implements TitledEnum {
     VIRTUAL,
     LAND,
     PARKING,
-    ELECTRICAL_SUBSTATION;
+    ELECTRICAL_SUBSTATION,
+    RESIDENTIAL;
 
     public String title() {
         return StringUtils.enumTitle(this.name());
