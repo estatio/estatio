@@ -350,8 +350,8 @@ public class LeaseTermForTax extends LeaseTerm {
             final BigDecimal newTaxableValue = rentValueForDate();
             final BigDecimal newTaxPercentage = getTaxPercentage() == null ? BigDecimal.ZERO : getTaxPercentage();
             final BigDecimal newRecoverablePercentage = getRecoverablePercentage() == null ? BigDecimal.ZERO : getRecoverablePercentage();
-            final BigDecimal newPayableValue = newTaxableValue.multiply(newTaxPercentage.divide(HUNDRED));
-            final BigDecimal newTaxValue = newPayableValue.multiply(newRecoverablePercentage).divide(HUNDRED).setScale(0, RoundingMode.HALF_UP);
+            final BigDecimal newPayableValue = newTaxableValue.multiply(newTaxPercentage.divide(HUNDRED)).setScale(0, RoundingMode.HALF_UP).setScale(2);
+            final BigDecimal newTaxValue = newPayableValue.multiply(newRecoverablePercentage).divide(HUNDRED).setScale(2, RoundingMode.HALF_UP);
             if (ObjectUtils.compare(getTaxableValue(), newTaxableValue) != 0) {
                 setTaxableValue(newTaxableValue);
             }

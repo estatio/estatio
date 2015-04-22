@@ -1,18 +1,20 @@
 package org.estatio.dom.lease;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 public class LeaseTermForTaxTest {
+
+    public static final String VALUE = "12345.67";
 
     public static class ChangeRegistration extends LeaseTermForTaxTest {
 
@@ -48,7 +50,7 @@ public class LeaseTermForTaxTest {
             term1 = new LeaseTermForTax() {
                 @Override
                 public BigDecimal rentValueForDate() {
-                    return new BigDecimal(20000.00);
+                    return new BigDecimal(VALUE);
                 };
             };
             term2 = new LeaseTermForTax() {
@@ -65,8 +67,8 @@ public class LeaseTermForTaxTest {
             // when
             term1.doAlign();
             // then
-            assertThat(term1.getTaxableValue(), is(new BigDecimal(20000.00)));
-            assertThat(term1.getTaxValue(), is(new BigDecimal(0.00)));
+            assertThat(term1.getTaxableValue(), is(new BigDecimal(VALUE)));
+            assertThat(term1.getTaxValue(), is(new BigDecimal("0.00")));
 
         }
 
@@ -78,9 +80,9 @@ public class LeaseTermForTaxTest {
             // when
             term1.doAlign();
             // then
-            assertThat(term1.getTaxableValue(), is(new BigDecimal("20000")));
-            assertThat(term1.getPayableValue(), is(new BigDecimal("200.00")));
-            assertThat(term1.getTaxValue(), is(new BigDecimal("100")));
+            assertThat(term1.getTaxableValue(), is(new BigDecimal(VALUE)));
+            assertThat(term1.getPayableValue(), is(new BigDecimal("123.00")));
+            assertThat(term1.getTaxValue(), is(new BigDecimal("61.50")));
         }
 
         @Test
@@ -95,7 +97,7 @@ public class LeaseTermForTaxTest {
             // then
             term1.doAlign();
             // when
-            assertThat(term1.getTaxableValue(), is(new BigDecimal("20000")));
+            assertThat(term1.getTaxableValue(), is(new BigDecimal(VALUE)));
             assertThat(term1.getPayableValue(), is(new BigDecimal("222.00")));
             assertThat(term1.getTaxValue(), is(new BigDecimal("111.00")));
         }
