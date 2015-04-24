@@ -18,6 +18,10 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.List;
+import javax.inject.Inject;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -34,8 +38,29 @@ public class PhoneOrFaxNumbers extends UdoDomainRepositoryAndFactory<PhoneOrFaxN
     // //////////////////////////////////////
 
     @Programmatic
-    public PhoneOrFaxNumber findByPhoneOrFaxNumber(final CommunicationChannelOwner owner, final String phoneNumber) {
-        return firstMatch("findByPhoneNumber", "owner", owner, "phoneNumber", phoneNumber);
+    public PhoneOrFaxNumber findByPhoneOrFaxNumber(
+            final CommunicationChannelOwner owner,
+            final String phoneNumber) {
+
+        final Optional<PhoneOrFaxNumber> phoneNumberIfFound = findByPhoneOrFaxNumber(owner, phoneNumber, CommunicationChannelType.PHONE_NUMBER);
+        if(phoneNumberIfFound.isPresent()) {
+            return phoneNumberIfFound.get();
+        }
+
+        final Optional<PhoneOrFaxNumber> faxNumberIfFound = findByPhoneOrFaxNumber(owner, phoneNumber, CommunicationChannelType.FAX_NUMBER);
+        return faxNumberIfFound.orNull();
     }
 
+    private Optional<PhoneOrFaxNumber> findByPhoneOrFaxNumber(final CommunicationChannelOwner owner, final String phoneNumber, final CommunicationChannelType communicationChannelType) {
+        final List<CommunicationChannelOwnerLink> links =
+                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, communicationChannelType);
+        final Iterable<PhoneOrFaxNumber> phoneOrFaxNumbers =
+                Iterables.transform(
+                        links,
+                        CommunicationChannelOwnerLink.Functions.communicationChannel(PhoneOrFaxNumber.class));
+        return Iterables.tryFind(phoneOrFaxNumbers, PhoneOrFaxNumber.Predicates.equalTo(phoneNumber, communicationChannelType));
+    }
+
+    @Inject
+    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
 }

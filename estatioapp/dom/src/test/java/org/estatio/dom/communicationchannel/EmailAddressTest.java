@@ -22,6 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester;
 
 public class EmailAddressTest {
 
@@ -32,7 +33,7 @@ public class EmailAddressTest {
             newPojoTester()
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
                     .withFixture(pojos(ApplicationTenancy.class))
-                    .exercise(new EmailAddress());
+                    .exercise(new EmailAddress(), PojoTester.FilterSet.excluding("owner"));
         }
 
 

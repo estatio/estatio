@@ -45,7 +45,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());

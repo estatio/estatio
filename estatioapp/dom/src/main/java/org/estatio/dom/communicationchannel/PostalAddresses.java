@@ -18,6 +18,10 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.List;
+import javax.inject.Inject;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -45,12 +49,19 @@ public class PostalAddresses
             final String postalCode, 
             final String city, 
             final Country country) {
-        return firstMatch("findByAddress", 
-                "owner", owner, 
-                "address1", address1, 
-                "postalCode", postalCode, 
-                "city", city, 
-                "country", country);
+
+        final List<CommunicationChannelOwnerLink> links =
+                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.POSTAL_ADDRESS);
+        final Iterable<PostalAddress> postalAddresses =
+                Iterables.transform(
+                        links,
+                        CommunicationChannelOwnerLink.Functions.communicationChannel(PostalAddress.class));
+        final Optional<PostalAddress> postalAddressIfFound =
+                Iterables.tryFind(postalAddresses, PostalAddress.Predicates.equalTo(address1, postalCode, city, country));
+        return postalAddressIfFound.orNull();
     }
+
+    @Inject
+    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
 
 }

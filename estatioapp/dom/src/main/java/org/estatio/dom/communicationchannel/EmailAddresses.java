@@ -18,6 +18,10 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.List;
+import javax.inject.Inject;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -37,6 +41,19 @@ public class EmailAddresses extends UdoDomainRepositoryAndFactory<EmailAddress> 
     public EmailAddress findByEmailAddress(
             final CommunicationChannelOwner owner, 
             final String emailAddress) {
-        return firstMatch("findByEmailAddress", "owner", owner, "emailAddress", emailAddress);
+
+        final List<CommunicationChannelOwnerLink> links =
+                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.EMAIL_ADDRESS);
+        final Iterable<EmailAddress> emailAddresses =
+                Iterables.transform(
+                        links,
+                        CommunicationChannelOwnerLink.Functions.communicationChannel(EmailAddress.class));
+        final Optional<EmailAddress> emailAddressIfFound =
+                Iterables.tryFind(emailAddresses, EmailAddress.Predicates.equalTo(emailAddress));
+        return emailAddressIfFound.orNull();
     }
+
+    @Inject
+    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
+
 }

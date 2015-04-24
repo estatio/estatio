@@ -104,7 +104,7 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-specsupport</artifactId>
@@ -143,6 +143,11 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.lazyluke</groupId>
             <artifactId>log4jdbc-remix</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
         </dependency>
 
         <!-- needed by gmap3/HttpClient; not correctly declared as transitive dependency, it would seem... -->

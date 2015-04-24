@@ -18,6 +18,7 @@
  */
 package org.estatio.fixture;
 
+import java.util.Random;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public abstract class EstatioFixtureScript extends FixtureScript {
@@ -31,6 +32,17 @@ public abstract class EstatioFixtureScript extends FixtureScript {
 
     protected EstatioFixtureScript(String friendlyName, String localName, Discoverability discoverability) {
         super(friendlyName, localName, discoverability);
+    }
+
+    // //////////////////////////////////////
+
+    static Random random;
+    static {
+        random = new Random(System.currentTimeMillis());
+    }
+
+    public final Faker2 faker() {
+        return container.injectServicesInto(new Faker2(random));
     }
 
     // //////////////////////////////////////

@@ -22,6 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
@@ -36,7 +37,7 @@ public class PostalAddressTest {
                     .withFixture(pojos(State.class))
                     .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
                     .withFixture(pojos(ApplicationTenancy.class))
-                    .exercise(new PostalAddress());
+                    .exercise(new PostalAddress(), PojoTester.FilterSet.excluding("owner"));
         }
     }
 }

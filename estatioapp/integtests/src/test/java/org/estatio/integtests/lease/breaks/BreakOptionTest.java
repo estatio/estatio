@@ -18,18 +18,11 @@
  */
 package org.estatio.integtests.lease.breaks;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
@@ -41,62 +34,100 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class BreakOptionTest extends EstatioIntegrationTest {
+
+    @Inject
+    Leases leases;
+
+    @Inject
+    Events events;
 
     @Inject
     BreakOptions breakOptions;
 
     public static class Change extends BreakOptionTest {
 
-        @Inject
-        private Leases leases;
-
-        @Inject
-        private BreakOptions breakOptions;
-
-        @Inject
-        Events events;
-
-        private Lease lease;
+        Lease lease;
+        BreakOption breakOption;
 
         @Before
         public void setupData() {
-            runScript(new FixtureScript() {
+            runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(ExecutionContext executionContext) {
+                protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 }
             });
+
+            lease = leases.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
+
+            assertThat(breakOptions.allBreakOptions().size(), is(2));
+            final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);
+            assertThat(breakOptionList.size(), is(2));
+            breakOption = breakOptionList.get(0);
         }
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            assertThat(breakOption.getType(), is(BreakType.FIXED));
+            assertThat(breakOption.getExerciseType(), is(BreakExerciseType.MUTUAL));
+
+            // when
+            breakOption.change(BreakType.ROLLING, BreakExerciseType.TENANT, "Something");
+
+            // then
+            assertThat(breakOption.getType(), is(BreakType.ROLLING));
+            assertThat(breakOption.getExerciseType(), is(BreakExerciseType.TENANT));
+
+        }
+    }
+
+    public static class ChangeDates extends BreakOptionTest {
+
+        Lease lease;
+        BreakOption breakOption;
 
         @Before
         public void setup() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                }
+            });
+
             lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+
+            assertThat(breakOptions.allBreakOptions().size(), is(2));
+            final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);
+            assertThat(breakOptionList.size(), is(2));
+            breakOption = breakOptionList.get(0);
         }
 
         @Test
         public void happyCase() throws Exception {
             // given
-            assertThat(breakOptions.allBreakOptions().size(), is(2));
-            List<BreakOption> result = breakOptions.findByLease(lease);
-            assertThat(result.size(), is(2));
-            BreakOption breakOption = result.get(0);
             assertThat(breakOption.getType(), is(BreakType.FIXED));
             assertThat(breakOption.getExerciseType(), is(BreakExerciseType.MUTUAL));
             assertThat(breakOption.getBreakDate(), is(lease.getStartDate().plusYears(5)));
             assertThat(breakOption.getExerciseDate(), is(lease.getStartDate().plusYears(5).minusMonths(6)));
             assertThat(events.allEvents().size(), is(3));
+
             // when
-            breakOption.change(BreakType.ROLLING, BreakExerciseType.TENANT, "Something");
             breakOption.changeDates(lease.getStartDate().plusYears(2), lease.getStartDate().plusYears(2).minusMonths(6));
+
             // then
-            assertThat(breakOption.getType(), is(BreakType.ROLLING));
-            assertThat(breakOption.getExerciseType(), is(BreakExerciseType.TENANT));
             assertThat(breakOption.getBreakDate(), is(lease.getStartDate().plusYears(2)));
             assertThat(breakOption.getExerciseDate(), is(lease.getStartDate().plusYears(2).minusMonths(6)));
             assertThat(events.allEvents().size(), is(3));
         }
     }
+
 }

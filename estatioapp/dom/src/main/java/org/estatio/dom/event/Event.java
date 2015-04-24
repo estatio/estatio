@@ -18,11 +18,14 @@
  */
 package org.estatio.dom.event;
 
-import javax.jdo.annotations.Extension;
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -32,16 +35,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 
 /**
  * An event that has or is scheduled to occur at some point in time, pertaining
- * to an {@link EventSubject}.
+ * to an {@link EventSource}.
  */
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -52,22 +53,11 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findBySubject", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.event.Event " +
-                        "WHERE subject == :subject "),
-        @javax.jdo.annotations.Query(
-                name = "findBySubjectAndSubjectEventType", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.event.Event " +
-                        "WHERE subject == :subject " +
-                        "   && subjectEventType == :subjectEventType"),
-        @javax.jdo.annotations.Query(
                 name = "findInDateRange", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.event.Event " +
-                        "WHERE date >= :rangeStartDate &&" +
-                        "date <= :rangeEndDate")
+                    "WHERE date >= :rangeStartDate " +
+                    "   && date <= :rangeEndDate")
 })
 @DomainObject(editing = Editing.DISABLED)
 public class Event
@@ -77,7 +67,7 @@ public class Event
     private static final int NUMBER_OF_LINES = 8;
 
     public Event() {
-        super("date, subject, calendarName");
+        super("date, source, calendarName");
     }
 
     // //////////////////////////////////////
@@ -87,7 +77,7 @@ public class Event
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return getSubject().getApplicationTenancy();
+        return getSource().getApplicationTenancy();
     }
 
     // //////////////////////////////////////
@@ -106,32 +96,41 @@ public class Event
 
     // //////////////////////////////////////
 
-    private EventSubject subject;
-
+    
     /**
-     * Polymorphic association to (any implementation of) {@link EventSubject}.
+     * Polymorphic association to (any implementation of) {@link EventSource}.
      */
-    @javax.jdo.annotations.Persistent(
-            extensions = {
-                    @Extension(vendorName = "datanucleus",
-                            key = "mapping-strategy",
-                            value = "per-implementation"),
-                    @Extension(vendorName = "datanucleus",
-                            key = "implementation-classes",
-                            value = "org.estatio.dom.lease.breaks.BreakOption") })
-    @javax.jdo.annotations.Columns({
-            @javax.jdo.annotations.Column(name = "subjectBreakOptionId", allowsNull = "true")
-    })
-    // not really, but to be compatible with JDO
-    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Property(
+            editing = Editing.DISABLED,
+            hidden = Where.PARENTED_TABLES,
+            notPersisted = true
+    )
     @Title(sequence = "1")
-    public EventSubject getSubject() {
-        return subject;
+    public EventSource getSource() {
+        final EventSourceLink link = getSourceLink();
+        return link != null? link.getPolymorphicReference(): null;
     }
 
-    public void setSubject(final EventSubject subject) {
-        this.subject = subject;
+    @Programmatic
+    public void setSource(final EventSource eventSource) {
+        removeSourceLink();
+        eventSourceLinks.createLink(this, eventSource);
     }
+
+    private void removeSourceLink() {
+        final EventSourceLink eventSourceLink = getSourceLink();
+        if(eventSourceLink != null) {
+            getContainer().remove(eventSourceLink);
+        }
+    }
+
+    private EventSourceLink getSourceLink() {
+        if (!getContainer().isPersistent(this)) {
+            return null;
+        }
+        return eventSourceLinks.findByEvent(this);
+    }
+
 
     // //////////////////////////////////////
 
@@ -145,7 +144,7 @@ public class Event
      * of this event. These are expected to be uniquely identifiable for all and
      * any events that might be created. They therefore typically (always?)
      * include information relating to the type/class of the event's
-     * {@link #getSubject() subject}.
+     * {@link #getSource() subject}.
      * 
      * <p>
      * For example, an event whose subject is a lease's
@@ -184,7 +183,7 @@ public class Event
 
     @Programmatic
     public CalendarEvent toCalendarEvent() {
-        final String eventTitle = getContainer().titleOf(getSubject()) + " " + getCalendarName();
+        final String eventTitle = getContainer().titleOf(getSource()) + " " + getCalendarName();
         return new CalendarEvent(getDate().toDateTimeAtStartOfDay(), getCalendarName(), eventTitle);
     }
 
@@ -217,4 +216,10 @@ public class Event
     public String default0ChangeNotes() {
         return getNotes();
     }
+
+
+
+    @Inject
+    private EventSourceLinks eventSourceLinks;
+
 }

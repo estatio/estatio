@@ -19,11 +19,10 @@
 package org.estatio.dom.party.publishing;
 
 import java.util.Set;
-
+import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.services.publish.EventPayloadForObjectChanged;
-
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Organisation;
@@ -51,10 +50,8 @@ public class OrganisationChangedPayload extends EventPayloadForObjectChanged<Org
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    CommunicationChannelContributions channelContributions;
     
-    private CommunicationChannelContributions channelContributions;
-    
-    public void injectChannelContributions(final CommunicationChannelContributions channelContributions) {
-        this.channelContributions = channelContributions;
-    }
 }

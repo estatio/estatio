@@ -18,9 +18,6 @@
  */
 package org.estatio.integtests.financial;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.inject.Inject;
@@ -40,11 +37,15 @@ import org.estatio.fixture.financial.FinancialAccountTransactionForTopModel;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 public class FinancialAccountTransactionsTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());

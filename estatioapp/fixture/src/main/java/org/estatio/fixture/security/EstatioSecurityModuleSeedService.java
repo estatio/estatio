@@ -18,7 +18,6 @@ package org.estatio.fixture.security;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
