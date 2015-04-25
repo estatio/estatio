@@ -333,12 +333,10 @@ language governing permissions and limitations under the License.
         <profile>
             <id>m2e</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
-                <!--
+                <!-- only if running within then IDE -->
                 <property>
-                    <name>m2e.version</name>
+                    <name>idea.version</name>
                 </property>
-                -->
             </activation>
             <dependencies>
                 <dependency>
