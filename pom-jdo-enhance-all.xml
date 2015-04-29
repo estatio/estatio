@@ -34,7 +34,7 @@
     </description>
 
     <properties>
-        <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
+        <datanucleus-maven-plugin.version>4.0.0-release</datanucleus-maven-plugin.version>
     </properties>
 
     <build>
