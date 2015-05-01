@@ -20,6 +20,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.Matchers.containsString;
+
 public class PojoTesterTest_interference {
     
     @Rule
@@ -69,7 +71,7 @@ public class PojoTesterTest_interference {
     
     @Test
     public void strict_whenInterferenceBetweenProperties() {
-        expectedException.expectMessage("lastName: setLastName interferes with getFirstName");
+        expectedException.expectMessage(containsString("firstName"));
         PojoTester.strict().exercise(new CustomerWithInterferingProperties());
     }
 
