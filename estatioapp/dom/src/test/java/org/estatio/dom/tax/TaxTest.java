@@ -58,7 +58,7 @@ public class TaxTest {
 
             context.checking(new Expectations() {
                 {
-                    allowing(mockContainer).newTransientInstance(with(IsisMatchers.classEqualTo(TaxRate.class)));
+                    allowing(mockContainer).newTransientInstance(with.is(IsisMatchers.classEqualTo(TaxRate.class)));
                     will(returnNewTransientInstance(TaxRate.class));
                 }
 
