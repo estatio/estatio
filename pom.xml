@@ -443,7 +443,8 @@ language governing permissions and limitations under the License.
                     <configuration>
                         <rules>
                             <requireMavenVersion>
-                                <version>[3.2.1,)</version>
+				<!-- latest reliably available on CloudBees -->
+                                <version>[3.0.5,)</version>
                             </requireMavenVersion>
                             <requireJavaVersion>
                                 <version>[1.8.0,)</version>
