@@ -17,6 +17,8 @@ isis-module-sessionlogger:/c/github/isisaddons/isis-module-sessionlogger
 isis-module-settings:/c/github/isisaddons/isis-module-settings
 isis-module-stringinterpolator:/c/github/isisaddons/isis-module-stringinterpolator
 isis-module-tags:/c/github/isisaddons/isis-module-tags
+isis-module-togglz:/c/github/isisaddons/isis-module-togglz
+isis-metamodel-paraname8:/c/github/isisaddons/isis-metamodel-paraname8
 isis-wicket-excel:/c/github/isisaddons/isis-wicket-excel
 isis-wicket-fullcalendar2:/c/github/isisaddons/isis-wicket-fullcalendar2
 isis-wicket-gmap3:/c/github/isisaddons/isis-wicket-gmap3
