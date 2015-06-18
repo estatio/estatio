@@ -17,15 +17,17 @@
 package org.estatio.integtests;
 
 import java.util.List;
+
 import org.apache.log4j.Level;
-import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.objectstore.jdo.applib.service.exceprecog.ExceptionRecognizerCompositeForJdoObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
+
+import org.isisaddons.module.excel.dom.ExcelService;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
@@ -42,8 +44,10 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 "org.isisaddons"
         );
 
+        // any services explicitly registered in isis.properties should be registered here...
         withServices(
-                new ExceptionRecognizerCompositeForJdoObjectStore());
+                // none currently...
+        );
     }
 
     private static IsisConfiguration testConfiguration() {
