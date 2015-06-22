@@ -1,0 +1,130 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "Project": {
+          "members": {
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "reference": {
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "name": {
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "projectPhase": {
+            	"actions" : {
+            		"changeProject" : {}
+            	}
+            },
+            "businessCase": {},
+            "program": {},
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
+            }
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "endDate": {
+              "typicalLength": {
+                "value": 12
+              },
+             	"actions" : {
+            		"updateDates" : {}
+            	}
+            }
+          }
+        },
+         "Cost": {
+          "members": {
+            "currency": {
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "estimatedCost": {
+              "typicalLength": {
+                "value": 12
+              },
+             	"actions" : {
+            		"updateCost" : {}
+            	}
+            }
+          }
+        },
+        "General": {
+          "members": {
+            "relatedObject": {
+              "propertyLayout": {
+                "named": "Related Object",
+                "typicalLength": 25
+              }
+            },
+            "applicationTenancy": {
+              "propertyLayout": {
+                "describedAs": "Determines those users for whom this object is available to view and/or modify.",
+                "hidden": "PARENTED_TABLES",
+                "named": "Application Level"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+      	"roles" : {
+      		"actions" : {
+      			"newProjectRole" : {}
+      		}
+      	}
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "recentChanges": {
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "named": {
+        "value": "Reports"
+      }
+    }
+  }
+}

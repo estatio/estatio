@@ -1,0 +1,114 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "id": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "typicalLength": 25
+              }
+            },
+           "reference": {
+              "propertyLayout": {
+                "describedAs": "Unique reference code for this program",
+                "typicalLength": 25
+              }
+            },            
+            "name": {
+              "propertyLayout": {
+                "typicalLength": 25
+              }
+            },
+            "programGoal": {
+              "propertyLayout": {
+                "multiLine": 5,
+                "typicalLength": 125
+              },
+              "actions" : {
+    			"changeProgram": {
+      				"actionLayout": {
+        				"cssClass": "btn-primary",
+        				"cssClassFa": "fa fa-fw fa-edit",
+        				"named": "Change Program"
+      				}
+    			}
+              }
+            },
+            "applicationTenancy": {
+              "propertyLayout": {
+                "describedAs": "Determines those users for whom this object is available to view and/or modify.",
+                "named": "Application Level"
+              }
+            },
+            "applicationTenancyPath": {
+              "propertyLayout": {
+                "named": "Application Tenancy Path",
+                "typicalLength": 25
+              }
+            },
+            "relatedObject": {
+              "propertyLayout": {
+                "named": "Related Object",
+                "typicalLength": 25
+              }
+            },
+            "versionSequence": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "typicalLength": 18
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "roles" : {
+      		"actions" : {
+      			"newProgramRole" : {}
+      		}
+      	},
+      	"projects" : {
+      		"actions" : {
+      			"newProject" : {}
+      		}
+      	}
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "cssClassFa": "fa fa-fw fa-download",
+        "named": "Download Layout",
+        "contributed": "AS_ACTION"
+      }
+    },
+    "recentChanges": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Reports"
+      }
+    }
+  }
+}

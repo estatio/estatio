@@ -8,13 +8,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
-
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.geography.Country;
@@ -127,8 +127,6 @@ public class EstatioApplicationTenancies {
         final String tenancyName = String.format("%s (%s)", propertyReference, countryApplicationTenancy.getName());
         return applicationTenancies.newTenancy(tenancyName, propertyAppTenancyLevel.getPath(), countryApplicationTenancy);
     }
-
-
 
     @Programmatic
     public ApplicationTenancy findOrCreateLocalDefaultTenancy(final ApplicationTenancy propertyTenancy) {

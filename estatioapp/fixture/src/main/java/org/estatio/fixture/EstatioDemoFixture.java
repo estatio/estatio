@@ -41,9 +41,16 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
+
+import org.estatio.fixture.project.ProgramForGra;
+import org.estatio.fixture.project.ProgramForKal;
+import org.estatio.fixture.project.ProjectsForGra;
+import org.estatio.fixture.project.ProjectsForKal;
+
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
@@ -85,9 +92,18 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new PersonForGinoVannelliGb());
 
+
         executionContext.executeChild(this, new _PropertyForGraIt());
         executionContext.executeChild(this, new _PropertyForVivFr());
         executionContext.executeChild(this, new _PropertyForHanSe());
+
+        
+        executionContext.executeChild(this, new ProgramForGra());
+        executionContext.executeChild(this, new ProgramForKal());
+        
+        executionContext.executeChild(this, new ProjectsForKal());
+        executionContext.executeChild(this, new ProjectsForGra());
+
 
         executionContext.executeChild(this, new InteractiveMapDocumentForOxf());
         

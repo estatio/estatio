@@ -1,0 +1,82 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "reference": {
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "name": {
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "property": {},
+            "responsible": {},
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
+            }
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "endDate": {
+              "typicalLength": {
+                "value": 12
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "recentChanges": {
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "named": {
+        "value": "Reports"
+      }
+    }
+  }
+}

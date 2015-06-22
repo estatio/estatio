@@ -27,8 +27,8 @@ import org.estatio.dom.JdoColumnLength.Numerator;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
@@ -59,6 +59,11 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.relationship.PartyRelationship;
+import org.estatio.dom.project.BusinessCase;
+import org.estatio.dom.project.Program;
+import org.estatio.dom.project.ProgramRole;
+import org.estatio.dom.project.Project;
+import org.estatio.dom.project.ProjectRole;
 import org.estatio.dom.tag.Tag;
 
 public class EstatioOperationalTeardownFixture extends FixtureScript {
@@ -69,6 +74,12 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
     }
 
     private void deleteAllDirect() {
+
+        deleteFrom(ProgramRole.class);
+        deleteFrom(ProjectRole.class);
+        deleteFrom(BusinessCase.class);
+        deleteFrom(Project.class);
+        deleteFrom(Program.class);
 
         deleteFrom(Numerator.class);
 
@@ -123,6 +134,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
     private void deleteFrom(final Class cls) {
         deleteFrom(cls.getSimpleName());
+
     }
 
     private void deleteFrom(final String table) {
