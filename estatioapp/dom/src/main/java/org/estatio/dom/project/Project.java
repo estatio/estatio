@@ -179,7 +179,7 @@ public class Project extends UdoDomainObject<Project> implements
 
 	private Currency currency;
 
-	@Column(allowsNull = "true")
+	@Column(allowsNull = "true", name="currencyId")
 	@MemberOrder(sequence="6")
 	public Currency getCurrency() {
 		return currency;

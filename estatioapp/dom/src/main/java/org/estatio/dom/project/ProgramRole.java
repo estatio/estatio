@@ -127,7 +127,7 @@ public class ProgramRole
 
     private Program program;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", name="programId")
     @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
     public Program getProgram() {

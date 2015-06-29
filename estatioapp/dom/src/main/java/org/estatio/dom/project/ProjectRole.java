@@ -127,7 +127,7 @@ public class ProjectRole
 
     private Project project;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", name="projectId")
     @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
     public Project getProject() {
