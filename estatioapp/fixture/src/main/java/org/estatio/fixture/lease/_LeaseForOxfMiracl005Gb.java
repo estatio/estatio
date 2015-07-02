@@ -18,8 +18,10 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForMiracleGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
@@ -33,11 +35,15 @@ public class _LeaseForOxfMiracl005Gb extends LeaseAbstract {
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldNl.REF;
     public static final String PARTY_REF_TENANT = OrganisationForMiracleGb.REF;
 
+    public static final String BRAND = "Miracle";
+    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
+    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.GBR;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new PersonForJohnDoeNl());
             executionContext.executeChild(this, new OrganisationForHelloWorldNl());
             executionContext.executeChild(this, new OrganisationForMiracleGb());
@@ -47,11 +53,21 @@ public class _LeaseForOxfMiracl005Gb extends LeaseAbstract {
         // exec
         Party manager = parties.findPartyByReference(PersonForJohnDoeNl.REF);
         createLease(
-                REF, "Miracle lease",
-                UNIT_REF, "Miracle", "FASHION", "ALL",
+                REF,
+                "Miracle lease",
+                UNIT_REF,
+                BRAND,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
+                "FASHION",
+                "ALL",
                 PARTY_REF_LANDLORD,
                 PARTY_REF_TENANT,
-                ld(2013, 11, 7), ld(2023, 11, 6), false, true, manager,
+                ld(2013, 11, 7),
+                ld(2023, 11, 6),
+                false,
+                true,
+                manager,
                 executionContext);
     }
 

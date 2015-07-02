@@ -16,7 +16,11 @@
               "disabled": {},
               "typicalLength": {
                 "value": 25
-              },
+              }
+            },
+            "parentBrand": {},
+            "coverage": {},
+            "countryOfOrigin": {
               "actions": {
                 "change": {}
               }

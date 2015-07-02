@@ -193,6 +193,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
     }
 
+    @NotContributed
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeasesByBrand(

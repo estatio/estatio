@@ -18,8 +18,6 @@
  */
 package org.estatio.fixture.lease;
 
-import java.util.SortedSet;
-import javax.inject.Inject;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -29,11 +27,16 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+
+import javax.inject.Inject;
+import java.util.SortedSet;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -46,6 +49,8 @@ public class _LeaseForOxfTopModel001Gb extends LeaseAbstract {
     public static final String PARTY_REF_TENANT = OrganisationForTopModelGb.REF;
 
     public static final String BRAND = "Topmodel";
+    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
+    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.GBR;
 
     @Inject
     private AgreementRoleTypes agreementRoleTypes;
@@ -70,12 +75,21 @@ public class _LeaseForOxfTopModel001Gb extends LeaseAbstract {
         // exec
         Party manager = parties.findPartyByReference(PersonForJohnDoeNl.REF);
         Lease lease = createLease(
-                REF, "Topmodel Lease",
+                REF,
+                "Topmodel Lease",
                 UNIT_REF,
-                BRAND, "FASHION", "WOMEN",
+                BRAND,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
+                "FASHION",
+                "WOMEN",
                 PARTY_REF_LANDLORD,
                 PARTY_REF_TENANT,
-                ld(2010, 7, 15), ld(2022, 7, 14), true, true, manager,
+                ld(2010, 7, 15),
+                ld(2022, 7, 14),
+                true,
+                true,
+                manager,
                 executionContext);
         createAddress(lease, LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
         createAddress(lease, LeaseConstants.ARCCT_INVOICE_ADDRESS);

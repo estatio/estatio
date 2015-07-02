@@ -110,6 +110,7 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
                 "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date));
     }
 
+    @NotContributed
     @Action(semantics = SemanticsOf.SAFE)
     public List<Occupancy> findByBrand(
             final Brand brand,

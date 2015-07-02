@@ -20,6 +20,9 @@ package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
 
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.agreement.AgreementRole;
@@ -44,6 +47,8 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             String reference, String name,
             String unitReference,
             String brand,
+            BrandCoverage brandCoverage,
+            String countryOfOriginRef,
             String sector,
             String activity,
             String landlordReference,
@@ -66,8 +71,9 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
+            Country countryOfOrigin = countries.findCountry(countryOfOriginRef);
             Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
-            occupancy.setBrandName(brand);
+            occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
             fixtureResults.addResult(this, occupancy);
@@ -99,4 +105,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
 
     @Inject
     protected AgreementRoleTypes agreementRoleTypes;
+
+    @Inject
+    Countries countries;
 }

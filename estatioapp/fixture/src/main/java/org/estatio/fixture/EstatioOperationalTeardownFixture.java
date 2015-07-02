@@ -18,20 +18,13 @@
  */
 package org.estatio.fixture;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
-
 import org.estatio.dom.JdoColumnLength.Numerator;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRole;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.*;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.LandRegister;
@@ -53,18 +46,15 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption;
-import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRegistration;
-import org.estatio.dom.party.Person;
+import org.estatio.dom.lease.tags.Activity;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.Sector;
+import org.estatio.dom.lease.tags.UnitSize;
+import org.estatio.dom.party.*;
 import org.estatio.dom.party.relationship.PartyRelationship;
-import org.estatio.dom.project.BusinessCase;
-import org.estatio.dom.project.Program;
-import org.estatio.dom.project.ProgramRole;
-import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRole;
-import org.estatio.dom.tag.Tag;
+import org.estatio.dom.project.*;
+
+import javax.inject.Inject;
 
 public class EstatioOperationalTeardownFixture extends FixtureScript {
 
@@ -88,8 +78,6 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);
 
-        deleteFrom(Tag.class);
-
         deleteFrom(EventSourceLinkForBreakOption.class);
         deleteFrom(EventSourceLink.class);
         deleteFrom(Event.class);
@@ -101,6 +89,11 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(AgreementRoleCommunicationChannel.class);
         deleteFrom(AgreementRole.class);
+
+        deleteFrom(Activity.class);
+        deleteFrom(Brand.class);
+        deleteFrom(Sector.class);
+        deleteFrom(UnitSize.class);
 
         deleteFrom(Guarantee.class);
         deleteFrom(BankMandate.class);

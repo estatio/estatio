@@ -16,46 +16,17 @@
  */
 package org.estatio.api;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.agreement.*;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
-import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.*;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitType;
-import org.estatio.dom.asset.Units;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandates;
@@ -63,14 +34,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.communicationchannel.EmailAddresses;
-import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
-import org.estatio.dom.communicationchannel.PostalAddress;
-import org.estatio.dom.communicationchannel.PostalAddresses;
+import org.estatio.dom.communicationchannel.*;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactions;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -89,35 +53,12 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.CollectionNumerators;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForFixed;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTermForTax;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.LeaseTypes;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Occupancies;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.Occupancy.OccupancyReportingType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Organisations;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.Persons;
+import org.estatio.dom.party.*;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
 import org.estatio.dom.party.relationship.PartyRelationships;
@@ -128,6 +69,16 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.services.clock.ClockService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Hidden
 public class Api extends AbstractFactoryAndRepository {
@@ -489,7 +440,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("faxNumber") @Optional final String faxNumber,
             @Named("emailAddress") @Optional final String emailAddress,
             @Named("legal") @Optional final Boolean legal
-            ) {
+    ) {
         final Party party = fetchParty(partyReference);
         if (party == null)
             throw new ApplicationException(String.format("Party with reference [%s] not found", partyReference));
@@ -538,7 +489,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("partyReference") final String partyReference,
             @Named("emailAddress") final String emailAddress,
             @Named("legal") @Optional final Boolean legal
-            ) {
+    ) {
         final Party party = fetchParty(partyReference);
 
         CommunicationChannel comm = emailAddresses.findByEmailAddress(party, emailAddress);
@@ -558,7 +509,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") final String name,
             @Named("type") final String type,
             @Named("value") final String value
-            ) {
+    ) {
         final String toPartyReference = partyReference.concat("-").concat(sequence.toString());
         Person toPerson = (Person) parties.findPartyByReferenceOrNull(toPartyReference);
         final String UNKOWN_LASTNAME = "*Unknown";
@@ -578,32 +529,32 @@ public class Api extends AbstractFactoryAndRepository {
         }
         final Person person = (Person) toPerson;
         switch (type) {
-        case "name":
-            if (person.getLastName().equals(UNKOWN_LASTNAME)) {
-                final String[] nameParts = value.split(" ");
-                setNames(person, nameParts);
-            }
-            break;
+            case "name":
+                if (person.getLastName().equals(UNKOWN_LASTNAME)) {
+                    final String[] nameParts = value.split(" ");
+                    setNames(person, nameParts);
+                }
+                break;
 
-        case "phone":
-            if (phoneOrFaxNumbers.findByPhoneOrFaxNumber(toPerson, value) == null) {
-                communicationChannels.newPhoneOrFax(toPerson, CommunicationChannelType.PHONE_NUMBER, value);
-            }
-            break;
+            case "phone":
+                if (phoneOrFaxNumbers.findByPhoneOrFaxNumber(toPerson, value) == null) {
+                    communicationChannels.newPhoneOrFax(toPerson, CommunicationChannelType.PHONE_NUMBER, value);
+                }
+                break;
 
-        case "email":
-            if (person.getLastName().equals(UNKOWN_LASTNAME)) {
-                final String namePart = value.split("@")[0];
-                final String[] nameParts = namePart.split("\\.");
-                setNames(person, nameParts);
-            }
-            if (emailAddresses.findByEmailAddress(toPerson, value) == null) {
-                communicationChannels.newEmail(toPerson, CommunicationChannelType.EMAIL_ADDRESS, value.toLowerCase());
-            }
-            break;
+            case "email":
+                if (person.getLastName().equals(UNKOWN_LASTNAME)) {
+                    final String namePart = value.split("@")[0];
+                    final String[] nameParts = namePart.split("\\.");
+                    setNames(person, nameParts);
+                }
+                if (emailAddresses.findByEmailAddress(toPerson, value) == null) {
+                    communicationChannels.newEmail(toPerson, CommunicationChannelType.EMAIL_ADDRESS, value.toLowerCase());
+                }
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
 
     }
@@ -652,7 +603,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("tenancyStartDate") @Optional final LocalDate tenancyStartDate,
             @Named("tenancyEndDate") @Optional final LocalDate tenancyEndDate,
             @Named("propertyReference") @Optional final String propertyReference
-            ) {
+    ) {
         final Party tenant = fetchParty(tenantReference);
         final Party landlord = fetchParty(landlordReference);
         Lease lease = leases.findLeaseByReferenceElseNull(reference);
@@ -709,7 +660,7 @@ public class Api extends AbstractFactoryAndRepository {
 
         occupancy.setEndDate(endDate);
         occupancy.setUnitSizeName(size);
-        occupancy.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null);
+        occupancy.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null, null, null);
         occupancy.setSectorName(sector);
         occupancy.setActivityName(activity);
         occupancy.setReportTurnover(reportTurnover != null ? OccupancyReportingType.valueOf(reportTurnover) : OccupancyReportingType.NO);
@@ -782,7 +733,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("city") @Optional final String city,
             @Named("stateCode") @Optional final String stateCode,
             @Named("countryCode") @Optional final String countryCode, @Named("isInvoiceAddress") @Optional final BigInteger isInvoiceAddress
-            ) {
+    ) {
         if (address1 != null && partyReference != null && leaseReference != null) {
             final Lease lease = fetchLease(leaseReference);
             final Party party = fetchParty(partyReference);
@@ -1048,7 +999,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("branchCode") @Optional final String branchCode,
             @Named("accountNumber") @Optional final String accountNumber,
             @Named("externalReference") @Optional final String externalReference
-            ) {
+    ) {
         if (IBANValidator.valid(iban)) {
             BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
             final Party owner = parties.findPartyByReference(ownerReference);
@@ -1160,7 +1111,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("notificationDate") final LocalDate notificationDate,
             @Named("notificationPeriod") @Optional String notificationPeriodStr,
             @Named("description") @Optional final String description
-            ) {
+    ) {
         final Lease lease = fetchLease(leaseReference);
         final BreakType breakType = BreakType.valueOf(breakTypeStr);
         final BreakExerciseType breakExerciseType = BreakExerciseType.valueOf(breakExcerciseTypeStr);

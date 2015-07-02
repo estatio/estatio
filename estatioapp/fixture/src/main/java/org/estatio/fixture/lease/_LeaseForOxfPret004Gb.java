@@ -18,13 +18,16 @@
  */
 package org.estatio.fixture.lease;
 
-import javax.inject.Inject;
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForPretGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+
+import javax.inject.Inject;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -34,6 +37,10 @@ public class _LeaseForOxfPret004Gb extends LeaseAbstract {
     public static final String UNIT_REFERENCE = _PropertyForOxfGb.unitReference("004");
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldNl.REF;
     public static final String PARTY_REF_TENANT = OrganisationForPretGb.REF;
+
+    public static final String BRAND = "Pret-a-Partir";
+    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.REGIONAL;
+    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.FRA;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -51,12 +58,15 @@ public class _LeaseForOxfPret004Gb extends LeaseAbstract {
                 LEASE_REFERENCE,
                 "Pret-a-Partir lease",
                 UNIT_REFERENCE,
-                "Pret-a-Partir",
+                BRAND,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
                 "FASHION",
                 "ALL",
                 PARTY_REF_LANDLORD,
                 PARTY_REF_TENANT,
-                ld(2011, 7, 1), ld(2014, 6, 30),
+                ld(2011, 7, 1),
+                ld(2014, 6, 30),
                 false,
                 false,
                 manager,

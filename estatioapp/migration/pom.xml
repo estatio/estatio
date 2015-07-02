@@ -78,6 +78,14 @@ language governing permissions and limitations under the License.
             <artifactId>isis-core-applib</artifactId>
         </dependency>
 
+        <!-- FULLCALENDAR2 -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
+        </dependency>
+
         <!-- Because optional in estatio-dom -->
         <dependency>
             <groupId>org.isisaddons.wicket.gmap3</groupId>

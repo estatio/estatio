@@ -18,8 +18,10 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
@@ -34,11 +36,15 @@ public class _LeaseForOxfPoison003Gb extends LeaseAbstract {
     public static final String TENANT_REFERENCE = OrganisationForPoisonNl.REF;
     public static final String PARTY_REF_MANAGER = PersonForJohnDoeNl.REF;
 
+    public static final String BRAND = "Poison";
+    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
+    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.NLD;
+
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new PersonForJohnDoeNl());
             executionContext.executeChild(this, new OrganisationForHelloWorldNl());
             executionContext.executeChild(this, new OrganisationForPoisonNl());
@@ -48,12 +54,21 @@ public class _LeaseForOxfPoison003Gb extends LeaseAbstract {
         // exec
         final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
         createLease(
-                REF, "Poison Lease",
+                REF,
+                "Poison Lease",
                 UNIT_REFERENCE,
-                "Poison", "HEALT&BEAUTY", "PERFUMERIE",
+                BRAND,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
+                "HEALT&BEAUTY",
+                "PERFUMERIE",
                 PARTY_REF_LANDLORD,
                 TENANT_REFERENCE,
-                ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
+                ld(2011, 1, 1),
+                ld(2020, 12, 31),
+                true,
+                true,
+                manager,
                 executionContext);
     }
 

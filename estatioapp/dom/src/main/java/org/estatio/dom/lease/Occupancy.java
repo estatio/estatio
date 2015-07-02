@@ -18,40 +18,23 @@
  */
 package org.estatio.dom.lease;
 
-import java.util.List;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.lease.tags.Activities;
-import org.estatio.dom.lease.tags.Activity;
-import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.lease.tags.Brands;
-import org.estatio.dom.lease.tags.Sector;
-import org.estatio.dom.lease.tags.Sectors;
-import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.lease.tags.UnitSizes;
-import org.estatio.dom.tag.Taggable;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.lease.tags.*;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
+import java.util.List;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -62,7 +45,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column = "version")
 @javax.jdo.annotations.Unique(
         name = "Occupancy_lease_unit_startDate_UNQ",
-        members = { "lease", "unit", "startDate" })
+        members = {"lease", "unit", "startDate"})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByUnit", language = "JDOQL",
@@ -100,7 +83,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 public class Occupancy
         extends EstatioDomainObject<Occupancy>
-        implements WithIntervalMutable<Occupancy>, Taggable, WithApplicationTenancyProperty {
+        implements WithIntervalMutable<Occupancy>, WithApplicationTenancyProperty {
 
     public Occupancy() {
         super("lease, startDate desc nullsLast, unit");
@@ -366,8 +349,11 @@ public class Occupancy
     // //////////////////////////////////////
 
     @Programmatic
-    public Occupancy setBrandName(final String name) {
-        setBrand(brands.findOrCreate(getApplicationTenancy(), name));
+    public Occupancy setBrandName(
+            final String name,
+            @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage brandCoverage,
+            @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin) {
+        setBrand(brands.findOrCreate(getApplicationTenancy(), name, brandCoverage, countryOfOrigin));
         return this;
     }
 

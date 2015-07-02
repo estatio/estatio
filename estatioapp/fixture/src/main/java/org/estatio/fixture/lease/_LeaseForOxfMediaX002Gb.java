@@ -18,11 +18,14 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+
 import static org.estatio.integtests.VT.ld;
 
 public class _LeaseForOxfMediaX002Gb extends LeaseAbstract {
@@ -34,12 +37,14 @@ public class _LeaseForOxfMediaX002Gb extends LeaseAbstract {
     public static final String PARTY_REF_TENANT = OrganisationForMediaXGb.REF;
 
     public static final String BRAND = "Mediax";
+    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
+    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.GBR;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new PersonForJohnDoeNl());
             executionContext.executeChild(this, new OrganisationForHelloWorldNl());
             executionContext.executeChild(this, new OrganisationForMediaXGb());
@@ -52,10 +57,18 @@ public class _LeaseForOxfMediaX002Gb extends LeaseAbstract {
                 REF,
                 "Mediax Lease",
                 UNIT_REF,
-                BRAND, "ELECTRIC", "ELECTRIC",
+                BRAND,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
+                "ELECTRIC",
+                "ELECTRIC",
                 PARTY_REF_LANDLORD,
                 PARTY_REF_TENANT,
-                ld(2008, 1, 1), ld(2017, 12, 31), true, true, manager,
+                ld(2008, 1, 1),
+                ld(2017, 12, 31),
+                true,
+                true,
+                manager,
                 executionContext);
     }
 

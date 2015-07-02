@@ -18,19 +18,20 @@
  */
 package org.estatio.dom.lease.tags;
 
-import java.util.List;
+import com.google.common.collect.Lists;
+import org.apache.isis.applib.annotation.*;
+import org.estatio.dom.Dflt;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.utils.StringUtils;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import javax.inject.Inject;
 import javax.jdo.Query;
-import com.google.common.collect.Lists;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.Dflt;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
-import org.estatio.dom.utils.StringUtils;
+import java.util.List;
 
-@DomainService(repositoryFor = Brand.class)
+@DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
@@ -46,22 +47,28 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
 
     @MemberOrder(sequence = "1")
     public Brand newBrand(
-            final @Named("Brand name") String name,
-            final @Named("Global or Country") ApplicationTenancy applicationTenancy) {
+            final @ParameterLayout(named = "Brand name") String name,
+            final @ParameterLayout(named = "Brand coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
+            final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
+            final @ParameterLayout(named = "Parent brand") @Parameter(optionality = Optionality.OPTIONAL) Brand parentBrand,
+            final @ParameterLayout(named = "Global or Country") ApplicationTenancy applicationTenancy) {
         Brand brand;
         brand = newTransientInstance(Brand.class);
         brand.setName(name);
+        brand.setCoverage(coverage);
+        brand.setCountryOfOrigin(countryOfOrigin);
+        brand.setParentBrand(parentBrand);
         brand.setApplicationTenancyPath(applicationTenancy.getPath());
         persist(brand);
         return brand;
     }
 
-    public List<ApplicationTenancy> choices1NewBrand() {
+    public List<ApplicationTenancy> choices4NewBrand() {
         return estatioApplicationTenancies.countryTenanciesForCurrentUser();
     }
 
-    public ApplicationTenancy default1NewBrand() {
-        return Dflt.of(choices1NewBrand());
+    public ApplicationTenancy default4NewBrand() {
+        return Dflt.of(choices4NewBrand());
     }
 
     @Inject
@@ -69,47 +76,50 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Brand> allBrands() {
         return allInstances();
     }
 
-    @SuppressWarnings({ "unchecked" })
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @SuppressWarnings({"unchecked"})
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<String> findUniqueNames() {
         final Query query = newQuery("SELECT name FROM org.estatio.dom.lease.tags.Brand");
         return (List<String>) query.execute();
     }
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public Brand findByName(final String name) {
         return firstMatch("findByName", "name", name);
     }
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public List<Brand> matchByName(final String name) {
         return allMatches("matchByName", "name", StringUtils.wildcardToCaseInsensitiveRegex(name));
     }
 
     @Programmatic
-    public Brand findOrCreate(final ApplicationTenancy applicationTenancy, final String name) {
+    public Brand findOrCreate(
+            final ApplicationTenancy applicationTenancy,
+            final String name,
+            @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage brandCoverage,
+            @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin) {
         if (name == null) {
             return null;
         }
         Brand brand = findByName(name);
         if (brand == null) {
-            brand = newBrand(name, applicationTenancy);
+            brand = newBrand(name, brandCoverage, countryOfOrigin, null, applicationTenancy);
         }
         return brand;
     }
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public List<Brand> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 0
                 ? matchByName("*" + searchPhrase + "*")
-                : Lists.<Brand> newArrayList();
+                : Lists.<Brand>newArrayList();
     }
 
 }

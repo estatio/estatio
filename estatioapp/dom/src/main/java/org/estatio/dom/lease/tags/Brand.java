@@ -18,28 +18,22 @@
  */
 package org.estatio.dom.lease.tags;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.geography.Country;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -65,8 +59,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
                 value = "SELECT name "
                         + "FROM org.estatio.dom.lease.tags.Brand")
 })
-@AutoComplete(repository = Brands.class, action = "autoComplete")
-@Immutable
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Brands.class, autoCompleteAction = "autoComplete")
 public class Brand
         extends EstatioDomainObject<Brand>
         implements WithNameUnique, WithNameComparable<Brand>, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
@@ -84,7 +77,8 @@ public class Brand
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
+
+    @Property(hidden = Where.EVERYWHERE)
     public String getApplicationTenancyPath() {
         return applicationTenancyPath;
     }
@@ -105,7 +99,7 @@ public class Brand
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -115,15 +109,73 @@ public class Brand
         this.name = name;
     }
 
-    public Brand change(
-            final @Named("Name") String name) {
+    // //////////////////////////////////////
 
+    private BrandCoverage coverage;
+
+    @Column(allowsNull = "true")
+    public BrandCoverage getCoverage() {
+        return coverage;
+    }
+
+    public void setCoverage(BrandCoverage coverage) {
+        this.coverage = coverage;
+    }
+
+    // //////////////////////////////////////
+
+    private Country countryOfOrigin;
+
+    @Column(allowsNull = "true")
+    public Country getCountryOfOrigin() {
+        return countryOfOrigin;
+    }
+
+    public void setCountryOfOrigin(Country countryOfOrigin) {
+        this.countryOfOrigin = countryOfOrigin;
+    }
+
+    // //////////////////////////////////////
+
+    private Brand parentBrand;
+
+    @Column(allowsNull = "true")
+    public Brand getParentBrand() {
+        return parentBrand;
+    }
+
+    public void setParentBrand(Brand parentBrand) {
+        this.parentBrand = parentBrand;
+    }
+
+    // //////////////////////////////////////
+
+    public Brand change(
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Parent brand") @Parameter(optionality = Optionality.OPTIONAL) Brand parentBrand,
+            final @ParameterLayout(named = "Coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage brandCoverage,
+            final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
         setName(name);
+        setParentBrand(parentBrand);
+        setCoverage(brandCoverage);
+        setCountryOfOrigin(countryOfOrigin);
         return this;
     }
 
     public String default0Change() {
-        return getName();
+        return this.getName();
+    }
+
+    public Brand default1Change() {
+        return this.getParentBrand();
+    }
+
+    public BrandCoverage default2Change() {
+        return this.getCoverage();
+    }
+
+    public Country default3Change() {
+        return this.getCountryOfOrigin();
     }
 
     // //////////////////////////////////////

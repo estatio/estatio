@@ -18,8 +18,10 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
@@ -35,11 +37,15 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
     public static final String PARTY_REF_TENANT = OrganisationForPoisonNl.REF;
     public static final String PARTY_REF_MANAGER = PersonForJohnDoeNl.REF;
 
+    public static final String BRAND = "Poison";
+    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
+    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.NLD;
+
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new PersonForJohnDoeNl());
             executionContext.executeChild(this, new OrganisationForAcmeNl());
             executionContext.executeChild(this, new OrganisationForPoisonNl());
@@ -52,10 +58,18 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
                 REF,
                 "Poison Amsterdam",
                 UNIT_REF,
-                "Poison", "HEALT&BEAUTY", "PERFUMERIE",
+                BRAND,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
+                "HEALT&BEAUTY",
+                "PERFUMERIE",
                 PARTY_REF_LANDLORD,
                 PARTY_REF_TENANT,
-                ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
+                ld(2011, 1, 1),
+                ld(2020, 12, 31),
+                true,
+                true,
+                manager,
                 executionContext);
     }
 

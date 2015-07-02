@@ -18,33 +18,34 @@
  */
 package org.estatio.fixture.lease;
 
-import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Occupancies;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
 
 public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > reference
     private String reference;
+
     public String getReference() {
         return reference;
     }
+
     public void setReference(final String reference) {
         this.reference = reference;
     }
@@ -52,6 +53,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > name
     private String name;
+
     public String getName() {
         return name;
     }
@@ -63,6 +65,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > leaseType
     private LeaseType leaseType;
+
     public LeaseType getLeaseType() {
         return leaseType;
     }
@@ -74,6 +77,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > startDate
     private LocalDate startDate;
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -85,6 +89,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > duration
     private String duration;
+
     public String getDuration() {
         return duration;
     }
@@ -96,6 +101,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > endDate
     private LocalDate endDate;
+
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -107,6 +113,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > landlord
     private Party landlord;
+
     public Party getLandlord() {
         return landlord;
     }
@@ -118,6 +125,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > tenant
     private Party tenant;
+
     public Party getTenant() {
         return tenant;
     }
@@ -129,9 +137,11 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     //region > atPath (input property)
     private String atPath;
+
     public String getAtPath() {
         return atPath;
     }
+
     public void setAtPath(final String atPath) {
         this.atPath = atPath;
     }
@@ -151,6 +161,8 @@ public class LeaseBuilder extends EstatioFixtureScript {
             String reference, String name,
             String unitReference,
             String brand,
+            BrandCoverage brandCoverage,
+            String countryOfOriginRef,
             String sector,
             String activity,
             String landlordReference,
@@ -174,8 +186,9 @@ public class LeaseBuilder extends EstatioFixtureScript {
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
+            Country countryOfOrigin = countries.findCountry(countryOfOriginRef);
             Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
-            occupancy.setBrandName(brand);
+            occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
             fixtureResults.addResult(this, occupancy);
@@ -194,7 +207,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new LeaseTypeForItalyRefData());
         }
 
@@ -204,8 +217,8 @@ public class LeaseBuilder extends EstatioFixtureScript {
         defaultParam("atPath", executionContext, ApplicationTenancyForGb.PATH);
 
         defaultParam("startDate", executionContext, faker().dates().before(faker().periods().daysUpTo(2 * 365)));
-        if(getDuration()==null && getEndDate() == null) {
-            defaultParam("endDate", executionContext, getStartDate().plus(faker().periods().years(10,20)));
+        if (getDuration() == null && getEndDate() == null) {
+            defaultParam("endDate", executionContext, getStartDate().plus(faker().periods().years(10, 20)));
         }
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(getAtPath());
 
@@ -231,5 +244,8 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     @Inject
     protected ApplicationTenancies applicationTenancies;
+
+    @Inject
+    Countries countries;
 
 }

@@ -16,18 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tag;
 
+package org.estatio.dom.lease.tags;
 
+import org.estatio.dom.utils.StringUtils;
 
-/**
- * Entities that implement this interface may have arbitrary {@link Tag}s associated with them.
- * 
- * <p>
- * This interface decouples {@link Tag}s module from the entities that are being tagged, making
- * it reusable across any ({@link Taggable}) entity.
- */
-public interface Taggable {
+public enum BrandCoverage {
 
+    REGIONAL,
+    NATIONAL,
+    INTERNATIONAL;
 
+    public String title() {
+        return StringUtils.enumTitle(this.name());
+    }
 }
