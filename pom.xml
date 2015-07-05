@@ -201,7 +201,7 @@ language governing permissions and limitations under the License.
                         </excludes>
                         <useFile>true</useFile>
                         <printSummary>true</printSummary>
-                        <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+                        <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     </configuration>
                 </plugin>
 
@@ -210,15 +210,6 @@ language governing permissions and limitations under the License.
                     <artifactId>maven-surefire-report-plugin</artifactId>
                     <version>2.16</version>
                     <configuration>
-                        <includes>
-                            <include>**/*Test.java</include>
-                            <include>**/*Test*_*.java</include>
-                            <include>**/*Spec*.java</include>
-                        </includes>
-                        <excludes>
-                            <exclude>**/*ForTesting.java</exclude>
-                            <exclude>**/*Abstract*.java</exclude>
-                        </excludes>
                         <showSuccess>false</showSuccess>
                     </configuration>
                     <executions>
