@@ -11,6 +11,7 @@ isis-module-excel:/c/github/isisaddons/isis-module-excel
 isis-module-fakedata:/c/github/isisaddons/isis-module-fakedata
 isis-module-poly:/c/github/isisaddons/isis-module-poly
 isis-module-publishing:/c/github/isisaddons/isis-module-publishing
+isis-module-publishmq:/c/github/isisaddons/isis-module-publishmq
 isis-module-security:/c/github/isisaddons/isis-module-security
 isis-module-servletapi:/c/github/isisaddons/isis-module-servletapi
 isis-module-sessionlogger:/c/github/isisaddons/isis-module-sessionlogger
