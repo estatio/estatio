@@ -71,7 +71,7 @@ public class FinancialAccountTransaction
 
     FinancialAccount financialAccount;
 
-    @Column(name = "financialAccountId")
+    @Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     public FinancialAccount getFinancialAccount() {
         return financialAccount;
