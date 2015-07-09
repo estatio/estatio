@@ -1,3 +1,4 @@
+USE [estatio_dev]
 /**
 * Stored procedure creates column with default and removes default constraint
 **/
@@ -14,12 +15,12 @@ BEGIN
             WHERE [name] = @column AND [object_id] = OBJECT_ID(QUOTENAME(@table)))
     BEGIN
         DECLARE @addColumnCmd NVARCHAR(1000)
-        SET @addColumnCmd = 'ALTER TABLE '+ QUOTENAME(@table) + ' ADD '+ QUOTENAME(@column) + ' ' + @type + ' NOT NULL DEFAULT ''' + @default + ''''
+        SET @addColumnCmd = 'ALTER TABLE ['+ QUOTENAME(@table) + '] ADD ['+ QUOTENAME(@column) + '] ' + @type + ' NOT NULL DEFAULT ''' + @default + ''''
         EXEC sp_executesql @addColumnCmd
 
         DECLARE @dropDefaultCmd NVARCHAR(1000)
         SELECT 
-            @dropDefaultCmd = 'ALTER TABLE ' + @table + ' DROP CONSTRAINT ' + d.name
+            @dropDefaultCmd = 'ALTER TABLE [' + @table + '] DROP CONSTRAINT ' + d.name
         FROM
             sys.tables t 
             JOIN sys.default_constraints d ON d.parent_object_id = t.object_id  
@@ -32,84 +33,63 @@ END
 GO
 
 /**
-* Drop database constraints in order to perform changes on primary keys
+* Moves database to a different schema and renames it
 **/
-CREATE PROCEDURE dropConstraints
+CREATE PROCEDURE moveRenameDb
+(
+	@FromSchema VARCHAR(255),
+    @FromDb VARCHAR(255),
+    @ToSchema VARCHAR(255),
+    @ToDb VARCHAR(255)
+)
 AS
 BEGIN
-	DECLARE @str VARCHAR(MAX)
-	DECLARE cur CURSOR FOR
-
-	SELECT 
-		'ALTER TABLE ' + '[' + s.[NAME] + '].[' + t.name + '] DROP CONSTRAINT ['+ c.name + ']'
-	FROM 
-		sys.objects c 
-		INNER JOIN sys.objects t ON  c.[parent_object_id]=t.[object_id] 
-		INNER JOIN sys.schemas s ON  t.[schema_id] = s.[schema_id]
-	WHERE
-		c.[type] IN ('C', 'F', 'UQ', 'D') -- We don't want to drop PK 
-	ORDER BY 
-		c.[type]
-
-	OPEN cur
-
-	FETCH NEXT FROM cur INTO @str
-	WHILE (@@fetch_status = 0) BEGIN
-		PRINT @str
-		EXEC (@str)
-		FETCH NEXT FROM cur INTO @str
-	END
-
-	CLOSE cur
-	DEALLOCATE cur
+	DECLARE @NewName VARCHAR(255) = @ToSchema+'.'+@FromDb
+	IF NOT EXISTS (
+		SELECT  schema_name
+		FROM    information_schema.schemata
+		WHERE   schema_name = @ToSchema ) 
+		BEGIN
+			EXEC('CREATE SCHEMA '+@ToSchema)
+		END
+	EXEC('ALTER SCHEMA '+@ToSchema +' TRANSFER '+@FromSchema+'.'+@FromDb)
+	EXEC sp_rename @NewName, @ToDb;
 END
 GO
 
 /**
-* Actual upgrade starts here
+* Upgrade Application Tenancy
 **/
 
-EXECUTE [dbo].[dropConstraints] 
-GO
-
-
 ALTER TABLE [dbo].[IsisSecurityApplicationTenancy] DROP CONSTRAINT [IsisSecurityApplicationTenancy_PK]
-ALTER TABLE [dbo].[IsisSecurityApplicationTenancy] ALTER COLUMN [path] VARCHAR(30) NOT NULL
+ALTER TABLE [dbo].[IsisSecurityApplicationTenancy] ALTER COLUMN [path] VARCHAR(255) NOT NULL
 ALTER TABLE [dbo].[IsisSecurityApplicationTenancy] ADD  CONSTRAINT [IsisSecurityApplicationTenancy_PK] PRIMARY KEY CLUSTERED 
 (
 	[path] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 12) ON [PRIMARY]
 GO
-
-ALTER TABLE IsisSecurityApplicationTenancy ALTER COLUMN parentPath VARCHAR(30)
+ALTER TABLE IsisSecurityApplicationTenancy ALTER COLUMN parentPath VARCHAR(255)
+GO
+ALTER TABLE IsisSecurityApplicationUser ALTER COLUMN tenancyId VARCHAR(255)
+GO
+EXEC sp_rename 'IsisSecurityApplicationUser.tenancyId', 'atPath', 'COLUMN';
 GO
 
-ALTER TABLE IsisSecurityApplicationUser ALTER COLUMN tenancyId VARCHAR(30) -- TODO: fix isis-module-security and re-release with as "atPath" instead
-GO
 
-ALTER TABLE [dbo].[IsisSecurityApplicationUserRoles] DROP CONSTRAINT [IsisSecurityApplicationUserRoles_FK1]
-ALTER TABLE [dbo].[IsisSecurityApplicationUserRoles] DROP CONSTRAINT [IsisSecurityApplicationUserRoles_FK2]
-ALTER TABLE [dbo].[IsisSecurityApplicationUserRoles] ADD  CONSTRAINT [IsisSecurityApplicationUserRoles_PK] PRIMARY KEY CLUSTERED 
-(
-	[roleId] ASC,
-	[userId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 12) ON [PRIMARY]
-GO
-
-EXEC dbo.addColumn 'Brand', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Index', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Link', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Tax', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Charge', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Organisation', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Person', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Property', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'BankMandate', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Lease', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Invoice', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'LeaseItem', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'LeaseAssignment', 'atPath', 'VARCHAR(30)', '/ITA'
-EXEC dbo.addColumn 'Tag', 'atPath', 'VARCHAR(30)', '/ITA'
+EXEC dbo.addColumn 'Brand', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Index', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Link', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Tax', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Charge', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Organisation', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Person', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Property', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'BankMandate', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Lease', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Invoice', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'LeaseItem', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'LeaseAssignment', 'atPath', 'VARCHAR(255)', '/ITA'
+EXEC dbo.addColumn 'Tag', 'atPath', 'VARCHAR(255)', '/ITA'
 GO
 
 UPDATE lea SET atPath = '/ITA/' + LEFT(agr.reference,3)
@@ -117,8 +97,106 @@ UPDATE lea SET atPath = '/ITA/' + LEFT(agr.reference,3)
     INNER JOIN Agreement agr ON lea.id = agr.id
 GO
 
-DROP PROCEDURE dbo.addColumn
+/**
+* Move databases to new schemas
+*/
+EXEC dbo.moveRenameDb 'dbo','IsisAuditEntry','isisaudit','AuditEntry'
+EXEC dbo.moveRenameDb 'dbo','IsisCommand','isiscommand', 'Command'
+EXEC dbo.moveRenameDb 'dbo','IsisPublishedEvent', 'isispublishing', 'PublishedEvent'
+EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationPermission','isissecurity','ApplicationPermission'
+EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationRole','isissecurity','ApplicationRole'
+EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationTenancy','isissecurity','ApplicationTenancy'
+EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationUser','isissecurity','ApplicationUser'
+EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationUserRoles','isissecurity','ApplicationUserRoles'
+EXEC dbo.moveRenameDb 'dbo','IsisUserSetting', 'isissettings','UserSetting'
+
+/**
+* Change from DATETIME2 TO DATE
+**/
+ALTER TABLE dbo.Agreement ALTER COLUMN endDate DATE
+ALTER TABLE dbo.Agreement ALTER COLUMN startDate DATE
+ALTER TABLE dbo.AgreementRole ALTER COLUMN endDate DATE
+ALTER TABLE dbo.AgreementRole ALTER COLUMN startDate DATE
+ALTER TABLE dbo.AgreementRoleCommunicationChannel ALTER COLUMN endDate DATE
+ALTER TABLE dbo.AgreementRoleCommunicationChannel ALTER COLUMN startDate DATE
+ALTER TABLE dbo.BreakOption ALTER COLUMN breakDate DATE NOT NULL
+ALTER TABLE dbo.BreakOption ALTER COLUMN exerciseDate DATE NOT NULL
+ALTER TABLE dbo.BreakOption ALTER COLUMN reminderDate DATE
+ALTER TABLE dbo.Event ALTER COLUMN date DATE NOT NULL
+ALTER TABLE dbo.FinancialAccountTransaction ALTER COLUMN transactionDate DATE NOT NULL
+ALTER TABLE dbo.FixedAssetRegistration ALTER COLUMN startDate DATE
+ALTER TABLE dbo.FixedAssetRegistration ALTER COLUMN endDate DATE
+ALTER TABLE dbo.FixedAssetRole ALTER COLUMN endDate DATE
+ALTER TABLE dbo.FixedAssetRole ALTER COLUMN startDate DATE
+ALTER TABLE dbo.Guarantee ALTER COLUMN terminationDate DATE
+ALTER TABLE dbo.IndexBase ALTER COLUMN startDate DATE NOT NULL
+ALTER TABLE dbo.IndexValue ALTER COLUMN startDate DATE NOT NULL
+ALTER TABLE dbo.Invoice ALTER COLUMN dueDate DATE NOT NULL
+ALTER TABLE dbo.Invoice ALTER COLUMN invoiceDate DATE
+ALTER TABLE dbo.InvoiceItem ALTER COLUMN dueDate DATE NOT NULL
+ALTER TABLE dbo.InvoiceItem ALTER COLUMN effectiveEndDate DATE
+ALTER TABLE dbo.InvoiceItem ALTER COLUMN effectiveStartDate DATE
+ALTER TABLE dbo.InvoiceItem ALTER COLUMN endDate DATE
+ALTER TABLE dbo.InvoiceItem ALTER COLUMN startDate DATE
+ALTER TABLE dbo.Lease ALTER COLUMN tenancyEndDate DATE
+ALTER TABLE dbo.Lease ALTER COLUMN tenancyStartDate DATE
+ALTER TABLE dbo.LeaseAssignment ALTER COLUMN assignmentDate DATE NOT NULL
+ALTER TABLE dbo.LeaseItem ALTER COLUMN endDate DATE
+ALTER TABLE dbo.LeaseItem ALTER COLUMN epochDate DATE
+ALTER TABLE dbo.LeaseItem ALTER COLUMN nextDueDate DATE
+ALTER TABLE dbo.LeaseItem ALTER COLUMN startDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN endDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN startDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN paymentDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN registrationDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN baseIndexStartDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN effectiveDate DATE
+ALTER TABLE dbo.LeaseTerm ALTER COLUMN nextIndexStartDate DATE
+ALTER TABLE dbo.Occupancy ALTER COLUMN endDate DATE
+ALTER TABLE dbo.Occupancy ALTER COLUMN startDate DATE
+ALTER TABLE dbo.PartyRegistration ALTER COLUMN endDate DATE
+ALTER TABLE dbo.PartyRegistration ALTER COLUMN startDate DATE
+ALTER TABLE dbo.PartyRelationship ALTER COLUMN endDate DATE
+ALTER TABLE dbo.PartyRelationship ALTER COLUMN startDate DATE
+ALTER TABLE dbo.PaymentTerm ALTER COLUMN dueDate DATE NOT NULL
+ALTER TABLE dbo.Property ALTER COLUMN acquireDate DATE
+ALTER TABLE dbo.Property ALTER COLUMN disposalDate DATE
+ALTER TABLE dbo.Property ALTER COLUMN openingDate DATE
+ALTER TABLE dbo.TaxRate ALTER COLUMN endDate DATE
+ALTER TABLE dbo.TaxRate ALTER COLUMN startDate DATE
+ALTER TABLE dbo.Unit ALTER COLUMN endDate DATE
+ALTER TABLE dbo.Unit ALTER COLUMN startDate DATE
+
+
+/**
+* Clean up unused tables
+**/
+DROP TABLE [dbo].[UserSetting]
+GO
+DROP TABLE [dbo].[Tag]
+GO
+DROP TABLE [dbo].[IsisSettingApplicationSetting]
+GO
+DROP TABLE [dbo].[PaymentTerm]
 GO
 
-DROP PROCEDURE dbo.dropConstraints
+
+/**
+* Fix columns that have changed in the dom but were never upgraded
+ */
+ALTER TABLE LandRegister ALTER COLUMN rendita DECIMAL(19,2)
 GO
+ALTER TABLE FinancialAccountTransaction ALTER COLUMN financialAccountId BIGINT NOT NULL
+GO
+ALTER TABLE LeaseTerm DROP COLUMN taxable
+GO
+
+
+/**
+* Drop all procedures
+**/
+DROP PROCEDURE dbo.addColumn
+GO
+DROP PROCEDURE dbo.moveRenameDb
+GO
+
