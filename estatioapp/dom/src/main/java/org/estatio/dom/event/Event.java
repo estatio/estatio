@@ -219,6 +219,13 @@ public class Event
 
 
 
+    @Override
+    public String toString() {
+        // TODO: have (temporarily?) removed source from this, cos hitting an infinite loop :-(
+        return UDO_OBJECT_CONTRACTS.toStringOf(this, "date, calendarName");
+    }
+
+
     @Inject
     private EventSourceLinks eventSourceLinks;
 

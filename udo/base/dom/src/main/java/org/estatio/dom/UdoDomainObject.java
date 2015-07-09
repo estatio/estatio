@@ -56,7 +56,7 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
         extends AbstractDomainObject 
         implements Comparable<T>, WithApplicationTenancy {
 
-    private static ObjectContracts UDO_OBJECT_CONTRACTS =
+    protected static ObjectContracts UDO_OBJECT_CONTRACTS =
             new ObjectContracts()
     .with(WithReferenceGetter.ToString.evaluator())
                 .with(WithCodeGetter.ToString.evaluator())

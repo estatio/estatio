@@ -32,7 +32,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = CommunicationChannelOwnerLink.class
+        repositoryFor = EventSourceLink.class
 )
 public class EventSourceLinks {
 
