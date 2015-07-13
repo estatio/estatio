@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-invoice</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO Invoice DOM</name>
+    <name>UDO DOM - Invoice</name>
     <description>
         UDO Invoice DOM
     </description>

@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-base</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO Base Dom</name>
+    <name>UDO Base</name>
     <description>
         Base concepts for UDO domain object model.
     </description>
@@ -162,11 +162,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
         
-        <dependency>
-            <groupId>org.apache.chemistry.opencmis</groupId>
-            <artifactId>chemistry-opencmis-client-impl</artifactId>
-        </dependency>
-
     </dependencies>
 
     <reporting>

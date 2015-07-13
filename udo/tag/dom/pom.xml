@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-tag</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO Tag DOM</name>
+    <name>UDO DOm - Tag</name>
     <description>
         UDO Tag DOM
     </description>

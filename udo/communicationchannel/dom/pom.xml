@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-communicationchannel</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO CommunicationChannel DOM</name>
+    <name>UDO DOM - CommunicationChannel</name>
     <description>
         UDO CommunicationChannel DOM
     </description>

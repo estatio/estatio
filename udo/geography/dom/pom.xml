@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-geography</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO Geography DOM</name>
+    <name>UDO DOM - Geography</name>
     <description>
         UDO Geography DOM
     </description>

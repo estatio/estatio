@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-event</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO Event DOM</name>
+    <name>UDO DOM - Event</name>
     <description>
         UDO Event DOM
     </description>

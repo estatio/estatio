@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-currency</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO Currency DOM</name>
+    <name>UDO DOM - Currency</name>
     <description>
         UDO Currency DOM
     </description>
