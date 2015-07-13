@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>estatio-integtests</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio Integration Tests</name>
+    <name>Estatio (Open Source) Integration Tests</name>
     <description>
         Integration tests for Estatio.
     </description>
@@ -128,11 +128,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
             <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.wicket.svg</groupId>
-            <artifactId>isis-wicket-svg-cpt</artifactId>
         </dependency>
 
         <dependency>

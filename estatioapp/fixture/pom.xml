@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>estatio-fixture</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio Fixtures</name>
+    <name>Estatio (Open Source) Fixtures</name>
     <description>
         Testing/demo fixtures for Estatio.  These can be installed either during
         bootstrapped or from the admin menu.)
@@ -62,10 +62,6 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-dom-italy</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.security</groupId>
             <artifactId>isis-module-security-dom</artifactId>
         </dependency>
@@ -83,14 +79,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.wicket.gmap3</groupId>
             <artifactId>isis-wicket-gmap3-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
-        </dependency>
-
-        <!-- SVG -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.svg</groupId>
-            <artifactId>isis-wicket-svg-cpt</artifactId>
             <!-- avoid polluting the classpath -->
             <optional>true</optional>
         </dependency>

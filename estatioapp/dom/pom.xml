@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>estatio-dom</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio DOM &amp; Services</name>
+    <name>Estatio (Open Source) DOM &amp; Services</name>
     <description>
         Estatio DOM and Services
     </description>
@@ -94,27 +94,6 @@ language governing permissions and limitations under the License.
             <optional>true</optional>
         </dependency>
 
-        <!-- SVG -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.svg</groupId>
-            <artifactId>isis-wicket-svg-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-transcoder</artifactId>
-            <version>${apache-batik.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-codec</artifactId>
-            <version>${apache-batik.version}</version>
-        </dependency>
-        <!-- SVG -->
-
         <!-- EXCEL -->
         <dependency>
             <groupId>org.isisaddons.module.excel</groupId>
@@ -131,16 +110,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.settings</groupId>
             <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-
-        <!-- QUARTZ -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
         </dependency>
 
         <!-- testing -->

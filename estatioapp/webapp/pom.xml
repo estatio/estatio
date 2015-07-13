@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>estatio-webapp</artifactId>
     <packaging>war</packaging>
     
-    <name>Estatio Webapp</name>
+    <name>Estatio (Open Source) Webapp</name>
     <description>
         Packages the Estatio management system as a standard Java webapp.
     </description>
@@ -131,10 +131,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-migration</artifactId>
         </dependency>
 
         <!-- other isis components -->
@@ -245,25 +241,6 @@ language governing permissions and limitations under the License.
             <groupId>org.isisaddons.wicket.excel</groupId>
             <artifactId>isis-wicket-excel-cpt</artifactId>
         </dependency>
-
-        <!-- SVG maps -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.svg</groupId>
-            <artifactId>isis-wicket-svg-cpt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-transcoder</artifactId>
-            <version>${apache-batik.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-codec</artifactId>
-            <version>${apache-batik.version}</version>
-        </dependency>
-        <!-- SVG maps -->
 
         <!-- Other dependencies -->
         <dependency>

@@ -48,7 +48,7 @@ language governing permissions and limitations under the License.
     <version>1.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Estatio Management System</name>
+    <name>Estatio (Open Source)</name>
     <description>
         Estatio is modern and flexible property management software, built on Apache Isis.
         It offers real estate professionals and service providers the power and 
@@ -106,8 +106,6 @@ language governing permissions and limitations under the License.
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
         <datanucleus-maven-plugin.version>4.0.0-release</datanucleus-maven-plugin.version>
-
-        <apache-batik.version>1.7</apache-batik.version>
 
         <!-- override in each module (used by locate global resources) -->
         <siteBaseDir>.</siteBaseDir>
@@ -566,6 +564,12 @@ language governing permissions and limitations under the License.
                 <version>${isis-module-poly.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.isisaddons.module.stringinterpolator</groupId>
+                <artifactId>isis-module-stringinterpolator-dom</artifactId>
+                <version>${isis-module-stringinterpolator.version}</version>
+            </dependency>
+
             <!-- UDO modules -->
             
             <!-- todo: these will rename to udo-xxx-dom etc in the future -->
@@ -729,7 +733,6 @@ language governing permissions and limitations under the License.
 
             
             <!-- EstatioApp modules -->
-
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
@@ -742,22 +745,6 @@ language governing permissions and limitations under the License.
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-italy</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-italy</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-
-
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -767,25 +754,7 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-fixture-italy</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-integtests</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-migration</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-migration-integtests</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
 
@@ -822,7 +791,6 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <!-- testing dependencies -->
-
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
@@ -873,62 +841,21 @@ language governing permissions and limitations under the License.
             </dependency>
 
 
-            <!-- scheduler -->
-            <dependency>
-                <groupId>org.quartz-scheduler</groupId>
-                <artifactId>quartz</artifactId>
-                <version>${quartz-scheduler.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.quartz-scheduler</groupId>
-                <artifactId>quartz-jobs</artifactId>
-                <version>${quartz-scheduler.version}</version>
-            </dependency>
-
-
             <!-- viewer extensions -->
-
-            <!-- GMAP3: https://github.com/danhaywood/isis-wicket-gmap3 -->
             <dependency>
                 <groupId>org.isisaddons.wicket.gmap3</groupId>
                 <artifactId>isis-wicket-gmap3-cpt</artifactId>
                 <version>${isis-wicket-gmap3.version}</version>
             </dependency>
-
-            <!-- FULLCALENDAR2: use https://github.com/danhaywood/isis-wicket-fullcalendar2 -->
             <dependency>
                 <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
                 <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
                 <version>${isis-wicket-fullcalendar2.version}</version>
             </dependency>
-
-
-            <!-- EXCEL: https://github.com/danhaywood/isis-wicket-excel -->
             <dependency>
                 <groupId>org.isisaddons.wicket.excel</groupId>
                 <artifactId>isis-wicket-excel-cpt</artifactId>
                 <version>${isis-wicket-excel.version}</version>
-            </dependency>
-
-            <!-- SVG: https://github.com/jcvanderwal/isis-wicket-svg -->
-            <dependency>
-                <groupId>org.isisaddons.wicket.svg</groupId>
-                <artifactId>isis-wicket-svg-cpt</artifactId>
-                <version>${isis-wicket-svg.version}</version>
-            </dependency>
-
-            <!-- domain services -->
-
-            <dependency>
-                <groupId>org.isisaddons.module.stringinterpolator</groupId>
-                <artifactId>isis-module-stringinterpolator-dom</artifactId>
-                <version>${isis-module-stringinterpolator.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.chemistry.opencmis</groupId>
-                <artifactId>chemistry-opencmis-client-impl</artifactId>
-                <version>0.10.0</version>
             </dependency>
 
 
@@ -1115,11 +1042,8 @@ language governing permissions and limitations under the License.
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/dom-italy</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
-                <module>estatioapp/migration</module>
-                <module>estatioapp/migration-integtests</module>
                 <module>estatioapp/webapp</module>
             </modules>
         </profile>
@@ -1139,7 +1063,6 @@ language governing permissions and limitations under the License.
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/dom-italy</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
             </modules>
@@ -1160,12 +1083,9 @@ language governing permissions and limitations under the License.
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/dom-italy</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
-                <module>estatioapp/migration</module>
-                <module>estatioapp/migration-integtests</module>
                 <module>estatioapp/webapp</module>
             </modules>
         </profile>
@@ -1188,7 +1108,6 @@ language governing permissions and limitations under the License.
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/dom-italy</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->

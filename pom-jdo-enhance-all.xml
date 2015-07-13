@@ -118,7 +118,6 @@
             </activation>
             <modules>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/dom-italy</module>
             </modules>
         </profile>
     </profiles>

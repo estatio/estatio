@@ -27,7 +27,6 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.asset.*;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.LandRegister;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
@@ -63,7 +62,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteAllDirect();
     }
 
-    private void deleteAllDirect() {
+    protected void deleteAllDirect() {
 
         deleteFrom(ProgramRole.class);
         deleteFrom(ProjectRole.class);
@@ -114,7 +113,6 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Unit.class);
         deleteFrom(Property.class);
         deleteFrom(FixedAssetRole.class);
-        deleteFrom(LandRegister.class);
         deleteFrom(FixedAssetRegistration.class);
         deleteFrom(FixedAsset.class);
 
@@ -125,14 +123,19 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Party.class);
     }
 
-    private void deleteFrom(final Class cls) {
+    protected void deleteFrom(final Class cls) {
+        preDeleteFrom(cls);
         deleteFrom(cls.getSimpleName());
-
+        postDeleteFrom(cls);
     }
 
-    private void deleteFrom(final String table) {
+    protected void deleteFrom(final String table) {
         isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
     }
+
+    protected void preDeleteFrom(final Class cls) {}
+
+    protected void postDeleteFrom(final Class cls) {}
 
     @Inject
     private IsisJdoSupport isisJdoSupport;
