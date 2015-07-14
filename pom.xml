@@ -1052,6 +1052,7 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/canonical</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
@@ -1074,7 +1075,9 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/canonical</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
             </modules>
@@ -1094,7 +1097,9 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/canonical</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
