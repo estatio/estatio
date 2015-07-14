@@ -19,10 +19,15 @@
 package org.estatio.services.settings;
 
 import java.util.List;
-import org.isisaddons.module.settings.dom.ApplicationSetting;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
@@ -37,8 +42,7 @@ import org.estatio.dom.currency.Currency;
  * {@link ApplicationSettingKey defaults for keys} have been installed if
  * required.
  */
-@DomainService(menuOrder = "99")
-@Hidden
+@DomainService(nature = NatureOfService.DOMAIN)
 public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
 
     public EstatioSettingsService() {
@@ -57,7 +61,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public Currency systemCurrency() {
         //TODO: Make system default currency configurable
         return currencies.findCurrency("EUR");
@@ -70,7 +74,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     /**
      * @see ApplicationSettingKey#epochDate
      */
-    @Hidden
+    @Programmatic
     public LocalDate fetchEpochDate() {
         if (cachedEpochDate == null) {
             // getApplicationSettings().installDefaultsIfRequired();
@@ -85,7 +89,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     /**
      * @see ApplicationSettingKey#epochDate
      */
-    @Hidden
+    @Programmatic
     public void updateEpochDate(
             final LocalDate newEpochDate) {
         // getApplicationSettings().installDefaultsIfRequired();
@@ -111,7 +115,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     /**
      * @see ApplicationSettingKey#reportServerBaseUrl
      */
-    @Hidden
+    @Programmatic
     public String fetchReportServerBaseUrl() {
         if (cachedReportServerBaseUrl == null) {
             final ApplicationSetting reportServerBaseUrl = applicationSettingsService.find(REPORT_SERVER_BASE_URL_KEY);
@@ -127,7 +131,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public List<ApplicationSetting> listAll() {
         return applicationSettingsService.listAll();
     }

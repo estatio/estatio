@@ -84,6 +84,12 @@ language governing permissions and limitations under the License.
                             <Build-Label>${project.version}</Build-Label>
                         </manifestEntries>
                     </archive>
+                    <packagingExcludes>
+                        WEB-INF/lib/isis-core-webserver*.jar,
+                        WEB-INF/lib/javax.servlet-api-*.jar,
+                        WEB-INF/lib/javax.websocket-api-*.jar,
+                        WEB-INF/lib/jetty-all-*.jar
+                    </packagingExcludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -123,10 +129,9 @@ language governing permissions and limitations under the License.
 
     <dependencies>
 
-        <!-- other modules in this project -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-dom</artifactId>
+            <artifactId>estatio-domservices</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -157,39 +162,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-core-security</artifactId>
         </dependency>
 
-        <!-- isis modules -->
-        <dependency>
-            <groupId>org.isisaddons.module.audit</groupId>
-            <artifactId>isis-module-audit-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.publishing</groupId>
-            <artifactId>isis-module-publishing-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.devutils</groupId>
-            <artifactId>isis-module-devutils-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.settings</groupId>
-            <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.command</groupId>
-            <artifactId>isis-module-command-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.security</groupId>
-            <artifactId>isis-module-security-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.sessionlogger</groupId>
-            <artifactId>isis-module-sessionlogger-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
 
 
         <!-- to run using WebServer (optional) -->
@@ -228,20 +200,6 @@ language governing permissions and limitations under the License.
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- isis addons (wicket cpts) -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.excel</groupId>
-            <artifactId>isis-wicket-excel-cpt</artifactId>
-        </dependency>
-
         <!-- Other dependencies -->
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -249,11 +207,6 @@ language governing permissions and limitations under the License.
             <version>0.1.51</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <version>1.2</version>
-        </dependency>
 
         <dependency>
             <groupId>org.mindrot</groupId>

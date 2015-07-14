@@ -19,12 +19,13 @@
 package org.estatio.services.clock;
 
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.clock.Clock;
 
-@Hidden
-@DomainService(menuOrder = "99")
+@DomainService(nature = NatureOfService.DOMAIN)
 public class ClockService extends org.apache.isis.applib.services.clock.ClockService {
 
     private static final int MONTHS_IN_QUARTER = 3;
@@ -35,12 +36,14 @@ public class ClockService extends org.apache.isis.applib.services.clock.ClockSer
         return "estatioClockService";
     }
 
+    @Programmatic
     public long timestamp() {
         return Clock.getTime();
     }
     
     // //////////////////////////////////////
 
+    @Programmatic
     public LocalDate beginningOfMonth() {
         return beginningOfMonth(now());
     }
@@ -52,11 +55,13 @@ public class ClockService extends org.apache.isis.applib.services.clock.ClockSer
 
     // //////////////////////////////////////
 
+    @Programmatic
     public LocalDate beginningOfQuarter() {
         final LocalDate date = now();
         return beginningOfQuarter(date);
     }
 
+    @Programmatic
     public LocalDate beginningOfNextQuarter() {
         final LocalDate date = now().plusMonths(3);
         return beginningOfQuarter(date);

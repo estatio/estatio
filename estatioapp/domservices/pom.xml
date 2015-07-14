@@ -24,12 +24,12 @@ language governing permissions and limitations under the License.
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom</artifactId>
+    <artifactId>estatio-domservices</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) DOM &amp; Services</name>
+    <name>Estatio (Open Source) DOM Services</name>
     <description>
-        Estatio DOM and Services
+        Estatio DOM Services
     </description>
 
     <properties>
@@ -64,53 +64,57 @@ language governing permissions and limitations under the License.
     <dependencies>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <artifactId>estatio-dom</artifactId>
         </dependency>
 
+        <!-- isis modules -->
         <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom</artifactId>
+            <groupId>org.isisaddons.module.audit</groupId>
+            <artifactId>isis-module-audit-dom</artifactId>
         </dependency>
-
-        <!-- GMAP3 -->
         <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
+            <groupId>org.isisaddons.module.publishing</groupId>
+            <artifactId>isis-module-publishing-dom</artifactId>
         </dependency>
-
-        <!-- FULLCALENDAR2 -->
         <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
+            <groupId>org.isisaddons.module.devutils</groupId>
+            <artifactId>isis-module-devutils-dom</artifactId>
         </dependency>
-
-        <!-- EXCEL -->
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-                
-        <!-- EXCEL -->
-        <dependency>
-            <groupId>org.isisaddons.module.poly</groupId>
-            <artifactId>isis-module-poly-dom</artifactId>
-        </dependency>
-
-        <!-- SETTINGS -->
         <dependency>
             <groupId>org.isisaddons.module.settings</groupId>
             <artifactId>isis-module-settings-dom</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.command</groupId>
+            <artifactId>isis-module-command-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.security</groupId>
+            <artifactId>isis-module-security-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.sessionlogger</groupId>
+            <artifactId>isis-module-sessionlogger-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.excel</groupId>
+            <artifactId>isis-module-excel-dom</artifactId>
+        </dependency>
+
+        <!-- isis addons (wicket cpts) -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.wicket.excel</groupId>
+            <artifactId>isis-wicket-excel-cpt</artifactId>
+        </dependency>
+
 
         <!-- testing -->
         <dependency>
@@ -194,78 +198,6 @@ language governing permissions and limitations under the License.
 
     <profiles>
         <profile>
-            <id>enhance</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                            <groupId>org.eclipse.m2e</groupId>
-                            <artifactId>lifecycle-mapping</artifactId>
-                            <version>1.0.0</version>
-                            <configuration>
-                                <lifecycleMappingMetadata>
-                                    <pluginExecutions>
-                                        <pluginExecution>
-                                            <pluginExecutionFilter>
-                                                <groupId>org.datanucleus</groupId>
-                                                <artifactId>datanucleus-maven-plugin</artifactId>
-                                                <versionRange>[${datanucleus-maven-plugin.version},)</versionRange>
-                                                <goals>
-                                                    <goal>enhance</goal>
-                                                </goals>
-                                            </pluginExecutionFilter>
-                                            <action>
-                                                <ignore></ignore>
-                                            </action>
-                                        </pluginExecution>
-                                    </pluginExecutions>
-                                </lifecycleMappingMetadata>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-                <plugins>
-                    <plugin>
-                        <groupId>org.datanucleus</groupId>
-                        <artifactId>datanucleus-maven-plugin</artifactId>
-                        <version>${datanucleus-maven-plugin.version}</version>
-                        <configuration>
-                            <fork>false</fork>
-                            <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
-                            <verbose>true</verbose>
-                            <props>${basedir}/datanucleus.properties</props>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>process-classes</phase>
-                                <goals>
-                                    <goal>enhance</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-core</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-jodatime</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-api-jdo</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>analysis</id>
             <build>
                 <plugins>
@@ -275,14 +207,14 @@ language governing permissions and limitations under the License.
                         <version>2.6</version>
                         <inherited>true</inherited>
                         <configuration>
-                            <check></check>
+                            <check>
+
+                            </check>
                             <formats>
                                 <format>xml</format>
                             </formats>
                             <instrumentation>
                                 <excludes>
-                                    <exclude>org/estatio/fixture/**/*.class</exclude>
-                                    <exclude>org/estatio/api/Api.class</exclude>
                                     <exclude>org/estatio/**/*Test*.class</exclude>
                                 </excludes>
                             </instrumentation>
@@ -302,7 +234,6 @@ language governing permissions and limitations under the License.
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <configuration>
                             <configLocation>${checkstyle.configLocation}</configLocation>
-                            <excludes>org/estatio/api/**</excludes>
                         </configuration>
                         <executions>
                             <execution>
@@ -358,49 +289,6 @@ language governing permissions and limitations under the License.
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>pmd</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>isis-validate</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.isis.tool</groupId>
-                        <artifactId>isis-maven-plugin</artifactId>
-                        <version>${isis.version}</version>
-                        <configuration>
-                            <isisConfigDir>../webapp/src/main/webapp/WEB-INF</isisConfigDir>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>${project.groupId}</groupId>
-                                <artifactId>${project.artifactId}</artifactId>
-                                <version>${project.version}</version>
-                            </dependency>
-                            <!--
-                            ... workaround to avoid conflict with plexus-default
-                                (not sure why exclusions in the isis-maven-plugin aren't sufficient, though ...
-                            -->
-                            <dependency>
-                                <groupId>com.google.guava</groupId>
-                                <artifactId>guava</artifactId>
-                                <version>16.0.1</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>validate</goal>
                                 </goals>
                             </execution>
                         </executions>

@@ -18,30 +18,28 @@ language governing permissions and limitations under the License.
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+<!--
+to run unit tests with clover code coverage:
+mvn clean clover2:setup test clover2:aggregate clover2:clover -o
+'5m46s target/site/clover/clover.xml target/site/clover/* (html site)
+
+to run metrics (targets dom project only):
+mvn clean verify -P metrics-on -o
+ '1m42s
+dom/target/checkstyle-result.xml
+dom/target/findBugs.xml and dom/target/findBugsXml.xml
+dom/target/pmd.xml
+
+to build webapp:
+mvn clean install -DskipTests -o
+
+-->
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-
-    <!--
-    to run unit tests with clover code coverage:
-    mvn clean clover2:setup test clover2:aggregate clover2:clover -o
-    '5m46s
-    target/site/clover/clover.xml
-    target/site/clover/* (html site)
-    
-    to run metrics (targets dom project only):
-    mvn clean verify -P metrics-on -o
-    '1m42s
-    dom/target/checkstyle-result.xml
-    dom/target/findBugs.xml and dom/target/findBugsXml.xml
-    dom/target/pmd.xml
-
-    to build webapp:
-    mvn clean install -DskipTests -o
-    
-    -->
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
@@ -101,14 +99,10 @@ language governing permissions and limitations under the License.
         <isis-wicket-excel.version>1.8.0</isis-wicket-excel.version>
         <isis-wicket-fullcalendar2.version>1.8.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.9.0-SNAPSHOT</isis-wicket-gmap3.version>
-        <isis-wicket-svg.version>1.9.0-SNAPSHOT</isis-wicket-svg.version>
 
-        <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
         <datanucleus-maven-plugin.version>4.0.0-release</datanucleus-maven-plugin.version>
 
-        <!-- override in each module (used by locate global resources) -->
-        <siteBaseDir>.</siteBaseDir>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -117,6 +111,9 @@ language governing permissions and limitations under the License.
 
         <clover.version>3.1.12</clover.version>
         <maven.clover.licenseLocation>${siteBaseDir}/codequality/clover.license</maven.clover.licenseLocation>
+
+        <!-- override in each module (used by locate global resources) -->
+        <siteBaseDir>.</siteBaseDir>
     </properties>
 
     <repositories>
@@ -132,20 +129,20 @@ language governing permissions and limitations under the License.
         </repository>
 
         <repository>
-          <id>estatio.snapshots</id>
-          <name>Estatio Snapshots</name>
-          <releases>
-            <enabled>false</enabled>
-            <updatePolicy>always</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-            <checksumPolicy>fail</checksumPolicy>
-          </snapshots>
-          <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-          <layout>default</layout>
+            <id>estatio.snapshots</id>
+            <name>Estatio Snapshots</name>
+            <releases>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
+            <layout>default</layout>
         </repository>
 
         <repository>
@@ -432,7 +429,7 @@ language governing permissions and limitations under the License.
                     <configuration>
                         <rules>
                             <requireMavenVersion>
-				<!-- latest reliably available on CloudBees -->
+                                <!-- latest reliably available on CloudBees -->
                                 <version>[3.0.5,)</version>
                             </requireMavenVersion>
                             <requireJavaVersion>
@@ -444,7 +441,7 @@ language governing permissions and limitations under the License.
                                 <banLatest>true</banLatest>
                                 <banRelease>true</banRelease>
                             </requirePluginVersions>
-                            <!-- 
+                            <!--
                             RELAXED!
                             <DependencyConvergence />
                             -->
@@ -568,6 +565,23 @@ language governing permissions and limitations under the License.
                 <groupId>org.isisaddons.module.stringinterpolator</groupId>
                 <artifactId>isis-module-stringinterpolator-dom</artifactId>
                 <version>${isis-module-stringinterpolator.version}</version>
+            </dependency>
+
+            <!-- viewer extensions -->
+            <dependency>
+                <groupId>org.isisaddons.wicket.gmap3</groupId>
+                <artifactId>isis-wicket-gmap3-cpt</artifactId>
+                <version>${isis-wicket-gmap3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+                <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+                <version>${isis-wicket-fullcalendar2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.excel</groupId>
+                <artifactId>isis-wicket-excel-cpt</artifactId>
+                <version>${isis-wicket-excel.version}</version>
             </dependency>
 
             <!-- UDO modules -->
@@ -748,6 +762,19 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-domservices</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-domservices</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
@@ -841,22 +868,6 @@ language governing permissions and limitations under the License.
             </dependency>
 
 
-            <!-- viewer extensions -->
-            <dependency>
-                <groupId>org.isisaddons.wicket.gmap3</groupId>
-                <artifactId>isis-wicket-gmap3-cpt</artifactId>
-                <version>${isis-wicket-gmap3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-                <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-                <version>${isis-wicket-fullcalendar2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.wicket.excel</groupId>
-                <artifactId>isis-wicket-excel-cpt</artifactId>
-                <version>${isis-wicket-excel.version}</version>
-            </dependency>
 
 
         </dependencies>
@@ -1042,6 +1053,7 @@ language governing permissions and limitations under the License.
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/webapp</module>

@@ -16,13 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.webapp.services.admin;
+package org.estatio.services.admin;
 
 import java.util.List;
+
 import javax.inject.Inject;
-import org.isisaddons.module.settings.dom.ApplicationSetting;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
@@ -38,10 +50,14 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
         super(EstatioAdministrationService.class);
     }
 
-    @ActionSemantics(ActionSemantics.Of.IDEMPOTENT)
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @MemberOrder(sequence = "1")
     public void updateEpochDate(
-            @Named("Epoch Date") @Optional final LocalDate epochDate) {
+            @Parameter(optionality = Optionality.OPTIONAL)
+            @ParameterLayout(named = "Epoch Date")
+            final LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
     }
 
@@ -51,7 +67,10 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
 
     // //////////////////////////////////////
 
-    @TypeOf(ApplicationSettingForEstatio.class)
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            typeOf = ApplicationSettingForEstatio.class
+    )
     @MemberOrder(sequence = "2")
     public List<ApplicationSetting> listAllSettings() {
         return settingsService.listAll();

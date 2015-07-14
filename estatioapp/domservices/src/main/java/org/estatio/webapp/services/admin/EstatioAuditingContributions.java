@@ -18,23 +18,41 @@ package org.estatio.webapp.services.admin;
 
 import java.util.Collections;
 import java.util.List;
+
 import com.google.common.collect.Lists;
-import org.isisaddons.module.audit.dom.AuditingServiceRepository;
-import org.isisaddons.module.command.dom.CommandJdo;
-import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
-import org.isisaddons.module.publishing.dom.PublishingServiceRepository;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.ViewModel;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.HasTransactionId;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract;
+
+import org.isisaddons.module.audit.dom.AuditEntry;
+import org.isisaddons.module.audit.dom.AuditingServiceRepository;
+import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
+import org.isisaddons.module.publishing.dom.PublishingServiceRepository;
+
 import org.estatio.dom.UdoDomainService;
 
-@DomainService(menuOrder = "95")
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+)
 public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditingContributions> {
 
     public EstatioAuditingContributions() {
@@ -43,19 +61,25 @@ public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditi
 
     /**
      * Depending on which services are available, returns either a list of {@link CommandJdo command}s that have 
-     * caused a change in the domain object or a list of {@link AuditEntryJdo audit entries} capturing the 'effect' 
+     * caused a change in the domain object or a list of {@link AuditEntry audit entries} capturing the 'effect'
      * of that change.
      * 
      * <p>
-     * If {@link CommandJdo command}s are returned, then the corresponding {@link AuditEntryJdo audit entries} are
+     * If {@link CommandJdo command}s are returned, then the corresponding {@link AuditEntry audit entries} are
      * available from each command.
      */
-    @NotInServiceMenu
-    @ActionSemantics(Of.SAFE)
+    @Action(
+            semantics = SemanticsOf.SAFE
+    )
+    @ActionLayout(
+            contributed = Contributed.AS_ACTION
+    )
     @MemberOrder(sequence="30")
     public List<? extends DomainChangeJdoAbstract> recentChanges (
             final Object targetDomainObject,
-            final @Optional @Named("From") LocalDate from,
+            @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "From")
+            final LocalDate from,
+            @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "To")
             final @Optional @Named("To") LocalDate to) {
         final Bookmark targetBookmark = bookmarkService.bookmarkFor(targetDomainObject);
         final List<DomainChangeJdoAbstract> changes = Lists.newArrayList();
@@ -70,7 +94,7 @@ public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditi
         return changes;
     }
     /**
-     * Hide for implementations of {@link HasTransactionId} (in other words for {@link CommandJdo command}s, {@link AuditEntryJdo audit entries}
+     * Hide for implementations of {@link HasTransactionId} (in other words for {@link CommandJdo command}s, {@link AuditEntry audit entries}
      * and {@link org.isisaddons.module.publishing.dom.PublishedEvent published event}s) and for {@link ViewModel}s.
      */
     public boolean hideRecentChanges(final Object targetDomainObject, final LocalDate from, final LocalDate to) {
