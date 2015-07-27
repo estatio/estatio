@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://financial.dom.estatio.org/BankAccount.xsd"
+            elementFormDefault="qualified"
+            xmlns="http://financial.dom.estatio.org/BankAccount.xsd"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:common="http://isis.apache.org/schema/common"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://isis.apache.org/schema/common ../../../../apache/isis/schema/common/common-1.0.xsd"
+        >
+
+    <xs:import namespace="http://isis.apache.org/schema/common" schemaLocation="../../../../apache/isis/schema/common/common-1.0.xsd"/>
+
+    <xs:element name="bankAccountDto">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- org.estatio.dom.financial.FinancialAccount -->
+                <xs:element name="owner" type="common:oidDto" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="reference" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="externalReference" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <!-- org.estatio.dom.financial.bankaccount.BankAccount -->
+                <xs:element name="iban" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="accountNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="branchCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="bank" type="common:oidDto" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="nationalBankCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="nationalCheckCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>

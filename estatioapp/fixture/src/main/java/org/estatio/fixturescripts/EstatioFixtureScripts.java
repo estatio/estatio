@@ -19,17 +19,22 @@
 package org.estatio.fixturescripts;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+
 import org.estatio.EstatioModule;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
@@ -46,7 +51,9 @@ public class EstatioFixtureScripts extends FixtureScripts {
         super(EstatioModule.class.getPackage().getName());
     }
 
-    @Prototype
+    @Action(
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     @ActionLayout(
             cssClassFa = "fa-bolt",
             named = "Run Property/Lease Fixture Script"
@@ -65,27 +72,44 @@ public class EstatioFixtureScripts extends FixtureScripts {
         return super.choices0RunFixtureScript();
     }
 
-    @Prototype
+    @Action(
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     @MemberOrder(sequence = "2")
     public List<FixtureResult> createRetroInvoicesForProperty(
             final Property property,
-            final @Named("Start due date") LocalDate startDueDate,
-            final @Named("Next due date") @Optional LocalDate nextDueDate) {
+            @ParameterLayout(
+                    named = "Start due date"
+            )
+            final LocalDate startDueDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            @ParameterLayout(
+                    named = "Nextdue date"
+            )
+            final LocalDate nextDueDate) {
         final CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
         final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
         creator.createProperty(property, startDueDate, nextDueDate, executionContext);
         return executionContext.getResults();
     }
 
-    @Prototype
+    @Action(
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     @ActionLayout(
             cssClassFa = "fa-bolt"
     )
     @MemberOrder(sequence = "3")
     public List<FixtureResult> createRetroInvoicesForLease(
             final Lease lease,
-            final @Named("Start due date") LocalDate startDueDate,
-            final @Named("Next due date") LocalDate nextDueDate) {
+            @ParameterLayout(
+                    named = "Start due date"
+            )
+            final LocalDate startDueDate,
+            @ParameterLayout(
+                    named = "Nextdue date"
+            )
+            final LocalDate nextDueDate) {
         final CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
         final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
         creator.createLease(lease, startDueDate, nextDueDate, executionContext);
