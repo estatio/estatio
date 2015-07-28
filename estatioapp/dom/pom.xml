@@ -182,16 +182,6 @@ language governing permissions and limitations under the License.
 
     </dependencies>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
     <profiles>
         <profile>
             <id>enhance</id>
@@ -269,34 +259,6 @@ language governing permissions and limitations under the License.
             <id>analysis</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>2.6</version>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <check></check>
-                            <formats>
-                                <format>xml</format>
-                            </formats>
-                            <instrumentation>
-                                <excludes>
-                                    <exclude>org/estatio/fixture/**/*.class</exclude>
-                                    <exclude>org/estatio/api/Api.class</exclude>
-                                    <exclude>org/estatio/**/*Test*.class</exclude>
-                                </excludes>
-                            </instrumentation>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
- 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
