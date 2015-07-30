@@ -68,7 +68,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     private Budget budget;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="budgetId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     public Budget getBudget() {
@@ -83,7 +83,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     private BudgetKeyTable budgetKeyTable;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="budgetKeyTableId", allowsNull = "false")
     @MemberOrder(sequence = "2")
     public BudgetKeyTable getBudgetKeyTable() {
         return budgetKeyTable;
@@ -143,7 +143,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     private Currency currency;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="currencyId", allowsNull = "false")
     @MemberOrder(sequence = "4")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public Currency getCurrency() {
@@ -175,7 +175,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     private Charge charge;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="chargeId", allowsNull = "false")
     @MemberOrder(sequence = "5")
     public Charge getCharge() {
         return charge;
@@ -205,7 +205,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     private BudgetCostGroup budgetCostGroup;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="budgetCostGroupId", allowsNull = "false")
     @MemberOrder(sequence = "6")
     public BudgetCostGroup getBudgetCostGroup() {
         return budgetCostGroup;

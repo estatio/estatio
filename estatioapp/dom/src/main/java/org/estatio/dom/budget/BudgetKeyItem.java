@@ -67,7 +67,7 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements
 
     private BudgetKeyTable budgetKeyTable;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="budgetKeyTableId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @PropertyLayout(hidden = Where.PARENTED_TABLES )
     public BudgetKeyTable getBudgetKeyTable() {
@@ -82,7 +82,7 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements
 
     private Unit unit;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="unitId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     public Unit getUnit() {
         return unit;

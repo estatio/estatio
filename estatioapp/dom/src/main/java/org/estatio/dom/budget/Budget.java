@@ -82,7 +82,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
 
     private Property property;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="propertyId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     public Property getProperty() {

@@ -97,7 +97,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
 
     private Property property;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="propertyId", allowsNull = "false")
     @MemberOrder(sequence = "2")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     public Property getProperty() {
@@ -226,7 +226,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
 
     private BudgetFoundationValueType foundationValueType;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="foundationValueTypeId", allowsNull = "false")
     @MemberOrder(sequence = "5")
     public BudgetFoundationValueType getFoundationValueType() {
         return foundationValueType;
@@ -257,7 +257,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
 
     private BudgetKeyValueMethod keyValueMethod;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="keyValueMethodId", allowsNull = "false")
     @MemberOrder(sequence = "6")
     public BudgetKeyValueMethod getKeyValueMethod() {
         return keyValueMethod;
