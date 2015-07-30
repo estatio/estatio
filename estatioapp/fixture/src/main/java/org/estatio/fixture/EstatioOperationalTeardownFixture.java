@@ -18,16 +18,27 @@
  */
 package org.estatio.fixture;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+
 import org.estatio.dom.JdoColumnLength.Numerator;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.asset.*;
+import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.budget.Budget;
+import org.estatio.dom.budget.BudgetItem;
+import org.estatio.dom.budget.BudgetKeyItem;
+import org.estatio.dom.budget.BudgetKeyTable;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 import org.estatio.dom.document.Document;
@@ -49,11 +60,17 @@ import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.party.*;
+import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRegistration;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.relationship.PartyRelationship;
-import org.estatio.dom.project.*;
-
-import javax.inject.Inject;
+import org.estatio.dom.project.BusinessCase;
+import org.estatio.dom.project.Program;
+import org.estatio.dom.project.ProgramRole;
+import org.estatio.dom.project.Project;
+import org.estatio.dom.project.ProjectRole;
 
 public class EstatioOperationalTeardownFixture extends FixtureScript {
 
@@ -69,6 +86,12 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(BusinessCase.class);
         deleteFrom(Project.class);
         deleteFrom(Program.class);
+
+        deleteFrom(BudgetKeyItem.class);
+        deleteFrom(BudgetKeyTable.class);
+
+        deleteFrom(BudgetItem.class);
+        deleteFrom(Budget.class);
 
         deleteFrom(Numerator.class);
 

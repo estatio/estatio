@@ -1,0 +1,198 @@
+{
+    "columns": [
+        {
+            "span": 4,
+            "memberGroups": {
+                "General": {
+                    "members": {
+                        "name": {
+                            "propertyLayout": {
+                                "named": "Name",
+                                "typicalLength": 25
+                            },
+                            "actions": {
+                                "changeName": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Name"
+                                    }
+                                }
+                            }
+                        },
+                        "property": {
+                            "propertyLayout": {
+                                "named": "Property"
+                            }
+                        },
+                        "startDate": {
+                            "propertyLayout": {
+                                "named": "Start Date",
+                                "typicalLength": 12
+                            }
+                        },
+                        "endDate": {
+                            "propertyLayout": {
+                                "named": "End Date",
+                                "typicalLength": 12
+                            },
+                            "actions" : {
+                                "changeDates": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Dates"
+                                    }
+                                }
+                            }
+                        },
+                        "foundationValueType": {
+                            "propertyLayout": {
+                                "named": "Foundation Value Type",
+                                "typicalLength": 6
+                            },
+                            "actions" : {
+                                "changeFoundationValueType": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Foundation Value Type"
+                                    }
+                                }
+                            }
+                        },
+                        "keyValueMethod": {
+                            "propertyLayout": {
+                                "named": "Key Value Method",
+                                "typicalLength": 9
+                            },
+                            "actions" : {
+                                "changeKeyValueMethod": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Key Value Method"
+                                    }
+                                }
+                            }
+
+                        },
+                        "applicationTenancy": {
+                            "propertyLayout": {
+                                "named": "Application Tenancy"
+                            }
+                        },
+                        "id": {
+                            "propertyLayout": {
+                                "hidden": "ANYWHERE",
+                                "named": "Id",
+                                "typicalLength": 25
+                            }
+                        },
+                        "versionSequence": {
+                            "propertyLayout": {
+                                "hidden": "ANYWHERE",
+                                "named": "Version Sequence",
+                                "typicalLength": 18
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 8,
+            "collections": {
+                "budgetKeyItems": {
+                    "collectionLayout": {
+                        "named": "Budget Key Items",
+                        "paged": 10,
+                        "render": "EAGERLY"
+                    },
+                    "actions" : {
+                        "newBudgetKeyItem": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "cssClassFa": "fa fa-fw fa-plus",
+                                "named": "New Budget Key Item"
+                            }
+                        },
+                        "generateBudgetKeyItems": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "named": "Generate Budget Key Items"
+                            }
+                        },
+                        "bulkUpdateManager": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "named": "Bulk Update Manager",
+                                "contributed": "AS_ACTION"
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    ],
+    "actions": {
+        "downloadLayout": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-download",
+                "named": "Download Layout",
+                "contributed": "AS_ACTION"
+            }
+        },
+        "changeKeyValueMethod": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-edit",
+                "named": "Change Key Value Method"
+            }
+        },
+        "recentChanges": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Recent Changes"
+            }
+        },
+        "openLink": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Reports"
+            }
+        },
+        "newBudgetItem": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-plus",
+                "named": "New Budget Item",
+                "hidden": "ANYWHERE"
+            }
+        },
+        "findByBudgetKeyTableAndUnit": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-search",
+                "named": "Find By Budget Key Table And Unit"
+            }
+        }
+//        "newBudgetKeyItem": {
+//            "actionLayout": {
+//                "cssClass": "btn-primary",
+//                "cssClassFa": "fa fa-fw fa-plus",
+//                "named": "New Budget Key Item"
+//            }
+//        }
+    }
+}

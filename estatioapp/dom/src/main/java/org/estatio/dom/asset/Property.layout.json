@@ -79,6 +79,16 @@
           "actions": {
             "newUnit": {}
           }
+        },
+        "budgets": {
+          "actions": {
+            "newBudget": {}
+          }
+        },
+        "budgetKeyTables": {
+          "actions": {
+            "newBudgetKeyTable": {}
+          }
         }
       }
     }

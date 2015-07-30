@@ -24,13 +24,16 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.estatio.fixture.asset._PropertyForGraIt;
 import org.estatio.fixture.asset._PropertyForHanSe;
 import org.estatio.fixture.asset._PropertyForVivFr;
-import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.budget.BudgetForOxf;
+import org.estatio.fixture.budget.BudgetItemForOxf;
+import org.estatio.fixture.budget.BudgetKeyTablesForOxf;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
-import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
 import org.estatio.fixture.financial.BankAccountForMediaXGb;
 import org.estatio.fixture.financial.BankAccountForMiracleGb;
 import org.estatio.fixture.financial.BankAccountForPretGb;
+import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.interactivemap.InteractiveMapDocumentForOxf;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
@@ -39,10 +42,10 @@ import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxf
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 
@@ -106,6 +109,10 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
 
         executionContext.executeChild(this, new InteractiveMapDocumentForOxf());
+
+        executionContext.executeChild(this, new BudgetForOxf());
+        executionContext.executeChild(this, new BudgetItemForOxf());
+        executionContext.executeChild(this, new BudgetKeyTablesForOxf());
         
         
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();

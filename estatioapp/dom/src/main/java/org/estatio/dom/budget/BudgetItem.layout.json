@@ -1,0 +1,144 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "budget": {
+              "propertyLayout": {
+                "hidden": "PARENTED_TABLES",
+                "named": "Budget"
+              }
+            },
+            "budgetKeyTable": {
+              "propertyLayout": {
+                "named": "Budget Key Table"
+              },
+              "actions": {
+                "changeBudgetKeyTable": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit",
+                    "named": "Change Budget Key Table"
+                  }
+                }
+              }
+            },
+            "value": {
+              "propertyLayout": {
+                "named": "Value",
+                "typicalLength": 10
+              },
+              "actions" : {
+                "changeValue": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit",
+                    "named": "Change Value"
+                  }
+                }
+              }
+            },
+            "checkTotalValue" : {},
+            "currency": {
+              "propertyLayout": {
+                "named": "Currency"
+              }
+            },
+            "charge": {
+              "propertyLayout": {
+                "named": "Charge"
+              },
+              "actions" : {
+                "changeCharge": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit",
+                    "named": "Change Charge"
+                  }
+                }
+              }
+            },
+            "budgetCostGroup": {
+              "propertyLayout": {
+                "named": "Budget Cost Group",
+                "typicalLength": 9
+              },
+              "actions" : {
+                "changeBudgetCostGroup": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit",
+                    "named": "Change Budget Cost Group"
+                  }
+                }
+              }
+            },
+            "applicationTenancy": {
+              "propertyLayout": {
+                "hidden": "EVERYWHERE",
+                "named": "Application Tenancy"
+              }
+            },
+            "id": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "named": "Id",
+                "typicalLength": 25
+              }
+            },
+            "versionSequence": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "named": "Version Sequence",
+                "typicalLength": 18
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "cssClassFa": "fa fa-fw fa-download",
+        "named": "Download Layout",
+        "contributed": "AS_ACTION"
+      }
+    },
+    "changeCurrency": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "cssClassFa": "fa fa-fw fa-edit",
+        "named": "Change Currency"
+      }
+    },
+    "recentChanges": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Reports"
+      }
+    }
+  }
+}

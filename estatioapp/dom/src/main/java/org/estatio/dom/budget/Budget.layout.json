@@ -1,0 +1,118 @@
+{
+    "columns": [
+        {
+            "span": 4,
+            "memberGroups": {
+                "General": {
+                    "members": {
+                        "property": {
+                            "propertyLayout": {
+                                "hidden": "PARENTED_TABLES",
+                                "named": "Property"
+                            }
+                        },
+                        "startDate": {
+                            "propertyLayout": {
+                                "named": "Start Date",
+                                "typicalLength": 12
+                            }
+                        },
+                        "endDate": {
+                            "propertyLayout": {
+                                "named": "End Date",
+                                "typicalLength": 12
+                            },
+                            "actions" : {
+                                "changeDates": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Dates"
+                                    }
+                                }
+                            }
+                        },
+                        "applicationTenancy": {
+                            "propertyLayout": {
+                                "hidden": "EVERYWHERE",
+                                "named": "Application Tenancy"
+                            }
+                        },
+                        "id": {
+                            "propertyLayout": {
+                                "hidden": "ANYWHERE",
+                                "named": "Id",
+                                "typicalLength": 25
+                            }
+                        },
+                        "versionSequence": {
+                            "propertyLayout": {
+                                "hidden": "ANYWHERE",
+                                "named": "Version Sequence",
+                                "typicalLength": 18
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 8,
+            "collections": {
+                "budgetItems": {
+                    "collectionLayout": {
+                        "named": "Budget Items",
+                        "paged": 10,
+                        "render": "EAGERLY"
+                    },
+                    "actions" : {
+                        "newBudgetItem": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "cssClassFa": "fa fa-fw fa-plus",
+                                "named": "New Budget Item"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "actions": {
+        "downloadLayout": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-download",
+                "named": "Download Layout",
+                "contributed": "AS_ACTION"
+            }
+        },
+        "recentChanges": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Recent Changes"
+            }
+        },
+        "openLink": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Reports"
+            }
+        },
+        "calculateBudget": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-calculator",
+                "named": "Calculate Budget"
+            }
+        }
+    }
+}

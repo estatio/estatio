@@ -290,7 +290,7 @@ public class InvoiceCalculationServiceTest {
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
                 calculateDueDateRange(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
                         3296.70, 5000.00, 5000.00, 5000.00, 1722.22);
-                // TODO: Since 2012 is a leap year, the sum of the invoices is greater
+                // TODO: Since 2012 is a leap year, the keySum of the invoices is greater
                 // than the value of the term.....
             }
 
@@ -363,7 +363,7 @@ public class InvoiceCalculationServiceTest {
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
                 calculateDueDateRange(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
                         0.00, 0.00, 0.00, 0.00, 1722.22);
-                // TODO: Since 2012 is a leap year, the sum of the invoices is greater
+                // TODO: Since 2012 is a leap year, the keySum of the invoices is greater
                 // than the value of the term.....
             }
 

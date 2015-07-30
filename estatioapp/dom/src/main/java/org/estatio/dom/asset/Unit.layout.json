@@ -71,6 +71,13 @@
     }
   ],
   "actions": {
-    "activeLeasesOnDate": {}
+    "newBudgetKeyItem": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "cssClassFa": "fa fa-fw fa-plus",
+        "named": "New Budget Key Item",
+        "hidden" : "EVERYWHERE"
+      }
+    }
   }
 }
