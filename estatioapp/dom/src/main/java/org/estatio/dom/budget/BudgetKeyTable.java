@@ -314,16 +314,26 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
 
             BigDecimal denominator = BigDecimal.ZERO;
             for (Unit u :  units.findByProperty(this.getProperty())) {
-                denominator = denominator.add(getFoundationValueType().valueOf(u));
+                if (getFoundationValueType().valueOf(u) != null) {
+                    denominator = denominator.add(getFoundationValueType().valueOf(u));
+                }
             }
 
             BigDecimal numerator = BigDecimal.ZERO;
-            numerator = numerator.add(getFoundationValueType().valueOf(unit));
+            if (getFoundationValueType().valueOf(unit) != null) {
+                numerator = numerator.add(getFoundationValueType().valueOf(unit));
+            }
+            BigDecimal sourceValue;
+            if (getFoundationValueType().valueOf(unit) != null) {
+                sourceValue = getFoundationValueType().valueOf(unit);
+            } else {
+                sourceValue = BigDecimal.ZERO;
+            }
             BigDecimal keyValue = getKeyValueMethod().calculate(numerator, denominator);
             budgetKeyItemsRepo.newBudgetKeyItem(
                     this,
                     unit,
-                    getFoundationValueType().valueOf(unit),
+                    sourceValue,
                     keyValue);
 
         }

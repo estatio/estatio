@@ -48,30 +48,32 @@ public class BudgetContributions {
     @Action(semantics = SemanticsOf.SAFE, invokeOn = InvokeOn.OBJECT_ONLY)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
-    public List<Budget> budgets(Property property){
+    public List<Budget> budgets(Property property) {
         return budgets.findByProperty(property);
-    };
+    }
+
+    ;
 
     @Action(semantics = SemanticsOf.SAFE, invokeOn = InvokeOn.OBJECT_ONLY)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.EAGERLY)
-    public List<BudgetCalculatedValueOnLeaseTermLine> calculatedServiceChargesOnLease(final Budget budget){
+    public List<BudgetCalculatedValueOnLeaseTermLine> calculatedServiceChargesOnLease(final Budget budget) {
 
         List<BudgetCalculatedValueOnLeaseTermLine> lines = new ArrayList<BudgetCalculatedValueOnLeaseTermLine>();
 
         List<Lease> leasesOnProperty = leases.findLeasesByProperty(budget.getProperty());
         for (Lease lease : leasesOnProperty) {
-
-            lines.add(new BudgetCalculatedValueOnLeaseTermLine(
-                    budgetCalculationServices.calculateValueOnCurrentLeaseTermForServiceCharge(lease, budget),
-                    lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE).currentTerm(budget.getStartDate()))
-            );
+            if (lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE) != null) {
+                lines.add(new BudgetCalculatedValueOnLeaseTermLine(
+                                budgetCalculationServices.calculateValueOnCurrentLeaseTermForServiceCharge(lease, budget),
+                                lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE).currentTerm(budget.getStartDate()))
+                );
+            }
 
         }
 
         return lines;
     }
-
 
     @Inject
     Budgets budgets;
