@@ -85,7 +85,7 @@ mvn clean install -DskipTests -o
 
         <isis-module-audit.version>1.9.0-SNAPSHOT</isis-module-audit.version>
         <isis-module-command.version>1.9.0-SNAPSHOT</isis-module-command.version>
-        <isis-module-publishing.version>1.9.0-SNAPSHOT</isis-module-publishing.version>
+        <isis-module-publishmq.version>1.9.0-SNAPSHOT</isis-module-publishmq.version>
         <isis-module-security.version>1.9.0-SNAPSHOT</isis-module-security.version>
         <isis-module-sessionlogger.version>1.9.0-SNAPSHOT</isis-module-sessionlogger.version>
         <isis-module-settings.version>1.9.0-SNAPSHOT</isis-module-settings.version>
@@ -539,9 +539,9 @@ mvn clean install -DskipTests -o
                 <version>${isis-module-excel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.isisaddons.module.publishing</groupId>
-                <artifactId>isis-module-publishing-dom</artifactId>
-                <version>${isis-module-publishing.version}</version>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom</artifactId>
+                <version>${isis-module-publishmq.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.security</groupId>

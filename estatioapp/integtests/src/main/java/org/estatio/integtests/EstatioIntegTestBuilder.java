@@ -52,7 +52,11 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
     private static IsisConfiguration testConfiguration() {
         final IsisConfigurationForJdoIntegTests testConfiguration = new IsisConfigurationForJdoIntegTests();
-        testConfiguration.addRegisterEntitiesPackagePrefix("org.estatio");
+
+        testConfiguration.addRegisterEntitiesPackagePrefix(
+                "org.estatio",
+                "org.isisaddons"
+        );
 
         // uncomment to use log4jdbc instead
         // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",

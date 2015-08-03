@@ -74,7 +74,7 @@ language governing permissions and limitations under the License.
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.publishing</groupId>
-            <artifactId>isis-module-publishing-dom</artifactId>
+            <artifactId>isis-module-publishmq-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.devutils</groupId>
