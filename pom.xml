@@ -540,7 +540,7 @@ mvn clean install -DskipTests -o
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.publishmq</groupId>
-                <artifactId>isis-module-publishmq-dom</artifactId>
+                <artifactId>isis-module-publishmq-dom-servicespi</artifactId>
                 <version>${isis-module-publishmq.version}</version>
             </dependency>
             <dependency>

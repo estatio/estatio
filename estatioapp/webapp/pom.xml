@@ -246,37 +246,6 @@ language governing permissions and limitations under the License.
             </build>
         </profile>
 
-        <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath 
-        (nb: driver must be manually installed to local repo manually using mvn install-file)
-        
-        http://www.microsoft.com/en-us/download/confirmation.aspx?id=11774
-        
-        mvn install:install-file -DgroupId=com.microsoft.sqlserver \
-                         -DartifactId=sqljdbc4 \
-                         -Dversion=4.0 \
-                         -Dpackaging=jar \
-                         -Dfile=jdbc4.jar
-        -->
-        <!--
-        commented out for open source release.
-        -->
-        <profile>
-            <id>m2e</id>
-            <activation>
-                <!-- only if running within then IDE -->
-                <property>
-                    <name>idea.version</name>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.microsoft.sqlserver</groupId>
-                    <artifactId>sqljdbc4</artifactId>
-                    <version>4.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <profile>
             <id>intellij</id>
             <activation>

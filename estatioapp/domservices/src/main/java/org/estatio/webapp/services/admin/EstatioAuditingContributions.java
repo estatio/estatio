@@ -46,7 +46,6 @@ import org.isisaddons.module.audit.dom.AuditEntry;
 import org.isisaddons.module.audit.dom.AuditingServiceRepository;
 import org.isisaddons.module.command.dom.CommandJdo;
 import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
-import org.isisaddons.module.publishing.dom.PublishingServiceRepository;
 
 import org.estatio.dom.UdoDomainService;
 
@@ -86,16 +85,12 @@ public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditi
         if(commandServiceRepository != null) {
             changes.addAll(commandServiceRepository.findByTargetAndFromAndTo(targetBookmark, from, to));
         } 
-        if(publishingServiceRepository != null) {
-            changes.addAll(publishingServiceRepository.findByTargetAndFromAndTo(targetBookmark, from, to));
-        }
         changes.addAll(auditingServiceRepository.findByTargetAndFromAndTo(targetBookmark, from, to));
         Collections.sort(changes, DomainChangeJdoAbstract.compareByTimestampDescThenType());
         return changes;
     }
     /**
-     * Hide for implementations of {@link HasTransactionId} (in other words for {@link CommandJdo command}s, {@link AuditEntry audit entries}
-     * and {@link org.isisaddons.module.publishing.dom.PublishedEvent published event}s) and for {@link ViewModel}s.
+     * Hide for implementations of {@link HasTransactionId} (in other words for {@link CommandJdo command}s and {@link AuditEntry audit entries}) and for {@link ViewModel}s.
      */
     public boolean hideRecentChanges(final Object targetDomainObject, final LocalDate from, final LocalDate to) {
         return targetDomainObject instanceof HasTransactionId || targetDomainObject instanceof ViewModel || auditingServiceRepository == null || bookmarkService == null;
@@ -116,10 +111,7 @@ public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditi
     
     @javax.inject.Inject
     private AuditingServiceRepository auditingServiceRepository;
-    
-    @javax.inject.Inject
-    private PublishingServiceRepository publishingServiceRepository;
-    
+
     @javax.inject.Inject
     private BookmarkService bookmarkService;
 
