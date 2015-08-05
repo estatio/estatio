@@ -19,19 +19,31 @@
 package org.estatio.integtests.financial;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.InvalidException;
+
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -86,4 +98,57 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
     }
 
+    public static class RemoveBankAccount extends FinancialAccountTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                    executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
+                }
+            });
+        }
+
+        @Inject
+        private FinancialAccounts financialAccounts;
+
+        @Inject
+        private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+
+        private BankAccount bankAccount;
+
+        private FixedAssetFinancialAccount fixedAssetFinancialAccount;
+
+        @Before
+        public void setUp() throws Exception {
+            FinancialAccount financialAccount = financialAccounts.findAccountByReference(_BankAccountForHelloWorldNl.REF);
+            Assert.assertTrue(financialAccount instanceof BankAccount);
+            bankAccount = (BankAccount) financialAccount;
+        }
+
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
+        @Test
+        public void happyCase() throws Exception {
+            // Given
+            List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount);
+            Assert.assertThat(results.size(), is(1));
+            fixedAssetFinancialAccount = results.get(0);
+
+            Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(_PropertyForOxfGb.REF));
+
+            // When
+            wrap(fixedAssetFinancialAccount).remove(true);
+            Assert.assertThat(fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount).size(), is(0));
+            wrap(bankAccount).remove(true);
+
+            // Then
+            Assert.assertThat(fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount).size(), is(0));
+            Assert.assertNull(financialAccounts.findAccountByReference(_BankAccountForHelloWorldNl.REF));
+        }
+    }
 }

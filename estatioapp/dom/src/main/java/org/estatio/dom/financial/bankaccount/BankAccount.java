@@ -18,9 +18,12 @@
  */
 package org.estatio.dom.financial.bankaccount;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.Identifier;
+import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -29,10 +32,12 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
@@ -212,5 +217,36 @@ public class BankAccount
         IBANHelper.verifyAndUpdate(this);
         return this;
     }
+
+    @Action(domainEvent = BankAccount.RemoveEvent.class)
+    public void remove(
+            @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+        if (confirm) {
+            doRemove();
+        }
+    }
+
+    @Programmatic
+    public void doRemove() {
+        getContainer().remove(this);
+        getContainer().flush();
+    }
+
+    public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
+        private static final long serialVersionUID = 1L;
+
+        public RemoveEvent(
+                final BankAccount source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    @Inject
+    FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+
+    @Inject
+    BankAccounts bankAccounts;
 
 }

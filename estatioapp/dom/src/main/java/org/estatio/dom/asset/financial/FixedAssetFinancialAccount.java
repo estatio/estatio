@@ -21,13 +21,19 @@ package org.estatio.dom.asset.financial;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
@@ -116,7 +122,7 @@ public class FixedAssetFinancialAccount
 
     public void setFinancialAccount(final FinancialAccount financialAccount) {
         this.financialAccount = financialAccount;
-     }
+    }
 
     // //////////////////////////////////////
 
@@ -150,6 +156,16 @@ public class FixedAssetFinancialAccount
         }
     }
 
+    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
+        if (confirm) {
+            doRemove();
+        }
+    }
 
+    @Programmatic
+    public void doRemove() {
+        getContainer().remove(this);
+        getContainer().flush();
+    }
 
 }

@@ -20,12 +20,15 @@ package org.estatio.dom.asset.financial;
 
 import java.util.List;
 
+import com.google.common.eventbus.Subscribe;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @DomainService(menuOrder = "10", repositoryFor = FixedAssetFinancialAccount.class)
 public class FixedAssetFinancialAccounts extends UdoDomainRepositoryAndFactory<FixedAssetFinancialAccount> {
@@ -84,4 +87,28 @@ public class FixedAssetFinancialAccounts extends UdoDomainRepositoryAndFactory<F
         }
         return instance;
     }
+
+    @Subscribe
+    @Programmatic
+    public void on(final BankAccount.RemoveEvent ev) {
+        BankAccount sourceBankAccount = ev.getSource();
+
+        List<FixedAssetFinancialAccount> results;
+        switch (ev.getEventPhase()) {
+        case VALIDATE:
+            results = findByFinancialAccount(sourceBankAccount);
+            if (results.size() > 0) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("This bank account is assigned to a fixed asset: remove the bank account from the fixed asset. In use by the following fixed assets: ");
+                for (FixedAssetFinancialAccount fixedAssetFinancialAccount : results) {
+                    stringBuilder.append(fixedAssetFinancialAccount.getFixedAsset().getName() + "\n");
+                }
+                ev.invalidate(stringBuilder.toString());
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
 }
