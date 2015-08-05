@@ -5,6 +5,11 @@
       "memberGroups": {
         "General": {
           "members": {
+            "description": {
+              "actions": {
+                "changeDescription": {}
+              }
+            },
             "reference": {},
             "name": {},
             "externalReference": {}

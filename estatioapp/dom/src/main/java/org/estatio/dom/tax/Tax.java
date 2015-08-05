@@ -159,6 +159,11 @@ public class Tax
         this.description = description;
     }
 
+    public Tax changeDescription(final String description) {
+        setDescription(description);
+        return this;
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
