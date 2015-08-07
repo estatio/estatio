@@ -20,7 +20,7 @@ package org.estatio.dom.invoice;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
-import org.estatio.services.settings.ApplicationSettingCreator;
+import org.estatio.domsettings.ApplicationSettingCreator;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
     reportURLInvoice(

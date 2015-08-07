@@ -45,7 +45,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.services.settings.EstatioSettingsService;
+import org.estatio.domsettings.EstatioSettingsService;
 
 @DomainService(repositoryFor = Invoice.class)
 @DomainServiceLayout(

@@ -26,7 +26,10 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import com.google.inject.util.Providers;
 
+import org.apache.isis.applib.AppManifest;
 import org.apache.isis.viewer.wicket.viewer.IsisWicketApplication;
+
+import org.estatio.app.EstatioAppManifest;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
@@ -58,6 +61,9 @@ public class EstatioApplication extends IsisWicketApplication {
                 bind(String.class).annotatedWith(Names.named("welcomeMessage")).toInstance("This is Estatio - an open source property management system implemented using Apache Isis.");
                 bind(String.class).annotatedWith(Names.named("aboutMessage")).toInstance("Estatio");
                 bind(InputStream.class).annotatedWith(Names.named("metaInfManifest")).toProvider(Providers.of(getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF")));
+
+                // if uncommented, overrides isis.properties
+                // bind(AppManifest.class).toInstance(new EstatioAppManifest());
             }
         };
         return Modules.override(isisDefaults).with(estatioOverrides);

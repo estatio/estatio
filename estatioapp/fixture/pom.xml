@@ -79,8 +79,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.wicket.gmap3</groupId>
             <artifactId>isis-wicket-gmap3-cpt</artifactId>
-            <!-- avoid polluting the classpath -->
-            <optional>true</optional>
         </dependency>
 
         <dependency>

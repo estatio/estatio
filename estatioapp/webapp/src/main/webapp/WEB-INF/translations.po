@@ -470,7 +470,7 @@ msgid "Application Setting"
 msgstr ""
 
 
-#: org.estatio.app.index.maint.IndexValueMaintLineItem#apply()
+#: org.estatio.app.services.indexmaint.IndexValueMaintLineItem#apply()
 msgid "Apply"
 msgstr ""
 
@@ -1062,7 +1062,7 @@ msgid "Current Leases"
 msgstr ""
 
 
-#: org.estatio.app.EstatioAppDashboard
+#: org.estatio.app.services.dashboard.EstatioAppHomePage
 msgid "Dashboard"
 msgstr ""
 
@@ -1180,13 +1180,13 @@ msgid "Divided By"
 msgstr ""
 
 
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#download()
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#download()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#download()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#download()
 msgid "Download"
 msgstr ""
 
 
-#: org.estatio.app.index.maint.IndexValueMaintService#downloadIndexValues()
+#: org.estatio.app.services.indexmaint.IndexValueMaintService#downloadIndexValues()
 msgid "Download Index Values"
 msgstr ""
 
@@ -1364,9 +1364,9 @@ msgid "Example: Herengracht 469, Amsterdam, NL"
 msgstr ""
 
 
-#: org.estatio.app.index.maint.IndexValueMaintService#uploadIndexValues(org.apache.isis.applib.value.Blob)
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#upload(org.apache.isis.applib.value.Blob)
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#upload(org.apache.isis.applib.value.Blob)
+#: org.estatio.app.services.indexmaint.IndexValueMaintService#uploadIndexValues(org.apache.isis.applib.value.Blob)
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#upload(org.apache.isis.applib.value.Blob)
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#upload(org.apache.isis.applib.value.Blob)
 msgid "Excel spreadsheet"
 msgstr ""
 
@@ -1426,13 +1426,13 @@ msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#fetchEpochDate()
-#: org.estatio.services.settings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchEpochDate()
+#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchEpochDate()
 msgid "Fetch Epoch Date"
 msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#fetchReportServerBaseUrl()
-#: org.estatio.services.settings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchReportServerBaseUrl()
+#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchReportServerBaseUrl()
 msgid "Fetch Report Server Base Url"
 msgstr ""
 
@@ -1951,7 +1951,7 @@ msgid "Index Of"
 msgstr ""
 
 
-#: org.estatio.app.index.maint.IndexValueMaintService
+#: org.estatio.app.services.indexmaint.IndexValueMaintService
 #: org.estatio.dom.index.IndexBases
 #: org.estatio.dom.index.IndexValues
 #: org.estatio.dom.index.Indices
@@ -2199,7 +2199,7 @@ msgid "Leases"
 msgstr ""
 
 
-#: org.estatio.app.EstatioAppDashboard#leasesAboutToExpire
+#: org.estatio.app.services.dashboard.EstatioAppHomePage#leasesAboutToExpire
 msgid "Leases about to expire"
 msgstr ""
 
@@ -2226,7 +2226,7 @@ msgstr ""
 #: org.estatio.dom.party.Person#allBankMandates()
 #: org.estatio.dom.party.Person#allLeases()
 #: org.estatio.services.settings.EstatioSettingsService#listAll()
-#: org.estatio.services.settings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#listAll()
+#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#listAll()
 #: org.isisaddons.module.settings.dom.jdo.ApplicationSettingsServiceJdo#listAll()
 #: org.isisaddons.module.settings.dom.jdo.ApplicationSettingsServiceJdoHidden#listAll()
 #: org.isisaddons.module.settings.dom.jdo.UserSettingsServiceJdo#listAll()
@@ -2248,20 +2248,20 @@ msgstr ""
 
 #: org.apache.isis.applib.fixturescripts.FixtureScript#lookup()
 #: org.apache.isis.applib.services.bookmark.BookmarkHolderActionContributions#lookup()
-#: org.estatio.app.EstatioAppHomePageService#lookup()
+#: org.estatio.app.services.dashboard.EstatioAppHomePageService#lookup()
 #: org.estatio.dom.asset.Property#lookupLocation()
 #: org.estatio.dom.numerator.Numerator#lookup()
 msgid "Lookup"
 msgstr ""
 
 
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditService#maintainServiceCharges()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditService#maintainServiceCharges()
 #: org.estatio.dom.asset.Property#maintainServiceCharges()
 msgid "Maintain Service Charges"
 msgstr ""
 
 
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentService#maintainTurnoverRent()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentService#maintainTurnoverRent()
 #: org.estatio.dom.asset.Property#maintainTurnoverRent()
 msgid "Maintain Turnover Rent"
 msgstr ""
@@ -3376,12 +3376,12 @@ msgstr ""
 #: org.apache.isis.applib.Identifier#openLink()
 #: org.apache.isis.applib.fixturescripts.FixtureResult#openLink()
 #: org.apache.isis.core.metamodel.spec.FreeStandingList#openLink()
-#: org.estatio.app.EstatioAppDashboard#openLink()
-#: org.estatio.app.index.maint.IndexValueMaintLineItem#openLink()
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditLineItem#openLink()
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#openLink()
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentLineItem#openLink()
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#openLink()
+#: org.estatio.app.services.dashboard.EstatioAppHomePage#openLink()
+#: org.estatio.app.services.indexmaint.IndexValueMaintLineItem#openLink()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditLineItem#openLink()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#openLink()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentLineItem#openLink()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#openLink()
 #: org.estatio.dom.agreement.AgreementRole#openLink()
 #: org.estatio.dom.agreement.AgreementRoleCommunicationChannel#openLink()
 #: org.estatio.dom.agreement.AgreementRoleCommunicationChannelType#openLink()
@@ -3560,10 +3560,10 @@ msgid "Security"
 msgstr ""
 
 
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectProperty()
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectStartDate()
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectProperty()
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectStartDate()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectProperty()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectStartDate()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectProperty()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectStartDate()
 msgid "Select"
 msgstr ""
 
@@ -3660,12 +3660,12 @@ msgid "Start amount"
 msgstr ""
 
 
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectProperty(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectStartDate(org.joda.time.LocalDate)
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditService#maintainServiceCharges(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectProperty(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectStartDate(org.joda.time.LocalDate)
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentService#maintainTurnoverRent(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectProperty(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#selectStartDate(org.joda.time.LocalDate)
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditService#maintainServiceCharges(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectProperty(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#selectStartDate(org.joda.time.LocalDate)
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentService#maintainTurnoverRent(org.estatio.dom.asset.Property,org.joda.time.LocalDate)
 #: org.estatio.dom.agreement.Agreement#newRole(org.estatio.dom.agreement.AgreementRoleType,org.estatio.dom.party.Party,org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.estatio.dom.agreement.AgreementRole#addCommunicationChannel(org.estatio.dom.agreement.AgreementRoleCommunicationChannelType,org.estatio.dom.communicationchannel.CommunicationChannel,org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.estatio.dom.agreement.AgreementRole#precededBy(org.estatio.dom.party.Party,org.joda.time.LocalDate,org.joda.time.LocalDate)
@@ -3749,7 +3749,7 @@ msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#systemCurrency()
-#: org.estatio.services.settings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#systemCurrency()
+#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#systemCurrency()
 msgid "System Currency"
 msgstr ""
 
@@ -4122,7 +4122,7 @@ msgid "Until date"
 msgstr ""
 
 
-#: org.estatio.app.EstatioAppDashboard#upcomingEvents
+#: org.estatio.app.services.dashboard.EstatioAppHomePage#upcomingEvents
 msgid "Upcoming events"
 msgstr ""
 
@@ -4185,7 +4185,7 @@ msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#updateEpochDate()
-#: org.estatio.services.settings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#updateEpochDate()
+#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#updateEpochDate()
 msgid "Update Epoch Date"
 msgstr ""
 
@@ -4232,14 +4232,14 @@ msgid "Update Username"
 msgstr ""
 
 
-#: org.estatio.app.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#upload()
-#: org.estatio.app.lease.turnoverrent.LeaseTermForTurnoverRentManager#upload()
+#: org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager#upload()
+#: org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager#upload()
 msgid "Upload"
 msgstr ""
 
 
 #: org.apache.isis.applib.value.Blob#uploadIndexValues()
-#: org.estatio.app.index.maint.IndexValueMaintService#uploadIndexValues()
+#: org.estatio.app.services.indexmaint.IndexValueMaintService#uploadIndexValues()
 msgid "Upload Index Values"
 msgstr ""
 
@@ -4371,7 +4371,7 @@ msgid "Vat Code"
 msgstr ""
 
 
-#: org.estatio.app.index.maint.IndexValueMaintLineItem#verify()
+#: org.estatio.app.services.indexmaint.IndexValueMaintLineItem#verify()
 #: org.estatio.dom.invoice.InvoiceItem#verify()
 #: org.estatio.dom.lease.Lease#verify()
 #: org.estatio.dom.lease.LeaseItem#verify()

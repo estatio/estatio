@@ -25,8 +25,8 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
-import org.estatio.services.links.Link;
-import org.estatio.services.links.Links;
+import org.estatio.domlink.Link;
+import org.estatio.domlink.Links;
 
 public class LinksRefData extends EstatioFixtureScript {
 

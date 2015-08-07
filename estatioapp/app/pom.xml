@@ -77,10 +77,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-audit-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.isisaddons.module.publishmq</groupId>
-            <artifactId>isis-module-publishmq-dom-servicespi</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.devutils</groupId>
             <artifactId>isis-module-devutils-dom</artifactId>
         </dependency>

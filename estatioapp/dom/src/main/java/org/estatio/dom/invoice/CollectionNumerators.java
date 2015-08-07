@@ -34,7 +34,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
-import org.estatio.services.settings.EstatioSettingsService;
+import org.estatio.domsettings.EstatioSettingsService;
 
 @DomainService
 @DomainServiceLayout(

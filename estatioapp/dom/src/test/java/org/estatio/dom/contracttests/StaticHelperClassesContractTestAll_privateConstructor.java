@@ -21,7 +21,7 @@ package org.estatio.dom.contracttests;
 import org.junit.Test;
 
 import org.estatio.dom.PrivateConstructorTester;
-import org.estatio.services.settings.ApplicationSettingCreator;
+import org.estatio.domsettings.ApplicationSettingCreator;
 import org.estatio.dom.WithCodeGetter;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithNameGetter;

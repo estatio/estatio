@@ -40,7 +40,7 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.settings.EstatioSettingsService;
+import org.estatio.domsettings.EstatioSettingsService;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50")

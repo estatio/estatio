@@ -44,4 +44,49 @@ Copyright 2015 Dan Haywood
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>isis</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.isis.core</groupId>
+                    <artifactId>isis-core-applib</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.isis.core</groupId>
+                    <artifactId>isis-core-viewer-restfulobjects-rendering</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mapping-library</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <properties>
+                <orika-core.version>1.4.5</orika-core.version>
+            </properties>
+
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>ma.glasnost.orika</groupId>
+                        <artifactId>orika-core</artifactId>
+                        <version>${orika-core.version}</version>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+
+            <dependencies>
+                <dependency>
+                    <groupId>ma.glasnost.orika</groupId>
+                    <artifactId>orika-core</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

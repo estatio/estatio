@@ -16,18 +16,22 @@
  */
 package org.estatio.integtests;
 
+import java.util.Arrays;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import org.apache.log4j.Level;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.value.Blob;
-import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+
+import org.estatio.app.EstatioAppManifest;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
@@ -36,46 +40,18 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         // no need to add, because each test will set up its own test fixtures
         // anyway.
         withLoggingAt(Level.DEBUG);
-        with(testConfiguration());
+        with(new IsisConfigurationForJdoIntegTests());
         with(new DataNucleusPersistenceMechanismInstaller());
 
-        withServicesIn(
-                "org.estatio",
-                "org.isisaddons"
-        );
-
-        // any services explicitly registered in isis.properties should be registered here...
-        withServices(
-                // none currently...
-        );
+        with(new EstatioAppManifestForIntegTests());
     }
 
-    private static IsisConfiguration testConfiguration() {
-        final IsisConfigurationForJdoIntegTests testConfiguration = new IsisConfigurationForJdoIntegTests();
 
-        testConfiguration.addRegisterEntitiesPackagePrefix(
-                "org.estatio",
-                "org.isisaddons"
-        );
+    public static class EstatioAppManifestForIntegTests extends EstatioAppManifest {
 
-        // uncomment to use log4jdbc instead
-        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-        // "net.sf.log4jdbc.DriverSpy");
-
-        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-        // "jdbc:hsqldb:mem:test;sqllog=3");
-
-        //
-        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-        // "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
-        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-        // "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
-        // "estatio");
-        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
-        // "estatio");
-
-        return testConfiguration;
+        @Override public List<Class<?>> getAdditionalServices() {
+            return Arrays.asList(FakeExcelService.class);
+        }
     }
 
     @DomainService
