@@ -24,12 +24,12 @@ language governing permissions and limitations under the License.
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-domservices</artifactId>
+    <artifactId>estatio-app</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) DOM Services</name>
+    <name>Estatio (Open Source) App</name>
     <description>
-        Estatio DOM Services
+        Estatio App (manifest and application-scoped services)
     </description>
 
     <properties>
@@ -63,8 +63,12 @@ language governing permissions and limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-fixture</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-canonicalmappings</artifactId>
         </dependency>
 
         <!-- isis modules -->

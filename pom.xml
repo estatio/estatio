@@ -791,12 +791,12 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-domservices</artifactId>
+                <artifactId>estatio-app</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-domservices</artifactId>
+                <artifactId>estatio-app</artifactId>
                 <version>1.2.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -1058,10 +1058,10 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/webapp</module>
@@ -1082,10 +1082,10 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
             </modules>
@@ -1105,10 +1105,10 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/domservices</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
@@ -1133,10 +1133,10 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
+                <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/domservices</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->

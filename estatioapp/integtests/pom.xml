@@ -81,7 +81,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-fixture</artifactId>
+            <artifactId>estatio-app</artifactId>
         </dependency>
 
         <!-- isis -->
