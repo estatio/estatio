@@ -116,6 +116,15 @@ language governing permissions and limitations under the License.
         </dependency>
 
 
+        <!--
+        defined as optional dependency in security module, so need to reference explicitly here
+        -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>

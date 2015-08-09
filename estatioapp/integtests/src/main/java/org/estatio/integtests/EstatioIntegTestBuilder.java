@@ -16,7 +16,6 @@
  */
 package org.estatio.integtests;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -48,12 +47,17 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
 
     public static class EstatioAppManifestForIntegTests extends EstatioAppManifest {
-
-        @Override public List<Class<?>> getAdditionalServices() {
-            return Arrays.asList(FakeExcelService.class);
+        @Override
+        public List<Class<?>> getAdditionalServices() {
+            List<Class<?>> additionalServices = Lists.newArrayList();
+            appendEstatioClockService(additionalServices);
+            appendOptionalServicesForSecurityModule(additionalServices);
+             appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
+            return additionalServices;
         }
     }
 
+    // REVIEW: may not need anymore since appManifest refactoring...
     @DomainService
     public static class FakeExcelService extends ExcelService {
 

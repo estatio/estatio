@@ -1,7 +1,6 @@
 package org.estatio.app;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,14 +17,15 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.poly.dom.PolyModule;
 import org.isisaddons.module.security.SecurityModule;
 import org.isisaddons.module.sessionlogger.SessionLoggerModule;
-import org.isisaddons.module.settings.SettingsModule;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.estatio.dom.EstatioDomainModule;
 import org.estatio.canonicalmappings.EstatioCanonicalMappingsModule;
+import org.estatio.dom.EstatioDomainModule;
 import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
+import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
+import org.estatio.services.clock.ClockService;
 
 public class EstatioAppManifest implements AppManifest {
 
@@ -40,21 +40,21 @@ public class EstatioAppManifest implements AppManifest {
     protected List<Class<?>> appendAddonModules(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
-                PolyModule.class,
-                SettingsModule.class,
+                        PolyModule.class,
+                        // SettingsModule.class,
 
-                AuditModule.class,
-                CommandModule.class,
-                DevUtilsModule.class,
-                SessionLoggerModule.class
+                        AuditModule.class,
+                        CommandModule.class,
+                        DevUtilsModule.class,
+                        SessionLoggerModule.class
 
-                // TODO: stringinterpolator-module
-                // TODO: excel-dom
+                        // TODO: stringinterpolator-module
+                        // TODO: excel-dom
 
-                // fullcalendar2-cpt doesn't need a module
-                // TODO: gmap3-cpt DOES need a module
+                        // fullcalendar2-cpt doesn't need a module
+                        // TODO: gmap3-cpt DOES need a module
 
-                // TODO: excel-cpt
+                        // TODO: excel-cpt
                 )
         );
         return modules;
@@ -63,46 +63,79 @@ public class EstatioAppManifest implements AppManifest {
     protected List<Class<?>> appendDomModulesAndSecurityAddon(List<Class<?>> modules) {
         modules.addAll(
                     Arrays.asList(
-                    EstatioDomainModule.class,
-                    EstatioDomainLinkModule.class,
-                    EstatioDomainSettingsModule.class,
-                    EstatioFixtureScriptsModule.class, // TODO: need to sort out the packages for this module, are breaking our own conventions
-                    EstatioCanonicalMappingsModule.class,
-                    SecurityModule.class,
-                    EstatioAppModule.class
+                            // TODO: sort out packages for the 'dom' module
+                            EstatioDomainModule.class, EstatioDomainLinkModule.class, EstatioDomainSettingsModule.class,
+                            // TODO: sort out packages for the 'fixture' module
+                            EstatioFixtureModule.class,  EstatioFixtureScriptsModule.class,
+                            EstatioCanonicalMappingsModule.class,
+                            SecurityModule.class,
+                            EstatioAppModule.class
                 )
         );
         return modules;
     }
 
-    @Override public List<Class<?>> getAdditionalServices() {
-        return Arrays.asList(
-                ExcelService.class, // TODO: missing a module to reference
-                StringInterpolatorService.class, // TODO: missing a module to reference
-                org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
-                org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
+    @Override
+    public List<Class<?>> getAdditionalServices() {
+        List<Class<?>> additionalServices = Lists.newArrayList();
+        appendEstatioClockService(additionalServices);
+        appendOptionalServicesForSecurityModule(additionalServices);
+        appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
+        return additionalServices;
+    }
+
+    protected void appendEstatioClockService(final List<Class<?>> additionalServices) {
+        // TODO: need to create a module for this (the Estatio ClockService... else maybe use Isis')
+        additionalServices.addAll(
+                Arrays.asList(
+                        ClockService.class
+                )
         );
     }
 
-    @Override public String getAuthenticationMechanism() {
-        return null;
-    }
-
-    @Override public String getAuthorizationMechanism() {
-        return null;
-    }
-
-    @Override public List<Class<? extends FixtureScript>> getFixtures() {
-        return Arrays.asList(
-                org.estatio.fixture.EstatioDemoFixture.class
+    protected void appendOptionalServicesForSecurityModule(final List<Class<?>> additionalServices) {
+        additionalServices.addAll(
+                Arrays.asList(
+                        org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
+                        org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
+                )
         );
     }
 
-    @Override public Map<String, String> getConfigurationProperties() {
-        final HashMap<String, String> props = Maps.newHashMap();
+    protected void appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(final List<Class<?>> additionalServices) {
+        // TODO: missing a module to reference
+        additionalServices.addAll(
+                Arrays.asList(
+                        ExcelService.class,
+                        StringInterpolatorService.class
+                )
+        );
+    }
+
+    @Override
+    public String getAuthenticationMechanism() {
+        return null;
+    }
+
+    @Override
+    public String getAuthorizationMechanism() {
+        return null;
+    }
+
+    @Override
+    public List<Class<? extends FixtureScript>> getFixtures() {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getConfigurationProperties() {
+        final Map<String, String> props = Maps.newHashMap();
+        appendProps(props);
+        return props;
+    }
+
+    protected Map<String, String> appendProps(final Map<String, String> props) {
         props.put("isis.services.audit.objects","all");
-
-        props.put("isis.persistor.datanucleus.install-fixtures", "true");
 
         // uncomment to use log4jdbc instead
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
@@ -120,7 +153,6 @@ public class EstatioAppManifest implements AppManifest {
         // "estatio");
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
         // "estatio");
-
 
         return props;
     }
