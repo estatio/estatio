@@ -39,6 +39,7 @@ import org.estatio.app.budget.BudgetCalculationServices;
 import org.estatio.app.budget.BudgetItemCalculatedValueLine;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.Leases;
@@ -51,6 +52,8 @@ public class BudgetItemContributions extends UdoDomainRepositoryAndFactory<Budge
     public BudgetItemContributions() {
         super(BudgetItemContributions.class, BudgetItem.class);
     }
+
+
 
     @CollectionLayout(render = RenderType.EAGERLY)
     @Action(semantics = SemanticsOf.SAFE)
@@ -74,9 +77,11 @@ public class BudgetItemContributions extends UdoDomainRepositoryAndFactory<Budge
                 for (Occupancy o : l.getOccupancies()) {
 
                     if (budgetKeyItem.getUnit().equals(o.getUnit())) {
-                        //TODO: other lease Item Types depending on BudgetItem charge
-                        leaseTermForServiceCharge = (LeaseTermForServiceCharge) o.getLease().findFirstItemOfType(LeaseItemType.SERVICE_CHARGE).currentTerm(budgetItem.getBudget().getStartDate());
-                        status="OK";
+                        LeaseItem firstLeaseItemOfTypeAndCharge = o.getLease().findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetItem.getCharge());
+                        if (firstLeaseItemOfTypeAndCharge !=null) {
+                            leaseTermForServiceCharge = (LeaseTermForServiceCharge) firstLeaseItemOfTypeAndCharge.currentTerm(budgetItem.getBudget().getStartDate());
+                            status = "OK";
+                        }
                     }
 
                 }
@@ -108,9 +113,9 @@ public class BudgetItemContributions extends UdoDomainRepositoryAndFactory<Budge
     }
 
     @Inject
-    Leases leases;
+    private Leases leases;
 
     @Inject
-    BudgetCalculationServices budgetCalculationServices;
+    private BudgetCalculationServices budgetCalculationServices;
 
 }

@@ -23,10 +23,11 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -76,8 +77,9 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
         return allInstances();
     }
 
-    @Programmatic
-    public List<Budget> findByProperty(Property property){
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
+    public List<Budget> findBudgetByProperty(Property property){
         return allMatches("findByProperty", "property", property);
     };
 }

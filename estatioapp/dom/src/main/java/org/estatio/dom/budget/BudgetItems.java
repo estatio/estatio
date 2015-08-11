@@ -24,10 +24,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -44,14 +45,13 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @Programmatic
     public BudgetItem newBudgetItem(
-            final @ParameterLayout(named = "Budget") Budget budget,
-            final @ParameterLayout(named = "Budget Key Table") BudgetKeyTable budgetKeyTable,
-            final @ParameterLayout(named = "Value") BigDecimal value,
-//            final @ParameterLayout(named = "Currency") Currency currency,
-            final @ParameterLayout(named = "Charge") Charge charge,
-            final @ParameterLayout(named = "Budget Cost Group") BudgetCostGroup budgetCostGroup) {
+            final Budget budget,
+            final BudgetKeyTable budgetKeyTable,
+            final BigDecimal value,
+            final Charge charge,
+            final BudgetCostGroup budgetCostGroup) {
         BudgetItem budgetItem = newTransientInstance();
         budgetItem.setBudget(budget);
         budgetItem.setBudgetKeyTable(budgetKeyTable);
@@ -65,34 +65,35 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
         return budgetItem;
     }
 
-    public String validateNewBudgetItem(
-            final Budget budget,
-            final BudgetKeyTable budgetKeyTable,
-            final BigDecimal value,
-//            final Currency currency,
-            final Charge charge,
-            final BudgetCostGroup budgetCostGroup) {
-        if (value.equals(new BigDecimal(0))) {
-            return "Value can't be zero";
-        }
-        return null;
-    }
-
-    public List<BudgetKeyTable> choices1NewBudgetItem(
-            final Budget budget,
-            final BudgetKeyTable budgetKeyTable,
-            final BigDecimal value,
-//            final Currency currency,
-            final Charge charge,
-            final BudgetCostGroup budgetCostGroup) {
-
-        return budgetKeyTables.findBudgetKeyTableByProperty(budget.getProperty());
-
-    }
+//    public String validateNewBudgetItem(
+//            final Budget budget,
+//            final BudgetKeyTable budgetKeyTable,
+//            final BigDecimal value,
+////            final Currency currency,
+//            final Charge charge,
+//            final BudgetCostGroup budgetCostGroup) {
+//        if (value.equals(new BigDecimal(0))) {
+//            return "Value can't be zero";
+//        }
+//        return null;
+//    }
+//
+//    public List<BudgetKeyTable> choices1NewBudgetItem(
+//            final Budget budget,
+//            final BudgetKeyTable budgetKeyTable,
+//            final BigDecimal value,
+////            final Currency currency,
+//            final Charge charge,
+//            final BudgetCostGroup budgetCostGroup) {
+//
+//        return budgetKeyTables.findBudgetKeyTableByProperty(budget.getProperty());
+//
+//    }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @ActionLayout()
     public List<BudgetItem> allBudgetItems() {
         return allInstances();
     }

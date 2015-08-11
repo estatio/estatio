@@ -87,10 +87,9 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Project.class);
         deleteFrom(Program.class);
 
+        deleteFrom(BudgetItem.class);
         deleteFrom(BudgetKeyItem.class);
         deleteFrom(BudgetKeyTable.class);
-
-        deleteFrom(BudgetItem.class);
         deleteFrom(Budget.class);
 
         deleteFrom(Numerator.class);

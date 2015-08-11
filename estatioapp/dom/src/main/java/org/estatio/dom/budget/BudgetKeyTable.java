@@ -19,6 +19,7 @@
 package org.estatio.dom.budget;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -29,6 +30,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.VersionStrategy;
+
 
 import org.joda.time.LocalDate;
 
@@ -48,6 +50,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.app.budget.IdentifierValueInputPair;
+import org.estatio.app.budget.IdentifierValuesOutputObject;
+import org.estatio.app.budget.Rounding;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -298,52 +303,80 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
         this.budgetKeyItems = budgetKeyItems;
     }
 
-    // //////////////////////////////////////
+    // /////////////////////////////////////
 
     public BudgetKeyTable generateBudgetKeyItems(
             @ParameterLayout(named="Are you sure you want to delete all Budget Key Items and generate new ones?")
             @Parameter(optionality= Optionality.OPTIONAL)
-            boolean confirmGenerate){
+            boolean confirmGenerate,
+            @ParameterLayout(named="Use rounding correction if needed to make this keyTable valid?")
+            @Parameter(optionality= Optionality.OPTIONAL)
+            boolean useRoundingCorrection){
 
         //delete old items
         for (Iterator<BudgetKeyItem> it = this.getBudgetKeyItems().iterator(); it.hasNext();) {
             it.next().deleteBudgetKeyItem();
         }
 
+        /*
+        create list of input pairs: identifier - sourcevalue
+        sourcevalue is determined by BudgetFoundationValueType
+        */
+        ArrayList<IdentifierValueInputPair> input = new ArrayList<IdentifierValueInputPair>();
+
         for (Unit unit :  units.findByProperty(this.getProperty())){
-
-            BigDecimal denominator = BigDecimal.ZERO;
-            for (Unit u :  units.findByProperty(this.getProperty())) {
-                if (getFoundationValueType().valueOf(u) != null) {
-                    denominator = denominator.add(getFoundationValueType().valueOf(u));
+            // TODO: create isValid method in order to inform user that invalid units are in keyTable?
+            if (unitValidForThisKeyTable(unit)) {
+                BigDecimal sourceValue;
+                if (getFoundationValueType().valueOf(unit) != null) {
+                    sourceValue = getFoundationValueType().valueOf(unit);
+                } else {
+                    sourceValue = BigDecimal.ZERO;
                 }
+                IdentifierValueInputPair newPair = new IdentifierValueInputPair(unit, sourceValue);
+                input.add(newPair);
             }
 
-            BigDecimal numerator = BigDecimal.ZERO;
-            if (getFoundationValueType().valueOf(unit) != null) {
-                numerator = numerator.add(getFoundationValueType().valueOf(unit));
+        }
+        /*
+        call generateKeyValues() method
+         */
+        ArrayList<IdentifierValuesOutputObject> output = new ArrayList<IdentifierValuesOutputObject>();
+        output = getKeyValueMethod().generateKeyValues(input, Rounding.DECIMAL3, useRoundingCorrection);
+
+        /*
+        map the returned list of outputObjects back to units in order to create budgetKeyItems
+        */
+        for (IdentifierValuesOutputObject outputObject : output) {
+
+            BigDecimal sourceValue = BigDecimal.ZERO;
+            if (((Unit) outputObject.getIdentifier()).getArea() != null) {
+                sourceValue = sourceValue.add(((Unit) outputObject.getIdentifier()).getArea());
             }
-            BigDecimal sourceValue;
-            if (getFoundationValueType().valueOf(unit) != null) {
-                sourceValue = getFoundationValueType().valueOf(unit);
-            } else {
-                sourceValue = BigDecimal.ZERO;
-            }
-            BigDecimal keyValue = getKeyValueMethod().calculate(numerator, denominator);
+
             budgetKeyItemsRepo.newBudgetKeyItem(
                     this,
-                    unit,
+                    (Unit) outputObject.getIdentifier(),
                     sourceValue,
-                    keyValue);
-
+                    outputObject.getRoundedValue(),
+                    outputObject.getValue(),
+                    outputObject.isCorrected()
+                    );
         }
 
         return this;
 
     }
 
-    public String validateGenerateBudgetKeyItems(boolean confirmGenerate){
+    public String validateGenerateBudgetKeyItems(boolean confirmGenerate, boolean useRoundingCorrection){
         return confirmGenerate? null:"Please confirm";
+    }
+
+    public boolean hideGenerateBudgetKeyItems(boolean confirmGenerate, boolean useRoundingCorrection){
+        if (getFoundationValueType() == BudgetFoundationValueType.MANUAL) {
+            return true;
+        }
+        return false;
     }
 
     // //////////////////////////////////////
@@ -358,9 +391,34 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
     // //////////////////////////////////////
 
     public boolean isValid(){
+        return (this.isValidForKeyValues() && this.isValidForUnits());
+    }
 
+    public boolean isValidForKeyValues(){
         return getKeyValueMethod().isValid(this);
     }
+
+    public boolean isValidForUnits(){
+        for (BudgetKeyItem item : this.getBudgetKeyItems()) {
+            if (!this.unitValidForThisKeyTable(item.getUnit())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Helper //////////////////////////////////////
+
+    @Programmatic
+    private boolean unitValidForThisKeyTable(final Unit unit) {
+        LocalDateInterval budgetKeyTableInterval = LocalDateInterval.including(this.getStartDate(), this.getEndDate());
+        return unit.getInterval().contains(budgetKeyTableInterval)
+                || (unit.getEndDate() == null && unit.getStartDate().isBefore(this.getStartDate().plusDays(1)))
+                || (unit.getStartDate()==null && unit.getEndDate().isAfter(this.getEndDate().minusDays(1)))
+                || (unit.getStartDate()==null && unit.getEndDate()==null);
+    }
+
+    // //////////////////////////////////////
 
     @Inject
     Units units;

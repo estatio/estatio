@@ -30,6 +30,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -196,5 +197,24 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Override public ApplicationTenancy getApplicationTenancy() {
         return getProperty().getApplicationTenancy();
+    }
+
+    // //////////////////////////////////////
+
+    @Action()
+    @ActionLayout()
+    public Budget removeAllBudgetItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
+        for (BudgetItem budgetItem : this.getBudgetItems()) {
+
+            getContainer().remove(budgetItem);
+            getContainer().flush();
+
+        }
+
+        return this;
+    }
+
+    public String validateRemoveAllBudgetItems(boolean confirmDelete){
+        return confirmDelete? null:"Please confirm";
     }
 }

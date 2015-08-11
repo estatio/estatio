@@ -71,7 +71,7 @@ public class BudgetCalculationServices {
             }
 
         }
-        return calculatedValue;
+        return calculatedValue.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     @Inject

@@ -80,6 +80,13 @@
                                 "cssClassFa": "fa fa-fw fa-plus",
                                 "named": "New Budget Item"
                             }
+                        },
+                        "removeAllBudgetItems": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "cssClassFa": "fa fa-fw fa-plus",
+                                "named": "Remove All Budget Items"
+                            }
                         }
                     }
                 }

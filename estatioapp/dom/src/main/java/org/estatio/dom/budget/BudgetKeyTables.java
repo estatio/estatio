@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -86,7 +87,8 @@ public class BudgetKeyTables extends UdoDomainRepositoryAndFactory<BudgetKeyTabl
 
     // //////////////////////////////////////
 
-    @Programmatic
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public List<BudgetKeyTable> findBudgetKeyTableByProperty(Property property) {
         return allMatches("findByProperty", "property", property);
     }

@@ -517,6 +517,16 @@ public class Lease
         return items;
     }
 
+    @Programmatic
+    public LeaseItem findFirstItemOfTypeAndCharge(final LeaseItemType type, final Charge charge) {
+        for (LeaseItem item : getItems()) {
+            if (item.getType().equals(type) && item.getCharge().equals(charge)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "lease")

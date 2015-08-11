@@ -96,7 +96,7 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements
 
     private BigDecimal sourceValue;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 3)
+    @javax.jdo.annotations.Column(allowsNull = "false", scale = 2)
     @MemberOrder(sequence = "3")
     public BigDecimal getSourceValue() {
         return sourceValue;
@@ -139,7 +139,72 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements
         return null;
     }
 
-    // //////////////////////////////////////
+    //region > augmentedKeyValue (property)
+
+    private BigDecimal augmentedKeyValue;
+
+    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
+    @MemberOrder(sequence = "2.5")
+    public BigDecimal getAugmentedKeyValue() {
+        return augmentedKeyValue;
+    }
+
+    public void setAugmentedKeyValue(final BigDecimal augmentedKeyValue) {
+        this.augmentedKeyValue = augmentedKeyValue;
+    }
+
+    public BudgetKeyItem changeAugmentedKeyValue(final @ParameterLayout(named = "Augmented Key value") BigDecimal augmentedKeyValue) {
+        setAugmentedKeyValue(augmentedKeyValue.setScale(6, BigDecimal.ROUND_HALF_DOWN));
+        return this;
+    }
+
+    public BigDecimal default0ChangeAugmentedKeyValue(final BigDecimal keyValue) {
+        return getAugmentedKeyValue();
+    }
+
+    public String validateChangeAugmentedKeyValue(final BigDecimal keyValue) {
+        if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
+            return "keyValue cannot be less than zero";
+        }
+        return null;
+    }
+
+    //endregion
+
+    //region > corrected (property)
+    private boolean corrected;
+
+    @MemberOrder(sequence = "2.6")
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    public boolean getCorrected() {
+        return corrected;
+    }
+
+    public void setCorrected(final boolean corrected) {
+        this.corrected = corrected;
+    }
+    //endregion
+
+    //region > deleteBudgetKeyItem
+    public BudgetKeyTable deleteBudgetKeyItem(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
+        removeIfNotAlready(this);
+        return this.getBudgetKeyTable();
+    }
+
+    public String validateDeleteBudgetKeyItem(boolean confirmDelete){
+        return confirmDelete? null:"Please confirm";
+    }
+    //endregion
+
+
+    @Programmatic
+    public BigDecimal delta() {
+        return this.getKeyValue().subtract(this.getAugmentedKeyValue()).setScale(6, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public String getDelta() {
+        return this.getKeyValue().subtract(this.getAugmentedKeyValue()).setScale(6, BigDecimal.ROUND_HALF_UP).toString();
+    }
 
     @Programmatic
     public void deleteBudgetKeyItem() {

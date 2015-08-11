@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.budget;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.app.budget.BudgetCalculatedValueOnLeaseTermLine;
 import org.estatio.app.budget.BudgetCalculationServices;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.Leases;
 
@@ -45,11 +48,46 @@ import org.estatio.dom.lease.Leases;
 @DomainServiceLayout()
 public class BudgetContributions {
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public BudgetItem newBudgetItem(
+            final Budget budget,
+            final BudgetKeyTable budgetKeyTable,
+            final BigDecimal value,
+            final Charge charge,
+            final BudgetCostGroup budgetCostGroup) {
+        return budgetItems.newBudgetItem(budget, budgetKeyTable, value, charge, budgetCostGroup);
+    }
+
+    public String validateNewBudgetItem(
+            final Budget budget,
+            final BudgetKeyTable budgetKeyTable,
+            final BigDecimal value,
+            final Charge charge,
+            final BudgetCostGroup budgetCostGroup) {
+        if (value.equals(new BigDecimal(0))) {
+            return "Value can't be zero";
+        }
+        return null;
+    }
+
+    public List<BudgetKeyTable> choices1NewBudgetItem(
+            final Budget budget,
+            final BudgetKeyTable budgetKeyTable,
+            final BigDecimal value,
+            final Charge charge,
+            final BudgetCostGroup budgetCostGroup) {
+
+        return budgetKeyTables.findBudgetKeyTableByProperty(budget.getProperty());
+
+    }
+
+
     @Action(semantics = SemanticsOf.SAFE, invokeOn = InvokeOn.OBJECT_ONLY)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
     public List<Budget> budgets(Property property) {
-        return budgets.findByProperty(property);
+        return budgets.findBudgetByProperty(property);
     }
 
     ;
@@ -63,10 +101,11 @@ public class BudgetContributions {
 
         List<Lease> leasesOnProperty = leases.findLeasesByProperty(budget.getProperty());
         for (Lease lease : leasesOnProperty) {
-            if (lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE) != null) {
+            LeaseItem firstLeaseItemOfType = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+            if (firstLeaseItemOfType != null) {
                 lines.add(new BudgetCalculatedValueOnLeaseTermLine(
                                 budgetCalculationServices.calculateValueOnCurrentLeaseTermForServiceCharge(lease, budget),
-                                lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE).currentTerm(budget.getStartDate()))
+                                firstLeaseItemOfType.currentTerm(budget.getStartDate()))
                 );
             }
 
@@ -76,12 +115,18 @@ public class BudgetContributions {
     }
 
     @Inject
-    Budgets budgets;
+    private Budgets budgets;
 
     @Inject
-    Leases leases;
+    private Leases leases;
 
     @Inject
-    BudgetCalculationServices budgetCalculationServices;
+    private BudgetCalculationServices budgetCalculationServices;
+
+    @Inject
+    private BudgetItems budgetItems;
+
+    @Inject
+    private BudgetKeyTables budgetKeyTables;
 
 }

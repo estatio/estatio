@@ -55,7 +55,7 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
 
         // exec
         Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
-        Budget budget = budgets.findByProperty(property).get(0);
+        Budget budget = budgets.findBudgetByProperty(property).get(0);
         BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME2);
         final BigDecimal VALUE = new BigDecimal(40000);
         final Currency currency = currencies.findCurrency(CurrenciesRefData.EUR);

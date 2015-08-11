@@ -19,11 +19,13 @@ package org.estatio.dom.budget;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
@@ -38,14 +40,17 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
 
     // //////////////////////////////////////
 
+    @Programmatic
     public BudgetKeyItem newBudgetKeyItem(
-            final @ParameterLayout(named = "Budget Key Table") BudgetKeyTable budgetKeyTable,
-            final @ParameterLayout(named = "Unit") Unit unit,
-            final @ParameterLayout(named = "Key Value") BigDecimal keyValue) {
+            final BudgetKeyTable budgetKeyTable,
+            final Unit unit,
+            final BigDecimal keyValue,
+            final BigDecimal augmentedKeyValue) {
         BudgetKeyItem budgetKeyItem = newTransientInstance();
         budgetKeyItem.setBudgetKeyTable(budgetKeyTable);
         budgetKeyItem.setUnit(unit);
         budgetKeyItem.setKeyValue(keyValue);
+        budgetKeyItem.setAugmentedKeyValue(augmentedKeyValue);
         persistIfNotAlready(budgetKeyItem);
 
         return budgetKeyItem;
@@ -56,27 +61,19 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
             final BigDecimal sourceValue,
-            final BigDecimal keyValue) {
+            final BigDecimal keyValue,
+            final BigDecimal augmentedKeyValue,
+            final boolean corrected) {
         BudgetKeyItem budgetKeyItem = newTransientInstance();
         budgetKeyItem.setBudgetKeyTable(budgetKeyTable);
         budgetKeyItem.setUnit(unit);
         budgetKeyItem.setSourceValue(sourceValue);
         budgetKeyItem.setKeyValue(keyValue);
+        budgetKeyItem.setAugmentedKeyValue(augmentedKeyValue);
+        budgetKeyItem.setCorrected(corrected);
         persistIfNotAlready(budgetKeyItem);
 
         return budgetKeyItem;
-    }
-
-    public String validateNewBudgetKeyItem(
-            final BudgetKeyTable budgetKeyTable,
-            final Unit unit,
-            final BigDecimal keyValue) {
-
-        if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "keyValue cannot be less than zero";
-        }
-
-        return null;
     }
 
     // //////////////////////////////////////
@@ -89,6 +86,7 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<BudgetKeyItem> allBudgetKeyItems() {
         return allInstances();
     }

@@ -47,6 +47,6 @@ public class BudgetKeyTableContributions extends UdoDomainRepositoryAndFactory<B
     }
 
     @Inject
-    BudgetKeyTables budgetKeyTables;
+    private BudgetKeyTables budgetKeyTables;
 
 }

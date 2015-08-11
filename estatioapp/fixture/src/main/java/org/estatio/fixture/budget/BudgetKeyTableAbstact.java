@@ -24,7 +24,6 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budget.BudgetFoundationValueType;
-import org.estatio.dom.budget.BudgetKeyItems;
 import org.estatio.dom.budget.BudgetKeyTable;
 import org.estatio.dom.budget.BudgetKeyTables;
 import org.estatio.dom.budget.BudgetKeyValueMethod;
@@ -44,15 +43,12 @@ public abstract class BudgetKeyTableAbstact extends EstatioFixtureScript {
             final BudgetKeyValueMethod budgetKeyValueMethod,
             final ExecutionContext fixtureResults){
         BudgetKeyTable budgetKeyTable = budgetKeyTables.newBudgetKeyTable(property, name ,startDate, endDate, budgetFoundationValueType, budgetKeyValueMethod);
-        budgetKeyTable.generateBudgetKeyItems(true);
+        budgetKeyTable.generateBudgetKeyItems(true, false);
         return fixtureResults.addResult(this, budgetKeyTable);
     }
 
     @Inject
     protected BudgetKeyTables budgetKeyTables;
-
-    @Inject
-    protected BudgetKeyItems budgetKeyItems;
 
     @Inject
     protected Properties properties;

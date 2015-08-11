@@ -76,7 +76,7 @@ public class BudgetsTest {
         public void happyCase() {
 
             Property property = new PropertyForTesting();
-            budgets.findByProperty(property);
+            budgets.findBudgetByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
