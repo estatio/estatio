@@ -95,6 +95,8 @@ mvn clean install -DskipTests -o
 
         <isis-module-poly.version>1.9.0-SNAPSHOT</isis-module-poly.version>
 
+        <isis-metamodel-paraname8.version>1.9.0-SNAPSHOT</isis-metamodel-paraname8.version>
+
         <isis-wicket-excel.version>1.8.0</isis-wicket-excel.version>
         <isis-wicket-fullcalendar2.version>1.8.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.9.0-SNAPSHOT</isis-wicket-gmap3.version>
@@ -164,8 +166,8 @@ mvn clean install -DskipTests -o
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${compileSource}</source>
+                        <target>${compileTarget}</target>
                         <compilerArgument>-parameters</compilerArgument>
                     </configuration>
                     <executions>
@@ -556,6 +558,12 @@ mvn clean install -DskipTests -o
                 <groupId>org.isisaddons.module.poly</groupId>
                 <artifactId>isis-module-poly-dom</artifactId>
                 <version>${isis-module-poly.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.metamodel.paraname8</groupId>
+                <artifactId>isis-metamodel-paraname8-dom</artifactId>
+                <version>${isis-metamodel-paraname8.version}</version>
             </dependency>
 
             <dependency>
