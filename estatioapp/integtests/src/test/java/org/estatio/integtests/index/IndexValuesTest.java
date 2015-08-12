@@ -19,15 +19,16 @@
 package org.estatio.integtests.index;
 
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
@@ -69,7 +70,6 @@ public class IndexValuesTest extends EstatioIntegrationTest {
                     // tearing down because of a failure which suggests that one of the other tests is creating new index values...
                     // (not sure which one though :-( )
                     new EstatioOperationalTeardownFixture(),
-                    new EstatioRefDataTeardownFixture(),
                     new EstatioBaseLineFixture()
             );
         }
