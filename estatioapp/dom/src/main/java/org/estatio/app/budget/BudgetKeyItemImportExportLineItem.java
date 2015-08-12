@@ -61,8 +61,7 @@ public class BudgetKeyItemImportExportLineItem
         this.budgetKeyItem = budgetKeyItem;
         this.unitReference = budgetKeyItem.getUnit().getReference();
         this.sourceValue = budgetKeyItem.getSourceValue();
-        this.keyValue = budgetKeyItem.getKeyValue();
-        this.augmentedKeyValue = budgetKeyItem.getAugmentedKeyValue();
+        this.keyValue = budgetKeyItem.getTargetValue();
         this.budgetKeyTableName = budgetKeyItem.getBudgetKeyTable().getName();
     }
 
@@ -71,8 +70,7 @@ public class BudgetKeyItemImportExportLineItem
         this.unitReference = item.unitReference;
         this.status = item.status;
         this.sourceValue = item.sourceValue.setScale(2, BigDecimal.ROUND_HALF_UP);
-        this.keyValue = item.keyValue.setScale(3,BigDecimal.ROUND_HALF_UP);
-        this.augmentedKeyValue = item.augmentedKeyValue.setScale(6,BigDecimal.ROUND_HALF_UP);
+        this.keyValue = item.keyValue;
         this.budgetKeyTableName = item.budgetKeyTableName;
     }
 
@@ -116,7 +114,7 @@ public class BudgetKeyItemImportExportLineItem
 
     private BigDecimal keyValue;
 
-    @Column(scale = 3)
+    @Column(scale = 6)
     @MemberOrder(sequence = "4")
     public BigDecimal getKeyValue() {
         return keyValue;
@@ -124,18 +122,6 @@ public class BudgetKeyItemImportExportLineItem
 
     public void setKeyValue(BigDecimal keyValue) {
         this.keyValue = keyValue;
-    }
-
-    private BigDecimal augmentedKeyValue;
-
-    @Column(scale = 6)
-    @MemberOrder(sequence = "5")
-    public BigDecimal getAugmentedKeyValue() {
-        return augmentedKeyValue;
-    }
-
-    public void setAugmentedKeyValue(BigDecimal keyValue) {
-        this.augmentedKeyValue = keyValue;
     }
 
     private String comments;
@@ -174,8 +160,7 @@ public class BudgetKeyItemImportExportLineItem
             budgetKeyItem.setBudgetKeyTable(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()));
             budgetKeyItem.setUnit(units.findUnitByReference(unitReference));
         }
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).changeKeyValue(this.getKeyValue().setScale(3,BigDecimal.ROUND_HALF_UP));
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).changeAugmentedKeyValue(this.getAugmentedKeyValue().setScale(6, BigDecimal.ROUND_HALF_UP));
+        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).changeTargetValue(this.getKeyValue().setScale(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
         budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         return budgetKeyItem;
     }
@@ -189,8 +174,7 @@ public class BudgetKeyItemImportExportLineItem
             if (budgetKeyItem == null) {
                 newStatus = Status.ADDED;
             } else {
-                if (org.apache.commons.lang3.ObjectUtils.compare(keyValue, budgetKeyItem.getKeyValue()) != 0 ||
-                        org.apache.commons.lang3.ObjectUtils.compare(augmentedKeyValue, budgetKeyItem.getAugmentedKeyValue()) != 0 ) {
+                if (org.apache.commons.lang3.ObjectUtils.compare(keyValue, budgetKeyItem.getTargetValue()) != 0) {
                     newStatus = Status.UPDATED;
                 }
             }

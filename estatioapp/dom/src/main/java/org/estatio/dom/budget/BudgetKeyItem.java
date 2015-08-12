@@ -53,10 +53,12 @@ import org.estatio.dom.asset.Unit;
                         "FROM org.estatio.dom.budget.BudgetKeyItem " +
                         "WHERE budgetKeyTable == :budgetKeyTable && unit == :unit")
 })
-public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements WithApplicationTenancyProperty {
+public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem>
+        implements WithApplicationTenancyProperty,
+        Distributable {
 
     public BudgetKeyItem() {
-        super("budgetKeyTable,unit,keyValue, sourceValue");
+        super("budgetKeyTable,unit,targetValue, sourceValue");
     }
 
     //region > identificatiom
@@ -106,84 +108,53 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements
             this.sourceValue = sourceValue;
     }
 
+    public BudgetKeyItem changeSourceValue(final @ParameterLayout(named = "Source value") BigDecimal sourceValue) {
+        setSourceValue(sourceValue.setScale(2, BigDecimal.ROUND_HALF_UP));
+        return this;
+    }
+
+    public BigDecimal default0ChangeSourceValue(final BigDecimal sourceValue) {
+        return getSourceValue();
+    }
+
+    public String validateChangeSourceValue(final BigDecimal sourceValue) {
+        if (sourceValue.compareTo(BigDecimal.ZERO) <= 0) {
+            return "Source Value must be positive";
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
-    private BigDecimal keyValue;
-
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 3)
-    @MemberOrder(sequence = "2")
-    public BigDecimal getKeyValue() {
-        return keyValue;
-    }
-
-    public void setKeyValue(BigDecimal keyValue) {
-
-            this.keyValue = keyValue;
-
-    }
-
-    public BudgetKeyItem changeKeyValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
-        setKeyValue(keyValue.setScale(3, BigDecimal.ROUND_HALF_DOWN));
-        return this;
-    }
-
-    public BigDecimal default0ChangeKeyValue(final BigDecimal keyValue) {
-        return getKeyValue();
-    }
-
-    public String validateChangeKeyValue(final BigDecimal keyValue) {
-        if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "keyValue cannot be less than zero";
-        }
-        //TODO: Maybe changing an individual key value is no good idea at all?
-        return null;
-    }
-
-    //region > augmentedKeyValue (property)
-
-    private BigDecimal augmentedKeyValue;
+    private BigDecimal targetValue;
 
     @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
-    @MemberOrder(sequence = "2.5")
-    public BigDecimal getAugmentedKeyValue() {
-        return augmentedKeyValue;
+    @MemberOrder(sequence = "2")
+    public BigDecimal getTargetValue() {
+        return targetValue;
     }
 
-    public void setAugmentedKeyValue(final BigDecimal augmentedKeyValue) {
-        this.augmentedKeyValue = augmentedKeyValue;
+    public void setTargetValue(BigDecimal targetValue) {
+
+            this.targetValue = targetValue;
+
     }
 
-    public BudgetKeyItem changeAugmentedKeyValue(final @ParameterLayout(named = "Augmented Key value") BigDecimal augmentedKeyValue) {
-        setAugmentedKeyValue(augmentedKeyValue.setScale(6, BigDecimal.ROUND_HALF_DOWN));
+    public BudgetKeyItem changeTargetValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
+        setTargetValue(keyValue.setScale(getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
 
-    public BigDecimal default0ChangeAugmentedKeyValue(final BigDecimal keyValue) {
-        return getAugmentedKeyValue();
+    public BigDecimal default0ChangeTargetValue(final BigDecimal targetValue) {
+        return getTargetValue().setScale(getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
     }
 
-    public String validateChangeAugmentedKeyValue(final BigDecimal keyValue) {
+    public String validateChangeTargetValue(final BigDecimal keyValue) {
         if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "keyValue cannot be less than zero";
+            return "Target Value cannot be less than zero";
         }
         return null;
     }
-
-    //endregion
-
-    //region > corrected (property)
-    private boolean corrected;
-
-    @MemberOrder(sequence = "2.6")
-    @javax.jdo.annotations.Column(allowsNull = "true")
-    public boolean getCorrected() {
-        return corrected;
-    }
-
-    public void setCorrected(final boolean corrected) {
-        this.corrected = corrected;
-    }
-    //endregion
 
     //region > deleteBudgetKeyItem
     public BudgetKeyTable deleteBudgetKeyItem(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
@@ -195,16 +166,6 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem> implements
         return confirmDelete? null:"Please confirm";
     }
     //endregion
-
-
-    @Programmatic
-    public BigDecimal delta() {
-        return this.getKeyValue().subtract(this.getAugmentedKeyValue()).setScale(6, BigDecimal.ROUND_HALF_UP);
-    }
-
-    public String getDelta() {
-        return this.getKeyValue().subtract(this.getAugmentedKeyValue()).setScale(6, BigDecimal.ROUND_HALF_UP).toString();
-    }
 
     @Programmatic
     public void deleteBudgetKeyItem() {

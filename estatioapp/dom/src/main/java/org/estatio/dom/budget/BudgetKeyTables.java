@@ -53,7 +53,8 @@ public class BudgetKeyTables extends UdoDomainRepositoryAndFactory<BudgetKeyTabl
             final @ParameterLayout(named = "Start Date") LocalDate startDate,
             final @ParameterLayout(named = "End Date") LocalDate endDate,
             final @ParameterLayout(named = "Foundation Value Type") BudgetFoundationValueType foundationValueType,
-            final @ParameterLayout(named = "Key Value Method") BudgetKeyValueMethod keyValueMethod) {
+            final @ParameterLayout(named = "Key Value Method") BudgetKeyValueMethod keyValueMethod,
+            final @ParameterLayout(named = "Number Of Digits") Integer numberOfDigits) {
         BudgetKeyTable budgetKeyTable = newTransientInstance();
         budgetKeyTable.setProperty(property);
         budgetKeyTable.setName(name);
@@ -61,6 +62,7 @@ public class BudgetKeyTables extends UdoDomainRepositoryAndFactory<BudgetKeyTabl
         budgetKeyTable.setEndDate(endDate);
         budgetKeyTable.setFoundationValueType(foundationValueType);
         budgetKeyTable.setKeyValueMethod(keyValueMethod);
+        budgetKeyTable.setNumberOfDigits(numberOfDigits);
         persistIfNotAlready(budgetKeyTable);
 
         return budgetKeyTable;
@@ -72,7 +74,8 @@ public class BudgetKeyTables extends UdoDomainRepositoryAndFactory<BudgetKeyTabl
             final LocalDate startDate,
             final LocalDate endDate,
             final BudgetFoundationValueType foundationValueType,
-            final BudgetKeyValueMethod keyValueMethod) {
+            final BudgetKeyValueMethod keyValueMethod,
+            final Integer numberOfDigits) {
         if (!new LocalDateInterval(startDate, endDate).isValid()) {
             return "End date can not be before start date";
         }

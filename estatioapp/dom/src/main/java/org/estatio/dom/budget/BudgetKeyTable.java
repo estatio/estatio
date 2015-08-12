@@ -21,6 +21,7 @@ package org.estatio.dom.budget;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -30,7 +31,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.VersionStrategy;
-
 
 import org.joda.time.LocalDate;
 
@@ -50,9 +50,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.app.budget.IdentifierValueInputPair;
-import org.estatio.app.budget.IdentifierValuesOutputObject;
-import org.estatio.app.budget.Rounding;
+import org.estatio.app.budget.DistributionService;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -289,7 +287,36 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
         return null;
     }
 
-    // //////////////////////////////////////
+    //region > numberOfDigits (property)
+    private Integer numberOfDigits;
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @MemberOrder(sequence = "7")
+    public Integer getNumberOfDigits() {
+        return numberOfDigits;
+    }
+
+    public void setNumberOfDigits(final Integer numberOfDigits) {
+        this.numberOfDigits = numberOfDigits;
+    }
+
+    public BudgetKeyTable changeNumberOfDigits(
+            final @ParameterLayout(named = "Number Of Digits") Integer numberOfDigits) {
+        setNumberOfDigits(numberOfDigits);
+        return this;
+    }
+
+    public Integer default0ChangeNumberOfDigits(final Integer numberOfDigits) {
+        return getNumberOfDigits();
+    }
+
+    public String validateChangeNumberOfDigits(final Integer numberOfDigits) {
+        if (numberOfDigits< 0 || numberOfDigits > 6) {
+            return "Number Of Digits must have a value between 0 and 6";
+        }
+        return null;
+    }
+    //endregion
 
     private SortedSet<BudgetKeyItem> budgetKeyItems = new TreeSet<BudgetKeyItem>();
 
@@ -306,12 +333,9 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
     // /////////////////////////////////////
 
     public BudgetKeyTable generateBudgetKeyItems(
-            @ParameterLayout(named="Are you sure you want to delete all Budget Key Items and generate new ones?")
+            @ParameterLayout(named="Are you sure? (All current Budget Key Items will be deleted.)")
             @Parameter(optionality= Optionality.OPTIONAL)
-            boolean confirmGenerate,
-            @ParameterLayout(named="Use rounding correction if needed to make this keyTable valid?")
-            @Parameter(optionality= Optionality.OPTIONAL)
-            boolean useRoundingCorrection){
+            boolean confirmGenerate){
 
         //delete old items
         for (Iterator<BudgetKeyItem> it = this.getBudgetKeyItems().iterator(); it.hasNext();) {
@@ -322,10 +346,10 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
         create list of input pairs: identifier - sourcevalue
         sourcevalue is determined by BudgetFoundationValueType
         */
-        ArrayList<IdentifierValueInputPair> input = new ArrayList<IdentifierValueInputPair>();
+        List<Distributable> input = new ArrayList<>();
 
         for (Unit unit :  units.findByProperty(this.getProperty())){
-            // TODO: create isValid method in order to inform user that invalid units are in keyTable?
+
             if (unitValidForThisKeyTable(unit)) {
                 BigDecimal sourceValue;
                 if (getFoundationValueType().valueOf(unit) != null) {
@@ -333,50 +357,53 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
                 } else {
                     sourceValue = BigDecimal.ZERO;
                 }
-                IdentifierValueInputPair newPair = new IdentifierValueInputPair(unit, sourceValue);
-                input.add(newPair);
+                BudgetKeyItem newItem = new BudgetKeyItem();
+                newItem.setSourceValue(sourceValue);
+                newItem.setTargetValue(BigDecimal.ZERO);
+                newItem.setUnit(unit);
+                newItem.setBudgetKeyTable(this);
+                persistIfNotAlready(newItem);
+                input.add(newItem);
             }
-
         }
+
         /*
-        call generateKeyValues() method
+        call distribute method
          */
-        ArrayList<IdentifierValuesOutputObject> output = new ArrayList<IdentifierValuesOutputObject>();
-        output = getKeyValueMethod().generateKeyValues(input, Rounding.DECIMAL3, useRoundingCorrection);
-
-        /*
-        map the returned list of outputObjects back to units in order to create budgetKeyItems
-        */
-        for (IdentifierValuesOutputObject outputObject : output) {
-
-            BigDecimal sourceValue = BigDecimal.ZERO;
-            if (((Unit) outputObject.getIdentifier()).getArea() != null) {
-                sourceValue = sourceValue.add(((Unit) outputObject.getIdentifier()).getArea());
-            }
-
-            budgetKeyItemsRepo.newBudgetKeyItem(
-                    this,
-                    (Unit) outputObject.getIdentifier(),
-                    sourceValue,
-                    outputObject.getRoundedValue(),
-                    outputObject.getValue(),
-                    outputObject.isCorrected()
-                    );
-        }
+        DistributionService distributionService = new DistributionService();
+        distributionService.distribute(input, getKeyValueMethod().targetTotal(), getNumberOfDigits());
 
         return this;
-
     }
 
-    public String validateGenerateBudgetKeyItems(boolean confirmGenerate, boolean useRoundingCorrection){
+    public String validateGenerateBudgetKeyItems(boolean confirmGenerate){
         return confirmGenerate? null:"Please confirm";
     }
 
-    public boolean hideGenerateBudgetKeyItems(boolean confirmGenerate, boolean useRoundingCorrection){
+    public boolean hideGenerateBudgetKeyItems(boolean confirmGenerate){
         if (getFoundationValueType() == BudgetFoundationValueType.MANUAL) {
             return true;
         }
         return false;
+    }
+
+    // //////////////////////////////////////
+
+    public BudgetKeyTable distributeSourceValues(
+            @ParameterLayout(named="Are you sure? (All current Target Values will be overwritten.)")
+            @Parameter(optionality= Optionality.OPTIONAL)
+            boolean confirmDistribute){
+
+
+        DistributionService distributionService = new DistributionService();
+        distributionService.distribute(new ArrayList(getBudgetKeyItems()), getKeyValueMethod().targetTotal(), getNumberOfDigits());
+
+
+        return this;
+    }
+
+    public String validateDistributeSourceValues(boolean confirmDistribute){
+        return confirmDistribute? null:"Please confirm";
     }
 
     // //////////////////////////////////////
@@ -412,10 +439,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
     @Programmatic
     private boolean unitValidForThisKeyTable(final Unit unit) {
         LocalDateInterval budgetKeyTableInterval = LocalDateInterval.including(this.getStartDate(), this.getEndDate());
-        return unit.getInterval().contains(budgetKeyTableInterval)
-                || (unit.getEndDate() == null && unit.getStartDate().isBefore(this.getStartDate().plusDays(1)))
-                || (unit.getStartDate()==null && unit.getEndDate().isAfter(this.getEndDate().minusDays(1)))
-                || (unit.getStartDate()==null && unit.getEndDate()==null);
+        return unit.getInterval().contains(budgetKeyTableInterval);
     }
 
     // //////////////////////////////////////
@@ -423,6 +447,4 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
     @Inject
     Units units;
 
-    @Inject
-    BudgetKeyItems budgetKeyItemsRepo;
 }

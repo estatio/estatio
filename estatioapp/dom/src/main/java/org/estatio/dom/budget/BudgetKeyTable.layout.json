@@ -77,6 +77,22 @@
                             }
 
                         },
+                        "numberOfDigits": {
+                            "propertyLayout": {
+                                "named": "Number Of Digits",
+                                "typicalLength": 9
+                            },
+                            "actions" : {
+                                "changeNumberOfDigits": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Number Of Digits"
+                                    }
+                                }
+                            }
+
+                        },
                         "applicationTenancy": {
                             "propertyLayout": {
                                 "named": "Application Tenancy"
@@ -129,6 +145,12 @@
                             "actionLayout": {
                                 "cssClass": "btn-primary",
                                 "named": "Generate Budget Key Items"
+                            }
+                        },
+                        "distributeSourceValues": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "named": "Distribute Source Values"
                             }
                         },
                         "bulkUpdateManager": {

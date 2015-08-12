@@ -118,11 +118,11 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             budgetKeyTable = tables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME);
 
             //when
-            budgetKeyTable.generateBudgetKeyItems(true, false);
+            budgetKeyTable.generateBudgetKeyItems(true);
 
             //then
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-001")).getKeyValue().equals(new BigDecimal(3)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getKeyValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-001")).getTargetValue().equals(new BigDecimal(3)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getTargetValue().equals(new BigDecimal(6)));
         }
 
         Unit unitWithAreaNull;
@@ -135,11 +135,11 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             unitWithAreaNull.setArea(null);
 
             //when
-            budgetKeyTable.generateBudgetKeyItems(true, false);
+            budgetKeyTable.generateBudgetKeyItems(true);
 
             //then
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitWithAreaNull).getKeyValue().equals(BigDecimal.ZERO));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getKeyValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitWithAreaNull).getTargetValue().equals(BigDecimal.ZERO));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getTargetValue().equals(new BigDecimal(6)));
         }
 
         Unit unitNotIncluded;
@@ -179,7 +179,7 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             unitIncludedWithoutStartAndEndDate.setStartDate(null);
             unitIncludedWithoutStartAndEndDate.setEndDate(null);
 
-            budgetKeyTable.generateBudgetKeyItems(true, false);
+            budgetKeyTable.generateBudgetKeyItems(true);
 
             //then
             assertThat(budgetKeyTable.getStartDate().equals(new LocalDate(2015,01,01)));
@@ -187,10 +187,10 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             Assert.assertNull(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitNotIncludedWithEndDateOnly));
             Assert.assertNull(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitNotIncluded));
             Assert.assertNull(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitNotIncludedWithStartDateOnly));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncluded).getKeyValue().equals(new BigDecimal(6)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithEndDateOnly).getKeyValue().equals(new BigDecimal(6)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithStartDateOnly).getKeyValue().equals(new BigDecimal(6)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithoutStartAndEndDate).getKeyValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncluded).getTargetValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithEndDateOnly).getTargetValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithStartDateOnly).getTargetValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithoutStartAndEndDate).getTargetValue().equals(new BigDecimal(6)));
 
         }
 
@@ -208,7 +208,6 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
 
         BigDecimal newKeyValue;
         BigDecimal newPositiveKeyValue;
-        BigDecimal newAugmentedKeyValue;
         Unit unit;
 
         @Test
@@ -220,17 +219,15 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
 
             //when
             newKeyValue = new BigDecimal(-0.001);
-            newAugmentedKeyValue = new BigDecimal(-0.000001);
 
             // then
-            assertThat(items.validateNewBudgetKeyItem(budgetKeyTable, unit, newKeyValue, newAugmentedKeyValue).equals("keyValue cannot be less than zero"));
+            assertThat(items.validateNewBudgetKeyItem(budgetKeyTable, unit, newKeyValue).equals("keyValue cannot be less than zero"));
 
             //when
             newPositiveKeyValue = new BigDecimal(0.001);
-            newAugmentedKeyValue = new BigDecimal(-0.000001);
 
             // then
-            assertThat(items.validateNewBudgetKeyItem(budgetKeyTable, unit, newKeyValue, newAugmentedKeyValue).equals("Augmented keyValue cannot be less than zero"));
+            assertThat(items.validateNewBudgetKeyItem(budgetKeyTable, unit, newKeyValue).equals("Augmented keyValue cannot be less than zero"));
 
         }
     }

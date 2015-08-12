@@ -87,9 +87,9 @@ public class BudgetItemContributions extends UdoDomainRepositoryAndFactory<Budge
                 }
             }
             BigDecimal calculatedValue = BigDecimal.ZERO;
-//            calculatedValue = calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getKeyValue()).divide(new BigDecimal(1000)));
+//            calculatedValue = calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getTargetValue()).divide(new BigDecimal(1000)));
             calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(budgetItem,budgetKeyItem));
-            BudgetItemCalculatedValueLine newLine = new BudgetItemCalculatedValueLine(calculatedValue, leaseTermForServiceCharge, status, budgetKeyItem.getUnit(), budgetKeyItem.getKeyValue());
+            BudgetItemCalculatedValueLine newLine = new BudgetItemCalculatedValueLine(calculatedValue, leaseTermForServiceCharge, status, budgetKeyItem.getUnit(), budgetKeyItem.getTargetValue());
             lines.add(newLine);
         }
 
@@ -104,7 +104,7 @@ public class BudgetItemContributions extends UdoDomainRepositoryAndFactory<Budge
         BigDecimal calculatedValue = new BigDecimal(0);
         for (Iterator<BudgetKeyItem> it = budgetItem.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
             budgetKeyItem = it.next();
-//            calculatedValue=calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getKeyValue()).divide(new BigDecimal(1000)));
+//            calculatedValue=calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getTargetValue()).divide(new BigDecimal(1000)));
             calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(budgetItem,budgetKeyItem));
         }
 

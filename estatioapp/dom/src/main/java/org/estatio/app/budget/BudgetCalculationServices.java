@@ -30,12 +30,12 @@ public class BudgetCalculationServices {
 
         calculatedValue = calculatedValue.add(
                 budgetItem.getValue()
-                        .multiply(budgetKeyItem.getKeyValue())
+                        .multiply(budgetKeyItem.getTargetValue(), MathContext.DECIMAL64)
                         .divide(
                                 budgetKeyTable
                                         .getKeyValueMethod()
                                         .keySum(budgetKeyTable) ,
-                                MathContext.DECIMAL32
+                                MathContext.DECIMAL64
                         )
         );
 

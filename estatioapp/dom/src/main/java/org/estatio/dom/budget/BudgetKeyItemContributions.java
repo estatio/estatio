@@ -48,25 +48,18 @@ public class BudgetKeyItemContributions extends UdoDomainRepositoryAndFactory<Bu
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
             @ParameterLayout(named = "keyValue")
-            final BigDecimal keyValue,
-            @ParameterLayout(named = "augmented keyValue")
-            final BigDecimal augmentedKeyValue) {
+            final BigDecimal keyValue) {
 
-        return budgetKeyItems.newBudgetKeyItem(budgetKeyTable, unit, keyValue, augmentedKeyValue);
+        return budgetKeyItems.newBudgetKeyItem(budgetKeyTable, unit, keyValue);
     }
 
     public String validateNewBudgetKeyItem(
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
-            final BigDecimal keyValue,
-            final BigDecimal augmentedKeyValue) {
+            final BigDecimal keyValue) {
 
         if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
             return "keyValue cannot be less than zero";
-        }
-
-        if (augmentedKeyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "Augmented keyValue cannot be less than zero";
         }
 
         return null;

@@ -44,13 +44,11 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
     public BudgetKeyItem newBudgetKeyItem(
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
-            final BigDecimal keyValue,
-            final BigDecimal augmentedKeyValue) {
+            final BigDecimal keyValue) {
         BudgetKeyItem budgetKeyItem = newTransientInstance();
         budgetKeyItem.setBudgetKeyTable(budgetKeyTable);
         budgetKeyItem.setUnit(unit);
-        budgetKeyItem.setKeyValue(keyValue);
-        budgetKeyItem.setAugmentedKeyValue(augmentedKeyValue);
+        budgetKeyItem.setTargetValue(keyValue);
         persistIfNotAlready(budgetKeyItem);
 
         return budgetKeyItem;
@@ -61,16 +59,12 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
             final BigDecimal sourceValue,
-            final BigDecimal keyValue,
-            final BigDecimal augmentedKeyValue,
-            final boolean corrected) {
+            final BigDecimal keyValue) {
         BudgetKeyItem budgetKeyItem = newTransientInstance();
         budgetKeyItem.setBudgetKeyTable(budgetKeyTable);
         budgetKeyItem.setUnit(unit);
         budgetKeyItem.setSourceValue(sourceValue);
-        budgetKeyItem.setKeyValue(keyValue);
-        budgetKeyItem.setAugmentedKeyValue(augmentedKeyValue);
-        budgetKeyItem.setCorrected(corrected);
+        budgetKeyItem.setTargetValue(keyValue);
         persistIfNotAlready(budgetKeyItem);
 
         return budgetKeyItem;
