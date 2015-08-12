@@ -41,7 +41,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
         @javax.jdo.annotations.Query(
                 name = "findByClassName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.services.links.Link "
+                        + "FROM org.estatio.domlink.Link "
                         + "WHERE className == :className")
 })
 @javax.jdo.annotations.Unique(members = { "className", "name" })
