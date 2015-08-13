@@ -8,11 +8,13 @@ import com.google.common.collect.Maps;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.fixturescripts.EstatioDemoFixture;
+
 public class EstatioAppManifestWithDemoFixture extends EstatioAppManifest {
 
     @Override public List<Class<? extends FixtureScript>> getFixtures() {
         return Arrays.asList(
-                org.estatio.fixture.EstatioDemoFixture.class
+                EstatioDemoFixture.class
         );
     }
 
@@ -22,6 +24,7 @@ public class EstatioAppManifestWithDemoFixture extends EstatioAppManifest {
         appendProps(props);
         props.put("isis.persistor.datanucleus.install-fixtures", "true");
         return props;
+
     }
 
 }

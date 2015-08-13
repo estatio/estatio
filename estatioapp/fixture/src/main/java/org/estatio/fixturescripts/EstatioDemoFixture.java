@@ -16,11 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture;
+package org.estatio.fixturescripts;
 
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset._PropertyForGraIt;
 import org.estatio.fixture.asset._PropertyForHanSe;
 import org.estatio.fixture.asset._PropertyForVivFr;

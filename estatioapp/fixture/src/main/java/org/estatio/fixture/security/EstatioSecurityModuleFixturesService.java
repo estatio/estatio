@@ -17,7 +17,13 @@
 package org.estatio.fixture.security;
 
 import java.util.List;
+
+import javax.inject.Inject;
+
 import org.isisaddons.module.security.dom.role.ApplicationRole;
+
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.DomainService;
@@ -26,6 +32,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
@@ -39,62 +47,63 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "20.2"
 )
-public class EstatioSecurityModuleFixturesService extends FixtureScripts {
+public class EstatioSecurityModuleFixturesService {
 
-    public EstatioSecurityModuleFixturesService() {
-        super(EstatioSecurityModuleFixturesService.class.getPackage().getName());
-    }
 
-    @Prototype
+    @Action(
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     @ActionLayout(
             cssClassFa = "fa-bolt",
             named = "Run Security Fixture Script"
     )
-    @Override
     public List<FixtureResult> runFixtureScript(FixtureScript fixtureScript, @ParameterLayout(
             named = "Parameters",
             describedAs = "Script-specific parameters (if any).  The format depends on the script implementation (eg key=value, CSV, JSON, XML etc)",
             multiLine = 10) @Optional String parameters) {
-        return super.runFixtureScript(fixtureScript, parameters);
+        return fixtureScripts.runFixtureScript(fixtureScript, parameters);
     }
 
-    @Override
     public FixtureScript default0RunFixtureScript() {
-        return findFixtureScriptFor(EstatioSecurityModuleSeedFixture.class);
+        return fixtureScripts.findFixtureScriptFor(EstatioSecurityModuleSeedFixture.class);
     }
 
     /**
      * Raising visibility to <tt>public</tt> so that choices are available for
      * first param of {@link #runFixtureScript(FixtureScript, String)}.
      */
-    @Override
     public List<FixtureScript> choices0RunFixtureScript() {
-        return super.choices0RunFixtureScript();
+        return fixtureScripts.getFixtureScriptList();
     }
 
     // //////////////////////////////////////
 
-    @ActionSemantics(ActionSemantics.Of.NON_IDEMPOTENT)
-    @Prototype
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT,
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     @ActionLayout(
             cssClassFa = "fa-bolt"
     )
     @MemberOrder(sequence = "20")
     public Object installFixturesAndReturnFirstRole() {
-        final List<FixtureResult> fixtureResultList = findFixtureScriptFor(EstatioSecurityModuleSeedFixture.class).run(null);
+        final List<FixtureResult> fixtureResultList = fixtureScripts.findFixtureScriptFor(EstatioSecurityModuleSeedFixture.class).run(null);
         for (FixtureResult fixtureResult : fixtureResultList) {
             final Object object = fixtureResult.getObject();
             if (object instanceof ApplicationRole) {
                 return object;
             }
         }
-        getContainer().warnUser("No rules found in fixture; returning all results");
+        container.warnUser("No rules found in fixture; returning all results");
         return fixtureResultList;
     }
     
     // //////////////////////////////////////
     
 
-    
+    @Inject
+    FixtureScripts fixtureScripts;
+    @Inject
+    DomainObjectContainer container;
 
 }

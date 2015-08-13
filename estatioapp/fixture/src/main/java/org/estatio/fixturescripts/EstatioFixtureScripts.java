@@ -20,8 +20,11 @@ package org.estatio.fixturescripts;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -38,6 +41,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
+import org.estatio.fixture.EstatioFixtureModule;
 
 @DomainService(menuOrder = "93")
 @DomainServiceLayout(
@@ -45,32 +49,7 @@ import org.estatio.dom.lease.Lease;
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "20.1"
 )
-public class EstatioFixtureScripts extends FixtureScripts {
-
-    public EstatioFixtureScripts() {
-        super(EstatioDomainModule.class.getPackage().getName());
-    }
-
-    @Action(
-            restrictTo = RestrictTo.PROTOTYPING
-    )
-    @ActionLayout(
-            cssClassFa = "fa-bolt",
-            named = "Run Property/Lease Fixture Script"
-    )
-    @MemberOrder(sequence = "1")
-    @Override
-    public List<FixtureResult> runFixtureScript(
-            final FixtureScript fixtureScript,
-            final String parameters) {
-
-        return super.runFixtureScript(fixtureScript.withTracing(null) , parameters);
-    }
-
-    @Override
-    public List<FixtureScript> choices0RunFixtureScript() {
-        return super.choices0RunFixtureScript();
-    }
+public class EstatioFixtureScripts {
 
     @Action(
             restrictTo = RestrictTo.PROTOTYPING
@@ -87,8 +66,8 @@ public class EstatioFixtureScripts extends FixtureScripts {
                     named = "Nextdue date"
             )
             final LocalDate nextDueDate) {
-        final CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
-        final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
+        final CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        final FixtureScript.ExecutionContext executionContext = fixtureScripts.newExecutionContext(null);
         creator.createProperty(property, startDueDate, nextDueDate, executionContext);
         return executionContext.getResults();
     }
@@ -110,14 +89,22 @@ public class EstatioFixtureScripts extends FixtureScripts {
                     named = "Nextdue date"
             )
             final LocalDate nextDueDate) {
-        final CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
-        final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
+        final CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        final FixtureScript.ExecutionContext executionContext = fixtureScripts.newExecutionContext(null);
         creator.createLease(lease, startDueDate, nextDueDate, executionContext);
         return executionContext.getResults();
     }
 
     public boolean hideCreateRetroInvoicesForLease() {
-        return !getContainer().getUser().hasRole("superuser_role");
+        return !container.getUser().hasRole("superuser_role");
     }
+
+
+    // //////////////////////////////////////
+
+    @Inject
+    FixtureScripts fixtureScripts;
+    @Inject
+    DomainObjectContainer container;
 
 }
