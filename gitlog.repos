@@ -1,4 +1,6 @@
 estatio:/c/github/estatio/estatio
+camel-coda:/c/bitbucket/incodehq/camel-coda
+estatio-ecp:/c/bitbucket/incodehq/estatio-ecp
 isis:/c/apache/isis-git-rw
 isis-app-kitchensink:/c/github/isisaddons/isis-app-kitchensink
 isis-app-neoapp:/c/github/isisaddons/isis-app-neoapp
@@ -25,4 +27,3 @@ isis-wicket-fullcalendar2:/c/github/isisaddons/isis-wicket-fullcalendar2
 isis-wicket-gmap3:/c/github/isisaddons/isis-wicket-gmap3
 isis-wicket-wickedcharts:/c/github/isisaddons/isis-wicket-wickedcharts
 isis-wicket-wizard:/c/github/isisaddons/isis-wicket-wizard
-NUCCORE-1326:https://github.com/danhaywood/datanucleus-testcase-NUCCORE-1326
