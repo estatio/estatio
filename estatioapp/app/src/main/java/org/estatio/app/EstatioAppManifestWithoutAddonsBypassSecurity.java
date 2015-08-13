@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-public class EstatioAppManifestWithoutAddonsOrSecurity extends EstatioAppManifest {
+public class EstatioAppManifestWithoutAddonsBypassSecurity extends EstatioAppManifest {
 
     @Override
     public List<Class<?>> getModules() {

@@ -10,13 +10,8 @@ import com.google.common.collect.Maps;
 import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.audit.AuditModule;
-import org.isisaddons.module.command.CommandModule;
-import org.isisaddons.module.devutils.DevUtilsModule;
 import org.isisaddons.module.excel.dom.ExcelService;
-import org.isisaddons.module.poly.dom.PolyModule;
 import org.isisaddons.module.security.SecurityModule;
-import org.isisaddons.module.sessionlogger.SessionLoggerModule;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.estatio.canonicalmappings.EstatioCanonicalMappingsModule;
@@ -34,27 +29,37 @@ public class EstatioAppManifest implements AppManifest {
         List<Class<?>> modules = Lists.newArrayList();
         appendDomModulesAndSecurityAddon(modules);
         appendAddonModules(modules);
+        appendAddonWicketComponents(modules);
         return modules;
     }
 
     protected List<Class<?>> appendAddonModules(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
-                        PolyModule.class,
-                        // SettingsModule.class,
+                        org.isisaddons.module.audit.AuditModule.class,
+                        org.isisaddons.module.command.CommandModule.class,
+                        org.isisaddons.module.excel.ExcelModule.class,
+                        org.isisaddons.module.devutils.DevUtilsModule.class,
+                        org.isisaddons.module.poly.PolyModule.class,
+                        org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
+                        org.isisaddons.module.settings.SettingsModule.class,
+                        org.isisaddons.module.stringinterpolator.StringInterpolatorModule.class
+                )
+        );
+        return modules;
+    }
 
-                        AuditModule.class,
-                        CommandModule.class,
-                        DevUtilsModule.class,
-                        SessionLoggerModule.class
-
-                        // TODO: stringinterpolator-module
-                        // TODO: excel-dom
-
-                        // fullcalendar2-cpt doesn't need a module
-                        // TODO: gmap3-cpt DOES need a module
-
-                        // TODO: excel-cpt
+    protected List<Class<?>> appendAddonWicketComponents(List<Class<?>> modules) {
+        modules.addAll(
+                Arrays.asList(
+                        // apart from gmap3-service, the other modules here contain no services or entities
+                        // but are included "for completeness"
+                        org.isisaddons.wicket.excel.cpt.ui.ExcelUiModule.class,
+                        org.isisaddons.wicket.fullcalendar2.cpt.ui.FullCalendar2UiModule.class,
+                        org.isisaddons.wicket.fullcalendar2.cpt.applib.FullCalendar2ApplibModule.class,
+                        org.isisaddons.wicket.gmap3.cpt.applib.Gmap3ApplibModule.class,
+                        org.isisaddons.wicket.gmap3.cpt.service.Gmap3ServiceModule.class,
+                        org.isisaddons.wicket.gmap3.cpt.ui.Gmap3UiModule.class
                 )
         );
         return modules;
