@@ -33,6 +33,21 @@ public class EstatioAppManifest implements AppManifest {
         return modules;
     }
 
+    protected List<Class<?>> appendDomModulesAndSecurityAddon(List<Class<?>> modules) {
+        modules.addAll(
+                Arrays.asList(
+                        // TODO: sort out packages for the 'dom' module
+                        EstatioDomainModule.class, EstatioDomainLinkModule.class, EstatioDomainSettingsModule.class,
+                        // TODO: sort out packages for the 'fixture' module
+                        EstatioFixtureModule.class, EstatioFixtureScriptsModule.class,
+                        EstatioCanonicalMappingsModule.class,
+                        SecurityModule.class,
+                        EstatioAppModule.class
+                )
+        );
+        return modules;
+    }
+
     protected List<Class<?>> appendAddonModules(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
@@ -42,7 +57,8 @@ public class EstatioAppManifest implements AppManifest {
                         org.isisaddons.module.devutils.DevUtilsModule.class,
                         org.isisaddons.module.poly.PolyModule.class,
                         org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
-                        org.isisaddons.module.settings.SettingsModule.class,
+                        // don't include the settings module, instead we use EstatioDomainSettingsModule
+                        // org.isisaddons.module.settings.SettingsModule.class,
                         org.isisaddons.module.stringinterpolator.StringInterpolatorModule.class
                 )
         );
@@ -60,21 +76,6 @@ public class EstatioAppManifest implements AppManifest {
                         org.isisaddons.wicket.gmap3.cpt.applib.Gmap3ApplibModule.class,
                         org.isisaddons.wicket.gmap3.cpt.service.Gmap3ServiceModule.class,
                         org.isisaddons.wicket.gmap3.cpt.ui.Gmap3UiModule.class
-                )
-        );
-        return modules;
-    }
-
-    protected List<Class<?>> appendDomModulesAndSecurityAddon(List<Class<?>> modules) {
-        modules.addAll(
-                    Arrays.asList(
-                            // TODO: sort out packages for the 'dom' module
-                            EstatioDomainModule.class, EstatioDomainLinkModule.class, EstatioDomainSettingsModule.class,
-                            // TODO: sort out packages for the 'fixture' module
-                            EstatioFixtureModule.class,  EstatioFixtureScriptsModule.class,
-                            EstatioCanonicalMappingsModule.class,
-                            SecurityModule.class,
-                            EstatioAppModule.class
                 )
         );
         return modules;
