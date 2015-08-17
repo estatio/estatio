@@ -20,22 +20,24 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 import java.util.UUID;
+
 import javax.inject.Inject;
+
 import com.google.common.eventbus.Subscribe;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Brand;
@@ -68,24 +70,15 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @CollectionLayout(render = RenderType.EAGERLY)
-    @MemberOrder(name = "Occupancies", sequence = "10")
-    public List<Occupancy> occupancies(Unit unit) {
+    @Programmatic
+    public List<Occupancy> findByUnit(Unit unit) {
         return allMatches("findByUnit", "unit", unit);
     }
 
-    // //////////////////////////////////////
-
-    @NotInServiceMenu
-    @CollectionLayout(render = RenderType.EAGERLY)
-    @NotContributed
-    @MemberOrder(name = "Occupancies", sequence = "10")
-    public List<Occupancy> occupancies(Lease lease) {
+    @Programmatic
+    public List<Occupancy> findByLease(Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
-
-    // //////////////////////////////////////
 
     @Programmatic
     public Occupancy findByLeaseAndUnitAndStartDate(

@@ -89,7 +89,7 @@ public class OccupanciesTest {
 
     @Test
     public void happyCase() {
-        occupancies.occupancies(lease);
+        occupancies.findByLease(lease);
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
         assertThat(finderInteraction.getQueryName(), is("findByLease"));
@@ -101,7 +101,7 @@ public class OccupanciesTest {
 
         @Test
         public void happyCase() {
-            occupancies.occupancies(unit);
+            occupancies.findByUnit(unit);
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
             assertThat(finderInteraction.getQueryName(), is("findByUnit"));
