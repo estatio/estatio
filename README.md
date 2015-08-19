@@ -26,32 +26,12 @@ Estatio runs on Java and is built with [Maven](http://maven.apache.org).  The so
 
 If you don't already have them installed, install Java (JDK 6 or later), Maven (3.0.4 or later), and git.
 
-### Download and build Apache Isis ###
-
-Estatio currently uses the snapshot version of [Apache Isis](http://isis.apache.org), and so Isis must be built from source.
-
-Estatio also maintains its [own copy of the Isis codebase](http://github.com/estatio/isis), and so this is what you should download.  (Normally there is very little, if any, difference between the Estatio's copy of Isis and the [official Isis codebase](http://github.com/apache/isis))
-
-Download using git:
-
-    mkdir -p github/estatio
-    cd github/estatio
-    git clone https://github.com/estatio/isis.git
-    cd isis
-
-and build using maven:
-
-    mvn clean install
-
-The clone is approx 83Mb, and takes approx 10 minutes to build.
-
 ### Download and build Estatio ###
 
-Estatio itself is also built using maven.
+Estatio is built using maven.
 
 Download using git:
  
-    cd ..
     git clone https://github.com/estatio/estatio.git
     cd estatio
 
@@ -59,7 +39,7 @@ and build using maven:
 
     mvn clean install -Pjetty-console
 
-The clone is approx 3Mb, and takes approximately 1 minute to build.
+The clone is approx 70Mb, and takes approximately 1 minute to build.
 
 ## Configure Estatio (JDBC URL) ##
 
@@ -84,7 +64,7 @@ You can run Estatio either using the standalone (self-hosting) version of the WA
 
 Run using:
 
-    java -jar webapp/target/estatio-webapp-0.0.1-SNAPSHOT-jetty-console.war
+    java -jar estatioapp/webapp/target/estatio-webapp-1.2.0-SNAPSHOT-jetty-console.war
 
 and press the 'start button'.
 
@@ -96,12 +76,12 @@ Then browse to:
 
 Run using:
 
-    cd webapp
+    cd estatioapp/webapp
     mvn jetty:run
 
 Then browse to:
 
-    http://localhost:8080/estatio-webapp/wicket/
+    http://localhost:8080/
 
 ## Use Estatio ##
 
@@ -134,16 +114,12 @@ You can find plenty of help on using Apache Isis at the [Isis mailing lists](htt
 
 Just run:
 
-<pre>
     cd adocs/documentation
     mvn site
-</pre>
 
 The `.html` will be generated in `target/site`.  It should be possible to load the HTML straight from the directory.  Alternatively, load from a webserver, eg:
 
-<pre>
     python -m SimpleHTTPServer
-</pre>
 
 and browse to http://localhost:8000.
 
