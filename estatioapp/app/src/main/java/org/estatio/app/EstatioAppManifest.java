@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -141,7 +142,9 @@ public class EstatioAppManifest implements AppManifest {
     }
 
     protected Map<String, String> appendProps(final Map<String, String> props) {
-        props.put("isis.services.audit.objects","all");
+        props.put("isis.services.eventbus.implementation", "guava");
+
+        props.put("isis.services.audit.objects", "all");
 
         // uncomment to use log4jdbc instead
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
@@ -160,6 +163,51 @@ public class EstatioAppManifest implements AppManifest {
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
         // "estatio");
 
+        props.put("isis.reflector.facet.cssClassFa.patterns",
+                Joiner.on(',').join(
+                "new.*:fa-plus",
+                "add.*:fa-plus-square",
+                "create.*:fa-plus",
+                "update.*:fa-edit",
+                "change.*:fa-edit",
+                "remove.*:fa-minus-square",
+                "copy.*:fa-copy",
+                "move.*:fa-exchange",
+                "first.*:fa-star",
+                "find.*:fa-search",
+                "lookup.*:fa-search",
+                "clear.*:fa-remove",
+                "previous.*:fa-step-backward",
+                "next.*:fa-step-forward",
+                "list.*:fa-list",
+                "all.*:fa-list",
+                "download.*:fa-download",
+                "upload.*:fa-upload",
+                "execute.*:fa-bolt",
+                "run.*:fa-bolt",
+                "calculate.*:fa-calculator",
+                "verify.*:fa-check-circle",
+                "refresh.*:fa-refresh",
+                "install.*:fa-wrench",
+                "stop.*:fa-stop",
+                "terminate.*:fa-stop",
+                "pause.*:fa-pause",
+                "suspend.*:fa-pause",
+                "approve.*:fa-thumbs-o-up",
+                "decline.*:fa-thumbs-o-down"));
+
+        props.put("isis.reflector.facet.cssClass.patterns",
+                Joiner.on(',').join(
+                "update.*:btn-default",
+                "delete.*:btn-warning",
+                ".*:btn-primary"));
+
+        props.put("isis.reflector.facets.include",
+                Joiner.on(',').join(
+                "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory",
+                "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory"));
+
         return props;
     }
+
 }
