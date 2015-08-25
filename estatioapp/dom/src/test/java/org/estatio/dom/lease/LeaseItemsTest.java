@@ -19,11 +19,17 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.budget.ChargeForTesting;
+import org.estatio.dom.charge.Charge;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -72,4 +78,27 @@ public class LeaseItemsTest {
         }
 
     }
+
+    public static class findByLeaseAndTypeAndCharge extends LeaseItemsTest {
+
+        @Test
+        public void happyCase() {
+
+            Lease lease = new Lease();
+            LeaseItemType leaseItemType = LeaseItemType.SERVICE_CHARGE;
+            Charge charge = new ChargeForTesting();
+
+            leaseItems.findByLeaseAndTypeAndCharge(lease, leaseItemType, charge);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(LeaseItem.class));
+            assertThat(finderInteraction.getQueryName(), is("findByLeaseAndTypeAndCharge"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) leaseItemType));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+        }
+
+    }
+
 }

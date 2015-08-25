@@ -58,7 +58,7 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem>
         Distributable {
 
     public BudgetKeyItem() {
-        super("budgetKeyTable,unit,targetValue, sourceValue");
+        super("budgetKeyTable, unit, value, sourceValue");
     }
 
     //region > identificatiom
@@ -126,32 +126,32 @@ public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem>
 
     // //////////////////////////////////////
 
-    private BigDecimal targetValue;
+    private BigDecimal value;
 
     @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
     @MemberOrder(sequence = "2")
-    public BigDecimal getTargetValue() {
-        return targetValue;
+    public BigDecimal getValue() {
+        return value;
     }
 
-    public void setTargetValue(BigDecimal targetValue) {
+    public void setValue(BigDecimal value) {
 
-            this.targetValue = targetValue;
+            this.value = value;
 
     }
 
-    public BudgetKeyItem changeTargetValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
-        setTargetValue(keyValue.setScale(getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+    public BudgetKeyItem changeValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
+        setValue(keyValue.setScale(getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
 
-    public BigDecimal default0ChangeTargetValue(final BigDecimal targetValue) {
-        return getTargetValue().setScale(getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
+    public BigDecimal default0ChangeValue(final BigDecimal targetValue) {
+        return getValue().setScale(getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
     }
 
-    public String validateChangeTargetValue(final BigDecimal keyValue) {
+    public String validateChangeValue(final BigDecimal keyValue) {
         if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "Target Value cannot be less than zero";
+            return "Value cannot be less than zero";
         }
         return null;
     }

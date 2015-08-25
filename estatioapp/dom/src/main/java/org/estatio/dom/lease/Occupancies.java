@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,6 +114,23 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
                 "brand", brand,
                 "includeTerminated", includeTerminated,
                 "date", clockService.now());
+    }
+
+    @Programmatic
+    public List<Occupancy> occupanciesByUnitAndInterval(final Unit unit, final LocalDateInterval localDateInterval) {
+
+        List<Occupancy> foundOccupancies = new ArrayList<>();
+        for (Occupancy occupancy : findByUnit(unit)) {
+
+            // if occupancy overlaps budget period
+            if (localDateInterval.overlaps(occupancy.getInterval())) {
+                foundOccupancies.add(occupancy);
+            }
+
+        }
+
+        return foundOccupancies;
+
     }
 
     // //////////////////////////////////////

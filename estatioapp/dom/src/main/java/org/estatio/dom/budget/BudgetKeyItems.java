@@ -48,7 +48,7 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
         BudgetKeyItem budgetKeyItem = newTransientInstance();
         budgetKeyItem.setBudgetKeyTable(budgetKeyTable);
         budgetKeyItem.setUnit(unit);
-        budgetKeyItem.setTargetValue(keyValue);
+        budgetKeyItem.setValue(keyValue);
         persistIfNotAlready(budgetKeyItem);
 
         return budgetKeyItem;
@@ -64,7 +64,7 @@ public class BudgetKeyItems extends UdoDomainRepositoryAndFactory<BudgetKeyItem>
         budgetKeyItem.setBudgetKeyTable(budgetKeyTable);
         budgetKeyItem.setUnit(unit);
         budgetKeyItem.setSourceValue(sourceValue);
-        budgetKeyItem.setTargetValue(keyValue);
+        budgetKeyItem.setValue(keyValue);
         persistIfNotAlready(budgetKeyItem);
 
         return budgetKeyItem;

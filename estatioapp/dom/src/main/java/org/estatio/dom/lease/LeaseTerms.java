@@ -171,4 +171,18 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
     public boolean hideFindTermsWithInvalidInterval() {
         return !getContainer().getUser().hasRole(EstatioUserRoles.ADMIN_ROLE);
     }
+
+    @Programmatic
+    public LeaseTerm findOrCreateLeaseTermForInterval(final LeaseItem leaseItem, final LocalDateInterval localDateInterval) {
+        boolean leaseTermFound = false;
+        for (LeaseTerm leaseTerm : leaseItem.getTerms()) {
+            if (leaseTerm.getInterval().equals(localDateInterval)) {
+                return leaseTerm;
+            }
+        }
+        if (!leaseTermFound) {
+            return leaseItem.newTerm(localDateInterval.startDate(),localDateInterval.endDate());
+        }
+        return null;
+    }
 }

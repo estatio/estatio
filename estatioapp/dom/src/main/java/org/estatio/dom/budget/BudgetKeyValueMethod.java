@@ -35,13 +35,13 @@ public enum BudgetKeyValueMethod {
         public BigDecimal keySum(BudgetKeyTable budgetKeyTable) {
             BigDecimal sum = BigDecimal.ZERO;
             for (Iterator<BudgetKeyItem> it = budgetKeyTable.getBudgetKeyItems().iterator(); it.hasNext();) {
-                sum = sum.add(it.next().getTargetValue());
+                sum = sum.add(it.next().getValue());
             }
             return sum.setScale(budgetKeyTable.getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
         }
         @Override
         public BigDecimal targetTotal() {
-            return new BigDecimal(1000, MathContext.DECIMAL32);
+            return new BigDecimal(1000, MathContext.DECIMAL64);
         }
     },
     PERCENT {
@@ -56,13 +56,13 @@ public enum BudgetKeyValueMethod {
         public BigDecimal keySum(BudgetKeyTable budgetKeyTable) {
             BigDecimal sum = BigDecimal.ZERO;
             for (Iterator<BudgetKeyItem> it = budgetKeyTable.getBudgetKeyItems().iterator(); it.hasNext();) {
-                sum = sum.add(it.next().getTargetValue());
+                sum = sum.add(it.next().getValue());
             }
             return sum.setScale(budgetKeyTable.getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
         }
         @Override
         public BigDecimal targetTotal() {
-            return new BigDecimal(100, MathContext.DECIMAL32);
+            return new BigDecimal(100, MathContext.DECIMAL64);
         }
     },
     DEFAULT {
@@ -74,7 +74,7 @@ public enum BudgetKeyValueMethod {
         public BigDecimal keySum(BudgetKeyTable budgetKeyTable) {
             BigDecimal sum = BigDecimal.ZERO;
             for (Iterator<BudgetKeyItem> it = budgetKeyTable.getBudgetKeyItems().iterator(); it.hasNext();) {
-                sum = sum.add(it.next().getTargetValue());
+                sum = sum.add(it.next().getValue());
             }
             return sum;
         }

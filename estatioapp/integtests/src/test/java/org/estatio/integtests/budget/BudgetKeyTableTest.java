@@ -121,8 +121,8 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             budgetKeyTable.generateBudgetKeyItems(true);
 
             //then
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-001")).getTargetValue().equals(new BigDecimal(3)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getTargetValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-001")).getValue().equals(new BigDecimal(3)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getValue().equals(new BigDecimal(6)));
         }
 
         Unit unitWithAreaNull;
@@ -138,8 +138,8 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             budgetKeyTable.generateBudgetKeyItems(true);
 
             //then
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitWithAreaNull).getTargetValue().equals(BigDecimal.ZERO));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getTargetValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitWithAreaNull).getValue().equals(BigDecimal.ZERO));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, units.findUnitByReference("OXF-002")).getValue().equals(new BigDecimal(6)));
         }
 
         Unit unitNotIncluded;
@@ -187,10 +187,10 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
             Assert.assertNull(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitNotIncludedWithEndDateOnly));
             Assert.assertNull(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitNotIncluded));
             Assert.assertNull(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitNotIncludedWithStartDateOnly));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncluded).getTargetValue().equals(new BigDecimal(6)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithEndDateOnly).getTargetValue().equals(new BigDecimal(6)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithStartDateOnly).getTargetValue().equals(new BigDecimal(6)));
-            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithoutStartAndEndDate).getTargetValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncluded).getValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithEndDateOnly).getValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithStartDateOnly).getValue().equals(new BigDecimal(6)));
+            assertThat(items.findByBudgetKeyTableAndUnit(budgetKeyTable, unitIncludedWithoutStartAndEndDate).getValue().equals(new BigDecimal(6)));
 
         }
 

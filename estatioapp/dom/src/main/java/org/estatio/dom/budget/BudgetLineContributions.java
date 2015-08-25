@@ -29,19 +29,21 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.asset.Property;
-
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class BudgetKeyTableContributions {
+public class BudgetLineContributions {
+
+    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.LAZILY)
-    public List<BudgetKeyTable> budgetKeyTables(Property property){
-        return budgetKeyTables.findBudgetKeyTableByProperty(property);
+    @CollectionLayout(render = RenderType.EAGERLY)
+    public List<BudgetLine> budgetLines(BudgetItem budgetItem) {
+        return budgetLines.findByBudgetItem(budgetItem);
     }
 
     @Inject
-    private BudgetKeyTables budgetKeyTables;
+    private BudgetLines budgetLines;
+
+    // //////////////////////////////////////
 
 }

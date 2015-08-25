@@ -39,6 +39,7 @@ import org.estatio.dom.budget.Budget;
 import org.estatio.dom.budget.BudgetItem;
 import org.estatio.dom.budget.BudgetKeyItem;
 import org.estatio.dom.budget.BudgetKeyTable;
+import org.estatio.dom.budget.BudgetLine;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 import org.estatio.dom.document.Document;
@@ -87,6 +88,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Project.class);
         deleteFrom(Program.class);
 
+        deleteFrom(BudgetLine.class);
         deleteFrom(BudgetItem.class);
         deleteFrom(BudgetKeyItem.class);
         deleteFrom(BudgetKeyTable.class);

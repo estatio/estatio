@@ -18,9 +18,11 @@
  */
 package org.estatio.dom.budget;
 
+import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
@@ -51,6 +53,13 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseItems;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -70,6 +79,12 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
 
     public Budget() {
         super("property, startDate, endDate");
+    }
+
+    public Budget(final LocalDate startDate, final LocalDate endDate) {
+        this();
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     //region > identificatiom
@@ -217,4 +232,66 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     public String validateRemoveAllBudgetItems(boolean confirmDelete){
         return confirmDelete? null:"Please confirm";
     }
+
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Budget allocateBudget(@ParameterLayout(named = "Are you sure?") final boolean confirmAllocate) {
+
+        //1st pass: generate leaseTerms (if needed) and set budgeted value = BigDecimal.ZERO
+        for (BudgetItem budgetItem : getBudgetItems()) {
+
+            for (BudgetLine budgetLine : budgetLines.findByBudgetItem(budgetItem)) {
+
+                if (occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).size() > 0) {
+                    Occupancy occupancy = occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).get(0);
+                    Lease lease = occupancy.getLease();
+                    LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetLine.getBudgetItem().getCharge());
+                    if (leaseItem != null) {
+                        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.findOrCreateLeaseTermForInterval(leaseItem, budgetLine.getBudgetKeyItem().getBudgetKeyTable().getInterval());
+                        leaseTerm.setBudgetedValue(BigDecimal.ZERO);
+                    }
+                }
+            }
+        }
+
+        //2nd pass: allocate budgetedValue
+        for (BudgetItem budgetItem : getBudgetItems()) {
+
+            for (BudgetLine budgetLine : budgetLines.findByBudgetItem(budgetItem)) {
+
+                if (occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).size() > 0) {
+                    Occupancy occupancy = occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).get(0);
+                    Lease lease = occupancy.getLease();
+                    LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetLine.getBudgetItem().getCharge());
+                    if (leaseItem !=null) {
+
+                        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.findOrCreateLeaseTermForInterval(leaseItem, budgetLine.getBudgetKeyItem().getBudgetKeyTable().getInterval());
+                        leaseTerm.setBudgetedValue(leaseTerm.getBudgetedValue().add(budgetLine.getValue()));
+
+                    }
+                }
+            }
+
+        }
+
+        return this;
+    }
+
+    public String validateAllocateBudget(boolean confirmAllocate){
+        return confirmAllocate? null:"Please confirm";
+    }
+
+    @Inject
+    private BudgetLines budgetLines;
+
+    @Inject
+    private LeaseItems leaseItems;
+
+    @Inject
+    private OccupancyContributionsForBudgets occupancyContributionsForBudgets;
+
+    @Inject
+    private LeaseTerms leaseTerms;
+
 }

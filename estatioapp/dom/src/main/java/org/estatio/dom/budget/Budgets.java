@@ -67,6 +67,12 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
             return "End date can not be before start date";
         }
 
+        for (Budget budget : this.findBudgetByProperty(property)) {
+            if (budget.getInterval().overlaps(new LocalDateInterval(startDate, endDate))) {
+                return "A new budget cannot overlap an existing budget.";
+            }
+        }
+
         return null;
     }
 

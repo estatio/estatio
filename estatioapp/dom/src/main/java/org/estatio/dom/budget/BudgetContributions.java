@@ -19,7 +19,6 @@
 package org.estatio.dom.budget;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,13 +34,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.app.budget.BudgetCalculatedValueOnLeaseTermLine;
 import org.estatio.app.budget.BudgetCalculationServices;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.Leases;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
@@ -90,29 +85,31 @@ public class BudgetContributions {
         return budgets.findBudgetByProperty(property);
     }
 
-    ;
 
-    @Action(semantics = SemanticsOf.SAFE, invokeOn = InvokeOn.OBJECT_ONLY)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<BudgetCalculatedValueOnLeaseTermLine> calculatedServiceChargesOnLease(final Budget budget) {
-
-        List<BudgetCalculatedValueOnLeaseTermLine> lines = new ArrayList<BudgetCalculatedValueOnLeaseTermLine>();
-
-        List<Lease> leasesOnProperty = leases.findLeasesByProperty(budget.getProperty());
-        for (Lease lease : leasesOnProperty) {
-            LeaseItem firstLeaseItemOfType = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
-            if (firstLeaseItemOfType != null) {
-                lines.add(new BudgetCalculatedValueOnLeaseTermLine(
-                                budgetCalculationServices.calculateValueOnCurrentLeaseTermForServiceCharge(lease, budget),
-                                firstLeaseItemOfType.currentTerm(budget.getStartDate()))
-                );
-            }
-
-        }
-
-        return lines;
-    }
+//    @Action(semantics = SemanticsOf.SAFE, invokeOn = InvokeOn.OBJECT_ONLY)
+//    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+//    @CollectionLayout(render = RenderType.EAGERLY)
+//    public List<BudgetCalculatedValueOnLeaseTermLine> calculatedServiceChargesOnLease(final Budget budget) {
+//
+//        List<BudgetCalculatedValueOnLeaseTermLine> lines = new ArrayList<BudgetCalculatedValueOnLeaseTermLine>();
+//
+//        List<Lease> leasesOnProperty = leases.findLeasesByProperty(budget.getProperty());
+//        for (Lease lease : leasesOnProperty) {
+//            LeaseItem firstLeaseItemOfType = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+//            if (firstLeaseItemOfType != null) {
+//                if (firstLeaseItemOfType.currentTerm(budget.getStartDate()) != null) {
+//                    lines.add(new BudgetCalculatedValueOnLeaseTermLine(
+//                                    budgetCalculationServices.calculateValueOnCurrentLeaseTermForServiceCharge(lease, budget),
+//                                    firstLeaseItemOfType.currentTerm(budget.getStartDate()),
+//                                    firstLeaseItemOfType.getLease().getOccupancies().first().getUnit().getReference())
+//                    );
+//                }
+//            }
+//
+//        }
+//
+//        return lines;
+//    }
 
     @Inject
     private Budgets budgets;

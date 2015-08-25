@@ -18,99 +18,75 @@
  */
 package org.estatio.dom.budget;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.app.budget.BudgetCalculationServices;
-import org.estatio.app.budget.BudgetItemCalculatedValueLine;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Occupancy;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
-public class BudgetItemContributions extends UdoDomainRepositoryAndFactory<BudgetItem> {
+public class BudgetItemContributions {
 
-    public BudgetItemContributions() {
-        super(BudgetItemContributions.class, BudgetItem.class);
-    }
+//    @CollectionLayout(render = RenderType.EAGERLY)
+//    @Action(semantics = SemanticsOf.SAFE)
+//    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+//    public List<BudgetItemCalculatedValueLine> lines(final BudgetItem budgetItem) {
+//
+//        List<BudgetItemCalculatedValueLine> lines = new ArrayList<BudgetItemCalculatedValueLine>();
+//        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
+//        LeaseTermForServiceCharge leaseTermForServiceCharge= new LeaseTermForServiceCharge();
+//        String status = new String();
+//
+//        for (Iterator<BudgetKeyItem> it = budgetItem.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
+//
+//            budgetKeyItem = it.next();
+//
+//            List<Lease> leasesOnProperty = leases.findLeasesByProperty(budgetItem.getBudget().getProperty());
+//            leaseTermForServiceCharge = null;
+//            status="Value could not be assigned to lease term!";
+//            //find term for the unit on budgetKeyItem
+//            for (Lease l : leasesOnProperty) {
+//                for (Occupancy o : l.getOccupancies()) {
+//
+//                    if (budgetKeyItem.getUnit().equals(o.getUnit())) {
+//                        LeaseItem firstLeaseItemOfTypeAndCharge = o.getLease().findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetItem.getCharge());
+//                        if (firstLeaseItemOfTypeAndCharge !=null) {
+//                            leaseTermForServiceCharge = (LeaseTermForServiceCharge) firstLeaseItemOfTypeAndCharge.currentTerm(budgetItem.getBudget().getStartDate());
+//                            status = "OK";
+//                        }
+//                    }
+//
+//                }
+//            }
+//            BigDecimal calculatedValue = BigDecimal.ZERO;
+////            calculatedValue = calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getValue()).divide(new BigDecimal(1000)));
+//            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(budgetItem,budgetKeyItem));
+//            BudgetItemCalculatedValueLine newLine = new BudgetItemCalculatedValueLine(calculatedValue, leaseTermForServiceCharge, status, budgetKeyItem.getUnit(), budgetKeyItem.getValue().setScale(budgetKeyItem.getBudgetKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+//            lines.add(newLine);
+//        }
+//
+//        return lines;
+//
+//    }
 
-
-
-    @CollectionLayout(render = RenderType.EAGERLY)
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<BudgetItemCalculatedValueLine> lines(final BudgetItem budgetItem) {
-
-        List<BudgetItemCalculatedValueLine> lines = new ArrayList<BudgetItemCalculatedValueLine>();
-        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-        LeaseTermForServiceCharge leaseTermForServiceCharge= new LeaseTermForServiceCharge();
-        String status = new String();
-
-        for (Iterator<BudgetKeyItem> it = budgetItem.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
-
-            budgetKeyItem = it.next();
-
-            List<Lease> leasesOnProperty = leases.findLeasesByProperty(budgetItem.getBudget().getProperty());
-            leaseTermForServiceCharge = null;
-            status="Value could not be assigned to lease term!";
-            //find term for the unit on budgetKeyItem
-            for (Lease l : leasesOnProperty) {
-                for (Occupancy o : l.getOccupancies()) {
-
-                    if (budgetKeyItem.getUnit().equals(o.getUnit())) {
-                        LeaseItem firstLeaseItemOfTypeAndCharge = o.getLease().findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetItem.getCharge());
-                        if (firstLeaseItemOfTypeAndCharge !=null) {
-                            leaseTermForServiceCharge = (LeaseTermForServiceCharge) firstLeaseItemOfTypeAndCharge.currentTerm(budgetItem.getBudget().getStartDate());
-                            status = "OK";
-                        }
-                    }
-
-                }
-            }
-            BigDecimal calculatedValue = BigDecimal.ZERO;
-//            calculatedValue = calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getTargetValue()).divide(new BigDecimal(1000)));
-            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(budgetItem,budgetKeyItem));
-            BudgetItemCalculatedValueLine newLine = new BudgetItemCalculatedValueLine(calculatedValue, leaseTermForServiceCharge, status, budgetKeyItem.getUnit(), budgetKeyItem.getTargetValue());
-            lines.add(newLine);
-        }
-
-        return lines;
-
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public BigDecimal checkTotalValue(final BudgetItem budgetItem){
-        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-        BigDecimal calculatedValue = new BigDecimal(0);
-        for (Iterator<BudgetKeyItem> it = budgetItem.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
-            budgetKeyItem = it.next();
-//            calculatedValue=calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getTargetValue()).divide(new BigDecimal(1000)));
-            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(budgetItem,budgetKeyItem));
-        }
-
-        return calculatedValue.setScale(2, BigDecimal.ROUND_HALF_DOWN);
-
-    }
+//    @Action(semantics = SemanticsOf.SAFE)
+//    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+//    public BigDecimal checkTotalValue(final BudgetItem budgetItem){
+//        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
+//        BigDecimal calculatedValue = new BigDecimal(0);
+//        for (Iterator<BudgetKeyItem> it = budgetItem.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
+//            budgetKeyItem = it.next();
+////            calculatedValue=calculatedValue.add(budgetItem.getValue().multiply(budgetKeyItem.getValue()).divide(new BigDecimal(1000)));
+//            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(budgetItem,budgetKeyItem));
+//        }
+//
+//        return calculatedValue.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+//
+//    }
 
     @Inject
     private Leases leases;

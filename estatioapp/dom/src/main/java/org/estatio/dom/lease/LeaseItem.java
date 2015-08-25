@@ -117,6 +117,15 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.LeaseItem "
                         + "WHERE lease == :lease "
                         + "&& type == :type "
+                        + "ORDER BY sequence "),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndTypeAndCharge",
+                language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItem "
+                        + "WHERE lease == :lease "
+                        + "&& type == :type "
+                        + "&& charge == :charge "
                         + "ORDER BY sequence ")
 })
 @Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = { "lease", "type", "startDate", "sequence" })

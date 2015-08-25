@@ -39,7 +39,7 @@ public class BudgetKeyValueMethodTest {
 
         for(int i = 0; i < 1; i = i+1) {
             BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-            budgetKeyItem.setTargetValue(new BigDecimal(999.999));
+            budgetKeyItem.setValue(new BigDecimal(999.999));
             budgetKeyItems.add(budgetKeyItem);
         }
         budgetKeyTable.setBudgetKeyItems(budgetKeyItems);
@@ -64,7 +64,7 @@ public class BudgetKeyValueMethodTest {
 
         for(int i = 0; i < 1; i = i+1) {
                         BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-                        budgetKeyItem.setTargetValue(new BigDecimal(999.9999));
+                        budgetKeyItem.setValue(new BigDecimal(999.9999));
                         budgetKeyItems.add(budgetKeyItem);
                     }
         budgetKeyTable.setBudgetKeyItems(budgetKeyItems);
@@ -88,7 +88,7 @@ public class BudgetKeyValueMethodTest {
 
         for(int i = 0; i < 1; i = i+1) {
             BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-            budgetKeyItem.setTargetValue(new BigDecimal(1000.0001));
+            budgetKeyItem.setValue(new BigDecimal(1000.0001));
             budgetKeyItems.add(budgetKeyItem);
         }
         budgetKeyTable.setBudgetKeyItems(budgetKeyItems);

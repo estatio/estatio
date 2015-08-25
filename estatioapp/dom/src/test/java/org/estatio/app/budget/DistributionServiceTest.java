@@ -48,20 +48,20 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 3);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue());
+            sumRoundedValues = sumRoundedValues.add(object.getValue());
         }
 
         //then
         assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getTargetValue()).isEqualTo(new BigDecimal(997.519).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getTargetValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(997.519).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 8; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 8; i < 14; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
@@ -99,20 +99,20 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 3);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue());
+            sumRoundedValues = sumRoundedValues.add(object.getValue());
         }
 
         //then
         assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getTargetValue()).isEqualTo(new BigDecimal(987.764).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getTargetValue()).isEqualTo(new BigDecimal(9.878).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(987.764).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(9.878).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 8; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.197).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.197).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 8; i < 14; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.196).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.196).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
@@ -150,20 +150,20 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 2);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue(), MathContext.DECIMAL32);
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL32);
         }
 
         //then
         assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getTargetValue()).isEqualTo(new BigDecimal(978.10).setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getTargetValue()).isEqualTo(new BigDecimal(19.57).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(978.10).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(19.57).setScale(2, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 9; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 9; i < 14; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
         assertThat(sumRoundedValues.setScale(2, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.00).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -200,20 +200,20 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 2);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue(), MathContext.DECIMAL32);
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL32);
         }
 
         //then
         assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getTargetValue()).isEqualTo(new BigDecimal(987.76).setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getTargetValue()).isEqualTo(new BigDecimal(9.89).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(987.76).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(9.89).setScale(2, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 9; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 9; i < 14; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
         assertThat(sumRoundedValues.setScale(2, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.00).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -251,21 +251,21 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(100), 3);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue(), MathContext.DECIMAL64);
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
         }
 
         //then
 
         assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getTargetValue()).isEqualTo(new BigDecimal(99.752).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getTargetValue()).isEqualTo(new BigDecimal(0.010).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(99.752).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.010).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 12; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 12; i < 14; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         // Corrected Rounding Error for 3 decimals
@@ -304,21 +304,21 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(100), 3);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue(), MathContext.DECIMAL64);
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
         }
 
         //then
 
         assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getTargetValue()).isEqualTo(new BigDecimal(97.801).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getTargetValue()).isEqualTo(new BigDecimal(1.966).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(97.801).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(1.966).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 9; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 9; i < 14; i = i + 1) {
-            assertThat(output.get(i).getTargetValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         // Corrected Rounding Error for 3 decimals
@@ -342,7 +342,7 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 6);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue(), MathContext.DECIMAL64);
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
         }
 
         assertThat(output.size()).isEqualTo(24);
@@ -367,7 +367,7 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000, MathContext.DECIMAL64), 5);
         BigDecimal sumRoundedValues = BigDecimal.ZERO;
         for (Distributable object: output) {
-            sumRoundedValues = sumRoundedValues.add(object.getTargetValue(), MathContext.DECIMAL64);
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
         }
 
         assertThat(output.size()).isEqualTo(25);

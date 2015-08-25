@@ -57,6 +57,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -350,7 +351,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
 
         for (Unit unit :  units.findByProperty(this.getProperty())){
 
-            if (unitValidForThisKeyTable(unit)) {
+            if (unitIntervalValidForThisKeyTable(unit)) {
                 BigDecimal sourceValue;
                 if (getFoundationValueType().valueOf(unit) != null) {
                     sourceValue = getFoundationValueType().valueOf(unit);
@@ -359,7 +360,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
                 }
                 BudgetKeyItem newItem = new BudgetKeyItem();
                 newItem.setSourceValue(sourceValue);
-                newItem.setTargetValue(BigDecimal.ZERO);
+                newItem.setValue(BigDecimal.ZERO);
                 newItem.setUnit(unit);
                 newItem.setBudgetKeyTable(this);
                 persistIfNotAlready(newItem);
@@ -427,24 +428,44 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
 
     public boolean isValidForUnits(){
         for (BudgetKeyItem item : this.getBudgetKeyItems()) {
-            if (!this.unitValidForThisKeyTable(item.getUnit())) {
+            if (!this.unitIntervalValidForThisKeyTable(item.getUnit())) {
+                return false;
+            }
+            if (!item.getUnit().hasOccupancyOverlappingInterval(this.getInterval())){
                 return false;
             }
         }
         return true;
     }
 
-    // Helper //////////////////////////////////////
-
     @Programmatic
-    private boolean unitValidForThisKeyTable(final Unit unit) {
-        LocalDateInterval budgetKeyTableInterval = LocalDateInterval.including(this.getStartDate(), this.getEndDate());
-        return unit.getInterval().contains(budgetKeyTableInterval);
+    private boolean unitIntervalValidForThisKeyTable(final Unit unit) {
+        return unit.getInterval().contains(this.getInterval());
     }
+
+    // //////////////////////////////////////
+
+
+    public BudgetKeyTable deleteBudgetKeyItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
+
+        for (BudgetKeyItem budgetKeyItem : getBudgetKeyItems()){
+            removeIfNotAlready(budgetKeyItem);
+        }
+
+        return this;
+    }
+
+    public String validateDeleteBudgetKeyItems(final boolean confirmDelete) {
+        return confirmDelete? null:"Please confirm";
+    }
+
 
     // //////////////////////////////////////
 
     @Inject
     Units units;
+
+    @Inject
+    Occupancies occupancies;
 
 }

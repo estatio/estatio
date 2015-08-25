@@ -159,6 +159,13 @@
                                 "named": "Bulk Update Manager",
                                 "contributed": "AS_ACTION"
                             }
+                        },
+                        "deleteBudgetKeyItems": {
+                            "actionLayout": {
+                                "cssClass": "btn-warning",
+                                "named": "Delete all items",
+                                "contributed": "AS_ACTION"
+                            }
                         }
                     }
                 }

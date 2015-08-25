@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public interface Distributable {
 
     BigDecimal getSourceValue();
-    BigDecimal getTargetValue();
-    void setTargetValue(BigDecimal targetValue);
+    BigDecimal getValue();
+    void setValue(BigDecimal value);
 
 }

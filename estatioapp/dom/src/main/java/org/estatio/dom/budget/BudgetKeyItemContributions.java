@@ -29,18 +29,13 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
-public class BudgetKeyItemContributions extends UdoDomainRepositoryAndFactory<BudgetKeyItem> {
+public class BudgetKeyItemContributions {
 
-    public BudgetKeyItemContributions() {
-        super(BudgetKeyItemContributions.class, BudgetKeyItem.class);
-    }
-
-    // //////////////////////////////////////
+     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)

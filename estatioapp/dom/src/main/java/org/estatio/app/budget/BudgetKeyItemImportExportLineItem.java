@@ -61,7 +61,7 @@ public class BudgetKeyItemImportExportLineItem
         this.budgetKeyItem = budgetKeyItem;
         this.unitReference = budgetKeyItem.getUnit().getReference();
         this.sourceValue = budgetKeyItem.getSourceValue();
-        this.keyValue = budgetKeyItem.getTargetValue();
+        this.keyValue = budgetKeyItem.getValue();
         this.budgetKeyTableName = budgetKeyItem.getBudgetKeyTable().getName();
     }
 
@@ -159,8 +159,11 @@ public class BudgetKeyItemImportExportLineItem
             BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
             budgetKeyItem.setBudgetKeyTable(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()));
             budgetKeyItem.setUnit(units.findUnitByReference(unitReference));
+            budgetKeyItem.setValue(BigDecimal.ZERO);
+            budgetKeyItem.setSourceValue(BigDecimal.ZERO);
+            container.persistIfNotAlready(budgetKeyItem);
         }
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).changeTargetValue(this.getKeyValue().setScale(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).changeValue(this.getKeyValue().setScale(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
         budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         return budgetKeyItem;
     }
@@ -174,7 +177,7 @@ public class BudgetKeyItemImportExportLineItem
             if (budgetKeyItem == null) {
                 newStatus = Status.ADDED;
             } else {
-                if (org.apache.commons.lang3.ObjectUtils.compare(keyValue, budgetKeyItem.getTargetValue()) != 0) {
+                if (org.apache.commons.lang3.ObjectUtils.compare(keyValue, budgetKeyItem.getValue()) != 0) {
                     newStatus = Status.UPDATED;
                 }
             }

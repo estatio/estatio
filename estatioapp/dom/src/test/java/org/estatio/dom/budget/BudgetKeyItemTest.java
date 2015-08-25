@@ -53,16 +53,16 @@ public class BudgetKeyItemTest {
         BudgetKeyTable table = new BudgetKeyTable();
         table.setNumberOfDigits(3);
         BudgetKeyItem item = new BudgetKeyItem();
-        item.setTargetValue(new BigDecimal(2));
+        item.setValue(new BigDecimal(2));
         item.setBudgetKeyTable(table);
-        assertTrue(item.getTargetValue().equals(new BigDecimal(2)));
+        assertTrue(item.getValue().equals(new BigDecimal(2)));
 
         //when
-        item.changeTargetValue(new BigDecimal(2.3335));
+        item.changeValue(new BigDecimal(2.3335));
 
         //then
-        assertEquals(item.getTargetValue(),new BigDecimal(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getTargetValue().equals(new BigDecimal(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getValue(),new BigDecimal(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertFalse(item.getValue().equals(new BigDecimal(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
 
     }
 
@@ -73,12 +73,12 @@ public class BudgetKeyItemTest {
         BudgetKeyTable table = new BudgetKeyTable();
         table.setNumberOfDigits(3);
         BudgetKeyItem item = new BudgetKeyItem();
-        item.setTargetValue(new BigDecimal(2));
+        item.setValue(new BigDecimal(2));
         item.setBudgetKeyTable(table);
-        assertTrue(item.getTargetValue().equals(new BigDecimal(2)));
+        assertTrue(item.getValue().equals(new BigDecimal(2)));
 
         //when, then
-        assertEquals(item.validateChangeTargetValue(new BigDecimal(-0.001)),"Target Value cannot be less than zero");
+        assertEquals(item.validateChangeValue(new BigDecimal(-0.001)),"Value cannot be less than zero");
     }
 
     @Test

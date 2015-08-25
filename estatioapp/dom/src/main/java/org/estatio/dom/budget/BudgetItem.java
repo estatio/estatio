@@ -19,7 +19,11 @@
 package org.estatio.dom.budget;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Query;
@@ -36,10 +40,14 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.app.budget.BudgetCalculationServices;
+import org.estatio.app.budget.DistributionService;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.OccupancyContributions;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -233,10 +241,62 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     // //////////////////////////////////////
 
+    public BudgetItem generateBudgetLines(@ParameterLayout(named = "Are you sure? All existing lines will be deleted.") final boolean confirmDelete) {
+
+        for (BudgetLine budgetLine : budgetLines.findByBudgetItem(this)) {
+            budgetLine.deleteBudgetLine();
+        }
+
+        List<Distributable> budgetLineList = new ArrayList<>();
+
+        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
+        for (Iterator<BudgetKeyItem> it = this.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
+
+            budgetKeyItem = it.next();
+
+            BigDecimal calculatedValue = BigDecimal.ZERO;
+            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(this,budgetKeyItem));
+            BudgetLine newBudgetLine = new BudgetLine(calculatedValue, this,budgetKeyItem);
+            budgetLineList.add(newBudgetLine);
+
+        }
+
+        //distribute budget lines
+        DistributionService distributionService = new DistributionService();
+        budgetLineList = distributionService.distribute(budgetLineList, this.getValue(), 2);
+
+        for (Distributable budgetLine : budgetLineList) {
+
+            persistIfNotAlready((BudgetLine) budgetLine);
+
+        }
+
+        return this;
+    }
+
+    public String validateGenerateBudgetLines(final boolean confirmDelete) {
+
+        return confirmDelete? null:"Please confirm";
+
+    }
+
     @Override
     @MemberOrder(sequence = "7")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getBudget().getApplicationTenancy();
     }
+
+    @Inject
+    private Leases leases;
+
+    @Inject
+    private BudgetCalculationServices budgetCalculationServices;
+
+    @Inject
+    BudgetLines budgetLines;
+
+    @Inject
+    OccupancyContributions occupancies;
+
 }

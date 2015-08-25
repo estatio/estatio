@@ -29,7 +29,7 @@ public class DistributionService {
         for (Distributable distributable : input) {
             BigDecimal unroundedTargetValue = distributable.getSourceValue().multiply(targetTotal, MathContext.DECIMAL64).divide(denominator, MathContext.DECIMAL64);
             BigDecimal roundedTargetValue = unroundedTargetValue.setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP);
-            distributable.setTargetValue(roundedTargetValue);
+            distributable.setValue(roundedTargetValue);
             OutputHelper newOutputObject = new OutputHelper(
                     distributable,
                     roundedTargetValue.subtract(unroundedTargetValue, MathContext.DECIMAL64),
@@ -41,10 +41,10 @@ public class DistributionService {
         // 1. check if rounding correction is needed
         BigDecimal sumOfCalculatedRoundedValues = BigDecimal.ZERO;
         for (OutputHelper helper : outputHelperList) {
-            sumOfCalculatedRoundedValues = sumOfCalculatedRoundedValues.add(helper.distributable.getTargetValue(), MathContext.DECIMAL64);
+            sumOfCalculatedRoundedValues = sumOfCalculatedRoundedValues.add(helper.distributable.getValue(), MathContext.DECIMAL64);
                     /*debug*/
 //            System.out.println("***************************");
-//            System.out.println(helper.distributable.getTargetValue());
+//            System.out.println(helper.distributable.getValue());
 //            System.out.print("sumOfCalculatedRoundedValues: ");
 //            System.out.println(sumOfCalculatedRoundedValues);
                     /*debug*/
@@ -89,8 +89,8 @@ public class DistributionService {
                     }
                 }
                 helperToRoundUp
-                        .distributable.setTargetValue(
-                        helperToRoundUp.distributable.getTargetValue()
+                        .distributable.setValue(
+                        helperToRoundUp.distributable.getValue()
                                 .add(increment(numberOfDigitsAfterDecimalPoint), MathContext.DECIMAL64)
                                 .setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP)
                 );
@@ -101,7 +101,7 @@ public class DistributionService {
 //                System.out.print("Identifier: ");
 //                System.out.println(helperToRoundUp.distributable.getSourceValue());
 //                System.out.print("New keyRoundedValue: ");
-//                System.out.println(helperToRoundUp.distributable.getTargetValue());
+//                System.out.println(helperToRoundUp.distributable.getValue());
 //                System.out.print("New deltaOfSum: ");
 //                System.out.println(deltaOfSum);
                         /*debug*/
@@ -117,8 +117,8 @@ public class DistributionService {
                     }
                 }
                 helperToRoundDown.
-                        distributable.setTargetValue(
-                        helperToRoundDown.distributable.getTargetValue()
+                        distributable.setValue(
+                        helperToRoundDown.distributable.getValue()
                                 .subtract(increment(numberOfDigitsAfterDecimalPoint), MathContext.DECIMAL64)
                                 .setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP)
                 );
@@ -129,7 +129,7 @@ public class DistributionService {
 //                System.out.print("Identifier: ");
 //                System.out.println(helperToRoundDown.distributable.getSourceValue());
 //                System.out.print("New keyRoundedValue: ");
-//                System.out.println(helperToRoundDown.distributable.getTargetValue());
+//                System.out.println(helperToRoundDown.distributable.getValue());
 //                System.out.print("New deltaOfSum: ");
 //                System.out.println(deltaOfSum);
                         /*debug*/

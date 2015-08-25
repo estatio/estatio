@@ -18,15 +18,21 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.Arrays;
 import java.util.List;
+
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -107,6 +113,61 @@ public class OccupanciesTest {
             assertThat(finderInteraction.getQueryName(), is("findByUnit"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object) unit));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
+
+    }
+
+    public static class occupanciesByUnitAndInterval extends OccupanciesTest {
+
+        @Before
+        public void setup() {
+            Occupancy occupancy2015 = new Occupancy();
+            occupancy2015.setStartDate(new LocalDate(2015, 01, 01));
+            occupancy2015.setEndDate(new LocalDate(2015, 12, 31));
+            Occupancy occupancy2016 = new Occupancy();
+            occupancy2016.setStartDate(new LocalDate(2016, 01, 01));
+            occupancy2016.setEndDate(new LocalDate(2016, 12, 31));
+            occupancies = new Occupancies() {
+                @Override
+                public List<Occupancy> findByUnit(final Unit unit) {
+                    return Arrays.asList(occupancy2015, occupancy2016);
+                }
+            };
+        }
+
+        @Test
+        public void happyCase() {
+
+            //given
+            Unit unit = new Unit();
+            LocalDateInterval localDateInterval = new LocalDateInterval(new LocalDate(2015,01,01), new LocalDate(2015,02,01));
+
+            //when
+            List<Occupancy> foundOccupancies = occupancies.occupanciesByUnitAndInterval(unit, localDateInterval);
+
+            //then
+            Assertions.assertThat(foundOccupancies.size()).isEqualTo(1);
+
+            //when
+            localDateInterval = new LocalDateInterval(new LocalDate(2015,01,01), new LocalDate(2016,01,01));
+            foundOccupancies = occupancies.occupanciesByUnitAndInterval(unit, localDateInterval);
+
+            //then
+            Assertions.assertThat(foundOccupancies.size()).isEqualTo(2);
+
+            //when
+            localDateInterval = new LocalDateInterval(new LocalDate(2014,01,01), new LocalDate(2014,12,31));
+            foundOccupancies = occupancies.occupanciesByUnitAndInterval(unit, localDateInterval);
+
+            //then
+            Assertions.assertThat(foundOccupancies.size()).isEqualTo(0);
+
+            //when
+            localDateInterval = new LocalDateInterval(new LocalDate(2017,01,01), new LocalDate(2017,01,01));
+            foundOccupancies = occupancies.occupanciesByUnitAndInterval(unit, localDateInterval);
+
+            //then
+            Assertions.assertThat(foundOccupancies.size()).isEqualTo(0);
         }
 
     }
