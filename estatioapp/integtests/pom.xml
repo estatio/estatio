@@ -58,7 +58,7 @@ language governing permissions and limitations under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <!--<testFailureIgnore>true</testFailureIgnore>-->
                 </configuration>
             </plugin>
         </plugins> 

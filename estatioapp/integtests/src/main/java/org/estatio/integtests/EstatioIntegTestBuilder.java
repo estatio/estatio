@@ -25,6 +25,7 @@ import org.apache.log4j.Level;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
@@ -41,6 +42,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         withLoggingAt(Level.DEBUG);
         with(new IsisConfigurationForJdoIntegTests());
         with(new DataNucleusPersistenceMechanismInstaller());
+        with(new AuthenticationRequestNameOnly("estatio-admin"));
 
         with(new EstatioAppManifestForIntegTests());
     }
