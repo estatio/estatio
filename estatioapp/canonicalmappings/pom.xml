@@ -48,7 +48,9 @@ Copyright 2015 Dan Haywood
         <profile>
             <id>isis</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.isis</name>
+                </property>
             </activation>
             <dependencies>
                 <dependency>
@@ -64,7 +66,9 @@ Copyright 2015 Dan Haywood
         <profile>
             <id>mapping-library</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.mapping-library</name>
+                </property>
             </activation>
 
             <properties>

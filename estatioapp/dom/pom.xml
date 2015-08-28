@@ -182,7 +182,9 @@ language governing permissions and limitations under the License.
         <profile>
             <id>enhance</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.enhance</name>
+                </property>
             </activation>
             <build>
                 <pluginManagement>
@@ -327,7 +329,9 @@ language governing permissions and limitations under the License.
         <profile>
             <id>isis-validate</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>!skip.isis-validate</name>
+                </property>
             </activation>
             <build>
                 <plugins>

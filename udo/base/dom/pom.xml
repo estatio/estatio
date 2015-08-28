@@ -168,7 +168,9 @@ language governing permissions and limitations under the License.
         <profile>
             <id>enhance</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.enhance</name>
+                </property>
             </activation>
             <build>
                 <pluginManagement>

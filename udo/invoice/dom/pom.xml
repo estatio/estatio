@@ -142,7 +142,9 @@ language governing permissions and limitations under the License.
         <profile>
             <id>enhance</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.enhance</name>
+                </property>
             </activation>
             <build>
                 <pluginManagement>
@@ -265,7 +267,6 @@ language governing permissions and limitations under the License.
                         <inherited>true</inherited>
                         <configuration>
                             <findbugsXmlOutput>true</findbugsXmlOutput>
-                            <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
                             <xmlOutput>true</xmlOutput>
                             <failOnError>false</failOnError>
                         </configuration>
@@ -286,7 +287,7 @@ language governing permissions and limitations under the License.
                         <configuration>
                             <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                             <minimumTokens>100</minimumTokens>
-                            <linkXref>true</linkXref>
+                            <linkXRef>true</linkXRef>
                             <rulesets>
                                 <ruleset>${pmd.ruleset}</ruleset>
                             </rulesets>

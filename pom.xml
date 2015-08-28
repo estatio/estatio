@@ -1044,7 +1044,9 @@ mvn clean install -DskipTests -o
         <profile>
             <id>regular-build</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.regular-build</name>
+                </property>
             </activation>
             <modules>
                 <module>udo/agreement/dom</module>

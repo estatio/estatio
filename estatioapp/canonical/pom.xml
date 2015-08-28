@@ -44,7 +44,9 @@ Copyright 2015 Dan Haywood
         <profile>
             <id>xsd-to-java</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.xsd-to-java</name>
+                </property>
             </activation>
 
             <build>
