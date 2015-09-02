@@ -330,7 +330,7 @@ language governing permissions and limitations under the License.
             <id>isis-validate</id>
             <activation>
                 <property>
-                    <name>!skip.isis-validate</name>
+                    <name>isis-validate</name>
                 </property>
             </activation>
             <build>
