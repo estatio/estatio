@@ -48,7 +48,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class PropertiesTest extends EstatioIntegrationTest {
+public class PropertyMenuTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -68,7 +68,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
     @Inject
     PropertyRepository propertyRepository;
 
-    public static class AllProperties extends PropertiesTest {
+    public static class AllPropertyMenu extends PropertyMenuTest {
 
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
@@ -81,7 +81,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindProperties extends PropertiesTest {
+    public static class FindPropertyMenu extends PropertyMenuTest {
 
         @Test
         public void withReference() throws Exception {
@@ -112,7 +112,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindPropertyByReference extends PropertiesTest {
+    public static class FindPropertyByReference extends PropertyMenuTest {
 
         @Test
         public void withReference() throws Exception {
@@ -125,7 +125,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class NewProperty extends PropertiesTest {
+    public static class NewProperty extends PropertyMenuTest {
 
         @Inject
         private Countries countries;

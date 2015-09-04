@@ -41,7 +41,7 @@ import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class PropertiesTest {
+public class PropertyMenuTest {
 
     FinderInteraction finderInteraction;
     PropertyMenu propertyMenu;
@@ -71,7 +71,7 @@ public class PropertiesTest {
         propertyMenu.propertyRepository = propertyRepository;
     }
 
-    public static class FindProperties extends PropertiesTest {
+    public static class FindPropertyMenu extends PropertyMenuTest {
 
         @Test
         public void happyCase() {
@@ -87,7 +87,7 @@ public class PropertiesTest {
 
     }
 
-    public static class FindPropertyByReference extends PropertiesTest {
+    public static class FindPropertyByReference extends PropertyMenuTest {
 
         @Test
         public void happyCase() {
@@ -103,7 +103,7 @@ public class PropertiesTest {
 
     }
 
-    public static class AutoComplete extends PropertiesTest {
+    public static class AutoComplete extends PropertyMenuTest {
 
         @Test
         public void happyCase() {
@@ -118,7 +118,7 @@ public class PropertiesTest {
         }
     }
 
-    public static class AllProperties extends PropertiesTest {
+    public static class AllPropertyMenu extends PropertyMenuTest {
 
         @Test
         public void happyCase() {
@@ -130,7 +130,7 @@ public class PropertiesTest {
     }
 
 
-    public static class NewProperty extends PropertiesTest {
+    public static class NewProperty extends PropertyMenuTest {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
