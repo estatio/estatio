@@ -23,30 +23,29 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
-@DomainService(menuOrder = "10", repositoryFor = FixedAssetRole.class)
-@Hidden
-public class FixedAssetRoles extends UdoDomainRepositoryAndFactory<FixedAssetRole> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = FixedAssetRole.class
+)
+public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<FixedAssetRole> {
 
-    public FixedAssetRoles() {
-        super(FixedAssetRoles.class, FixedAssetRole.class);
+    public FixedAssetRoleRepository() {
+        super(FixedAssetRoleRepository.class, FixedAssetRole.class);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public List<FixedAssetRole> findByAsset(
             final FixedAsset asset) {
         return allMatches("findByAsset",
                 "asset", asset);
     }
 
-    @Programmatic
     public List<FixedAssetRole> findByAssetAndType(
             final FixedAsset asset,
             final FixedAssetRoleType type) {
@@ -55,7 +54,6 @@ public class FixedAssetRoles extends UdoDomainRepositoryAndFactory<FixedAssetRol
                 "type", type);
     }
 
-    @Programmatic
     public FixedAssetRole findRole(
             final FixedAsset asset,
             final FixedAssetRoleType type) {
@@ -64,10 +62,6 @@ public class FixedAssetRoles extends UdoDomainRepositoryAndFactory<FixedAssetRol
                 "type", type);
     }
 
-    // //////////////////////////////////////
-
-    @NotContributed
-    @Action(semantics = SemanticsOf.SAFE)
     public FixedAssetRole findRole(
             final FixedAsset asset,
             final Party party,

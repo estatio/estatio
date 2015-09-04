@@ -32,7 +32,7 @@ import org.estatio.dom.party.PartyForTesting;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class FixedAssetRolesTest {
+public class FixedAssetRoleRepositoryTest {
 
     FinderInteraction finderInteraction;
 
@@ -42,7 +42,7 @@ public class FixedAssetRolesTest {
     LocalDate startDate;
     LocalDate endDate;
 
-    FixedAssetRoles fixedAssetRoles;
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Before
     public void setup() {
@@ -54,7 +54,7 @@ public class FixedAssetRolesTest {
         startDate = new LocalDate(2013, 1, 4);
         endDate = new LocalDate(2013, 2, 5);
 
-        fixedAssetRoles = new FixedAssetRoles() {
+        fixedAssetRoleRepository = new FixedAssetRoleRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -76,13 +76,13 @@ public class FixedAssetRolesTest {
         };
     }
 
-    public static class FindRole_5Args extends FixedAssetRolesTest {
+    public static class FindRole_5Args extends FixedAssetRoleRepositoryTest {
 
         @Test
         public void findRole2() {
 
             // TODO: need also to search by dates
-            fixedAssetRoles.findRole(asset, party, type, startDate, endDate);
+            fixedAssetRoleRepository.findRole(asset, party, type, startDate, endDate);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAssetRole.class));

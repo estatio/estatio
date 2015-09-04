@@ -33,8 +33,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.FinancialAccount;
@@ -59,7 +59,7 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
     public List<FinancialAccount> choices1NewAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
-        final FixedAssetRole role = fixedAssetRoles.findRole(fixedAsset, FixedAssetRoleType.PROPERTY_OWNER);
+        final FixedAssetRole role = fixedAssetRoleRepository.findRole(fixedAsset, FixedAssetRoleType.PROPERTY_OWNER);
         if (role != null) {
             return financialAccounts.findAccountsByOwner(role.getParty());
         }
@@ -98,10 +98,10 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
         this.financialAccounts = financialAccounts;
     }
 
-    private FixedAssetRoles fixedAssetRoles;
+    private FixedAssetRoleRepository fixedAssetRoleRepository;
 
-    public final void setFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRoles = fixedAssetRoles;
+    public final void setFixedAssetRoleRepository(final FixedAssetRoleRepository fixedAssetRoleRepository) {
+        this.fixedAssetRoleRepository = fixedAssetRoleRepository;
     }
 
 }

@@ -18,8 +18,6 @@
  */
 package org.estatio.integtests.assets;
 
-import static org.junit.Assert.assertNotNull;
-
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -30,8 +28,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Parties;
@@ -41,7 +39,9 @@ import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class FixedAssetRolesTest extends EstatioIntegrationTest {
+import static org.junit.Assert.assertNotNull;
+
+public class FixedAssetRoleRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -62,9 +62,9 @@ public class FixedAssetRolesTest extends EstatioIntegrationTest {
     Parties parties;
 
     @Inject
-    FixedAssetRoles fixedAssetRoles;
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
-    public static class FindRole_AssetAndType extends FixedAssetRolesTest {
+    public static class FindRole_AssetAndType extends FixedAssetRoleRepositoryTest {
 
         @Test
         public void withExistingPropertyAndRoleType() throws Exception {
@@ -73,14 +73,14 @@ public class FixedAssetRolesTest extends EstatioIntegrationTest {
             Property property = properties.findPropertyByReference("OXF");
 
             // when
-            FixedAssetRole propertyActor = fixedAssetRoles.findRole(property, FixedAssetRoleType.PROPERTY_OWNER);
+            FixedAssetRole propertyActor = fixedAssetRoleRepository.findRole(property, FixedAssetRoleType.PROPERTY_OWNER);
 
             // then
             assertNotNull(propertyActor);
         }
     }
 
-    public static class FindRole_AssetAndPartyAndType extends FixedAssetRolesTest {
+    public static class FindRole_AssetAndPartyAndType extends FixedAssetRoleRepositoryTest {
 
         @Test
         public void withExistingPropertyPartyAndRoleType() throws Exception {
@@ -94,7 +94,7 @@ public class FixedAssetRolesTest extends EstatioIntegrationTest {
             LocalDate endDate = new LocalDate();
 
             // when
-            FixedAssetRole propertyActor = fixedAssetRoles.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER, startDate, endDate);
+            FixedAssetRole propertyActor = fixedAssetRoleRepository.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER, startDate, endDate);
 
             // then
             Assert.assertNotNull(propertyActor);

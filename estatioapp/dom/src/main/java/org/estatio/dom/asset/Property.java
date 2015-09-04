@@ -259,7 +259,7 @@ public class Property
             final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
 
-        FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
+        FixedAssetRole role = fixedAssetRoleRepository.findRole(this, party, type, startDate, endDate);
         if (role == null) {
             role = this.createRole(type, party, startDate, endDate);
         }
@@ -292,7 +292,7 @@ public class Property
     Units unitsRepo;
 
     @Inject
-    FixedAssetRoles fixedAssetRoles;
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject
     LocationLookupService locationLookupService;
