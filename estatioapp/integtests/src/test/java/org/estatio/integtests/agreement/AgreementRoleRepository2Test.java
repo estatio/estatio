@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.roles;
+package org.estatio.integtests.agreement;
 
 import javax.inject.Inject;
 import org.joda.time.LocalDate;
@@ -39,9 +39,9 @@ import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
 
-public class AgreementRolesTest extends EstatioIntegrationTest {
+public class AgreementRoleRepository2Test extends EstatioIntegrationTest {
 
-    public static class FindByAgreementAndPartyAndTypeAndContainsDate extends AgreementRolesTest {
+    public static class FindByAgreementAndPartyAndTypeAndContainsDate2 extends AgreementRoleRepository2Test {
 
         private AgreementRoleType artTenant;
         private Lease leaseOxfTopModel;
@@ -66,7 +66,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
         @Inject
         private AgreementRoleTypes agreementRoleTypes;
         @Inject
-        private AgreementRoleRepository agreementRoles;
+        private AgreementRoleRepository agreementRoleRepository;
         @Inject
         private ClockService clockService;
 
@@ -84,7 +84,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
             final LocalDate date = clockService.now();
 
             // when
-            AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseOxfTopModel, partyTopModel, artTenant, date);
+            AgreementRole role = agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(leaseOxfTopModel, partyTopModel, artTenant, date);
 
             // then
             Assert.assertNotNull(role);
