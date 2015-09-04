@@ -19,25 +19,31 @@
 package org.estatio.integtests.agreement;
 
 import java.util.List;
+
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent.Phase;
 import org.apache.isis.applib.services.wrapper.InvalidException;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.dom.agreement.PartySubscriptions;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
@@ -54,10 +60,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class AgreementRolesTest extends EstatioIntegrationTest {
+public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
     AgreementRoleRepository agreementRoles;
+    @Inject
+    PartySubscriptions partySubscriptions;
 
     @Inject
     Parties parties;
@@ -106,7 +114,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindByParty extends AgreementRolesTest {
+    public static class FindByParty extends AgreementRoleRepositoryTest {
 
         @Test
         public void findByParty() throws Exception {
@@ -116,7 +124,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindByPartyAndTypeAndContainsDate extends AgreementRolesTest {
+    public static class FindByPartyAndTypeAndContainsDate extends AgreementRoleRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
@@ -140,7 +148,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class findByAgreementAndPartyAndTypeAndContainsDate extends AgreementRolesTest {
+    public static class findByAgreementAndPartyAndTypeAndContainsDate extends AgreementRoleRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
@@ -150,7 +158,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class findByAgreementAndPartyAndContainsDate extends AgreementRolesTest {
+    public static class findByAgreementAndPartyAndContainsDate extends AgreementRoleRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
@@ -160,7 +168,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class OnPartyRemove extends AgreementRolesTest {
+    public static class OnPartyRemove extends AgreementRoleRepositoryTest {
 
         Party oldParty;
         Party newParty;
@@ -193,7 +201,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
             // when
             Party.RemoveEvent event = new RemoveEvent(oldParty, null, (Object[]) null);
             event.setEventPhase(Phase.VALIDATE);
-            agreementRoles.on(event);
+            partySubscriptions.on(event);
 
             // then
             assertTrue(event.isInvalid());
@@ -204,9 +212,9 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
             // when
             Party.RemoveEvent event = new RemoveEvent(oldParty, null, newParty);
             event.setEventPhase(Phase.VALIDATE);
-            agreementRoles.on(event);
+            partySubscriptions.on(event);
             event.setEventPhase(Phase.EXECUTING);
-            agreementRoles.on(event);
+            partySubscriptions.on(event);
 
             // then
             assertThat(agreementRoles.findByParty(oldParty).size(), is(0));

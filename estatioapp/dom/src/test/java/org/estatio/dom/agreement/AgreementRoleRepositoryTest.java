@@ -141,7 +141,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void getId() {
-            assertThat(new AgreementRoleRepository().getId(), is("agreementRoleRepository"));
+            assertThat(new AgreementRoleRepository().getId(), is(AgreementRoleRepository.class.getName()));
         }
 
     }

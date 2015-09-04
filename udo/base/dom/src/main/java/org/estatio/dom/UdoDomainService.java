@@ -19,14 +19,16 @@
 package org.estatio.dom;
 
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 import org.apache.isis.applib.AbstractService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.memento.MementoService;
-import org.estatio.dom.utils.StringExtensions;
+
 import org.estatio.services.clock.ClockService;
 
 public abstract class UdoDomainService<T> extends AbstractService {
@@ -37,12 +39,6 @@ public abstract class UdoDomainService<T> extends AbstractService {
         this.serviceType = serviceType;
     }
     
-    @Override
-    public String getId() {
-        // eg "agreementRoles";
-        return StringExtensions.asCamelLowerFirst(serviceType.getSimpleName());
-    }
-
     public String iconName() {
         // eg "AgreementRole";
         return serviceType.getSimpleName();

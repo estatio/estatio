@@ -29,12 +29,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class CommunicationChannelSubscriptions {
+public class CommunicationChannelSubscriptions extends UdoDomainService<CommunicationChannelSubscriptions> {
+
+    public CommunicationChannelSubscriptions() {
+        super(CommunicationChannelSubscriptions.class);
+    }
 
     @Subscribe
     public void on(final CommunicationChannel.RemoveEvent ev) {

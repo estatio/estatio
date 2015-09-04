@@ -30,12 +30,17 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
+import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class PartySubscriptions  {
+public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
+
+    public PartySubscriptions() {
+        super(PartySubscriptions.class);
+    }
 
     @Subscribe
     @Programmatic

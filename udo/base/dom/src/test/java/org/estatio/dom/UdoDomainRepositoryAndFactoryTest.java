@@ -19,12 +19,15 @@
 package org.estatio.dom;
 
 import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryDefault;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -178,7 +181,7 @@ public class UdoDomainRepositoryAndFactoryTest {
 
         @Test
         public void getId() {
-            assertThat(someDomainService.getId(), is("someDomainService"));
+            assertThat(someDomainService.getId(), is(someDomainService.getClass().getName()));
         }
 
         @Test
