@@ -19,39 +19,36 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannelType.class)
-@Hidden
-public class AgreementRoleCommunicationChannelTypes
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = AgreementRoleCommunicationChannelType.class
+)
+public class AgreementRoleCommunicationChannelTypeRepository
         extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannelType> {
 
-    public AgreementRoleCommunicationChannelTypes() {
-        super(AgreementRoleCommunicationChannelTypes.class, AgreementRoleCommunicationChannelType.class);
+    public AgreementRoleCommunicationChannelTypeRepository() {
+        super(AgreementRoleCommunicationChannelTypeRepository.class, AgreementRoleCommunicationChannelType.class);
     }
 
-    // //////////////////////////////////////
-
-    @NotContributed
     public AgreementRoleCommunicationChannelType findByTitle(final String title) {
         return firstMatch("findByTitle", "title", title);
     }
 
-    @NotContributed
     public AgreementRoleCommunicationChannelType findByAgreementTypeAndTitle(final AgreementType agreementType, final String title) {
         return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
     }
 
-    @NotContributed
     public List<AgreementRoleCommunicationChannelType> findApplicableTo(final AgreementType agreementType) {
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 
-    @Programmatic
     public AgreementRoleCommunicationChannelType findOrCreate(final String title, final AgreementType agreementType) {
         AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);
         if (arcct == null) {

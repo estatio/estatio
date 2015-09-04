@@ -99,7 +99,7 @@ public class AgreementType
     @Programmatic
     @NotPersisted
     public List<AgreementRoleCommunicationChannelType> getRoleChannelTypesApplicableTo() {
-        return agreementRoleCommunicationChannelTypes.findApplicableTo(this);
+        return agreementRoleCommunicationChannelTypeRepository.findApplicableTo(this);
     }
 
     // //////////////////////////////////////
@@ -110,11 +110,11 @@ public class AgreementType
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+    private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
     public final void injectAgreementRoleCommunicationChannelTypes(
-            final AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
-        this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
+            final AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository) {
+        this.agreementRoleCommunicationChannelTypeRepository = agreementRoleCommunicationChannelTypeRepository;
     }
 
 }

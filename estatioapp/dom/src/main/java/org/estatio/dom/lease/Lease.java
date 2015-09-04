@@ -65,7 +65,7 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
@@ -1018,7 +1018,7 @@ public class Lease
     Units units;
 
     @Inject
-    AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
     @Inject
     CommunicationChannels communicationChannels;

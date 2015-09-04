@@ -47,7 +47,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
@@ -291,8 +291,8 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
-        agreementRoleCommunicationChannelTypes.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
-        agreementRoleCommunicationChannelTypes.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
     }
 
     // //////////////////////////////////////
@@ -329,7 +329,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     private AgreementRoleTypes agreementRoleTypes;
 
     @Inject
-    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+    private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
     @Inject 
     ClockService clockService;
