@@ -20,29 +20,32 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 import java.util.UUID;
+
 import javax.inject.Inject;
+
 import com.google.common.eventbus.Subscribe;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
-@DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannel.class)
-@Hidden
-public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = AgreementRoleCommunicationChannel.class
+)
+public class AgreementRoleCommunicationChannelRepository
+        extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
 
-    public AgreementRoleCommunicationChannels() {
-        super(AgreementRoleCommunicationChannels.class, AgreementRoleCommunicationChannel.class);
+    public AgreementRoleCommunicationChannelRepository() {
+        super(AgreementRoleCommunicationChannelRepository.class, AgreementRoleCommunicationChannel.class);
     }
 
-    @Hidden
-    @ActionSemantics(Of.SAFE)
     public AgreementRoleCommunicationChannel findByRoleAndTypeAndContainsDate(
             final AgreementRole role,
             final AgreementRoleCommunicationChannelType type,
@@ -53,15 +56,12 @@ public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFa
                 "date", date);
     }
 
-    @Hidden
-    @ActionSemantics(Of.SAFE)
     public List<AgreementRoleCommunicationChannel> findByCommunicationChannel(
             final CommunicationChannel communicationChannel) {
         return allMatches("findByCommunicationChannel",
                 "communicationChannel", communicationChannel);
     }
 
-    @Programmatic
     public Iterable<? extends EstatioDomainObject<?>> findByAgreement(final Agreement agreement) {
         return allMatches("findByAgreement",
                 "agreement", agreement);
@@ -69,7 +69,7 @@ public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFa
 
     @Subscribe
     public void on(final CommunicationChannel.RemoveEvent ev) {
-        CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
+        CommunicationChannel sourceCommunicationChannel = ev.getSource();
         CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
 
         List<AgreementRoleCommunicationChannel> communicationChannels;
@@ -83,8 +83,8 @@ public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFa
             }
             break;
         case EXECUTING:
-                communicationChannels = (List<AgreementRoleCommunicationChannel>) scratchpad.get(onCommunicationChannelRemoveScratchpadKey);
-                for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
+            communicationChannels = (List<AgreementRoleCommunicationChannel>) scratchpad.get(onCommunicationChannelRemoveScratchpadKey);
+            for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
                 arcc.setCommunicationChannel(replacementCommunicationChannel);
             }
             break;
@@ -94,9 +94,6 @@ public class AgreementRoleCommunicationChannels extends UdoDomainRepositoryAndFa
     }
 
     private transient UUID onCommunicationChannelRemoveScratchpadKey;
-
-    // //////////////////////////////////////
-
 
 
 

@@ -562,7 +562,7 @@ public class AgreementRole
 
     private AgreementRoleCommunicationChannel findCommunicationChannel(
             final AgreementRoleCommunicationChannelType type, final LocalDate date) {
-        return agreementRoleCommunicationChannels.findByRoleAndTypeAndContainsDate(this, type, date);
+        return agreementRoleCommunicationChannelRepository.findByRoleAndTypeAndContainsDate(this, type, date);
     }
 
     // //////////////////////////////////////
@@ -574,10 +574,10 @@ public class AgreementRole
         this.communicationChannelContributions = communicationChannelContributions;
     }
 
-    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
+    private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
 
     public final void injectAgreementRoleCommunicationChannels(
-            final AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
-        this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
+            final AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository) {
+        this.agreementRoleCommunicationChannelRepository = agreementRoleCommunicationChannelRepository;
     }
 }

@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -35,9 +35,9 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AgreementRoleCommunicationChannelsTest extends EstatioIntegrationTest {
+public class AgreementRoleCommunicationChannelRepositoryTest extends EstatioIntegrationTest {
 
-    public static class FindByCommunicationChannel extends AgreementRoleCommunicationChannelsTest {
+    public static class FindByCommunicationChannel extends AgreementRoleCommunicationChannelRepositoryTest {
 
         @Before
         public void setupData() {
@@ -55,7 +55,7 @@ public class AgreementRoleCommunicationChannelsTest extends EstatioIntegrationTe
         CommunicationChannels communicationChannels;
 
         @Inject
-        AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
+        AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
 
         @Inject
         Parties parties;
@@ -73,7 +73,8 @@ public class AgreementRoleCommunicationChannelsTest extends EstatioIntegrationTe
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(agreementRoleCommunicationChannels.findByCommunicationChannel(communicationChannel).get(0).getCommunicationChannel(), is(communicationChannel));
+            assertThat(
+                    agreementRoleCommunicationChannelRepository.findByCommunicationChannel(communicationChannel).get(0).getCommunicationChannel(), is(communicationChannel));
         }
     }
 

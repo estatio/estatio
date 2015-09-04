@@ -46,10 +46,10 @@ public class AgreementRoleCommunicationChannelContributions extends UdoDomainRep
     @CollectionLayout(render = RenderType.LAZILY)
     public List<AgreementRoleCommunicationChannel> agreements(
             final CommunicationChannel communicationChannel) {
-        return agreementRoleCommunicationChannels.findByCommunicationChannel(communicationChannel);
+        return agreementRoleCommunicationChannelRepository.findByCommunicationChannel(communicationChannel);
     }
 
 
     @javax.inject.Inject
-    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
+    private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
 }
