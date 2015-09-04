@@ -18,14 +18,20 @@
  */
 package org.estatio.dom.asset;
 
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.collect.Sets;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -39,13 +45,15 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -83,6 +91,9 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     public FixedAsset() {
         super("name");
     }
+
+    @Inject
+    FixedAssetRoles fixedAssetRoles;
 
     // //////////////////////////////////////
 
@@ -175,9 +186,19 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
+        List<FixedAssetRole> currentRoles = fixedAssetRoles.findAllForPropertyAndPartyAndType(this, party, type);
+        for (FixedAssetRole fixedAssetRole : currentRoles) {
+            LocalDateInterval existingInterval = new LocalDateInterval(fixedAssetRole.getStartDate(), fixedAssetRole.getEndDate());
+            LocalDateInterval newInterval = new LocalDateInterval(startDate, endDate);
+            if (existingInterval.overlaps(newInterval)) {
+                return "The provided dates overlap with a current role of this type and party";
+            }
+        }
+
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             return "End date cannot be earlier than start date";
         }
+
         if (!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
             return "Add a successor/predecessor from existing role";
         }
@@ -191,7 +212,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
         role.setStartDate(startDate);
         role.setEndDate(endDate);
         role.setType(type); // must do before associate with agreement, since
-                            // part of AgreementRole#compareTo impl.
+        // part of AgreementRole#compareTo impl.
 
         // JDO will manage the relationship for us
         // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email

@@ -668,7 +668,7 @@ public class AgreementTest {
                 agreement.getRoles().add(existingRole);
                 assertThat(
                         agreement.validateNewRole(art, party, null, null),
-                        is("Add a successor/predecessor to existing agreement role"));
+                        is("There is already a role for this type and period"));
             }
 
         }

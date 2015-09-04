@@ -24,15 +24,12 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -106,16 +103,6 @@ public class AgreementRoleType
     }
 
     // //////////////////////////////////////
-
-    @Programmatic
-    public Predicate<? super AgreementRole> matchingRole() {
-        return new Predicate<AgreementRole>() {
-            @Override
-            public boolean apply(final AgreementRole ar) {
-                return ar != null && Objects.equal(ar.getType(), AgreementRoleType.this) ? true : false;
-            }
-        };
-    }
 
     // //////////////////////////////////////
 

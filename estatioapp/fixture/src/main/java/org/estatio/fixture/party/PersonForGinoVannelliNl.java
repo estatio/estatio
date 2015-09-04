@@ -28,8 +28,15 @@ public class PersonForGinoVannelliNl extends PersonAbstract {
     public static final String AT_PATH = ApplicationTenancyForNl.PATH;
     public static final String PARTY_REF_FROM = OrganisationForMediaXNl.REF;
 
+    public static final String PARTY_REFERENCE = "GVANNELLI";
+
     @Override
     protected void execute(ExecutionContext executionContext) {
+        // prereqs
+        if (isExecutePrereqs()) {
+            executionContext.executeChild(this, new OrganisationForTopModelGb());
+        }
+
         createPerson(
                 AT_PATH,
                 REF,

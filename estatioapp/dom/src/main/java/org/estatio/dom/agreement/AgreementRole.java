@@ -27,6 +27,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -286,19 +287,19 @@ public class AgreementRole
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @Override
     public AgreementRole getPredecessor() {
-        return helper.getPredecessor(getAgreement().getRoles(), getType().matchingRole());
+        return helper.getPredecessor(getAgreement().getRoles(), Predicates.matchingRole(this.getType()));
     }
 
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @Override
     public AgreementRole getSuccessor() {
-        return helper.getSuccessor(getAgreement().getRoles(), getType().matchingRole());
+        return helper.getSuccessor(getAgreement().getRoles(), Predicates.matchingRole(this.getType()));
     }
 
     @CollectionLayout(render = RenderType.EAGERLY)
     @Override
     public SortedSet<AgreementRole> getTimeline() {
-        return helper.getTimeline(getAgreement().getRoles(), getType().matchingRole());
+        return helper.getTimeline(getAgreement().getRoles(), Predicates.matchingRole(this.getType()));
     }
 
     // //////////////////////////////////////
@@ -487,6 +488,30 @@ public class AgreementRole
                 @Override
                 public boolean apply(final AgreementRole input) {
                     return input != null && input.getAgreement().getType() == at;
+                }
+            };
+        }
+
+        @Programmatic
+        public static Predicate<? super AgreementRole> matchingRoleAndPeriod(
+                final AgreementRoleType art,
+                final LocalDate startDate,
+                final LocalDate endDate) {
+            return new Predicate<AgreementRole>() {
+                @Override
+                public boolean apply(final AgreementRole ar) {
+                    return Objects.equal(ar.getType(), art) && ar.getInterval().overlaps(new LocalDateInterval(startDate, endDate));
+                }
+            };
+        }
+
+        @Programmatic
+        public static Predicate<? super AgreementRole> matchingRole(
+                final AgreementRoleType art) {
+            return new Predicate<AgreementRole>() {
+                @Override
+                public boolean apply(final AgreementRole ar) {
+                    return Objects.equal(ar.getType(), art);
                 }
             };
         }

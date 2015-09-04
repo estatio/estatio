@@ -72,7 +72,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.asset.FixedAssetRole "
                         + "WHERE asset == :asset "
                         + "&& party == :party "
-                        + "&& type == :type")
+                        + "&& type == :type"),
+        @javax.jdo.annotations.Query(
+                name = "findAllForProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE asset == :asset")
 })
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole

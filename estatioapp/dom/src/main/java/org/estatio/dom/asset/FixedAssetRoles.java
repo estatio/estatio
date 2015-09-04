@@ -19,13 +19,16 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
@@ -80,4 +83,23 @@ public class FixedAssetRoles extends UdoDomainRepositoryAndFactory<FixedAssetRol
                 "type", type);
     }
 
+    @NotContributed
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<FixedAssetRole> findAllForProperty(
+            final Property property) {
+        return allMatches("findAllForProperty",
+                "asset", property);
+    }
+
+    @NotContributed
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<FixedAssetRole> findAllForPropertyAndPartyAndType(
+            final FixedAsset asset,
+            final Party party,
+            final FixedAssetRoleType type) {
+        return allMatches("findByAssetAndPartyAndType",
+                "asset", asset,
+                "party", party,
+                "type", type);
+    }
 }
