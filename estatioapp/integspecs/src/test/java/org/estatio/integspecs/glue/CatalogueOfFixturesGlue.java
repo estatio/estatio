@@ -23,14 +23,14 @@ import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
 import org.estatio.fixture.financial.BankAccountForMediaXGb;
 import org.estatio.fixture.financial.BankAccountForMiracleGb;
 import org.estatio.fixture.financial.BankAccountForPretGb;
-import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
-import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
+import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
@@ -39,11 +39,11 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.fixture.lease._LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
@@ -80,14 +80,14 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new PersonForLinusTorvaldsNl(), executionContext);
 
                         // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
-                        execute(new _PropertyForOxfGb(), executionContext);
+                        execute(new PropertyForOxfGb(), executionContext);
                         execute(new PropertyForKalNl(), executionContext);
 
                         // execute("leases", new LeasesEtcForAll(), executionContext);
                         execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
                         execute(new LeaseBreakOptionsForOxfMediax002Gb(), executionContext);
                         execute(new LeaseBreakOptionsForOxfPoison003Gb(), executionContext);
-                        execute(new _LeaseForOxfPret004Gb(), executionContext);
+                        execute(new LeaseForOxfPret004Gb(), executionContext);
                         execute(new LeaseItemAndTermsForOxfMiracl005Gb(), executionContext);
                         execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
@@ -97,10 +97,10 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
 
                         //execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
                         execute(new BankAccountForAcmeNl(), executionContext);
-                        execute(new _BankAccountForHelloWorldNl(), executionContext);
+                        execute(new BankAccountForHelloWorldGb(), executionContext);
                         execute(new BankAccountForMediaXGb(), executionContext);
                         execute(new BankAccountForMiracleGb(), executionContext);
-                        execute(new _BankAccountAndMandateForPoisonNl(), executionContext);
+                        execute(new BankAccountAndMandateForPoisonNl(), executionContext);
                         execute(new BankAccountForPretGb(), executionContext);
                         execute(new BankAccountAndMandateForTopModelGb(), executionContext);
                     }
@@ -128,15 +128,15 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new PersonForLinusTorvaldsNl(), executionContext);
 
                         // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
-                        execute(new _PropertyForOxfGb(), executionContext);
+                        execute(new PropertyForOxfGb(), executionContext);
                         execute(new PropertyForKalNl(), executionContext);
 
                         //execute("leases", new LeaseForAll(), executionContext);
-                        execute(new _LeaseForOxfTopModel001Gb(), executionContext);
-                        execute(new _LeaseForOxfMediaX002Gb(), executionContext);
-                        execute(new _LeaseForOxfPoison003Gb(), executionContext);
-                        execute(new _LeaseForOxfPret004Gb(), executionContext);
-                        execute(new _LeaseForOxfMiracl005Gb(), executionContext);
+                        execute(new LeaseForOxfTopModel001Gb(), executionContext);
+                        execute(new LeaseForOxfMediaX002Gb(), executionContext);
+                        execute(new LeaseForOxfPoison003Gb(), executionContext);
+                        execute(new LeaseForOxfPret004Gb(), executionContext);
+                        execute(new LeaseForOxfMiracl005Gb(), executionContext);
                         execute(new LeaseForKalPoison001Nl(), executionContext);
 
                         // no lease items or terms

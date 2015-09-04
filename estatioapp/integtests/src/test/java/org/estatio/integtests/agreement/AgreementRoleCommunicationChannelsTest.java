@@ -29,7 +29,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -46,7 +46,7 @@ public class AgreementRoleCommunicationChannelsTest extends EstatioIntegrationTe
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -66,7 +66,7 @@ public class AgreementRoleCommunicationChannelsTest extends EstatioIntegrationTe
 
         @Before
         public void setUp() throws Exception {
-            party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+            party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
             communicationChannel = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
         }
 

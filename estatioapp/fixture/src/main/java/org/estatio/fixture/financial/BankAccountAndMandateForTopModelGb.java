@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 
 public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbstract {
 
@@ -38,7 +38,7 @@ public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbs
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             executionContext.executeChild(this, new BankAccountForTopModelGb());
         }
 

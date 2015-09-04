@@ -19,10 +19,14 @@
 package org.estatio.integtests.agreement;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
@@ -32,11 +36,11 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.lease._LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -53,16 +57,16 @@ public class AgreementsTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 // 5 oxford leases, 1 kal
-                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
-                    executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
-                    executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
-                    executionContext.executeChild(this, new _LeaseForOxfMiracl005Gb());
-                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
+                executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                executionContext.executeChild(this, new LeaseForOxfPret004Gb());
+                executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+                executionContext.executeChild(this, new LeaseForKalPoison001Nl());
             }
         });
 
-        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     @Inject

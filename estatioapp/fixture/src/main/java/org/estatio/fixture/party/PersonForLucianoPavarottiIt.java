@@ -20,13 +20,13 @@ package org.estatio.fixture.party;
 
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-public class PersonForGinoVannelliNl extends PersonAbstract {
+public class PersonForLucianoPavarottiIt extends PersonAbstract {
 
-    public static final String REF = "GVANNELLI_NL";
-    public static final String AT_PATH = ApplicationTenancyForNl.PATH;
-    public static final String PARTY_REF_FROM = OrganisationForMediaXNl.REF;
+    public static final String REF = "LPAVAROTTI";
+    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
+    public static final String PARTY_REF_FROM = OrganisationForPastaPapaIt.REF;
 
     public static final String PARTY_REFERENCE = "GVANNELLI";
 
@@ -40,12 +40,12 @@ public class PersonForGinoVannelliNl extends PersonAbstract {
         createPerson(
                 AT_PATH,
                 REF,
-                "G",
-                "Gino",
-                "Vannelli",
+                "L",
+                "Luciano",
+                "Pavarotti",
                 PersonGenderType.MALE,
-                "+31201234567",
-                "gino@topmodel.example.com",
+                null,
+                null,
                 PARTY_REF_FROM,
                 PartyRelationshipType.CONTACT.fromTitle(), executionContext);
     }

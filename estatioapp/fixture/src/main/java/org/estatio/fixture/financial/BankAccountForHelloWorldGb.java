@@ -21,16 +21,18 @@ package org.estatio.fixture.financial;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 
+public class BankAccountForHelloWorldGb extends BankAccountAbstract {
 
-public class BankAccountForOxford extends BankAccountAbstract {
+    public static final String REF = "NL31ABNA0580744434";
 
-    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744432";
+    public static final String PARTY_REF = OrganisationForHelloWorldGb.REF;
+    public static final String PROPERTY_REF = PropertyForOxfGb.REF;
 
-    public BankAccountForOxford() {
+    public BankAccountForHelloWorldGb() {
         this(null, null);
     }
 
-    public BankAccountForOxford(String friendlyName, String localName) {
+    public BankAccountForHelloWorldGb(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -39,13 +41,16 @@ public class BankAccountForOxford extends BankAccountAbstract {
 
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PropertyForOxfGb());
             executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+            executionContext.executeChild(this, new PropertyForOxfGb());
         }
 
         // exec
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(OrganisationForHelloWorldGb.REF, BANK_ACCOUNT_REF, PropertyForOxfGb.REF, executionContext);
-        
+        createBankAccountAndOptionallyFixedAssetFinancialAsset(
+                PARTY_REF,
+                REF,
+                PROPERTY_REF, // create FAFA
+                executionContext);
     }
 
 }

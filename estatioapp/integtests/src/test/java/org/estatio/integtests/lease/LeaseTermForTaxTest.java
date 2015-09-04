@@ -41,7 +41,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class LeaseTermForTaxTest extends EstatioIntegrationTest {
@@ -71,7 +71,7 @@ public class LeaseTermForTaxTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             item = leaseItems.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0);
             taxItem = leaseItems.findLeaseItemsByType(lease, LeaseItemType.TAX).get(0);
             assertNotNull(item);

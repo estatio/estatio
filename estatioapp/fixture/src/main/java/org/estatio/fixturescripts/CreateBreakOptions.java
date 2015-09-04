@@ -29,7 +29,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.services.clock.ClockService;
 
 public class CreateBreakOptions extends DiscoverableFixtureScript {
@@ -37,7 +37,7 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     private String reference;
 
     public CreateBreakOptions() {
-        this(_LeaseForOxfTopModel001Gb.REF);
+        this(LeaseForOxfTopModel001Gb.REF);
     }
 
     public CreateBreakOptions(String reference) {

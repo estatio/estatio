@@ -32,7 +32,7 @@ import org.estatio.dom.document.DocumentType;
 import org.estatio.dom.document.asset.DocumentForFixedAsset;
 import org.estatio.dom.document.asset.DocumentsForFixedAsset;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.interactivemap.InteractiveMapDocumentForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -73,7 +73,7 @@ public class DocumentsForFixedAssetsTest extends EstatioIntegrationTest {
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = properties.findPropertyByReference(PropertyForOxfGb.REF);
             // when
             final List<DocumentForFixedAsset> document = documents.findByFixedAsset(property);
             // then
@@ -89,7 +89,7 @@ public class DocumentsForFixedAssetsTest extends EstatioIntegrationTest {
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = properties.findPropertyByReference(PropertyForOxfGb.REF);
             // when
             final List<DocumentForFixedAsset> document = documents.findByFixedAssetAndType(property, DocumentType.INTERACTIVE_MAP);
             // then

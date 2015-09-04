@@ -20,7 +20,6 @@ package org.estatio.fixture.project;
 
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.party.OrganisationForMediaXNl;
-import org.estatio.fixture.party.PersonForGinoVannelliNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 
@@ -33,12 +32,10 @@ public class ProgramForGra extends ProgramAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new OrganisationForMediaXNl());
             executionContext.executeChild(this, new PersonForJohnDoeNl());
             executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-            executionContext.executeChild(this, new PersonForGinoVannelliNl());
-
         }
 
         // exec

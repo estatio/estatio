@@ -26,7 +26,7 @@ import static org.estatio.integtests.VT.bd;
 public class LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
 
     public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
-    public static final String LEASE_REF = _LeaseForOxfMiracl005Gb.REF;
+    public static final String LEASE_REF = LeaseForOxfMiracl005Gb.REF;
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
@@ -37,7 +37,7 @@ public class LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb extends LeaseItem
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _LeaseForOxfMiracl005Gb());
+            executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
         }
 
         // exec

@@ -32,7 +32,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
 
@@ -45,21 +45,20 @@ public class BudgetForOxf extends BudgetAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _PropertyForOxfGb());
+        if (isExecutePrereqs()) {
+            executionContext.executeChild(this, new PropertyForOxfGb());
             executionContext.executeChild(this, new BudgetKeyTablesForOxf());
             executionContext.executeChild(this, new CurrenciesRefData());
             executionContext.executeChild(this, new ChargeRefData());
         }
 
         // exec
-        Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+        Property property = properties.findPropertyByReference(PropertyForOxfGb.REF);
         BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME);
         final BigDecimal VALUE = new BigDecimal(30000);
         final Currency currency = currencies.findCurrency(CurrenciesRefData.EUR);
         final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
         final BudgetCostGroup budgetCostGroup = BudgetCostGroup.VIGILANZA;
-
 
         Budget newBudget = createBudget(
                 property,
@@ -67,7 +66,7 @@ public class BudgetForOxf extends BudgetAbstact {
                 new LocalDate(2015, 12, 31),
                 budgetKeyTable,
                 VALUE,
-//                currency,
+                //                currency,
                 charge,
                 budgetCostGroup,
                 executionContext);

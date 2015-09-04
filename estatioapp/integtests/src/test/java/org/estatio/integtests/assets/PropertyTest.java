@@ -19,21 +19,26 @@
 package org.estatio.integtests.assets;
 
 import java.util.Set;
+
 import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
+
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyBuilder;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,12 +47,12 @@ public class PropertyTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-            runFixtureScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
             }
         });
     }
@@ -55,13 +60,12 @@ public class PropertyTest extends EstatioIntegrationTest {
     @Inject
     Properties properties;
 
-
     public static class GetUnits extends PropertyTest {
 
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // given
-            Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            Property property = properties.findPropertyByReference(PropertyForOxfGb.REF);
 
             // when
             Set<Unit> units = property.getUnits();
@@ -105,7 +109,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // when
             //
-            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10,20));
+            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
             wrap(property).dispose(disposalDate, true);
 
             //
@@ -126,7 +130,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // when
             //
-            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10,20));
+            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
             wrap(property).dispose(disposalDate, false);
 
             //
@@ -146,11 +150,10 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // and given
             //
-            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10,20));
+            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
             wrap(property).dispose(disposalDate, true);
 
             Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
-
 
             //
             // expect
@@ -158,13 +161,11 @@ public class PropertyTest extends EstatioIntegrationTest {
             expectedExceptions.expect(DisabledException.class);
             expectedExceptions.expectMessage(containsString("already disposed"));
 
-
             //
             // when
             //
-            final LocalDate disposalDate2 = clockService.now().plusDays(fs.faker().values().anInt(30,40));
+            final LocalDate disposalDate2 = clockService.now().plusDays(fs.faker().values().anInt(30, 40));
             wrap(property).dispose(disposalDate, true);
-
 
             //
             // then

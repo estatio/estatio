@@ -32,7 +32,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
 
@@ -45,8 +45,8 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _PropertyForOxfGb());
+        if (isExecutePrereqs()) {
+            executionContext.executeChild(this, new PropertyForOxfGb());
             executionContext.executeChild(this, new BudgetKeyTablesForOxf());
             executionContext.executeChild(this, new CurrenciesRefData());
             executionContext.executeChild(this, new ChargeRefData());
@@ -54,14 +54,13 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
         }
 
         // exec
-        Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+        Property property = properties.findPropertyByReference(PropertyForOxfGb.REF);
         Budget budget = budgets.findBudgetByProperty(property).get(0);
         BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME2);
         final BigDecimal VALUE = new BigDecimal(40000);
         final Currency currency = currencies.findCurrency(CurrenciesRefData.EUR);
         final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
         final BudgetCostGroup budgetCostGroup = BudgetCostGroup.UTENZE;
-
 
         createBudgetItem(
                 budget,

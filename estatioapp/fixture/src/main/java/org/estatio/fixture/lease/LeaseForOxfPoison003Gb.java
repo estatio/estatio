@@ -20,35 +20,37 @@ package org.estatio.fixture.lease;
 
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.geography.CountriesRefData;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForPoisonNl;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+import org.estatio.fixture.party.OrganisationForPoisonGb;
+import org.estatio.fixture.party.PersonForJohnSmithGb;
 
 import static org.estatio.integtests.VT.ld;
 
-public class _LeaseForOxfPoison003Gb extends LeaseAbstract {
+public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
     public static final String REF = "OXF-POISON-003";
-    public static final String UNIT_REFERENCE = _PropertyForOxfGb.unitReference("003");
-    public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldNl.REF;
-    public static final String TENANT_REFERENCE = OrganisationForPoisonNl.REF;
-    public static final String PARTY_REF_MANAGER = PersonForJohnDoeNl.REF;
+    public static final String UNIT_REFERENCE = PropertyForOxfGb.unitReference("003");
+    public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
 
     public static final String BRAND = "Poison";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
     public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.NLD;
+
+    public static final String TENANT_REFERENCE = OrganisationForPoisonGb.REF;
+    public static final String PARTY_REF_MANAGER = PersonForJohnSmithGb.REF;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PersonForJohnDoeNl());
-            executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-            executionContext.executeChild(this, new OrganisationForPoisonNl());
-            executionContext.executeChild(this, new _PropertyForOxfGb());
+
+            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+            executionContext.executeChild(this, new OrganisationForPoisonGb());
+            executionContext.executeChild(this, new PersonForJohnSmithGb());
+            executionContext.executeChild(this, new PropertyForOxfGb());
         }
 
         // exec

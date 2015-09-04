@@ -20,13 +20,17 @@ package org.estatio.integtests.lease.breaks;
 
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
+
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
@@ -39,8 +43,10 @@ import org.estatio.dom.lease.breaks.RollingBreakOption;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseBuilder;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -51,7 +57,6 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
-
 
     public static class FindByLease extends BreakOptionsTest {
 
@@ -69,7 +74,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
         @Test
         public void findByLease() throws Exception {
             // given
-            Lease lease = leases.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
+            Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
             List<BreakOption> result = breakOptions.findByLease(lease);
@@ -90,10 +95,10 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
         @Before
         public void setup() {
             getFixtureClock().clear();
-            getFixtureClock().setDate(2014,7,1);
+            getFixtureClock().setDate(2014, 7, 1);
 
             fs = new LeaseBuilder() {{
-                setStartDate(VT.ld(2014,4,1));
+                setStartDate(VT.ld(2014, 4, 1));
                 setDuration("P10y");
             }};
             runFixtureScript(new FixtureScript() {
@@ -118,7 +123,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
             Assertions.assertThat(lease.getBreakOptions()).isEmpty();
 
             // when
-            final LocalDate breakDate =  VT.ld(2014,11,1); // 4 months from now
+            final LocalDate breakDate = VT.ld(2014, 11, 1); // 4 months from now
             final String notificationPeriodStr = "3m";
             final BreakType breakType = BreakType.ROLLING;
             final BreakExerciseType breakExerciseType = fs.faker().collections().anEnum(BreakExerciseType.class);
@@ -133,7 +138,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
 
             Assertions.assertThat(breakOption.getLease()).isEqualTo(lease);
 
-            Assertions.assertThat(breakOption.getBreakDate()).isEqualTo(VT.ld(2014,11,1));
+            Assertions.assertThat(breakOption.getBreakDate()).isEqualTo(VT.ld(2014, 11, 1));
             Assertions.assertThat(breakOption.getNotificationPeriod()).isEqualTo("3m");
             Assertions.assertThat(breakOption.getType()).isEqualTo(BreakType.ROLLING);
             Assertions.assertThat(breakOption).isInstanceOf(RollingBreakOption.class);
@@ -141,7 +146,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
             Assertions.assertThat(breakOption.getExerciseType()).isEqualTo(breakExerciseType);
             Assertions.assertThat(breakOption.getDescription()).isEqualTo(description);
 
-            Assertions.assertThat(breakOption.getExerciseDate()).isEqualTo(VT.ld(2014,8,1)); // 3 months before break date
+            Assertions.assertThat(breakOption.getExerciseDate()).isEqualTo(VT.ld(2014, 8, 1)); // 3 months before break date
             Assertions.assertThat(breakOption.getCurrentBreakDate()).isEqualTo(breakDate);
 
             Assertions.assertThat(breakOption.getCalendarEvents()).hasSize(1);

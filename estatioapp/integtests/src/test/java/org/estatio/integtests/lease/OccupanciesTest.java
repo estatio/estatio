@@ -42,10 +42,10 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brand.RemoveEvent;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.fixture.lease._LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -64,8 +64,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }
         });
-        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
-        unit = units.findUnitByReference(_PropertyForOxfGb.unitReference("001"));
+        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        unit = units.findUnitByReference(PropertyForOxfGb.unitReference("001"));
     }
 
     @Inject
@@ -115,7 +115,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Brand brand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
+            Brand brand = brands.findByName(LeaseForOxfTopModel001Gb.BRAND);
             assertNotNull(brand);
 
             assertThat(occupancies.findByBrand(brand, false).size(), is(1));
@@ -147,8 +147,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
                 }
             });
 
@@ -156,8 +156,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            oldBrand = brands.findByName(_LeaseForOxfTopModel001Gb.BRAND);
-            newBrand = brands.findByName(_LeaseForOxfMediaX002Gb.BRAND);
+            oldBrand = brands.findByName(LeaseForOxfTopModel001Gb.BRAND);
+            newBrand = brands.findByName(LeaseForOxfMediaX002Gb.BRAND);
         }
 
         @Test

@@ -40,8 +40,8 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -59,7 +59,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
-                executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
+                executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
             }
         });
     }
@@ -74,7 +74,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class FindLeaseItem extends LeaseItemsTest {
@@ -110,7 +110,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            leasePoison = leases.findLeaseByReference(_LeaseForOxfPoison003Gb.REF);
+            leasePoison = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
         }
 
 

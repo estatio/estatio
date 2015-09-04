@@ -44,8 +44,8 @@ import org.estatio.dom.project.ProgramRolesContributions;
 import org.estatio.dom.project.Programs;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForMediaXNl;
-import org.estatio.fixture.party.PersonForGinoVannelliNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.fixture.project.ProgramForGra;
 import org.estatio.fixture.project.ProgramForKal;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -56,7 +56,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ProgramRolesTest extends EstatioIntegrationTest {
-	
+
     @Before
     public void setupData() {
         runScript(new FixtureScript() {
@@ -67,20 +67,20 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new OrganisationForMediaXNl());
                 executionContext.executeChild(this, new ProgramForKal());
                 executionContext.executeChild(this, new ProgramForGra());
-                executionContext.executeChild(this, new PersonForGinoVannelliNl());
+                executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
             }
         });
     }
 
     @Inject
     Programs programs;
-    
+
     @Inject
     Parties parties;
-    
+
     @Inject
     ProgramRoles programRoles;
-    
+
     @Inject
     ProgramRolesContributions programRolesContributions;
 
@@ -99,7 +99,7 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
             // then
             Assert.assertNotNull(programActor);
         }
-        
+
         @Test
         public void withExistingParty() throws Exception {
 
@@ -114,78 +114,78 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
         }
 
     }
-    
+
     public static class newProgramRole extends ProgramRolesTest {
-    	
-    	Party party;
-    	Program program;
-    	ProgramRole pr;
-    	
-    	@Test
-    	public void overlappingPeriod() throws Exception {
-    		
-    		// given
-	    	Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-			Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
-			
-			// when
-			pr = programRoles.findRole(program, party, ProgramRoleType.PROGRAM_OWNER);
-			assertThat(pr.getEndDate(), is(new LocalDate(2000,1,1)));
-			
-			// then
-			assertThat(programRolesContributions.validateNewProgramRole(program, ProgramRoleType.PROGRAM_OWNER, party, new LocalDate(2000,1,1), null), is("Same party, same role, cannot have overlapping period"));
-			assertNull(programRolesContributions.validateNewProgramRole(program, ProgramRoleType.PROGRAM_OWNER, party, new LocalDate(2000,1,2), null));
-    	}
+
+        Party party;
+        Program program;
+        ProgramRole pr;
+
+        @Test
+        public void overlappingPeriod() throws Exception {
+
+            // given
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
+
+            // when
+            pr = programRoles.findRole(program, party, ProgramRoleType.PROGRAM_OWNER);
+            assertThat(pr.getEndDate(), is(new LocalDate(2000, 1, 1)));
+
+            // then
+            assertThat(programRolesContributions.validateNewProgramRole(program, ProgramRoleType.PROGRAM_OWNER, party, new LocalDate(2000, 1, 1), null), is("Same party, same role, cannot have overlapping period"));
+            assertNull(programRolesContributions.validateNewProgramRole(program, ProgramRoleType.PROGRAM_OWNER, party, new LocalDate(2000, 1, 2), null));
+        }
     }
-    
+
     public static class changeProgramRoleDates extends ProgramRolesTest {
-    	
-    	Party party;
-    	Program program;
-    	ProgramRole pr1;
-    	ProgramRole pr2;
-    	
-    	@Before
-    	public void setUp() {
-	    	Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-			Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
-    		pr2 = programRoles.createRole(program, ProgramRoleType.PROGRAM_OWNER, party, new LocalDate(2000,1,2), null);
-    	}
-    	
-    	@Test
-    	public void overlappingPeriod() throws Exception {
-    		
-    		// given
-	    	Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-			Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
-			
-			// when
-			pr1 = programRoles.findRole(program, party, ProgramRoleType.PROGRAM_OWNER);
-			assertThat(pr1.getEndDate(), is(new LocalDate(2000,1,1)));
-			assertThat(pr2.getStartDate(), is(new LocalDate(2000,1,2)));
-			
-			// then
-			assertThat(pr2.validateChangeDates(new LocalDate(2000,1,1), null), is("Same party, same role, cannot have overlapping period"));
-			assertNull(pr2.validateChangeDates(new LocalDate(2000,1,3), null));
-    	}
+
+        Party party;
+        Program program;
+        ProgramRole pr1;
+        ProgramRole pr2;
+
+        @Before
+        public void setUp() {
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
+            pr2 = programRoles.createRole(program, ProgramRoleType.PROGRAM_OWNER, party, new LocalDate(2000, 1, 2), null);
+        }
+
+        @Test
+        public void overlappingPeriod() throws Exception {
+
+            // given
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
+
+            // when
+            pr1 = programRoles.findRole(program, party, ProgramRoleType.PROGRAM_OWNER);
+            assertThat(pr1.getEndDate(), is(new LocalDate(2000, 1, 1)));
+            assertThat(pr2.getStartDate(), is(new LocalDate(2000, 1, 2)));
+
+            // then
+            assertThat(pr2.validateChangeDates(new LocalDate(2000, 1, 1), null), is("Same party, same role, cannot have overlapping period"));
+            assertNull(pr2.validateChangeDates(new LocalDate(2000, 1, 3), null));
+        }
     }
-    
+
     public static class OnPartyRemove extends ProgramRolesTest {
 
         Party oldParty;
         Party newParty;
         Program program;
-    	ProgramRole pr;
+        ProgramRole pr;
 
         @Rule
         public ExpectedException expectedException = ExpectedException.none();
 
         @Before
         public void setUp() throws Exception {
-        	program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
-            oldParty = parties.findPartyByReference(PersonForGinoVannelliNl.REF);
+            program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
+            oldParty = parties.findPartyByReference(PersonForLinusTorvaldsNl.REF);
             newParty = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-            pr = programRoles.createRole(program, ProgramRoleType.PROGRAM_BOARDMEMBER, oldParty, new LocalDate(2000,1,2), null);
+            pr = programRoles.createRole(program, ProgramRoleType.PROGRAM_BOARDMEMBER, oldParty, new LocalDate(2000, 1, 2), null);
         }
 
         @Test
@@ -202,8 +202,8 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
         @Test
         public void executingReplacesParty() throws Exception {
             // when
-        	assertThat(programRoles.findByParty(oldParty).size(), is(1));
-        	assertThat(programRoles.findByParty(newParty).size(), is(2));
+            assertThat(programRoles.findByParty(oldParty).size(), is(3));
+            assertThat(programRoles.findByParty(newParty).size(), is(2));
             Party.RemoveEvent event = new RemoveEvent(oldParty, null, newParty);
             event.setPhase(Phase.VALIDATE);
             programRoles.on(event);
@@ -212,7 +212,7 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
 
             // then
             assertThat(programRoles.findByParty(oldParty).size(), is(0));
-            assertThat(programRoles.findByParty(newParty).size(), is(3));
+            assertThat(programRoles.findByParty(newParty).size(), is(5));
         }
 
         @Test

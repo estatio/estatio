@@ -40,7 +40,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -81,7 +81,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             assertThat(lease.getPrimaryParty(), is(not(nullValue())));
             assertThat(lease.getSecondaryParty(), is(not(nullValue())));
@@ -189,7 +189,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             List<Guarantee> allGuarantees = guarantees.allGuarantees();
 
             // when
-            List<Guarantee> results = guarantees.findGuarantees(_LeaseForOxfTopModel001Gb.REF + "*");
+            List<Guarantee> results = guarantees.findGuarantees(LeaseForOxfTopModel001Gb.REF + "*");
 
             // then
             assertThat(results.size(), is(1));
@@ -201,10 +201,10 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         @Test
         public void findByReference() throws Exception {
             // when
-            Guarantee guarantee = guarantees.findByReference(_LeaseForOxfTopModel001Gb.REF + "-D");
+            Guarantee guarantee = guarantees.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
 
             // then
-            assertThat(guarantee.getReference(), is(_LeaseForOxfTopModel001Gb.REF + "-D"));
+            assertThat(guarantee.getReference(), is(LeaseForOxfTopModel001Gb.REF + "-D"));
         }
     }
 
@@ -213,7 +213,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         @Test
         public void guarantees() throws Exception {
             // given
-            Lease lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
             List<Guarantee> results = guarantees.guarantees(lease);
@@ -228,13 +228,13 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         @Test
         public void findFor() throws Exception {
             // given
-            FinancialAccount account = financialAccounts.findAccountByReference(_LeaseForOxfTopModel001Gb.REF + "-D");
+            FinancialAccount account = financialAccounts.findAccountByReference(LeaseForOxfTopModel001Gb.REF + "-D");
 
             // when
             Guarantee guarantee = guarantees.findFor(account);
 
             // then
-            assertThat(guarantee.getReference(), is(_LeaseForOxfTopModel001Gb.REF + "-D"));
+            assertThat(guarantee.getReference(), is(LeaseForOxfTopModel001Gb.REF + "-D"));
         }
     }
 }

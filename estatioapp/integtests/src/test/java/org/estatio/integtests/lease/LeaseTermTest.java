@@ -45,9 +45,9 @@ import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterFo
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -113,7 +113,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
             @Before
             public void setup() {
-                lease = leases.findLeaseByReference(_LeaseForOxfMiracl005Gb.REF);
+                lease = leases.findLeaseByReference(LeaseForOxfMiracl005Gb.REF);
                 leaseTopModelRentItem = lease.getItems().first();
                 assertNotNull(leaseTopModelRentItem);
                 assertNotNull(leaseTopModelRentItem.getStartDate());
@@ -152,7 +152,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
                 // have to obtain again because runScript commits and so JDO
                 // clears out all enlisted objects.
-                lease = leases.findLeaseByReference(_LeaseForOxfMiracl005Gb.REF);
+                lease = leases.findLeaseByReference(LeaseForOxfMiracl005Gb.REF);
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.DISCOUNT);
 
                 // and given
@@ -229,7 +229,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             public void allowedIfLeaseHasInvoiceForNonFixedInvoicingFrequencyTerm() throws Exception {
 
                 // given
-                lease = leases.findLeaseByReference(_LeaseForOxfPoison003Gb.REF);
+                lease = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.TURNOVER_RENT);
 
                 // and given
@@ -279,7 +279,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
             assertNotNull(leaseTopModelRentItem);
         }
@@ -325,7 +325,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             Assert.assertThat(lease.getItems().size(), is(6));
         }
 

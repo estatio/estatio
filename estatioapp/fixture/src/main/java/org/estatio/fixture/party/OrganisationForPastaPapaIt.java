@@ -4,7 +4,7 @@
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
+ *  "License")"," you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
  *
  *        http://www.apache.org/licenses/LICENSE-2.0
@@ -18,18 +18,28 @@
  */
 package org.estatio.fixture.party;
 
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-public class PersonForLesleyThursdayGb extends PersonAbstract {
+public class OrganisationForPastaPapaIt extends OrganisationAbstract {
 
-    public static final String REF = "LTHURSDAY";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    public static final String REF = "PASTAPAPA";
+    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createPerson(
+        createOrganisation(
                 AT_PATH,
-                REF, "L", "Lesley", "Thursday", PersonGenderType.FEMALE, executionContext);
+                REF,
+                "Pasta Papa Food",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null, executionContext);
+
     }
 }

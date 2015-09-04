@@ -45,7 +45,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -92,7 +92,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
         creator.properties = properties;
         creator.invoiceCalculationService = invoiceCalculationService;
 
-        lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class FindDueDatesForLease extends CreateRetroInvoicesTest {

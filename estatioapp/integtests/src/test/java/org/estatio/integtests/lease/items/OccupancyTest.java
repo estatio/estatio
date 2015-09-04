@@ -27,7 +27,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -44,7 +44,7 @@ public class OccupancyTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -57,7 +57,7 @@ public class OccupancyTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            leaseTopModel = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             occupancy = leaseTopModel.getOccupancies().first();
         }
 

@@ -18,21 +18,22 @@
  */
 package org.estatio.fixture.asset;
 
+import static org.estatio.integtests.VT.ld;
+
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.geography.CountriesRefData;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-import static org.estatio.integtests.VT.ld;
-
-public class _PropertyForOxfGb extends PropertyAbstract {
+public class PropertyForOxfGb extends PropertyAbstract {
 
     public static final String REF = "OXF";
-    public static final String PARTY_REF_MANAGER = PersonForJohnDoeNl.REF;
-    public static final String PARTY_REF_OWNER = OrganisationForHelloWorldNl.REF;
+    public static final String PARTY_REF_MANAGER = PersonForGinoVannelliGb.REF;
+    public static final String PARTY_REF_OWNER = OrganisationForHelloWorldGb.REF;
     public static final String AT_PATH_COUNTRY = ApplicationTenancyForGb.PATH;
 
     public static String unitReference(String suffix) {
@@ -43,9 +44,10 @@ public class _PropertyForOxfGb extends PropertyAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-            executionContext.executeChild(this, new PersonForJohnDoeNl());
+        if (isExecutePrereqs()) {
+            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+            executionContext.executeChild(this, new OrganisationForTopModelGb());
+            executionContext.executeChild(this, new PersonForGinoVannelliGb());
         }
 
         // exec

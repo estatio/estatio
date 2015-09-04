@@ -37,7 +37,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForOxford;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -57,7 +57,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
                 executionContext.executeChild(this, new BankAccountForOxford());
             }
         });
@@ -80,7 +80,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -96,7 +96,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void findByFinancialAccount() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -112,7 +112,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void find() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

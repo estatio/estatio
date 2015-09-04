@@ -20,12 +20,16 @@ package org.estatio.integscenarios.invoice;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
+
 import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -42,19 +46,19 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.domsettings.EstatioSettingsService;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-import org.estatio.domsettings.EstatioSettingsService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -93,13 +97,13 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PersonForJohnDoeNl());
-                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
                 executionContext.executeChild(this, new PropertyForKalNl());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                executionContext.executeChild(this, new LeaseForOxfPret004Gb());
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
             }
         });
@@ -113,7 +117,6 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         Assert.assertNotNull(leaseTopModelRentItem);
         Assert.assertNotNull(leaseTopModelServiceChargeItem);
     }
-
 
     @Test
     public void fullLifecycle() throws Exception {

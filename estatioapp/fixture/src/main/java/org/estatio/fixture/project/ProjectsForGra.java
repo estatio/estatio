@@ -22,8 +22,8 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProjectPhase;
 import org.estatio.fixture.party.OrganisationForMediaXNl;
-import org.estatio.fixture.party.PersonForGinoVannelliNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -35,20 +35,20 @@ public class ProjectsForGra extends ProjectAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executionContext.executeChild(this, new OrganisationForMediaXNl());
-        	executionContext.executeChild(this, new PersonForGinoVannelliNl());
+            executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
             executionContext.executeChild(this, new PersonForJohnDoeNl());
             executionContext.executeChild(this, new ProgramForGra());
         }
 
         // exec
         Party executive = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-        Party manager = parties.findPartyByReference(PersonForGinoVannelliNl.REF);
+        Party manager = parties.findPartyByReference(PersonForLinusTorvaldsNl.REF);
         Program program = programs.findProgram(ProgramForGra.PROGRAM_REFERENCE).get(0);
 
         createProject(
-        		PROJECT_REFERENCE, "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), null, null, ProjectPhase.EXECUTION, program, executive, manager,
+                PROJECT_REFERENCE, "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), null, null, ProjectPhase.EXECUTION, program, executive, manager,
                 executionContext);
     }
 

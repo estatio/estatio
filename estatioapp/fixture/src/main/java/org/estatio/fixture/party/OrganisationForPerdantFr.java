@@ -4,7 +4,7 @@
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
+ *  "License")"," you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
  *
  *        http://www.apache.org/licenses/LICENSE-2.0
@@ -18,28 +18,28 @@
  */
 package org.estatio.fixture.party;
 
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
-public class OrganisationForAcmeNl extends OrganisationAbstract {
+public class OrganisationForPerdantFr extends OrganisationAbstract {
 
-    public static final String REF = "ACME_NL";
-    public static final String AT_PATH = ApplicationTenancyForNl.PATH;
+    public static final String REF = "PERDANT";
+    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         createOrganisation(
                 AT_PATH,
                 REF,
-                "ACME Properties International",
-                "Herengracht 100",
+                "Perdant Clothing",
                 null,
-                "1010 AA",
-                "Amsterdam",
                 null,
-                "NLD",
-                "+31202211333",
-                "+312022211399",
-                "info@acme.example.com", executionContext);
-    }
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null, executionContext);
 
+    }
 }

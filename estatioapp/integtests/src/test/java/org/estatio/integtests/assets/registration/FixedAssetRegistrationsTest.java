@@ -32,7 +32,7 @@ import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
@@ -44,7 +44,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
             }
         });
     }
@@ -64,7 +64,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
         @Test
         public void findBySubject() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

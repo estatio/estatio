@@ -37,7 +37,7 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -50,7 +50,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new _PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
                 executionContext.executeChild(this, new PropertyForKalNl());
             }
         });
@@ -109,10 +109,10 @@ public class PropertiesTest extends EstatioIntegrationTest {
         public void withReference() throws Exception {
 
             // when
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = properties.findPropertyByReference(PropertyForOxfGb.REF);
 
             // then
-            Assertions.assertThat(property.getReference()).isEqualTo(_PropertyForOxfGb.REF);
+            Assertions.assertThat(property.getReference()).isEqualTo(PropertyForOxfGb.REF);
         }
     }
 

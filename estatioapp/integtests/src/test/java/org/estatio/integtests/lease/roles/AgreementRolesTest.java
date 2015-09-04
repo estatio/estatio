@@ -34,7 +34,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
@@ -54,7 +54,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -73,7 +73,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
         @Before
         public void setUp() throws Exception {
             artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
-            leaseOxfTopModel = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            leaseOxfTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             partyTopModel = parties.findPartyByReference(OrganisationForTopModelGb.REF);
         }
 

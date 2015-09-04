@@ -15,7 +15,7 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -47,15 +47,15 @@ public class AgreementRoleTypesTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
     }
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreement = agreements.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
+        party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+        agreement = agreements.findAgreementByReference(LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
         agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 
