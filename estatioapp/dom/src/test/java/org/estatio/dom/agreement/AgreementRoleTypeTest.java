@@ -41,12 +41,12 @@ public class AgreementRoleTypeTest {
         private AgreementType at;
 
         @Mock
-        private AgreementRoleTypes mockAgreementRoleTypes;
+        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
 
         @Before
         public void setUp() throws Exception {
             at = new AgreementType();
-            at.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            at.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
 
             art = new AgreementRoleType();
             art.setAppliesTo(at);
@@ -56,7 +56,7 @@ public class AgreementRoleTypeTest {
         public void delegatesToService() {
             context.checking(new Expectations() {
                                  {
-                                     oneOf(mockAgreementRoleTypes).findApplicableTo(at);
+                                     oneOf(mockAgreementRoleTypeRepository).findApplicableTo(at);
                                  }
                              }
             );

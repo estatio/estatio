@@ -680,7 +680,7 @@ public class Lease
     }
 
     private AgreementRoleType debtorRoleType() {
-        return agreementRoleTypes.findByTitle(BankMandateConstants.ART_DEBTOR);
+        return agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_DEBTOR);
     }
 
     private AgreementType bankMandateAgreementType() {

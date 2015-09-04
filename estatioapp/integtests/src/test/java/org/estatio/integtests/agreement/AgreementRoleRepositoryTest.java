@@ -34,7 +34,7 @@ import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.lease.Lease;
@@ -67,7 +67,7 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
     AgreementTypes agreementTypes;
 
     @Inject
-    AgreementRoleTypes agreementRoleTypes;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
 
 
@@ -92,7 +92,7 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
         party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
         agreement = agreementRepository.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
-        agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 
     }
 
@@ -123,7 +123,7 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+            artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
             leaseOxfTopModel = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
             partyTopModel = parties.findPartyByReference(OrganisationForTopModelGb.REF);
         }

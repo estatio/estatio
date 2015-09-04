@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -50,7 +50,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
 
         final BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(bankAccountRef);
 
-        final AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRoleType agreementRoleType = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
 
         final Party party = bankAccount.getOwner();
         final String partyRef = party.getReference();
@@ -85,7 +85,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
     private AgreementRoleRepository agreementRoles;
 
     @Inject
-    private AgreementRoleTypes agreementRoleTypes;
+    private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     private Properties properties;

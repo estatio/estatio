@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.AgreementRepository;
@@ -22,7 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class AgreementRoleTypesTest extends EstatioIntegrationTest {
+public class AgreementRoleTypeRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
     Parties parties;
@@ -34,7 +34,7 @@ public class AgreementRoleTypesTest extends EstatioIntegrationTest {
     AgreementTypes agreementTypes;
 
     @Inject
-    AgreementRoleTypes agreementRoleTypes;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     Party party;
     Agreement agreement;
@@ -57,34 +57,34 @@ public class AgreementRoleTypesTest extends EstatioIntegrationTest {
         party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
         agreement = agreementRepository.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
-        agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 
     }
 
-    public static class FindByTitle extends AgreementRoleTypesTest {
+    public static class FindByTitle extends AgreementRoleTypeRepositoryTest {
 
         @Test
         public void findByTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
             assertThat(result, is(agreementRoleType));
         }
     }
 
-    public static class FindApplicableTo extends AgreementRoleTypesTest {
+    public static class FindApplicableTo extends AgreementRoleTypeRepositoryTest {
 
         @Test
         public void findApplicableTo() throws Exception {
-            List<AgreementRoleType> result = agreementRoleTypes.findApplicableTo(agreementType);
+            List<AgreementRoleType> result = agreementRoleTypeRepository.findApplicableTo(agreementType);
             assertThat(result.size(), is(agreementType.getRoleTypesApplicableTo().size()));
             assertThat(result, is(agreementType.getRoleTypesApplicableTo()));
         }
     }
 
-    public static class FindByAgreementTypeAndTitle extends AgreementRoleTypesTest {
+    public static class FindByAgreementTypeAndTitle extends AgreementRoleTypeRepositoryTest {
 
         @Test
         public void findByAgreementTypeAndTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
             assertNotNull(result);
         }
     }

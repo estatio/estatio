@@ -35,7 +35,7 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -83,9 +83,9 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
 
         persistIfNotAlready(mandate);
 
-        final AgreementRoleType artCreditor = agreementRoleTypes.findByTitle(BankMandateConstants.ART_CREDITOR);
+        final AgreementRoleType artCreditor = agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_CREDITOR);
         mandate.newRole(artCreditor, creditor, null, null);
-        final AgreementRoleType artDebtor = agreementRoleTypes.findByTitle(BankMandateConstants.ART_DEBTOR);
+        final AgreementRoleType artDebtor = agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_DEBTOR);
         mandate.newRole(artDebtor, debtor, null, null);
         return mandate;
     }
@@ -111,9 +111,9 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
     public void init(Map<String, String> properties) {
         super.init(properties);
         AgreementType agreementType = agreementTypes.findOrCreate(BankMandateConstants.AT_MANDATE);
-        agreementRoleTypes.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
-        agreementRoleTypes.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
-        agreementRoleTypes.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
     }
 
     // //////////////////////////////////////
@@ -124,10 +124,10 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
         this.agreementTypes = agreementTypes;
     }
 
-    private AgreementRoleTypes agreementRoleTypes;
+    private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
+    public void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
+        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
     }
 
     @Inject

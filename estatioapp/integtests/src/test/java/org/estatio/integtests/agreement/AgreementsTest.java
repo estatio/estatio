@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.lease.Lease;
@@ -72,7 +72,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
     AgreementTypes agreementTypes;
 
     @Inject
-    AgreementRoleTypes agreementRoleTypes;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     Leases leases;

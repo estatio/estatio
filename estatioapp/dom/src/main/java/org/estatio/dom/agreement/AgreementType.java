@@ -93,7 +93,7 @@ public class AgreementType
     @Programmatic
     @NotPersisted
     public List<AgreementRoleType> getRoleTypesApplicableTo() {
-        return agreementRoleTypes.findApplicableTo(this);
+        return agreementRoleTypeRepository.findApplicableTo(this);
     }
 
     @Programmatic
@@ -104,10 +104,10 @@ public class AgreementType
 
     // //////////////////////////////////////
 
-    private AgreementRoleTypes agreementRoleTypes;
+    private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
+    public final void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
+        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
     }
 
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;

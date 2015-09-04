@@ -193,7 +193,7 @@ public class AgreementTest {
     public static class FindParty extends AgreementTest {
 
         @Mock
-        private AgreementRoleTypes mockAgreementRoleTypes;
+        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
 
         @Mock
         private ClockService mockClockService;
@@ -259,10 +259,10 @@ public class AgreementTest {
 
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle("Creditor");
+                    allowing(mockAgreementRoleTypeRepository).findByTitle("Creditor");
                     will(returnValue(creditorAgreementRoleType));
 
-                    allowing(mockAgreementRoleTypes).findByTitle("Debtor");
+                    allowing(mockAgreementRoleTypeRepository).findByTitle("Debtor");
                     will(returnValue(creditorAgreementRoleType));
 
                     allowing(mockClockService).now();
@@ -271,7 +271,7 @@ public class AgreementTest {
             });
 
             agreement = new AgreementForSubtypeTesting();
-            agreement.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
         }
 
         @Test
@@ -330,7 +330,7 @@ public class AgreementTest {
         @Mock
         private AgreementRepository mockAgreementRepository;
         @Mock
-        private AgreementRoleTypes mockAgreementRoleTypes;
+        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
         private AgreementTypes mockAgreementTypes;
         @Mock
@@ -346,13 +346,13 @@ public class AgreementTest {
         @Test
         public void injected() {
             agreement.injectAgreementTypes(mockAgreementTypes);
-            agreement.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             agreement.injectAgreements(mockAgreementRepository);
             agreement.injectAgreementRoles(mockAgreementRoles);
 
             assertThat(agreement.agreementRepository, is(mockAgreementRepository));
             assertThat(agreement.agreementRoles, is(mockAgreementRoles));
-            assertThat(agreement.agreementRoleTypes, is(mockAgreementRoleTypes));
+            assertThat(agreement.agreementRoleTypeRepository, is(mockAgreementRoleTypeRepository));
             assertThat(agreement.agreementTypes, is(mockAgreementTypes));
         }
     }
@@ -509,7 +509,7 @@ public class AgreementTest {
             private Agreement agreement;
 
             @Mock
-            private AgreementRoleTypes mockAgreementRoleTypes;
+            private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
 
             @Before
             public void setUp() throws Exception {
@@ -518,7 +518,7 @@ public class AgreementTest {
 
                 agreement = new AgreementForTesting();
                 agreement.setType(art);
-                agreement.injectAgreementRoleTypes(mockAgreementRoleTypes);
+                agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             }
 
             @Test
@@ -526,7 +526,7 @@ public class AgreementTest {
                 final List<AgreementRoleType> list = Lists.newArrayList();
                 context.checking(new Expectations() {
                     {
-                        oneOf(mockAgreementRoleTypes).findApplicableTo(art);
+                        oneOf(mockAgreementRoleTypeRepository).findApplicableTo(art);
                         will(returnValue(list));
                     }
                 });

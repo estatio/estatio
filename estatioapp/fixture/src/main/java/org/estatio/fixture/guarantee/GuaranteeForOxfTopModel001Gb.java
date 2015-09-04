@@ -23,7 +23,7 @@ import static org.estatio.integtests.VT.ld;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeConstants;
 import org.estatio.dom.guarantee.GuaranteeType;
@@ -60,14 +60,14 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
                 ld(2014, 1, 1), ld(2015, 1, 1), "Description", bd(50000),
                 executionContext);
         guarantee.createRole(
-                agreementRoleTypes.findByTitle(GuaranteeConstants.ART_BANK),
+                agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_BANK),
                 parties.findPartyByReference(PARTY_REF_BANK),
                 null,
                 null);
     }
 
     @Inject
-    AgreementRoleTypes agreementRoleTypes;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     Parties parties;

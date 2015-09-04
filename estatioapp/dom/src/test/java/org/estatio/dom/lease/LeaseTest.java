@@ -48,7 +48,7 @@ import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.Unit;
@@ -276,7 +276,7 @@ public class LeaseTest {
     public static class NewMandate extends LeaseTest {
 
         @Mock
-        private AgreementRoleTypes mockAgreementRoleTypes;
+        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
         private AgreementRoleRepository mockAgreementRoles;
         @Mock
@@ -322,7 +322,7 @@ public class LeaseTest {
             tenantAgreementRoleType.setTitle(LeaseConstants.ART_LANDLORD);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle(LeaseConstants.ART_LANDLORD);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.ART_LANDLORD);
                     will(returnValue(landlordAgreementRoleType));
                 }
             });
@@ -331,7 +331,7 @@ public class LeaseTest {
             tenantAgreementRoleType.setTitle(LeaseConstants.ART_TENANT);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle(LeaseConstants.ART_TENANT);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.ART_TENANT);
                     will(returnValue(tenantAgreementRoleType));
                 }
             });
@@ -340,7 +340,7 @@ public class LeaseTest {
             debtorAgreementRoleType.setTitle(BankMandateConstants.ART_DEBTOR);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle(BankMandateConstants.ART_DEBTOR);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(BankMandateConstants.ART_DEBTOR);
                     will(returnValue(debtorAgreementRoleType));
                 }
             });
@@ -355,7 +355,7 @@ public class LeaseTest {
             creditorAgreementRoleType.setTitle(BankMandateConstants.ART_CREDITOR);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle(BankMandateConstants.ART_CREDITOR);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(BankMandateConstants.ART_CREDITOR);
                     will(returnValue(creditorAgreementRoleType));
                 }
             });
@@ -410,13 +410,13 @@ public class LeaseTest {
             bankMandates = new BankMandates();
             bankMandates.setContainer(mockContainer);
             bankMandates.injectAgreementTypes(mockAgreementTypes);
-            bankMandates.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            bankMandates.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
 
             // the main class under test
             lease = new Lease();
             lease.setApplicationTenancyPath("/it");
 
-            lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             lease.injectAgreementRoles(mockAgreementRoles);
             lease.injectAgreementTypes(mockAgreementTypes);
             lease.financialAccounts = mockFinancialAccounts;
@@ -578,7 +578,7 @@ public class LeaseTest {
     public static class PaidBy extends LeaseTest {
 
         @Mock
-        private AgreementRoleTypes mockAgreementRoleTypes;
+        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
         private AgreementTypes mockAgreementTypes;
         @Mock
@@ -606,7 +606,7 @@ public class LeaseTest {
             tenantAgreementRoleType.setTitle(LeaseConstants.ART_TENANT);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle(LeaseConstants.ART_TENANT);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.ART_TENANT);
                     will(returnValue(tenantAgreementRoleType));
                 }
             });
@@ -615,7 +615,7 @@ public class LeaseTest {
             debtorAgreementRoleType.setTitle(BankMandateConstants.ART_DEBTOR);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle(BankMandateConstants.ART_DEBTOR);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(BankMandateConstants.ART_DEBTOR);
                     will(returnValue(debtorAgreementRoleType));
                 }
             });
@@ -646,7 +646,7 @@ public class LeaseTest {
             someOtherBankMandate = new BankMandate();
 
             lease = new Lease();
-            lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             lease.injectAgreements(mockAgreementRepository);
             lease.injectAgreementTypes(mockAgreementTypes);
             lease.injectClockService(mockClockService);

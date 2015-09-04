@@ -21,7 +21,7 @@ package org.estatio.fixture.lease;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -53,7 +53,7 @@ public class _LeaseForOxfTopModel001Gb extends LeaseAbstract {
     public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.GBR;
 
     @Inject
-    private AgreementRoleTypes agreementRoleTypes;
+    private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
@@ -96,7 +96,7 @@ public class _LeaseForOxfTopModel001Gb extends LeaseAbstract {
     }
 
     private void createAddress(Lease lease, String addressType) {
-        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
+        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
                 .findByTitle(addressType);
         final SortedSet<CommunicationChannel> channels = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);

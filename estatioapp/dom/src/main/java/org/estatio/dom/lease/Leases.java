@@ -49,7 +49,7 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.Dflt;
@@ -161,11 +161,11 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
         persistIfNotAlready(lease);
 
         if (tenant != null) {
-            final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
             lease.newRole(artTenant, tenant, null, null);
         }
         if (landlord != null) {
-            final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
+            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_LANDLORD);
             lease.newRole(artLandlord, landlord, null, null);
         }
         return lease;
@@ -288,9 +288,9 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     public void init(final Map<String, String> properties) {
         super.init(properties);
         final AgreementType agreementType = agreementTypes.findOrCreate(LeaseConstants.AT_LEASE);
-        agreementRoleTypes.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
-        agreementRoleTypes.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
-        agreementRoleTypes.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
         agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
         agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
     }
@@ -326,7 +326,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     private AgreementTypes agreementTypes;
 
     @Inject
-    private AgreementRoleTypes agreementRoleTypes;
+    private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;

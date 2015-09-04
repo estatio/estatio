@@ -29,11 +29,11 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AgreementRoleTypesTest {
+public class AgreementRoleTypeRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    AgreementRoleTypes agreementRoleTypes;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     AgreementType agreementType;
 
@@ -41,7 +41,7 @@ public class AgreementRoleTypesTest {
     public void setup() {
         agreementType = new AgreementType();
 
-        agreementRoleTypes = new AgreementRoleTypes() {
+        agreementRoleTypeRepository = new AgreementRoleTypeRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -64,12 +64,12 @@ public class AgreementRoleTypesTest {
     }
 
 
-    public static class FindApplicableTo extends AgreementRoleTypesTest {
+    public static class FindApplicableTo extends AgreementRoleTypeRepositoryTest {
 
         @Test
         public void happyCase() {
 
-            agreementRoleTypes.findApplicableTo(agreementType);
+            agreementRoleTypeRepository.findApplicableTo(agreementType);
 
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
@@ -80,12 +80,12 @@ public class AgreementRoleTypesTest {
         }
     }
 
-    public static class FindByTitle extends AgreementRoleTypesTest {
+    public static class FindByTitle extends AgreementRoleTypeRepositoryTest {
 
         @Test
         public void happyCase() {
 
-            agreementRoleTypes.findByTitle("someTitle");
+            agreementRoleTypeRepository.findByTitle("someTitle");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRoleType.class));

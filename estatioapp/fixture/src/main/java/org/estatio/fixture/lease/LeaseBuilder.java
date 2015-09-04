@@ -19,7 +19,7 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.geography.Countries;
@@ -182,7 +182,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
-            final AgreementRole role = lease.createRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
+            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
@@ -240,7 +240,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
     protected Parties parties;
 
     @Inject
-    protected AgreementRoleTypes agreementRoleTypes;
+    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

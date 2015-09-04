@@ -32,7 +32,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
@@ -114,7 +114,7 @@ public class InvoiceCalculationServiceTest {
         AgreementRoleRepository mockAgreementRoles;
 
         @Mock
-        AgreementRoleTypes mockAgreementRoleTypes;
+        AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
 
         @Mock
         AgreementTypes mockAgreementTypes;
@@ -134,9 +134,9 @@ public class InvoiceCalculationServiceTest {
 
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypes).findByTitle("Landlord");
+                    allowing(mockAgreementRoleTypeRepository).findByTitle("Landlord");
                     will(returnValue(artLandlord));
-                    allowing(mockAgreementRoleTypes).findByTitle("Tenant");
+                    allowing(mockAgreementRoleTypeRepository).findByTitle("Tenant");
                     will(returnValue(artTenant));
                 }
             });
@@ -172,7 +172,7 @@ public class InvoiceCalculationServiceTest {
             invoiceItemForLease = new InvoiceItemForLease();
             invoiceItemForLease.setLeaseTerm(leaseTerm);
 
-            invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypes);
+            invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             invoiceItemForLease.injectAgreementTypes(mockAgreementTypes);
 
             ic = new InvoiceCalculationService();

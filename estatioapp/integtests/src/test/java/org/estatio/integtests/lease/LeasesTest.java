@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
@@ -280,7 +280,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         private AgreementRoleRepository agreementRoles;
 
         @Inject
-        private AgreementRoleTypes agreementRoleTypes;
+        private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
         @Test
         public void renew() {
@@ -304,7 +304,8 @@ public class LeasesTest extends EstatioIntegrationTest {
             assertThat(newLease.getTenancyEndDate(), is(newEndDate));
 
             // Then
-            assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size(), is(2));
+            assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypeRepository
+                    .findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size(), is(2));
             assertThat(newLease.getOccupancies().size(), is(1));
 
         }

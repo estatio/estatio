@@ -194,7 +194,7 @@ public abstract class Agreement
     }
 
     protected AgreementRole findCurrentOrMostRecentAgreementRole(final String agreementRoleTypeTitle) {
-        final AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleTypeTitle);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(agreementRoleTypeTitle);
         return findCurrentOrMostRecentAgreementRole(art);
     }
 
@@ -419,7 +419,7 @@ public abstract class Agreement
     }
 
     public List<AgreementRoleType> choices0NewRole() {
-        return agreementRoleTypes.findApplicableTo(getType());
+        return agreementRoleTypeRepository.findApplicableTo(getType());
     }
 
     public LocalDate default2NewRole() {
@@ -483,10 +483,10 @@ public abstract class Agreement
         this.agreementRoles = agreementRoles;
     }
 
-    protected AgreementRoleTypes agreementRoleTypes;
+    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
+    public final void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
+        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
     }
 
     protected AgreementTypes agreementTypes;

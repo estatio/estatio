@@ -22,37 +22,36 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "25", repositoryFor = AgreementRoleType.class)
-@Hidden
-public class AgreementRoleTypes extends UdoDomainRepositoryAndFactory<AgreementRoleType> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = AgreementRoleType.class
+)
+public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<AgreementRoleType> {
 
-    public AgreementRoleTypes() {
-        super(AgreementRoleTypes.class, AgreementRoleType.class);
+    public AgreementRoleTypeRepository() {
+        super(AgreementRoleTypeRepository.class, AgreementRoleType.class);
     }
 
     // //////////////////////////////////////
 
-    @NotContributed
     public AgreementRoleType findByTitle(final String title) {
         return firstMatch("findByTitle", "title", title);
     }
 
-    @NotContributed
     public List<AgreementRoleType> findApplicableTo(final AgreementType agreementType) {
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 
-    @NotContributed
     public AgreementRoleType findByAgreementTypeAndTitle(final AgreementType agreementType, final String title) {
         return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
     }
 
-    @Programmatic
     public AgreementRoleType findOrCreate(final String title, final AgreementType appliesTo) {
         AgreementRoleType agreementRoleType = findByAgreementTypeAndTitle(appliesTo, title);
         if (agreementRoleType == null) {

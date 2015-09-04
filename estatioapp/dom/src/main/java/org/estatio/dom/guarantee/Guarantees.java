@@ -50,7 +50,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.financial.FinancialAccount;
@@ -94,10 +94,10 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
             final @ParameterLayout(named = "Start amount") BigDecimal startAmount
             ) {
 
-        AgreementRoleType artGuarantee = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE);
+        AgreementRoleType artGuarantee = agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_GUARANTEE);
         Party leasePrimaryParty = lease.getPrimaryParty();
 
-        AgreementRoleType artGuarantor = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTOR);
+        AgreementRoleType artGuarantor = agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_GUARANTOR);
         Party leaseSecondaryParty = lease.getSecondaryParty();
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
@@ -220,9 +220,9 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     public void init(Map<String, String> properties) {
         super.init(properties);
         AgreementType agreementType = agreementTypes.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
-        agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
-        agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);
-        agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_BANK, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_BANK, agreementType);
     }
 
     // //////////////////////////////////////
@@ -231,7 +231,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     private AgreementTypes agreementTypes;
 
     @Inject
-    private AgreementRoleTypes agreementRoleTypes;
+    private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     private FinancialAccounts financialAccounts;

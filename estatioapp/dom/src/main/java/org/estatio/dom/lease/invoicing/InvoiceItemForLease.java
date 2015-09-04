@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.Invoice;
@@ -186,10 +186,10 @@ public class InvoiceItemForLease extends InvoiceItem {
         this.agreementTypes = agreementTypes;
     }
 
-    protected AgreementRoleTypes agreementRoleTypes;
+    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
+    public final void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
+        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
     }
 
     // //////////////////////////////////////
