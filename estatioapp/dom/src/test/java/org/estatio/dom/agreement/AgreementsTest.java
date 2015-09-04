@@ -35,7 +35,7 @@ public class AgreementsTest {
 
     FinderInteraction finderInteraction;
 
-    Agreements agreements;
+    AgreementRepository agreementRepository;
 
     AgreementType agreementType;
     AgreementRoleType agreementRoleType;
@@ -48,7 +48,7 @@ public class AgreementsTest {
         agreementRoleType = new AgreementRoleType();
         party = new PartyForTesting();
 
-        agreements = new Agreements() {
+        agreementRepository = new AgreementRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -76,7 +76,7 @@ public class AgreementsTest {
         @Test
         public void happyCase() {
 
-            agreements.findAgreementByReference("*some?Reference*");
+            agreementRepository.findAgreementByReference("*some?Reference*");
 
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
@@ -92,7 +92,7 @@ public class AgreementsTest {
         @Test
         public void happyCase() {
 
-            agreements.findByAgreementTypeAndRoleTypeAndParty(agreementType, agreementRoleType, party);
+            agreementRepository.findByAgreementTypeAndRoleTypeAndParty(agreementType, agreementRoleType, party);
 
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
@@ -110,7 +110,7 @@ public class AgreementsTest {
 
         @Test
         public void happyCase() {
-            agreements.findByTypeAndReferenceOrName(agreementType, "");
+            agreementRepository.findByTypeAndReferenceOrName(agreementType, "");
 
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));

@@ -10,7 +10,7 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -28,7 +28,7 @@ public class AgreementRoleTypesTest extends EstatioIntegrationTest {
     Parties parties;
 
     @Inject
-    Agreements agreements;
+    AgreementRepository agreementRepository;
 
     @Inject
     AgreementTypes agreementTypes;
@@ -55,7 +55,7 @@ public class AgreementRoleTypesTest extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreement = agreements.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
+        agreement = agreementRepository.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
         agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 

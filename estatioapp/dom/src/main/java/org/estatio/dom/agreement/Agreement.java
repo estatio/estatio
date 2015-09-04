@@ -355,7 +355,7 @@ public abstract class Agreement
     }
 
     public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
-        return agreements.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
+        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
     }
 
     // //////////////////////////////////////
@@ -471,10 +471,10 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    protected Agreements agreements;
+    protected AgreementRepository agreementRepository;
 
-    public final void injectAgreements(final Agreements agreements) {
-        this.agreements = agreements;
+    public final void injectAgreements(final AgreementRepository agreementRepository) {
+        this.agreementRepository = agreementRepository;
     }
 
     protected AgreementRoleRepository agreementRoles;

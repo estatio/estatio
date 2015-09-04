@@ -598,7 +598,7 @@ public class Lease
         final AgreementType bankMandateAgreementType = bankMandateAgreementType();
         final AgreementRoleType debtorRoleType = debtorRoleType();
 
-        return (List) agreements.findByAgreementTypeAndRoleTypeAndParty(
+        return (List) agreementRepository.findByAgreementTypeAndRoleTypeAndParty(
                 bankMandateAgreementType, debtorRoleType, tenant);
     }
 
@@ -664,7 +664,7 @@ public class Lease
         if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
         }
-        if (agreements.findAgreementByReference(reference) != null) {
+        if (agreementRepository.findAgreementByReference(reference) != null) {
             return "Reference already exists";
         }
         return null;

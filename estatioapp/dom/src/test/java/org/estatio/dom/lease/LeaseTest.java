@@ -44,13 +44,13 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
@@ -292,7 +292,7 @@ public class LeaseTest {
         private BankMandates bankMandates;
 
         @Mock
-        private Agreements agreements;
+        private AgreementRepository agreementRepository;
 
         private BankMandate bankMandate;
 
@@ -346,7 +346,7 @@ public class LeaseTest {
             });
             context.checking(new Expectations() {
                 {
-                    allowing(agreements).findAgreementByReference("MANDATEREF");
+                    allowing(agreementRepository).findAgreementByReference("MANDATEREF");
                     will(returnValue(null));
                 }
             });
@@ -423,7 +423,7 @@ public class LeaseTest {
             lease.bankMandates = bankMandates;
             lease.setContainer(mockContainer);
             lease.injectClockService(mockClockService);
-            lease.injectAgreements(agreements);
+            lease.injectAgreements(agreementRepository);
 
         }
 
@@ -582,7 +582,7 @@ public class LeaseTest {
         @Mock
         private AgreementTypes mockAgreementTypes;
         @Mock
-        private Agreements mockAgreements;
+        private AgreementRepository mockAgreementRepository;
         @Mock
         private ClockService mockClockService;
 
@@ -647,7 +647,7 @@ public class LeaseTest {
 
             lease = new Lease();
             lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
-            lease.injectAgreements(mockAgreements);
+            lease.injectAgreements(mockAgreementRepository);
             lease.injectAgreementTypes(mockAgreementTypes);
             lease.injectClockService(mockClockService);
         }
@@ -674,7 +674,7 @@ public class LeaseTest {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockAgreements).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
+                    oneOf(mockAgreementRepository).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
                     will(returnValue(Collections.emptyList()));
                 }
             });
@@ -695,7 +695,7 @@ public class LeaseTest {
 
             context.checking(new Expectations() {
                 {
-                    never(mockAgreements);
+                    never(mockAgreementRepository);
                 }
             });
 
@@ -718,7 +718,7 @@ public class LeaseTest {
 
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreements).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
+                    allowing(mockAgreementRepository).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
                     will(returnValue(Lists.newArrayList(bankMandate)));
                 }
             });
@@ -759,7 +759,7 @@ public class LeaseTest {
 
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreements).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
+                    allowing(mockAgreementRepository).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
                     will(returnValue(Lists.newArrayList(bankMandate)));
                 }
             });

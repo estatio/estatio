@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -42,7 +42,7 @@ public class AgreementTypesTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Agreements agreements;
+    AgreementRepository agreementRepository;
 
     @Inject
     AgreementTypes agreementTypes;

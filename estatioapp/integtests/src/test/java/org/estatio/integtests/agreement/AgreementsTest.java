@@ -24,10 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -66,7 +66,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Agreements agreements;
+    AgreementRepository agreementRepository;
 
     @Inject
     AgreementTypes agreementTypes;
@@ -85,7 +85,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
         public void whenPresent() throws Exception {
             final AgreementType type = agreementTypes.find("Lease");
             assertNotNull(type);
-            final List<Agreement> results = agreements.findByTypeAndReferenceOrName(type, ".*OXF.*");
+            final List<Agreement> results = agreementRepository.findByTypeAndReferenceOrName(type, ".*OXF.*");
             assertThat(results.size(), is(5));
         }
     }
@@ -94,7 +94,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Agreement agreement = agreements.findAgreementByReference(lease.getReference());
+            Agreement agreement = agreementRepository.findAgreementByReference(lease.getReference());
             assertThat(agreement.getName(), is(lease.getName()));
         }
     }

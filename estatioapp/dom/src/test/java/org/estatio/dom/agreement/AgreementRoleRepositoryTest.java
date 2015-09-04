@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.agreement;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -36,9 +33,12 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-public class AgreementRolesTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    public static class FindByAgreementAndPartyAndTypeAndContainsDate extends AgreementRolesTest {
+public class AgreementRoleRepositoryTest {
+
+    public static class FindByAgreementAndPartyAndTypeAndContainsDate extends AgreementRoleRepositoryTest {
 
         private FinderInteraction finderInteraction;
 
@@ -141,7 +141,7 @@ public class AgreementRolesTest {
 
         @Test
         public void getId() {
-            assertThat(new AgreementRoleRepository().getId(), is("agreementRoles"));
+            assertThat(new AgreementRoleRepository().getId(), is("agreementRoleRepository"));
         }
 
     }
