@@ -19,19 +19,12 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
@@ -128,44 +121,6 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
                 "endDate", LocalDateInterval.endDateFromStartDate(date));
     }
 
-    // //////////////////////////////////////
-
-    @Subscribe
-    @Programmatic
-    public void on(final Party.RemoveEvent ev) {
-        Party sourceParty = (Party) ev.getSource();
-        Party replacementParty = ev.getReplacement();
-
-        List<AgreementRole> agreementRoles;
-        switch (ev.getEventPhase()) {
-        case VALIDATE:
-            agreementRoles = findByParty(sourceParty);
-
-            if (replacementParty == null && agreementRoles.size() > 0) {
-                ev.invalidate("Party is being used in an agreement role: remove roles or provide a replacement");
-            } else {
-                scratchpad.put(onPartyRemoveScratchpadKey = UUID.randomUUID(), agreementRoles);
-            }
-            break;
-        case EXECUTING:
-            agreementRoles = (List<AgreementRole>) scratchpad.get(onPartyRemoveScratchpadKey);
-            for (AgreementRole agreementRole : agreementRoles) {
-                agreementRole.setParty(replacementParty);
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-
-    private transient UUID onPartyRemoveScratchpadKey;
-
-    // //////////////////////////////////////
-
-
-    @Inject
-    private Scratchpad scratchpad;
 
 
 }
