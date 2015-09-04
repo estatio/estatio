@@ -19,18 +19,18 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.lease._LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 
-public class _BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
+public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
-    public static final String BANK_ACCOUNT_REF = _BankAccountForPoisonNl.REF;
+    public static final String BANK_ACCOUNT_REF = BankAccountForPoisonNl.REF;
     public static final int SEQUENCE = 2;
 
-    public _BankAccountAndMandateForPoisonNl() {
+    public BankAccountAndMandateForPoisonNl() {
         this(null, null);
     }
 
-    public _BankAccountAndMandateForPoisonNl(String friendlyName, String localName) {
+    public BankAccountAndMandateForPoisonNl(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -40,8 +40,7 @@ public class _BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbst
         // prereqs
         if(isExecutePrereqs()) {
             executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-            executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
-            executionContext.executeChild(this, new _BankAccountForPoisonNl());
+            executionContext.executeChild(this, new BankAccountForPoisonNl());
         }
 
         // exec

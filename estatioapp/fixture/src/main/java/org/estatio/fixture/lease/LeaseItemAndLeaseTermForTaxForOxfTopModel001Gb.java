@@ -25,7 +25,7 @@ import static org.estatio.integtests.VT.bd;
 
 public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = _LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
     public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
 
     @Override
@@ -37,11 +37,11 @@ public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAnd
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+        final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
         createLeaseTermForTax(
                 LEASE_REF,
                 AT_PATH, lease.getStartDate(), null,

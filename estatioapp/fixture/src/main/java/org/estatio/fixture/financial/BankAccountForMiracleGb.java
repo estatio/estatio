@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.fixture.lease._LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.fixture.party.OrganisationForMiracleGb;
 
 public class BankAccountForMiracleGb extends BankAccountAbstract {
@@ -39,7 +39,7 @@ public class BankAccountForMiracleGb extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _LeaseForOxfMiracl005Gb());
+            executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
         }
 
         // exec

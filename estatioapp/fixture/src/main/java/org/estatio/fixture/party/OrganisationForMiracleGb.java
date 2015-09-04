@@ -22,7 +22,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
 public class OrganisationForMiracleGb extends OrganisationAbstract {
 
-    public static final String REF = "MIRACLE";
+    public static final String REF = "MIRACLE_GB";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override

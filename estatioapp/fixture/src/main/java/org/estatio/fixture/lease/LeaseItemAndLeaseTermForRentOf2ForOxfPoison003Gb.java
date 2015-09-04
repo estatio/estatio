@@ -27,7 +27,7 @@ import static org.estatio.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = _LeaseForOxfPoison003Gb.REF;
+    public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
     public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
     public static final String INDEX_REF_IT = IndexRefData.IT_REF;
 
@@ -40,7 +40,7 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemA
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _LeaseForOxfPoison003Gb());
+            executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
         }
 
         // exec

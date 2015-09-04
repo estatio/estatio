@@ -22,7 +22,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 
 public class OrganisationForPoisonNl extends OrganisationAbstract {
 
-    public static final String REF = "POISON";
+    public static final String REF = "POISON_NL";
     public static final String AT_PATH = ApplicationTenancyForNl.PATH;
 
     @Override

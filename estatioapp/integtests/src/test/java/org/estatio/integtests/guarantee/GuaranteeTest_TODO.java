@@ -29,7 +29,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class GuaranteeTest_TODO extends EstatioIntegrationTest {
@@ -49,8 +49,8 @@ public class GuaranteeTest_TODO extends EstatioIntegrationTest {
                 }
             }.withTracing());
 
-            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
-            guarantee = guarantees.findByReference(_LeaseForOxfTopModel001Gb.REF + "-D");
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            guarantee = guarantees.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
         }
 
         @Test

@@ -20,28 +20,23 @@ package org.estatio.fixture.party;
 
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
-public class PersonForGinoVannelliGb extends PersonAbstract {
+public class PersonForJeanneDarcFr extends PersonAbstract {
 
-    public static final String REF = "GVANNELLI";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
-    public static final String PARTY_REF_FROM = OrganisationForTopModelGb.REF;
+    public static final String REF = "JDARC";
+    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final String PARTY_REF_FROM = OrganisationForPerdantFr.REF;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForTopModelGb());
-        }
-
         createPerson(
                 AT_PATH,
                 REF,
-                "G",
-                "Gino",
-                "Vannelli",
-                PersonGenderType.MALE,
+                "J",
+                "Jeanne",
+                "D'arc",
+                PersonGenderType.FEMALE,
                 null,
                 null,
                 PARTY_REF_FROM,

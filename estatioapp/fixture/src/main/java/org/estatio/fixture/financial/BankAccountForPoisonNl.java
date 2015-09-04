@@ -18,21 +18,20 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.fixture.asset._PropertyForOxfGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.party.OrganisationForPoisonNl;
 
-public class _BankAccountForHelloWorldNl extends BankAccountAbstract {
+public class BankAccountForPoisonNl extends BankAccountAbstract {
 
-    public static final String REF = "NL31ABNA0580744434";
+    public static final String REF = "NL31ABNA0580744437";
+    public static final String PARTY_REF = OrganisationForPoisonNl.REF;
 
-    public static final String PARTY_REF = OrganisationForHelloWorldNl.REF;
-    public static final String PROPERTY_REF = _PropertyForOxfGb.REF;
-
-    public _BankAccountForHelloWorldNl() {
+    public BankAccountForPoisonNl() {
         this(null, null);
     }
 
-    public _BankAccountForHelloWorldNl(String friendlyName, String localName) {
+    public BankAccountForPoisonNl(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -41,15 +40,14 @@ public class _BankAccountForHelloWorldNl extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-            executionContext.executeChild(this, new _PropertyForOxfGb());
+            executionContext.executeChild(this, new LeaseForKalPoison001Nl());
         }
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                PROPERTY_REF, // create FAFA
+                null, // no property = no FAFA,
                 executionContext);
     }
 

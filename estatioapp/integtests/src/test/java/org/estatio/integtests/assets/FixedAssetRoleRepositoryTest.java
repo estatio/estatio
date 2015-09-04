@@ -36,8 +36,8 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset._PropertyForOxfGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.junit.Assert.assertNotNull;
@@ -51,7 +51,7 @@ public class FixedAssetRoleRepositoryTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyForOxfGb());
             }
         });
     }
@@ -89,7 +89,7 @@ public class FixedAssetRoleRepositoryTest extends EstatioIntegrationTest {
         public void withExistingPropertyPartyAndRoleType() throws Exception {
 
             // given
-            Party party = parties.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            Party party = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
             Property property = propertyRepository.findPropertyByReference("OXF");
             // TODO: get right dates (although the date params are not actually
             // used in the query..)

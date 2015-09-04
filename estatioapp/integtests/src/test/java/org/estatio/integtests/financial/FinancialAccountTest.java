@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
@@ -43,9 +42,11 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset._PropertyForOxfGb;
-import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
+import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -60,8 +61,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
+                    executionContext.executeChild(this, new BankAccountForHelloWorldGb());
                 }
             });
         }
@@ -75,7 +75,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            party = parties.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            party = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
         }
 
         // this test really just makes an assertion about the fixture.
@@ -107,7 +107,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
+                    executionContext.executeChild(this, new BankAccountForHelloWorldNl());
                 }
             });
         }
@@ -124,7 +124,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            FinancialAccount financialAccount = financialAccounts.findAccountByReference(_BankAccountForHelloWorldNl.REF);
+            FinancialAccount financialAccount = financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF);
             Assert.assertTrue(financialAccount instanceof BankAccount);
             bankAccount = (BankAccount) financialAccount;
         }
@@ -139,7 +139,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
             Assert.assertThat(results.size(), is(1));
             fixedAssetFinancialAccount = results.get(0);
 
-            Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(_PropertyForOxfGb.REF));
+            Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(PropertyForKalNl.REF));
 
             // When
             wrap(fixedAssetFinancialAccount).remove(true);
@@ -148,7 +148,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccounts.findAccountByReference(_BankAccountForHelloWorldNl.REF));
+            Assert.assertNull(financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF));
         }
     }
 }

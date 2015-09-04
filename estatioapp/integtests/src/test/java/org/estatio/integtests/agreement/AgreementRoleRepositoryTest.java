@@ -29,6 +29,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
@@ -40,10 +42,12 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.Persons;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
@@ -61,6 +65,12 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
     Parties parties;
 
     @Inject
+    Persons persons;
+
+    @Inject
+    Organisations organisations;
+
+    @Inject
     AgreementRepository agreementRepository;
 
     @Inject
@@ -69,6 +79,8 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
 
+    @Inject
+    ApplicationTenancies applicationTenancies;
 
 
     Party party;
@@ -82,15 +94,15 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
     }
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(_LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreement = agreementRepository.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
+        party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+        agreement = agreementRepository.findAgreementByReference(LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
         agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 
@@ -109,7 +121,7 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
         }
@@ -124,7 +136,7 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
         @Before
         public void setUp() throws Exception {
             artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
-            leaseOxfTopModel = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            leaseOxfTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             partyTopModel = parties.findPartyByReference(OrganisationForTopModelGb.REF);
         }
 

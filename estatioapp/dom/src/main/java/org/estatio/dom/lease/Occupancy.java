@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.isis.applib.annotation.*;
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
@@ -475,18 +476,14 @@ public class Occupancy
     }
 
     public void verify() {
-        Lease verifyLease = getLease();
+        Lease lease = getLease();
 
-        if (verifyLease.getTenancyEndDate() == null) {
-            if (verifyLease.getEndDate() != null && !verifyLease.getEndDate().equals(getEndDate())) {
-                setEndDate(verifyLease.getEndDate());
-            } else if (verifyLease.getEndDate() == null) {
-                setEndDate(null);
-            }
-        } else {
-            if (!verifyLease.getTenancyEndDate().equals(getEndDate())) {
-                setEndDate(verifyLease.getTenancyEndDate());
-            }
+        if (ObjectUtils.compare(lease.getTenancyStartDate(), getStartDate()) != 0) {
+            setStartDate(lease.getTenancyStartDate());
+        }
+
+        if (getEndDate() != null && (ObjectUtils.compare(lease.getTenancyEndDate(), getEndDate()) != 0)) {
+            setEndDate(lease.getTenancyEndDate());
         }
     }
 }

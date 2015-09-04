@@ -20,9 +20,13 @@ package org.estatio.integtests.api;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import javax.inject.Inject;
+
+import org.apache.chemistry.opencmis.commons.enums.PropertyType;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.AfterClass;
@@ -31,8 +35,11 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -71,14 +78,14 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset._PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
 import org.estatio.fixture.financial.BankAccountForMediaXGb;
 import org.estatio.fixture.financial.BankAccountForMiracleGb;
 import org.estatio.fixture.financial.BankAccountForPretGb;
-import org.estatio.fixture.financial._BankAccountAndMandateForPoisonNl;
-import org.estatio.fixture.financial._BankAccountForHelloWorldNl;
+import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
+import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
@@ -86,7 +93,7 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
@@ -115,8 +122,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
 
                         executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-                        executionContext.executeChild(this, new _PropertyForOxfGb());
-                        executionContext.executeChild(this, new _BankAccountForHelloWorldNl());
+                        executionContext.executeChild(this, new PropertyForOxfGb());
+                        executionContext.executeChild(this, new BankAccountForHelloWorldGb());
 
                         executionContext.executeChild(this, new OrganisationForAcmeNl());
                         executionContext.executeChild(this, new PropertyForKalNl());
@@ -134,12 +141,12 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                         executionContext.executeChild(this, new OrganisationForPoisonNl());
                         executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                        executionContext.executeChild(this, new _BankAccountAndMandateForPoisonNl());
+                        executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
                         executionContext.executeChild(this, new OrganisationForPretGb());
-                        executionContext.executeChild(this, new _LeaseForOxfPret004Gb());
+                        executionContext.executeChild(this, new LeaseForOxfPret004Gb());
                         executionContext.executeChild(this, new BankAccountForPretGb());
 
                         executionContext.executeChild(this, new OrganisationForMiracleGb());
@@ -250,7 +257,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t01_putAsset() throws Exception {
-        api.putProperty("APIP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT", "APIEXTREF", "/NLD");
+        api.putProperty("APIP", "Apiland", "NLD", "ApiCity", org.estatio.dom.asset.PropertyType.SHOPPING_CENTER.name(), null, null, null, OrganisationForHelloWorldNl.REF, "APIFORMAT", "APIEXTREF", "/NLD");
         api.putUnit("APIUNIT", "APIP", "APIONWER", "Name", "BOUTIQUE", dt(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
         Assert.assertThat(properties.findProperties("APIP").size(), Is.is(1));
     }

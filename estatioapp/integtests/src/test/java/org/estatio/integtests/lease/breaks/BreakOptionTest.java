@@ -19,10 +19,14 @@
 package org.estatio.integtests.lease.breaks;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
@@ -32,8 +36,9 @@ import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -103,7 +108,7 @@ public class BreakOptionTest extends EstatioIntegrationTest {
                 }
             });
 
-            lease = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             assertThat(breakOptions.allBreakOptions().size(), is(2));
             final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);

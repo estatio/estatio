@@ -21,17 +21,21 @@ package org.estatio.dom.agreement;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
@@ -39,9 +43,9 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -50,6 +54,7 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -125,7 +130,6 @@ public abstract class Agreement
         this.secondaryRoleTypeTitle = secondaryRoleTypeTitle;
     }
 
-
     // //////////////////////////////////////
 
     private String reference;
@@ -198,7 +202,6 @@ public abstract class Agreement
         return findCurrentOrMostRecentAgreementRole(art);
     }
 
-
     private AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType =
@@ -206,7 +209,7 @@ public abstract class Agreement
 
         // try to find the one that is current...
         Iterable<AgreementRole> roles =
-                Iterables.filter(rolesOfType, WithInterval.Predicates.<AgreementRole> whetherCurrentIs(true));
+                Iterables.filter(rolesOfType, WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
 
         // ... else the most recently ended one
         if (Iterables.isEmpty(roles)) {
@@ -405,15 +408,16 @@ public abstract class Agreement
             final LocalDate endDate) {
 
         Party currentParty = findCurrentOrMostRecentParty(art);
-        if(currentParty != null && !Objects.equal(currentParty.getApplicationTenancy(), newParty.getApplicationTenancy())) {
+        if (currentParty != null && !Objects.equal(currentParty.getApplicationTenancy(), newParty.getApplicationTenancy())) {
             return "The application level of the new party must be the same as that of the current party";
         }
 
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             return "End date cannot be earlier than start date";
         }
-        if (!Sets.filter(getRoles(), art.matchingRole()).isEmpty()) {
-            return "Add a successor/predecessor to existing agreement role";
+
+        if (!Sets.filter(getRoles(), org.estatio.dom.agreement.AgreementRole.Predicates.matchingRoleAndPeriod(art, startDate, endDate)).isEmpty()) {
+            return "There is already a role for this type and period";
         }
         return null;
     }
@@ -444,8 +448,7 @@ public abstract class Agreement
         role.setStartDate(startDate);
         role.setEndDate(endDate);
         role.setType(type); // must do before associate with agreement, since
-                            // part of AgreementRole#compareTo impl.
-
+        // part of AgreementRole#compareTo impl.
         // JDO will manage the relationship for us
         // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email
         // 2013-7-17

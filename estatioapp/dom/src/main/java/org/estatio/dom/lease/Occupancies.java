@@ -135,6 +135,46 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
 
     // //////////////////////////////////////
 
+    private void verifyFor(Lease lease) {
+        for (Occupancy occupancy : findByLease(lease)) {
+            occupancy.verify();
+        }
+    }
+
+    private void terminateFor(Lease lease, LocalDate terminationDate) {
+        for (Occupancy occupancy : findByLease(lease)) {
+            occupancy.terminate(terminationDate);
+        }
+    }
+
+    // //////////////////////////////////////
+
+    @Subscribe
+    @Programmatic
+    public void on(final Lease.ChangeDatesEvent ev) {
+        switch (ev.getEventPhase()) {
+        case EXECUTED:
+            verifyFor(ev.getSource());
+            break;
+        default:
+            break;
+        }
+    }
+
+    @Subscribe
+    @Programmatic
+    public void on(final Lease.TerminateEvent ev) {
+        switch (ev.getEventPhase()) {
+        case EXECUTED:
+            terminateFor(ev.getSource(), ev.getTerminationDate());
+            break;
+        default:
+            break;
+        }
+    }
+
+    // //////////////////////////////////////
+
     @Subscribe
     @Programmatic
     public void on(final Brand.RemoveEvent ev) {
@@ -142,7 +182,7 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
         Brand replacementBrand = ev.getReplacement();
 
         List<Occupancy> occupancies;
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             occupancies = findByBrand(sourceBrand, true);
 

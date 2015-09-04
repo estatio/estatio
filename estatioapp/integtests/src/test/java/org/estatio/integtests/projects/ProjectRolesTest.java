@@ -43,8 +43,8 @@ import org.estatio.dom.project.ProjectRoles;
 import org.estatio.dom.project.ProjectRolesContributions;
 import org.estatio.dom.project.Projects;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.PersonForGinoVannelliNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -55,7 +55,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ProjectRolesTest extends EstatioIntegrationTest {
-	
+
     @Before
     public void setupData() {
         runScript(new FixtureScript() {
@@ -63,23 +63,23 @@ public class ProjectRolesTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-//                executionContext.executeChild(this, new OrganisationForTopModel());
+                //                executionContext.executeChild(this, new OrganisationForTopModel());
                 executionContext.executeChild(this, new ProjectsForKal());
                 executionContext.executeChild(this, new ProjectsForGra());
             }
         });
     }
-    
-	@Inject
+
+    @Inject
     Projects projects;
-    
-	@Inject
+
+    @Inject
     Parties parties;
-    
-	@Inject
+
+    @Inject
     ProjectRoles projectRoles;
-	
-	@Inject
+
+    @Inject
     ProjectRolesContributions projectRolesContributions;
 
     public static class FindRole extends ProjectRolesTest {
@@ -97,7 +97,7 @@ public class ProjectRolesTest extends EstatioIntegrationTest {
             // then
             Assert.assertNotNull(projectActor);
         }
-        
+
         @Test
         public void withExistingParty() throws Exception {
 
@@ -112,78 +112,78 @@ public class ProjectRolesTest extends EstatioIntegrationTest {
         }
 
     }
-    
+
     public static class newProjectRole extends ProjectRolesTest {
-    	
-    	Party party;
-    	Project project;
-    	ProjectRole pr;
-    	
-    	@Test
-    	public void overlappingPeriod() throws Exception {
-    		
-    		// given
-	    	Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-	    	Project project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
-			
-			// when
-			pr = projectRoles.findRole(project, party, ProjectRoleType.PROJECT_EXECUTIVE);
-			assertThat(pr.getEndDate(), is(new LocalDate(2000,1,1)));
-			assertThat(pr.getType(), is(ProjectRoleType.PROJECT_EXECUTIVE));
-			// then
-			assertThat(projectRolesContributions.validateNewProjectRole(project, ProjectRoleType.PROJECT_EXECUTIVE, party, new LocalDate(2000,1,1), null), is("Same party, same role, cannot have overlapping period"));
-			assertNull(projectRolesContributions.validateNewProjectRole(project, ProjectRoleType.PROJECT_EXECUTIVE, party, new LocalDate(2000,1,2), null));
-    	}
+
+        Party party;
+        Project project;
+        ProjectRole pr;
+
+        @Test
+        public void overlappingPeriod() throws Exception {
+
+            // given
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Project project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
+
+            // when
+            pr = projectRoles.findRole(project, party, ProjectRoleType.PROJECT_EXECUTIVE);
+            assertThat(pr.getEndDate(), is(new LocalDate(2000, 1, 1)));
+            assertThat(pr.getType(), is(ProjectRoleType.PROJECT_EXECUTIVE));
+            // then
+            assertThat(projectRolesContributions.validateNewProjectRole(project, ProjectRoleType.PROJECT_EXECUTIVE, party, new LocalDate(2000, 1, 1), null), is("Same party, same role, cannot have overlapping period"));
+            assertNull(projectRolesContributions.validateNewProjectRole(project, ProjectRoleType.PROJECT_EXECUTIVE, party, new LocalDate(2000, 1, 2), null));
+        }
     }
-    
+
     public static class changeProjectRoleDates extends ProjectRolesTest {
-    	
-    	Party party;
-    	Project project;
-    	ProjectRole pr1;
-    	ProjectRole pr2;
-    	
-    	@Before
-    	public void setUp() {
-	    	Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-	    	Project project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
-    		pr2 = projectRoles.createRole(project, ProjectRoleType.PROJECT_EXECUTIVE, party, new LocalDate(2000,1,2), null);
-    	}
-    	
-    	@Test
-    	public void overlappingPeriod() throws Exception {
-    		
-    		// given
-	    	Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-	    	Project project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
-			
-			// when
-			pr1 = projectRoles.findRole(project, party, ProjectRoleType.PROJECT_EXECUTIVE);
-			assertThat(pr1.getEndDate(), is(new LocalDate(2000,1,1)));
-			assertThat(pr2.getStartDate(), is(new LocalDate(2000,1,2)));
-			
-			// then
-			assertThat(pr2.validateChangeDates(new LocalDate(2000,1,1), null), is("Same party, same role, cannot have overlapping period"));
-			assertNull(pr2.validateChangeDates(new LocalDate(2000,1,3), null));
-    	}
+
+        Party party;
+        Project project;
+        ProjectRole pr1;
+        ProjectRole pr2;
+
+        @Before
+        public void setUp() {
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Project project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
+            pr2 = projectRoles.createRole(project, ProjectRoleType.PROJECT_EXECUTIVE, party, new LocalDate(2000, 1, 2), null);
+        }
+
+        @Test
+        public void overlappingPeriod() throws Exception {
+
+            // given
+            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Project project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
+
+            // when
+            pr1 = projectRoles.findRole(project, party, ProjectRoleType.PROJECT_EXECUTIVE);
+            assertThat(pr1.getEndDate(), is(new LocalDate(2000, 1, 1)));
+            assertThat(pr2.getStartDate(), is(new LocalDate(2000, 1, 2)));
+
+            // then
+            assertThat(pr2.validateChangeDates(new LocalDate(2000, 1, 1), null), is("Same party, same role, cannot have overlapping period"));
+            assertNull(pr2.validateChangeDates(new LocalDate(2000, 1, 3), null));
+        }
     }
-    
+
     public static class OnPartyRemove extends ProjectRolesTest {
 
         Party oldParty;
         Party newParty;
         Project project;
-    	ProjectRole pr;
+        ProjectRole pr;
 
         @Rule
         public ExpectedException expectedException = ExpectedException.none();
 
         @Before
         public void setUp() throws Exception {
-        	project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
-            oldParty = parties.findPartyByReference(PersonForGinoVannelliNl.REF);
+            project = projects.findProject(ProjectsForKal.PROJECT_REFERENCE).get(0);
+            oldParty = parties.findPartyByReference(PersonForLinusTorvaldsNl.REF);
             newParty = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-            pr = projectRoles.createRole(project, ProjectRoleType.SENIOR_SUPPLIER, oldParty, new LocalDate(2000,1,2), null);
+            pr = projectRoles.createRole(project, ProjectRoleType.SENIOR_SUPPLIER, oldParty, new LocalDate(2000, 1, 2), null);
         }
 
         @Test
@@ -200,8 +200,8 @@ public class ProjectRolesTest extends EstatioIntegrationTest {
         @Test
         public void executingReplacesParty() throws Exception {
             // when
-        	assertThat(projectRoles.findByParty(oldParty).size(), is(2));
-        	assertThat(projectRoles.findByParty(newParty).size(), is(3));
+            assertThat(projectRoles.findByParty(oldParty).size(), is(4));
+            assertThat(projectRoles.findByParty(newParty).size(), is(3));
             Party.RemoveEvent event = new RemoveEvent(oldParty, null, newParty);
             event.setPhase(Phase.VALIDATE);
             projectRoles.on(event);
@@ -210,7 +210,7 @@ public class ProjectRolesTest extends EstatioIntegrationTest {
 
             // then
             assertThat(projectRoles.findByParty(oldParty).size(), is(0));
-            assertThat(projectRoles.findByParty(newParty).size(), is(5));
+            assertThat(projectRoles.findByParty(newParty).size(), is(7));
         }
 
         @Test

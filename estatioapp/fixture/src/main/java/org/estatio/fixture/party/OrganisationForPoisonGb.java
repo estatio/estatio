@@ -18,33 +18,28 @@
  */
 package org.estatio.fixture.party;
 
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.relationship.PartyRelationshipType;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForGinoVannelliGb extends PersonAbstract {
+public class OrganisationForPoisonGb extends OrganisationAbstract {
 
-    public static final String REF = "GVANNELLI";
+    public static final String REF = "POISON_GB";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
-    public static final String PARTY_REF_FROM = OrganisationForTopModelGb.REF;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForTopModelGb());
-        }
-
-        createPerson(
+        createOrganisation(
                 AT_PATH,
                 REF,
-                "G",
-                "Gino",
-                "Vannelli",
-                PersonGenderType.MALE,
+                "Poison Perfumeries",
                 null,
                 null,
-                PARTY_REF_FROM,
-                PartyRelationshipType.CONTACT.fromTitle(), executionContext);
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null, executionContext);
     }
+
 }

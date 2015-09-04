@@ -23,7 +23,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = _LeaseForOxfMediaX002Gb.REF;
+    public static final String LEASE_REF = LeaseForOxfMediaX002Gb.REF;
     public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
 
     @Override
@@ -31,7 +31,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends Lease
 
         // prereqs
         if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new _LeaseForOxfMediaX002Gb());
+            executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
         }
 
         // exec

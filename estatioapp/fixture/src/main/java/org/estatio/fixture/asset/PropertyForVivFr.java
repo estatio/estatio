@@ -18,21 +18,21 @@
  */
 package org.estatio.fixture.asset;
 
+import static org.estatio.integtests.VT.ld;
+
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.geography.CountriesRefData;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixture.party.OrganisationForHelloWorldFr;
+import org.estatio.fixture.party.PersonForJeanneDarcFr;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
-import static org.estatio.integtests.VT.ld;
-
-public class _PropertyForVivFr extends PropertyAbstract {
+public class PropertyForVivFr extends PropertyAbstract {
 
     public static final String REF = "VIV";
-    public static final String PARTY_REF_OWNER = OrganisationForHelloWorldNl.REF;
-    public static final String PARTY_REF_MANAGER = PersonForJohnDoeNl.REF;
+    public static final String PARTY_REF_OWNER = OrganisationForHelloWorldFr.REF;
+    public static final String PARTY_REF_MANAGER = PersonForJeanneDarcFr.REF;
     public static final String AT_PATH_COUNTRY = ApplicationTenancyForFr.PATH;
 
     public static String unitReference(String suffix) {
@@ -43,9 +43,9 @@ public class _PropertyForVivFr extends PropertyAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-            executionContext.executeChild(this, new PersonForJohnDoeNl());
+        if (isExecutePrereqs()) {
+            executionContext.executeChild(this, new OrganisationForHelloWorldFr());
+            executionContext.executeChild(this, new PersonForJeanneDarcFr());
         }
 
         // exec

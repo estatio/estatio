@@ -23,7 +23,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
 public class OrganisationForMediaXGb extends OrganisationAbstract {
 
-    public static final String REF = "MEDIAX";
+    public static final String REF = "MEDIAX_GB";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override

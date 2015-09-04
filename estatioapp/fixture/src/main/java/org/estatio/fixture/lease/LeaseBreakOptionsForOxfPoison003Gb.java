@@ -24,7 +24,7 @@ import org.estatio.dom.lease.breaks.BreakType;
 
 public class LeaseBreakOptionsForOxfPoison003Gb extends LeaseBreakOptionsAbstract {
 
-    public static final String LEASE_REF = _LeaseForOxfPoison003Gb.REF;
+    public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
 
     @Override
     protected void execute(ExecutionContext executionContext) {

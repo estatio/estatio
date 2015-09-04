@@ -30,12 +30,12 @@ import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForDagoBankGb;
 
 public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
-    public static final String LEASE_REFERENCE = _LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REFERENCE = LeaseForOxfTopModel001Gb.REF;
     public static final String PARTY_REF_BANK = OrganisationForDagoBankGb.REF;
 
     @Override
@@ -43,7 +43,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
         if (isExecutePrereqs()) {
             executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
-            executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             executionContext.executeChild(this, new OrganisationForDagoBankGb());
         }
 
