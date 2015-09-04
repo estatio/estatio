@@ -12,244 +12,1206 @@
   <property name="project-type" value="classpath" />
   <property name="hide-externals" value="true" />
   <classpath>
-    <classpathentry kind="lib" path="../dom/target/classes" />
-    <classpathentry kind="lib" path="../dom-italy/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/dom/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/dom-guarantee/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/dom-index/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/dom-instance/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/dom-lease_invoice/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/dom-party_asset/target/classes" />
+    <classpathentry kind="lib" path="../estatioapp/domservices/target/classes" />
   </classpath>
   <pom-root-files />
-  <excludes>
-    <exclude expression="*.Q*" active="true" />
-  </excludes>
+  <transformations>
+    <transformation in="*" out="{jar}.*" />
+  </transformations>
   <restructuring>
-    <set version="3" name="Model 1" hiview="Codemap" active="true" todo="false" list="0" />
+    <set version="3" name="Model 1" hiview="Codemap" active="true" todo="false" list="0">
+      <action type="flatten-v2" active="true" last-applied="false" description="Flatten root">
+        <composite-set>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.app.budget to org.estatio.app.budget">
+            <params name="org.estatio.app.budget">
+              <source-fqn fqn="org.estatio.app.budget" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="app" type="package" />
+                <node name="budget" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.app.budget in org.estatio.app to root">
+            <params sourceChild="org.estatio.app.budget" sourceChildType="package">
+              <source-fqn fqn="org.estatio.app" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="app" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="remove-node" active="true" last-applied="false" description="Remove org.estatio.app">
+            <params onlyIfEmptyOfEntities="true">
+              <source-fqn fqn="org.estatio.app" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="app" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.agreement to org.estatio.dom.agreement">
+            <params name="org.estatio.dom.agreement">
+              <source-fqn fqn="org.estatio.dom.agreement" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="agreement" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.agreement in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.agreement" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.apptenancy to org.estatio.dom.apptenancy">
+            <params name="org.estatio.dom.apptenancy">
+              <source-fqn fqn="org.estatio.dom.apptenancy" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="apptenancy" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.apptenancy in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.apptenancy" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.asset.financial.contributed to org.estatio.dom.asset.financial.contributed">
+            <params name="org.estatio.dom.asset.financial.contributed">
+              <source-fqn fqn="org.estatio.dom.asset.financial.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+                <node name="financial" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.asset.financial.contributed in org.estatio.dom.asset.financial to root">
+            <params sourceChild="org.estatio.dom.asset.financial.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.asset.financial" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+                <node name="financial" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.asset.financial to org.estatio.dom.asset.financial">
+            <params name="org.estatio.dom.asset.financial">
+              <source-fqn fqn="org.estatio.dom.asset.financial" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+                <node name="financial" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.asset.financial in org.estatio.dom.asset to root">
+            <params sourceChild="org.estatio.dom.asset.financial" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.asset" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.asset.registration.contributed to org.estatio.dom.asset.registration.contributed">
+            <params name="org.estatio.dom.asset.registration.contributed">
+              <source-fqn fqn="org.estatio.dom.asset.registration.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+                <node name="registration" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.asset.registration.contributed in org.estatio.dom.asset.registration to root">
+            <params sourceChild="org.estatio.dom.asset.registration.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.asset.registration" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+                <node name="registration" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.asset.registration to org.estatio.dom.asset.registration">
+            <params name="org.estatio.dom.asset.registration">
+              <source-fqn fqn="org.estatio.dom.asset.registration" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+                <node name="registration" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.asset.registration in org.estatio.dom.asset to root">
+            <params sourceChild="org.estatio.dom.asset.registration" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.asset" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.asset to org.estatio.dom.asset">
+            <params name="org.estatio.dom.asset">
+              <source-fqn fqn="org.estatio.dom.asset" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="asset" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.asset in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.asset" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.bankmandate to org.estatio.dom.bankmandate">
+            <params name="org.estatio.dom.bankmandate">
+              <source-fqn fqn="org.estatio.dom.bankmandate" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="bankmandate" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.bankmandate in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.bankmandate" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.budget to org.estatio.dom.budget">
+            <params name="org.estatio.dom.budget">
+              <source-fqn fqn="org.estatio.dom.budget" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="budget" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.budget in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.budget" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.charge to org.estatio.dom.charge">
+            <params name="org.estatio.dom.charge">
+              <source-fqn fqn="org.estatio.dom.charge" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="charge" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.charge in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.charge" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.communicationchannel to org.estatio.dom.communicationchannel">
+            <params name="org.estatio.dom.communicationchannel">
+              <source-fqn fqn="org.estatio.dom.communicationchannel" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="communicationchannel" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.communicationchannel in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.communicationchannel" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.communicationchannelfixedasset to org.estatio.dom.communicationchannelfixedasset">
+            <params name="org.estatio.dom.communicationchannelfixedasset">
+              <source-fqn fqn="org.estatio.dom.communicationchannelfixedasset" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="communicationchannelfixedasset" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.communicationchannelfixedasset in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.communicationchannelfixedasset" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.communicationchannelparty to org.estatio.dom.communicationchannelparty">
+            <params name="org.estatio.dom.communicationchannelparty">
+              <source-fqn fqn="org.estatio.dom.communicationchannelparty" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="communicationchannelparty" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.communicationchannelparty in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.communicationchannelparty" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.currency to org.estatio.dom.currency">
+            <params name="org.estatio.dom.currency">
+              <source-fqn fqn="org.estatio.dom.currency" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="currency" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.currency in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.currency" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.document.asset to org.estatio.dom.document.asset">
+            <params name="org.estatio.dom.document.asset">
+              <source-fqn fqn="org.estatio.dom.document.asset" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="document" type="package" />
+                <node name="asset" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.document.asset in org.estatio.dom.document to root">
+            <params sourceChild="org.estatio.dom.document.asset" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.document" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="document" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.document to org.estatio.dom.document">
+            <params name="org.estatio.dom.document">
+              <source-fqn fqn="org.estatio.dom.document" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="document" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.document in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.document" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.event to org.estatio.dom.event">
+            <params name="org.estatio.dom.event">
+              <source-fqn fqn="org.estatio.dom.event" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="event" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.event in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.event" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.financial.bankaccount to org.estatio.dom.financial.bankaccount">
+            <params name="org.estatio.dom.financial.bankaccount">
+              <source-fqn fqn="org.estatio.dom.financial.bankaccount" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+                <node name="bankaccount" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.financial.bankaccount in org.estatio.dom.financial to root">
+            <params sourceChild="org.estatio.dom.financial.bankaccount" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.financial" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.financial.contributed to org.estatio.dom.financial.contributed">
+            <params name="org.estatio.dom.financial.contributed">
+              <source-fqn fqn="org.estatio.dom.financial.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.financial.contributed in org.estatio.dom.financial to root">
+            <params sourceChild="org.estatio.dom.financial.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.financial" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.financial.utils to org.estatio.dom.financial.utils">
+            <params name="org.estatio.dom.financial.utils">
+              <source-fqn fqn="org.estatio.dom.financial.utils" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+                <node name="utils" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.financial.utils in org.estatio.dom.financial to root">
+            <params sourceChild="org.estatio.dom.financial.utils" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.financial" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.financial to org.estatio.dom.financial">
+            <params name="org.estatio.dom.financial">
+              <source-fqn fqn="org.estatio.dom.financial" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="financial" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.financial in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.financial" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.geography to org.estatio.dom.geography">
+            <params name="org.estatio.dom.geography">
+              <source-fqn fqn="org.estatio.dom.geography" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="geography" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.geography in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.geography" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.guarantee.contributed to org.estatio.dom.guarantee.contributed">
+            <params name="org.estatio.dom.guarantee.contributed">
+              <source-fqn fqn="org.estatio.dom.guarantee.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="guarantee" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.guarantee.contributed in org.estatio.dom.guarantee to root">
+            <params sourceChild="org.estatio.dom.guarantee.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.guarantee" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="guarantee" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.guarantee to org.estatio.dom.guarantee">
+            <params name="org.estatio.dom.guarantee">
+              <source-fqn fqn="org.estatio.dom.guarantee" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="guarantee" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.guarantee in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.guarantee" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.index to org.estatio.dom.index">
+            <params name="org.estatio.dom.index">
+              <source-fqn fqn="org.estatio.dom.index" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="index" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.index in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.index" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.invoice.viewmodel to org.estatio.dom.invoice.viewmodel">
+            <params name="org.estatio.dom.invoice.viewmodel">
+              <source-fqn fqn="org.estatio.dom.invoice.viewmodel" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="invoice" type="package" />
+                <node name="viewmodel" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.invoice.viewmodel in org.estatio.dom.invoice to root">
+            <params sourceChild="org.estatio.dom.invoice.viewmodel" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.invoice" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="invoice" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.invoice to org.estatio.dom.invoice">
+            <params name="org.estatio.dom.invoice">
+              <source-fqn fqn="org.estatio.dom.invoice" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="invoice" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.invoice in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.invoice" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease.assignment to org.estatio.dom.lease.assignment">
+            <params name="org.estatio.dom.lease.assignment">
+              <source-fqn fqn="org.estatio.dom.lease.assignment" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+                <node name="assignment" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease.assignment in org.estatio.dom.lease to root">
+            <params sourceChild="org.estatio.dom.lease.assignment" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease.breaks to org.estatio.dom.lease.breaks">
+            <params name="org.estatio.dom.lease.breaks">
+              <source-fqn fqn="org.estatio.dom.lease.breaks" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+                <node name="breaks" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease.breaks in org.estatio.dom.lease to root">
+            <params sourceChild="org.estatio.dom.lease.breaks" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease.contributed to org.estatio.dom.lease.contributed">
+            <params name="org.estatio.dom.lease.contributed">
+              <source-fqn fqn="org.estatio.dom.lease.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease.contributed in org.estatio.dom.lease to root">
+            <params sourceChild="org.estatio.dom.lease.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease.invoicing to org.estatio.dom.lease.invoicing">
+            <params name="org.estatio.dom.lease.invoicing">
+              <source-fqn fqn="org.estatio.dom.lease.invoicing" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+                <node name="invoicing" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease.invoicing in org.estatio.dom.lease to root">
+            <params sourceChild="org.estatio.dom.lease.invoicing" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease.status to org.estatio.dom.lease.status">
+            <params name="org.estatio.dom.lease.status">
+              <source-fqn fqn="org.estatio.dom.lease.status" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+                <node name="status" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease.status in org.estatio.dom.lease to root">
+            <params sourceChild="org.estatio.dom.lease.status" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease.tags to org.estatio.dom.lease.tags">
+            <params name="org.estatio.dom.lease.tags">
+              <source-fqn fqn="org.estatio.dom.lease.tags" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+                <node name="tags" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease.tags in org.estatio.dom.lease to root">
+            <params sourceChild="org.estatio.dom.lease.tags" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.lease to org.estatio.dom.lease">
+            <params name="org.estatio.dom.lease">
+              <source-fqn fqn="org.estatio.dom.lease" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="lease" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.lease in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.lease" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.numerator to org.estatio.dom.numerator">
+            <params name="org.estatio.dom.numerator">
+              <source-fqn fqn="org.estatio.dom.numerator" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="numerator" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.numerator in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.numerator" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.party.contributed to org.estatio.dom.party.contributed">
+            <params name="org.estatio.dom.party.contributed">
+              <source-fqn fqn="org.estatio.dom.party.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.party.contributed in org.estatio.dom.party to root">
+            <params sourceChild="org.estatio.dom.party.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.party" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.party.publishing to org.estatio.dom.party.publishing">
+            <params name="org.estatio.dom.party.publishing">
+              <source-fqn fqn="org.estatio.dom.party.publishing" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+                <node name="publishing" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.party.publishing in org.estatio.dom.party to root">
+            <params sourceChild="org.estatio.dom.party.publishing" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.party" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.party.relationship.contributed to org.estatio.dom.party.relationship.contributed">
+            <params name="org.estatio.dom.party.relationship.contributed">
+              <source-fqn fqn="org.estatio.dom.party.relationship.contributed" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+                <node name="relationship" type="package" />
+                <node name="contributed" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.party.relationship.contributed in org.estatio.dom.party.relationship to root">
+            <params sourceChild="org.estatio.dom.party.relationship.contributed" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.party.relationship" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+                <node name="relationship" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.party.relationship to org.estatio.dom.party.relationship">
+            <params name="org.estatio.dom.party.relationship">
+              <source-fqn fqn="org.estatio.dom.party.relationship" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+                <node name="relationship" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.party.relationship in org.estatio.dom.party to root">
+            <params sourceChild="org.estatio.dom.party.relationship" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom.party" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.party to org.estatio.dom.party">
+            <params name="org.estatio.dom.party">
+              <source-fqn fqn="org.estatio.dom.party" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="party" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.party in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.party" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.project to org.estatio.dom.project">
+            <params name="org.estatio.dom.project">
+              <source-fqn fqn="org.estatio.dom.project" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="project" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.project in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.project" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.tax to org.estatio.dom.tax">
+            <params name="org.estatio.dom.tax">
+              <source-fqn fqn="org.estatio.dom.tax" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="tax" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.tax in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.tax" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom.valuetypes to org.estatio.dom.valuetypes">
+            <params name="org.estatio.dom.valuetypes">
+              <source-fqn fqn="org.estatio.dom.valuetypes" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+                <node name="valuetypes" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom.valuetypes in org.estatio.dom to root">
+            <params sourceChild="org.estatio.dom.valuetypes" sourceChildType="package">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.dom to org.estatio.dom">
+            <params name="org.estatio.dom">
+              <source-fqn fqn="org.estatio.dom" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="dom" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.dom in org.estatio to root">
+            <params sourceChild="org.estatio.dom" sourceChildType="package">
+              <source-fqn fqn="org.estatio" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.domlink to org.estatio.domlink">
+            <params name="org.estatio.domlink">
+              <source-fqn fqn="org.estatio.domlink" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="domlink" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.domlink in org.estatio to root">
+            <params sourceChild="org.estatio.domlink" sourceChildType="package">
+              <source-fqn fqn="org.estatio" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.domsettings to org.estatio.domsettings">
+            <params name="org.estatio.domsettings">
+              <source-fqn fqn="org.estatio.domsettings" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="domsettings" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.domsettings in org.estatio to root">
+            <params sourceChild="org.estatio.domsettings" sourceChildType="package">
+              <source-fqn fqn="org.estatio" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.services.admin to org.estatio.services.admin">
+            <params name="org.estatio.services.admin">
+              <source-fqn fqn="org.estatio.services.admin" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="services" type="package" />
+                <node name="admin" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.services.admin in org.estatio.services to root">
+            <params sourceChild="org.estatio.services.admin" sourceChildType="package">
+              <source-fqn fqn="org.estatio.services" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="services" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.services.exceprecog to org.estatio.services.exceprecog">
+            <params name="org.estatio.services.exceprecog">
+              <source-fqn fqn="org.estatio.services.exceprecog" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="services" type="package" />
+                <node name="exceprecog" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.services.exceprecog in org.estatio.services to root">
+            <params sourceChild="org.estatio.services.exceprecog" sourceChildType="package">
+              <source-fqn fqn="org.estatio.services" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="services" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.services to org.estatio.services">
+            <params name="org.estatio.services">
+              <source-fqn fqn="org.estatio.services" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="services" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.services in org.estatio to root">
+            <params sourceChild="org.estatio.services" sourceChildType="package">
+              <source-fqn fqn="org.estatio" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="rename" active="true" last-applied="false" description="Rename org.estatio.webapp.services.admin to org.estatio.webapp.services.admin">
+            <params name="org.estatio.webapp.services.admin">
+              <source-fqn fqn="org.estatio.webapp.services.admin" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="webapp" type="package" />
+                <node name="services" type="package" />
+                <node name="admin" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="move" active="true" last-applied="false" description="Move org.estatio.webapp.services.admin in org.estatio.webapp.services to root">
+            <params sourceChild="org.estatio.webapp.services.admin" sourceChildType="package">
+              <source-fqn fqn="org.estatio.webapp.services" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="webapp" type="package" />
+                <node name="services" type="package" />
+              </source-fqn>
+              <to-fqn fqn="root" type="root" isroot="true" />
+            </params>
+          </action>
+          <action type="remove-node" active="true" last-applied="false" description="Remove org.estatio.webapp.services">
+            <params onlyIfEmptyOfEntities="true">
+              <source-fqn fqn="org.estatio.webapp.services" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="webapp" type="package" />
+                <node name="services" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="remove-node" active="true" last-applied="false" description="Remove org.estatio.webapp">
+            <params onlyIfEmptyOfEntities="true">
+              <source-fqn fqn="org.estatio.webapp" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+                <node name="webapp" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="remove-node" active="true" last-applied="false" description="Remove org.estatio">
+            <params onlyIfEmptyOfEntities="true">
+              <source-fqn fqn="org.estatio" type="package">
+                <node name="org" type="package" />
+                <node name="estatio" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+          <action type="remove-node" active="true" last-applied="false" description="Remove org">
+            <params onlyIfEmptyOfEntities="true">
+              <source-fqn fqn="org" type="package">
+                <node name="org" type="package" />
+              </source-fqn>
+            </params>
+          </action>
+        </composite-set>
+        <params flattenLeafFolders="false">
+          <container-fqn fqn="root" type="root" path="" isroot="true" />
+        </params>
+      </action>
+    </set>
   </restructuring>
   <grid-set sep="." version="4.1.5501">
     <grid name="Diagram 1" enforce="true" locked="true" strict="false" excludes="">
       <row>
-        <cell name="org" pattern="" vexpanded="true" visibility="public" drill="true">
-          <grid>
-            <row>
-              <cell name="estatio" pattern="" vexpanded="true" visibility="public" drill="true">
-                <grid>
-                  <row>
-                    <cell name="app" pattern="org.estatio.app.*" vexpanded="false" visibility="public" drill="true" />
-                  </row>
-                  <row>
-                    <cell name="dom" pattern="org.estatio.dom.*" vexpanded="true" visibility="public" drill="true">
-                      <grid>
-                        <row>
-                          <cell name="guarantee" pattern="org.estatio.dom.guarantee.*" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="leaseassignments" pattern="org.estatio.dom.leaseassignments.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="lease" pattern="org.estatio.dom.lease.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="invoice" pattern="org.estatio.dom.invoice.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="asset" pattern="org.estatio.dom.asset.*" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="bankmandate" pattern="org.estatio.dom.bankmandate.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="agreement" pattern="org.estatio.dom.agreement.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="charge" pattern="org.estatio.dom.charge.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="index" pattern="org.estatio.dom.index.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="instance" pattern="org.estatio.dom.instance.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="currency" pattern="org.estatio.dom.currency.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="event" pattern="org.estatio.dom.event.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="geography" pattern="org.estatio.dom.geography.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="numerator" pattern="org.estatio.dom.numerator.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="tag" pattern="org.estatio.dom.tag.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="utils" pattern="org.estatio.dom.utils.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="dom" pattern="org.estatio.dom.?" vexpanded="false" visibility="public" drill="false">
-                            <grid>
-                              <row>
-                                <cell name="WithIntervalContiguous" pattern="org.estatio.dom.WithIntervalContiguous" vexpanded="false" visibility="public" drill="false" />
-                              </row>
-                              <row>
-                                <cell name="EstatioImmutableObject" pattern="org.estatio.dom.EstatioImmutableObject" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="EstatioMutableObject" pattern="org.estatio.dom.EstatioMutableObject" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithIntervalMutable" pattern="org.estatio.dom.WithIntervalMutable" vexpanded="false" visibility="public" drill="false" />
-                              </row>
-                              <row>
-                                <cell name="ApplicationSettingKey" pattern="org.estatio.dom.ApplicationSettingKey" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="EstatioDomainObject" pattern="org.estatio.dom.EstatioDomainObject" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="EstatioDomainService" pattern="org.estatio.dom.EstatioDomainService" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="TitledEnum" pattern="org.estatio.dom.TitledEnum" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithCodeComparable" pattern="org.estatio.dom.WithCodeComparable" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithCodeUnique" pattern="org.estatio.dom.WithCodeUnique" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithDescriptionComparable" pattern="org.estatio.dom.WithDescriptionComparable" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithDescriptionUnique" pattern="org.estatio.dom.WithDescriptionUnique" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithInterval" pattern="org.estatio.dom.WithInterval" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithNameComparable" pattern="org.estatio.dom.WithNameComparable" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithNameUnique" pattern="org.estatio.dom.WithNameUnique" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithReferenceComparable" pattern="org.estatio.dom.WithReferenceComparable" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithReferenceUnique" pattern="org.estatio.dom.WithReferenceUnique" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithTitleComparable" pattern="org.estatio.dom.WithTitleComparable" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithTitleUnique" pattern="org.estatio.dom.WithTitleUnique" vexpanded="false" visibility="public" drill="false" />
-                              </row>
-                              <row>
-                                <cell name="ApplicationSettingCreator" pattern="org.estatio.dom.ApplicationSettingCreator" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="Chained" pattern="org.estatio.dom.Chained" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="EstatioApplicationException" pattern="org.estatio.dom.EstatioApplicationException" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="EstatioService" pattern="org.estatio.dom.EstatioService" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="EstatioUserRoles" pattern="org.estatio.dom.EstatioUserRoles" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="IsisMultilineLines" pattern="org.estatio.dom.IsisMultilineLines" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="JdoColumnLength" pattern="org.estatio.dom.JdoColumnLength" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="JdoColumnScale" pattern="org.estatio.dom.JdoColumnScale" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="PowerType" pattern="org.estatio.dom.PowerType" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="RegexValidation" pattern="org.estatio.dom.RegexValidation" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="Titled" pattern="org.estatio.dom.Titled" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithCodeGetter" pattern="org.estatio.dom.WithCodeGetter" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithDescriptionGetter" pattern="org.estatio.dom.WithDescriptionGetter" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithNameGetter" pattern="org.estatio.dom.WithNameGetter" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithReferenceGetter" pattern="org.estatio.dom.WithReferenceGetter" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithSequence" pattern="org.estatio.dom.WithSequence" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithStartDate" pattern="org.estatio.dom.WithStartDate" vexpanded="false" visibility="public" drill="false" />
-                                <cell name="WithTitleGetter" pattern="org.estatio.dom.WithTitleGetter" vexpanded="false" visibility="public" drill="false" />
-                              </row>
-                            </grid>
-                          </cell>
-                        </row>
-                        <row>
-                          <cell name="valuetypes" pattern="org.estatio.dom.valuetypes.?" vexpanded="false" visibility="public" drill="false">
-                            <grid>
-                              <row>
-                                <cell name="LocalDateInterval" pattern="org.estatio.dom.valuetypes.LocalDateInterval" vexpanded="false" visibility="public" drill="false" />
-                              </row>
-                              <row>
-                                <cell name="AbstractInterval" pattern="org.estatio.dom.valuetypes.AbstractInterval" vexpanded="false" visibility="public" drill="false" />
-                              </row>
-                            </grid>
-                          </cell>
-                        </row>
-                      </grid>
-                    </cell>
-                  </row>
-                  <row>
-                    <cell name="services" pattern="org.estatio.services.*" vexpanded="true" visibility="public" drill="true">
-                      <grid>
-                        <row>
-                          <cell name="links" pattern="org.estatio.services.links.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="clock" pattern="org.estatio.services.clock.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="documents" pattern="org.estatio.services.documents.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="exceprecog" pattern="org.estatio.services.exceprecog.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="scheduler" pattern="org.estatio.services.scheduler.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="settings" pattern="org.estatio.services.settings.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                      </grid>
-                    </cell>
-                  </row>
-                </grid>
-              </cell>
-            </row>
-          </grid>
-        </cell>
+        <cell name="org.estatio.dom.lease.invoicing" pattern="org.estatio.dom.lease.invoicing.?" vexpanded="false" visibility="public" drill="true" />
       </row>
-      <description>Generated from LSM "Model 1"</description>
-    </grid>
-    <grid name="Diagram 2" enforce="true" locked="true" strict="false" excludes="">
       <row>
-        <cell name="org" pattern="" vexpanded="true" visibility="public" drill="true">
-          <grid>
-            <row>
-              <cell name="estatio" pattern="" vexpanded="true" visibility="public" drill="true">
-                <grid>
-                  <row>
-                    <cell name="app" pattern="org.estatio.app.*" vexpanded="false" visibility="public" drill="true" />
-                  </row>
-                  <row>
-                    <cell name="dom" pattern="org.estatio.dom.*" vexpanded="false" visibility="public" drill="true" />
-                  </row>
-                  <row>
-                    <cell name="services" pattern="org.estatio.services.*" vexpanded="false" visibility="public" drill="true" />
-                  </row>
-                </grid>
-              </cell>
-            </row>
-          </grid>
-        </cell>
+        <cell name="org.estatio.app.budget" pattern="org.estatio.app.budget.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.guarantee.contributed" pattern="org.estatio.dom.guarantee.contributed.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.invoice.viewmodel" pattern="org.estatio.dom.invoice.viewmodel.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.domlink" pattern="org.estatio.domlink.?" vexpanded="false" visibility="public" drill="true" />
       </row>
-      <description>Generated from LSM "Model 1"</description>
-    </grid>
-    <grid name="Diagram 3" enforce="true" locked="true" strict="false" excludes="">
       <row>
-        <cell name="org" pattern="" vexpanded="true" visibility="public" drill="true">
-          <grid>
-            <row>
-              <cell name="estatio" pattern="" vexpanded="true" visibility="public" drill="true">
-                <grid>
-                  <row>
-                    <cell name="api" pattern="org.estatio.api.?" vexpanded="false" visibility="public" drill="true" />
-                    <cell name="app" pattern="org.estatio.app.*" vexpanded="false" visibility="public" drill="true" />
-                  </row>
-                  <row>
-                    <cell name="dom" pattern="org.estatio.dom.*" vexpanded="true" visibility="public" drill="true">
-                      <grid>
-                        <row>
-                          <cell name="guarantee" pattern="org.estatio.dom.guarantee.*" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="leaseassignments" pattern="org.estatio.dom.leaseassignments.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="lease" pattern="org.estatio.dom.lease.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="invoice" pattern="org.estatio.dom.invoice.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="asset" pattern="org.estatio.dom.asset.*" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="bankmandate" pattern="org.estatio.dom.bankmandate.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="agreement" pattern="org.estatio.dom.agreement.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="charge" pattern="org.estatio.dom.charge.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="instance" pattern="org.estatio.dom.instance.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                        <row>
-                          <cell name="currency" pattern="org.estatio.dom.currency.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="event" pattern="org.estatio.dom.event.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="geography" pattern="org.estatio.dom.geography.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="index" pattern="org.estatio.dom.index.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="numerator" pattern="org.estatio.dom.numerator.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="tag" pattern="org.estatio.dom.tag.?" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="false" />
-                        </row>
-                      </grid>
-                    </cell>
-                  </row>
-                  <row>
-                    <cell name="services" pattern="org.estatio.services.*" vexpanded="false" visibility="public" drill="true" />
-                  </row>
-                </grid>
-              </cell>
-            </row>
-          </grid>
-        </cell>
+        <cell name="org.estatio.dom.budget" pattern="org.estatio.dom.budget.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.guarantee" pattern="org.estatio.dom.guarantee.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.invoice" pattern="org.estatio.dom.invoice.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.lease.assignment" pattern="org.estatio.dom.lease.assignment.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.lease.breaks" pattern="org.estatio.dom.lease.breaks.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.lease.contributed" pattern="org.estatio.dom.lease.contributed.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.lease.status" pattern="org.estatio.dom.lease.status.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.domsettings" pattern="org.estatio.domsettings.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.asset.financial.contributed" pattern="org.estatio.dom.asset.financial.contributed.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.financial.contributed" pattern="org.estatio.dom.financial.contributed.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.lease" pattern="org.estatio.dom.lease.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.asset.financial" pattern="org.estatio.dom.asset.financial.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.asset.registration.contributed" pattern="org.estatio.dom.asset.registration.contributed.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.bankmandate" pattern="org.estatio.dom.bankmandate.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.financial.utils" pattern="org.estatio.dom.financial.utils.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.party.contributed" pattern="org.estatio.dom.party.contributed.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.asset.registration" pattern="org.estatio.dom.asset.registration.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.communicationchannelfixedasset" pattern="org.estatio.dom.communicationchannelfixedasset.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.document.asset" pattern="org.estatio.dom.document.asset.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.financial.bankaccount" pattern="org.estatio.dom.financial.bankaccount.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.party.relationship.contributed" pattern="org.estatio.dom.party.relationship.contributed.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.project" pattern="org.estatio.dom.project.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.asset" pattern="org.estatio.dom.asset.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.charge" pattern="org.estatio.dom.charge.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.communicationchannelparty" pattern="org.estatio.dom.communicationchannelparty.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.financial" pattern="org.estatio.dom.financial.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.party.publishing" pattern="org.estatio.dom.party.publishing.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.party.relationship" pattern="org.estatio.dom.party.relationship.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.agreement" pattern="org.estatio.dom.agreement.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.currency" pattern="org.estatio.dom.currency.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.event" pattern="org.estatio.dom.event.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.index" pattern="org.estatio.dom.index.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.lease.tags" pattern="org.estatio.dom.lease.tags.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.numerator" pattern="org.estatio.dom.numerator.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.party" pattern="org.estatio.dom.party.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.apptenancy" pattern="org.estatio.dom.apptenancy.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom.geography" pattern="org.estatio.dom.geography.?" vexpanded="false" visibility="public" drill="true" />
+      </row>
+      <row>
+        <cell name="org.estatio.dom" pattern="org.estatio.dom.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.document" pattern="org.estatio.dom.document.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.dom.valuetypes" pattern="org.estatio.dom.valuetypes.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.services" pattern="org.estatio.services.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.services.admin" pattern="org.estatio.services.admin.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.services.exceprecog" pattern="org.estatio.services.exceprecog.?" vexpanded="false" visibility="public" drill="true" />
+        <cell name="org.estatio.webapp.services.admin" pattern="org.estatio.webapp.services.admin.?" vexpanded="false" visibility="public" drill="true" />
       </row>
       <description>Generated from LSM "Model 1"</description>
     </grid>
