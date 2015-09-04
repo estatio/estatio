@@ -12,10 +12,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.FixedAssetRoles;
-import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -34,10 +34,10 @@ public class FixedAssetTest extends EstatioIntegrationTest {
     Parties parties;
 
     @Inject
-    Properties properties;
+    PropertyRepository properties;
 
     @Inject
-    FixedAssetRoles fixedAssetRoles;
+    FixedAssetRoleRepository fixedAssetRoles;
 
     Party party;
 

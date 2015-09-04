@@ -10,10 +10,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
-import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.agreement.AgreementRoleRepository;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -29,16 +29,16 @@ import static org.junit.Assert.assertThat;
 public class AgreementTest extends EstatioIntegrationTest {
 
     @Inject
-    Agreements agreements;
+    AgreementRepository agreements;
 
     @Inject
     Parties parties;
 
     @Inject
-    AgreementRoleTypes agreementRoleTypes;
+    AgreementRoleTypeRepository agreementRoleTypes;
 
     @Inject
-    AgreementRoles agreementRoles;
+    AgreementRoleRepository agreementRoles;
 
     Agreement agreement;
 

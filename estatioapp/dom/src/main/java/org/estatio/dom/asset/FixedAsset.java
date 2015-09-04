@@ -97,7 +97,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     }
 
     @Inject
-    FixedAssetRoles fixedAssetRoles;
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
     // //////////////////////////////////////
 
@@ -190,7 +190,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
-        List<FixedAssetRole> currentRoles = fixedAssetRoles.findAllForPropertyAndPartyAndType(this, party, type);
+        List<FixedAssetRole> currentRoles = fixedAssetRoleRepository.findAllForPropertyAndPartyAndType(this, party, type);
         for (FixedAssetRole fixedAssetRole : currentRoles) {
             LocalDateInterval existingInterval = new LocalDateInterval(fixedAssetRole.getStartDate(), fixedAssetRole.getEndDate());
             LocalDateInterval newInterval = new LocalDateInterval(startDate, endDate);

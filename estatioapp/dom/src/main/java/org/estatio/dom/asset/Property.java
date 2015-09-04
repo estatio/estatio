@@ -292,9 +292,6 @@ public class Property
     Units unitsRepo;
 
     @Inject
-    FixedAssetRoleRepository fixedAssetRoleRepository;
-
-    @Inject
     LocationLookupService locationLookupService;
 
 }
