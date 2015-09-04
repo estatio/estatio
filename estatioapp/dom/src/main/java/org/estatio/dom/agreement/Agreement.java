@@ -489,10 +489,10 @@ public abstract class Agreement
         this.agreementRoleTypeRepository = agreementRoleTypeRepository;
     }
 
-    protected AgreementTypes agreementTypes;
+    protected AgreementTypeRepository agreementTypeRepository;
 
-    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
+    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
+        this.agreementTypeRepository = agreementTypeRepository;
     }
 
 }

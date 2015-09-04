@@ -684,7 +684,7 @@ public class Lease
     }
 
     private AgreementType bankMandateAgreementType() {
-        return agreementTypes.find(BankMandateConstants.AT_MANDATE);
+        return agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
     }
 
     // //////////////////////////////////////

@@ -32,16 +32,16 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-public class AgreementTypesTest {
+public class AgreementTypeRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    AgreementTypes agreements;
+    AgreementTypeRepository agreements;
 
     @Before
     public void setup() {
 
-        agreements = new AgreementTypes() {
+        agreements = new AgreementTypeRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -63,7 +63,7 @@ public class AgreementTypesTest {
         };
     }
 
-    public static class findAgreementByTitle extends AgreementTypesTest {
+    public static class findAgreementByTitle extends AgreementTypeRepositoryTest {
 
         @Test
         public void happyCase() {

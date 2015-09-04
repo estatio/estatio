@@ -50,7 +50,7 @@ import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
@@ -280,7 +280,7 @@ public class LeaseTest {
         @Mock
         private AgreementRoleRepository mockAgreementRoles;
         @Mock
-        private AgreementTypes mockAgreementTypes;
+        private AgreementTypeRepository mockAgreementTypeRepository;
         @Mock
         private BankAccounts mockFinancialAccounts;
         @Mock
@@ -364,7 +364,7 @@ public class LeaseTest {
             bankMandateAgreementType.setTitle(BankMandateConstants.AT_MANDATE);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementTypes).find(BankMandateConstants.AT_MANDATE);
+                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AT_MANDATE);
                     will(returnValue(bankMandateAgreementType));
                 }
             });
@@ -409,7 +409,7 @@ public class LeaseTest {
             // a mini integration test, since using the real BankMandates impl
             bankMandates = new BankMandates();
             bankMandates.setContainer(mockContainer);
-            bankMandates.injectAgreementTypes(mockAgreementTypes);
+            bankMandates.injectAgreementTypes(mockAgreementTypeRepository);
             bankMandates.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
 
             // the main class under test
@@ -418,7 +418,7 @@ public class LeaseTest {
 
             lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             lease.injectAgreementRoles(mockAgreementRoles);
-            lease.injectAgreementTypes(mockAgreementTypes);
+            lease.injectAgreementTypes(mockAgreementTypeRepository);
             lease.financialAccounts = mockFinancialAccounts;
             lease.bankMandates = bankMandates;
             lease.setContainer(mockContainer);
@@ -580,7 +580,7 @@ public class LeaseTest {
         @Mock
         private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
-        private AgreementTypes mockAgreementTypes;
+        private AgreementTypeRepository mockAgreementTypeRepository;
         @Mock
         private AgreementRepository mockAgreementRepository;
         @Mock
@@ -624,7 +624,7 @@ public class LeaseTest {
             bankMandateAgreementType.setTitle(BankMandateConstants.AT_MANDATE);
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementTypes).find(BankMandateConstants.AT_MANDATE);
+                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AT_MANDATE);
                     will(returnValue(bankMandateAgreementType));
                 }
             });
@@ -648,7 +648,7 @@ public class LeaseTest {
             lease = new Lease();
             lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             lease.injectAgreements(mockAgreementRepository);
-            lease.injectAgreementTypes(mockAgreementTypes);
+            lease.injectAgreementTypes(mockAgreementTypeRepository);
             lease.injectClockService(mockClockService);
         }
 

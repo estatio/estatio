@@ -1,13 +1,14 @@
 package org.estatio.integtests.agreement;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import javax.inject.Inject;
+
 import org.junit.Before;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+
 import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -19,7 +20,10 @@ import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class AgreementTypesTest extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class AgreementTypeRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -45,18 +49,18 @@ public class AgreementTypesTest extends EstatioIntegrationTest {
     AgreementRepository agreementRepository;
 
     @Inject
-    AgreementTypes agreementTypes;
+    AgreementTypeRepository agreementTypeRepository;
 
     @Inject
     Leases leases;
 
     Lease lease;
 
-    public static class Test extends AgreementTypesTest {
+    public static class Test extends AgreementTypeRepositoryTest {
 
         @org.junit.Test
         public void happyCase() throws Exception {
-            AgreementType agreementType = agreementTypes.find(lease.getType().getTitle());
+            AgreementType agreementType = agreementTypeRepository.find(lease.getType().getTitle());
             assertThat(agreementType, is(lease.getType()));
         }
     }

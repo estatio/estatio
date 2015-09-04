@@ -37,7 +37,7 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
 
@@ -71,7 +71,7 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
             // CHECKSTYLE:ON
     ) {
         BankMandate mandate = newTransientInstance();
-        mandate.setType(agreementTypes.find(BankMandateConstants.AT_MANDATE));
+        mandate.setType(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE));
         mandate.setReference(reference);
         mandate.setName(name);
         mandate.setStartDate(startDate);
@@ -110,7 +110,7 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
     @Programmatic
     public void init(Map<String, String> properties) {
         super.init(properties);
-        AgreementType agreementType = agreementTypes.findOrCreate(BankMandateConstants.AT_MANDATE);
+        AgreementType agreementType = agreementTypeRepository.findOrCreate(BankMandateConstants.AT_MANDATE);
         agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
         agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
         agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
@@ -118,10 +118,10 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
 
     // //////////////////////////////////////
 
-    private AgreementTypes agreementTypes;
+    private AgreementTypeRepository agreementTypeRepository;
 
-    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
+    public void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
+        this.agreementTypeRepository = agreementTypeRepository;
     }
 
     private AgreementRoleTypeRepository agreementRoleTypeRepository;

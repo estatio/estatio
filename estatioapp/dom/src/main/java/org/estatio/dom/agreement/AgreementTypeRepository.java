@@ -21,27 +21,28 @@ package org.estatio.dom.agreement;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "25", repositoryFor = AgreementType.class)
-@Hidden
-public class AgreementTypes extends UdoDomainRepositoryAndFactory<AgreementType> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = AgreementType.class
+)
+public class AgreementTypeRepository extends UdoDomainRepositoryAndFactory<AgreementType> {
 
-    public AgreementTypes() {
-        super(AgreementTypes.class, AgreementType.class);
+    public AgreementTypeRepository() {
+        super(AgreementTypeRepository.class, AgreementType.class);
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
     public AgreementType find(final String title) {
         return firstMatch("findByTitle", "title", title);
     }
 
-    @Programmatic
     public AgreementType findOrCreate(final String title) {
         AgreementType agreementType = find(title);
         if (agreementType == null) {

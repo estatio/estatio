@@ -35,7 +35,7 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 
@@ -70,7 +70,7 @@ public class LeaseContributions extends UdoDomainService<LeaseContributions> {
     @Render(Type.EAGERLY)
     @MemberOrder(sequence="80")
     public Collection<Lease> currentLeases(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
+        final AgreementType agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
@@ -99,7 +99,7 @@ public class LeaseContributions extends UdoDomainService<LeaseContributions> {
     @Named("List All")
     @NotContributed(As.ASSOCIATION) // ie contributed action
     public Collection<Lease> allLeases(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
+        final AgreementType agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
@@ -111,10 +111,10 @@ public class LeaseContributions extends UdoDomainService<LeaseContributions> {
     
     // //////////////////////////////////////
 
-    private AgreementTypes agreementTypes;
+    private AgreementTypeRepository agreementTypeRepository;
 
-    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
+    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
+        this.agreementTypeRepository = agreementTypeRepository;
     }
 
 }

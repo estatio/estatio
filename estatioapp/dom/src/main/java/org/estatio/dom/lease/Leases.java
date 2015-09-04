@@ -51,7 +51,7 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
 import org.estatio.dom.asset.FixedAsset;
@@ -148,7 +148,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
             final Party landlord,
             final Party tenant) {
         Lease lease = newTransientInstance();
-        final AgreementType at = agreementTypes.find(LeaseConstants.AT_LEASE);
+        final AgreementType at = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
         lease.setType(at);
         lease.setApplicationTenancyPath(applicationTenancy.getPath());
         lease.setReference(reference);
@@ -287,7 +287,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @Programmatic
     public void init(final Map<String, String> properties) {
         super.init(properties);
-        final AgreementType agreementType = agreementTypes.findOrCreate(LeaseConstants.AT_LEASE);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AT_LEASE);
         agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
         agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
         agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
@@ -323,7 +323,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     private FixedAssets fixedAssets;
 
     @Inject
-    private AgreementTypes agreementTypes;
+    private AgreementTypeRepository agreementTypeRepository;
 
     @Inject
     private AgreementRoleTypeRepository agreementRoleTypeRepository;

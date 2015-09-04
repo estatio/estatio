@@ -52,7 +52,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactions;
@@ -101,7 +101,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
         Party leaseSecondaryParty = lease.getSecondaryParty();
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
-        final AgreementType at = agreementTypes.find(GuaranteeConstants.AT_GUARANTEE);
+        final AgreementType at = agreementTypeRepository.find(GuaranteeConstants.AT_GUARANTEE);
         guarantee.setType(at);
         guarantee.setReference(reference);
         guarantee.setDescription(description);
@@ -219,7 +219,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     @Programmatic
     public void init(Map<String, String> properties) {
         super.init(properties);
-        AgreementType agreementType = agreementTypes.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
+        AgreementType agreementType = agreementTypeRepository.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
         agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
         agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);
         agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_BANK, agreementType);
@@ -228,7 +228,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     // //////////////////////////////////////
 
     @Inject
-    private AgreementTypes agreementTypes;
+    private AgreementTypeRepository agreementTypeRepository;
 
     @Inject
     private AgreementRoleTypeRepository agreementRoleTypeRepository;

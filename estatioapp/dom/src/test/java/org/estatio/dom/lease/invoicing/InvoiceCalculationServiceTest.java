@@ -33,7 +33,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.*;
@@ -117,7 +117,7 @@ public class InvoiceCalculationServiceTest {
         AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
 
         @Mock
-        AgreementTypes mockAgreementTypes;
+        AgreementTypeRepository mockAgreementTypeRepository;
 
         @Mock
         EstatioSettingsService mockSettings;
@@ -173,7 +173,7 @@ public class InvoiceCalculationServiceTest {
             invoiceItemForLease.setLeaseTerm(leaseTerm);
 
             invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            invoiceItemForLease.injectAgreementTypes(mockAgreementTypes);
+            invoiceItemForLease.injectAgreementTypes(mockAgreementTypeRepository);
 
             ic = new InvoiceCalculationService();
             ic.estatioSettingsService = mockSettings;

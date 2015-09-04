@@ -27,7 +27,7 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -69,7 +69,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
     AgreementRepository agreementRepository;
 
     @Inject
-    AgreementTypes agreementTypes;
+    AgreementTypeRepository agreementTypeRepository;
 
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
@@ -83,7 +83,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
 
         @Test
         public void whenPresent() throws Exception {
-            final AgreementType type = agreementTypes.find("Lease");
+            final AgreementType type = agreementTypeRepository.find("Lease");
             assertNotNull(type);
             final List<Agreement> results = agreementRepository.findByTypeAndReferenceOrName(type, ".*OXF.*");
             assertThat(results.size(), is(5));

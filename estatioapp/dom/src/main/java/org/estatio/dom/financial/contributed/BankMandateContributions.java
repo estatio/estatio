@@ -35,7 +35,7 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 
@@ -75,7 +75,7 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
     @Render(Type.LAZILY)
     @MemberOrder(sequence = "80")
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypes.find(BankMandateConstants.AT_MANDATE);
+        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
@@ -107,7 +107,7 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
     @NotContributed(As.ASSOCIATION)
     // ie contributed action
     public Collection<BankMandate> allBankMandates(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypes.find(BankMandateConstants.AT_MANDATE);
+        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
@@ -118,10 +118,10 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
 
     // //////////////////////////////////////
 
-    private AgreementTypes agreementTypes;
+    private AgreementTypeRepository agreementTypeRepository;
 
-    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
+    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
+        this.agreementTypeRepository = agreementTypeRepository;
     }
 
 }

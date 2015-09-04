@@ -332,7 +332,7 @@ public class AgreementTest {
         @Mock
         private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
-        private AgreementTypes mockAgreementTypes;
+        private AgreementTypeRepository mockAgreementTypeRepository;
         @Mock
         private AgreementRoleRepository mockAgreementRoles;
 
@@ -345,7 +345,7 @@ public class AgreementTest {
 
         @Test
         public void injected() {
-            agreement.injectAgreementTypes(mockAgreementTypes);
+            agreement.injectAgreementTypes(mockAgreementTypeRepository);
             agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
             agreement.injectAgreements(mockAgreementRepository);
             agreement.injectAgreementRoles(mockAgreementRoles);
@@ -353,7 +353,7 @@ public class AgreementTest {
             assertThat(agreement.agreementRepository, is(mockAgreementRepository));
             assertThat(agreement.agreementRoles, is(mockAgreementRoles));
             assertThat(agreement.agreementRoleTypeRepository, is(mockAgreementRoleTypeRepository));
-            assertThat(agreement.agreementTypes, is(mockAgreementTypes));
+            assertThat(agreement.agreementTypeRepository, is(mockAgreementTypeRepository));
         }
     }
 
