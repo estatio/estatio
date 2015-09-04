@@ -25,7 +25,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.joda.time.LocalDate;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.UnitType;
@@ -60,7 +60,7 @@ public abstract class PropertyAbstract extends EstatioFixtureScript {
             final ExecutionContext fixtureResults) {
 
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-        Property property = properties.newProperty(reference, name, type, city, country, acquireDate, applicationTenancy);
+        Property property = propertyMenu.newProperty(reference, name, type, city, country, acquireDate, applicationTenancy);
         property.setOpeningDate(openingDate);
         property.setLocation(Location.fromString(locationStr));
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
@@ -86,7 +86,7 @@ public abstract class PropertyAbstract extends EstatioFixtureScript {
     protected Countries countries;
 
     @Inject
-    protected Properties properties;
+    protected PropertyMenu propertyMenu;
 
     @Inject
     protected Parties parties;

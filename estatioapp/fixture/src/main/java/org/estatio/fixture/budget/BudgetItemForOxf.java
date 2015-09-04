@@ -21,8 +21,9 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budget.Budget;
 import org.estatio.dom.budget.BudgetCostGroup;
 import org.estatio.dom.budget.BudgetKeyTable;
@@ -54,7 +55,7 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
         }
 
         // exec
-        Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
         Budget budget = budgets.findBudgetByProperty(property).get(0);
         BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME2);
         final BigDecimal VALUE = new BigDecimal(40000);
@@ -86,6 +87,9 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
     Charges charges;
 
     @Inject
-    Properties properties;
+    PropertyRepository propertyRepository;
+
+    @Inject
+    PropertyMenu propertyMenu;
 
 }

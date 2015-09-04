@@ -20,8 +20,9 @@ package org.estatio.fixture.financial;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
@@ -47,7 +48,7 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
         executionContext.addResult(this, bankAccount.getReference(), bankAccount);
 
         if (propertyRef != null) {
-            final Property property = properties.findPropertyByReference(propertyRef);
+            final Property property = propertyRepository.findPropertyByReference(propertyRef);
             fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);
         }
 
@@ -64,7 +65,10 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
     private Parties parties;
 
     @Inject
-    private Properties properties;
+    PropertyRepository propertyRepository;
+
+    @Inject
+    private PropertyMenu propertyMenu;
 
     @Inject
     private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;

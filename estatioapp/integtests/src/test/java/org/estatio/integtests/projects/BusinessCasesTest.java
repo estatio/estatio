@@ -28,7 +28,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.project.BusinessCase;
 import org.estatio.dom.project.BusinessCaseContributions;
 import org.estatio.dom.project.Program;
@@ -69,7 +69,7 @@ public class BusinessCasesTest extends EstatioIntegrationTest {
     Programs programs;
     
     @Inject
-    Properties properties;
+	PropertyMenu propertyMenu;
 
 	@Inject
 	ApplicationTenancies applicationTenancies;

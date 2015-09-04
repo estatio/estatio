@@ -18,20 +18,23 @@
  */
 package org.estatio.integtests.assets;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.estatio.dom.asset.Properties;
+
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
@@ -40,6 +43,10 @@ import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class PropertiesTest extends EstatioIntegrationTest {
 
@@ -57,14 +64,16 @@ public class PropertiesTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Properties properties;
+    PropertyMenu propertyMenu;
+    @Inject
+    PropertyRepository propertyRepository;
 
     public static class AllProperties extends PropertiesTest {
 
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // when
-            final List<Property> allProperties = properties.allProperties();
+            final List<Property> allProperties = propertyMenu.allProperties();
 
             // then
             assertThat(allProperties.size(), is(2));
@@ -76,28 +85,28 @@ public class PropertiesTest extends EstatioIntegrationTest {
 
         @Test
         public void withReference() throws Exception {
-            final List<Property> props = properties.findProperties("OXF");
+            final List<Property> props = propertyMenu.findProperties("OXF");
             assertNotNull(props);
             assertThat(props.size(), is(1));
         }
 
         @Test
         public void withName() throws Exception {
-            final List<Property> props = properties.findProperties("Oxford Super Mall");
+            final List<Property> props = propertyMenu.findProperties("Oxford Super Mall");
             assertNotNull(props);
             assertThat(props.size(), is(1));
         }
 
         @Test
         public void withWildcard() throws Exception {
-            final List<Property> props = properties.findProperties("Oxford*");
+            final List<Property> props = propertyMenu.findProperties("Oxford*");
             assertNotNull(props);
             assertThat(props.size(), is(1));
         }
 
         @Test
         public void withWildcard_returningMultiple() throws Exception {
-            final List<Property> props = properties.findProperties("*");
+            final List<Property> props = propertyMenu.findProperties("*");
             assertNotNull(props);
             assertThat(props.size(), is(2));
         }
@@ -109,7 +118,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
         public void withReference() throws Exception {
 
             // when
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // then
             Assertions.assertThat(property.getReference()).isEqualTo(_PropertyForOxfGb.REF);
@@ -136,7 +145,7 @@ public class PropertiesTest extends EstatioIntegrationTest {
             Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN")).isNull();
 
             // when
-            final Property property = properties.newProperty("ARN", "Arndale", PropertyType.RETAIL_PARK, "Manchester", gbrCountry, new LocalDate(2014,4,1), countryAppTenancy);
+            final Property property = propertyMenu.newProperty("ARN", "Arndale", PropertyType.RETAIL_PARK, "Manchester", gbrCountry, new LocalDate(2014,4,1), countryAppTenancy);
 
             // then
             Assertions.assertThat(property.getName()).isEqualTo("Arndale");

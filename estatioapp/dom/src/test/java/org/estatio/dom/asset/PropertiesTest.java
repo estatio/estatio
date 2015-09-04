@@ -19,17 +19,21 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+
 import org.assertj.core.api.Assertions;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
@@ -40,11 +44,12 @@ import static org.junit.Assert.assertThat;
 public class PropertiesTest {
 
     FinderInteraction finderInteraction;
-    Properties properties;
+    PropertyMenu propertyMenu;
+    PropertyRepository propertyRepository;
 
     @Before
     public void setup() {
-        properties = new Properties() {
+        propertyRepository = new PropertyRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -62,6 +67,8 @@ public class PropertiesTest {
                 return null;
             }
         };
+        propertyMenu = new PropertyMenu();
+        propertyMenu.propertyRepository = propertyRepository;
     }
 
     public static class FindProperties extends PropertiesTest {
@@ -69,7 +76,7 @@ public class PropertiesTest {
         @Test
         public void happyCase() {
 
-            properties.findProperties("*REF?1*");
+            propertyMenu.findProperties("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
@@ -85,7 +92,7 @@ public class PropertiesTest {
         @Test
         public void happyCase() {
 
-            properties.findPropertyByReference("*REF?1*");
+            propertyRepository.findPropertyByReference("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
@@ -101,7 +108,7 @@ public class PropertiesTest {
         @Test
         public void happyCase() {
 
-            properties.autoComplete("X?yz");
+            propertyRepository.autoComplete("X?yz");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
@@ -116,7 +123,7 @@ public class PropertiesTest {
         @Test
         public void happyCase() {
 
-            properties.allProperties();
+            propertyMenu.allProperties();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }
@@ -133,13 +140,18 @@ public class PropertiesTest {
         @Mock
         private ApplicationTenancyRepository mockApplicationTenancyRepository;
 
-        Properties properties;
+        PropertyRepository propertyRepository;
+        PropertyMenu propertyMenu;
 
         @Before
         public void setup() {
-            properties = new Properties();
-            properties.setContainer(mockContainer);
-            properties.applicationTenancyRepository = mockApplicationTenancyRepository;
+            propertyRepository = new PropertyRepository();
+            propertyRepository.setContainer(mockContainer);
+
+            propertyMenu = new PropertyMenu();
+            propertyMenu.propertyRepository = propertyRepository;
+
+            propertyRepository.applicationTenancyRepository = mockApplicationTenancyRepository;
         }
 
 
@@ -171,7 +183,7 @@ public class PropertiesTest {
             });
 
             // when
-            final Property newProperty = properties.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null, countryApplicationTenancy);
+            final Property newProperty = propertyMenu.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null, countryApplicationTenancy);
 
             // then
             Assertions.assertThat(newProperty.getReference()).isEqualTo("REF-1");
@@ -183,7 +195,7 @@ public class PropertiesTest {
 
         @Test
         public void defaults() {
-            assertThat(properties.default2NewProperty(), is(PropertyType.MIXED));
+            assertThat(propertyMenu.default2NewProperty(), is(PropertyType.MIXED));
         }
 
     }

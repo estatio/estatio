@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -69,7 +69,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
         createProperties(
-                properties.allProperties(),
+                propertyMenu.allProperties(),
                 ObjectUtils.firstNonNull(startDate, EPOCH_START_DATE),
                 endDate,
                 executionContext);
@@ -81,7 +81,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final LocalDate endDueDate,
             final ExecutionContext executionContext) {
         createProperties(
-                properties.allProperties(),
+                propertyMenu.allProperties(),
                 startDueDate,
                 endDueDate,
                 executionContext);
@@ -182,7 +182,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
     public Leases leases;
 
     @Inject
-    public Properties properties;
+    public PropertyMenu propertyMenu;
 
     @Inject
     public InvoiceCalculationService invoiceCalculationService;

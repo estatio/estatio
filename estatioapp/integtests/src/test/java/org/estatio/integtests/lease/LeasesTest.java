@@ -18,22 +18,22 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.tags.Brand;
@@ -48,6 +48,11 @@ import org.estatio.fixture.lease._LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LeasesTest extends EstatioIntegrationTest {
 
@@ -187,12 +192,14 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Properties properties;
+        private PropertyMenu propertyMenu;
+        @Inject
+        PropertyRepository propertyRepository;
 
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
             // when
             final List<Lease> matchingLeases = leases.findLeasesByProperty(property);
             // then
@@ -250,12 +257,14 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Properties properties;
+        private PropertyMenu propertyMenu;
+        @Inject
+        PropertyRepository propertyRepository;
 
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
             System.out.println(property);
             // when
             assertThat(leases.findLeasesActiveOnDate(property, new LocalDate(2010, 7, 14)).size(), is(0));

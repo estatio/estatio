@@ -27,8 +27,9 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyBuilder;
@@ -53,7 +54,9 @@ public class PropertyTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Properties properties;
+    PropertyMenu propertyMenu;
+    @Inject
+    PropertyRepository propertyRepository;
 
 
     public static class GetUnits extends PropertyTest {
@@ -61,7 +64,7 @@ public class PropertyTest extends EstatioIntegrationTest {
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // given
-            Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // when
             Set<Unit> units = property.getUnits();
@@ -89,7 +92,7 @@ public class PropertyTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Properties properties;
+        private PropertyMenu propertyMenu;
         @Inject
         private ClockService clockService;
 

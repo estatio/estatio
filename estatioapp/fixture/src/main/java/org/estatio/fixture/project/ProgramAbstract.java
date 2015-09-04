@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Program;
@@ -62,7 +62,7 @@ public abstract class ProgramAbstract extends EstatioFixtureScript {
   	protected Parties parties;
   
   @Inject
-  	protected Properties properties;
+  	protected PropertyMenu propertyMenu;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

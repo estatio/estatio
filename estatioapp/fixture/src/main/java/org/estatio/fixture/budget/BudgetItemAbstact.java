@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.budget.Budget;
 import org.estatio.dom.budget.BudgetCostGroup;
 import org.estatio.dom.budget.BudgetItem;
@@ -60,5 +60,5 @@ public abstract class BudgetItemAbstact extends EstatioFixtureScript {
     protected BudgetItems budgetItems;
 
     @Inject
-    protected Properties properties;
+    protected PropertyMenu propertyMenu;
 }

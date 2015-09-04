@@ -19,7 +19,7 @@
 package org.estatio.fixturescripts;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.CollectionNumerators;
 import org.estatio.dom.numerator.Numerator;
@@ -30,7 +30,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        for (Property property : properties.allProperties()) {
+        for (Property property : propertyMenu.allProperties()) {
             final Numerator numerator = collectionNumerators.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0));
             fixtureResults.addResult(this, property.getReference(), numerator);
         }
@@ -42,6 +42,6 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     CollectionNumerators collectionNumerators;
 
     @javax.inject.Inject
-    Properties properties;
+    PropertyMenu propertyMenu;
 
 }

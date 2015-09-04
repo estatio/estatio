@@ -21,8 +21,9 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budget.BudgetFoundationValueType;
 import org.estatio.dom.budget.BudgetKeyTable;
 import org.estatio.dom.budget.BudgetKeyTables;
@@ -52,5 +53,7 @@ public abstract class BudgetKeyTableAbstact extends EstatioFixtureScript {
     protected BudgetKeyTables budgetKeyTables;
 
     @Inject
-    protected Properties properties;
+    PropertyRepository propertyRepository;
+    @Inject
+    protected PropertyMenu propertyMenu;
 }

@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -69,7 +69,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
     LeaseTerms leaseTerms;
 
     @Inject
-    Properties properties;
+    PropertyMenu propertyMenu;
 
     Lease lease;
 

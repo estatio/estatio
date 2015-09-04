@@ -46,7 +46,7 @@ public class BudgetKeyTablesForOxf extends BudgetKeyTableAbstact {
         }
 
         // exec
-        Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
 
         createBudgetKeyTable(property, NAME, STARTDATE, ENDDATE, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
         createBudgetKeyTable(property, NAME2, STARTDATE, ENDDATE, BUDGET_FOUNDATION_VALUE_TYPE2, BUDGET_KEY_VALUE_METHOD, 3, executionContext);

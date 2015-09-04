@@ -18,22 +18,27 @@
  */
 package org.estatio.integtests.assets;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.Properties;
+
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class UnitsTest extends EstatioIntegrationTest {
 
@@ -54,7 +59,9 @@ public class UnitsTest extends EstatioIntegrationTest {
     Units units;
 
     @Inject
-    Properties properties;
+    PropertyMenu propertyMenu;
+    @Inject
+    PropertyRepository propertyRepository;
 
     public static class FindUnitByReference extends UnitsTest {
 
@@ -86,7 +93,7 @@ public class UnitsTest extends EstatioIntegrationTest {
         @Test
         public void findActiveByProperty() throws Exception {
             // given
-            Property propertyForOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            Property propertyForOxf = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
 
             // when
             Unit unit = units.findUnitByReference(_PropertyForOxfGb.REF + "-001");
@@ -108,7 +115,7 @@ public class UnitsTest extends EstatioIntegrationTest {
         @Test
         public void findActiveByProperty() throws Exception {
             // given, when
-            Property propertyForOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            Property propertyForOxf = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
             // then
             assertThat(units.findByProperty(propertyForOxf).size(), is(25));
         }

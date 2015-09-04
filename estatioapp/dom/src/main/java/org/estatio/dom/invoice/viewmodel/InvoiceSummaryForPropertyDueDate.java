@@ -20,6 +20,7 @@ package org.estatio.dom.invoice.viewmodel;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -36,8 +37,9 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 
 /**
@@ -133,7 +135,7 @@ public class InvoiceSummaryForPropertyDueDate extends InvoiceSummaryAbstract {
     @Title(sequence = "1")
     public Property getProperty() {
         if (property == null) {
-            setProperty(properties.findPropertyByReference(getReference()));
+            setProperty(propertyRepository.findPropertyByReference(getReference()));
         }
         return property;
     }
@@ -213,10 +215,11 @@ public class InvoiceSummaryForPropertyDueDate extends InvoiceSummaryAbstract {
 
     // //////////////////////////////////////
 
-    private Properties properties;
+    @Inject
+    PropertyRepository propertyRepository;
 
-    final public void injectProperties(final Properties properties) {
-        this.properties = properties;
-    }
+    @Inject
+    PropertyMenu propertyMenu;
+
 
 }

@@ -18,29 +18,28 @@
  */
 package org.estatio.integtests.invoice;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import java.math.BigInteger;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.estatio.dom.asset.Properties;
+
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.CollectionNumerators;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
@@ -66,6 +65,14 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
@@ -78,7 +85,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
     @Inject
     Leases leases;
     @Inject
-    Properties properties;
+    PropertyRepository propertyRepository;
+    @Inject
+    PropertyMenu propertyMenu;
     @Inject
     ApplicationTenancies applicationTenancies;
 
@@ -139,8 +148,8 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
-            propertyKal = properties.findPropertyByReference(PropertyForKalNl.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
 
             propertyOxfBookmark = bookmarkService.bookmarkFor(propertyOxf);
         }
@@ -222,7 +231,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
         }
 
         @Test
@@ -269,7 +278,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
-            propertyKal = properties.findPropertyByReference(PropertyForKalNl.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
 
             Invoice invoice = invoices.findOrCreateMatchingInvoice(
                     applicationTenancy,

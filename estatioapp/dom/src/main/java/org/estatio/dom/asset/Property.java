@@ -66,7 +66,7 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.asset.Property "
                         + "WHERE reference == :reference")
 })
-@DomainObject(autoCompleteRepository = Properties.class)
+@DomainObject(autoCompleteRepository = PropertyRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Property
         extends FixedAsset<Property>

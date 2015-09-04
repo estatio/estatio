@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budget.Budget;
 import org.estatio.dom.budget.Budgets;
 import org.estatio.dom.charge.Charge;
@@ -61,7 +62,9 @@ public class BudgetTest extends EstatioIntegrationTest {
         Charges charges;
 
         @Inject
-        Properties properties;
+        PropertyRepository propertyRepository;
+        @Inject
+        PropertyMenu propertyMenu;
 
         @Inject
         Budgets budgets;
@@ -73,7 +76,7 @@ public class BudgetTest extends EstatioIntegrationTest {
         public void whenSetUp() throws Exception {
 
             // Given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
             final Budget budget = budgets.findBudgetByProperty(property).get(0);
             leaseForMediax = leases.findLeaseByReference(_LeaseForOxfMediaX002Gb.REF);
             charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);

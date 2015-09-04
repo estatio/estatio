@@ -23,7 +23,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.UnitType;
@@ -160,7 +160,7 @@ public class PropertyBuilder extends EstatioFixtureScript {
 
         final ApplicationTenancy countryApplicationTenancy = applicationTenancies.findTenancyByPath("/" + getCountry().getReference());
 
-        this.property = properties.newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate(), countryApplicationTenancy);
+        this.property = propertyMenu.newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate(), countryApplicationTenancy);
 
         if(getOwner() != null) {
             wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
@@ -191,7 +191,7 @@ public class PropertyBuilder extends EstatioFixtureScript {
     protected Countries countries;
 
     @Inject
-    protected Properties properties;
+    protected PropertyMenu propertyMenu;
 
     @Inject
     protected Units units;

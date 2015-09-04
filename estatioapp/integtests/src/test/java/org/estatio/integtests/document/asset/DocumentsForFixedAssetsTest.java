@@ -18,15 +18,18 @@
  */
 package org.estatio.integtests.document.asset;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.Properties;
+
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.document.Document;
 import org.estatio.dom.document.DocumentType;
 import org.estatio.dom.document.asset.DocumentForFixedAsset;
@@ -35,6 +38,9 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.fixture.interactivemap.InteractiveMapDocumentForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class DocumentsForFixedAssetsTest extends EstatioIntegrationTest {
 
@@ -68,12 +74,14 @@ public class DocumentsForFixedAssetsTest extends EstatioIntegrationTest {
     public static class FindByFixedAsset extends DocumentsForFixedAssetsTest {
 
         @Inject
-        private Properties properties;
+        private PropertyMenu propertyMenu;
+        @Inject
+        PropertyRepository propertyRepository;
 
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
             // when
             final List<DocumentForFixedAsset> document = documents.findByFixedAsset(property);
             // then
@@ -84,12 +92,14 @@ public class DocumentsForFixedAssetsTest extends EstatioIntegrationTest {
     public static class FindByFixedAssetAndType extends DocumentsForFixedAssetsTest {
 
         @Inject
-        private Properties properties;
+        private PropertyMenu propertyMenu;
+        @Inject
+        PropertyRepository propertyRepository;
 
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            final Property property = properties.findPropertyByReference(_PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
             // when
             final List<DocumentForFixedAsset> document = documents.findByFixedAssetAndType(property, DocumentType.INTERACTIVE_MAP);
             // then

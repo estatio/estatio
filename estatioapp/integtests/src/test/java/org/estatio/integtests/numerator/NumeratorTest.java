@@ -23,8 +23,9 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
@@ -54,15 +55,17 @@ public class NumeratorTest extends EstatioIntegrationTest {
     @Inject
     Numerators numerators;
     @Inject
-    Properties properties;
+    PropertyMenu propertyMenu;
+    @Inject
+    PropertyRepository propertyRepository;
 
     Property propertyOxf;
     Property propertyKal;
 
     @Before
     public void setUp() throws Exception {
-        propertyOxf = properties.findPropertyByReference(_PropertyForOxfGb.REF);
-        propertyKal = properties.findPropertyByReference(PropertyForKalNl.REF);
+        propertyOxf = propertyRepository.findPropertyByReference(_PropertyForOxfGb.REF);
+        propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
     }
 
 

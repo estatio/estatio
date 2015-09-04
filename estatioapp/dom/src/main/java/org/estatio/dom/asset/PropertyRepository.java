@@ -18,10 +18,23 @@
  */
 package org.estatio.dom.asset;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.utils.StringUtils;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -32,6 +45,83 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     public PropertyRepository() {
         super(PropertyRepository.class, Property.class);
     }
+
+    public Property newProperty(
+            final String propertyReference,
+            final String name,
+            final PropertyType propertyType,
+            final String city,
+            final Country country,
+            final LocalDate acquireDate,
+            final ApplicationTenancy countryApplicationTenancy) {
+        final Property property = newTransientInstance();
+
+        final ApplicationTenancy propertyApplicationTenancy = applicationTenancyRepository.findOrCreatePropertyTenancy(countryApplicationTenancy, propertyReference);
+        applicationTenancyRepository.findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
+        applicationTenancyRepository.findOrCreateLocalTaTenancy(propertyApplicationTenancy);
+
+        property.setApplicationTenancyPath(propertyApplicationTenancy.getPath());
+        property.setReference(propertyReference);
+        property.setName(name);
+        property.setType(propertyType);
+
+        property.setCity(city);
+        property.setCountry(country);
+        property.setAcquireDate(acquireDate);
+
+        if (city != null && country != null && property.getLocation() == null) {
+            property.lookupLocation(city.concat(", ").concat(country.getName()));
+        }
+
+        persistIfNotAlready(property);
+        return property;
+    }
+
+    // //////////////////////////////////////
+
+    public List<Property> findProperties(
+            final String referenceOrName) {
+        return allMatches("findByReferenceOrName",
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+    }
+
+    // //////////////////////////////////////
+
+    public List<Property> allProperties() {
+        return allInstances();
+    }
+
+    // //////////////////////////////////////
+
+    public Property findPropertyByReference(final String reference) {
+        return mustMatch("findByReference", "reference", reference);
+    }
+
+    // //////////////////////////////////////
+
+    public Property findPropertyByReferenceElseNull(final String reference) {
+        return firstMatch("findByReference", "reference", reference);
+    }
+
+    // //////////////////////////////////////
+
+    /**
+     * For {@link Property} as per {@link DomainObject#autoCompleteRepository()}.
+     */
+    public List<Property> autoComplete(final String searchPhrase) {
+        return findProperties("*".concat(searchPhrase).concat("*"));
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
+    ApplicationTenancyRepository applicationTenancyRepository;
+
+    @Inject
+    PropertyRepository propertyRepository;
+
+    @Inject
+    Countries countries;
 
 
 }
