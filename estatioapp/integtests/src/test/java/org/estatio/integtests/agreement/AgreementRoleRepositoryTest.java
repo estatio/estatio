@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,7 +45,9 @@ import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.PartySubscriptions;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -54,6 +57,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease._LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.services.clock.ClockService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -111,6 +115,57 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
         agreement = agreementRepository.findAgreementByReference(_LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
         agreementRoleType = agreementRoleTypes.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+
+    }
+
+    public static class FindByAgreementAndPartyAndTypeAndContainsDate2 extends AgreementRoleRepositoryTest {
+
+        private AgreementRoleType artTenant;
+        private Lease leaseOxfTopModel;
+        private Party partyTopModel;
+
+        @Before
+        public void setupData() {
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                    executionContext.executeChild(this, new _LeaseForOxfTopModel001Gb());
+                }
+            });
+        }
+
+        @Inject
+        private Leases leases;
+        @Inject
+        private Parties parties;
+        @Inject
+        private AgreementRoleTypes agreementRoleTypes;
+        @Inject
+        private AgreementRoleRepository agreementRoleRepository;
+        @Inject
+        private ClockService clockService;
+
+        @Before
+        public void setUp() throws Exception {
+            artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+            leaseOxfTopModel = leases.findLeaseByReference(_LeaseForOxfTopModel001Gb.REF);
+            partyTopModel = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+        }
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            final LocalDate date = clockService.now();
+
+            // when
+            AgreementRole role = agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(leaseOxfTopModel, partyTopModel, artTenant, date);
+
+            // then
+            Assert.assertNotNull(role);
+        }
 
     }
 
