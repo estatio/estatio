@@ -19,15 +19,20 @@
 package org.estatio.integtests.lease;
 
 import java.util.SortedSet;
+
 import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -39,12 +44,12 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -264,8 +269,6 @@ public class LeaseTest extends EstatioIntegrationTest {
          * Compare to tests that verify at the
          * {@link org.estatio.dom.lease.LeaseTerm} level.
          *
-         * @see LeaseTermTest_verifyUntil#givenLeaseTermForIndexableRent()
-         * @see LeaseTermTest_verifyUntil#givenLeaseTermForServiceCharge()
          */
         @Test
         public void createsTermsForLeaseTermItems() throws Exception {
@@ -402,4 +405,33 @@ public class LeaseTest extends EstatioIntegrationTest {
 
     }
 
+    public static class ChangeDates extends LeaseTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                }
+            });
+        }
+
+        private Lease leaseTopModel;
+
+        @Inject
+        private Leases leases;
+
+        @Before
+        public void setup() {
+            leaseTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        }
+
+        @Test
+        public void onDateChange() throws Exception {
+
+        }
+    }
 }
