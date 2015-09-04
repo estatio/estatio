@@ -1,7 +1,7 @@
 package org.estatio.fixture.interactivemap;
 
 import javax.inject.Inject;
-import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 
 public class InteractiveMapDocumentForOxf extends InteractiveMapDocumentAbstract {
@@ -11,10 +11,10 @@ public class InteractiveMapDocumentForOxf extends InteractiveMapDocumentAbstract
     @Override
     protected void execute(ExecutionContext executionContext) {
         executionContext.executeChild(this, new _PropertyForOxfGb());
-        createDocument(NAME, fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF).get(0));
+        createDocument(NAME, fixedAssetRepository.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF).get(0));
     }
 
     @Inject
-    FixedAssets fixedAssets;
+    FixedAssetRepository fixedAssetRepository;
 
 }

@@ -28,7 +28,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -50,7 +50,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    FixedAssets fixedAssets;
+    FixedAssetRepository fixedAssetRepository;
 
     @Inject
     FixedAssetRegistrations fixedAssetRegistrations;
@@ -64,7 +64,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
         @Test
         public void findBySubject() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

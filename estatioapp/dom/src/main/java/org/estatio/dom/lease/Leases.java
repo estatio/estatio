@@ -55,7 +55,7 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
@@ -211,7 +211,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     }
 
     public List<FixedAsset> autoComplete0FindLeasesActiveOnDate(final String searchPhrase) {
-        return fixedAssets.matchAssetsByReferenceOrName(searchPhrase);
+        return fixedAssetRepository.matchAssetsByReferenceOrName(searchPhrase);
     }
 
     public LocalDate default1FindLeasesActiveOnDate() {
@@ -320,7 +320,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     // //////////////////////////////////////
 
     @Inject
-    private FixedAssets fixedAssets;
+    private FixedAssetRepository fixedAssetRepository;
 
     @Inject
     private AgreementTypeRepository agreementTypeRepository;

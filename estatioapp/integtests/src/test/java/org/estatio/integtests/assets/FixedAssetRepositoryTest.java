@@ -24,13 +24,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset._PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class FixedAssetsTest extends EstatioIntegrationTest {
+public class FixedAssetRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -46,32 +46,32 @@ public class FixedAssetsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    FixedAssets fixedAssets;
+    FixedAssetRepository fixedAssetRepository;
 
-    public static class AutoComplete extends FixedAssetsTest {
+    public static class AutoComplete extends FixedAssetRepositoryTest {
 
         @Test
         public void whenPresent() throws Exception {
-            Assert.assertThat(fixedAssets.autoComplete("mall").size(), Is.is(1));
+            Assert.assertThat(fixedAssetRepository.autoComplete("mall").size(), Is.is(1));
         }
 
         @Test
         public void whenNotPresent() throws Exception {
-            Assert.assertThat(fixedAssets.autoComplete("nonExistent").size(), Is.is(0));
+            Assert.assertThat(fixedAssetRepository.autoComplete("nonExistent").size(), Is.is(0));
         }
 
     }
 
-    public static class MatchAssetsByReferenceOrName extends FixedAssetsTest {
+    public static class MatchAssetRepositoryByReferenceOrName extends FixedAssetRepositoryTest {
 
         @Test
         public void whenPresent() throws Exception {
-            Assert.assertThat(fixedAssets.matchAssetsByReferenceOrName("*mall*").size(), Is.is(1));
+            Assert.assertThat(fixedAssetRepository.matchAssetsByReferenceOrName("*mall*").size(), Is.is(1));
         }
 
         @Test
         public void whenNotPresent() throws Exception {
-            Assert.assertThat(fixedAssets.matchAssetsByReferenceOrName("*nonExistent*").size(), Is.is(0));
+            Assert.assertThat(fixedAssetRepository.matchAssetsByReferenceOrName("*nonExistent*").size(), Is.is(0));
         }
     }
 

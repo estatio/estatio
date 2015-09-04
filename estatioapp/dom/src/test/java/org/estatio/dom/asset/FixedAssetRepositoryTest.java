@@ -29,15 +29,15 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class FixedAssetsTest {
+public class FixedAssetRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    FixedAssets fixedAssets;
+    FixedAssetRepository fixedAssetRepository;
 
     @Before
     public void setup() {
-        fixedAssets = new FixedAssets() {
+        fixedAssetRepository = new FixedAssetRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -60,12 +60,12 @@ public class FixedAssetsTest {
     }
 
 
-    public static class FindAssetsByReferenceOrName extends FixedAssetsTest {
+    public static class FindAssetRepositoryByReferenceOrName extends FixedAssetRepositoryTest {
 
         @Test
         public void happyCase() {
 
-            fixedAssets.matchAssetsByReferenceOrName("some?search*Phrase");
+            fixedAssetRepository.matchAssetsByReferenceOrName("some?search*Phrase");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAsset.class));
@@ -77,12 +77,12 @@ public class FixedAssetsTest {
     }
 
 
-    public static class AutoComplete extends FixedAssetsTest {
+    public static class AutoComplete extends FixedAssetRepositoryTest {
 
         @Test
         public void happyCase() {
 
-            fixedAssets.autoComplete("some?RegEx*Phrase");
+            fixedAssetRepository.autoComplete("some?RegEx*Phrase");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAsset.class));

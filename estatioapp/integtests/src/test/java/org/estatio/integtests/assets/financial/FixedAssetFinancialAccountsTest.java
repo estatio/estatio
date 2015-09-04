@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -64,7 +64,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    FixedAssets fixedAssets;
+    FixedAssetRepository fixedAssetRepository;
 
     @Inject
     FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
@@ -80,7 +80,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -96,7 +96,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void findByFinancialAccount() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -112,7 +112,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void find() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssets.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(_PropertyForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

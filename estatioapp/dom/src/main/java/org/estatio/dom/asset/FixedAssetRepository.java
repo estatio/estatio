@@ -20,35 +20,31 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(repositoryFor = FixedAsset.class)
-@DomainServiceLayout(menuOrder = "10")
-@Hidden
-public class FixedAssets extends UdoDomainRepositoryAndFactory<FixedAsset> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = FixedAsset.class
+)
+public class FixedAssetRepository extends UdoDomainRepositoryAndFactory<FixedAsset> {
 
-    public FixedAssets() {
-        super(FixedAssets.class, FixedAsset.class);
+    public FixedAssetRepository() {
+        super(FixedAssetRepository.class, FixedAsset.class);
     }
 
-    // //////////////////////////////////////
-
-    @CollectionLayout(hidden = Where.EVERYWHERE)
     public List<FixedAsset> matchAssetsByReferenceOrName(final String searchPhrase) {
         return allMatches("matchByReferenceOrName",
                 "regex", StringUtils.wildcardToCaseInsensitiveRegex(searchPhrase));
     }
 
-    // //////////////////////////////////////
-
-    @CollectionLayout(hidden = Where.EVERYWHERE)
+    /**
+     * To support autoComplete on {@link FixedAsset} per {@link DomainObject#autoCompleteRepository()}.
+     */
     public List<FixedAsset> autoComplete(final String searchPhrase) {
         return matchAssetsByReferenceOrName("*".concat(searchPhrase).concat("*"));
     }

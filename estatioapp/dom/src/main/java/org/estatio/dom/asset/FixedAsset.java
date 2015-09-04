@@ -74,7 +74,11 @@ import org.estatio.dom.party.Party;
                         + "WHERE reference.matches(:regex) "
                         + "|| name.matches(:regex) ")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = FixedAssets.class, autoCompleteAction = "autoComplete")
+@DomainObject(
+        editing = Editing.DISABLED,
+        autoCompleteRepository = FixedAssetRepository.class,
+        autoCompleteAction = "autoComplete"
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class FixedAsset<X extends FixedAsset<X>>
         extends EstatioDomainObject<X>
