@@ -23,9 +23,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -82,7 +82,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
     private BankMandates bankMandates;
 
     @Inject
-    private AgreementRoles agreementRoles;
+    private AgreementRoleRepository agreementRoles;
 
     @Inject
     private AgreementRoleTypes agreementRoleTypes;

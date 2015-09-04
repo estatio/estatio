@@ -32,9 +32,9 @@ import org.apache.isis.applib.services.eventbus.AbstractDomainEvent.Phase;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
@@ -57,7 +57,7 @@ import static org.junit.Assert.assertTrue;
 public class AgreementRolesTest extends EstatioIntegrationTest {
 
     @Inject
-    AgreementRoles agreementRoles;
+    AgreementRoleRepository agreementRoles;
 
     @Inject
     Parties parties;

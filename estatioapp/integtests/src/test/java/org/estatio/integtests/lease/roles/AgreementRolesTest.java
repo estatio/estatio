@@ -25,9 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Leases;
@@ -66,7 +66,7 @@ public class AgreementRolesTest extends EstatioIntegrationTest {
         @Inject
         private AgreementRoleTypes agreementRoleTypes;
         @Inject
-        private AgreementRoles agreementRoles;
+        private AgreementRoleRepository agreementRoles;
         @Inject
         private ClockService clockService;
 

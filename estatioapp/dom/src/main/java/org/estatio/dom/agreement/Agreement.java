@@ -477,9 +477,9 @@ public abstract class Agreement
         this.agreements = agreements;
     }
 
-    protected AgreementRoles agreementRoles;
+    protected AgreementRoleRepository agreementRoles;
 
-    public final void injectAgreementRoles(final AgreementRoles agreementRoles) {
+    public final void injectAgreementRoles(final AgreementRoleRepository agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
 

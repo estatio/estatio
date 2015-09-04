@@ -48,7 +48,7 @@ public class AgreementRolesTest {
         private AgreementRoleType type;
         private LocalDate date;
 
-        private AgreementRoles agreementRoles;
+        private AgreementRoleRepository agreementRoles;
 
         @Before
         public void setup() {
@@ -59,7 +59,7 @@ public class AgreementRolesTest {
             type = new AgreementRoleType();
             date = new LocalDate(2013, 4, 1);
 
-            agreementRoles = new AgreementRoles() {
+            agreementRoles = new AgreementRoleRepository() {
 
                 @Override
                 protected <T> T firstMatch(Query<T> query) {
@@ -141,7 +141,7 @@ public class AgreementRolesTest {
 
         @Test
         public void getId() {
-            assertThat(new AgreementRoles().getId(), is("agreementRoles"));
+            assertThat(new AgreementRoleRepository().getId(), is("agreementRoles"));
         }
 
     }
@@ -150,7 +150,7 @@ public class AgreementRolesTest {
 
         @Test
         public void iconName() {
-            assertThat(new AgreementRoles().iconName(), is("AgreementRole"));
+            assertThat(new AgreementRoleRepository().iconName(), is("AgreementRole"));
         }
 
     }

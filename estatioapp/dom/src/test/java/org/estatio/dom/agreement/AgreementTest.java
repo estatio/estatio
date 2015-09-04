@@ -291,7 +291,7 @@ public class AgreementTest {
     public static class FindRole extends AgreementTest {
 
         @Mock
-        private AgreementRoles mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoles;
 
         private AgreementRoleType art;
         private Party party;
@@ -334,7 +334,7 @@ public class AgreementTest {
         @Mock
         private AgreementTypes mockAgreementTypes;
         @Mock
-        private AgreementRoles mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoles;
 
         private Agreement agreement;
 

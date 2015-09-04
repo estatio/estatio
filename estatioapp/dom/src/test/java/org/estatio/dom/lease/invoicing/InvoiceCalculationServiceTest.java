@@ -29,9 +29,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
@@ -110,7 +111,7 @@ public class InvoiceCalculationServiceTest {
         InvoiceItemsForLease mockInvoiceItemsForLease;
 
         @Mock
-        AgreementRoles mockAgreementRoles;
+        AgreementRoleRepository mockAgreementRoles;
 
         @Mock
         AgreementRoleTypes mockAgreementRoleTypes;

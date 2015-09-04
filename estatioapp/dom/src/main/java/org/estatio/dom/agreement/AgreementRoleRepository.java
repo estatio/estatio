@@ -22,35 +22,33 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+
 import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@DomainService(menuOrder = "25", repositoryFor = AgreementRole.class)
-@Hidden
-public class AgreementRoles extends UdoDomainRepositoryAndFactory<AgreementRole> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = AgreementRole.class
+)
+public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<AgreementRole> {
 
-    public AgreementRoles() {
-        super(AgreementRoles.class, AgreementRole.class);
+    public AgreementRoleRepository() {
+        super(AgreementRoleRepository.class, AgreementRole.class);
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @NotContributed
     public AgreementRole newAgreementRole(
             final Agreement agreement,
             final Party party,
@@ -71,8 +69,6 @@ public class AgreementRoles extends UdoDomainRepositoryAndFactory<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @NotContributed
     public AgreementRole findByAgreementAndPartyAndTypeAndContainsDate(
             final Agreement agreement,
             final Party party,
@@ -89,8 +85,6 @@ public class AgreementRoles extends UdoDomainRepositoryAndFactory<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @NotContributed
     public AgreementRole findByAgreementAndTypeAndContainsDate(
             final Agreement agreement,
             final AgreementRoleType type,
@@ -105,8 +99,6 @@ public class AgreementRoles extends UdoDomainRepositoryAndFactory<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @NotContributed
     public List<AgreementRole> findByParty(
             final Party party) {
         return allMatches(
@@ -116,7 +108,6 @@ public class AgreementRoles extends UdoDomainRepositoryAndFactory<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Programmatic
     public List<AgreementRole> findByAgreement(final Agreement agreement) {
         return allMatches(
                 "findByAgreement",
@@ -125,8 +116,6 @@ public class AgreementRoles extends UdoDomainRepositoryAndFactory<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @NotContributed
     public List<AgreementRole> findByPartyAndTypeAndContainsDate(
             final Party party,
             final AgreementRoleType type,
