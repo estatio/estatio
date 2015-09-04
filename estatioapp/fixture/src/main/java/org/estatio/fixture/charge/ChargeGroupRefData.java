@@ -19,7 +19,8 @@
 package org.estatio.fixture.charge;
 
 import javax.inject.Inject;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
@@ -76,6 +77,6 @@ public class ChargeGroupRefData extends EstatioFixtureScript {
     private Taxes taxes;
 
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
 }

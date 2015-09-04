@@ -32,7 +32,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -131,7 +131,7 @@ public class PropertiesTest {
         @Mock
         private DomainObjectContainer mockContainer;
         @Mock
-        private EstatioApplicationTenancies mockEstatioApplicationTenancies;
+        private ApplicationTenancyRepository mockApplicationTenancyRepository;
 
         Properties properties;
 
@@ -139,7 +139,7 @@ public class PropertiesTest {
         public void setup() {
             properties = new Properties();
             properties.setContainer(mockContainer);
-            properties.estatioApplicationTenancies = mockEstatioApplicationTenancies;
+            properties.applicationTenancyRepository = mockApplicationTenancyRepository;
         }
 
 
@@ -157,11 +157,11 @@ public class PropertiesTest {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockEstatioApplicationTenancies).findOrCreatePropertyTenancy(countryApplicationTenancy, "REF-1");
+                    oneOf(mockApplicationTenancyRepository).findOrCreatePropertyTenancy(countryApplicationTenancy, "REF-1");
                     will(returnValue(propertyApplicationTenancy));
 
-                    oneOf(mockEstatioApplicationTenancies).findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
-                    oneOf(mockEstatioApplicationTenancies).findOrCreateLocalTaTenancy(propertyApplicationTenancy);
+                    oneOf(mockApplicationTenancyRepository).findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
+                    oneOf(mockApplicationTenancyRepository).findOrCreateLocalTaTenancy(propertyApplicationTenancy);
 
                     oneOf(mockContainer).newTransientInstance(Property.class);
                     will(returnValue(property));

@@ -24,7 +24,8 @@ import javax.inject.Inject;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
@@ -337,7 +338,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     protected ApplicationTenancies applicationTenancies;
 
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
 
 }

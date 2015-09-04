@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.value.Blob;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.Dflt;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 
 
 @DomainService
@@ -83,7 +83,7 @@ public class IndexValueMaintService extends UdoDomainService<IndexValueMaintServ
     }
 
     public List<ApplicationTenancy> choices1UploadIndexValues() {
-        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+        return applicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default1UploadIndexValues() {
@@ -97,6 +97,6 @@ public class IndexValueMaintService extends UdoDomainService<IndexValueMaintServ
     private ExcelService excelService;
 
     @javax.inject.Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
 }

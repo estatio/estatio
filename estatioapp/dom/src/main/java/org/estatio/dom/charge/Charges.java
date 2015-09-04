@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
@@ -81,7 +81,7 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
     }
 
     public List<ApplicationTenancy> choices0NewCharge() {
-        return estatioApplicationTenancies.allCountryTenancies();
+        return applicationTenancyRepository.allCountryTenancies();
     }
 
     // //////////////////////////////////////
@@ -140,7 +140,7 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
 
 }

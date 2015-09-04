@@ -38,7 +38,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.utils.StringUtils;
 
@@ -72,7 +72,7 @@ public class Programs extends UdoDomainRepositoryAndFactory<Program> {
     }
 
     public List<ApplicationTenancy> choices3NewProgram() {
-        return estatioApplicationTenancies.globalOrCountryTenanciesForCurrentUser();
+        return applicationTenancyRepository.globalOrCountryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default3NewProgram() {
@@ -97,6 +97,6 @@ public class Programs extends UdoDomainRepositoryAndFactory<Program> {
     }
 
     @Inject
-    EstatioApplicationTenancies estatioApplicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
 }

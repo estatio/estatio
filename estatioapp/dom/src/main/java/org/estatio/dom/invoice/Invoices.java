@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -156,7 +156,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     public List<ApplicationTenancy> choices4NewInvoiceForLease() {
-        return estatioApplicationTenancies.selfOrChildrenOf(meService.me().getTenancy());
+        return applicationTenancyRepository.selfOrChildrenOf(meService.me().getTenancy());
     }
 
 
@@ -285,7 +285,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
     private EstatioSettingsService settings;
 
     @javax.inject.Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
     @javax.inject.Inject
     private MeService meService;

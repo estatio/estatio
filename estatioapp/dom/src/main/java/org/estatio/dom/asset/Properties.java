@@ -34,18 +34,13 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
@@ -75,9 +70,9 @@ public class Properties extends UdoDomainRepositoryAndFactory<Property> {
             final @Named("Country-level Application Tenancy") ApplicationTenancy countryApplicationTenancy) {
         final Property property = newTransientInstance();
 
-        final ApplicationTenancy propertyApplicationTenancy = estatioApplicationTenancies.findOrCreatePropertyTenancy(countryApplicationTenancy, propertyReference);
-        estatioApplicationTenancies.findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
-        estatioApplicationTenancies.findOrCreateLocalTaTenancy(propertyApplicationTenancy);
+        final ApplicationTenancy propertyApplicationTenancy = applicationTenancyRepository.findOrCreatePropertyTenancy(countryApplicationTenancy, propertyReference);
+        applicationTenancyRepository.findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
+        applicationTenancyRepository.findOrCreateLocalTaTenancy(propertyApplicationTenancy);
 
         property.setApplicationTenancyPath(propertyApplicationTenancy.getPath());
         property.setReference(propertyReference);
@@ -97,7 +92,7 @@ public class Properties extends UdoDomainRepositoryAndFactory<Property> {
     }
 
     public List<ApplicationTenancy> choices6NewProperty() {
-        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+        return applicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default6NewProperty() {
@@ -160,7 +155,7 @@ public class Properties extends UdoDomainRepositoryAndFactory<Property> {
     // //////////////////////////////////////
 
     @Inject
-    EstatioApplicationTenancies estatioApplicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
     Countries countries;

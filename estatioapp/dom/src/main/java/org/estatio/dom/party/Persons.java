@@ -35,7 +35,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.Dflt;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Person.class)
 @DomainServiceLayout(
@@ -69,7 +69,7 @@ public class Persons extends UdoDomainRepositoryAndFactory<Person> {
 
 
     public List<ApplicationTenancy> choices5NewPerson() {
-        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+        return applicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default5NewPerson() {
@@ -87,6 +87,6 @@ public class Persons extends UdoDomainRepositoryAndFactory<Person> {
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
 }

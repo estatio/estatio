@@ -14,7 +14,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.geography.Country;
 
-public class EstatioApplicationTenanciesTest {
+public class ApplicationTenancyRepositoryTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -38,7 +38,7 @@ public class EstatioApplicationTenanciesTest {
     private ApplicationTenancy grandeDefault;
     private ApplicationTenancy grandeTa;
 
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -62,8 +62,8 @@ public class EstatioApplicationTenanciesTest {
             will(returnValue(grandeTa));
         }});
 
-        estatioApplicationTenancies = new EstatioApplicationTenancies();
-        estatioApplicationTenancies.applicationTenancies = mockApplicationTenancies;
+        applicationTenancyRepository = new ApplicationTenancyRepository();
+        applicationTenancyRepository.applicationTenancies = mockApplicationTenancies;
     }
 
     private List<ApplicationTenancy> someTenancies() {
@@ -120,7 +120,7 @@ public class EstatioApplicationTenanciesTest {
 
     @Test
     public void testAllCountryTenancies() throws Exception {
-        List<ApplicationTenancy> applicationTenancies = estatioApplicationTenancies.allCountryTenancies();
+        List<ApplicationTenancy> applicationTenancies = applicationTenancyRepository.allCountryTenancies();
 
         Assertions.assertThat(applicationTenancies).containsExactly(france, italy);
     }
@@ -130,13 +130,13 @@ public class EstatioApplicationTenanciesTest {
         List<ApplicationTenancy> applicationTenancies;
 
         // when
-        applicationTenancies = estatioApplicationTenancies.propertyTenanciesFor(country("fr"));
+        applicationTenancies = applicationTenancyRepository.propertyTenanciesFor(country("fr"));
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(viv, piq);
 
         // when
-        applicationTenancies = estatioApplicationTenancies.propertyTenanciesFor(country("it"));
+        applicationTenancies = applicationTenancyRepository.propertyTenanciesFor(country("it"));
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(grande);
@@ -147,7 +147,7 @@ public class EstatioApplicationTenanciesTest {
         List<ApplicationTenancy> applicationTenancies;
 
         // when
-        applicationTenancies = estatioApplicationTenancies.selfOrChildrenOf(france);
+        applicationTenancies = applicationTenancyRepository.selfOrChildrenOf(france);
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(france, franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
@@ -159,13 +159,13 @@ public class EstatioApplicationTenanciesTest {
         List<ApplicationTenancy> applicationTenancies;
 
         // when
-        applicationTenancies = estatioApplicationTenancies.countryTenanciesFor(france);
+        applicationTenancies = applicationTenancyRepository.countryTenanciesFor(france);
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(france);
 
         // when
-        applicationTenancies = estatioApplicationTenancies.countryTenanciesFor(global);
+        applicationTenancies = applicationTenancyRepository.countryTenanciesFor(global);
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(france, italy);
@@ -177,19 +177,19 @@ public class EstatioApplicationTenanciesTest {
         List<ApplicationTenancy> applicationTenancies;
 
         // when
-        applicationTenancies = estatioApplicationTenancies.propertyTenanciesUnder(france);
+        applicationTenancies = applicationTenancyRepository.propertyTenanciesUnder(france);
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(viv, piq);
 
         // when
-        applicationTenancies = estatioApplicationTenancies.propertyTenanciesUnder(italy);
+        applicationTenancies = applicationTenancyRepository.propertyTenanciesUnder(italy);
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(grande);
 
         // when
-        applicationTenancies = estatioApplicationTenancies.propertyTenanciesUnder(global);
+        applicationTenancies = applicationTenancyRepository.propertyTenanciesUnder(global);
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(viv, piq, grande);
@@ -204,7 +204,7 @@ public class EstatioApplicationTenanciesTest {
         country.setReference("it");
 
         // when
-        ApplicationTenancy countryTenancy = estatioApplicationTenancies.findOrCreateCountryTenancy(country);
+        ApplicationTenancy countryTenancy = applicationTenancyRepository.findOrCreateCountryTenancy(country);
 
         // then
         Assertions.assertThat(countryTenancy).isEqualTo(italy);
@@ -226,7 +226,7 @@ public class EstatioApplicationTenanciesTest {
         }});
 
         // when
-        ApplicationTenancy countryTenancy = estatioApplicationTenancies.findOrCreateCountryTenancy(country);
+        ApplicationTenancy countryTenancy = applicationTenancyRepository.findOrCreateCountryTenancy(country);
 
         // then
         Assertions.assertThat(countryTenancy).isEqualTo(newlyCreatedTenancy);
@@ -239,7 +239,7 @@ public class EstatioApplicationTenanciesTest {
         countryApplicationTenancy.setPath("/it");
 
         // when
-        ApplicationTenancy propertyTenancy = estatioApplicationTenancies.findOrCreatePropertyTenancy(countryApplicationTenancy, "GRA");
+        ApplicationTenancy propertyTenancy = applicationTenancyRepository.findOrCreatePropertyTenancy(countryApplicationTenancy, "GRA");
 
         // then
         Assertions.assertThat(propertyTenancy).isEqualTo(grande);
@@ -260,7 +260,7 @@ public class EstatioApplicationTenanciesTest {
         }});
 
         // when
-        ApplicationTenancy propertyTenancy = estatioApplicationTenancies.findOrCreatePropertyTenancy(italy, "XXX");
+        ApplicationTenancy propertyTenancy = applicationTenancyRepository.findOrCreatePropertyTenancy(italy, "XXX");
 
         // then
         Assertions.assertThat(propertyTenancy).isEqualTo(newApplicationTenancy);
@@ -274,7 +274,7 @@ public class EstatioApplicationTenanciesTest {
         property.setApplicationTenancyPath("/it/GRA");
 
         // when
-        List<ApplicationTenancy> localTenancies = estatioApplicationTenancies.localTenanciesFor(property);
+        List<ApplicationTenancy> localTenancies = applicationTenancyRepository.localTenanciesFor(property);
 
         // then
         Assertions.assertThat(localTenancies).containsExactly(grandeDefault, grandeTa);
@@ -283,7 +283,7 @@ public class EstatioApplicationTenanciesTest {
 
     @Test
     public void testFindOrCreateLocalNamedTenancy_whenExists() throws Exception {
-        ApplicationTenancy localTenancy = estatioApplicationTenancies.findOrCreateLocalNamedTenancy(grande, "_", "Default");
+        ApplicationTenancy localTenancy = applicationTenancyRepository.findOrCreateLocalNamedTenancy(grande, "_", "Default");
         Assertions.assertThat(localTenancy).isEqualTo(grandeDefault);
     }
 
@@ -299,7 +299,7 @@ public class EstatioApplicationTenanciesTest {
             will(returnValue(newApplicationTenancy));
         }});
 
-        ApplicationTenancy localTenancy = estatioApplicationTenancies.findOrCreateLocalNamedTenancy(grande, "abc", "ABC");
+        ApplicationTenancy localTenancy = applicationTenancyRepository.findOrCreateLocalNamedTenancy(grande, "abc", "ABC");
         Assertions.assertThat(localTenancy).isEqualTo(newApplicationTenancy);
     }
 

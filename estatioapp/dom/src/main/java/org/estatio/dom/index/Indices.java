@@ -32,7 +32,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Index.class)
 @DomainServiceLayout(
@@ -62,7 +62,7 @@ public class Indices extends UdoDomainRepositoryAndFactory<Index> {
     }
 
     public List<ApplicationTenancy> choices2NewIndex() {
-        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+        return applicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default2NewIndex() {
@@ -99,5 +99,5 @@ public class Indices extends UdoDomainRepositoryAndFactory<Index> {
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 }

@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -64,7 +64,7 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
     public List<ApplicationTenancy> choices4NewBrand() {
-        return estatioApplicationTenancies.countryTenanciesForCurrentUser();
+        return applicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default4NewBrand() {
@@ -72,7 +72,7 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
     // //////////////////////////////////////
 

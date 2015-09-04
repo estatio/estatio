@@ -22,7 +22,8 @@ import java.util.List;
 import javax.inject.Inject;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancies;
+
+import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
@@ -49,7 +50,7 @@ public class TaxRefData extends EstatioFixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        final List<ApplicationTenancy> countryTenancies = estatioApplicationTenancies.allCountryTenancies();
+        final List<ApplicationTenancy> countryTenancies = applicationTenancyRepository.allCountryTenancies();
 
         for (final ApplicationTenancy countryTenancy : countryTenancies) {
 
@@ -77,6 +78,6 @@ public class TaxRefData extends EstatioFixtureScript {
     @Inject
     private ApplicationTenancies applicationTenancies;
     @Inject
-    private EstatioApplicationTenancies estatioApplicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
 }
