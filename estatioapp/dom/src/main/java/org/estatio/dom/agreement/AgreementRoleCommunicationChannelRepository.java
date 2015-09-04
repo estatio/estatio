@@ -67,37 +67,5 @@ public class AgreementRoleCommunicationChannelRepository
                 "agreement", agreement);
     }
 
-    @Subscribe
-    public void on(final CommunicationChannel.RemoveEvent ev) {
-        CommunicationChannel sourceCommunicationChannel = ev.getSource();
-        CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
-
-        List<AgreementRoleCommunicationChannel> communicationChannels;
-        switch (ev.getEventPhase()) {
-        case VALIDATE:
-            communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
-            if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
-                ev.invalidate("Communication channel is being used: provide a replacement");
-            } else {
-                scratchpad.put(onCommunicationChannelRemoveScratchpadKey = UUID.randomUUID(), communicationChannels);
-            }
-            break;
-        case EXECUTING:
-            communicationChannels = (List<AgreementRoleCommunicationChannel>) scratchpad.get(onCommunicationChannelRemoveScratchpadKey);
-            for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
-                arcc.setCommunicationChannel(replacementCommunicationChannel);
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    private transient UUID onCommunicationChannelRemoveScratchpadKey;
-
-
-
-    @Inject
-    private Scratchpad scratchpad;
 
 }
