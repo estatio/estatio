@@ -29,7 +29,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
-import org.estatio.dom.asset.registration.FixedAssetRegistrations;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -45,7 +45,7 @@ public class FixedAssetRegistrationContributionsTest {
         @Mock
         private DomainObjectContainer mockContainer;
         @Mock
-        private FixedAssetRegistrations mockFixedAssetRegistrations;
+        private FixedAssetRegistrationRepository mockFixedAssetRegistrationRepository;
 
         private FixedAsset subject;
         private FixedAssetRegistrationType registrationType;
@@ -93,7 +93,7 @@ public class FixedAssetRegistrationContributionsTest {
             registrationType.setFullyQualifiedClassName(FoobarAssetRegistration.class.getName());
 
             target = new FixedAssetRegistrationContributions();
-            target.injectFixedAssetRegistrations(mockFixedAssetRegistrations);
+            target.injectFixedAssetRegistrations(mockFixedAssetRegistrationRepository);
             target.setContainer(mockContainer);
         }
 

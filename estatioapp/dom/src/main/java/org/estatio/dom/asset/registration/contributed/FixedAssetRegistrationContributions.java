@@ -28,7 +28,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
-import org.estatio.dom.asset.registration.FixedAssetRegistrations;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 
 @DomainService(menuOrder = "10")
 @Hidden
@@ -63,15 +63,15 @@ public class FixedAssetRegistrationContributions extends UdoDomainService<FixedA
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Registrations", sequence = "13.5")
     public List<FixedAssetRegistration> registrations(final FixedAsset subject) {
-        return fixedAssetRegistrations.findBySubject(subject);
+        return fixedAssetRegistrationRepository.findBySubject(subject);
     }
 
     // //////////////////////////////////////
 
-    private FixedAssetRegistrations fixedAssetRegistrations;
+    private FixedAssetRegistrationRepository fixedAssetRegistrationRepository;
 
-    public void injectFixedAssetRegistrations(final FixedAssetRegistrations fixedAssetRegistrations) {
-        this.fixedAssetRegistrations = fixedAssetRegistrations;
+    public void injectFixedAssetRegistrations(final FixedAssetRegistrationRepository fixedAssetRegistrationRepository) {
+        this.fixedAssetRegistrationRepository = fixedAssetRegistrationRepository;
     }
 
 }

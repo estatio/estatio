@@ -19,23 +19,28 @@
 
 package org.estatio.integtests.assets.registration;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrations;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class FixedAssetRegistrationRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -53,9 +58,9 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
     FixedAssetRepository fixedAssetRepository;
 
     @Inject
-    FixedAssetRegistrations fixedAssetRegistrations;
+    FixedAssetRegistrationRepository fixedAssetRegistrationRepository;
 
-    public static class FindBySubject extends FixedAssetRegistrationsTest {
+    public static class FindBySubject extends FixedAssetRegistrationRepositoryTest {
 
         // TODO: Is this test actually necessary? I cannot figure out where
         // FixedAssetRegistration is actually used
@@ -68,7 +73,7 @@ public class FixedAssetRegistrationsTest extends EstatioIntegrationTest {
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            List<FixedAssetRegistration> results = fixedAssetRegistrations.findBySubject(fixedAsset.get(0));
+            List<FixedAssetRegistration> results = fixedAssetRegistrationRepository.findBySubject(fixedAsset.get(0));
 
             // then
             assertThat(results.size(), is(1));

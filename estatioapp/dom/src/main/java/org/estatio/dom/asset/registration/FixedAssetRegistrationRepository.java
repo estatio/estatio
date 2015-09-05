@@ -36,10 +36,10 @@ import org.estatio.dom.asset.FixedAsset;
         named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.3")
-public class FixedAssetRegistrations extends UdoDomainRepositoryAndFactory<FixedAssetRegistration> {
+public class FixedAssetRegistrationRepository extends UdoDomainRepositoryAndFactory<FixedAssetRegistration> {
 
-    public FixedAssetRegistrations() {
-        super(FixedAssetRegistrations.class, FixedAssetRegistration.class);
+    public FixedAssetRegistrationRepository() {
+        super(FixedAssetRegistrationRepository.class, FixedAssetRegistration.class);
     }
 
     // //////////////////////////////////////
