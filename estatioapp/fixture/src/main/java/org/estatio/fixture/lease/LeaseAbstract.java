@@ -20,20 +20,21 @@ package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.asset.UnitMenu;
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.lease.tags.BrandCoverage;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitMenu;
+import org.estatio.dom.asset.UnitRepository;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
@@ -59,7 +60,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             boolean createLeaseUnitAndTags,
             Party manager, ExecutionContext fixtureResults) {
 
-        Unit unit = unitMenu.findUnitByReference(unitReference);
+        Unit unit = unitRepository.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
@@ -93,6 +94,8 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
 
     @Inject
     protected UnitMenu unitMenu;
+    @Inject
+    protected UnitRepository unitRepository;
 
     @Inject
     protected Leases leases;

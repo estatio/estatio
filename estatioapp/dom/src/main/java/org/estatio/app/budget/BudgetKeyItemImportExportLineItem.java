@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budget.BudgetKeyItem;
 import org.estatio.dom.budget.BudgetKeyItems;
 import org.estatio.dom.budget.BudgetKeyTables;
@@ -158,21 +159,21 @@ public class BudgetKeyItemImportExportLineItem
         if (budgetKeyItem == null) {
             BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
             budgetKeyItem.setBudgetKeyTable(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()));
-            budgetKeyItem.setUnit(unitMenu.findUnitByReference(unitReference));
+            budgetKeyItem.setUnit(unitRepository.findUnitByReference(unitReference));
             budgetKeyItem.setValue(BigDecimal.ZERO);
             budgetKeyItem.setSourceValue(BigDecimal.ZERO);
             container.persistIfNotAlready(budgetKeyItem);
         }
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unitMenu
+        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unitRepository
                 .findUnitByReference(unitReference)).changeValue(this.getKeyValue().setScale(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unitMenu
+        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unitRepository
                 .findUnitByReference(unitReference)).setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         return budgetKeyItem;
     }
 
     @Programmatic
     public void validate() {
-        Unit unit = unitMenu.findUnitByReference(unitReference);
+        Unit unit = unitRepository.findUnitByReference(unitReference);
         Status newStatus = Status.UNCHANGED;
         if (unit != null) {
             BudgetKeyItem budgetKeyItem = budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unit);
@@ -214,6 +215,8 @@ public class BudgetKeyItemImportExportLineItem
 
     @Inject
     private UnitMenu unitMenu;
+    @Inject
+    private UnitRepository unitRepository;
 
     @Inject
     private DomainObjectContainer container;

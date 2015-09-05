@@ -41,12 +41,14 @@ public class UnitMenuTest {
     private DomainObjectContainer mockContainer;
 
     private UnitMenu unitMenu;
+    private UnitRepository unitRepository;
 
     @Before
     public void setup() {
-        unitMenu = new UnitMenu() {
-        };
-        unitMenu.setContainer(mockContainer);
+        unitRepository = new UnitRepository();
+        unitRepository.setContainer(mockContainer);
+        unitMenu = new UnitMenu();
+        unitMenu.unitRepository = unitRepository;
     }
 
     @Test

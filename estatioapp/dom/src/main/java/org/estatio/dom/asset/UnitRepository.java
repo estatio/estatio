@@ -24,20 +24,11 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -47,6 +38,73 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         repositoryFor = Unit.class
 )
 public class UnitRepository extends UdoDomainRepositoryAndFactory<Unit> {
+
+
+    @Inject
+    ClockService clockService;
+
+    public UnitRepository() {
+        super(UnitRepository.class, Unit.class);
+    }
+
+    // //////////////////////////////////////
+
+    public Unit newUnit(
+            final Property property,
+            final String reference,
+            final String name,
+            final UnitType type) {
+        final Unit unit = newTransientInstance();
+        unit.setReference(reference);
+        unit.setName(name);
+        unit.setType(type);
+        unit.setProperty(property);
+        persist(unit);
+        return unit;
+    }
+
+    // //////////////////////////////////////
+
+    public List<Unit> findUnits(
+            final String referenceOrName,
+            final boolean includeTerminated) {
+        return allMatches("findByReferenceOrName",
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName),
+                "includeTerminated", includeTerminated,
+                "date", clockService.now());
+    }
+
+    public Unit findUnitByReference(final String reference) {
+        return firstMatch("findByReference", "reference", reference);
+    }
+
+    public List<Unit> findByProperty(final Property property) {
+        return allMatches("findByProperty", "property", property);
+    }
+
+    public List<Unit> findByActiveOnDate(LocalDate date) {
+        return allMatches("findByActiveOnDate", "startDate", date, "endDate", LocalDateInterval.endDateFromStartDate(date));
+    }
+
+    public List<Unit> findByPropertyAndActiveNow(final Property property) {
+        LocalDate now = clockService.now();
+        return findByPropertyAndActiveOnDate(property, now);
+    }
+
+    public List<Unit> findByPropertyAndActiveOnDate(final Property property, LocalDate date) {
+        return allMatches("findByPropertyAndActiveOnDate", "property", property, "date", date);
+    }
+
+    /**
+     * Autocomplete for {@link Unit}, as per {@link DomainObject#autoCompleteRepository()}.
+     */
+    public List<Unit> autoComplete(final String searchPhrase) {
+        return findUnits("*".concat(searchPhrase).concat("*"), false);
+    }
+
+    public List<Unit> allUnits() {
+        return allInstances();
+    }
 
 
 }

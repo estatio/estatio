@@ -22,55 +22,51 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.dom.UdoDomainService;
 
-@DomainService(repositoryFor = Unit.class)
+@DomainService(
+        nature = NatureOfService.VIEW
+)
 @DomainServiceLayout(
         named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "10.2")
-public class UnitMenu extends UdoDomainRepositoryAndFactory<Unit> {
+        menuOrder = "10.2"
+)
+public class UnitMenu extends UdoDomainService<UnitMenu> {
 
     @Inject
     ClockService clockService;
 
+    @Inject
+    UnitRepository unitRepository;
+
     public UnitMenu() {
-        super(UnitMenu.class, Unit.class);
+        super(UnitMenu.class);
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT
+    )
     @MemberOrder(sequence = "1")
     public Unit newUnit(
             final Property property,
             final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE) String reference,
             final String name,
             final UnitType type) {
-        final Unit unit = newTransientInstance();
-        unit.setReference(reference);
-        unit.setName(name);
-        unit.setType(type);
-        unit.setProperty(property);
-        persist(unit);
-        return unit;
+        return unitRepository.newUnit(property, reference, name, type);
     }
 
     public UnitType default3NewUnit() {
@@ -79,55 +75,25 @@ public class UnitMenu extends UdoDomainRepositoryAndFactory<Unit> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(
+            semantics = SemanticsOf.SAFE
+    )
     @MemberOrder(sequence = "2")
     public List<Unit> findUnits(
             final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName,
             final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
-        return allMatches("findByReferenceOrName",
-                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName),
-                "includeTerminated", includeTerminated,
-                "date", clockService.now());
+        return unitRepository.findUnits(referenceOrName, includeTerminated);
     }
 
-    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
-    public Unit findUnitByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
-    }
-
-    @Programmatic
-    public List<Unit> findByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
-    }
-
-    @Programmatic
-    public List<Unit> findByActiveOnDate(LocalDate date) {
-        return allMatches("findByActiveOnDate", "startDate", date, "endDate", LocalDateInterval.endDateFromStartDate(date));
-    }
-
-    @Programmatic
-    public List<Unit> findByPropertyAndActiveNow(final Property property) {
-        LocalDate now = clockService.now();
-        return findByPropertyAndActiveOnDate(property, now);
-    }
-
-    @Programmatic
-    public List<Unit> findByPropertyAndActiveOnDate(final Property property, LocalDate date) {
-        return allMatches("findByPropertyAndActiveOnDate", "property", property, "date", date);
-    }
 
     // //////////////////////////////////////
 
-    @Collection(hidden = Where.EVERYWHERE)
-    public List<Unit> autoComplete(final String searchPhrase) {
-        return findUnits("*".concat(searchPhrase).concat("*"), false);
-    }
-
-    // //////////////////////////////////////
-
+    @Action(
+            semantics = SemanticsOf.SAFE
+    )
     @MemberOrder(sequence = "99")
     public List<Unit> allUnits() {
-        return allInstances();
+        return unitRepository.allUnits();
     }
 
 }

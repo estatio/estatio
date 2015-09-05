@@ -18,24 +18,32 @@
  */
 package org.estatio.fixture.lease;
 
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
 
 public class LeaseBuilder extends EstatioFixtureScript {
 
@@ -174,7 +182,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
             Party manager,
             ExecutionContext fixtureResults) {
 
-        Unit unit = unitMenu.findUnitByReference(unitReference);
+        Unit unit = unitRepository.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
@@ -229,6 +237,8 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     @Inject
     protected UnitMenu unitMenu;
+    @Inject
+    protected UnitRepository unitRepository;
 
     @Inject
     protected Leases leases;
