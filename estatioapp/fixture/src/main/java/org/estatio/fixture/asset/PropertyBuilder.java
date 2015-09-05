@@ -26,8 +26,8 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitType;
-import org.estatio.dom.asset.Units;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.States;
@@ -173,7 +173,7 @@ public class PropertyBuilder extends EstatioFixtureScript {
             final String unitRef = buildUnitReference(property.getReference(), i);
             final UnitType unitType = faker().collections().anEnum(UnitType.class);
             final String unitName = faker().name().firstName();
-            wrap(units).newUnit(property, unitRef, unitName, unitType);
+            wrap(unitMenu).newUnit(property, unitRef, unitName, unitType);
         }
 
     }
@@ -194,7 +194,7 @@ public class PropertyBuilder extends EstatioFixtureScript {
     protected PropertyMenu propertyMenu;
 
     @Inject
-    protected Units units;
+    protected UnitMenu unitMenu;
 
     @Inject
     protected Parties parties;

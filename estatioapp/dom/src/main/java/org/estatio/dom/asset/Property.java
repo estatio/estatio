@@ -268,7 +268,7 @@ public class Property
 
     @Programmatic
     public Unit newUnit(final String reference, final String name, final UnitType type) {
-        return unitsRepo.newUnit(this, reference, name, type);
+        return unitMenuRepo.newUnit(this, reference, name, type);
     }
 
     // //////////////////////////////////////
@@ -289,7 +289,7 @@ public class Property
     // //////////////////////////////////////
 
     @Inject
-    Units unitsRepo;
+    UnitMenu unitMenuRepo;
 
     @Inject
     LocationLookupService locationLookupService;

@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.budget.BudgetKeyItem;
 import org.estatio.dom.budget.BudgetKeyItems;
 import org.estatio.dom.budget.BudgetKeyTables;
@@ -158,19 +158,21 @@ public class BudgetKeyItemImportExportLineItem
         if (budgetKeyItem == null) {
             BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
             budgetKeyItem.setBudgetKeyTable(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()));
-            budgetKeyItem.setUnit(units.findUnitByReference(unitReference));
+            budgetKeyItem.setUnit(unitMenu.findUnitByReference(unitReference));
             budgetKeyItem.setValue(BigDecimal.ZERO);
             budgetKeyItem.setSourceValue(BigDecimal.ZERO);
             container.persistIfNotAlready(budgetKeyItem);
         }
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).changeValue(this.getKeyValue().setScale(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
-        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), units.findUnitByReference(unitReference)).setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
+        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unitMenu
+                .findUnitByReference(unitReference)).changeValue(this.getKeyValue().setScale(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+        budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unitMenu
+                .findUnitByReference(unitReference)).setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         return budgetKeyItem;
     }
 
     @Programmatic
     public void validate() {
-        Unit unit = units.findUnitByReference(unitReference);
+        Unit unit = unitMenu.findUnitByReference(unitReference);
         Status newStatus = Status.UNCHANGED;
         if (unit != null) {
             BudgetKeyItem budgetKeyItem = budgetKeyItems.findByBudgetKeyTableAndUnit(budgetKeyTables.findBudgetKeyTableByName(getBudgetKeyTableName()), unit);
@@ -211,7 +213,7 @@ public class BudgetKeyItemImportExportLineItem
     private ActionInvocationContext actionInvocationContext;
 
     @Inject
-    private Units units;
+    private UnitMenu unitMenu;
 
     @Inject
     private DomainObjectContainer container;

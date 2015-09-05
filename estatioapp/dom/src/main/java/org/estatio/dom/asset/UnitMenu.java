@@ -46,13 +46,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         named = "Fixed Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.2")
-public class Units extends UdoDomainRepositoryAndFactory<Unit> {
+public class UnitMenu extends UdoDomainRepositoryAndFactory<Unit> {
 
     @Inject
     ClockService clockService;
 
-    public Units() {
-        super(Units.class, Unit.class);
+    public UnitMenu() {
+        super(UnitMenu.class, Unit.class);
     }
 
     // //////////////////////////////////////

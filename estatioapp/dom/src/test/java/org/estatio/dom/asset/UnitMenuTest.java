@@ -30,9 +30,9 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class UnitsTest {
+public class UnitMenuTest {
 
-    public static class NewUnit extends UnitsTest {}
+    public static class NewUnit extends UnitMenuTest {}
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -40,13 +40,13 @@ public class UnitsTest {
     @Mock
     private DomainObjectContainer mockContainer;
 
-    private Units units;
+    private UnitMenu unitMenu;
 
     @Before
     public void setup() {
-        units = new Units() {
+        unitMenu = new UnitMenu() {
         };
-        units.setContainer(mockContainer);
+        unitMenu.setContainer(mockContainer);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class UnitsTest {
             }
         });
 
-        final Unit newUnit = units.newUnit(null, "REF-1", "Name-1", UnitType.EXTERNAL);
+        final Unit newUnit = unitMenu.newUnit(null, "REF-1", "Name-1", UnitType.EXTERNAL);
         assertThat(newUnit.getReference(), is("REF-1"));
         assertThat(newUnit.getName(), is("Name-1"));
         assertThat(newUnit.getType(), is(UnitType.EXTERNAL));

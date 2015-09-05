@@ -56,7 +56,7 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -349,7 +349,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
         */
         List<Distributable> input = new ArrayList<>();
 
-        for (Unit unit :  units.findByProperty(this.getProperty())){
+        for (Unit unit :  unitMenu.findByProperty(this.getProperty())){
 
             if (unitIntervalValidForThisKeyTable(unit)) {
                 BigDecimal sourceValue;
@@ -463,7 +463,7 @@ public class BudgetKeyTable extends EstatioDomainObject<Budget> implements WithI
     // //////////////////////////////////////
 
     @Inject
-    Units units;
+    UnitMenu unitMenu;
 
     @Inject
     Occupancies occupancies;

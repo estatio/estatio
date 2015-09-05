@@ -84,7 +84,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& (startDate == null || startDate <= :date) "
                         + "&& (endDate == null || endDate >= :date)")
 })
-@DomainObject(autoCompleteRepository = Units.class, editing = Editing.DISABLED)
+@DomainObject(autoCompleteRepository = UnitMenu.class, editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class Unit
         extends FixedAsset<Unit>

@@ -20,6 +20,7 @@ package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
 
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.tags.BrandCoverage;
@@ -28,7 +29,6 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Leases;
@@ -59,7 +59,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             boolean createLeaseUnitAndTags,
             Party manager, ExecutionContext fixtureResults) {
 
-        Unit unit = units.findUnitByReference(unitReference);
+        Unit unit = unitMenu.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
@@ -92,7 +92,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    protected Units units;
+    protected UnitMenu unitMenu;
 
     @Inject
     protected Leases leases;

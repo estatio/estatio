@@ -21,7 +21,7 @@ package org.estatio.fixture.lease;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.*;
@@ -174,7 +174,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
             Party manager,
             ExecutionContext fixtureResults) {
 
-        Unit unit = units.findUnitByReference(unitReference);
+        Unit unit = unitMenu.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
@@ -228,7 +228,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    protected Units units;
+    protected UnitMenu unitMenu;
 
     @Inject
     protected Leases leases;

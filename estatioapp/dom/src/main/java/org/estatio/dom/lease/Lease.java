@@ -73,7 +73,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandates;
@@ -418,9 +418,9 @@ public class Lease
     public List<Unit> choices1NewOccupancy(final LocalDate startDate) {
         Property property = getProperty();
         if (property != null) {
-            return units.findByPropertyAndActiveOnDate(property, startDate);
+            return unitMenu.findByPropertyAndActiveOnDate(property, startDate);
         } else {
-            return units.findByActiveOnDate(startDate);
+            return unitMenu.findByActiveOnDate(startDate);
         }
     }
 
@@ -1009,7 +1009,7 @@ public class Lease
     Leases leases;
 
     @Inject
-    Units units;
+    UnitMenu unitMenu;
 
     @Inject
     AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;

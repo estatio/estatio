@@ -19,7 +19,6 @@
 package org.estatio.integtests.assets;
 
 import javax.inject.Inject;
-import javax.ws.rs.HEAD;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -32,7 +31,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
+import org.estatio.dom.asset.UnitMenu;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -41,7 +40,7 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class UnitsTest extends EstatioIntegrationTest {
+public class UnitMenuTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -57,18 +56,18 @@ public class UnitsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Units units;
+    UnitMenu unitMenu;
 
     @Inject
     PropertyMenu propertyMenu;
     @Inject
     PropertyRepository propertyRepository;
 
-    public static class FindUnitByReference extends UnitsTest {
+    public static class FindUnitByReference extends UnitMenuTest {
 
         @Test
         public void findByReference() throws Exception {
-            final Unit unit = units.findUnitByReference(PropertyForOxfGb.unitReference("001"));
+            final Unit unit = unitMenu.findUnitByReference(PropertyForOxfGb.unitReference("001"));
             // then
             Assert.assertEquals("OXF-001", unit.getReference());
         }
@@ -76,20 +75,20 @@ public class UnitsTest extends EstatioIntegrationTest {
         @Test
         public void findByReferenceOrName() throws Exception {
             // given
-            assertThat(units.findUnits("*XF*", false).size(), is(25));
+            assertThat(unitMenu.findUnits("*XF*", false).size(), is(25));
 
             // when
-            Unit unit = units.findUnitByReference(PropertyForOxfGb.unitReference("001"));
+            Unit unit = unitMenu.findUnitByReference(PropertyForOxfGb.unitReference("001"));
             unit.setEndDate(new LocalDate(2014, 1, 1));
 
             // then
-            assertThat(units.findUnits("*XF*", false).size(), is(24));
-            assertThat(units.findUnits("*XF*", true).size(), is(25));
+            assertThat(unitMenu.findUnits("*XF*", false).size(), is(24));
+            assertThat(unitMenu.findUnits("*XF*", true).size(), is(25));
         }
 
     }
 
-    public static class FindByPropertyAndActiveOnDate extends UnitsTest {
+    public static class FindByPropertyAndActiveOnDate extends UnitMenuTest {
 
         @Test
         public void findActiveByProperty() throws Exception {
@@ -97,28 +96,28 @@ public class UnitsTest extends EstatioIntegrationTest {
             Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
             // when
-            Unit unit = units.findUnitByReference(PropertyForOxfGb.REF + "-001");
+            Unit unit = unitMenu.findUnitByReference(PropertyForOxfGb.REF + "-001");
             LocalDate startDate = new LocalDate(2013, 1, 1);
             LocalDate endDate = new LocalDate(2013, 12, 31);
             unit.setEndDate(endDate);
             unit.setStartDate(startDate);
 
             // then
-            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, startDate).size(), is(25));
-            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, startDate.minusDays(1)).size(), is(24));
-            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, endDate).size(), is(25));
-            assertThat(units.findByPropertyAndActiveOnDate(propertyForOxf, endDate.plusDays(1)).size(), is(24));
+            assertThat(unitMenu.findByPropertyAndActiveOnDate(propertyForOxf, startDate).size(), is(25));
+            assertThat(unitMenu.findByPropertyAndActiveOnDate(propertyForOxf, startDate.minusDays(1)).size(), is(24));
+            assertThat(unitMenu.findByPropertyAndActiveOnDate(propertyForOxf, endDate).size(), is(25));
+            assertThat(unitMenu.findByPropertyAndActiveOnDate(propertyForOxf, endDate.plusDays(1)).size(), is(24));
         }
     }
 
-    public static class FindByProperty extends UnitsTest {
+    public static class FindByProperty extends UnitMenuTest {
 
         @Test
         public void findActiveByProperty() throws Exception {
             // given, when
             Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             // then
-            assertThat(units.findByProperty(propertyForOxf).size(), is(25));
+            assertThat(unitMenu.findByProperty(propertyForOxf).size(), is(25));
         }
     }
 }
