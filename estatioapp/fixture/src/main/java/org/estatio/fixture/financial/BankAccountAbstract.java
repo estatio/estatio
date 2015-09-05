@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.party.Parties;
@@ -49,7 +49,7 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
 
         if (propertyRef != null) {
             final Property property = propertyRepository.findPropertyByReference(propertyRef);
-            fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);
+            fixedAssetFinancialAccountRepository.newFixedAssetFinancialAccount(property, bankAccount);
         }
 
         return bankAccount;
@@ -71,6 +71,6 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
     private PropertyMenu propertyMenu;
 
     @Inject
-    private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+    private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
 }

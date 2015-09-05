@@ -31,10 +31,10 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @DomainService(menuOrder = "10", repositoryFor = FixedAssetFinancialAccount.class)
-public class FixedAssetFinancialAccounts extends UdoDomainRepositoryAndFactory<FixedAssetFinancialAccount> {
+public class FixedAssetFinancialAccountRepository extends UdoDomainRepositoryAndFactory<FixedAssetFinancialAccount> {
 
-    public FixedAssetFinancialAccounts() {
-        super(FixedAssetFinancialAccounts.class, FixedAssetFinancialAccount.class);
+    public FixedAssetFinancialAccountRepository() {
+        super(FixedAssetFinancialAccountRepository.class, FixedAssetFinancialAccount.class);
     }
 
     @Programmatic

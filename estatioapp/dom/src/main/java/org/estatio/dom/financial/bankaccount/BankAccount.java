@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
@@ -244,7 +244,7 @@ public class BankAccount
     }
 
     @Inject
-    FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @Inject
     BankAccounts bankAccounts;

@@ -27,7 +27,7 @@ import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.PropertyMenu;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -91,6 +91,6 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
     private PropertyMenu propertyMenu;
 
     @Inject
-    private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+    private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
 }

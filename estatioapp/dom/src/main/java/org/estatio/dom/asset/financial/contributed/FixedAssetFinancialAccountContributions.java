@@ -36,7 +36,7 @@ import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 
@@ -53,7 +53,7 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
     public FixedAssetFinancialAccount newAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
-        return fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(fixedAsset, financialAccount);
+        return fixedAssetFinancialAccountRepository.newFixedAssetFinancialAccount(fixedAsset, financialAccount);
     }
 
     public List<FinancialAccount> choices1NewAccount(
@@ -72,7 +72,7 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(name = "Accounts", sequence = "13.5")
     public List<FixedAssetFinancialAccount> accounts(final FixedAsset fixedAsset) {
-        return fixedAssetFinancialAccounts.findByFixedAsset(fixedAsset);
+        return fixedAssetFinancialAccountRepository.findByFixedAsset(fixedAsset);
     }
 
     // //////////////////////////////////////
@@ -81,15 +81,15 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(name = "FinancialAccounts", sequence = "13.5")
     public List<FixedAssetFinancialAccount> fixedAssets(final FinancialAccount fixedAsset) {
-        return fixedAssetFinancialAccounts.findByFinancialAccount(fixedAsset);
+        return fixedAssetFinancialAccountRepository.findByFinancialAccount(fixedAsset);
     }
 
     // //////////////////////////////////////
 
-    private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+    private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
-    public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccounts fixedAssetFinancialAccounts) {
-        this.fixedAssetFinancialAccounts = fixedAssetFinancialAccounts;
+    public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository) {
+        this.fixedAssetFinancialAccountRepository = fixedAssetFinancialAccountRepository;
     }
 
     private FinancialAccounts financialAccounts;

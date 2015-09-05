@@ -19,7 +19,6 @@ package org.estatio.integtests.assets.financial;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.ws.rs.HEAD;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +32,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.party.Parties;
@@ -47,10 +46,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-/**
- * @version $Rev$ $Date$
- */
-public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
+public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -68,7 +64,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
     FixedAssetRepository fixedAssetRepository;
 
     @Inject
-    FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @Inject
     BankAccounts bankAccounts;
@@ -76,7 +72,7 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
     @Inject
     Parties parties;
 
-    public static class FindByFixedAsset extends FixedAssetFinancialAccountsTest {
+    public static class FindByFixedAsset extends FixedAssetFinancialAccountRepositoryTest {
 
         @Test
         public void findByFixedAsset() throws Exception {
@@ -85,14 +81,14 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccounts.findByFixedAsset(fixedAsset.get(0));
+            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFixedAsset(fixedAsset.get(0));
 
             // then
             assertThat(results.size(), is(1));
         }
     }
 
-    public static class FindByFinancialAccount extends FixedAssetFinancialAccountsTest {
+    public static class FindByFinancialAccount extends FixedAssetFinancialAccountRepositoryTest {
 
         @Test
         public void findByFinancialAccount() throws Exception {
@@ -101,14 +97,14 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccounts.findByFinancialAccount(bankAccounts.findBankAccountByReference(BankAccountForOxford.BANK_ACCOUNT_REF));
+            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccounts.findBankAccountByReference(BankAccountForOxford.BANK_ACCOUNT_REF));
 
             // then
             assertThat(results.size(), is(1));
         }
     }
 
-    public static class Find extends FixedAssetFinancialAccountsTest {
+    public static class Find extends FixedAssetFinancialAccountRepositoryTest {
 
         @Test
         public void find() throws Exception {
@@ -117,14 +113,14 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final FixedAssetFinancialAccount result = fixedAssetFinancialAccounts.find(fixedAsset.get(0), bankAccounts.findBankAccountByReference(BankAccountForOxford.BANK_ACCOUNT_REF));
+            final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccounts.findBankAccountByReference(BankAccountForOxford.BANK_ACCOUNT_REF));
 
             // then
             assertNotNull(result);
         }
     }
 
-    public static class OnBankAccountRemove extends FixedAssetFinancialAccountsTest {
+    public static class OnBankAccountRemove extends FixedAssetFinancialAccountRepositoryTest {
 
         BankAccount oldBankAccount;
         BankAccount newBankAccount;
@@ -141,13 +137,13 @@ public class FixedAssetFinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void removeFixedAssetFinancialAccount() throws Exception {
             // Given
-            FixedAssetFinancialAccount fixedAssetFinancialAccount = fixedAssetFinancialAccounts.findByFinancialAccount(oldBankAccount).get(0);
+            FixedAssetFinancialAccount fixedAssetFinancialAccount = fixedAssetFinancialAccountRepository.findByFinancialAccount(oldBankAccount).get(0);
 
             // When
             wrap(fixedAssetFinancialAccount).remove(true);
 
             // Then
-            Assert.assertThat(fixedAssetFinancialAccounts.findByFinancialAccount(oldBankAccount).size(), is(0));
+            Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(oldBankAccount).size(), is(0));
         }
 
         @Test

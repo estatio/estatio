@@ -35,7 +35,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -43,7 +43,6 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
@@ -116,7 +115,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         private FinancialAccounts financialAccounts;
 
         @Inject
-        private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+        private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
         private BankAccount bankAccount;
 
@@ -135,7 +134,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // Given
-            List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount);
+            List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount);
             Assert.assertThat(results.size(), is(1));
             fixedAssetFinancialAccount = results.get(0);
 
@@ -143,11 +142,11 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
             // When
             wrap(fixedAssetFinancialAccount).remove(true);
-            Assert.assertThat(fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount).size(), is(0));
+            Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
             wrap(bankAccount).remove(true);
 
             // Then
-            Assert.assertThat(fixedAssetFinancialAccounts.findByFinancialAccount(bankAccount).size(), is(0));
+            Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
             Assert.assertNull(financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF));
         }
     }
