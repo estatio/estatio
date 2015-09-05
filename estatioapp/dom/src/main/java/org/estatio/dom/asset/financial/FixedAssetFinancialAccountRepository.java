@@ -23,6 +23,7 @@ import java.util.List;
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -30,14 +31,16 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
-@DomainService(menuOrder = "10", repositoryFor = FixedAssetFinancialAccount.class)
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = FixedAssetFinancialAccount.class
+)
 public class FixedAssetFinancialAccountRepository extends UdoDomainRepositoryAndFactory<FixedAssetFinancialAccount> {
 
     public FixedAssetFinancialAccountRepository() {
         super(FixedAssetFinancialAccountRepository.class, FixedAssetFinancialAccount.class);
     }
 
-    @Programmatic
     public FixedAssetFinancialAccount newFixedAssetFinancialAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
@@ -48,27 +51,18 @@ public class FixedAssetFinancialAccountRepository extends UdoDomainRepositoryAnd
         return instance;
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public List<FixedAssetFinancialAccount> findByFixedAsset(
             final FixedAsset fixedAsset) {
         return allMatches("findByFixedAsset",
                 "fixedAsset", fixedAsset);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public List<FixedAssetFinancialAccount> findByFinancialAccount(
             final FinancialAccount financialAccount) {
         return allMatches("findByFinancialAccount",
                 "financialAccount", financialAccount);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public FixedAssetFinancialAccount find(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
@@ -77,7 +71,6 @@ public class FixedAssetFinancialAccountRepository extends UdoDomainRepositoryAnd
                 "financialAccount", financialAccount);
     }
 
-    @Programmatic
     public FixedAssetFinancialAccount findOrCreate(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
