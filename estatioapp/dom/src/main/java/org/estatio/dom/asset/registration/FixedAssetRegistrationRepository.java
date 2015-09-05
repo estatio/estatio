@@ -20,40 +20,28 @@ package org.estatio.dom.asset.registration;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 
-@DomainService(repositoryFor = FixedAssetRegistration.class)
-@DomainServiceLayout(
-        named = "Fixed Assets",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "10.3")
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = FixedAssetRegistration.class
+)
 public class FixedAssetRegistrationRepository extends UdoDomainRepositoryAndFactory<FixedAssetRegistration> {
 
     public FixedAssetRegistrationRepository() {
         super(FixedAssetRegistrationRepository.class, FixedAssetRegistration.class);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public List<FixedAssetRegistration> findBySubject(
             final FixedAsset asset) {
         return allMatches("findBySubject",
                 "subject", asset);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public List<FixedAssetRegistration> findBySubjectAndType(
             final FixedAsset asset,
             final FixedAssetRegistrationType type) {
@@ -62,10 +50,6 @@ public class FixedAssetRegistrationRepository extends UdoDomainRepositoryAndFact
                 "type", type);
     }
 
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(name = "Fixed Assets", sequence = "99")
     public List<FixedAssetRegistration> allRegistrations() {
         return allInstances();
     }
