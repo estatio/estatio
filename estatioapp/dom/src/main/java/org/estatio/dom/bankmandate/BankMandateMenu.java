@@ -63,6 +63,6 @@ public class BankMandateMenu extends UdoDomainService<BankMandateMenu> {
     // //////////////////////////////////////
 
     @Inject
-    BankMandateRepository bankMandateRepository;
+    protected BankMandateRepository bankMandateRepository;
 
 }

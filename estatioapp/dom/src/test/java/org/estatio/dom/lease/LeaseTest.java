@@ -22,11 +22,12 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.Is;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -34,12 +35,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.agreement.Agreement;
@@ -55,6 +60,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateMenu;
+import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -289,8 +295,6 @@ public class LeaseTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        private BankMandateMenu bankMandateMenu;
-
         @Mock
         private AgreementRepository agreementRepository;
 
@@ -406,11 +410,18 @@ public class LeaseTest {
             startDate = new LocalDate(2013, 4, 1);
             endDate = new LocalDate(2013, 5, 2);
 
-            // a mini integration test, since using the real BankMandates impl
-            bankMandateMenu = new BankMandateMenu();
-            bankMandateMenu.setContainer(mockContainer);
-            bankMandateMenu.injectAgreementTypes(mockAgreementTypeRepository);
-            bankMandateMenu.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+
+            // a mini integration test, since using the real BankMandateMenu and BankMandateRepository impl
+
+            BankMandateRepository bankMandateRepository2 = new BankMandateRepository() {{
+                setContainer(mockContainer);
+                this.agreementTypeRepository = mockAgreementTypeRepository;
+                this.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            }};
+
+            BankMandateMenu bankMandateMenu = new BankMandateMenu() {{
+                this.bankMandateRepository = bankMandateRepository2;
+            }};
 
             // the main class under test
             lease = new Lease();

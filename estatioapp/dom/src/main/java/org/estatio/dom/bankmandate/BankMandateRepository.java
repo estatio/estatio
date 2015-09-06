@@ -103,9 +103,9 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
     // //////////////////////////////////////
 
     @Inject
-    AgreementTypeRepository agreementTypeRepository;
+    protected AgreementTypeRepository agreementTypeRepository;
 
     @Inject
-    AgreementRoleTypeRepository agreementRoleTypeRepository;
+    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
 }

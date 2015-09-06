@@ -93,7 +93,7 @@ public class FixedAssetRegistrationContributionsTest {
             registrationType.setFullyQualifiedClassName(FoobarAssetRegistration.class.getName());
 
             target = new FixedAssetRegistrationContributions();
-            target.injectFixedAssetRegistrations(mockFixedAssetRegistrationRepository);
+            target.fixedAssetRegistrationRepository = mockFixedAssetRegistrationRepository;
             target.setContainer(mockContainer);
         }
 
