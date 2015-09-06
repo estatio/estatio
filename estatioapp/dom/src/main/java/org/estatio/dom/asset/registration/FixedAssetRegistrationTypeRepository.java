@@ -20,20 +20,20 @@ package org.estatio.dom.asset.registration;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "10", repositoryFor = FixedAssetRegistrationType.class)
-@Hidden
-public class FixedAssetRegistrationTypes extends UdoDomainRepositoryAndFactory<FixedAssetRegistrationType> {
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = FixedAssetRegistrationType.class
+)
+public class FixedAssetRegistrationTypeRepository extends UdoDomainRepositoryAndFactory<FixedAssetRegistrationType> {
 
-    public FixedAssetRegistrationTypes() {
-        super(FixedAssetRegistrationTypes.class, FixedAssetRegistrationType.class);
+    public FixedAssetRegistrationTypeRepository() {
+        super(FixedAssetRegistrationTypeRepository.class, FixedAssetRegistrationType.class);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public FixedAssetRegistrationType create(String title, Class<? extends FixedAssetRegistration> cls) {
         FixedAssetRegistrationType fixedAssetRegistrationType = newTransientInstance(FixedAssetRegistrationType.class);
         fixedAssetRegistrationType.setTitle(title);
@@ -42,16 +42,10 @@ public class FixedAssetRegistrationTypes extends UdoDomainRepositoryAndFactory<F
         return fixedAssetRegistrationType;
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public FixedAssetRegistrationType findByTitle(final String title) {
         return firstMatch("findByTitle", "title", title);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
     public FixedAssetRegistrationType findOrCreate(String title, Class<? extends FixedAssetRegistration> cls) {
         final FixedAssetRegistrationType type = findByTitle(title);
         if (type != null) {
