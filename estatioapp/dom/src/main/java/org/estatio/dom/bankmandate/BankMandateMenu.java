@@ -19,114 +19,50 @@
 package org.estatio.dom.bankmandate;
 
 import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
+
 import javax.inject.Inject;
-import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Party;
+
+import org.estatio.dom.UdoDomainService;
 
 @DomainService(
-    nature = NatureOfService.VIEW,
-    repositoryFor = BankMandate.class
+    nature = NatureOfService.VIEW
 )
 @DomainServiceLayout(
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "30.2"
 )
-public class BankMandateMenu extends UdoDomainRepositoryAndFactory<BankMandate> {
+public class BankMandateMenu extends UdoDomainService<BankMandateMenu> {
 
     public BankMandateMenu() {
-        super(BankMandateMenu.class, BankMandate.class);
+        super(BankMandateMenu.class);
     }
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public BankMandate newBankMandate(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
-            // aggregate value types
-            @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
-            final String name,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            final Party debtor,
-            final Party creditor,
-            final BankAccount bankAccount
-            // CHECKSTYLE:ON
-    ) {
-        BankMandate mandate = newTransientInstance();
-        mandate.setType(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE));
-        mandate.setReference(reference);
-        mandate.setName(name);
-        mandate.setStartDate(startDate);
-        mandate.setEndDate(endDate);
-        mandate.setBankAccount(bankAccount);
-
-        // app tenancy derived from the debtor
-        mandate.setApplicationTenancyPath(debtor.getApplicationTenancy().getPath());
-
-        persistIfNotAlready(mandate);
-
-        final AgreementRoleType artCreditor = agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_CREDITOR);
-        mandate.newRole(artCreditor, creditor, null, null);
-        final AgreementRoleType artDebtor = agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_DEBTOR);
-        mandate.newRole(artDebtor, debtor, null, null);
-        return mandate;
-    }
-
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(name = "Accounts", sequence = "99")
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            restrictTo = RestrictTo.PROTOTYPING
+    )
+    @MemberOrder(
+            name = "Accounts",
+            sequence = "99"
+    )
     public List<BankMandate> allBankMandates() {
-        return allInstances();
-    }
-
-    @Programmatic
-    @Action(semantics = SemanticsOf.SAFE)
-    public List<BankMandate> findBankMandatesFor(final BankAccount bankAccount) {
-        return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
-    }
-
-    // //////////////////////////////////////
-
-    @PostConstruct
-    @Programmatic
-    public void init(Map<String, String> properties) {
-        super.init(properties);
-        AgreementType agreementType = agreementTypeRepository.findOrCreate(BankMandateConstants.AT_MANDATE);
-        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
+        return bankMandateRepository.allBankMandates();
     }
 
     // //////////////////////////////////////
 
     @Inject
-    AgreementTypeRepository agreementTypeRepository;
-
-    @Inject
-    AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    @Inject
-    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+    BankMandateRepository bankMandateRepository;
 
 }

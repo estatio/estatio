@@ -30,6 +30,7 @@ import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateMenu;
+import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
@@ -58,7 +59,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
         final List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(party, agreementRoleType, ld(2013, 10, 1));
         final Lease lease = (Lease) roles.get(0).getAgreement();
 
-        final BankMandate bankMandate = bankMandateMenu.newBankMandate(
+        final BankMandate bankMandate = bankMandateRepository.newBankMandate(
                 partyRef + sequence.toString(),
                 partyRef,
                 lease.getStartDate(),
@@ -80,6 +81,8 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
 
     @Inject
     private BankMandateMenu bankMandateMenu;
+    @Inject
+    private BankMandateRepository bankMandateRepository;
 
     @Inject
     private AgreementRoleRepository agreementRoles;

@@ -30,6 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateMenu;
+import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -42,9 +43,9 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BankMandatesTest extends EstatioIntegrationTest {
+public class BankMandateMenuTest extends EstatioIntegrationTest {
 
-    public static class FindBankMandatesFor extends BankMandatesTest {
+    public static class FindBankMandateMenuFor extends BankMandateMenuTest {
 
         @Before
         public void setupData() {
@@ -64,6 +65,8 @@ public class BankMandatesTest extends EstatioIntegrationTest {
         private FinancialAccounts financialAccounts;
         @Inject
         private BankMandateMenu bankMandateMenu;
+        @Inject
+        private BankMandateRepository bankMandateRepository;
 
         @Test
         public void forAccountWithMandate() {
@@ -74,7 +77,7 @@ public class BankMandatesTest extends EstatioIntegrationTest {
             final BankAccount bankAccount = (BankAccount) account;
 
             // when
-            List<BankMandate> mandates = bankMandateMenu.findBankMandatesFor(bankAccount);
+            List<BankMandate> mandates = bankMandateRepository.findBankMandatesFor(bankAccount);
 
             // then
             assertThat(mandates.size(), is(1));

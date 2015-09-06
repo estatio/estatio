@@ -18,10 +18,24 @@
  */
 package org.estatio.dom.bankmandate;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.party.Party;
 
 @DomainService(
     nature = NatureOfService.DOMAIN,
@@ -33,5 +47,65 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         super(BankMandateRepository.class, BankMandate.class);
     }
 
+    // //////////////////////////////////////
+
+    public BankMandate newBankMandate(
+            final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Party debtor,
+            final Party creditor,
+            final BankAccount bankAccount
+    ) {
+        BankMandate mandate = newTransientInstance();
+        mandate.setType(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE));
+        mandate.setReference(reference);
+        mandate.setName(name);
+        mandate.setStartDate(startDate);
+        mandate.setEndDate(endDate);
+        mandate.setBankAccount(bankAccount);
+
+        // app tenancy derived from the debtor
+        mandate.setApplicationTenancyPath(debtor.getApplicationTenancy().getPath());
+
+        persistIfNotAlready(mandate);
+
+        final AgreementRoleType artCreditor = agreementRoleTypeRepository
+                .findByTitle(BankMandateConstants.ART_CREDITOR);
+        mandate.newRole(artCreditor, creditor, null, null);
+        final AgreementRoleType artDebtor = agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_DEBTOR);
+        mandate.newRole(artDebtor, debtor, null, null);
+        return mandate;
+    }
+
+    // //////////////////////////////////////
+
+    public List<BankMandate> allBankMandates() {
+        return allInstances();
+    }
+
+    public List<BankMandate> findBankMandatesFor(final BankAccount bankAccount) {
+        return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
+    }
+
+    // //////////////////////////////////////
+
+    @PostConstruct
+    public void init(Map<String, String> properties) {
+        super.init(properties);
+        AgreementType agreementType = agreementTypeRepository.findOrCreate(BankMandateConstants.AT_MANDATE);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
+    AgreementTypeRepository agreementTypeRepository;
+
+    @Inject
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
 }
