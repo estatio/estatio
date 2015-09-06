@@ -20,31 +20,43 @@ package org.estatio.dom.asset.registration.contributed;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 
-@DomainService(menuOrder = "10")
-@Hidden
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,
+        menuOrder = "10"
+)
 public class FixedAssetRegistrationContributions extends UdoDomainService<FixedAssetRegistrationContributions> {
 
     public FixedAssetRegistrationContributions() {
         super(FixedAssetRegistrationContributions.class);
     }
 
-    @NotInServiceMenu
-    @MemberOrder(name = "Registrations", sequence = "13")
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(
+            semantics =  SemanticsOf.NON_IDEMPOTENT
+    )
+    @MemberOrder(
+            name = "Registrations",
+            sequence = "13"
+    )
     public FixedAssetRegistration newRegistration(
             final FixedAsset subject,
-            final @Named("Type") FixedAssetRegistrationType registrationType) {
-        final FixedAssetRegistration registration = registrationType.create(getContainer());
+            final FixedAssetRegistrationType type) {
+        final FixedAssetRegistration registration = type.create(getContainer());
         registration.setSubject(subject);
         persistIfNotAlready(registration);
         return registration;
@@ -58,20 +70,23 @@ public class FixedAssetRegistrationContributions extends UdoDomainService<FixedA
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Registrations", sequence = "13.5")
+    @Action(
+            semantics = SemanticsOf.SAFE
+    )
+    @ActionLayout(
+            contributed = Contributed.AS_ASSOCIATION
+    )
+    @MemberOrder(
+            name = "Registrations",
+            sequence = "13.5"
+    )
     public List<FixedAssetRegistration> registrations(final FixedAsset subject) {
         return fixedAssetRegistrationRepository.findBySubject(subject);
     }
 
     // //////////////////////////////////////
 
-    private FixedAssetRegistrationRepository fixedAssetRegistrationRepository;
-
-    public void injectFixedAssetRegistrations(final FixedAssetRegistrationRepository fixedAssetRegistrationRepository) {
-        this.fixedAssetRegistrationRepository = fixedAssetRegistrationRepository;
-    }
+    @Inject
+    FixedAssetRegistrationRepository fixedAssetRegistrationRepository;
 
 }
