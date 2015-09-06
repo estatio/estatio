@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -41,22 +42,23 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
 
-@DomainService(repositoryFor = BankMandate.class)
+@DomainService(
+    nature = NatureOfService.VIEW,
+    repositoryFor = BankMandate.class
+)
 @DomainServiceLayout(
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "30.2")
-public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
+        menuOrder = "30.2"
+)
+public class BankMandateMenu extends UdoDomainRepositoryAndFactory<BankMandate> {
 
-    public BankMandates() {
-        super(BankMandates.class, BankMandate.class);
+    public BankMandateMenu() {
+        super(BankMandateMenu.class, BankMandate.class);
     }
 
     // //////////////////////////////////////
 
-    /**
-     * for migration API only
-     */
     @Programmatic
     public BankMandate newBankMandate(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
@@ -118,17 +120,11 @@ public class BankMandates extends UdoDomainRepositoryAndFactory<BankMandate> {
 
     // //////////////////////////////////////
 
-    private AgreementTypeRepository agreementTypeRepository;
+    @Inject
+    AgreementTypeRepository agreementTypeRepository;
 
-    public void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
-        this.agreementTypeRepository = agreementTypeRepository;
-    }
-
-    private AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    public void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
-        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
-    }
+    @Inject
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;

@@ -54,7 +54,7 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
-import org.estatio.dom.bankmandate.BankMandates;
+import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -289,7 +289,7 @@ public class LeaseTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        private BankMandates bankMandates;
+        private BankMandateMenu bankMandateMenu;
 
         @Mock
         private AgreementRepository agreementRepository;
@@ -407,10 +407,10 @@ public class LeaseTest {
             endDate = new LocalDate(2013, 5, 2);
 
             // a mini integration test, since using the real BankMandates impl
-            bankMandates = new BankMandates();
-            bankMandates.setContainer(mockContainer);
-            bankMandates.injectAgreementTypes(mockAgreementTypeRepository);
-            bankMandates.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+            bankMandateMenu = new BankMandateMenu();
+            bankMandateMenu.setContainer(mockContainer);
+            bankMandateMenu.injectAgreementTypes(mockAgreementTypeRepository);
+            bankMandateMenu.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
 
             // the main class under test
             lease = new Lease();
@@ -420,7 +420,7 @@ public class LeaseTest {
             lease.injectAgreementRoles(mockAgreementRoles);
             lease.injectAgreementTypes(mockAgreementTypeRepository);
             lease.financialAccounts = mockFinancialAccounts;
-            lease.bankMandates = bankMandates;
+            lease.bankMandateMenu = bankMandateMenu;
             lease.setContainer(mockContainer);
             lease.injectClockService(mockClockService);
             lease.injectAgreements(agreementRepository);

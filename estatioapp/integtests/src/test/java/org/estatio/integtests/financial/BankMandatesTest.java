@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandates;
+import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -63,7 +63,7 @@ public class BankMandatesTest extends EstatioIntegrationTest {
         @Inject
         private FinancialAccounts financialAccounts;
         @Inject
-        private BankMandates bankMandates;
+        private BankMandateMenu bankMandateMenu;
 
         @Test
         public void forAccountWithMandate() {
@@ -74,7 +74,7 @@ public class BankMandatesTest extends EstatioIntegrationTest {
             final BankAccount bankAccount = (BankAccount) account;
 
             // when
-            List<BankMandate> mandates = bankMandates.findBankMandatesFor(bankAccount);
+            List<BankMandate> mandates = bankMandateMenu.findBankMandatesFor(bankAccount);
 
             // then
             assertThat(mandates.size(), is(1));

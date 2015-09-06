@@ -77,7 +77,7 @@ import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
-import org.estatio.dom.bankmandate.BankMandates;
+import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccount;
@@ -607,7 +607,7 @@ public class Lease
         final Party debtor = getSecondaryParty();
 
         final BankMandate bankMandate =
-                bankMandates.newBankMandate(
+                bankMandateMenu.newBankMandate(
                         reference, reference,
                         startDate, endDate,
                         debtor, creditor, bankAccount);
@@ -1004,7 +1004,7 @@ public class Lease
     BankAccounts financialAccounts;
 
     @Inject
-    BankMandates bankMandates;
+    BankMandateMenu bankMandateMenu;
 
     @Inject
     Leases leases;
