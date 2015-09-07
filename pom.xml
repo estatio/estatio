@@ -81,25 +81,25 @@ mvn clean install -DskipTests -o
     </developers>
 
     <properties>
-        <isis.version>1.9.0-SNAPSHOT</isis.version>
+        <isis.version>1.9.0</isis.version>
 
-        <isis-module-audit.version>1.9.0-SNAPSHOT</isis-module-audit.version>
-        <isis-module-command.version>1.9.0-SNAPSHOT</isis-module-command.version>
-        <isis-module-security.version>1.9.0-SNAPSHOT</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.9.0-SNAPSHOT</isis-module-sessionlogger.version>
-        <isis-module-settings.version>1.9.0-SNAPSHOT</isis-module-settings.version>
+        <isis-module-audit.version>1.9.0</isis-module-audit.version>
+        <isis-module-command.version>1.9.0</isis-module-command.version>
+        <isis-module-security.version>1.9.0</isis-module-security.version>
+        <isis-module-sessionlogger.version>1.9.0</isis-module-sessionlogger.version>
+        <isis-module-settings.version>1.9.0</isis-module-settings.version>
 
-        <isis-module-devutils.version>1.9.0-SNAPSHOT</isis-module-devutils.version>
-        <isis-module-excel.version>1.9.0-SNAPSHOT</isis-module-excel.version>
-        <isis-module-stringinterpolator.version>1.9.0-SNAPSHOT</isis-module-stringinterpolator.version>
+        <isis-module-devutils.version>1.9.0</isis-module-devutils.version>
+        <isis-module-excel.version>1.9.0</isis-module-excel.version>
+        <isis-module-stringinterpolator.version>1.9.0</isis-module-stringinterpolator.version>
 
-        <isis-module-poly.version>1.9.0-SNAPSHOT</isis-module-poly.version>
+        <isis-module-poly.version>1.9.0</isis-module-poly.version>
 
-        <isis-metamodel-paraname8.version>1.9.0-SNAPSHOT</isis-metamodel-paraname8.version>
+        <isis-metamodel-paraname8.version>1.9.0</isis-metamodel-paraname8.version>
 
-        <isis-wicket-excel.version>1.9.0-SNAPSHOT</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.9.0-SNAPSHOT</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.9.0-SNAPSHOT</isis-wicket-gmap3.version>
+        <isis-wicket-excel.version>1.9.0</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.9.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.9.0</isis-wicket-gmap3.version>
 
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
