@@ -435,6 +435,7 @@ public class LeaseTest {
             lease.setContainer(mockContainer);
             lease.injectClockService(mockClockService);
             lease.injectAgreements(agreementRepository);
+            lease.bankMandateRepository = bankMandateRepository2;
 
         }
 
