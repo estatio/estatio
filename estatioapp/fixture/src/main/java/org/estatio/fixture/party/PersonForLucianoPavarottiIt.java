@@ -34,7 +34,7 @@ public class PersonForLucianoPavarottiIt extends PersonAbstract {
     protected void execute(ExecutionContext executionContext) {
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForTopModelGb());
+            executionContext.executeChild(this, new OrganisationForPastaPapaIt());
         }
 
         createPerson(

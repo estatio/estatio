@@ -23,7 +23,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 
 public class BankAccountForHelloWorldGb extends BankAccountAbstract {
 
-    public static final String REF = "NL31ABNA0580744434";
+    public static final String REF = "GB31ABNA0580744434";
 
     public static final String PARTY_REF = OrganisationForHelloWorldGb.REF;
     public static final String PROPERTY_REF = PropertyForOxfGb.REF;
