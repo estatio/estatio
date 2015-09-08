@@ -59,7 +59,6 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
-import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
@@ -413,14 +412,10 @@ public class LeaseTest {
 
             // a mini integration test, since using the real BankMandateMenu and BankMandateRepository impl
 
-            BankMandateRepository bankMandateRepository2 = new BankMandateRepository() {{
+            BankMandateRepository mandateRepository = new BankMandateRepository() {{
                 setContainer(mockContainer);
                 this.agreementTypeRepository = mockAgreementTypeRepository;
                 this.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
-            }};
-
-            BankMandateMenu bankMandateMenu = new BankMandateMenu() {{
-                this.bankMandateRepository = bankMandateRepository2;
             }};
 
             // the main class under test
@@ -431,12 +426,10 @@ public class LeaseTest {
             lease.injectAgreementRoles(mockAgreementRoles);
             lease.injectAgreementTypes(mockAgreementTypeRepository);
             lease.financialAccounts = mockFinancialAccounts;
-            lease.bankMandateMenu = bankMandateMenu;
+            lease.bankMandateRepository = mandateRepository;
             lease.setContainer(mockContainer);
             lease.injectClockService(mockClockService);
             lease.injectAgreements(agreementRepository);
-            lease.bankMandateRepository = bankMandateRepository2;
-
         }
 
         @Test

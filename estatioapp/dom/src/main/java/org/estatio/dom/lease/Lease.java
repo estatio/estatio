@@ -1005,9 +1005,6 @@ public class Lease
     BankAccounts financialAccounts;
 
     @Inject
-    BankMandateMenu bankMandateMenu;
-
-    @Inject
     BankMandateRepository bankMandateRepository;
 
     @Inject
