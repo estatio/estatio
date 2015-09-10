@@ -67,7 +67,7 @@
             },
             "invoicingDisabled": {
               "actions": {
-                "disableInvoicing": {},
+                "dizableInvoicing": {},
                 "enableInvoicing": {}
               }
             }

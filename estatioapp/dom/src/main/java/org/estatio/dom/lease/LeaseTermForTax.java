@@ -11,12 +11,15 @@ import javax.jdo.annotations.Persistent;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -187,16 +190,25 @@ public class LeaseTermForTax extends LeaseTerm {
         this.invoicingDisabled = disabledForInvoicing;
     }
 
-    public LeaseTermForTax disableInvoicing(@ParameterLayout(named = "Reason") String reason) {
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    @ActionLayout(
+            named = "Disable Invoicing"
+    )
+    public LeaseTermForTax dizableInvoicing(String reason) {
         setInvoicingDisabled(true);
         return this;
     }
 
-    public boolean hideDisableInvoicing() {
+    public boolean hideDizableInvoicing() {
         return isInvoicingDisabled();
     }
 
-    public LeaseTermForTax enableInvoicing(@ParameterLayout(named = "Reason") String reason) {
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    public LeaseTermForTax enableInvoicing(String reason) {
         setInvoicingDisabled(false);
         return this;
     }
