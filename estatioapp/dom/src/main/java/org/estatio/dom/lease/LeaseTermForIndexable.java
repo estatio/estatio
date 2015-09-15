@@ -50,9 +50,15 @@ import org.estatio.dom.utils.MathUtils;
 })
 public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
-    //TODO: Eventually the indexation method must be persisted. Currently returning the default.
+    private IndexationMethod indexationMethod;
+
+    @Column(allowsNull = "true")
     public IndexationMethod getIndexationMethod() {
-        return IndexationMethod.LAST_KNOWN_INDEX;
+        return indexationMethod == null ? IndexationMethod.LAST_KNOWN_INDEX: indexationMethod;
+    }
+
+    public void setIndexationMethod(final IndexationMethod indexationMethod) {
+        this.indexationMethod = indexationMethod;
     }
 
     // //////////////////////////////////////
@@ -155,12 +161,14 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     // //////////////////////////////////////
 
     public LeaseTermForIndexable changeParameters(
+            final IndexationMethod indexationMethod,
             final Index index,
             final @ParameterLayout(named = "Base index date") LocalDate baseIndexDate,
             final @ParameterLayout(named = "Next index date") LocalDate nextIndexDate,
             final @ParameterLayout(named = "Levelling percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal levellingPercentage,
             final @ParameterLayout(named = "Effective date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate effectiveDate
     ) {
+        setIndexationMethod(indexationMethod);
         setIndex(index);
         setBaseIndexStartDate(baseIndexDate);
         setNextIndexStartDate(nextIndexDate);
@@ -176,23 +184,27 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return this;
     }
 
-    public Index default0ChangeParameters() {
+    public IndexationMethod default0ChangeParameters() {
+        return getIndexationMethod();
+    }
+
+    public Index default1ChangeParameters() {
         return getIndex();
     }
 
-    public LocalDate default1ChangeParameters() {
+    public LocalDate default2ChangeParameters() {
         return getBaseIndexStartDate();
     }
 
-    public LocalDate default2ChangeParameters() {
+    public LocalDate default3ChangeParameters() {
         return getNextIndexStartDate();
     }
 
-    public BigDecimal default3ChangeParameters() {
+    public BigDecimal default4ChangeParameters() {
         return getLevellingPercentage();
     }
 
-    public LocalDate default4ChangeParameters() {
+    public LocalDate default5ChangeParameters() {
         return getEffectiveDate();
     }
 
@@ -316,7 +328,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
         final LeaseTermForIndexable previousTerm = (LeaseTermForIndexable) getPrevious();
         if (previousTerm != null) {
-            //setIndexationMethod(previousTerm.getIndexationMethod());
+            setIndexationMethod(previousTerm.getIndexationMethod());
             getIndexationMethod().doInitialze(this);
             LeaseTermFrequency frequency = previousTerm.getFrequency();
             if (frequency != null) {
@@ -325,6 +337,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
                 setEffectiveDate(frequency.nextDate(previousTerm.getEffectiveDate()));
                 setBaseValue(previousTerm.getSettledValue());
                 setLevellingPercentage(previousTerm.getLevellingPercentage());
+
             }
         }
 

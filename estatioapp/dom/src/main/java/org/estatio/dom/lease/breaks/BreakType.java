@@ -23,12 +23,14 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum BreakType implements Titled {
 
-    FIXED(FixedBreakOption.class), 
-    ROLLING(RollingBreakOption.class);
+    FIXED(FixedBreakOption.class, BreakOptionEventType.BREAK_DATE),
+    ROLLING(RollingBreakOption.class, BreakOptionEventType.BREAK_DATE);
 
     private Class<? extends BreakOption> cls;
 
-    private BreakType(final Class<? extends BreakOption> cls) {
+    private BreakOptionEventType breakOptionEventType;
+
+    private BreakType(final Class<? extends BreakOption> cls, BreakOptionEventType type) {
         this.cls = cls;
     }
     

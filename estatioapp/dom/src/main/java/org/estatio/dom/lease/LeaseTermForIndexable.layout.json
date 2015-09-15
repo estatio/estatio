@@ -38,6 +38,7 @@
       "memberGroups": {
         "Indexable Rent": {
           "members": {
+            "indexationMethod": {},
             "index": {},
             "baseIndexStartDate": {},
             "baseIndexValue": {},

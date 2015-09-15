@@ -30,7 +30,7 @@ public enum IndexationMethod {
         @Override
         public void doAlign(LeaseTermForIndexable term) {
             LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
-            if (previous != null) {
+            if (previous != null && term.getBaseValue() == null) {
                 term.setBaseValue(MathUtils.firstNonZero(
                         previous.getSettledValue(),
                         previous.getIndexedValue(),

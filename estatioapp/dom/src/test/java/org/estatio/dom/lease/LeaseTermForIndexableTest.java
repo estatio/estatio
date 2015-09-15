@@ -18,23 +18,20 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
@@ -44,6 +41,9 @@ import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.IndexationService;
 import org.estatio.services.clock.ClockService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class LeaseTermForIndexableTest {
 
@@ -140,7 +140,7 @@ public class LeaseTermForIndexableTest {
 
     }
 
-    public static class Align extends LeaseTermForIndexableTest {
+    public static class DoAlign extends LeaseTermForIndexableTest {
 
         @Test
         public void happyCase() {
@@ -212,18 +212,31 @@ public class LeaseTermForIndexableTest {
 
     public static class DoInitialize extends LeaseTermForIndexableTest {
 
-        @Ignore // incomplete, null pointer exception
         @Test
-        public void initialize_ok() throws Exception {
+        public void initializeWithoutIndexationMethod() throws Exception {
+            // given
             LeaseTermForIndexable nextTerm = new LeaseTermForIndexable();
             term.setNext(nextTerm);
-
+            nextTerm.setPrevious(term);
+            // when
             nextTerm.doInitialize();
-
+            // then
             assertThat(nextTerm.getBaseIndexStartDate(), is(term.getNextIndexStartDate()));
             assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
-            assertThat(nextTerm.getEffectiveDate(), is(term.getEffectiveDate().plusYears(1)));
+        }
 
+        @Test
+        public void initializeWithBaseIndexIndexationMethod() throws Exception {
+            // given
+            LeaseTermForIndexable nextTerm = new LeaseTermForIndexable();
+            term.setIndexationMethod(IndexationMethod.BASE_INDEX);
+            term.setNext(nextTerm);
+            nextTerm.setPrevious(term);
+            // when
+            nextTerm.doInitialize();
+            // then
+            assertThat(nextTerm.getBaseIndexStartDate(), is(term.getBaseIndexStartDate()));
+            assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
         }
     }
     
