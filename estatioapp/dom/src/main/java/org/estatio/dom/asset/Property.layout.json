@@ -82,7 +82,8 @@
         },
         "budgets": {
           "actions": {
-            "newBudget": {}
+            "newBudget": {},
+            "createSchedule" : {}
           }
         },
         "budgetKeyTables": {

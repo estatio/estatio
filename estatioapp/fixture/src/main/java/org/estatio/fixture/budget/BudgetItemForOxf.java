@@ -21,18 +21,16 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budget.Budget;
-import org.estatio.dom.budget.BudgetCostGroup;
-import org.estatio.dom.budget.BudgetKeyTable;
-import org.estatio.dom.budget.BudgetKeyTables;
-import org.estatio.dom.budget.Budgets;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
+import org.estatio.dom.budgeting.budget.Budgets;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.currency.Currency;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
@@ -59,17 +57,13 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
         Budget budget = budgets.findBudgetByProperty(property).get(0);
         BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME2);
         final BigDecimal VALUE = new BigDecimal(40000);
-        final Currency currency = currencies.findCurrency(CurrenciesRefData.EUR);
         final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
-        final BudgetCostGroup budgetCostGroup = BudgetCostGroup.UTENZE;
 
         createBudgetItem(
                 budget,
                 budgetKeyTable,
                 VALUE,
-                currency,
                 charge,
-                budgetCostGroup,
                 executionContext);
     }
 

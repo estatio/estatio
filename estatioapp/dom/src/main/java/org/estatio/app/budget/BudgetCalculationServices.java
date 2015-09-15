@@ -6,9 +6,9 @@ import java.math.MathContext;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.budget.BudgetItem;
-import org.estatio.dom.budget.BudgetKeyItem;
-import org.estatio.dom.budget.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetCalculationServices {

@@ -22,13 +22,11 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import org.estatio.dom.asset.PropertyMenu;
-import org.estatio.dom.budget.Budget;
-import org.estatio.dom.budget.BudgetCostGroup;
-import org.estatio.dom.budget.BudgetItem;
-import org.estatio.dom.budget.BudgetItems;
-import org.estatio.dom.budget.BudgetKeyTable;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetitem.BudgetItems;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.currency.Currency;
 import org.estatio.fixture.EstatioFixtureScript;
 
 /**
@@ -41,18 +39,14 @@ public abstract class BudgetItemAbstact extends EstatioFixtureScript {
             final Budget budget,
             final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
-            final Currency currency,
             final Charge charge,
-            final BudgetCostGroup budgetCostGroup,
             final ExecutionContext fixtureResults
     ){
         BudgetItem budgetItem = budgetItems.newBudgetItem(
                 budget,
                 budgetKeyTable,
                 value,
-//                currency,
-                charge,
-                budgetCostGroup);
+                charge);
         return fixtureResults.addResult(this, budgetItem);
     }
 

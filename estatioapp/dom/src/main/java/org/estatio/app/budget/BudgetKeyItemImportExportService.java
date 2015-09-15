@@ -38,8 +38,8 @@ import org.apache.isis.applib.services.memento.MementoService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budget.BudgetKeyItem;
-import org.estatio.dom.budget.BudgetKeyItems;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItems;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")

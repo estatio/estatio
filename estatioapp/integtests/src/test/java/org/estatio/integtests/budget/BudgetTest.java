@@ -3,7 +3,6 @@ package org.estatio.integtests.budget;
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
-import javax.ws.rs.HEAD;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +12,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budget.Budget;
-import org.estatio.dom.budget.Budgets;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.Budgets;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.lease.Lease;

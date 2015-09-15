@@ -28,7 +28,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.budget.ChargeForTesting;
+import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.charge.Charge;
 
 import static org.hamcrest.CoreMatchers.is;

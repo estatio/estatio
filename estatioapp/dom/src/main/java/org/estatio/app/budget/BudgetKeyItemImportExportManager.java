@@ -40,8 +40,8 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.budget.BudgetKeyTable;
-import org.estatio.dom.budget.BudgetKeyTables;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL

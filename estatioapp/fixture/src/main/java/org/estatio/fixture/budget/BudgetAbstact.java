@@ -23,14 +23,13 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budget.Budget;
-import org.estatio.dom.budget.BudgetCostGroup;
-import org.estatio.dom.budget.BudgetItems;
-import org.estatio.dom.budget.BudgetKeyTable;
-import org.estatio.dom.budget.Budgets;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetitem.BudgetItems;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.budget.Budgets;
 import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -46,12 +45,10 @@ public abstract class BudgetAbstact extends EstatioFixtureScript {
             final LocalDate endDate,
             final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
-//            final Currency currency,
             final Charge charge,
-            final BudgetCostGroup budgetCostGroup,
             final ExecutionContext fixtureResults){
         Budget budget = budgets.newBudget(property, startDate, endDate);
-        createBudgetItem(budget, budgetKeyTable, value, charge, budgetCostGroup);
+        createBudgetItem(budget, budgetKeyTable, value, charge);
         return fixtureResults.addResult(this, budget);
     }
 
@@ -59,11 +56,9 @@ public abstract class BudgetAbstact extends EstatioFixtureScript {
             final Budget budget,
             final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
-//            final Currency currency,
-            final Charge charge,
-            final BudgetCostGroup budgetCostGroup
+            final Charge charge
     ){
-        budgetItems.newBudgetItem(budget, budgetKeyTable, value, charge, budgetCostGroup);
+        budgetItems.newBudgetItem(budget, budgetKeyTable, value, charge);
     }
 
     @Inject

@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.dom.budget.BudgetKeyItem;
-import org.estatio.dom.budget.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

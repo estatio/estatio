@@ -5,7 +5,7 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.estatio.dom.budget.Distributable;
+import org.estatio.dom.budgeting.Distributable;
 
 public class DistributionService {
 

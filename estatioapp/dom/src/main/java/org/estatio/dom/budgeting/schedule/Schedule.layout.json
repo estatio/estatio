@@ -1,0 +1,144 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "applicationTenancy": {
+              "propertyLayout": {
+                "hidden": "EVERYWHERE",
+                "named": "Application Tenancy"
+              }
+            },
+            "budget": {
+              "propertyLayout": {
+                "named": "Budget"
+              }
+            },
+            "charge": {
+              "propertyLayout": {
+                "named": "Charge"
+              }
+            },
+            "startDate": {
+              "propertyLayout": {
+                "named": "Start Date",
+                "typicalLength": 12
+              }
+            },
+            "endDate": {
+              "propertyLayout": {
+                "named": "End Date",
+                "typicalLength": 12
+              },
+              "actions" : {
+                "changeDates": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit",
+                    "named": "Change Dates"
+                  }
+                }
+              }
+            },
+            "id": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "named": "Id",
+                "typicalLength": 25
+              }
+            },
+            "status": {
+              "propertyLayout": {
+                "named": "Status",
+                "typicalLength": 6
+              },
+              "actions" : {
+                "closeSchedule": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit"
+                  }
+                },
+                "openSchedule": {
+                  "actionLayout": {
+                    "cssClass": "btn-primary",
+                    "cssClassFa": "fa fa-fw fa-edit"
+                  }
+                }
+              }
+            },
+            "property": {
+              "propertyLayout": {
+                "hidden": "PARENTED_TABLES",
+                "named": "Property"
+              }
+            },
+            "versionSequence": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "named": "Version Sequence",
+                "typicalLength": 18
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "scheduleItems": {
+          "collectionLayout": {
+            "named": "Schedule Items",
+            "paged": 10,
+            "render": "EAGERLY"
+          },
+          "actions" : {
+            "createScheduleItem": {
+              "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-plus",
+                "named": "Create Schedule Item",
+                "contributed": "AS_ACTION"
+              }
+            }
+          }
+
+        }
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "cssClassFa": "fa fa-fw fa-download",
+        "named": "Download Layout",
+        "contributed": "AS_ACTION"
+      }
+    },
+    "openLink": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Reports"
+      }
+    },
+    "recentChanges": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Recent Changes",
+        "contributed": "AS_ACTION"
+      }
+    }
+  }
+}

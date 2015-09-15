@@ -24,10 +24,10 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budget.BudgetFoundationValueType;
-import org.estatio.dom.budget.BudgetKeyTable;
-import org.estatio.dom.budget.BudgetKeyTables;
-import org.estatio.dom.budget.BudgetKeyValueMethod;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetFoundationValueType;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyValueMethod;
 import org.estatio.fixture.EstatioFixtureScript;
 
 /**

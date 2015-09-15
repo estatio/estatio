@@ -35,9 +35,9 @@ import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.budget.BudgetKeyItem;
-import org.estatio.dom.budget.BudgetKeyItems;
-import org.estatio.dom.budget.BudgetKeyTables;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItems;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 
 enum Status {
     NOT_FOUND,

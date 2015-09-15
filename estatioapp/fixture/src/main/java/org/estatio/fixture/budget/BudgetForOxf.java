@@ -24,14 +24,12 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budget.Budget;
-import org.estatio.dom.budget.BudgetCostGroup;
-import org.estatio.dom.budget.BudgetKeyTable;
-import org.estatio.dom.budget.BudgetKeyTables;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.currency.Currency;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
@@ -56,9 +54,7 @@ public class BudgetForOxf extends BudgetAbstact {
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME);
         final BigDecimal VALUE = new BigDecimal(30000);
-        final Currency currency = currencies.findCurrency(CurrenciesRefData.EUR);
         final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
-        final BudgetCostGroup budgetCostGroup = BudgetCostGroup.VIGILANZA;
 
         Budget newBudget = createBudget(
                 property,
@@ -66,9 +62,7 @@ public class BudgetForOxf extends BudgetAbstact {
                 new LocalDate(2015, 12, 31),
                 budgetKeyTable,
                 VALUE,
-                //                currency,
                 charge,
-                budgetCostGroup,
                 executionContext);
     }
 
