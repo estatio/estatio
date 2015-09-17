@@ -58,14 +58,19 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
 import org.estatio.dom.budgeting.Distributable;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+//       ,schema = "budget"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")

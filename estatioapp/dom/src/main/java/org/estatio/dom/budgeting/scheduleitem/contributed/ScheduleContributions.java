@@ -54,7 +54,7 @@ public class ScheduleContributions {
             final Schedule schedule,
             final BudgetKeyTable budgetKeyTable,
             final BudgetItem budgetItem) {
-        return budgetItems.findBudgetItemByBudget(schedule.getBudget());
+        return budgetItems.findByBudget(schedule.getBudget());
     }
 
     @Inject

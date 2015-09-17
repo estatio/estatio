@@ -44,10 +44,6 @@ public class BudgetItemForOxf extends BudgetItemAbstact {
 
         // prereqs
         if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PropertyForOxfGb());
-            executionContext.executeChild(this, new BudgetKeyTablesForOxf());
-            executionContext.executeChild(this, new CurrenciesRefData());
-            executionContext.executeChild(this, new ChargeRefData());
             executionContext.executeChild(this, new BudgetForOxf());
         }
 

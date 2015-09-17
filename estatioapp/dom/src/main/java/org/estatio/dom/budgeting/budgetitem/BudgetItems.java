@@ -36,11 +36,13 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.Budgets;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = BudgetItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
@@ -88,22 +90,21 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
     // //////////////////////////////////////
 
     @Programmatic
-    public List<BudgetItem> findBudgetItemByBudget(final Budget budget) {
-        return allMatches("findBudgetItemByBudget", "budget", budget);
+    public List<BudgetItem> findByBudget(final Budget budget) {
+        return allMatches("findByBudget", "budget", budget);
     }
 
     @Programmatic
-    public BudgetItem findBudgetItemByBudgetCharge(
+    public BudgetItem findByBudgetAndCharge(
             final Budget budget,
             final Charge charge
     ){
-        return firstMatch("findBudgetItemByBudgetCharge", "budget", budget, "charge", charge);
+        return uniqueMatch("findByBudgetAndCharge", "budget", budget, "charge", charge);
     }
 
     @Programmatic
-    public BudgetItem findUniqueBudgetItem(final Property property, final Charge charge, final LocalDate startDate) {
-        Budget uniqueBudget = budgets.findBudgetByPropertyAndStartDate(property, startDate);
-        return findBudgetItemByBudgetCharge(uniqueBudget, charge);
+    public BudgetItem findByPropertyAndChargeAndStartDate(final Property property, final Charge charge, final LocalDate startDate) {
+        return uniqueMatch("findByPropertyAndChargeAndStartDate", "property", property, "charge", charge, "startDate", startDate);
     }
 
     @Inject

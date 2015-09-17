@@ -26,7 +26,8 @@ public class FinderInteraction {
     public enum FinderMethod {
         FIRST_MATCH,
         ALL_MATCHES,
-        ALL_INSTANCES
+        ALL_INSTANCES,
+        UNIQUE_MATCH
     }
     private QueryDefault<?> queryDefault;
     private FinderInteraction.FinderMethod finderMethod;

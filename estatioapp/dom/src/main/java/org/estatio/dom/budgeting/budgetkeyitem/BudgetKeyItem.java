@@ -41,9 +41,15 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+//       ,schema = "budget"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
@@ -56,8 +62,7 @@ import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
                         "WHERE budgetKeyTable == :budgetKeyTable && unit == :unit")
 })
 public class BudgetKeyItem extends EstatioDomainObject<BudgetKeyItem>
-        implements WithApplicationTenancyProperty,
-        Distributable {
+        implements WithApplicationTenancyProperty, Distributable {
 
     public BudgetKeyItem() {
         super("budgetKeyTable, unit, value, sourceValue");

@@ -25,21 +25,6 @@
                 }
               }
             },
-            "value": {
-              "propertyLayout": {
-                "named": "Value",
-                "typicalLength": 10
-              },
-              "actions" : {
-                "changeValue": {
-                  "actionLayout": {
-                    "cssClass": "btn-primary",
-                    "cssClassFa": "fa fa-fw fa-edit",
-                    "named": "Change Value"
-                  }
-                }
-              }
-            },
             "checkTotalValue" : {},
             "currency": {
               "propertyLayout": {
@@ -60,39 +45,19 @@
                 }
               }
             },
-            "budgetCostGroup": {
+            "value": {
               "propertyLayout": {
-                "named": "Budget Cost Group",
-                "typicalLength": 9
+                "named": "Value",
+                "typicalLength": 10
               },
               "actions" : {
-                "changeBudgetCostGroup": {
-                  "actionLayout": {
-                    "cssClass": "btn-primary",
-                    "cssClassFa": "fa fa-fw fa-edit",
-                    "named": "Change Budget Cost Group"
-                  }
-                }
+                "changeValue": {}
               }
             },
             "applicationTenancy": {
               "propertyLayout": {
                 "hidden": "EVERYWHERE",
                 "named": "Application Tenancy"
-              }
-            },
-            "id": {
-              "propertyLayout": {
-                "hidden": "ANYWHERE",
-                "named": "Id",
-                "typicalLength": 25
-              }
-            },
-            "versionSequence": {
-              "propertyLayout": {
-                "hidden": "ANYWHERE",
-                "named": "Version Sequence",
-                "typicalLength": 18
               }
             }
           }

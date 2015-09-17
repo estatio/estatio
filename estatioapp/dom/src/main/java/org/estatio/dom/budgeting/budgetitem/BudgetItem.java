@@ -41,33 +41,47 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.app.budget.BudgetCalculationServices;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.Distributable;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetline.BudgetLine;
 import org.estatio.dom.budgeting.budgetline.BudgetLines;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.OccupancyContributions;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        //      ,schema = "budget"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @Query(
-                name = "findBudgetItemByBudget", language = "JDOQL",
+                name = "findByBudget", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetitem.BudgetItem " +
                         "WHERE budget == :budget "),
         @Query(
-                name = "findBudgetItemByBudgetCharge", language = "JDOQL",
+                name = "findByBudgetAndCharge", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetitem.BudgetItem " +
-                        "WHERE budget == :budget && charge == :charge")
+                        "WHERE budget == :budget && charge == :charge"),
+        @Query(
+            name = "findByPropertyAndChargeAndStartDate", language = "JDOQL",
+            value = "SELECT " +
+                    "FROM org.estatio.dom.budgeting.budgetitem.BudgetItem " +
+                    "WHERE budget.property == :property "
+                    + "&& charge == :charge "
+                    + "&& budget.startDate == :startDate")
 })
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BudgetItems.class)
 public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty {
+
 
     public BudgetItem() {
         super("budget, charge, value");
@@ -161,46 +175,6 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     }
 
     // //////////////////////////////////////
-
-
-    public BudgetItem generateBudgetLines(@ParameterLayout(named = "Are you sure? All existing lines will be deleted.") final boolean confirmDelete) {
-
-        for (BudgetLine budgetLine : budgetLines.findByBudgetItem(this)) {
-            budgetLine.deleteBudgetLine();
-        }
-
-        List<Distributable> budgetLineList = new ArrayList<>();
-
-//        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-//        for (Iterator<BudgetKeyItem> it = this.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
-//
-//            budgetKeyItem = it.next();
-//
-//            BigDecimal calculatedValue = BigDecimal.ZERO;
-//            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(this,budgetKeyItem));
-//            BudgetLine newBudgetLine = new BudgetLine(calculatedValue, this,budgetKeyItem);
-//            budgetLineList.add(newBudgetLine);
-//
-//        }
-//
-//        //distribute budget lines
-//        DistributionService distributionService = new DistributionService();
-//        budgetLineList = distributionService.distribute(budgetLineList, this.getValue(), 2);
-//
-//        for (Distributable budgetLine : budgetLineList) {
-//
-//            persistIfNotAlready((BudgetLine) budgetLine);
-//
-//        }
-
-        return this;
-    }
-
-    public String validateGenerateBudgetLines(final boolean confirmDelete) {
-
-        return confirmDelete? null:"Please confirm";
-
-    }
 
     @Override
     @MemberOrder(sequence = "7")

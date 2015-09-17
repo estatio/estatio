@@ -30,13 +30,11 @@ import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.currency.Currencies;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
 
-/**
- * Created by jodo on 22/04/15.
- */
 public class BudgetForOxf extends BudgetAbstact {
 
     @Override
@@ -44,9 +42,8 @@ public class BudgetForOxf extends BudgetAbstact {
 
         // prereqs
         if (isExecutePrereqs()) {
+            executionContext.executeChild(this, new EstatioBaseLineFixture());
             executionContext.executeChild(this, new PropertyForOxfGb());
-            executionContext.executeChild(this, new BudgetKeyTablesForOxf());
-            executionContext.executeChild(this, new CurrenciesRefData());
             executionContext.executeChild(this, new ChargeRefData());
         }
 

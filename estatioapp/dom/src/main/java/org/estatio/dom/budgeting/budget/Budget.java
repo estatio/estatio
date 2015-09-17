@@ -54,7 +54,7 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.OccupancyContributionsForBudgets;
+import org.estatio.dom.budgeting.budgetkeyitem.contributions.OccupanciesOnBudgetKeyItemContributions;
 import org.estatio.dom.budgeting.budgetline.BudgetLine;
 import org.estatio.dom.budgeting.budgetline.BudgetLines;
 import org.estatio.dom.lease.Lease;
@@ -66,8 +66,13 @@ import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+//      ,schema = "budget"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
@@ -298,7 +303,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     private LeaseItems leaseItems;
 
     @Inject
-    private OccupancyContributionsForBudgets occupancyContributionsForBudgets;
+    private OccupanciesOnBudgetKeyItemContributions occupancyContributionsForBudgets;
 
     @Inject
     private LeaseTerms leaseTerms;

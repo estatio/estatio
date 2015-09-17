@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -41,6 +42,7 @@ public class BudgetContributions {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
+    @MemberOrder(name = "items", sequence = "1")
     public BudgetItem newBudgetItem(
             final Budget budget,
             final BigDecimal value,
@@ -54,7 +56,6 @@ public class BudgetContributions {
             final Charge charge) {
         return budgetItems.validateNewBudgetItem(budget,value,charge);
     }
-
 
     @Inject
     private BudgetItems budgetItems;

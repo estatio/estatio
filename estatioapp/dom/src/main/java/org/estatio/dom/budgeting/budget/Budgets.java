@@ -81,8 +81,8 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
             final @ParameterLayout(named = "Start Date") LocalDate startDate,
             final @ParameterLayout(named = "End Date") LocalDate endDate) {
 
-        if (findBudgetByPropertyAndStartDate(property, startDate)!= null){
-            return findBudgetByPropertyAndStartDate(property, startDate);
+        if (findByPropertyAndStartDate(property, startDate)!= null){
+            return findByPropertyAndStartDate(property, startDate);
         } else {
             return newBudget(property,startDate,endDate);
         }
@@ -101,7 +101,7 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
     }
 
     @Programmatic
-    public Budget findBudgetByPropertyAndStartDate(Property property, LocalDate startDate){
+    public Budget findByPropertyAndStartDate(Property property, LocalDate startDate){
         return firstMatch("findByPropertyAndStartDate", "property", property, "startDate", startDate);
     }
 }

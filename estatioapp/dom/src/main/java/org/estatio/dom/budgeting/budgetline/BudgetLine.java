@@ -20,10 +20,14 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
-import org.estatio.dom.budgeting.Distributable;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+//       ,schema = "budget"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
@@ -36,8 +40,7 @@ import org.estatio.dom.budgeting.Distributable;
                         "WHERE budgetItem == :budgetItem")
 })
 public class BudgetLine extends EstatioDomainObject<BudgetKeyItem>
-        implements WithApplicationTenancyProperty,
-        Distributable {
+        implements WithApplicationTenancyProperty {
 
     public BudgetLine() {
         super("budgetItem, budgetKeyItem");

@@ -34,6 +34,7 @@ public final class JdoColumnLength {
 
     public final static int TITLE = 50;
     public final static int NAME = 50;
+    public final static int SHORT_DESCRIPTION = 50;
     public final static int DESCRIPTION = 254;
     public final static int NOTES = 4000;
 

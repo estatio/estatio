@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.budgetitem;
+package org.estatio.dom.budgeting.budgetkeyitem.contributions;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class OccupancyContributionsForBudgets {
+public class OccupanciesOnBudgetKeyItemContributions {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)

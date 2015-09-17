@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.dom.budgeting.budgetkeyitem;
+package org.estatio.dom.budgeting.budgetkeyitem.contributions;
 
 import java.math.BigDecimal;
 
@@ -30,11 +30,13 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
+import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItems;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
-public class BudgetKeyItemContributions {
+public class BudgetKeyTableContributions {
 
      // //////////////////////////////////////
 

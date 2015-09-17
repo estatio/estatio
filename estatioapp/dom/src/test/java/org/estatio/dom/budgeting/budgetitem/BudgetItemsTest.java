@@ -56,6 +56,12 @@ public class BudgetItemsTest {
             }
 
             @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
+                return null;
+            }
+
+            @Override
             protected List<BudgetItem> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
                 return null;
@@ -69,35 +75,35 @@ public class BudgetItemsTest {
         };
     }
 
-    public static class FindBudgetItemByBudget extends BudgetItemsTest {
+    public static class FindByBudget extends BudgetItemsTest {
 
         @Test
         public void happyCase() {
 
             Budget budget = new BudgetForTesting();
-            budgetItems.findBudgetItemByBudget(budget);
+            budgetItems.findByBudget(budget);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findBudgetItemByBudget"));
+            assertThat(finderInteraction.getQueryName(), is("findByBudget"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
         }
 
     }
 
-    public static class FindUniqueBudgetItem extends BudgetItemsTest {
+    public static class FindByBudgetAndCharge extends BudgetItemsTest {
 
         @Test
         public void happyCase() {
 
             Budget budget = new Budget();
             Charge charge = new Charge();
-            budgetItems.findBudgetItemByBudgetCharge(budget,charge);
+            budgetItems.findByBudgetAndCharge(budget, charge);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findBudgetItemByBudgetCharge"));
+            assertThat(finderInteraction.getQueryName(), is("findByBudgetAndCharge"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
             assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));

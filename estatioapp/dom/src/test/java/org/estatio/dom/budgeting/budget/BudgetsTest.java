@@ -96,7 +96,7 @@ public class BudgetsTest {
 
             Property property = new PropertyForTesting();
             LocalDate startDate = new LocalDate();
-            budgets.findBudgetByPropertyAndStartDate(property, startDate);
+            budgets.findByPropertyAndStartDate(property, startDate);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
