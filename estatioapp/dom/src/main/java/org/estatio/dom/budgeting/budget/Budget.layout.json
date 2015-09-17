@@ -89,6 +89,21 @@
                             }
                         }
                     }
+                },
+                "schedules": {
+                    "collectionLayout": {
+                        "paged": 10,
+                        "render": "EAGERLY"
+                    },
+                    "actions" : {
+                        "createSchedule": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "cssClassFa": "fa fa-fw fa-plus",
+                                "named": "Create schedule"
+                            }
+                        }
+                    }
                 }
             }
         }

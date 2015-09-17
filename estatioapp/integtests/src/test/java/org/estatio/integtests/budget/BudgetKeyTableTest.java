@@ -21,18 +21,17 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetFoundationValueType;
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItemContributions;
 import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItems;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetFoundationValueType;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyValueMethod;
@@ -199,42 +198,6 @@ public class BudgetKeyTableTest extends EstatioIntegrationTest {
 
 
 
-    }
-
-    public static class validateNewBudgetKeyItemTest extends BudgetKeyTableTest {
-
-        @Inject
-        BudgetKeyItemContributions items;
-
-        @Inject
-        UnitMenu unitMenu;
-        @Inject
-        UnitRepository unitRepository;
-
-        BigDecimal newKeyValue;
-        BigDecimal newPositiveKeyValue;
-        Unit unit;
-
-        @Test
-        public void whenSetup() throws Exception {
-
-            //given
-            budgetKeyTable = tables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME);
-            unit = unitRepository.findUnitByReference("OXF-001");
-
-            //when
-            newKeyValue = new BigDecimal(-0.001);
-
-            // then
-            assertThat(items.validateNewBudgetKeyItem(budgetKeyTable, unit, newKeyValue).equals("keyValue cannot be less than zero"));
-
-            //when
-            newPositiveKeyValue = new BigDecimal(0.001);
-
-            // then
-            assertThat(items.validateNewBudgetKeyItem(budgetKeyTable, unit, newKeyValue).equals("Augmented keyValue cannot be less than zero"));
-
-        }
     }
 
 

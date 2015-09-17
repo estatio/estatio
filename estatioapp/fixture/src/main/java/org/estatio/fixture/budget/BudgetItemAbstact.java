@@ -25,7 +25,6 @@ import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItems;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -37,14 +36,12 @@ public abstract class BudgetItemAbstact extends EstatioFixtureScript {
 
     protected BudgetItem createBudgetItem(
             final Budget budget,
-            final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
             final Charge charge,
             final ExecutionContext fixtureResults
     ){
         BudgetItem budgetItem = budgetItems.newBudgetItem(
                 budget,
-                budgetKeyTable,
                 value,
                 charge);
         return fixtureResults.addResult(this, budgetItem);

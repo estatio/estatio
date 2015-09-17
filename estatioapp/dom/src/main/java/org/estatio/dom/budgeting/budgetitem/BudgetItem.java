@@ -20,7 +20,6 @@ package org.estatio.dom.budgeting.budgetitem;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,11 +39,8 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.app.budget.BudgetCalculationServices;
-import org.estatio.app.budget.DistributionService;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetline.BudgetLine;
@@ -74,7 +70,7 @@ import org.estatio.dom.lease.OccupancyContributions;
 public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty {
 
     public BudgetItem() {
-        super("budget, charge, budgetKeyTable, value");
+        super("budget, charge, value");
     }
 
     //region > identificatiom
@@ -102,36 +98,6 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     public void setBudget(Budget budget) {
         this.budget = budget;
-    }
-
-    // //////////////////////////////////////
-
-    private BudgetKeyTable budgetKeyTable;
-
-    @javax.jdo.annotations.Column(name="budgetKeyTableId", allowsNull = "false")
-    @MemberOrder(sequence = "2")
-    public BudgetKeyTable getBudgetKeyTable() {
-        return budgetKeyTable;
-    }
-
-    public void setBudgetKeyTable(BudgetKeyTable budgetKeyTable) {
-        this.budgetKeyTable = budgetKeyTable;
-    }
-
-    public BudgetItem changeBudgetKeyTable(final @ParameterLayout(named = "BudgetKeyTable") BudgetKeyTable budgetKeyTable) {
-        setBudgetKeyTable(budgetKeyTable);
-        return this;
-    }
-
-    public BudgetKeyTable default0ChangeBudgetKeyTable(final BudgetKeyTable budgetKeyTable) {
-        return getBudgetKeyTable();
-    }
-
-    public String validateChangeBudgetKeyTable(final BudgetKeyTable budgetKeyTable) {
-        if (budgetKeyTable.equals(null)) {
-            return "BudgetKeyTable can't be empty";
-        }
-        return null;
     }
 
     // //////////////////////////////////////
@@ -205,27 +171,27 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
         List<Distributable> budgetLineList = new ArrayList<>();
 
-        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
-        for (Iterator<BudgetKeyItem> it = this.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
-
-            budgetKeyItem = it.next();
-
-            BigDecimal calculatedValue = BigDecimal.ZERO;
-            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(this,budgetKeyItem));
-            BudgetLine newBudgetLine = new BudgetLine(calculatedValue, this,budgetKeyItem);
-            budgetLineList.add(newBudgetLine);
-
-        }
-
-        //distribute budget lines
-        DistributionService distributionService = new DistributionService();
-        budgetLineList = distributionService.distribute(budgetLineList, this.getValue(), 2);
-
-        for (Distributable budgetLine : budgetLineList) {
-
-            persistIfNotAlready((BudgetLine) budgetLine);
-
-        }
+//        BudgetKeyItem budgetKeyItem = new BudgetKeyItem();
+//        for (Iterator<BudgetKeyItem> it = this.getBudgetKeyTable().getBudgetKeyItems().iterator(); it.hasNext();){
+//
+//            budgetKeyItem = it.next();
+//
+//            BigDecimal calculatedValue = BigDecimal.ZERO;
+//            calculatedValue = calculatedValue.add(budgetCalculationServices.calculatedValuePerBudgetKeyItem(this,budgetKeyItem));
+//            BudgetLine newBudgetLine = new BudgetLine(calculatedValue, this,budgetKeyItem);
+//            budgetLineList.add(newBudgetLine);
+//
+//        }
+//
+//        //distribute budget lines
+//        DistributionService distributionService = new DistributionService();
+//        budgetLineList = distributionService.distribute(budgetLineList, this.getValue(), 2);
+//
+//        for (Distributable budgetLine : budgetLineList) {
+//
+//            persistIfNotAlready((BudgetLine) budgetLine);
+//
+//        }
 
         return this;
     }

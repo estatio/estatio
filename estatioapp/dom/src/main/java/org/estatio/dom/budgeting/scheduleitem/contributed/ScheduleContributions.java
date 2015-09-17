@@ -15,10 +15,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItems;
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.budgeting.schedule.Schedule;
+import org.estatio.dom.budgeting.schedule.Schedules;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItems;
-import org.estatio.dom.budgeting.schedule.Schedules;
 
 /**
  * Created by jodo on 10/09/15.
@@ -42,6 +43,13 @@ public class ScheduleContributions {
         return schedules.allSchedules();
     }
 
+    public List<BudgetKeyTable> choices1CreateScheduleItem(
+            final Schedule schedule,
+            final BudgetKeyTable budgetKeyTable,
+            final BudgetItem budgetItem) {
+        return budgetKeyTables.findBudgetKeyTableByProperty(schedule.getProperty());
+    }
+
     public List<BudgetItem> choices2CreateScheduleItem(
             final Schedule schedule,
             final BudgetKeyTable budgetKeyTable,
@@ -58,5 +66,7 @@ public class ScheduleContributions {
     @Inject
     private Schedules schedules;
 
+    @Inject
+    private BudgetKeyTables budgetKeyTables;
 
 }

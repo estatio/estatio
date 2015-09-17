@@ -25,7 +25,7 @@ import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+
 import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -52,7 +52,6 @@ public class BudgetForOxf extends BudgetAbstact {
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        BudgetKeyTable budgetKeyTable = budgetKeyTables.findBudgetKeyTableByName(BudgetKeyTablesForOxf.NAME);
         final BigDecimal VALUE = new BigDecimal(30000);
         final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
 
@@ -60,7 +59,6 @@ public class BudgetForOxf extends BudgetAbstact {
                 property,
                 new LocalDate(2015, 01, 01),
                 new LocalDate(2015, 12, 31),
-                budgetKeyTable,
                 VALUE,
                 charge,
                 executionContext);

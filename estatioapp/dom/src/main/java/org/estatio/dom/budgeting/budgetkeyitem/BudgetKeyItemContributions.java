@@ -43,22 +43,21 @@ public class BudgetKeyItemContributions {
     public BudgetKeyItem newBudgetKeyItem(
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
+            @ParameterLayout(named = "sourceValue")
+            final BigDecimal sourceValue,
             @ParameterLayout(named = "keyValue")
             final BigDecimal keyValue) {
 
-        return budgetKeyItems.newBudgetKeyItem(budgetKeyTable, unit, keyValue);
+        return budgetKeyItems.newBudgetKeyItem(budgetKeyTable, unit, sourceValue, keyValue);
     }
 
     public String validateNewBudgetKeyItem(
             final BudgetKeyTable budgetKeyTable,
             final Unit unit,
+            final BigDecimal sourceValue,
             final BigDecimal keyValue) {
 
-        if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "keyValue cannot be less than zero";
-        }
-
-        return null;
+        return budgetKeyItems.validateNewBudgetKeyItem(budgetKeyTable,unit,sourceValue,keyValue);
     }
 
     @Inject

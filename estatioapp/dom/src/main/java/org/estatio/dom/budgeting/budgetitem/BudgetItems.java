@@ -36,10 +36,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currencies;
 
@@ -53,21 +52,29 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
 
     // //////////////////////////////////////
 
-    @Programmatic
     public BudgetItem newBudgetItem(
             final Budget budget,
-            final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
             final Charge charge) {
         BudgetItem budgetItem = newTransientInstance();
         budgetItem.setBudget(budget);
-        budgetItem.setBudgetKeyTable(budgetKeyTable);
         budgetItem.setValue(value);
         budgetItem.setCharge(charge);
 
         persistIfNotAlready(budgetItem);
 
         return budgetItem;
+    }
+
+
+    public String validateNewBudgetItem(
+            final Budget budget,
+            final BigDecimal value,
+            final Charge charge) {
+        if (value.equals(new BigDecimal(0))) {
+            return "Value can't be zero";
+        }
+        return null;
     }
 
     // //////////////////////////////////////

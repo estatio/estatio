@@ -27,9 +27,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItems;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
 import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budgetitem.BudgetItems;
 import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -43,22 +42,22 @@ public abstract class BudgetAbstact extends EstatioFixtureScript {
             final Property property,
             final LocalDate startDate,
             final LocalDate endDate,
-            final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
             final Charge charge,
             final ExecutionContext fixtureResults){
         Budget budget = budgets.newBudget(property, startDate, endDate);
-        createBudgetItem(budget, budgetKeyTable, value, charge);
+        createBudgetItem(budget, value, charge);
+
         return fixtureResults.addResult(this, budget);
     }
 
     private void createBudgetItem(
             final Budget budget,
-            final BudgetKeyTable budgetKeyTable,
             final BigDecimal value,
             final Charge charge
     ){
-        budgetItems.newBudgetItem(budget, budgetKeyTable, value, charge);
+        budgetItems.newBudgetItem(budget, value, charge);
+
     }
 
     @Inject

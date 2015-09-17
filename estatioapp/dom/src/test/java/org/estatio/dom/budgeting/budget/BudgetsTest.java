@@ -178,8 +178,8 @@ public class BudgetsTest {
 
             //then
             assertThat(validateBudget, is("End date can not be before start date"));
-        }
 
+        }
 
     }
 
