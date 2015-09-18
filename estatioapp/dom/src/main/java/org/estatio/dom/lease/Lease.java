@@ -77,7 +77,6 @@ import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
-import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -184,7 +183,7 @@ public class Lease
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

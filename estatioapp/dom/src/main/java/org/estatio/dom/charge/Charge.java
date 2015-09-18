@@ -93,7 +93,7 @@ public class Charge
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

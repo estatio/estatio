@@ -26,6 +26,12 @@ import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 )
 public class ApplicationTenancyRepository {
 
+    //region > getId
+    public String getId() {
+        return "EstatioApplicationTenancyRepository";
+    }
+    //endregion
+
     public List<ApplicationTenancy> allTenancies() {
         return applicationTenancies.allTenancies();
     }

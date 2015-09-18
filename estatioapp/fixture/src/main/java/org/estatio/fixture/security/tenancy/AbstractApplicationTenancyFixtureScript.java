@@ -18,8 +18,8 @@ package org.estatio.fixture.security.tenancy;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
@@ -35,21 +35,21 @@ public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScr
 
         final ApplicationTenancyLevel node = ApplicationTenancyLevel.of(path);
         final ApplicationTenancyLevel parentNode = node != null ? node.parent() : null;
-        final ApplicationTenancy parentTenancy = applicationTenancies.findTenancyByPath(parentNode != null ? parentNode.getPath() : null);
+        final ApplicationTenancy parentTenancy = applicationTenancyRepository.findByPath(parentNode != null ? parentNode.getPath() : null);
 
-        ApplicationTenancy existingApplicationTenancy = applicationTenancies.findTenancyByPath(path);
+        ApplicationTenancy existingApplicationTenancy = applicationTenancyRepository.findByPath(path);
         if (existingApplicationTenancy != null) {
             executionContext.addResult(this, name, existingApplicationTenancy);
             return existingApplicationTenancy;
         } else {
-            final ApplicationTenancy applicationTenancy = applicationTenancies.newTenancy(name, path, parentTenancy);
+            final ApplicationTenancy applicationTenancy = applicationTenancyRepository.newTenancy(name, path, parentTenancy);
             executionContext.addResult(this, name, applicationTenancy);
             return applicationTenancy;
         }
     }
 
     @javax.inject.Inject
-    protected ApplicationTenancies applicationTenancies;
+    protected ApplicationTenancyRepository applicationTenancyRepository;
     @javax.inject.Inject
     protected Countries countries;
 

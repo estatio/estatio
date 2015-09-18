@@ -19,16 +19,19 @@
 package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.Hidden;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -63,7 +66,7 @@ public class Organisation
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
 

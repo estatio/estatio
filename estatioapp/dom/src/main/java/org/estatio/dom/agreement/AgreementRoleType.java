@@ -72,7 +72,7 @@ public class AgreementRoleType
 
     @Hidden
     public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

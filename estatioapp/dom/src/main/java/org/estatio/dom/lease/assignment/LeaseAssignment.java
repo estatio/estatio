@@ -21,11 +21,15 @@ package org.estatio.dom.lease.assignment;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.PropertyLayout;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -73,7 +77,7 @@ public class LeaseAssignment
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

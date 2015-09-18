@@ -19,10 +19,11 @@
 package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
@@ -31,6 +32,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
@@ -89,7 +93,7 @@ public class Numerator
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return applicationTenancies.findTenancyByPath(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////

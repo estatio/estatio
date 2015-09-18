@@ -20,8 +20,10 @@ package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.InheritanceStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.apache.isis.applib.annotation.Hidden;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over
@@ -83,7 +85,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    protected ApplicationTenancies applicationTenancies;
+    protected ApplicationTenancyRepository securityApplicationTenancyRepository;
 
 
 }

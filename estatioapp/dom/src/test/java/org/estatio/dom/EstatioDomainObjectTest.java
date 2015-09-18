@@ -1,13 +1,15 @@
 package org.estatio.dom;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -31,7 +33,7 @@ public class EstatioDomainObjectTest {
         }
 
         public ApplicationTenancy getApplicationTenancy() {
-            return applicationTenancies.findTenancyByPath(getApplicationTenancyPath());
+            return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
         }
 
         public SomeDomainObject(final String keyProperties) {
@@ -40,14 +42,14 @@ public class EstatioDomainObjectTest {
     };
 
     @Mock
-    ApplicationTenancies mockApplicationTenancies;
+    ApplicationTenancyRepository mockApplicationTenancies;
 
     SomeDomainObject domainObject;
 
     @Before
     public void setUp() throws Exception {
         domainObject = new SomeDomainObject("name");
-        domainObject.applicationTenancies = mockApplicationTenancies;
+        domainObject.securityApplicationTenancyRepository = mockApplicationTenancies;
     }
 
     public static class GetApplicationTenancy extends EstatioDomainObjectTest {
@@ -61,7 +63,7 @@ public class EstatioDomainObjectTest {
 
             // then
             context.checking(new Expectations() {{
-                oneOf(mockApplicationTenancies).findTenancyByPath("/a/b/c");
+                oneOf(mockApplicationTenancies).findByPathCached("/a/b/c");
                 will(returnValue(result));
             }});
 
@@ -80,7 +82,7 @@ public class EstatioDomainObjectTest {
 
             // then
             context.checking(new Expectations() {{
-                oneOf(mockApplicationTenancies).findTenancyByPath(null);
+                oneOf(mockApplicationTenancies).findByPathCached(null);
                 will(returnValue(null));
             }});
 
