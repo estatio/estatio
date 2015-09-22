@@ -95,9 +95,9 @@ mvn clean install -DskipTests -o
 
         <isis-module-poly.version>1.9.0</isis-module-poly.version>
 
-        <isis-metamodel-paraname8.version>1.9.0</isis-metamodel-paraname8.version>
+        <isis-metamodel-paraname8.version>1.10.0-SNAPSHOT</isis-metamodel-paraname8.version>
 
-        <isis-wicket-excel.version>1.9.0</isis-wicket-excel.version>
+        <isis-wicket-excel.version>1.10.0-SNAPSHOT</isis-wicket-excel.version>
         <isis-wicket-fullcalendar2.version>1.9.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.9.0</isis-wicket-gmap3.version>
 
