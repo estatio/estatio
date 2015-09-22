@@ -17,10 +17,10 @@
 
 package org.estatio.dom.budgeting.budgetitem;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
-
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,12 +28,14 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
-import org.estatio.dom.budgeting.budget.Budgets;
 import org.estatio.dom.charge.Charge;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -109,8 +111,46 @@ public class BudgetItemsTest {
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
         }
 
-        @Inject
-        Budgets budgets;
+    }
+
+    public static class FindByPropertyAndChargeAndStartDate extends BudgetItemsTest {
+
+        @Test
+        public void happyCase() {
+
+            Property property = new Property();
+            Charge charge = new Charge();
+            LocalDate startDate = new LocalDate();
+            budgetItems.findByPropertyAndChargeAndStartDate(property, charge, startDate);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
+            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndChargeAndStartDate"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+        }
+
+    }
+
+    public static class ValidateNewBudgetItem extends BudgetItemsTest{
+
+        @Test
+        public void testValidateNewBudgetItem() {
+            //given
+            Budget budget = new BudgetForTesting();
+            Charge charge = new ChargeForTesting();
+
+            //when
+            BigDecimal negativeValue = new BigDecimal(-0.01);
+            BigDecimal zeroValue = BigDecimal.ZERO;
+            BigDecimal positiveValue = new BigDecimal(0.01);
+            //then
+            assertThat(budgetItems.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be zero or negative"));
+            assertThat(budgetItems.validateNewBudgetItem(budget,zeroValue,charge), is("Value can't be zero or negative"));
+            assertThat(budgetItems.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
+        }
 
     }
 

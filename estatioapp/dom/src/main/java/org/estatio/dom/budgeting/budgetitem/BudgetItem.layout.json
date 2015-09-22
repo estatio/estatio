@@ -3,32 +3,12 @@
     {
       "span": 4,
       "memberGroups": {
-        "General": {
+        "Item": {
           "members": {
             "budget": {
               "propertyLayout": {
                 "hidden": "PARENTED_TABLES",
                 "named": "Budget"
-              }
-            },
-            "budgetKeyTable": {
-              "propertyLayout": {
-                "named": "Budget Key Table"
-              },
-              "actions": {
-                "changeBudgetKeyTable": {
-                  "actionLayout": {
-                    "cssClass": "btn-primary",
-                    "cssClassFa": "fa fa-fw fa-edit",
-                    "named": "Change Budget Key Table"
-                  }
-                }
-              }
-            },
-            "checkTotalValue" : {},
-            "currency": {
-              "propertyLayout": {
-                "named": "Currency"
               }
             },
             "charge": {
@@ -45,19 +25,32 @@
                 }
               }
             },
-            "value": {
-              "propertyLayout": {
-                "named": "Value",
-                "typicalLength": 10
-              },
-              "actions" : {
-                "changeValue": {}
-              }
-            },
             "applicationTenancy": {
               "propertyLayout": {
                 "hidden": "EVERYWHERE",
                 "named": "Application Tenancy"
+              }
+            }
+          }
+        },
+        "Values": {
+          "members": {
+          "budgetedValue": {
+              "propertyLayout": {
+                "named": "Budgeted Value",
+                "typicalLength": 10
+              },
+              "actions" : {
+                "changeBudgetedValue": {}
+              }
+            },
+            "auditedValue": {
+              "propertyLayout": {
+                "named": "Audited Value",
+                "typicalLength": 10
+              },
+              "actions" : {
+                "changeAuditedValue": {}
               }
             }
           }

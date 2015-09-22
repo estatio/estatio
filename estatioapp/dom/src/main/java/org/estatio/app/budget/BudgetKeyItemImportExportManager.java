@@ -40,8 +40,8 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTables;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL
@@ -62,19 +62,19 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     public BudgetKeyItemImportExportManager() {
     }
 
-    public BudgetKeyItemImportExportManager(final BudgetKeyTable budgetKeyTable) {
-        this.budgetKeyTable = budgetKeyTable;
+    public BudgetKeyItemImportExportManager(final KeyTable keyTable) {
+        this.keyTable = keyTable;
         this.fileName = "export.xlsx";
     }
 
-    private BudgetKeyTable budgetKeyTable;
+    private KeyTable keyTable;
 
-    public BudgetKeyTable getBudgetKeyTable() {
-        return budgetKeyTable;
+    public KeyTable getKeyTable() {
+        return keyTable;
     }
 
-    public void setBudgetKeyTable(final BudgetKeyTable budgetKeyTable) {
-        this.budgetKeyTable = budgetKeyTable;
+    public void setKeyTable(final KeyTable keyTable) {
+        this.keyTable = keyTable;
     }
 
     // //////////////////////////////////////
@@ -154,8 +154,8 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
 
         List<BudgetKeyItemImportExportLineItem> newItems = new ArrayList<>();
         for (BudgetKeyItemImportExportLineItem item : lineItems) {
-//            item.setBudgetKeyTable(getBudgetKeyTable());
-// yodo: doesn't work; used trick by changing budgetKeyTable to String budgetKeyTableName on BudgetKeyItemImportExportLineItem
+            //            item.setKeyTable(getKeyTable());
+            // yodo: doesn't work; used trick by changing keyTable to String budgetKeyTableName on BudgetKeyItemImportExportLineItem
             item.validate();
             newItems.add(new BudgetKeyItemImportExportLineItem(item));
         }
@@ -177,6 +177,6 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     private BudgetKeyItemImportExportService budgetKeyItemImportExportService;
 
     @Inject
-    private BudgetKeyTables budgetKeyTables;
+    private KeyTables keyTables;
 
 }

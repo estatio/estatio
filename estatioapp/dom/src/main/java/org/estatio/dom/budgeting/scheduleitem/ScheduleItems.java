@@ -21,8 +21,6 @@ package org.estatio.dom.budgeting.scheduleitem;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -34,9 +32,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.schedule.Schedule;
-import org.estatio.dom.currency.Currencies;
 
 @DomainService(repositoryFor = ScheduleItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -51,13 +48,13 @@ public class ScheduleItems extends UdoDomainRepositoryAndFactory<ScheduleItem> {
     @Programmatic
     public ScheduleItem newScheduleItem(
             final Schedule schedule,
-            final BudgetKeyTable budgetKeyTable,
+            final KeyTable keyTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage) {
 
         ScheduleItem scheduleItem = newTransientInstance(ScheduleItem.class);
         scheduleItem.setSchedule(schedule);
-        scheduleItem.setBudgetKeyTable(budgetKeyTable);
+        scheduleItem.setKeyTable(keyTable);
         scheduleItem.setBudgetItem(budgetItem);
         scheduleItem.setPercentage(percentage);
 
@@ -77,10 +74,22 @@ public class ScheduleItems extends UdoDomainRepositoryAndFactory<ScheduleItem> {
     // //////////////////////////////////////
 
     @Programmatic
-    public List<ScheduleItem> findScheduleItemBySchedule(final Schedule schedule) {
-        return allMatches("findScheduleItemBySchedule", "schedule", schedule);
+    public List<ScheduleItem> findBySchedule(final Schedule schedule) {
+        return allMatches("findBySchedule", "schedule", schedule);
     }
 
-    @Inject
-    Currencies currencies;
+    @Programmatic
+    public List<ScheduleItem> findByBudgetItem(final BudgetItem budgetItem) {
+        return allMatches("findByBudgetItem", "budgetItem", budgetItem);
+    }
+
+    @Programmatic
+    public List<ScheduleItem> findByKeyTable(final KeyTable keyTable) {
+        return allMatches("findByKeyTable", "keyTable", keyTable);
+    }
+
+    @Programmatic
+    public ScheduleItem findByScheduleAndBudgetItemAndKeyTable(final Schedule schedule, final BudgetItem budgetItem, final KeyTable keyTable) {
+        return uniqueMatch("findByScheduleAndBudgetItemAndKeyTable", "schedule", schedule, "budgetItem", budgetItem, "keyTable", keyTable);
+    }
 }

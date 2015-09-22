@@ -45,16 +45,16 @@ public class BudgetContributions {
     @MemberOrder(name = "items", sequence = "1")
     public BudgetItem newBudgetItem(
             final Budget budget,
-            final BigDecimal value,
+            final BigDecimal budgetedValue,
             final Charge charge) {
-        return budgetItems.newBudgetItem(budget, value, charge);
+        return budgetItems.newBudgetItem(budget, budgetedValue, charge);
     }
 
     public String validateNewBudgetItem(
             final Budget budget,
-            final BigDecimal value,
+            final BigDecimal budgetedValue,
             final Charge charge) {
-        return budgetItems.validateNewBudgetItem(budget,value,charge);
+        return budgetItems.validateNewBudgetItem(budget,budgetedValue,charge);
     }
 
     @Inject

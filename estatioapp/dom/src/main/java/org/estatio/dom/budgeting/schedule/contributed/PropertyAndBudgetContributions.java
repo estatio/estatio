@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -34,6 +35,7 @@ public class PropertyAndBudgetContributions {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
+    @MemberOrder(name = "schedules", sequence = "1")
     public Schedule createSchedule(
             final Property property,
             final Budget budget,
@@ -67,7 +69,7 @@ public class PropertyAndBudgetContributions {
             final LocalDate startDate,
             final LocalDate endDate,
             final Charge charge) {
-        return budgets.findBudgetByProperty(property);
+        return budgets.findByProperty(property);
     }
 
     public String validateCreateSchedule(
@@ -80,7 +82,7 @@ public class PropertyAndBudgetContributions {
             return "End date can not be before start date";
         }
 
-        for (Schedule schedule : schedules.findScheduleByPropertyAndCharge(property, charge)) {
+        for (Schedule schedule : schedules.findByPropertyAndCharge(property, charge)) {
             if (schedule.getInterval().overlaps(new LocalDateInterval(startDate, endDate))) {
                 return "A new schedule cannot overlap an existing schedule for this charge.";
             }
@@ -94,14 +96,14 @@ public class PropertyAndBudgetContributions {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
     public List<Schedule> schedules(final Property property) {
-        return schedules.findScheduleByProperty(property);
+        return schedules.findByProperty(property);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Schedule> schedules(final Budget budget) {
-        return schedules.findScheduleByBudget(budget);
+        return schedules.findByBudget(budget);
     }
 
 

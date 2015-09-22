@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.Distributable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,18 +25,18 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         //10000.99
-        BudgetKeyItem item1 = new BudgetKeyItem();
+        KeyItem item1 = new KeyItem();
         item1.setSourceValue(new BigDecimal(10000.99));
         input.add(item1);
 
         //0.99
-        BudgetKeyItem item2 = new BudgetKeyItem();
+        KeyItem item2 = new KeyItem();
         item2.setSourceValue(new BigDecimal(0.99));
         input.add(item2);
 
         //1.99
         for (int i = 2; i < 14; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(1.99));
             input.add(item);
         }
@@ -76,18 +76,18 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         //10000.99
-        BudgetKeyItem item1 = new BudgetKeyItem();
+        KeyItem item1 = new KeyItem();
         item1.setSourceValue(new BigDecimal(10000.99));
         input.add(item1);
 
         //100.01
-        BudgetKeyItem item2 = new BudgetKeyItem();
+        KeyItem item2 = new KeyItem();
         item2.setSourceValue(new BigDecimal(100.01));
         input.add(item2);
 
         //1.99
         for (int i = 2; i < 14; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(1.99));
             input.add(item);
         }
@@ -127,18 +127,18 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         //10000.99
-        BudgetKeyItem item1 = new BudgetKeyItem();
+        KeyItem item1 = new KeyItem();
         item1.setSourceValue(new BigDecimal(10000.99));
         input.add(item1);
 
         //200.09
-        BudgetKeyItem item2 = new BudgetKeyItem();
+        KeyItem item2 = new KeyItem();
         item2.setSourceValue(new BigDecimal(200.09));
         input.add(item2);
 
         //1.99
         for (int i = 2; i < 14; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(1.99));
             input.add(item);
         }
@@ -177,18 +177,18 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         //10000.99
-        BudgetKeyItem item1 = new BudgetKeyItem();
+        KeyItem item1 = new KeyItem();
         item1.setSourceValue(new BigDecimal(10000.99));
         input.add(item1);
 
         //100.09
-        BudgetKeyItem item2 = new BudgetKeyItem();
+        KeyItem item2 = new KeyItem();
         item2.setSourceValue(new BigDecimal(100.09));
         input.add(item2);
 
         //1.99
         for (int i = 2; i < 14; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(1.99));
             input.add(item);
         }
@@ -228,18 +228,18 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         //10000.99
-        BudgetKeyItem item1 = new BudgetKeyItem();
+        KeyItem item1 = new KeyItem();
         item1.setSourceValue(new BigDecimal(10000.99));
         input.add(item1);
 
         //0.99
-        BudgetKeyItem item2 = new BudgetKeyItem();
+        KeyItem item2 = new KeyItem();
         item2.setSourceValue(new BigDecimal(0.99));
         input.add(item2);
 
         //1.99
         for (int i = 2; i < 14; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(1.99));
             input.add(item);
         }
@@ -281,18 +281,18 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         //10000.99
-        BudgetKeyItem item1 = new BudgetKeyItem();
+        KeyItem item1 = new KeyItem();
         item1.setSourceValue(new BigDecimal(10000.99));
         input.add(item1);
 
         //200.99
-        BudgetKeyItem item2 = new BudgetKeyItem();
+        KeyItem item2 = new KeyItem();
         item2.setSourceValue(new BigDecimal(200.99));
         input.add(item2);
 
         //1.99
         for (int i = 2; i < 14; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(1.99));
             input.add(item);
         }
@@ -333,7 +333,7 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         for (int i = 2; i <= 25; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(i).multiply(new BigDecimal(100).setScale(2)));
             input.add(item);
         }
@@ -358,7 +358,7 @@ public class DistributionServiceTest {
         List<Distributable> input = new ArrayList<>();
 
         for (int i = 1; i <= 25; i = i + 1) {
-            BudgetKeyItem item = new BudgetKeyItem();
+            KeyItem item = new KeyItem();
             item.setSourceValue(new BigDecimal(i).multiply(new BigDecimal(100).setScale(2)));
             input.add(item);
         }

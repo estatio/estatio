@@ -23,14 +23,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.DomainServiceLayout.MenuBar;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -39,7 +36,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Program.class, nature=NatureOfService.VIEW)
@@ -87,13 +83,6 @@ public class Programs extends UdoDomainRepositoryAndFactory<Program> {
     @Action(semantics=SemanticsOf.SAFE)
     public List<Program> findProgram(@ParameterLayout(named="Name or reference") final String searchStr) {
         return allMatches("matchByReferenceOrName", "matcher", StringUtils.wildcardToCaseInsensitiveRegex(searchStr));
-    }
-
-    @NotInServiceMenu
-    @Action(semantics=SemanticsOf.SAFE)
-    @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
-    public List<Program> programs(final Property property) {
-        return allMatches("findByProperty", "property", property);
     }
 
     @Inject

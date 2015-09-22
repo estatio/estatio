@@ -81,15 +81,10 @@
           }
         },
         "budgets": {
-          "actions": {
-            "newBudget": {},
-            "createSchedule" : {}
-          }
         },
-        "budgetKeyTables": {
-          "actions": {
-            "newBudgetKeyTable": {}
-          }
+        "keyTables": {
+        },
+        "schedules" : {
         }
       }
     }

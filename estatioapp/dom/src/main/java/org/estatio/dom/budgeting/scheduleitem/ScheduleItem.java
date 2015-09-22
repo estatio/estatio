@@ -24,6 +24,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -39,7 +40,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.schedule.Schedule;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -54,16 +55,32 @@ import org.estatio.dom.budgeting.schedule.Schedule;
         column = "version")
 @javax.jdo.annotations.Queries({
         @Query(
-                name = "findScheduleItemBySchedule", language = "JDOQL",
+                name = "findBySchedule", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.scheduleitem.ScheduleItem " +
-                        "WHERE schedule == :schedule ")
+                        "WHERE schedule == :schedule "),
+        @Query(
+                name = "findByBudgetItem", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.scheduleitem.ScheduleItem " +
+                        "WHERE budgetItem == :budgetItem "),
+        @Query(
+                name = "findByKeyTable", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.scheduleitem.ScheduleItem " +
+                        "WHERE keyTable == :keyTable "),
+        @Query(
+                name = "findByScheduleAndBudgetItemAndKeyTable", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.scheduleitem.ScheduleItem " +
+                        "WHERE schedule == :schedule && budgetItem == :budgetItem && keyTable == :keyTable ")
 })
+@Unique(name = "ScheduleItem_schedule_budgetItem_keyTable_UNQ", members = {"schedule", "budgetItem", "keyTable"})
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = ScheduleItems.class)
 public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements WithApplicationTenancyProperty {
 
     public ScheduleItem() {
-        super("schedule, budgetItem, budgetKeyTable");
+        super("schedule, budgetItem, keyTable");
     }
 
     //region > identificatiom
@@ -76,6 +93,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
     private Schedule schedule;
 
     @Column(allowsNull = "false", name = "scheduleId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     public Schedule getSchedule() {
         return schedule;
     }
@@ -87,30 +105,30 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
 
     // //////////////////////////////////////
 
-    private BudgetKeyTable budgetKeyTable;
+    private KeyTable keyTable;
 
-    @javax.jdo.annotations.Column(name="budgetKeyTableId", allowsNull = "false")
-    @MemberOrder(sequence = "2")
-    public BudgetKeyTable getBudgetKeyTable() {
-        return budgetKeyTable;
+    @Column(name="keyTableId", allowsNull = "false")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
+    public KeyTable getKeyTable() {
+        return keyTable;
     }
 
-    public void setBudgetKeyTable(BudgetKeyTable budgetKeyTable) {
-        this.budgetKeyTable = budgetKeyTable;
+    public void setKeyTable(KeyTable keyTable) {
+        this.keyTable = keyTable;
     }
 
-    public ScheduleItem changeBudgetKeyTable(final @ParameterLayout(named = "BudgetKeyTable") BudgetKeyTable budgetKeyTable) {
-        setBudgetKeyTable(budgetKeyTable);
+    public ScheduleItem changeKeyTable(final @ParameterLayout(named = "KeyTable") KeyTable keyTable) {
+        setKeyTable(keyTable);
         return this;
     }
 
-    public BudgetKeyTable default0ChangeBudgetKeyTable(final BudgetKeyTable budgetKeyTable) {
-        return getBudgetKeyTable();
+    public KeyTable default0ChangeKeyTable(final KeyTable keyTable) {
+        return getKeyTable();
     }
 
-    public String validateChangeBudgetKeyTable(final BudgetKeyTable budgetKeyTable) {
-        if (budgetKeyTable.equals(null)) {
-            return "BudgetKeyTable can't be empty";
+    public String validateChangeKeyTable(final KeyTable keyTable) {
+        if (keyTable.equals(null)) {
+            return "KeyTable can't be empty";
         }
         return null;
     }
@@ -122,6 +140,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
     private BudgetItem budgetItem;
 
     @Column(allowsNull = "false", name = "budgetItemId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     public BudgetItem getBudgetItem() {
         return budgetItem;
     }

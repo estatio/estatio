@@ -1,0 +1,125 @@
+{
+    "columns": [
+        {
+            "span": 4,
+            "memberGroups": {
+                "General": {
+                    "members": {
+                        "keyTable": {
+                            "propertyLayout": {
+                                "hidden": "PARENTED_TABLES",
+                                "named": "Key Table"
+                            }
+                        }
+                    }
+                },
+                "Unit": {
+                    "members": {
+                        "unit": {
+                            "propertyLayout": {
+                                "named": "Unit"
+                            }
+                        }
+                    }
+                },
+                "Values": {
+                    "members": {
+                        "value": {
+                            "propertyLayout": {
+                                "named": "Value",
+                                "typicalLength": 10
+                            },
+                            "actions": {
+                                "changeValue": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Value"
+                                    }
+                                }
+                            }
+                        },
+                        "auditedValue": {
+                            "propertyLayout": {
+                                "named": "Audited Value",
+                                "typicalLength": 10
+                            },
+                            "actions": {
+                                "changeAuditedValue": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Audited Value"
+                                    }
+                                }
+                            }
+                        },
+                        "sourceValue": {
+                            "propertyLayout": {
+                                "named": "Source Value",
+                                "typicalLength": 10
+                            },
+                            "actions": {
+                                "changeSourceValue": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Source Value"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 8,
+            "collections": {}
+        }
+    ],
+    "actions": {
+        "downloadLayout": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-download",
+                "named": "Download Layout",
+                "contributed": "AS_ACTION"
+            }
+        },
+        "deleteBudgetKeyItem": {
+            "actionLayout": {
+                "cssClass": "btn-warning",
+                "named": "Delete Budget Key Item"
+            }
+        },
+        "openLink": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Reports"
+            }
+        },
+        "export": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Export",
+                "contributed": "AS_ACTION"
+            }
+        },
+        "recentChanges": {
+            "actionLayout": {
+                "cssClass": "btn-primary",
+                "named": "Recent Changes",
+                "contributed": "AS_ACTION"
+            }
+        }
+    }
+}

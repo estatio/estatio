@@ -17,8 +17,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTables;
 
 /**
  * Created by jodo on 14/09/15.
@@ -32,12 +31,6 @@ public class BudgetMenu {
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Budget> allBudgets() {
         return budgets.allBudgets();
-    }
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<BudgetKeyTable> allBudgetKeyTables() {
-        return budgetKeyTables.allBudgetKeyTables();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -58,13 +51,13 @@ public class BudgetMenu {
     @Action(semantics = SemanticsOf.SAFE)
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Budget> findBudgetByProperty(Property property){
-        return budgets.findBudgetByProperty(property);
+        return budgets.findByProperty(property);
     }
 
     @Inject
     private Budgets budgets;
 
     @Inject
-    private BudgetKeyTables budgetKeyTables;
+    private KeyTables keyTables;
 
 }

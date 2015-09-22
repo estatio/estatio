@@ -26,8 +26,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemForTesting;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTableForTesting;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.budgeting.schedule.Schedule;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -46,7 +46,7 @@ public class ScheduleItemTest {
             final ScheduleItem pojo = new ScheduleItem();
             newPojoTester()
                     .withFixture(pojos(Property.class, PropertyForTesting.class))
-                    .withFixture(pojos(BudgetKeyTable.class, BudgetKeyTableForTesting.class))
+                    .withFixture(pojos(KeyTable.class, KeyTableForTesting.class))
                     .withFixture(pojos(Schedule.class, Schedule.class))
                     .withFixture(pojos(BudgetItem.class, BudgetItemForTesting.class))
                     .exercise(pojo);

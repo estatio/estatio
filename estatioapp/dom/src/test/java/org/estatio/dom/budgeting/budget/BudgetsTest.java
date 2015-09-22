@@ -59,6 +59,12 @@ public class BudgetsTest {
             }
 
             @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
+                return null;
+            }
+
+            @Override
             protected List<Budget> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
                 return null;
@@ -78,7 +84,7 @@ public class BudgetsTest {
         public void happyCase() {
 
             Property property = new PropertyForTesting();
-            budgets.findBudgetByProperty(property);
+            budgets.findByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
@@ -98,7 +104,7 @@ public class BudgetsTest {
             LocalDate startDate = new LocalDate();
             budgets.findByPropertyAndStartDate(property, startDate);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
             assertThat(finderInteraction.getQueryName(), is("findByPropertyAndStartDate"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
@@ -122,7 +128,7 @@ public class BudgetsTest {
         public void setup() {
             budgets = new Budgets(){
                 @Override
-                public List<Budget> findBudgetByProperty(final Property property) {
+                public List<Budget> findByProperty(final Property property) {
                     return Arrays.asList(new Budget(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
                 }
             };
@@ -162,7 +168,7 @@ public class BudgetsTest {
         public void overlappingDates() {
 
             assertThat(budgets.validateNewBudget(null, new LocalDate(2011,1,1), new LocalDate(2011,12,31)),
-                    is("A new budget cannot overlap an existing budget."));
+                    is("A budget cannot overlap an existing budget."));
         }
 
         @Test

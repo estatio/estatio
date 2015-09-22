@@ -17,17 +17,21 @@
 
 package org.estatio.dom.budgeting.budgetitem;
 
+import java.math.BigDecimal;
+
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTableForTesting;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.budgeting.CurrencyForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jodo on 22/04/15.
@@ -43,8 +47,47 @@ public class BudgetItemTest {
                     .withFixture(pojos(Currency.class, CurrencyForTesting.class))
                     .withFixture(pojos(Budget.class, BudgetForTesting.class))
                     .withFixture(pojos(Charge.class, ChargeForTesting.class))
-                    .withFixture(pojos(BudgetKeyTable.class, BudgetKeyTableForTesting.class))
+                    .withFixture(pojos(KeyTable.class, KeyTableForTesting.class))
                     .exercise(pojo);
+        }
+
+    }
+
+    public static class ChangeBudgetedvalue {
+
+        @Test
+        public void testValidateChange() {
+            final BudgetItem budgetItem = new BudgetItemForTesting();
+            assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(-0.01))).isEqualTo("Value should be a positive non zero value");
+            assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(0))).isEqualTo("Value should be a positive non zero value");
+            assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(0.01))).isEqualTo(null);
+        }
+
+    }
+
+    public static class DefaultBudgetedvalue {
+
+        @Test
+        public void testValidateChange() {
+            //given
+            final BudgetItem budgetItem = new BudgetItemForTesting();
+            final BigDecimal anyValueWillDo = new BigDecimal(10);
+            //when
+            budgetItem.setBudgetedValue(new BigDecimal(1000.00));
+            //then
+            assertThat(budgetItem.default0ChangeBudgetedValue(anyValueWillDo)).isEqualTo(new BigDecimal(1000.00));
+        }
+
+    }
+
+    public static class ChangeAuditedvalue {
+
+        @Test
+        public void testValidateChange() {
+            final BudgetItem budgetItem = new BudgetItemForTesting();
+            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(-0.01))).isEqualTo("Value can't be negative");
+            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(0))).isEqualTo(null);
+            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(0.01))).isEqualTo(null);
         }
 
     }

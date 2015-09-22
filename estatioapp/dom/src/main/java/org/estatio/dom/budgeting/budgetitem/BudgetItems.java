@@ -36,13 +36,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.Budgets;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = BudgetItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
@@ -56,11 +52,11 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
 
     public BudgetItem newBudgetItem(
             final Budget budget,
-            final BigDecimal value,
+            final BigDecimal budgetedValue,
             final Charge charge) {
         BudgetItem budgetItem = newTransientInstance();
         budgetItem.setBudget(budget);
-        budgetItem.setValue(value);
+        budgetItem.setBudgetedValue(budgetedValue);
         budgetItem.setCharge(charge);
 
         persistIfNotAlready(budgetItem);
@@ -71,10 +67,10 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
 
     public String validateNewBudgetItem(
             final Budget budget,
-            final BigDecimal value,
+            final BigDecimal budgetedValue,
             final Charge charge) {
-        if (value.equals(new BigDecimal(0))) {
-            return "Value can't be zero";
+        if (budgetedValue.compareTo(new BigDecimal(0)) <= 0) {
+            return "Value can't be zero or negative";
         }
         return null;
     }
@@ -106,12 +102,6 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
     public BudgetItem findByPropertyAndChargeAndStartDate(final Property property, final Charge charge, final LocalDate startDate) {
         return uniqueMatch("findByPropertyAndChargeAndStartDate", "property", property, "charge", charge, "startDate", startDate);
     }
-
-    @Inject
-    BudgetKeyTables budgetKeyTables;
-
-    @Inject
-    Currencies currencies;
 
     @Inject
     Budgets budgets;

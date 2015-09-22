@@ -37,9 +37,10 @@ import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetline.BudgetLine;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.schedule.Schedule;
+import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 import org.estatio.dom.document.Document;
@@ -88,10 +89,11 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Project.class);
         deleteFrom(Program.class);
 
-        deleteFrom(BudgetLine.class);
+        deleteFrom(ScheduleItem.class);
+        deleteFrom(Schedule.class);
         deleteFrom(BudgetItem.class);
-        deleteFrom(BudgetKeyItem.class);
-        deleteFrom(BudgetKeyTable.class);
+        deleteFrom(KeyItem.class);
+        deleteFrom(KeyTable.class);
         deleteFrom(Budget.class);
 
         deleteFrom(Numerator.class);

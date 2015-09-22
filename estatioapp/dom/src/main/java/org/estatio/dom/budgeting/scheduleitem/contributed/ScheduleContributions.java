@@ -14,8 +14,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItems;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTables;
 import org.estatio.dom.budgeting.schedule.Schedule;
 import org.estatio.dom.budgeting.schedule.Schedules;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
@@ -32,10 +32,10 @@ public class ScheduleContributions {
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public ScheduleItem createScheduleItem(
             final Schedule schedule,
-            final BudgetKeyTable budgetKeyTable,
+            final KeyTable keyTable,
             final BudgetItem budgetItem
     ) {
-        return scheduleItems.newScheduleItem(schedule,budgetKeyTable,budgetItem, new BigDecimal(100));
+        return scheduleItems.newScheduleItem(schedule, keyTable,budgetItem, new BigDecimal(100));
     }
 
     public List<Schedule> autoComplete0CreateScheduleItem(
@@ -43,16 +43,16 @@ public class ScheduleContributions {
         return schedules.allSchedules();
     }
 
-    public List<BudgetKeyTable> choices1CreateScheduleItem(
+    public List<KeyTable> choices1CreateScheduleItem(
             final Schedule schedule,
-            final BudgetKeyTable budgetKeyTable,
+            final KeyTable keyTable,
             final BudgetItem budgetItem) {
-        return budgetKeyTables.findBudgetKeyTableByProperty(schedule.getProperty());
+        return keyTables.findByProperty(schedule.getProperty());
     }
 
     public List<BudgetItem> choices2CreateScheduleItem(
             final Schedule schedule,
-            final BudgetKeyTable budgetKeyTable,
+            final KeyTable keyTable,
             final BudgetItem budgetItem) {
         return budgetItems.findByBudget(schedule.getBudget());
     }
@@ -67,6 +67,6 @@ public class ScheduleContributions {
     private Schedules schedules;
 
     @Inject
-    private BudgetKeyTables budgetKeyTables;
+    private KeyTables keyTables;
 
 }

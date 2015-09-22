@@ -3,7 +3,7 @@
         {
             "span": 4,
             "memberGroups": {
-                "General": {
+                "Budget": {
                     "members": {
                         "property": {
                             "propertyLayout": {
@@ -67,9 +67,9 @@
         {
             "span": 8,
             "collections": {
-                "budgetItems": {
+                "items": {
                     "collectionLayout": {
-                        "named": "Budget Items",
+                        "named": "Items",
                         "paged": 10,
                         "render": "EAGERLY"
                     },
@@ -78,14 +78,13 @@
                             "actionLayout": {
                                 "cssClass": "btn-primary",
                                 "cssClassFa": "fa fa-fw fa-plus",
-                                "named": "New Budget Item"
+                                "named": "New Item"
                             }
                         },
                         "removeAllBudgetItems": {
                             "actionLayout": {
-                                "cssClass": "btn-primary",
-                                "cssClassFa": "fa fa-fw fa-plus",
-                                "named": "Remove All Budget Items"
+                                "cssClass": "btn-warning",
+                                "named": "Remove All Items"
                             }
                         }
                     }

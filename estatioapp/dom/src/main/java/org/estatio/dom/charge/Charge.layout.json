@@ -1,46 +1,58 @@
 {
-  "columns": [
-    {
-      "span": 6,
-      "memberGroups": {
-        "General": {
-          "members": {
-            "reference": {},
-            "name": {},
-            "tax": {},
-            "description": {},
-            "group": {},
-            "externalReference": {},
-            "sortOrder": {
-              "actions": {
-                "change": {}
-              }
+    "columns": [
+        {
+            "span": 6,
+            "memberGroups": {
+                "General": {
+                    "members": {
+                        "reference": {},
+                        "name": {},
+                        "tax": {},
+                        "description": {},
+                        "group": {},
+                        "externalReference": {},
+                        "sortOrder": {
+                            "actions": {
+                                "change": {}
+                            }
+                        }
+                    }
+                },
+                "Application Level": {
+                    "members": {
+                        "applicationTenancy": {
+                            "hidden": {
+                                "where": "ALL_TABLES"
+                            },
+                            "disabled": {}
+                        }
+                    }
+                }
             }
-          }
         },
-        "Application Level": {
-          "members": {
-            "applicationTenancy": {
-              "hidden": {"where": "ALL_TABLES"},
-              "disabled": {}
-            }
-          }
+        {
+            "span": 0,
+            "memberGroups": {}
+        },
+        {
+            "span": 6,
+            "memberGroups": {}
+        },
+        {
+            "span": 0,
+            "collections": {}
         }
-      }
-    },
-    {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 6,
-      "memberGroups": {}
-    },
-    {
-      "span": 0,
-      "collections": {}
+    ],
+    "actions": {
+        "createSchedule": {
+            "actionLayout": {
+                "hidden": "ANYWHERE"
+            }
+        },
+        "newBudgetItem": {
+            "actionLayout": {
+                "hidden": "ANYWHERE"
+            }
+        }
     }
-  ],
-  "actions": {
-  }
 }

@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
-import org.estatio.dom.budgeting.budgetkeytable.BudgetKeyTable;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keytable.KeyTable;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
@@ -59,10 +59,10 @@ public class BudgetKeyItemImportExportContributions {
             semantics = SemanticsOf.IDEMPOTENT
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    @MemberOrder(name = "Budgets", sequence = "90.1")
-    public BudgetKeyItemImportExportManager bulkUpdateManager(BudgetKeyTable budgetKeyTable) {
+    @MemberOrder(name = "items", sequence = "5")
+    public BudgetKeyItemImportExportManager bulkUpdateManager(KeyTable keyTable) {
 
-        return new BudgetKeyItemImportExportManager(budgetKeyTable);
+        return new BudgetKeyItemImportExportManager(keyTable);
 
     }
 
@@ -80,10 +80,10 @@ public class BudgetKeyItemImportExportContributions {
             contributed = Contributed.AS_ACTION
     )
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Blob export(final BudgetKeyItem budgetKeyItem) {
+    public Blob export(final KeyItem keyItem) {
         if (actionInvocationContext.isLast()) {
             final List budgetKeyItems = actionInvocationContext.getDomainObjects();
-            return excelService.toExcel(budgetKeyItems, BudgetKeyItem.class, "budgetKeyItems.xlsx");
+            return excelService.toExcel(budgetKeyItems, KeyItem.class, "budgetKeyItems.xlsx");
         } else {
             return null;
         }

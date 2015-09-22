@@ -66,9 +66,9 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
             return "End date can not be before start date";
         }
 
-        for (Budget budget : this.findBudgetByProperty(property)) {
+        for (Budget budget : this.findByProperty(property)) {
             if (budget.getInterval().overlaps(new LocalDateInterval(startDate, endDate))) {
-                return "A new budget cannot overlap an existing budget.";
+                return "A budget cannot overlap an existing budget.";
             }
         }
 
@@ -96,12 +96,12 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
     }
 
     @Programmatic
-    public List<Budget> findBudgetByProperty(Property property){
+    public List<Budget> findByProperty(Property property){
         return allMatches("findByProperty", "property", property);
     }
 
     @Programmatic
     public Budget findByPropertyAndStartDate(Property property, LocalDate startDate){
-        return firstMatch("findByPropertyAndStartDate", "property", property, "startDate", startDate);
+        return uniqueMatch("findByPropertyAndStartDate", "property", property, "startDate", startDate);
     }
 }

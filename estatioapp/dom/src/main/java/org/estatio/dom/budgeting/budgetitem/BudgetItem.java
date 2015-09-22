@@ -19,8 +19,6 @@
 package org.estatio.dom.budgeting.budgetitem;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -30,7 +28,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -38,17 +35,13 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.app.budget.BudgetCalculationServices;
+import org.estatio.app.budget.BudgetCalculationContributionServices;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetline.BudgetLine;
-import org.estatio.dom.budgeting.budgetline.BudgetLines;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.OccupancyContributions;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -84,7 +77,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
 
     public BudgetItem() {
-        super("budget, charge, value");
+        super("budget, charge, budgetedValue");
     }
 
     //region > identificatiom
@@ -94,7 +87,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
                 "Budget item - "
                 .concat(getCharge().getReference())
                 .concat(" - ")
-                .concat(getValue().toString())
+                .concat(getBudgetedValue().toString())
                 .concat(" - ")
                 .concat(getBudget().getProperty().getName())
         );
@@ -104,7 +97,6 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     private Budget budget;
 
     @javax.jdo.annotations.Column(name="budgetId", allowsNull = "false")
-    @MemberOrder(sequence = "1")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     public Budget getBudget() {
         return budget;
@@ -116,40 +108,67 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     // //////////////////////////////////////
 
-    private BigDecimal value;
+    private BigDecimal budgetedValue;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @MemberOrder(sequence = "3")
-    public BigDecimal getValue() {
-        return value;
+    @javax.jdo.annotations.Column(allowsNull = "false", scale = 2)
+    public BigDecimal getBudgetedValue() {
+        return budgetedValue;
     }
 
-    public void setValue(BigDecimal value) {
-        this.value = value;
+    public void setBudgetedValue(BigDecimal budgetedValue) {
+        this.budgetedValue = budgetedValue;
     }
 
-    public BudgetItem changeValue(final @ParameterLayout(named = "Value") BigDecimal value) {
-        setValue(value);
+    public BudgetItem changeBudgetedValue(final @ParameterLayout(named = "Value") BigDecimal value) {
+        setBudgetedValue(value);
         return this;
     }
 
-    public BigDecimal default0ChangeValue(final BigDecimal value) {
-        return getValue();
+    public BigDecimal default0ChangeBudgetedValue(final BigDecimal value) {
+        return getBudgetedValue();
     }
 
-    public String validateChangeValue(final BigDecimal value) {
-        if (value.equals(new BigDecimal(0))) {
-            return "Value can't be zero";
+    public String validateChangeBudgetedValue(final BigDecimal value) {
+        if (value.compareTo(BigDecimal.ZERO) <= 0) {
+            return "Value should be a positive non zero value";
         }
         return null;
     }
 
     // //////////////////////////////////////
 
+    //region > auditedValue (property)
+    private BigDecimal auditedValue;
+
+    @javax.jdo.annotations.Column(allowsNull = "true", scale = 2)
+    public BigDecimal getAuditedValue() {
+        return auditedValue;
+    }
+
+    public void setAuditedValue(final BigDecimal auditedValue) {
+        this.auditedValue = auditedValue;
+    }
+
+    public BudgetItem changeAuditedValue(final @ParameterLayout(named = "Value") BigDecimal value) {
+        setAuditedValue(value);
+        return this;
+    }
+
+    public BigDecimal default0ChangeAuditedValue(final BigDecimal value) {
+        return getAuditedValue();
+    }
+
+    public String validateChangeAuditedValue(final BigDecimal value) {
+        if (value.compareTo(BigDecimal.ZERO) < 0) {
+            return "Value can't be negative";
+        }
+        return null;
+    }
+    //endregion
+
     private Charge charge;
 
     @javax.jdo.annotations.Column(name="chargeId", allowsNull = "false")
-    @MemberOrder(sequence = "5")
     public Charge getCharge() {
         return charge;
     }
@@ -177,7 +196,6 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     // //////////////////////////////////////
 
     @Override
-    @MemberOrder(sequence = "7")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getBudget().getApplicationTenancy();
@@ -187,10 +205,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     private Leases leases;
 
     @Inject
-    private BudgetCalculationServices budgetCalculationServices;
-
-    @Inject
-    BudgetLines budgetLines;
+    private BudgetCalculationContributionServices budgetCalculationContributionServices;
 
     @Inject
     OccupancyContributions occupancies;

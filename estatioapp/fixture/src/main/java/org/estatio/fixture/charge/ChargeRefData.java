@@ -37,6 +37,8 @@ public class ChargeRefData extends EstatioFixtureScript {
 
     private static final String CHARGE_SUFFIX_RENT = "_RENT";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE = "_SERVICE_CHARGE";
+    private static final String CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1 = "_SERVICE_CHARGE_BGT1";
+    private static final String CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2 = "_SERVICE_CHARGE_BGT2";
     private static final String CHARGE_SUFFIX_TURNOVER_RENT = "_TURNOVER_RENT";
     private static final String CHARGE_SUFFIX_DISCOUNT = "_DISCOUNT";
     private static final String CHARGE_SUFFIX_ENTRY_FEE = "_ENTRY_FEE";
@@ -69,6 +71,8 @@ public class ChargeRefData extends EstatioFixtureScript {
 
     public static final String FR_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_RENT;
     public static final String FR_SERVICE_CHARGE = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String FR_SERVICE_CHARGE_ONBUDGET1 = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1;
+    public static final String FR_SERVICE_CHARGE_ONBUDGET2 = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2;
     public static final String FR_TURNOVER_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_TURNOVER_RENT;
     public static final String FR_DISCOUNT = CountriesRefData.FRA + CHARGE_SUFFIX_DISCOUNT;
     public static final String FR_ENTRY_FEE = CountriesRefData.FRA + CHARGE_SUFFIX_ENTRY_FEE;
@@ -77,6 +81,8 @@ public class ChargeRefData extends EstatioFixtureScript {
 
     public static final String GB_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_RENT;
     public static final String GB_SERVICE_CHARGE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String GB_SERVICE_CHARGE_ONBUDGET1 = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1;
+    public static final String GB_SERVICE_CHARGE_ONBUDGET2 = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2;
     public static final String GB_TURNOVER_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_TURNOVER_RENT;
     public static final String GB_DISCOUNT = CountriesRefData.GBR + CHARGE_SUFFIX_DISCOUNT;
     public static final String GB_ENTRY_FEE = CountriesRefData.GBR + CHARGE_SUFFIX_ENTRY_FEE;
@@ -112,6 +118,12 @@ public class ChargeRefData extends EstatioFixtureScript {
                     taxReference, executionContext);
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE,
                     "Service Charge" + countryName,
+                    taxReference, executionContext);
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1,
+                    "Service Charge On Budget1" + countryName,
+                    taxReference, executionContext);
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2,
+                    "Service Charge On Budget2" + countryName,
                     taxReference, executionContext);
             createCharge(chargeGroupTurnoverRent, country2AlphaCode + CHARGE_SUFFIX_TURNOVER_RENT,
                     "Turnover Rent" + countryName,

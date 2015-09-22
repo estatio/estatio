@@ -26,6 +26,8 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.schedule.Schedule;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,6 +53,12 @@ public class ScheduleItemsTest {
             }
 
             @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
+                return null;
+            }
+
+            @Override
             protected List<ScheduleItem> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
                 return null;
@@ -64,19 +72,74 @@ public class ScheduleItemsTest {
         };
     }
 
-    public static class findBySchedule extends ScheduleItemsTest {
+    public static class FindBySchedule extends ScheduleItemsTest {
 
         @Test
         public void happyCase() {
 
             Schedule schedule = new Schedule();
-            scheduleItems.findScheduleItemBySchedule(schedule);
+            scheduleItems.findBySchedule(schedule);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(ScheduleItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findScheduleItemBySchedule"));
+            assertThat(finderInteraction.getQueryName(), is("findBySchedule"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("schedule"), is((Object) schedule));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
+
+    }
+
+    public static class FindByBudgetItem extends ScheduleItemsTest {
+
+        @Test
+        public void happyCase() {
+
+            BudgetItem budgetItem = new BudgetItem();
+            scheduleItems.findByBudgetItem(budgetItem);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(ScheduleItem.class));
+            assertThat(finderInteraction.getQueryName(), is("findByBudgetItem"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem"), is((Object) budgetItem));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
+
+    }
+
+    public static class FindByKeyTable extends ScheduleItemsTest {
+
+        @Test
+        public void happyCase() {
+
+            KeyTable keyTable = new KeyTable();
+            scheduleItems.findByKeyTable(keyTable);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(ScheduleItem.class));
+            assertThat(finderInteraction.getQueryName(), is("findByKeyTable"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable"), is((Object) keyTable));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
+
+    }
+
+    public static class FindByScheduleAndBudgetItemAndKeyTable extends ScheduleItemsTest {
+
+        @Test
+        public void happyCase() {
+
+            Schedule schedule = new Schedule();
+            BudgetItem budgetItem = new BudgetItem();
+            KeyTable keyTable = new KeyTable();
+            scheduleItems.findByScheduleAndBudgetItemAndKeyTable(schedule, budgetItem, keyTable);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(ScheduleItem.class));
+            assertThat(finderInteraction.getQueryName(), is("findByScheduleAndBudgetItemAndKeyTable"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("schedule"), is((Object) schedule));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem"), is((Object) budgetItem));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable"), is((Object) keyTable));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
         }
 
     }

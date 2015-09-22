@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.budgeting.budget;
 
-import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -54,16 +53,9 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetkeyitem.contributions.OccupanciesOnBudgetKeyItemContributions;
-import org.estatio.dom.budgeting.budgetline.BudgetLine;
-import org.estatio.dom.budgeting.budgetline.BudgetLines;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.budgeting.keyitem.contributions.OccupanciesOnKeyItemContributions;
 import org.estatio.dom.lease.LeaseItems;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -203,21 +195,29 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
+
+        if (budgets.validateNewBudget(getProperty(),startDate,endDate) != null) {
+            for (Budget budget : budgets.findByProperty(property)) {
+                if (!budget.equals(this) && budget.getInterval().overlaps(new LocalDateInterval(startDate, endDate))) {
+                    return "A budget cannot overlap an existing budget.";
+                }
+            }
+        }
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
     // //////////////////////////////////////
 
-    private SortedSet<BudgetItem> budgetItems = new TreeSet<BudgetItem>();
+    private SortedSet<BudgetItem> items = new TreeSet<BudgetItem>();
 
     @CollectionLayout(render= RenderType.EAGERLY)
     @Persistent(mappedBy = "budget", dependentElement = "true")
-    public SortedSet<BudgetItem> getBudgetItems() {
-        return budgetItems;
+    public SortedSet<BudgetItem> getItems() {
+        return items;
     }
 
-    public void setBudgetItems(final SortedSet<BudgetItem> budgetItems) {
-        this.budgetItems = budgetItems;
+    public void setItems(final SortedSet<BudgetItem> items) {
+        this.items = items;
     }
 
     // //////////////////////////////////////
@@ -233,7 +233,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     @Action()
     @ActionLayout()
     public Budget removeAllBudgetItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
-        for (BudgetItem budgetItem : this.getBudgetItems()) {
+        for (BudgetItem budgetItem : this.getItems()) {
 
             getContainer().remove(budgetItem);
             getContainer().flush();
@@ -249,63 +249,16 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Budget allocateBudget(@ParameterLayout(named = "Are you sure?") final boolean confirmAllocate) {
-
-        //1st pass: generate leaseTerms (if needed) and set budgeted value = BigDecimal.ZERO
-        for (BudgetItem budgetItem : getBudgetItems()) {
-
-            for (BudgetLine budgetLine : budgetLines.findByBudgetItem(budgetItem)) {
-
-                if (occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).size() > 0) {
-                    Occupancy occupancy = occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).get(0);
-                    Lease lease = occupancy.getLease();
-                    LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetLine.getBudgetItem().getCharge());
-                    if (leaseItem != null) {
-                        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.findOrCreateLeaseTermForInterval(leaseItem, budgetLine.getBudgetKeyItem().getBudgetKeyTable().getInterval());
-                        leaseTerm.setBudgetedValue(BigDecimal.ZERO);
-                    }
-                }
-            }
-        }
-
-        //2nd pass: allocate budgetedValue
-        for (BudgetItem budgetItem : getBudgetItems()) {
-
-            for (BudgetLine budgetLine : budgetLines.findByBudgetItem(budgetItem)) {
-
-                if (occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).size() > 0) {
-                    Occupancy occupancy = occupancyContributionsForBudgets.occupancies(budgetLine.getBudgetKeyItem()).get(0);
-                    Lease lease = occupancy.getLease();
-                    LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, budgetLine.getBudgetItem().getCharge());
-                    if (leaseItem !=null) {
-
-                        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.findOrCreateLeaseTermForInterval(leaseItem, budgetLine.getBudgetKeyItem().getBudgetKeyTable().getInterval());
-                        leaseTerm.setBudgetedValue(leaseTerm.getBudgetedValue().add(budgetLine.getValue()));
-
-                    }
-                }
-            }
-
-        }
-
-        return this;
-    }
-
-    public String validateAllocateBudget(boolean confirmAllocate){
-        return confirmAllocate? null:"Please confirm";
-    }
-
-    @Inject
-    private BudgetLines budgetLines;
-
     @Inject
     private LeaseItems leaseItems;
 
     @Inject
-    private OccupanciesOnBudgetKeyItemContributions occupancyContributionsForBudgets;
+    private OccupanciesOnKeyItemContributions occupancyContributionsForBudgets;
 
     @Inject
     private LeaseTerms leaseTerms;
+
+    @Inject
+    private Budgets budgets;
 
 }

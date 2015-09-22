@@ -79,7 +79,7 @@ public class Schedules extends UdoDomainRepositoryAndFactory<Schedule> {
             return "End date can not be before start date";
         }
 
-        for (Schedule schedule : this.findScheduleByPropertyAndCharge(property, charge)) {
+        for (Schedule schedule : this.findByPropertyAndCharge(property, charge)) {
             if (schedule.getInterval().overlaps(new LocalDateInterval(startDate, endDate))) {
                 return "A new schedule cannot overlap an existing schedule for this charge.";
             }
@@ -114,19 +114,19 @@ public class Schedules extends UdoDomainRepositoryAndFactory<Schedule> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public List<Schedule> findScheduleByProperty(Property property){
+    public List<Schedule> findByProperty(Property property){
         return allMatches("findByProperty", "property", property);
     };
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public List<Schedule> findScheduleByBudget(Budget budget){
+    public List<Schedule> findByBudget(Budget budget){
         return allMatches("findByBudget", "budget", budget);
     };
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public List<Schedule> findScheduleByPropertyAndCharge(Property property, Charge charge){
+    public List<Schedule> findByPropertyAndCharge(Property property, Charge charge){
         return allMatches("findByPropertyAndCharge", "property", property, "charge", charge);
     };
 

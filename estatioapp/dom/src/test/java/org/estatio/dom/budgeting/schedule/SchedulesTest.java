@@ -82,7 +82,7 @@ public class SchedulesTest {
         public void happyCase() {
 
             Property property = new PropertyForTesting();
-            schedules.findScheduleByProperty(property);
+            schedules.findByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Schedule.class));
@@ -99,7 +99,7 @@ public class SchedulesTest {
         public void happyCase() {
 
             Budget budget = new BudgetForTesting();
-            schedules.findScheduleByBudget(budget);
+            schedules.findByBudget(budget);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Schedule.class));
@@ -117,7 +117,7 @@ public class SchedulesTest {
 
             Property property = new PropertyForTesting();
             Charge charge = new ChargeForTesting();
-            schedules.findScheduleByPropertyAndCharge(property, charge);
+            schedules.findByPropertyAndCharge(property, charge);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Schedule.class));
@@ -166,7 +166,7 @@ public class SchedulesTest {
         public void setup() {
             schedules1 = new Schedules(){
                 @Override
-                public List<Schedule> findScheduleByPropertyAndCharge(final Property property, final Charge charge) {
+                public List<Schedule> findByPropertyAndCharge(final Property property, final Charge charge) {
                     return Arrays.asList(new Schedule(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
                 }
             };

@@ -38,8 +38,8 @@ import org.apache.isis.applib.services.memento.MementoService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItem;
-import org.estatio.dom.budgeting.budgetkeyitem.BudgetKeyItems;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keyitem.KeyItems;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
@@ -55,14 +55,14 @@ public class BudgetKeyItemImportExportService {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetKeyItemImportExportLineItem> items(BudgetKeyItemImportExportManager manager) {
-        return Lists.transform(new ArrayList<BudgetKeyItem>(manager.getBudgetKeyTable().getBudgetKeyItems()), toLineItem());
+        return Lists.transform(new ArrayList<KeyItem>(manager.getKeyTable().getItems()), toLineItem());
     }
 
-    private Function<BudgetKeyItem, BudgetKeyItemImportExportLineItem> toLineItem() {
-        return new Function<BudgetKeyItem, BudgetKeyItemImportExportLineItem>() {
+    private Function<KeyItem, BudgetKeyItemImportExportLineItem> toLineItem() {
+        return new Function<KeyItem, BudgetKeyItemImportExportLineItem>() {
             @Override
-            public BudgetKeyItemImportExportLineItem apply(final BudgetKeyItem budgetKeyItem) {
-                return new BudgetKeyItemImportExportLineItem(budgetKeyItem);
+            public BudgetKeyItemImportExportLineItem apply(final KeyItem keyItem) {
+                return new BudgetKeyItemImportExportLineItem(keyItem);
             }
         };
     }
@@ -84,7 +84,7 @@ public class BudgetKeyItemImportExportService {
     private MementoService mementoService;
 
     @Inject
-    private BudgetKeyItems budgetKeyItems;
+    private KeyItems keyItems;
 
 
 }

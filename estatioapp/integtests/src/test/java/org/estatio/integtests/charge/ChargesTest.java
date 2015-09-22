@@ -75,6 +75,8 @@ public class ChargesTest extends EstatioIntegrationTest {
             gbCharges = Lists.newArrayList(
                     charges.findByReference(ChargeRefData.GB_DISCOUNT),
                     charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE),
+                    charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1),
+                    charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET2),
                     charges.findByReference(ChargeRefData.GB_RENT),
                     charges.findByReference(ChargeRefData.GB_ENTRY_FEE),
                     charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE_INDEXABLE),
