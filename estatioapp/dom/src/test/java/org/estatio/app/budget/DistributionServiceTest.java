@@ -378,11 +378,91 @@ public class DistributionServiceTest {
     @Test
     public void roundingTest() {
 
-        BigDecimal one = new BigDecimal(86.15385).setScale(5,BigDecimal.ROUND_HALF_UP);
+        BigDecimal one = new BigDecimal(86.15385).setScale(5, BigDecimal.ROUND_HALF_UP);
         BigDecimal two = new BigDecimal(800).multiply(new BigDecimal(1000), MathContext.DECIMAL64).divide(new BigDecimal(32500), MathContext.DECIMAL64).setScale(5, BigDecimal.ROUND_HALF_UP);
         BigDecimal sum = one.add(two, MathContext.DECIMAL64).setScale(5, BigDecimal.ROUND_HALF_UP);
 
         assertThat(sum).isEqualTo(new BigDecimal(110.76923).setScale(5, BigDecimal.ROUND_HALF_UP));
+
+    }
+
+    @Test
+    public void justZeroSourceValues() {
+
+        //given
+        DistributionService distributionService = new DistributionService();
+        List<Distributable> input = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i = i + 1) {
+            KeyItem item = new KeyItem();
+            item.setSourceValue(BigDecimal.ZERO);
+            input.add(item);
+        }
+
+        //when
+        List<Distributable> output = distributionService.distribute(input, BigDecimal.ONE, 3);
+        BigDecimal sumRoundedValues = BigDecimal.ZERO;
+        for (Distributable object: output) {
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
+        }
+
+        //then
+        assertThat(output.size()).isEqualTo(5);
+        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(BigDecimal.ZERO.setScale(3, BigDecimal.ROUND_HALF_UP));
+    }
+
+    @Test
+    public void oneNonZeroSourceValue() {
+
+        //given
+        DistributionService distributionService = new DistributionService();
+        List<Distributable> input = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i = i + 1) {
+            KeyItem item = new KeyItem();
+            item.setSourceValue(BigDecimal.ZERO);
+            input.add(item);
+        }
+        KeyItem item = new KeyItem();
+        item.setSourceValue(BigDecimal.ONE);
+        input.add(item);
+
+        //when
+        List<Distributable> output = distributionService.distribute(input, BigDecimal.ONE, 3);
+        BigDecimal sumRoundedValues = BigDecimal.ZERO;
+        for (Distributable object: output) {
+            sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
+        }
+
+        //then
+        assertThat(output.size()).isEqualTo(6);
+        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(BigDecimal.ONE.setScale(3, BigDecimal.ROUND_HALF_UP));
+    }
+
+    @Test
+    public void originalOrderPreserved() {
+
+        //given
+        DistributionService distributionService = new DistributionService();
+        List<Distributable> input = new ArrayList<>();
+
+        for (int i = 1; i <= 25; i = i + 1) {
+            KeyItem item = new KeyItem();
+            BigDecimal sourceValue = new BigDecimal(i).multiply(new BigDecimal(100).setScale(2));
+            item.setSourceValue(sourceValue);
+            input.add(item);
+        }
+
+        //when
+        List<Distributable> output = distributionService.distribute(input, BigDecimal.ONE, 3);
+
+        //then
+        int i = 1;
+        for (Distributable outputItem : output) {
+            BigDecimal sourceValue = new BigDecimal(i).multiply(new BigDecimal(100).setScale(2));
+            assertThat(outputItem.getSourceValue()).isEqualTo(sourceValue);
+            i ++;
+        }
 
     }
 

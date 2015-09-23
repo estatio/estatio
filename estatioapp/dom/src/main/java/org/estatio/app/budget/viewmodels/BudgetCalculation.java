@@ -1,6 +1,8 @@
-package org.estatio.dom.budgeting.schedule.viewmodels;
+package org.estatio.app.budget.viewmodels;
 
 import java.math.BigDecimal;
+
+import javax.jdo.annotations.Column;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
@@ -9,16 +11,13 @@ import org.apache.isis.applib.annotation.ViewModelLayout;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 
-/**
- * Created by jodo on 20/09/15.
- */
 @ViewModel
 @ViewModelLayout()
-public class ValueAssignedToUnitLine implements Distributable {
+public class BudgetCalculation implements Distributable {
 
-    public ValueAssignedToUnitLine(){};
+    public BudgetCalculation(){};
 
-    public ValueAssignedToUnitLine(final Unit unit, final BigDecimal value, final BigDecimal sourceValue) {
+    public BudgetCalculation(final Unit unit, final BigDecimal value, final BigDecimal sourceValue) {
         this.unit = unit;
         this.value = value;
         this.sourceValue = sourceValue;
@@ -54,6 +53,7 @@ public class ValueAssignedToUnitLine implements Distributable {
     private BigDecimal sourceValue;
 
     @MemberOrder(sequence = "3")
+    @Column(scale = 6)
     public BigDecimal getSourceValue() {
         return sourceValue;
     }

@@ -33,9 +33,10 @@ public class ScheduleContributions {
     public ScheduleItem createScheduleItem(
             final Schedule schedule,
             final KeyTable keyTable,
-            final BudgetItem budgetItem
+            final BudgetItem budgetItem,
+            final BigDecimal percentage
     ) {
-        return scheduleItems.newScheduleItem(schedule, keyTable,budgetItem, new BigDecimal(100));
+        return scheduleItems.newScheduleItem(schedule, keyTable,budgetItem, percentage);
     }
 
     public List<Schedule> autoComplete0CreateScheduleItem(
@@ -46,15 +47,34 @@ public class ScheduleContributions {
     public List<KeyTable> choices1CreateScheduleItem(
             final Schedule schedule,
             final KeyTable keyTable,
-            final BudgetItem budgetItem) {
+            final BudgetItem budgetItem,
+            final BigDecimal percentage) {
         return keyTables.findByProperty(schedule.getProperty());
     }
 
     public List<BudgetItem> choices2CreateScheduleItem(
             final Schedule schedule,
             final KeyTable keyTable,
-            final BudgetItem budgetItem) {
+            final BudgetItem budgetItem,
+            final BigDecimal percentage) {
         return budgetItems.findByBudget(schedule.getBudget());
+    }
+
+    public BigDecimal default3CreateScheduleItem(
+            final Schedule schedule,
+            final KeyTable keyTable,
+            final BudgetItem budgetItem,
+            final BigDecimal percentage) {
+        return new BigDecimal(100);
+    }
+
+    public String validateCreateScheduleItem(
+            final Schedule schedule,
+            final KeyTable keyTable,
+            final BudgetItem budgetItem,
+            final BigDecimal percentage
+    ){
+        return scheduleItems.validateNewScheduleItem(schedule,keyTable,budgetItem, percentage);
     }
 
     @Inject

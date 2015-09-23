@@ -152,6 +152,7 @@ public class KeyItemTest {
 
         //when, then
         assertEquals(item.validateChangeSourceValue(new BigDecimal(-0.001)),"Source Value must be positive");
+        assertEquals(item.validateChangeSourceValue(BigDecimal.ZERO),null);
     }
 
 }

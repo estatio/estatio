@@ -60,6 +60,12 @@ public class KeytablesTest {
             }
 
             @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
+                return null;
+            }
+
+            @Override
             protected List<KeyTable> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
                 return null;
@@ -73,22 +79,33 @@ public class KeytablesTest {
         };
     }
 
-    public static class findByName extends KeytablesTest {
+    public static class FindByPropertyAndNameAndStartDate extends KeytablesTest {
 
         @Test
         public void happyCase() {
 
-            keyTables.findByName("name");
+            Property property = new PropertyForTesting();
+            String name = "KeyTableName";
+            LocalDate startDate = new LocalDate();
+            keyTables.findByPropertyAndNameAndStartDate(property, name, startDate);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
-            assertThat(finderInteraction.getQueryName(), is("findKeyTableByName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) "name"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndNameAndStartDate"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) name));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
         }
 
+
+
+    }
+
+    public static class FindByProperty extends KeytablesTest {
+
         @Test
-         public void anotherHappyCase() {
+        public void anotherHappyCase() {
 
             Property property = new PropertyForTesting();
             keyTables.findByProperty(property);
@@ -99,7 +116,6 @@ public class KeytablesTest {
             assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
         }
-
     }
 
     public static class NewKeyTable extends KeytablesTest {

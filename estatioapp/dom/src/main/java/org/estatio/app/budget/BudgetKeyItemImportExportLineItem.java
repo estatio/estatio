@@ -21,6 +21,9 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -32,11 +35,14 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItems;
+import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTables;
 
 enum Status {
@@ -63,7 +69,7 @@ public class BudgetKeyItemImportExportLineItem
         this.unitReference = keyItem.getUnit().getReference();
         this.sourceValue = keyItem.getSourceValue();
         this.keyValue = keyItem.getValue();
-        this.budgetKeyTableName = keyItem.getKeyTable().getName();
+        this.keyTableName = keyItem.getKeyTable().getName();
     }
 
     public BudgetKeyItemImportExportLineItem(final BudgetKeyItemImportExportLineItem item) {
@@ -72,23 +78,72 @@ public class BudgetKeyItemImportExportLineItem
         this.status = item.status;
         this.sourceValue = item.sourceValue.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.keyValue = item.keyValue;
-        this.budgetKeyTableName = item.budgetKeyTableName;
+        this.keyTableName = item.keyTableName;
     }
 
     public String title() {
         return "";
     }
 
-    private String budgetKeyTableName;
+    private String propertyReference;
+
+    public String getPropertyReference() {
+        return propertyReference;
+    }
+
+    public void setPropertyReference(final String propertyReference) {
+        this.propertyReference = propertyReference;
+    }
+
+    private Property property;
+
+    @Programmatic
+    public Property getProperty() {
+        if (property == null) {
+            property = propertyRepository.findPropertyByReference(getPropertyReference());
+        }
+        return property;
+    }
+
+    private LocalDate startDate;
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(final LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    private String keyTableName;
 
     @MemberOrder(sequence = "1")
-    public String getBudgetKeyTableName() { return budgetKeyTableName; }
+    public String getKeyTableName() {
+        return keyTableName;
+    }
 
-    public void setBudgetKeyTableName(final String budgetKeyTableName) {
-        this.budgetKeyTableName = budgetKeyTableName;
+    public void setKeyTableName(final String keyTableName) {
+        this.keyTableName = keyTableName;
+    }
+
+    private KeyTable keyTable;
+
+    public KeyTable getKeyTable() {
+        if (keyTable == null) {
+            keyTable = keyTables.findByPropertyAndNameAndStartDate(getProperty(), getKeyTableName(), getStartDate());
+        }
+        return keyTable;
     }
 
     private KeyItem keyItem;
+
+    @Programmatic
+    public KeyItem getKeyItem() {
+        if (keyItem == null) {
+            keyItem = keyItems.findByKeyTableAndUnit(getKeyTable(), getUnit());
+        }
+        return keyItem;
+    }
 
     private String unitReference;
 
@@ -156,39 +211,47 @@ public class BudgetKeyItemImportExportLineItem
             invokeOn = InvokeOn.OBJECT_AND_COLLECTION
     )
     public KeyItem apply() {
-        if (keyItem == null) {
+        if (getKeyItem() == null) {
             KeyItem keyItem = new KeyItem();
-            keyItem.setKeyTable(keyTables.findByName(getBudgetKeyTableName()));
-            keyItem.setUnit(unitRepository.findUnitByReference(unitReference));
+            keyItem.setKeyTable(getKeyTable());
+            keyItem.setUnit(getUnit());
             keyItem.setValue(BigDecimal.ZERO);
             keyItem.setSourceValue(BigDecimal.ZERO);
             container.persistIfNotAlready(keyItem);
         }
-        keyItems.findByKeyTableAndUnit(keyTables.findByName(getBudgetKeyTableName()), unitRepository
-                .findUnitByReference(unitReference)).changeValue(this.getKeyValue().setScale(keyTables.findByName(getBudgetKeyTableName()).getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
-        keyItems.findByKeyTableAndUnit(keyTables.findByName(getBudgetKeyTableName()), unitRepository
-                .findUnitByReference(unitReference)).setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-        return keyItem;
+        getKeyItem().changeValue(this.getKeyValue().setScale(keyTable.getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+        getKeyItem().setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
+        return getKeyItem();
     }
 
     @Programmatic
     public void validate() {
-        Unit unit = unitRepository.findUnitByReference(unitReference);
-        Status newStatus = Status.UNCHANGED;
-        if (unit != null) {
-            KeyItem keyItem = keyItems.findByKeyTableAndUnit(keyTables.findByName(getBudgetKeyTableName()), unit);
-            if (keyItem == null) {
-                newStatus = Status.ADDED;
-            } else {
-                if (org.apache.commons.lang3.ObjectUtils.compare(keyValue, keyItem.getValue()) != 0) {
-                    newStatus = Status.UPDATED;
-                }
-            }
-        } else {
-            newStatus = Status.NOT_FOUND;
+        setStatus(calculateStatus());
+        setComments(getStatus().name());
+    }
+
+    private Status calculateStatus() {
+        if (getProperty() == null || getUnit() == null || getKeyTable() == null) {
+            return Status.NOT_FOUND;
         }
-        setStatus(newStatus);
-        setComments(newStatus.name());
+        if (getKeyItem() == null) {
+            return Status.ADDED;
+        }
+
+        if (ObjectUtils.notEqual(getKeyItem().getValue(), getKeyValue()) || ObjectUtils.notEqual(getKeyItem().getSourceValue(), getSourceValue())) {
+            return Status.UPDATED;
+        }
+        return Status.UNCHANGED;
+    }
+
+    private Unit unit;
+
+    @Programmatic
+    private Unit getUnit() {
+        if (unit == null) {
+            unit = unitRepository.findUnitByReference(unitReference);
+        }
+        return unit;
     }
 
     // //////////////////////////////////////
@@ -223,4 +286,8 @@ public class BudgetKeyItemImportExportLineItem
 
     @Inject
     private KeyTables keyTables;
+
+    @Inject
+    PropertyRepository propertyRepository;
+
 }

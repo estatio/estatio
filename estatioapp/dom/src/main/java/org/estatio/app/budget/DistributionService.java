@@ -9,16 +9,37 @@ import org.estatio.dom.budgeting.Distributable;
 
 public class DistributionService {
 
+    /**
+     * @return a {@link List} of
+     * {@link org.estatio.dom.budgeting.Distributable} items with {@link BigDecimal} targetTotal
+     * equally distributed over {@link BigDecimal} item.value according to
+     * {@link BigDecimal} item.sourceValue.
+     *
+     * Rounding correction finds place according to {@link int} precision.
+     *
+     * The original order of List input is preserved.
+     *
+     * Tested for item.sourceValue >= 0
+     */
     public List<Distributable> distribute(
             final List<Distributable> input,
             final BigDecimal targetTotal,
-            final int numberOfDigitsAfterDecimalPoint){
+            final int precision){
 
         // determine denominator (sum of all input values)
         BigDecimal denominator = BigDecimal.ZERO;
         for (Distributable distributable : input) {
             denominator = denominator.add(distributable.getSourceValue(), MathContext.DECIMAL64);
         }
+
+        // Case where no non-zero source values are found and so denominator equals zero
+        if (denominator.compareTo(BigDecimal.ZERO) <= 0) {
+            for (Distributable inputItem : input) {
+                inputItem.setValue(BigDecimal.ZERO);
+            }
+            return input;
+        }
+
             /*debug*/
 //        System.out.println("***************************");
 //        System.out.println("denominator: ");
@@ -27,16 +48,20 @@ public class DistributionService {
 
         List<OutputHelper> outputHelperList = new ArrayList<>();
         for (Distributable distributable : input) {
+
             BigDecimal unroundedTargetValue = distributable.getSourceValue().multiply(targetTotal, MathContext.DECIMAL64).divide(denominator, MathContext.DECIMAL64);
-            BigDecimal roundedTargetValue = unroundedTargetValue.setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP);
+            BigDecimal roundedTargetValue = unroundedTargetValue.setScale(precision, BigDecimal.ROUND_HALF_UP);
             distributable.setValue(roundedTargetValue);
             OutputHelper newOutputObject = new OutputHelper(
                     distributable,
                     roundedTargetValue.subtract(unroundedTargetValue, MathContext.DECIMAL64),
                     false
             );
+
             outputHelperList.add(newOutputObject);
+
         }
+
 
         // 1. check if rounding correction is needed
         BigDecimal sumOfCalculatedRoundedValues = BigDecimal.ZERO;
@@ -52,7 +77,7 @@ public class DistributionService {
 
         BigDecimal deltaOfSum = BigDecimal.ZERO;
         Delta deltaSignOfSum = Delta.NO_DELTA;
-        BigDecimal validTotal = targetTotal.setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP);
+        BigDecimal validTotal = targetTotal.setScale(precision, BigDecimal.ROUND_HALF_UP);
 
         if (sumOfCalculatedRoundedValues.compareTo(validTotal) > 0) {
             deltaSignOfSum = Delta.DELTA_POSITIVE;
@@ -74,7 +99,7 @@ public class DistributionService {
         }
 
         // 2. in case of rounding needed: iterate over sorted array until fixed
-        Integer numberOfIterationsNeeded = deltaOfSum.abs().multiply(multiplicationFactor(numberOfDigitsAfterDecimalPoint)).intValue();
+        Integer numberOfIterationsNeeded = deltaOfSum.abs().multiply(multiplicationFactor(precision)).intValue();
 
         for (int i = 0; i < numberOfIterationsNeeded; i = i + 1) {
 
@@ -91,10 +116,10 @@ public class DistributionService {
                 helperToRoundUp
                         .distributable.setValue(
                         helperToRoundUp.distributable.getValue()
-                                .add(increment(numberOfDigitsAfterDecimalPoint), MathContext.DECIMAL64)
-                                .setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP)
+                                .add(increment(precision), MathContext.DECIMAL64)
+                                .setScale(precision, BigDecimal.ROUND_HALF_UP)
                 );
-                deltaOfSum = deltaOfSum.add(increment(numberOfDigitsAfterDecimalPoint)).setScale(numberOfDigitsAfterDecimalPoint+3, BigDecimal.ROUND_HALF_UP);
+                deltaOfSum = deltaOfSum.add(increment(precision)).setScale(precision +3, BigDecimal.ROUND_HALF_UP);
                 helperToRoundUp.setCorrected(true);
 
                         /*debug*/
@@ -119,10 +144,10 @@ public class DistributionService {
                 helperToRoundDown.
                         distributable.setValue(
                         helperToRoundDown.distributable.getValue()
-                                .subtract(increment(numberOfDigitsAfterDecimalPoint), MathContext.DECIMAL64)
-                                .setScale(numberOfDigitsAfterDecimalPoint, BigDecimal.ROUND_HALF_UP)
+                                .subtract(increment(precision), MathContext.DECIMAL64)
+                                .setScale(precision, BigDecimal.ROUND_HALF_UP)
                 );
-                deltaOfSum = deltaOfSum.subtract(increment(numberOfDigitsAfterDecimalPoint)).setScale(numberOfDigitsAfterDecimalPoint+3, BigDecimal.ROUND_HALF_UP);
+                deltaOfSum = deltaOfSum.subtract(increment(precision)).setScale(precision +3, BigDecimal.ROUND_HALF_UP);
                 helperToRoundDown.setCorrected(true);
 
                         /*debug*/

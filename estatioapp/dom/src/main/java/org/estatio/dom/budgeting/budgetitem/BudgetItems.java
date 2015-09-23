@@ -69,8 +69,8 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
             final Budget budget,
             final BigDecimal budgetedValue,
             final Charge charge) {
-        if (budgetedValue.compareTo(new BigDecimal(0)) <= 0) {
-            return "Value can't be zero or negative";
+        if (budgetedValue.compareTo(BigDecimal.ZERO) < 0) {
+            return "Value can't be negative";
         }
         return null;
     }

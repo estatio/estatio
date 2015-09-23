@@ -16,6 +16,7 @@
  */
 package org.estatio.dom.budgeting.keytable;
 
+import java.security.Key;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -92,8 +93,9 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits
     ) {
-        if (findByName(name)!=null) {
-            return findByName(name);
+        final KeyTable keyTable = findByPropertyAndNameAndStartDate(property, name, startDate);
+        if (keyTable !=null) {
+            return keyTable;
         } else {
             return newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
         }
@@ -115,8 +117,8 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
     // //////////////////////////////////////
 
     @Programmatic
-    public KeyTable findByName(final String name) {
-        return firstMatch("findKeyTableByName", "name", name);
+    public KeyTable findByPropertyAndNameAndStartDate(final Property property, final String name, LocalDate startDate) {
+        return uniqueMatch("findByPropertyAndNameAndStartDate", "property", property, "name", name, "startDate", startDate);
     }
 
     // //////////////////////////////////////

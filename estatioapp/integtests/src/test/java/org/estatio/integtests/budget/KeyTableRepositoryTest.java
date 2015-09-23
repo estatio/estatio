@@ -59,14 +59,14 @@ public class KeyTableRepositoryTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindByName extends KeyTableRepositoryTest {
+    public static class FindByPropertyAndNameAndStartDate extends KeyTableRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             // when
-            final KeyTable keyTable = keyTableRepository.findByName(KeyTablesForOxf.NAME);
+            final KeyTable keyTable = keyTableRepository.findByPropertyAndNameAndStartDate(property, KeyTablesForOxf.NAME, KeyTablesForOxf.STARTDATE);
             // then
             assertThat(keyTable.getName()).isEqualTo(KeyTablesForOxf.NAME);
             assertThat(keyTable.getProperty()).isEqualTo(property);

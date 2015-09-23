@@ -45,22 +45,30 @@ public class ScheduleItems extends UdoDomainRepositoryAndFactory<ScheduleItem> {
 
     // //////////////////////////////////////
 
-    @Programmatic
     public ScheduleItem newScheduleItem(
             final Schedule schedule,
             final KeyTable keyTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage) {
-
         ScheduleItem scheduleItem = newTransientInstance(ScheduleItem.class);
         scheduleItem.setSchedule(schedule);
         scheduleItem.setKeyTable(keyTable);
         scheduleItem.setBudgetItem(budgetItem);
         scheduleItem.setPercentage(percentage);
-
         persistIfNotAlready(scheduleItem);
-
         return scheduleItem;
+    }
+
+    public String validateNewScheduleItem(
+            final Schedule schedule,
+            final KeyTable keyTable,
+            final BudgetItem budgetItem,
+            final BigDecimal percentage
+    ){
+        if(findByScheduleAndBudgetItemAndKeyTable(schedule,budgetItem,keyTable) != null) {
+            return "This schedule item already exists";
+        }
+        return null;
     }
 
     // //////////////////////////////////////

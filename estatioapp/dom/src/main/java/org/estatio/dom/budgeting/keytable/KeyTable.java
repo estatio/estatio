@@ -26,10 +26,16 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -62,22 +68,24 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(
+@PersistenceCapable(
         identityType = IdentityType.DATASTORE
         //       ,schema = "budget"
 )
-@javax.jdo.annotations.DatastoreIdentity(
+@DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Version(
+@Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Queries({
+@Queries({
         @Query(
-                name = "findKeyTableByName", language = "JDOQL",
+                name = "findByPropertyAndNameAndStartDate", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.keytable.KeyTable " +
-                        "WHERE name == :name "),
+                        "WHERE name == :name "
+                        + "&& property == :property "
+                        + "&& startDate == :startDate"),
         @Query(
                 name = "findKeyTableByNameMatches", language = "JDOQL",
                 value = "SELECT " +
@@ -89,6 +97,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "FROM org.estatio.dom.budgeting.keytable.KeyTable " +
                         "WHERE property == :property ")
 })
+@Unique(name = "KeyTable_property_name_startDate", members = { "property", "name", "startDate" })
 @DomainObject(editing = Editing.DISABLED,
         autoCompleteRepository = KeyTables.class,
         autoCompleteAction = "autoComplete")
@@ -114,7 +123,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     private Property property;
 
-    @javax.jdo.annotations.Column(name="propertyId", allowsNull = "false")
+    @Column(name = "propertyId", allowsNull = "false")
     @MemberOrder(sequence = "2")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     public Property getProperty() {
@@ -129,7 +138,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Column(allowsNull = "false")
     @MemberOrder(sequence = "1")
     public String getName() {
         return name;
@@ -159,7 +168,6 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     private LocalDate startDate;
 
-    @javax.jdo.annotations.Column(allowsNull = "true")
     @MemberOrder(sequence = "3")
     public LocalDate getStartDate() {
         return startDate;
@@ -173,7 +181,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     private LocalDate endDate;
 
-    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Column(allowsNull = "true")
     @MemberOrder(sequence = "4")
     public LocalDate getEndDate() {
         return endDate;
@@ -240,10 +248,9 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // //////////////////////////////////////
 
-
     private FoundationValueType foundationValueType;
 
-    @javax.jdo.annotations.Column(name="foundationValueTypeId", allowsNull = "false")
+    @Column(name = "foundationValueTypeId", allowsNull = "false")
     @MemberOrder(sequence = "5")
     public FoundationValueType getFoundationValueType() {
         return foundationValueType;
@@ -274,7 +281,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     private KeyValueMethod keyValueMethod;
 
-    @javax.jdo.annotations.Column(name="keyValueMethodId", allowsNull = "false")
+    @Column(name = "keyValueMethodId", allowsNull = "false")
     @MemberOrder(sequence = "6")
     public KeyValueMethod getKeyValueMethod() {
         return keyValueMethod;
@@ -304,7 +311,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     //region > numberOfDigits (property)
     private Integer numberOfDigits;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Column(allowsNull = "false")
     @MemberOrder(sequence = "7")
     public Integer getNumberOfDigits() {
         return numberOfDigits;
@@ -325,7 +332,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     }
 
     public String validateChangeNumberOfDigits(final Integer numberOfDigits) {
-        if (numberOfDigits< 0 || numberOfDigits > 6) {
+        if (numberOfDigits < 0 || numberOfDigits > 6) {
             return "Number Of Digits must have a value between 0 and 6";
         }
         return null;
@@ -350,10 +357,10 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     public KeyTable generateItems(
             @ParameterLayout(named = "Are you sure? (All current Key Items will be deleted.)")
             @Parameter(optionality = Optionality.OPTIONAL)
-            boolean confirmGenerate){
+            boolean confirmGenerate) {
 
         //delete old items
-        for (Iterator<KeyItem> it = this.getItems().iterator(); it.hasNext();) {
+        for (Iterator<KeyItem> it = this.getItems().iterator(); it.hasNext(); ) {
             it.next().deleteBudgetKeyItem();
         }
 
@@ -363,7 +370,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
         */
         List<Distributable> input = new ArrayList<>();
 
-        for (Unit unit :  unitRepository.findByProperty(this.getProperty())){
+        for (Unit unit : unitRepository.findByProperty(this.getProperty())) {
 
             if (unitIntervalValidForThisKeyTable(unit)) {
                 BigDecimal sourceValue;
@@ -391,11 +398,11 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
         return this;
     }
 
-    public String validateGenerateItems(boolean confirmGenerate){
-        return confirmGenerate? null:"Please confirm";
+    public String validateGenerateItems(boolean confirmGenerate) {
+        return confirmGenerate ? null : "Please confirm";
     }
 
-    public boolean hideGenerateItems(boolean confirmGenerate){
+    public boolean hideGenerateItems(boolean confirmGenerate) {
         if (getFoundationValueType() == FoundationValueType.MANUAL) {
             return true;
         }
@@ -406,20 +413,18 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     @MemberOrder(name = "items", sequence = "4")
     public KeyTable distributeSourceValues(
-            @ParameterLayout(named="Are you sure? (All current Target Values will be overwritten.)")
-            @Parameter(optionality= Optionality.OPTIONAL)
-            boolean confirmDistribute){
-
+            @ParameterLayout(named = "Are you sure? (All current Target Values will be overwritten.)")
+            @Parameter(optionality = Optionality.OPTIONAL)
+            boolean confirmDistribute) {
 
         DistributionService distributionService = new DistributionService();
         distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().targetTotal(), getNumberOfDigits());
 
-
         return this;
     }
 
-    public String validateDistributeSourceValues(boolean confirmDistribute){
-        return confirmDistribute? null:"Please confirm";
+    public String validateDistributeSourceValues(boolean confirmDistribute) {
+        return confirmDistribute ? null : "Please confirm";
     }
 
     // //////////////////////////////////////
@@ -433,22 +438,22 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // //////////////////////////////////////
     @MemberOrder(name = "validation", sequence = "1")
-    public boolean isValid(){
+    public boolean isValid() {
         return (this.isValidForKeyValues() && this.isValidForUnits());
     }
 
     @MemberOrder(name = "validation", sequence = "2")
-    public boolean isValidForKeyValues(){
+    public boolean isValidForKeyValues() {
         return getKeyValueMethod().isValid(this);
     }
 
     @MemberOrder(name = "validation", sequence = "3")
-    public boolean isValidForUnits(){
+    public boolean isValidForUnits() {
         for (KeyItem item : this.getItems()) {
             if (!this.unitIntervalValidForThisKeyTable(item.getUnit())) {
                 return false;
             }
-            if (!item.getUnit().hasOccupancyOverlappingInterval(this.getInterval())){
+            if (!item.getUnit().hasOccupancyOverlappingInterval(this.getInterval())) {
                 return false;
             }
         }
@@ -465,7 +470,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     @MemberOrder(name = "items", sequence = "3")
     public KeyTable deleteItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
 
-        for (KeyItem keyItem : getItems()){
+        for (KeyItem keyItem : getItems()) {
             removeIfNotAlready(keyItem);
         }
 
@@ -473,9 +478,8 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     }
 
     public String validateDeleteItems(final boolean confirmDelete) {
-        return confirmDelete? null:"Please confirm";
+        return confirmDelete ? null : "Please confirm";
     }
-
 
     // //////////////////////////////////////
 

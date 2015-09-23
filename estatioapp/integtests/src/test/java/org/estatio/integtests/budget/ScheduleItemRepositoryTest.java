@@ -60,6 +60,28 @@ public class ScheduleItemRepositoryTest extends EstatioIntegrationTest {
         });
     }
 
+    public static class validateNewScheduleItem extends ScheduleItemRepositoryTest {
+
+        @Test
+        public void doubleScheduleItem() throws Exception {
+
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Schedule schedule = scheduleRepository.findByProperty(property).get(0);
+            ScheduleItem scheduleItem = schedule.getScheduleItems().first();
+
+            //when, then
+            assertThat(scheduleItemRepository
+                    .validateNewScheduleItem(
+                            schedule,scheduleItem.getKeyTable(),
+                            scheduleItem.getBudgetItem(),
+                            null)
+            ).isEqualTo("This schedule item already exists");
+
+        }
+
+    }
+
     public static class FindBySchedule extends ScheduleItemRepositoryTest {
 
         @Test

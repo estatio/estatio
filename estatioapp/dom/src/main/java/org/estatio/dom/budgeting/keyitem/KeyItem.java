@@ -69,7 +69,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
 
     //region > identificatiom
     public TranslatableString title() {
-        return TranslatableString.tr("{name}", "name", "Budget key item for ".concat(getUnit().getName()));
+        return TranslatableString.tr("{name}", "name", "Key item for ".concat(getUnit().getName()));
     }
     //endregion
 
@@ -124,7 +124,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
 
     public String validateChangeSourceValue(final BigDecimal sourceValue) {
-        if (sourceValue.compareTo(BigDecimal.ZERO) <= 0) {
+        if (sourceValue.compareTo(BigDecimal.ZERO) < 0) {
             return "Source Value must be positive";
         }
         return null;

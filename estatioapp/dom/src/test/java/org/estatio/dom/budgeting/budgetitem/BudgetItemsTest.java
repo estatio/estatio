@@ -147,8 +147,8 @@ public class BudgetItemsTest {
             BigDecimal zeroValue = BigDecimal.ZERO;
             BigDecimal positiveValue = new BigDecimal(0.01);
             //then
-            assertThat(budgetItems.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be zero or negative"));
-            assertThat(budgetItems.validateNewBudgetItem(budget,zeroValue,charge), is("Value can't be zero or negative"));
+            assertThat(budgetItems.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be negative"));
+            assertThat(budgetItems.validateNewBudgetItem(budget,zeroValue,charge), is(nullValue()));
             assertThat(budgetItems.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
         }
 
