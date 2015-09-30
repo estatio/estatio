@@ -17,22 +17,20 @@
 
 package org.estatio.dom.budgeting.budgetitem;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
-
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.estatio.dom.charge.Charge;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -150,6 +148,7 @@ public class BudgetItemsTest {
             assertThat(budgetItems.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be negative"));
             assertThat(budgetItems.validateNewBudgetItem(budget,zeroValue,charge), is(nullValue()));
             assertThat(budgetItems.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
+
         }
 
     }

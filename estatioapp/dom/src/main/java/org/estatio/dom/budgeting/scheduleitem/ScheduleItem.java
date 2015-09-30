@@ -18,30 +18,17 @@
  */
 package org.estatio.dom.budgeting.scheduleitem;
 
-import java.math.BigDecimal;
-
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Unique;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.schedule.Schedule;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import javax.jdo.annotations.*;
+import java.math.BigDecimal;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -180,6 +167,14 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
 
     //endregion
 
+    public Schedule deleteScheduleItem(final boolean confirmDelete) {
+        removeIfNotAlready(this);
+        return this.getSchedule();
+    }
+
+    public String validateDeleteScheduleItem(boolean confirmDelete){
+        return confirmDelete? null:"Please confirm";
+    }
 
 
     @Override

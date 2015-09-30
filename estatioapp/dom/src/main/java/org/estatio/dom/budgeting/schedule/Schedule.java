@@ -18,43 +18,22 @@
  */
 package org.estatio.dom.budgeting.schedule;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.jdo.annotations.*;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -235,6 +214,7 @@ public class Schedule extends EstatioDomainObject<Schedule> implements WithInter
     private Budget budget;
 
     @Column(allowsNull = "false", name = "budgetId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     public Budget getBudget() {
         return budget;
     }
@@ -257,6 +237,22 @@ public class Schedule extends EstatioDomainObject<Schedule> implements WithInter
     public void setScheduleItems(final SortedSet<ScheduleItem> scheduleItems) {
         this.scheduleItems = scheduleItems;
     }
+
+
+    public Budget deleteSchedule(final boolean confirmDelete) {
+
+        for (ScheduleItem scheduleItem : getScheduleItems()) {
+            removeIfNotAlready(scheduleItem);
+        }
+
+        removeIfNotAlready(this);
+        return this.getBudget();
+    }
+
+    public String validateDeleteSchedule(boolean confirmDelete){
+        return confirmDelete? null:"Please confirm";
+    }
+
 
     // //////////////////////////////////////
 

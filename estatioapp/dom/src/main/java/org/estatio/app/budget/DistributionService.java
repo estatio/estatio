@@ -1,11 +1,11 @@
 package org.estatio.app.budget;
 
+import org.estatio.dom.budgeting.Distributable;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.estatio.dom.budgeting.Distributable;
 
 public class DistributionService {
 
@@ -109,7 +109,13 @@ public class DistributionService {
                 BigDecimal largestPositiveDelta = new BigDecimal(-1);
                 OutputHelper helperToRoundUp = null;
                 for (OutputHelper helper : outputHelperList) {
-                    if (helper.delta.compareTo(largestPositiveDelta) > 0 && !helper.corrected) {
+                    if (
+                            helper.delta.compareTo(largestPositiveDelta) > 0
+                            &&
+                                    !helper.corrected
+                            &&
+                                    !(helper.distributable.getSourceValue().compareTo(BigDecimal.ZERO) == 0)
+                            ) {
                         helperToRoundUp = helper;
                     }
                 }
@@ -137,7 +143,13 @@ public class DistributionService {
                 BigDecimal largestNegativeDelta = BigDecimal.ONE;
                 OutputHelper helperToRoundDown = null;
                 for (OutputHelper helper : outputHelperList) {
-                    if (helper.delta.compareTo(largestNegativeDelta) < 0 && !helper.corrected) {
+                    if (
+                            helper.delta.compareTo(largestNegativeDelta) < 0
+                            &&
+                                    !helper.corrected
+                            &&
+                                    !(helper.distributable.getSourceValue().compareTo(BigDecimal.ZERO) == 0)
+                            ) {
                         helperToRoundDown = helper;
                     }
                 }

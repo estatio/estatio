@@ -1,15 +1,6 @@
 package org.estatio.integtests.budget;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
@@ -25,6 +16,12 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.SchedulesForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -151,7 +148,5 @@ public class ScheduleItemRepositoryTest extends EstatioIntegrationTest {
         }
 
     }
-
-
 
 }

@@ -1,24 +1,16 @@
 package org.estatio.app.budget;
 
+import org.apache.isis.applib.annotation.*;
+import org.estatio.app.budget.viewmodels.BudgetCalculation;
+import org.estatio.dom.budgeting.Distributable;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.schedule.Schedule;
+import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
-import org.estatio.dom.budgeting.Distributable;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.schedule.Schedule;
-import org.estatio.app.budget.viewmodels.BudgetCalculation;
-import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class BudgetCalculationContributionServices {
@@ -32,10 +24,33 @@ public class BudgetCalculationContributionServices {
 
         List<Distributable> input = new ArrayList<>();
 
+        BigDecimal keySum = scheduleItem.getKeyTable().getKeyValueMethod().keySum(scheduleItem.getKeyTable());
+
         for (KeyItem keyItem : scheduleItem.getKeyTable().getItems()) {
-            BudgetCalculation valueAssignedToUnitLine =
-                    new BudgetCalculation(keyItem.getUnit(), BigDecimal.ONE, targetTotal.multiply(keyItem.getValue()));
-            input.add(valueAssignedToUnitLine);
+
+            BudgetCalculation valueAssignedToUnit;
+
+            // case all values in keyTable are zero
+            if (keySum.compareTo(BigDecimal.ZERO) == 0) {
+               valueAssignedToUnit =
+                        new BudgetCalculation(
+                                keyItem.getUnit(),
+                                BigDecimal.ONE,
+                                BigDecimal.ZERO
+                        );
+            } else {
+
+                valueAssignedToUnit =
+                        new BudgetCalculation(
+                                keyItem.getUnit(),
+                                BigDecimal.ONE,
+                                targetTotal.multiply(keyItem.getValue()).
+                                        divide(keySum, MathContext.DECIMAL64)
+                        );
+
+            }
+
+            input.add(valueAssignedToUnit);
         }
 
         DistributionService distributionService = new DistributionService();
@@ -59,7 +74,7 @@ public class BudgetCalculationContributionServices {
 
     }
 
-    private List<BudgetCalculation> merge(final List<BudgetCalculation> output, final List<BudgetCalculation> scheduleItemOuput) {
+    List<BudgetCalculation> merge(final List<BudgetCalculation> output, final List<BudgetCalculation> scheduleItemOuput) {
         for (BudgetCalculation item : scheduleItemOuput) {
            boolean unitFound = false;
             for (BudgetCalculation outputItem : output) {

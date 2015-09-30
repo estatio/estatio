@@ -17,9 +17,13 @@
 
 package org.estatio.dom.budgeting.keytable;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.PropertyForTesting;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -27,14 +31,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -181,9 +179,15 @@ public class KeytablesTest {
         @Test
         public void validateNewKeyTable() {
 
-            assertThat(keyTablesRepo.validateNewKeyTable(null, null, new LocalDate(2011, 1, 1), new LocalDate(2010, 12, 31), null, null, null),
+            KeyTables tables = new KeyTables(){
+                @Override
+                public KeyTable findByPropertyAndNameAndStartDate(Property property, String name, LocalDate startDate) {
+                    return null;
+                }};
+
+            assertThat(tables.validateNewKeyTable(null, null, new LocalDate(2011, 1, 1), new LocalDate(2010, 12, 31), null, null, null),
                     is("End date can not be before start date"));
-            assertThat(keyTablesRepo.validateNewKeyTable(null, null, new LocalDate(2011, 1, 1), new LocalDate(2011, 1, 1), null, null, null),
+            assertThat(tables.validateNewKeyTable(null, null, new LocalDate(2011, 1, 1), new LocalDate(2011, 1, 1), null, null, null),
                     is(nullValue()));
 
         }

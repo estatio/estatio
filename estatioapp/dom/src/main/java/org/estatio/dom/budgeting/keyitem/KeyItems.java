@@ -16,17 +16,16 @@
  */
 package org.estatio.dom.budgeting.keyitem;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @DomainService(repositoryFor = KeyItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -65,6 +64,10 @@ public class KeyItems extends UdoDomainRepositoryAndFactory<KeyItem> {
 
         if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
             return "keyValue cannot be less than zero";
+        }
+
+        if (findByKeyTableAndUnit(keyTable, unit)!=null) {
+            return "there is already a key item for this unit";
         }
 
         return null;

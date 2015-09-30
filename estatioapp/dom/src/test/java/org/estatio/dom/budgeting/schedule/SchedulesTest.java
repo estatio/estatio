@@ -17,21 +17,10 @@
 
 package org.estatio.dom.budgeting.schedule;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.ChargeForTesting;
@@ -39,6 +28,15 @@ import org.estatio.dom.budgeting.PropertyForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.estatio.dom.charge.Charge;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -59,6 +57,12 @@ public class SchedulesTest {
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.FIRST_MATCH);
+                return null;
+            }
+
+            @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
                 return null;
             }
 
@@ -140,7 +144,7 @@ public class SchedulesTest {
             LocalDate endDate = new LocalDate();
             schedules.findUniqueSchedule(property, charge, startDate, endDate);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Schedule.class));
             assertThat(finderInteraction.getQueryName(), is("findByPropertyChargeAndDates"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));

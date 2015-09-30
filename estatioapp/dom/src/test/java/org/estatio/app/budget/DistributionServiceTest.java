@@ -1,14 +1,13 @@
 package org.estatio.app.budget;
 
+import org.estatio.dom.budgeting.Distributable;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Test;
-
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.Distributable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -375,6 +374,72 @@ public class DistributionServiceTest {
 
     }
 
+
+    @Test
+    public void generateKeyValuesRoundingBy6DecimalsPositiveDelta() {
+
+        //given
+        DistributionService distributionService = new DistributionService();
+        List<Distributable> input = new ArrayList<>();
+
+        //10000.99 1 item
+        KeyItem item1 = new KeyItem();
+        item1.setSourceValue(new BigDecimal(10000.99));
+        input.add(item1);
+
+        //0.99 1 item
+        KeyItem item2 = new KeyItem();
+        item2.setSourceValue(new BigDecimal(0.99));
+        input.add(item2);
+
+        //1.99 10 items
+        for (int i = 1; i < 11; i = i + 1) {
+            KeyItem item = new KeyItem();
+            item.setSourceValue(new BigDecimal(1.99));
+            input.add(item);
+        }
+
+        //0 2 items
+        for (int i = 11; i < 13; i = i + 1) {
+            KeyItem item = new KeyItem();
+            item.setSourceValue(BigDecimal.ZERO);
+            input.add(item);
+        }
+
+
+        //theoretical max rounding error: 14*0.0000005 = +/- 0.000007
+        //in this example here we get to + 0.000005
+
+        //when
+        List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 6);
+        BigDecimal sumRoundedValues = BigDecimal.ZERO;
+        for (Distributable object: output) {
+            sumRoundedValues = sumRoundedValues.add(object.getValue());
+        }
+
+        //then
+        assertThat(output.size()).isEqualTo(14);
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(997.915561).setScale(6, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.098784).setScale(6, BigDecimal.ROUND_HALF_UP));
+
+        // 5 items not rounded
+        for (int i = 2; i < 7; i = i + 1) {
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198566).setScale(6, BigDecimal.ROUND_HALF_UP));
+        }
+
+        // 5 items rounded down
+        for (int i = 7; i < 12; i = i + 1) {
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198565).setScale(6, BigDecimal.ROUND_HALF_UP));
+        }
+
+        for (int i = 12; i < 13; i = i + 1) {
+            assertThat(output.get(i).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6, BigDecimal.ROUND_HALF_UP));
+        }
+
+        assertThat(sumRoundedValues.setScale(6, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000000).setScale(6, BigDecimal.ROUND_HALF_UP));
+
+    }
+
     @Test
     public void roundingTest() {
 
@@ -446,7 +511,7 @@ public class DistributionServiceTest {
         DistributionService distributionService = new DistributionService();
         List<Distributable> input = new ArrayList<>();
 
-        for (int i = 1; i <= 25; i = i + 1) {
+        for (int i = 0; i <= 25; i = i + 1) {
             KeyItem item = new KeyItem();
             BigDecimal sourceValue = new BigDecimal(i).multiply(new BigDecimal(100).setScale(2));
             item.setSourceValue(sourceValue);
@@ -457,12 +522,74 @@ public class DistributionServiceTest {
         List<Distributable> output = distributionService.distribute(input, BigDecimal.ONE, 3);
 
         //then
-        int i = 1;
+        int i = 0;
         for (Distributable outputItem : output) {
             BigDecimal sourceValue = new BigDecimal(i).multiply(new BigDecimal(100).setScale(2));
             assertThat(outputItem.getSourceValue()).isEqualTo(sourceValue);
             i ++;
         }
+
+    }
+
+    @Test
+    public void noDeltaAssignedToItemsWithZeroSourceValue() {
+
+        //given
+        DistributionService distributionService = new DistributionService();
+        List<Distributable> input = new ArrayList<>();
+
+        //10000.99
+        KeyItem item1 = new KeyItem();
+        item1.setSourceValue(new BigDecimal(10000.99));
+        input.add(item1);
+
+        //0.99
+        KeyItem item2 = new KeyItem();
+        item2.setSourceValue(new BigDecimal(0.99));
+        input.add(item2);
+
+        //1.99
+        for (int i = 2; i < 11; i = i + 1) {
+            KeyItem item = new KeyItem();
+            item.setSourceValue(new BigDecimal(1.99));
+            input.add(item);
+        }
+
+        //0
+        for (int i = 11; i < 14; i = i + 1) {
+            KeyItem item = new KeyItem();
+            item.setSourceValue(BigDecimal.ZERO);
+            input.add(item);
+        }
+
+        //theoretical max rounding error: 14*0.0005 = +/- 0.007
+        //in this example here we get to +0.004
+
+        //when
+        List<Distributable> output = distributionService.distribute(input, new BigDecimal(1000), 3);
+        BigDecimal sumRoundedValues = BigDecimal.ZERO;
+        for (Distributable object: output) {
+            sumRoundedValues = sumRoundedValues.add(object.getValue());
+        }
+
+        //then
+        assertThat(output.size()).isEqualTo(14);
+        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(998.114).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
+
+        for (int i = 2; i < 7; i = i + 1) {
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
+        }
+
+        for (int i = 7; i < 11; i = i + 1) {
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
+        }
+
+        for (int i = 11; i < 14; i = i + 1) {
+            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+        }
+
+        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 

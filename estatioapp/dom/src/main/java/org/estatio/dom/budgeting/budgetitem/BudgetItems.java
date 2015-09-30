@@ -18,27 +18,17 @@
  */
 package org.estatio.dom.budgeting.budgetitem;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.Budgets;
 import org.estatio.dom.charge.Charge;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.util.List;
 
 @DomainService(repositoryFor = BudgetItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
@@ -71,6 +61,9 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
             final Charge charge) {
         if (budgetedValue.compareTo(BigDecimal.ZERO) < 0) {
             return "Value can't be negative";
+        }
+        if (findByBudgetAndCharge(budget, charge)!=null) {
+            return "There is already an item with this charge.";
         }
         return null;
     }

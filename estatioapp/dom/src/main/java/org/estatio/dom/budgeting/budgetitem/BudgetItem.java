@@ -18,23 +18,8 @@
  */
 package org.estatio.dom.budgeting.budgetitem;
 
-import java.math.BigDecimal;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.app.budget.BudgetCalculationContributionServices;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -42,6 +27,14 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.OccupancyContributions;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.VersionStrategy;
+import java.math.BigDecimal;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -190,6 +183,9 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         if (charge.equals(null)) {
             return "Charge can't be empty";
         }
+        if (budgetItemRepository.findByBudgetAndCharge(budget, charge)!=null) {
+            return "There is already an item with this charge.";
+        }
         return null;
     }
 
@@ -209,5 +205,8 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
 
     @Inject
     OccupancyContributions occupancies;
+
+    @Inject
+    private BudgetItems budgetItemRepository;
 
 }

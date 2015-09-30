@@ -18,25 +18,15 @@
  */
 package org.estatio.dom.budgeting.schedule;
 
-import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import java.util.List;
 
 @DomainService(repositoryFor = Schedule.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -136,6 +126,6 @@ public class Schedules extends UdoDomainRepositoryAndFactory<Schedule> {
             final Charge charge,
             final LocalDate startDate,
             final LocalDate endDate){
-        return firstMatch("findByPropertyChargeAndDates", "property", property, "charge", charge, "startDate", startDate, "endDate", endDate);
+        return uniqueMatch("findByPropertyChargeAndDates", "property", property, "charge", charge, "startDate", startDate, "endDate", endDate);
     }
 }

@@ -16,27 +16,15 @@
  */
 package org.estatio.dom.budgeting.keytable;
 
-import java.security.Key;
-import java.util.List;
-
 import com.google.inject.Inject;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
-
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import java.util.List;
 
 @DomainService(repositoryFor = KeyTable.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -78,6 +66,9 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
             final Integer numberOfDigits) {
         if (!new LocalDateInterval(startDate, endDate.minusDays(1)).isValid()) {
             return "End date can not be before start date";
+        }
+        if (findByPropertyAndNameAndStartDate(property, name, startDate)!=null) {
+            return "There is already a keytable with this name for this property and startdate";
         }
 
         return null;
