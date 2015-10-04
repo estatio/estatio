@@ -59,7 +59,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioUserRoles;
+import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
@@ -918,7 +918,7 @@ public class Lease
     }
 
     public boolean hideRemove() {
-        return !getUser().hasRole(EstatioUserRoles.ADMIN_ROLE);
+        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
     }
 
     @Programmatic
