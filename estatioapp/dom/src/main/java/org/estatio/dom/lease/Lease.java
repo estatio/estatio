@@ -179,7 +179,7 @@ public class Lease
     }
 
     @PropertyLayout(
-            named = "Application Level",
+            hidden = Where.ALL_TABLES,
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
@@ -227,14 +227,14 @@ public class Lease
     // //////////////////////////////////////
 
     @Override
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES, notPersisted = true)
+    @org.apache.isis.applib.annotation.Property(notPersisted = true, hidden = Where.OBJECT_FORMS)
     public Party getPrimaryParty() {
         final AgreementRole ar = getPrimaryAgreementRole();
         return partyOf(ar);
     }
 
     @Override
-    @org.apache.isis.applib.annotation.Property(notPersisted = true)
+    @org.apache.isis.applib.annotation.Property(notPersisted = true, hidden = Where.OBJECT_FORMS)
     public Party getSecondaryParty() {
         final AgreementRole ar = getSecondaryAgreementRole();
         return partyOf(ar);
@@ -864,7 +864,10 @@ public class Lease
                 AgreementRole newRole = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
                 if (newRole != null) {
                     for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : role.getCommunicationChannels()) {
-                        newRole.addCommunicationChannel(agreementRoleCommunicationChannel.getType(), agreementRoleCommunicationChannel.getCommunicationChannel());
+                        newRole.addCommunicationChannel(
+                                agreementRoleCommunicationChannel.getType(),
+                                agreementRoleCommunicationChannel.getCommunicationChannel(),
+                                startDate);
                     }
                 }
             }

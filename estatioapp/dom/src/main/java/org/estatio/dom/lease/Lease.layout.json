@@ -91,17 +91,9 @@
             }
           }
         },
-        "Parties": {
+        "applicationTenancy": {
           "members": {
-            "primaryParty": {
-              "disabled": {},
-              "hidden": {
-                "where": "PARENTED_TABLES"
-              }
-            },
-            "secondaryParty": {
-              "disabled": {}
-            }
+            "applicationTenancy": {}
           }
         },
         "Related": {
@@ -292,14 +284,6 @@
       },
       "named": {
         "value": "Remove"
-      }
-    },
-    "newGuarantee": {
-      "cssClass": {
-        "value": "btn-primary"
-      },
-      "named": {
-        "value": "New Guarantee"
       }
     },
     "findLeaseItem": {

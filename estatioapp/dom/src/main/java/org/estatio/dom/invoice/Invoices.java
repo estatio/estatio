@@ -25,6 +25,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -62,7 +63,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @NotInServiceMenu
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(named = "Invoices")
+    @ActionLayout(named = "Invoices", contributed = Contributed.AS_ASSOCIATION)
     public List<Invoice> findInvoices(final Lease lease) {
         return allMatches("findByLease",
                 "lease", lease);
@@ -70,7 +71,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @NotInServiceMenu
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(named = "Invoices")
+    @ActionLayout(named = "Invoices", contributed = Contributed.AS_ASSOCIATION)
     public List<Invoice> findInvoices(final Party party) {
         return allMatches("findByBuyer",
                 "buyer", party);

@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -392,6 +393,7 @@ public abstract class Agreement
         this.roles = actors;
     }
 
+    @MemberOrder(name = "roles", sequence = "1")
     public Agreement newRole(
             final @ParameterLayout(named = "Type") AgreementRoleType type,
             final Party party,

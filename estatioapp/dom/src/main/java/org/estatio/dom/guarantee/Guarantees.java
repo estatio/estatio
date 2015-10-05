@@ -81,7 +81,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name = "guarantees", sequence = "1")
     public Guarantee newGuarantee(
             final Lease lease,
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,

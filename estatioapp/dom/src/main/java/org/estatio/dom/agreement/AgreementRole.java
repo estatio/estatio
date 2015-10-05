@@ -573,11 +573,12 @@ public class AgreementRole
     @Programmatic
     public void addCommunicationChannel(
             final AgreementRoleCommunicationChannelType type,
-            final CommunicationChannel communicationChannel) {
+            final CommunicationChannel communicationChannel,
+            final LocalDate startDate) {
         if (type == null || communicationChannel == null) {
             return;
         }
-        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, getClockService().now());
+        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, startDate);
         if (arcc != null) {
             return;
         }
