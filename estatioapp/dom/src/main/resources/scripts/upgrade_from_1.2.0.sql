@@ -1,8 +1,8 @@
-USE [estatio_dev]
+
 /**
 * Stored procedure creates column with default and removes default constraint
 **/
-CREATE PROCEDURE addColumn
+ALTER PROCEDURE addColumn
 (
     @table VARCHAR(255),
     @column VARCHAR(255),
@@ -15,7 +15,7 @@ BEGIN
             WHERE [name] = @column AND [object_id] = OBJECT_ID(QUOTENAME(@table)))
     BEGIN
         DECLARE @addColumnCmd NVARCHAR(1000)
-        SET @addColumnCmd = 'ALTER TABLE ['+ QUOTENAME(@table) + '] ADD ['+ QUOTENAME(@column) + '] ' + @type + ' NOT NULL DEFAULT ''' + @default + ''''
+        SET @addColumnCmd = 'ALTER TABLE '+ QUOTENAME(@table) + ' ADD '+ QUOTENAME(@column) + ' ' + @type + ' NOT NULL DEFAULT ''' + @default + ''''
         EXEC sp_executesql @addColumnCmd
 
         DECLARE @dropDefaultCmd NVARCHAR(1000)
@@ -92,7 +92,7 @@ EXEC dbo.addColumn 'LeaseAssignment', 'atPath', 'VARCHAR(255)', '/ITA'
 EXEC dbo.addColumn 'Tag', 'atPath', 'VARCHAR(255)', '/ITA'
 GO
 
-UPDATE lea SET atPath = '/ITA/' + LEFT(agr.reference,3)
+UPDATE lea SET atPath = '/ITA'
     FROM Lease lea
     INNER JOIN Agreement agr ON lea.id = agr.id
 GO
@@ -109,6 +109,13 @@ EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationTenancy','isissecurity','App
 EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationUser','isissecurity','ApplicationUser'
 EXEC dbo.moveRenameDb 'dbo','IsisSecurityApplicationUserRoles','isissecurity','ApplicationUserRoles'
 EXEC dbo.moveRenameDb 'dbo','IsisUserSetting', 'isissettings','UserSetting'
+
+/**
+* SET User's Application Tenancy
+*/
+UPDATE isissecurity.ApplicationUser SET atPath = '/' WHERE accountType = 'LOCAL' AND atPath IS NULL
+UPDATE isissecurity.ApplicationUser SET atPath = '/ITA' WHERE atPath IS NULL
+
 
 /**
 * Change from DATETIME2 TO DATE
@@ -175,7 +182,7 @@ DROP TABLE [dbo].[UserSetting]
 GO
 DROP TABLE [dbo].[Tag]
 GO
-DROP TABLE [dbo].[IsisSettingApplicationSetting]
+DROP TABLE [dbo].[IsisApplicationSetting]
 GO
 DROP TABLE [dbo].[PaymentTerm]
 GO
@@ -199,4 +206,10 @@ DROP PROCEDURE dbo.addColumn
 GO
 DROP PROCEDURE dbo.moveRenameDb
 GO
+
+
+
+
+SELECT * FROM Lease
+
 
