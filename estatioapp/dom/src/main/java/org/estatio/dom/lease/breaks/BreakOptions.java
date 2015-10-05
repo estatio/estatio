@@ -58,7 +58,7 @@ public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
             final BreakType breakType,
             final BreakExerciseType breakExerciseType,
             final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description
-            ) {
+    ) {
         final BreakOption breakOption = newTransientInstance(breakType.getFactoryClass());
         breakOption.setType(breakType);
         breakOption.setLease(lease);
@@ -114,6 +114,7 @@ public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
 
     // //////////////////////////////////////
 
+    @Programmatic
     public void copyBreakOptions(final Lease lease, final Lease newLease, final LocalDate startDate) {
         for (BreakOption option : findByLease(lease)) {
             if (option.getBreakDate().isAfter(startDate)) {
@@ -133,6 +134,20 @@ public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
     @Programmatic
     public List<BreakOption> findByLease(final Lease lease) {
         return allMatches("findByLease", "lease", lease);
+    }
+
+    @Programmatic
+    public BreakOption findByLeaseAndTypeAndBreakDateAndExerciseType(
+            final Lease lease,
+            final BreakType type,
+            final LocalDate breakDate,
+            final BreakExerciseType exerciseType) {
+        return uniqueMatch("findByLeaseAndTypeAndBreakDateAndExerciseType",
+                "lease", lease,
+                "type", type,
+                "breakDate", breakDate,
+                "exerciseType", exerciseType
+        );
     }
 
     // //////////////////////////////////////

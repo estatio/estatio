@@ -68,14 +68,22 @@ import org.estatio.dom.utils.JodaPeriodUtils;
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
 @javax.jdo.annotations.Unique(
-        name = "BreakOption_lease_type_exerciseDate_UNQ",
-        members = { "lease", "type", "exerciseDate" })
+        name = "BreakOption_lease_type_breakDate_exerciseType_exerciseDate_UNQ",
+        members = { "lease", "type", "breakDate", "exerciseType", "exerciseDate" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.breaks.BreakOption "
-                        + "WHERE lease == :lease") })
+                        + "WHERE lease == :lease"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndTypeAndBreakDateAndExerciseType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.breaks.BreakOption "
+                        + "WHERE lease == :lease "
+                        + "&& type == :type"
+                        + "&& breakDate == :breakDate "
+                        + "&& exerciseType == :exerciseType ") })
 @DomainObject(editing = Editing.DISABLED)
 public abstract class BreakOption
         extends EstatioDomainObject<BreakOption>
@@ -133,7 +141,7 @@ public abstract class BreakOption
      * The date on which this break option can be exercised, meaning that the
      * other party to the lease is notified (also known as <i>notification
      * date</i>).
-     * 
+     *
      * <p>
      * The exact semantics depend upon the particular {@link #getType() type}
      * (subclass) of option:
@@ -147,7 +155,7 @@ public abstract class BreakOption
      * <i>first</i> date at which a option can be exercised (it can also be
      * exercised any date after the notification date).</li>
      * </ul>
-     * 
+     *
      * <p>
      * To avoid misunderstandings in the UI, both subtypes rename the property
      * (using Isis' <tt>@Named</tt> annotation).
@@ -305,7 +313,7 @@ public abstract class BreakOption
 
     /**
      * The date when the {@link #getLease() lease} can be terminated.
-     * 
+     *
      * <p>
      * In the case of an {@link FixedBreakOption}, this is a fixed date. In the
      * case of a {@link RollingBreakOption}, this date will be fixed until the

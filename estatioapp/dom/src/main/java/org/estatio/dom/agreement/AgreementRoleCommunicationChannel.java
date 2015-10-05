@@ -67,6 +67,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 + "WHERE role == :agreementRole "
                 + "&& type == :type "
                 + "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(name = "findByRoleAndType", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
+                + "WHERE role == :role "
+                + "&& type == :type "),
         @javax.jdo.annotations.Query(name = "findByRoleAndTypeAndContainsDate", language = "JDOQL", value = "SELECT "
                 + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
                 + "WHERE role == :role "

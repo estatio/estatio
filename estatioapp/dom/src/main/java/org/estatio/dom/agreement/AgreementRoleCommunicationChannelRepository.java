@@ -50,10 +50,21 @@ public class AgreementRoleCommunicationChannelRepository
             final AgreementRole role,
             final AgreementRoleCommunicationChannelType type,
             final LocalDate date) {
+        if (date == null){
+            return findByRoleAndType(role, type);
+        }
         return firstMatch("findByRoleAndTypeAndContainsDate",
                 "role", role,
                 "type", type,
                 "date", date);
+    }
+
+    public AgreementRoleCommunicationChannel findByRoleAndType(
+            final AgreementRole role,
+            final AgreementRoleCommunicationChannelType type) {
+        return firstMatch("findByRoleAndType",
+                "role", role,
+                "type", type);
     }
 
     public List<AgreementRoleCommunicationChannel> findByCommunicationChannel(

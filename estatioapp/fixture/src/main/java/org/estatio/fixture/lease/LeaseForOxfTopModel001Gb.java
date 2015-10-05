@@ -103,7 +103,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
                 .findByTitle(addressType);
         final SortedSet<CommunicationChannel> channels = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
         final CommunicationChannel postalAddress = channels.first();
-        agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress);
+        agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress, null);
     }
 
 }
