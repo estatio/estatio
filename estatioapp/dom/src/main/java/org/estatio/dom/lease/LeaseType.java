@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
@@ -26,7 +27,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
@@ -77,7 +77,7 @@ public class LeaseType
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
@@ -91,7 +91,7 @@ public class LeaseType
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
+    @Column(allowsNull = "false", length = JdoColumnLength.TITLE)
     @Title()
     @MemberOrder(sequence = "2")
     public String getName() {
@@ -106,10 +106,10 @@ public class LeaseType
 
     private String description;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "3")
     public String getDescription() {
         return description;
     }
@@ -118,9 +118,10 @@ public class LeaseType
         this.description = description;
     }
 
+    @MemberOrder(sequence = "3", name = "description")
     public LeaseType change(
-            @ParameterLayout(named = "Name") final String name,
-            @ParameterLayout(named = "Description") final String description) {
+            final String name,
+            final String description) {
         setName(name);
         setDescription(description);
         return this;

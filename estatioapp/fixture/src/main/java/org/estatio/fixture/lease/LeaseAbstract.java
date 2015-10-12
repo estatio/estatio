@@ -31,6 +31,8 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.LeaseTypes;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
@@ -64,7 +66,17 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        Lease lease = leases.newLease(reference, name, null, startDate, null, endDate, landlord, tenant, unit.getApplicationTenancy());
+        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard");
+        Lease lease = leases.newLease(
+                reference,
+                name,
+                leaseType,
+                startDate,
+                null,
+                endDate,
+                landlord,
+                tenant,
+                unit.getApplicationTenancy());
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
@@ -108,6 +120,9 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
 
     @Inject
     protected AgreementRoleTypeRepository agreementRoleTypeRepository;
+
+    @Inject
+    protected LeaseTypes leaseTypes;
 
     @Inject
     Countries countries;
