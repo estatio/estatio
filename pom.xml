@@ -90,7 +90,7 @@ mvn clean install -DskipTests -o
         <isis-module-settings.version>1.10.0-SNAPSHOT</isis-module-settings.version>
 
         <isis-module-devutils.version>1.9.0</isis-module-devutils.version>
-        <isis-module-excel.version>1.9.0</isis-module-excel.version>
+        <isis-module-excel.version>1.10.0-SNAPSHOT</isis-module-excel.version>
         <isis-module-stringinterpolator.version>1.9.0</isis-module-stringinterpolator.version>
 
         <isis-module-poly.version>1.9.0</isis-module-poly.version>

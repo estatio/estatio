@@ -1,33 +1,15 @@
 package org.estatio.dom.project;
 
-import javax.inject.Inject;
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Queries;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Version;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.Chained;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.*;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -221,7 +203,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 	
 	// //////////////////////////////////////
 	
-	@Column(name="previousBusinessCaseId")
+//	@Column(name="previousBusinessCaseId")
 	@Persistent(mappedBy="next")
 	private BusinessCase previous;
 	

@@ -22,6 +22,7 @@ import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertyForCARTEST;
 import org.estatio.fixture.asset.PropertyForGraIt;
 import org.estatio.fixture.asset.PropertyForHanSe;
 import org.estatio.fixture.asset.PropertyForVivFr;
@@ -94,6 +95,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new SchedulesForOxf());
+        executionContext.executeChild(this, new PropertyForCARTEST());
 
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
         fixtureClock.reset();
