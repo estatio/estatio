@@ -50,7 +50,7 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
         keyTable.setEndDate(endDate);
         keyTable.setFoundationValueType(foundationValueType);
         keyTable.setKeyValueMethod(keyValueMethod);
-        keyTable.setNumberOfDigits(numberOfDigits);
+        keyTable.setPrecision(numberOfDigits);
         persistIfNotAlready(keyTable);
 
         return keyTable;
@@ -82,13 +82,13 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
             final LocalDate endDate,
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
-            final Integer numberOfDigits
+            final Integer precision
     ) {
         final KeyTable keyTable = findByPropertyAndNameAndStartDate(property, name, startDate);
         if (keyTable !=null) {
             return keyTable;
         } else {
-            return newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
+            return newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, precision);
         }
     }
 

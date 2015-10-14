@@ -16,32 +16,18 @@
  */
 package org.estatio.app.budget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.MemberGroupLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.value.Blob;
-
-import org.isisaddons.module.excel.dom.ExcelService;
-
 import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.isisaddons.module.excel.dom.ExcelService;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL
@@ -51,7 +37,12 @@ import org.estatio.dom.budgeting.keytable.KeyTables;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @MemberGroupLayout(left = {"File", "Criteria"})
-public class BudgetKeyItemImportExportManager extends EstatioViewModel {
+public class KeyItemImportExportManager extends EstatioViewModel {
+
+    public KeyItemImportExportManager(KeyItemImportExportManager keyItemImportExportManager) {
+        this.keyTable = keyItemImportExportManager.getKeyTable();
+        this.fileName = keyItemImportExportManager.getFileName();
+    }
 
     // //////////////////////////////////////
 
@@ -59,10 +50,10 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
         return "Import/export manager";
     }
 
-    public BudgetKeyItemImportExportManager() {
+    public KeyItemImportExportManager() {
     }
 
-    public BudgetKeyItemImportExportManager(final KeyTable keyTable) {
+    public KeyItemImportExportManager(final KeyTable keyTable) {
         this.keyTable = keyTable;
         this.fileName = "export.xlsx";
     }
@@ -96,11 +87,11 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(named = "Change")
+    @ActionLayout(named = "Change File Name")
     @MemberOrder(name = "fileName", sequence = "1")
-    public BudgetKeyItemImportExportManager changeFileName(final String fileName) {
-        setFileName(fileName);
-        return this;
+    public KeyItemImportExportManager changeFileName(final String fileName) {
+        this.setFileName(fileName);
+        return new KeyItemImportExportManager(this);
     }
 
     public String default0ChangeFileName() {
@@ -116,8 +107,8 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     @CollectionLayout(
             render = RenderType.EAGERLY
     )
-    public List<BudgetKeyItemImportExportLineItem> getBudgetKeyItems() {
-        return budgetKeyItemImportExportService.items(this);
+    public List<KeyItemImportExportLineItem> getKeyItems() {
+        return keyItemImportExportService.items(this);
     }
 
     // //////////////////////////////////////
@@ -125,10 +116,11 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(name = "budgetKeyItems", sequence = "1")
+    @ActionLayout(cssClassFa = "fa-download")
+    @MemberOrder(name = "keyItems", sequence = "1")
     public Blob export() {
         final String fileName = withExtension(getFileName(), ".xlsx");
-        return excelService.toExcel(getBudgetKeyItems(), BudgetKeyItemImportExportLineItem.class, fileName);
+        return excelService.toExcel(getKeyItems(), KeyItemImportExportLineItem.class, fileName);
     }
 
     public String disableExport() {
@@ -144,20 +136,32 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     // //////////////////////////////////////
 
     @Action
-    @ActionLayout(named = "Import")
-    @MemberOrder(name = "budgetKeyItems", sequence = "2")
-    public List<BudgetKeyItemImportExportLineItem> importBlob(
+    @ActionLayout(named = "Import", cssClassFa = "fa-upload")
+    @MemberOrder(name = "keyItems", sequence = "2")
+    public List<KeyItemImportExportLineItem> importBlob(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
-        List<BudgetKeyItemImportExportLineItem> lineItems =
-                excelService.fromExcel(spreadsheet, BudgetKeyItemImportExportLineItem.class);
+        List<KeyItemImportExportLineItem> lineItems =
+                excelService.fromExcel(spreadsheet, KeyItemImportExportLineItem.class);
         container.informUser(lineItems.size() + " items imported");
 
-        List<BudgetKeyItemImportExportLineItem> newItems = new ArrayList<>();
-        for (BudgetKeyItemImportExportLineItem item : lineItems) {
-            //            item.setKeyTable(getKeyTable());
-            // yodo: doesn't work; used trick by changing keyTable to String budgetKeyTableName on BudgetKeyItemImportExportLineItem
+        List<KeyItemImportExportLineItem> newItems = new ArrayList<>();
+        for (KeyItemImportExportLineItem item : lineItems) {
             item.validate();
-            newItems.add(new BudgetKeyItemImportExportLineItem(item));
+            newItems.add(new KeyItemImportExportLineItem(item));
+        }
+        for (KeyItem keyItem : keyTable.getItems()) {
+            Boolean keyItemFound = false;
+            for (KeyItemImportExportLineItem lineItem : newItems){
+                if (lineItem.getUnitReference().equals(keyItem.getUnit().getReference())){
+                    keyItemFound = true;
+                    break;
+                }
+            }
+            if (!keyItemFound) {
+                KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem);
+                deletedItem.setStatus(Status.DELETED);
+                newItems.add(deletedItem);
+            }
         }
         return newItems;
     }
@@ -174,7 +178,7 @@ public class BudgetKeyItemImportExportManager extends EstatioViewModel {
     private ExcelService excelService;
 
     @javax.inject.Inject
-    private BudgetKeyItemImportExportService budgetKeyItemImportExportService;
+    private KeyItemImportExportService keyItemImportExportService;
 
     @Inject
     private KeyTables keyTables;

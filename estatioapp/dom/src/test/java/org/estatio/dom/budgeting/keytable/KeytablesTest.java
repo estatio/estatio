@@ -173,7 +173,7 @@ public class KeytablesTest {
             assertThat(newKeyTable.getName(), is("new keyTable"));
             assertThat(newKeyTable.getFoundationValueType(), is(FoundationValueType.AREA));
             assertThat(newKeyTable.getKeyValueMethod(), is(KeyValueMethod.PERCENT));
-            assertThat(newKeyTable.getNumberOfDigits(), is(6));
+            assertThat(newKeyTable.getPrecision(), is(6));
         }
 
         @Test

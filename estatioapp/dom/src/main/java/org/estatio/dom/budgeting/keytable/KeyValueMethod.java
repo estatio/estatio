@@ -28,7 +28,7 @@ public enum KeyValueMethod {
     PROMILLE {
         @Override
         public boolean isValid(KeyTable keyTable) {
-                if (!this.keySum(keyTable).equals(new BigDecimal(1000.000).setScale(keyTable.getNumberOfDigits(),BigDecimal.ROUND_HALF_UP))) {
+                if (!this.keySum(keyTable).equals(new BigDecimal(1000.000).setScale(keyTable.getPrecision(),BigDecimal.ROUND_HALF_UP))) {
                     return false;
                 }
             return true;
@@ -39,7 +39,7 @@ public enum KeyValueMethod {
             for (Iterator<KeyItem> it = keyTable.getItems().iterator(); it.hasNext();) {
                 sum = sum.add(it.next().getValue());
             }
-            return sum.setScale(keyTable.getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
+            return sum.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
         }
         @Override
         public BigDecimal targetTotal() {
@@ -49,7 +49,7 @@ public enum KeyValueMethod {
     PERCENT {
         @Override
         public boolean isValid(KeyTable keyTable) {
-            if (!this.keySum(keyTable).equals(new BigDecimal(100.000).setScale(keyTable.getNumberOfDigits(), BigDecimal.ROUND_HALF_UP))) {
+            if (!this.keySum(keyTable).equals(new BigDecimal(100.000).setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP))) {
                 return false;
             }
             return true;
@@ -60,7 +60,7 @@ public enum KeyValueMethod {
             for (Iterator<KeyItem> it = keyTable.getItems().iterator(); it.hasNext();) {
                 sum = sum.add(it.next().getValue());
             }
-            return sum.setScale(keyTable.getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
+            return sum.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
         }
         @Override
         public BigDecimal targetTotal() {

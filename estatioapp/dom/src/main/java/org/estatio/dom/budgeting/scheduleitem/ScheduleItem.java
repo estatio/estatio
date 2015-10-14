@@ -140,7 +140,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
     //region > percentage (property)
     private BigDecimal percentage;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", scale = 6)
     public BigDecimal getPercentage() {
         return percentage;
     }
@@ -150,7 +150,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
     }
 
     public ScheduleItem updatePercentage(final BigDecimal percentage) {
-        setPercentage(percentage);
+        setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
         return this;
     }
 

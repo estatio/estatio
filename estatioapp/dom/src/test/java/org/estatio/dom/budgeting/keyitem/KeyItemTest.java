@@ -54,7 +54,7 @@ public class KeyItemTest {
 
         // given
         KeyTable table = new KeyTable();
-        table.setNumberOfDigits(3);
+        table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setValue(new BigDecimal(2));
         item.setKeyTable(table);
@@ -74,7 +74,7 @@ public class KeyItemTest {
 
         // given
         KeyTable table = new KeyTable();
-        table.setNumberOfDigits(3);
+        table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setValue(new BigDecimal(2));
         item.setKeyTable(table);
@@ -89,7 +89,7 @@ public class KeyItemTest {
 
         // given
         KeyTable table = new KeyTable();
-        table.setNumberOfDigits(3);
+        table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setAuditedValue(new BigDecimal(2));
         item.setKeyTable(table);
@@ -109,7 +109,7 @@ public class KeyItemTest {
 
         // given
         KeyTable table = new KeyTable();
-        table.setNumberOfDigits(3);
+        table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setAuditedValue(new BigDecimal(2));
         item.setKeyTable(table);
@@ -124,7 +124,7 @@ public class KeyItemTest {
 
         // given
         KeyTable table = new KeyTable();
-        table.setNumberOfDigits(3);
+        table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setSourceValue(new BigDecimal(2));
         item.setKeyTable(table);
@@ -144,7 +144,7 @@ public class KeyItemTest {
 
         // given
         KeyTable table = new KeyTable();
-        table.setNumberOfDigits(3);
+        table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setSourceValue(new BigDecimal(2));
         item.setKeyTable(table);

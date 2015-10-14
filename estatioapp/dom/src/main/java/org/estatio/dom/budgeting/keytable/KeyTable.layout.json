@@ -87,17 +87,17 @@
                             }
 
                         },
-                        "numberOfDigits": {
+                        "precision": {
                             "propertyLayout": {
-                                "named": "Number Of Digits",
+                                "named": "Precision",
                                 "typicalLength": 9
                             },
                             "actions" : {
-                                "changeNumberOfDigits": {
+                                "changePrecision": {
                                     "actionLayout": {
                                         "cssClass": "btn-primary",
                                         "cssClassFa": "fa fa-fw fa-edit",
-                                        "named": "Change Number Of Digits"
+                                        "named": "Change Precision"
                                     }
                                 }
                             }

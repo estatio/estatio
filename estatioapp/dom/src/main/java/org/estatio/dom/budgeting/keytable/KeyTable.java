@@ -281,30 +281,30 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
         return null;
     }
 
-    //region > numberOfDigits (property)
-    private Integer numberOfDigits;
+    //region > precision (property)
+    private Integer precision;
 
     @Column(allowsNull = "false")
     @MemberOrder(sequence = "7")
-    public Integer getNumberOfDigits() {
-        return numberOfDigits;
+    public Integer getPrecision() {
+        return precision;
     }
 
-    public void setNumberOfDigits(final Integer numberOfDigits) {
-        this.numberOfDigits = numberOfDigits;
+    public void setPrecision(final Integer precision) {
+        this.precision = precision;
     }
 
-    public KeyTable changeNumberOfDigits(
-            final @ParameterLayout(named = "Number Of Digits") Integer numberOfDigits) {
-        setNumberOfDigits(numberOfDigits);
+    public KeyTable changePrecision(
+            final Integer numberOfDigits) {
+        setPrecision(numberOfDigits);
         return this;
     }
 
-    public Integer default0ChangeNumberOfDigits(final Integer numberOfDigits) {
-        return getNumberOfDigits();
+    public Integer default0ChangePrecision(final Integer numberOfDigits) {
+        return getPrecision();
     }
 
-    public String validateChangeNumberOfDigits(final Integer numberOfDigits) {
+    public String validateChangePrecision(final Integer numberOfDigits) {
         if (numberOfDigits < 0 || numberOfDigits > 6) {
             return "Number Of Digits must have a value between 0 and 6";
         }
@@ -328,7 +328,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     @MemberOrder(name = "items", sequence = "2")
     public KeyTable generateItems(
-            @ParameterLayout(named = "Are you sure? (All current Key Items will be deleted.)")
+//            @ParameterLayout(named = "Are you sure?")
             @Parameter(optionality = Optionality.OPTIONAL)
             boolean confirmGenerate) {
 
@@ -366,7 +366,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
         call distribute method
          */
         DistributionService distributionService = new DistributionService();
-        distributionService.distribute(input, getKeyValueMethod().targetTotal(), getNumberOfDigits());
+        distributionService.distribute(input, getKeyValueMethod().targetTotal(), getPrecision());
 
         return this;
     }
@@ -386,12 +386,12 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     @MemberOrder(name = "items", sequence = "4")
     public KeyTable distributeSourceValues(
-            @ParameterLayout(named = "Are you sure? (All current Target Values will be overwritten.)")
+//            @ParameterLayout(named = "Are you sure? (All current Target Values will be overwritten.)")
             @Parameter(optionality = Optionality.OPTIONAL)
             boolean confirmDistribute) {
 
         DistributionService distributionService = new DistributionService();
-        distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().targetTotal(), getNumberOfDigits());
+        distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().targetTotal(), getPrecision());
 
         return this;
     }

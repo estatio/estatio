@@ -1,15 +1,11 @@
 package org.estatio.app.budget.viewmodels;
 
-import java.math.BigDecimal;
-
-import javax.jdo.annotations.Column;
-
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
-import org.apache.isis.applib.annotation.ViewModelLayout;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
+
+import javax.jdo.annotations.Column;
+import java.math.BigDecimal;
 
 @ViewModel
 @ViewModelLayout()
@@ -54,6 +50,7 @@ public class BudgetCalculation implements Distributable {
 
     @MemberOrder(sequence = "3")
     @Column(scale = 6)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public BigDecimal getSourceValue() {
         return sourceValue;
     }

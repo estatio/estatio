@@ -18,29 +18,20 @@
  */
 package org.estatio.dom.budgeting.keyitem;
 
-import java.math.BigDecimal;
-
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.VersionStrategy;
+import java.math.BigDecimal;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -104,7 +95,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
 
     private BigDecimal sourceValue;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 2)
+    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
     @MemberOrder(sequence = "3")
     public BigDecimal getSourceValue() {
         return sourceValue;
@@ -146,12 +137,12 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
 
     public KeyItem changeValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
-        setValue(keyValue.setScale(getKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+        setValue(keyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
 
     public BigDecimal default0ChangeValue(final BigDecimal targetValue) {
-        return getValue().setScale(getKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
+        return getValue().setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP);
     }
 
     public String validateChangeValue(final BigDecimal keyValue) {
@@ -174,13 +165,13 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
 
     public KeyItem changeAuditedValue(final BigDecimal auditedKeyValue) {
-        setAuditedValue(auditedKeyValue.setScale(getKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP));
+        setAuditedValue(auditedKeyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
 
     public BigDecimal default0ChangeAuditedValue(final BigDecimal auditedKeyValue) {
         if (getAuditedValue()!=null) {
-        return getAuditedValue().setScale(getKeyTable().getNumberOfDigits(), BigDecimal.ROUND_HALF_UP);
+        return getAuditedValue().setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP);
         } else {
             return BigDecimal.ZERO;
         }

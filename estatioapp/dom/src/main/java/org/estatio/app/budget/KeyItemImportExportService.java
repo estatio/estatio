@@ -16,34 +16,24 @@
  */
 package org.estatio.app.budget;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
+import org.apache.isis.applib.services.memento.MementoService;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keyitem.KeyItems;
+import org.isisaddons.module.excel.dom.ExcelService;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.apache.isis.applib.services.memento.MementoService;
-
-import org.isisaddons.module.excel.dom.ExcelService;
-
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keyitem.KeyItems;
+import java.util.ArrayList;
+import java.util.List;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
-public class BudgetKeyItemImportExportService {
+public class KeyItemImportExportService {
 
     @PostConstruct
     public void init() {
@@ -54,15 +44,15 @@ public class BudgetKeyItemImportExportService {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<BudgetKeyItemImportExportLineItem> items(BudgetKeyItemImportExportManager manager) {
+    public List<KeyItemImportExportLineItem> items(KeyItemImportExportManager manager) {
         return Lists.transform(new ArrayList<KeyItem>(manager.getKeyTable().getItems()), toLineItem());
     }
 
-    private Function<KeyItem, BudgetKeyItemImportExportLineItem> toLineItem() {
-        return new Function<KeyItem, BudgetKeyItemImportExportLineItem>() {
+    private Function<KeyItem, KeyItemImportExportLineItem> toLineItem() {
+        return new Function<KeyItem, KeyItemImportExportLineItem>() {
             @Override
-            public BudgetKeyItemImportExportLineItem apply(final KeyItem keyItem) {
-                return new BudgetKeyItemImportExportLineItem(keyItem);
+            public KeyItemImportExportLineItem apply(final KeyItem keyItem) {
+                return new KeyItemImportExportLineItem(keyItem);
             }
         };
     }

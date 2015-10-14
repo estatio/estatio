@@ -18,22 +18,14 @@
  */
 package org.estatio.dom.budgeting.scheduleitem;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.schedule.Schedule;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @DomainService(repositoryFor = ScheduleItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -54,7 +46,7 @@ public class ScheduleItems extends UdoDomainRepositoryAndFactory<ScheduleItem> {
         scheduleItem.setSchedule(schedule);
         scheduleItem.setKeyTable(keyTable);
         scheduleItem.setBudgetItem(budgetItem);
-        scheduleItem.setPercentage(percentage);
+        scheduleItem.setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
         persistIfNotAlready(scheduleItem);
         return scheduleItem;
     }

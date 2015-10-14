@@ -45,7 +45,7 @@ public class KeyValueMethodTest {
             budgetKeyItems.add(budgetKeyItem);
         }
         keyTable.setItems(budgetKeyItems);
-        keyTable.setNumberOfDigits(3);
+        keyTable.setPrecision(3);
 
         // then
         assertThat(method.keySum(keyTable)).isEqualTo(new BigDecimal(999.999).setScale(3, BigDecimal.ROUND_HALF_UP));
@@ -70,7 +70,7 @@ public class KeyValueMethodTest {
                         budgetKeyItems.add(budgetKeyItem);
                     }
         keyTable.setItems(budgetKeyItems);
-        keyTable.setNumberOfDigits(3);
+        keyTable.setPrecision(3);
 
         // then
         assertThat(method.keySum(keyTable)).isEqualTo(new BigDecimal(1000).setScale(3, BigDecimal.ROUND_HALF_UP));
@@ -94,7 +94,7 @@ public class KeyValueMethodTest {
             budgetKeyItems.add(budgetKeyItem);
         }
         keyTable.setItems(budgetKeyItems);
-        keyTable.setNumberOfDigits(3);
+        keyTable.setPrecision(3);
 
         // then
         assertThat(method.keySum(keyTable)).isEqualTo(new BigDecimal(1000).setScale(3, BigDecimal.ROUND_HALF_UP));

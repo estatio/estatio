@@ -16,31 +16,20 @@
  */
 package org.estatio.app.budget;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.isisaddons.module.excel.dom.ExcelService;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 import org.apache.isis.applib.value.Blob;
-
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.isisaddons.module.excel.dom.ExcelService;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
 )
-public class BudgetKeyItemImportExportContributions {
+public class KeyItemImportExportContributions {
 
     @PostConstruct
     public void init() {
@@ -60,9 +49,9 @@ public class BudgetKeyItemImportExportContributions {
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
-    public BudgetKeyItemImportExportManager bulkUpdateManager(KeyTable keyTable) {
+    public KeyItemImportExportManager bulkUpdateManager(KeyTable keyTable) {
 
-        return new BudgetKeyItemImportExportManager(keyTable);
+        return new KeyItemImportExportManager(keyTable);
 
     }
 
@@ -70,7 +59,7 @@ public class BudgetKeyItemImportExportContributions {
     /**
      * Bulk actions of this type are not yet supported, hence have hidden...
      *
-     * @see https://issues.apache.org/jira/browse/ISIS-705.
+//     * @see https://issues.apache.org/jira/browse/ISIS-705.
      */
     @Action(
             hidden = Where.EVERYWHERE, // ISIS-705
@@ -82,8 +71,8 @@ public class BudgetKeyItemImportExportContributions {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Blob export(final KeyItem keyItem) {
         if (actionInvocationContext.isLast()) {
-            final List budgetKeyItems = actionInvocationContext.getDomainObjects();
-            return excelService.toExcel(budgetKeyItems, KeyItem.class, "budgetKeyItems.xlsx");
+            final List keyItems = actionInvocationContext.getDomainObjects();
+            return excelService.toExcel(keyItems, KeyItem.class, "keyItems.xlsx");
         } else {
             return null;
         }
