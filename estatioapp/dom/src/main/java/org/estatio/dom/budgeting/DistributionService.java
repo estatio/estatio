@@ -1,4 +1,4 @@
-package org.estatio.app.budget;
+package org.estatio.dom.budgeting;
 
 import org.estatio.dom.budgeting.Distributable;
 

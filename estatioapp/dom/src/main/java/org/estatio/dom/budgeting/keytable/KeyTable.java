@@ -19,7 +19,6 @@
 package org.estatio.dom.budgeting.keytable;
 
 import org.apache.isis.applib.annotation.*;
-import org.estatio.app.budget.DistributionService;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -27,6 +26,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.Distributable;
+import org.estatio.dom.budgeting.DistributionService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.valuetypes.LocalDateInterval;

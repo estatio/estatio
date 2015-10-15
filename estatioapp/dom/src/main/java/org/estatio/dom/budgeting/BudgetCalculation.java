@@ -1,8 +1,7 @@
-package org.estatio.app.budget.viewmodels;
+package org.estatio.dom.budgeting;
 
 import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.Distributable;
 
 import javax.jdo.annotations.Column;
 import java.math.BigDecimal;

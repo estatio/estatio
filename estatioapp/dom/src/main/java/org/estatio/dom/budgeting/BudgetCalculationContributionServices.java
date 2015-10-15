@@ -1,8 +1,6 @@
-package org.estatio.app.budget;
+package org.estatio.dom.budgeting;
 
 import org.apache.isis.applib.annotation.*;
-import org.estatio.app.budget.viewmodels.BudgetCalculation;
-import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.schedule.Schedule;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;

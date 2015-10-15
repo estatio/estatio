@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.app.budget;
+package org.estatio.app.services.budget;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;

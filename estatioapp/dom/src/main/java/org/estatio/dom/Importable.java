@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.budget.spreadsheets;
+package org.estatio.dom;
 
 public interface Importable {
 

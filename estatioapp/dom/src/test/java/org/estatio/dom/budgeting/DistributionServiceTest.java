@@ -1,6 +1,6 @@
-package org.estatio.app.budget;
+package org.estatio.dom.budgeting;
 
-import org.estatio.dom.budgeting.Distributable;
+import org.assertj.core.api.Assertions;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.junit.Test;
 
@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jodo on 11/08/15.
@@ -51,19 +49,19 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(997.519).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(997.519).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 8; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 8; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -102,19 +100,19 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(987.764).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(9.878).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(987.764).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(9.878).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 8; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.197).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.197).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 8; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.196).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.196).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -153,19 +151,19 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(978.10).setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(19.57).setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(978.10).setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(19.57).setScale(2, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 9; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 9; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
-        assertThat(sumRoundedValues.setScale(2, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.00).setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(2, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.00).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
@@ -203,19 +201,19 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(987.76).setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(9.89).setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(987.76).setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(9.89).setScale(2, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 9; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.20).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 9; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.19).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
-        assertThat(sumRoundedValues.setScale(2, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.00).setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(2, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.00).setScale(2, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -255,20 +253,20 @@ public class DistributionServiceTest {
 
         //then
 
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(99.752).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.010).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(99.752).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.010).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 12; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 12; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         // Corrected Rounding Error for 3 decimals
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(100.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(100.000).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -308,20 +306,20 @@ public class DistributionServiceTest {
 
         //then
 
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(97.801).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(1.966).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(97.801).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(1.966).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 9; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.019).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 9; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.020).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         // Corrected Rounding Error for 3 decimals
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(100.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(100.000).setScale(3, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
@@ -344,8 +342,8 @@ public class DistributionServiceTest {
             sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
         }
 
-        assertThat(output.size()).isEqualTo(24);
-        assertThat(sumRoundedValues.setScale(6, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000).setScale(6, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(24);
+        Assertions.assertThat(sumRoundedValues.setScale(6, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000).setScale(6, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -369,8 +367,8 @@ public class DistributionServiceTest {
             sumRoundedValues = sumRoundedValues.add(object.getValue(), MathContext.DECIMAL64);
         }
 
-        assertThat(output.size()).isEqualTo(25);
-        assertThat(sumRoundedValues.setScale(5, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000).setScale(5, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(25);
+        Assertions.assertThat(sumRoundedValues.setScale(5, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000).setScale(5, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -418,25 +416,25 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(997.915561).setScale(6, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.098784).setScale(6, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(997.915561).setScale(6, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.098784).setScale(6, BigDecimal.ROUND_HALF_UP));
 
         // 5 items not rounded
         for (int i = 2; i < 7; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198566).setScale(6, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198566).setScale(6, BigDecimal.ROUND_HALF_UP));
         }
 
         // 5 items rounded down
         for (int i = 7; i < 12; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198565).setScale(6, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198565).setScale(6, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 12; i < 13; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6, BigDecimal.ROUND_HALF_UP));
         }
 
-        assertThat(sumRoundedValues.setScale(6, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000000).setScale(6, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(6, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000000).setScale(6, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -447,7 +445,7 @@ public class DistributionServiceTest {
         BigDecimal two = new BigDecimal(800).multiply(new BigDecimal(1000), MathContext.DECIMAL64).divide(new BigDecimal(32500), MathContext.DECIMAL64).setScale(5, BigDecimal.ROUND_HALF_UP);
         BigDecimal sum = one.add(two, MathContext.DECIMAL64).setScale(5, BigDecimal.ROUND_HALF_UP);
 
-        assertThat(sum).isEqualTo(new BigDecimal(110.76923).setScale(5, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sum).isEqualTo(new BigDecimal(110.76923).setScale(5, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -472,8 +470,8 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(5);
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(BigDecimal.ZERO.setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(5);
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(BigDecimal.ZERO.setScale(3, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
@@ -500,8 +498,8 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(6);
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(BigDecimal.ONE.setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(6);
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(BigDecimal.ONE.setScale(3, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
@@ -525,7 +523,7 @@ public class DistributionServiceTest {
         int i = 0;
         for (Distributable outputItem : output) {
             BigDecimal sourceValue = new BigDecimal(i).multiply(new BigDecimal(100).setScale(2));
-            assertThat(outputItem.getSourceValue()).isEqualTo(sourceValue);
+            Assertions.assertThat(outputItem.getSourceValue()).isEqualTo(sourceValue);
             i ++;
         }
 
@@ -573,23 +571,23 @@ public class DistributionServiceTest {
         }
 
         //then
-        assertThat(output.size()).isEqualTo(14);
-        assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(998.114).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.size()).isEqualTo(14);
+        Assertions.assertThat(output.get(0).getValue()).isEqualTo(new BigDecimal(998.114).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(output.get(1).getValue()).isEqualTo(new BigDecimal(0.099).setScale(3, BigDecimal.ROUND_HALF_UP));
 
         for (int i = 2; i < 7; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.199).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 7; i < 11; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.198).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
         for (int i = 11; i < 14; i = i + 1) {
-            assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(output.get(i).getValue()).isEqualTo(new BigDecimal(0.000).setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
-        assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(sumRoundedValues.setScale(3, BigDecimal.ROUND_HALF_UP)).isEqualTo(new BigDecimal(1000.000).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 

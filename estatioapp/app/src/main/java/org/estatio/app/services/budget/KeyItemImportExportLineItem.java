@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.app.budget;
+package org.estatio.app.services.budget;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.isis.applib.DomainObjectContainer;

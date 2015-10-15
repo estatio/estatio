@@ -20,9 +20,9 @@ package org.estatio.dom.budgeting.budgetitem;
 
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.estatio.app.budget.BudgetCalculationContributionServices;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.budgeting.BudgetCalculationContributionServices;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Leases;

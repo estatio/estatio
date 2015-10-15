@@ -1,8 +1,7 @@
-package org.estatio.app.budget;
+package org.estatio.dom.budgeting;
 
-import org.estatio.app.budget.viewmodels.BudgetCalculation;
+import org.assertj.core.api.Assertions;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.UnitForTesting;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
@@ -15,8 +14,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jodo on 11/08/15.
@@ -39,13 +36,13 @@ public class BudgetCalculationContributionServicesTest {
         List<BudgetCalculation> budgetCalculations = service.distributionOverUnits(scheduleItem);
 
         //then
-        assertThat(budgetCalculations.size()).isEqualTo(3);
-        assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
-        assertThat(budgetCalculations.get(1).getValue()).isEqualTo(new BigDecimal(333.33).setScale(2,BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
-        assertThat(budgetCalculations.get(2).getValue()).isEqualTo(new BigDecimal(666.67).setScale(2,BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
+        Assertions.assertThat(budgetCalculations.size()).isEqualTo(3);
+        Assertions.assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
+        Assertions.assertThat(budgetCalculations.get(1).getValue()).isEqualTo(new BigDecimal(333.33).setScale(2,BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
+        Assertions.assertThat(budgetCalculations.get(2).getValue()).isEqualTo(new BigDecimal(666.67).setScale(2,BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
 
 
     }
@@ -62,13 +59,13 @@ public class BudgetCalculationContributionServicesTest {
         List<BudgetCalculation> budgetCalculations = service.distributionOverUnits(scheduleItem);
 
         //then
-        assertThat(budgetCalculations.size()).isEqualTo(3);
-        assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
-        assertThat(budgetCalculations.get(1).getValue()).isEqualTo(new BigDecimal(326.67).setScale(2,BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
-        assertThat(budgetCalculations.get(2).getValue()).isEqualTo(new BigDecimal(653.33).setScale(2,BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
+        Assertions.assertThat(budgetCalculations.size()).isEqualTo(3);
+        Assertions.assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
+        Assertions.assertThat(budgetCalculations.get(1).getValue()).isEqualTo(new BigDecimal(326.67).setScale(2,BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
+        Assertions.assertThat(budgetCalculations.get(2).getValue()).isEqualTo(new BigDecimal(653.33).setScale(2,BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
 
 
     }
@@ -85,13 +82,13 @@ public class BudgetCalculationContributionServicesTest {
         List<BudgetCalculation> budgetCalculations = service.distributionOverUnits(scheduleItem);
 
         //then
-        assertThat(budgetCalculations.size()).isEqualTo(3);
-        assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-        assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
-        assertThat(budgetCalculations.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
-        assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
-        assertThat(budgetCalculations.get(2).getValue()).isEqualTo(BigDecimal.ZERO);
-        assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
+        Assertions.assertThat(budgetCalculations.size()).isEqualTo(3);
+        Assertions.assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
+        Assertions.assertThat(budgetCalculations.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
+        Assertions.assertThat(budgetCalculations.get(2).getValue()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
 
 
     }
@@ -108,9 +105,9 @@ public class BudgetCalculationContributionServicesTest {
         List<BudgetCalculation> budgetCalculations = service.distributionOverUnits(scheduleItem);
 
         //then budgetCalculations does not throw java.lang.ArithmeticException: Division undefined
-        assertThat(budgetCalculations.size()).isEqualTo(1);
-        assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-        assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
+        Assertions.assertThat(budgetCalculations.size()).isEqualTo(1);
+        Assertions.assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(budgetCalculations.get(0).getUnit()).isEqualTo(unit1);
 
     }
 
@@ -135,12 +132,12 @@ public class BudgetCalculationContributionServicesTest {
         List<BudgetCalculation> budgetCalculations = service.distributionOverUnits(schedule);
 
         // then
-        assertThat(budgetCalculations.size()).isEqualTo(3);
-        assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(1).getValue()).isEqualTo(new BigDecimal(660.00).setScale(2,BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
-        assertThat(budgetCalculations.get(2).getValue()).isEqualTo(new BigDecimal(1320.00).setScale(2,BigDecimal.ROUND_HALF_UP));
-        assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
+        Assertions.assertThat(budgetCalculations.size()).isEqualTo(3);
+        Assertions.assertThat(budgetCalculations.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(1).getValue()).isEqualTo(new BigDecimal(660.00).setScale(2,BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(1).getUnit()).isEqualTo(unit2);
+        Assertions.assertThat(budgetCalculations.get(2).getValue()).isEqualTo(new BigDecimal(1320.00).setScale(2,BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(budgetCalculations.get(2).getUnit()).isEqualTo(unit3);
 
     }
 
@@ -170,16 +167,16 @@ public class BudgetCalculationContributionServicesTest {
         List<BudgetCalculation> mergedList = service.merge(list1, list2);
 
         //then
-        assertThat(mergedList.size()).isEqualTo(3);
-        assertThat(mergedList.get(0).getUnit()).isEqualTo(unit1);
-        assertThat(mergedList.get(0).getValue()).isEqualTo(new BigDecimal(2));
-        assertThat(mergedList.get(0).getSourceValue()).isEqualTo(new BigDecimal(20));
-        assertThat(mergedList.get(1).getUnit()).isEqualTo(unit2);
-        assertThat(mergedList.get(1).getValue()).isEqualTo(new BigDecimal(4));
-        assertThat(mergedList.get(1).getSourceValue()).isEqualTo(new BigDecimal(40));
-        assertThat(mergedList.get(2).getUnit()).isEqualTo(unit3);
-        assertThat(mergedList.get(2).getValue()).isEqualTo(new BigDecimal(3));
-        assertThat(mergedList.get(2).getSourceValue()).isEqualTo(new BigDecimal(30));
+        Assertions.assertThat(mergedList.size()).isEqualTo(3);
+        Assertions.assertThat(mergedList.get(0).getUnit()).isEqualTo(unit1);
+        Assertions.assertThat(mergedList.get(0).getValue()).isEqualTo(new BigDecimal(2));
+        Assertions.assertThat(mergedList.get(0).getSourceValue()).isEqualTo(new BigDecimal(20));
+        Assertions.assertThat(mergedList.get(1).getUnit()).isEqualTo(unit2);
+        Assertions.assertThat(mergedList.get(1).getValue()).isEqualTo(new BigDecimal(4));
+        Assertions.assertThat(mergedList.get(1).getSourceValue()).isEqualTo(new BigDecimal(40));
+        Assertions.assertThat(mergedList.get(2).getUnit()).isEqualTo(unit3);
+        Assertions.assertThat(mergedList.get(2).getValue()).isEqualTo(new BigDecimal(3));
+        Assertions.assertThat(mergedList.get(2).getSourceValue()).isEqualTo(new BigDecimal(30));
 
     }
 
@@ -200,7 +197,6 @@ public class BudgetCalculationContributionServicesTest {
         KeyTable keyTable = setupKeyTable(keytableName,keyItems);
         keyTable.setKeyValueMethod(KeyValueMethod.PERCENT);
         keyTable.setPrecision(6);
-
 
         // setup budgetItem
         BudgetItem budgetItem = new BudgetItem();
@@ -230,7 +226,6 @@ public class BudgetCalculationContributionServicesTest {
         KeyTable keyTable = setupKeyTable("keytable1",keyItems);
         keyTable.setKeyValueMethod(KeyValueMethod.PERCENT);
         keyTable.setPrecision(6);
-
 
         // setup budgetItem
         BudgetItem budgetItem = new BudgetItem();

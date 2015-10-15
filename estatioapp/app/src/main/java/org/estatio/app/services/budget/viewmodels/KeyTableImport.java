@@ -1,6 +1,9 @@
-package org.estatio.fixture.budget.spreadsheets;
+package org.estatio.app.services.budget.viewmodels;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
@@ -68,6 +71,7 @@ public class KeyTableImport implements Importable {
     }
 
     @Override
+    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
     public void importData() {
 
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
@@ -176,6 +180,7 @@ public class KeyTableImport implements Importable {
         }
     }
 
+    @MemberOrder(sequence = "1")
     public String getPropertyReference() {
         return propertyReference;
     }
@@ -184,6 +189,7 @@ public class KeyTableImport implements Importable {
         this.propertyReference = propertyReference;
     }
 
+    @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -192,6 +198,7 @@ public class KeyTableImport implements Importable {
         this.startDate = startDate;
     }
 
+    @MemberOrder(sequence = "3")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -200,6 +207,7 @@ public class KeyTableImport implements Importable {
         this.endDate = endDate;
     }
 
+    @MemberOrder(sequence = "4")
     public String getUnitReference() {
         return unitReference;
     }
@@ -208,6 +216,7 @@ public class KeyTableImport implements Importable {
         this.unitReference = unitReference;
     }
 
+    @MemberOrder(sequence = "5")
     public BigDecimal getKeytableASourceValue() {
         return keytableASourceValue;
     }
@@ -216,6 +225,7 @@ public class KeyTableImport implements Importable {
         this.keytableASourceValue = keytableASourceValue;
     }
 
+    @MemberOrder(sequence = "6")
     public BigDecimal getKeytableAValue() {
         return keytableAValue;
     }
@@ -224,6 +234,7 @@ public class KeyTableImport implements Importable {
         this.keytableAValue = keytableAValue;
     }
 
+    @MemberOrder(sequence = "7")
     public BigDecimal getKeytableBSourceValue() {
         return keytableBSourceValue;
     }
@@ -232,6 +243,7 @@ public class KeyTableImport implements Importable {
         this.keytableBSourceValue = keytableBSourceValue;
     }
 
+    @MemberOrder(sequence = "8")
     public BigDecimal getKeytableBValue() {
         return keytableBValue;
     }
@@ -240,6 +252,7 @@ public class KeyTableImport implements Importable {
         this.keytableBValue = keytableBValue;
     }
 
+    @MemberOrder(sequence = "9")
     public BigDecimal getKeytableCSourceValue() {
         return keytableCSourceValue;
     }
@@ -248,6 +261,7 @@ public class KeyTableImport implements Importable {
         this.keytableCSourceValue = keytableCSourceValue;
     }
 
+    @MemberOrder(sequence = "10")
     public BigDecimal getKeytableCValue() {
         return keytableCValue;
     }
@@ -256,6 +270,7 @@ public class KeyTableImport implements Importable {
         this.keytableCValue = keytableCValue;
     }
 
+    @MemberOrder(sequence = "11")
     public BigDecimal getKeytableDSourceValue() {
         return keytableDSourceValue;
     }
@@ -264,6 +279,7 @@ public class KeyTableImport implements Importable {
         this.keytableDSourceValue = keytableDSourceValue;
     }
 
+    @MemberOrder(sequence = "12")
     public BigDecimal getKeytableDValue() {
         return keytableDValue;
     }
@@ -272,6 +288,7 @@ public class KeyTableImport implements Importable {
         this.keytableDValue = keytableDValue;
     }
 
+    @MemberOrder(sequence = "13")
     public BigDecimal getKeytableESourceValue() {
         return keytableESourceValue;
     }
@@ -280,6 +297,7 @@ public class KeyTableImport implements Importable {
         this.keytableESourceValue = keytableESourceValue;
     }
 
+    @MemberOrder(sequence = "14")
     public BigDecimal getKeytableEValue() {
         return keytableEValue;
     }
@@ -288,6 +306,7 @@ public class KeyTableImport implements Importable {
         this.keytableEValue = keytableEValue;
     }
 
+    @MemberOrder(sequence = "15")
     public BigDecimal getKeytableFSourceValue() {
         return keytableFSourceValue;
     }
@@ -296,6 +315,7 @@ public class KeyTableImport implements Importable {
         this.keytableFSourceValue = keytableFSourceValue;
     }
 
+    @MemberOrder(sequence = "16")
     public BigDecimal getKeytableFValue() {
         return keytableFValue;
     }
@@ -304,6 +324,7 @@ public class KeyTableImport implements Importable {
         this.keytableFValue = keytableFValue;
     }
 
+    @MemberOrder(sequence = "17")
     public BigDecimal getKeytableGSourceValue() {
         return keytableGSourceValue;
     }
@@ -312,6 +333,7 @@ public class KeyTableImport implements Importable {
         this.keytableGSourceValue = keytableGSourceValue;
     }
 
+    @MemberOrder(sequence = "18")
     public BigDecimal getKeytableGValue() {
         return keytableGValue;
     }
@@ -320,6 +342,7 @@ public class KeyTableImport implements Importable {
         this.keytableGValue = keytableGValue;
     }
 
+    @MemberOrder(sequence = "19")
     public BigDecimal getKeytableHSourceValue() {
         return keytableHSourceValue;
     }
@@ -328,6 +351,7 @@ public class KeyTableImport implements Importable {
         this.keytableHSourceValue = keytableHSourceValue;
     }
 
+    @MemberOrder(sequence = "20")
     public BigDecimal getKeytableHValue() {
         return keytableHValue;
     }
@@ -336,6 +360,7 @@ public class KeyTableImport implements Importable {
         this.keytableHValue = keytableHValue;
     }
 
+    @MemberOrder(sequence = "21")
     public BigDecimal getKeytableISourceValue() {
         return keytableISourceValue;
     }
@@ -344,6 +369,7 @@ public class KeyTableImport implements Importable {
         this.keytableISourceValue = keytableISourceValue;
     }
 
+    @MemberOrder(sequence = "22")
     public BigDecimal getKeytableIValue() {
         return keytableIValue;
     }
@@ -352,6 +378,7 @@ public class KeyTableImport implements Importable {
         this.keytableIValue = keytableIValue;
     }
 
+    @MemberOrder(sequence = "23")
     public BigDecimal getKeytableJSourceValue() {
         return keytableJSourceValue;
     }
@@ -360,6 +387,7 @@ public class KeyTableImport implements Importable {
         this.keytableJSourceValue = keytableJSourceValue;
     }
 
+    @MemberOrder(sequence = "24")
     public BigDecimal getKeytableJValue() {
         return keytableJValue;
     }

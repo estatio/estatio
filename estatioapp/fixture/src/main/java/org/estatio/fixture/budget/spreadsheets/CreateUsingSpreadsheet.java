@@ -24,6 +24,7 @@ import com.google.common.io.Resources;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
+import org.estatio.dom.Importable;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import javax.inject.Inject;

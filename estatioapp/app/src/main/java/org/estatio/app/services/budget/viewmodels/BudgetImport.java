@@ -1,4 +1,4 @@
-package org.estatio.fixture.budget.spreadsheets;
+package org.estatio.app.services.budget.viewmodels;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.DomainObjectContainer;
