@@ -95,7 +95,7 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
     }
 
     public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
-        return applicationTenancyRepository.localTenanciesFor(lease.getProperty());
+        return applicationTenancyRepository.selfOrChildrenOf(lease.getApplicationTenancy());
     }
 
     public String validateNewLeaseItem(final Lease lease,
