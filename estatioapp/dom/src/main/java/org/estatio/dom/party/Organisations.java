@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.Dflt;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Organisation.class)
 @DomainServiceLayout(
@@ -64,7 +64,7 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
     }
 
     public List<ApplicationTenancy> choices2NewOrganisation() {
-        return applicationTenancyRepository.countryTenanciesForCurrentUser();
+        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default2NewOrganisation() {
@@ -82,7 +82,7 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
     // //////////////////////////////////////
 
     @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 
 }

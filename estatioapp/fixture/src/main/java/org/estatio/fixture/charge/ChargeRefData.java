@@ -22,7 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
@@ -104,7 +104,7 @@ public class ChargeRefData extends EstatioFixtureScript {
         final ChargeGroup chargeGroupTax = chargeGroups.findChargeGroup(ChargeGroupRefData.REF_TAX);
         final ChargeGroup chargeGroupServiceChargeIndexable = chargeGroups.findChargeGroup(ChargeGroupRefData.REF_SERVICE_CHARGE_INDEXABLE);
 
-        final List<ApplicationTenancy> countryTenancies = applicationTenancyRepository.allCountryTenancies();
+        final List<ApplicationTenancy> countryTenancies = estatioApplicationTenancyRepository.allCountryTenancies();
 
         for (final ApplicationTenancy countryTenancy : countryTenancies) {
 
@@ -182,7 +182,7 @@ public class ChargeRefData extends EstatioFixtureScript {
     private Taxes taxes;
 
     @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 
 }

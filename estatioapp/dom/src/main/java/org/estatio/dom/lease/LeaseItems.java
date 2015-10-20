@@ -42,7 +42,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -95,7 +95,7 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
     }
 
     public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
-        return applicationTenancyRepository.selfOrChildrenOf(lease.getApplicationTenancy());
+        return estatioApplicationTenancyRepository.selfOrChildrenOf(lease.getApplicationTenancy());
     }
 
     public String validateNewLeaseItem(final Lease lease,
@@ -170,7 +170,7 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
     // //////////////////////////////////////
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject
     private Charges charges;

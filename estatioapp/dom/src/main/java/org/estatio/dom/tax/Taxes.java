@@ -35,7 +35,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.Dflt;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Tax.class)
 @DomainServiceLayout(
@@ -65,7 +65,7 @@ public class Taxes extends UdoDomainRepositoryAndFactory<Tax> {
     }
 
     public List<ApplicationTenancy> choices2NewTax() {
-        return applicationTenancyRepository.countryTenanciesForCurrentUser();
+        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default2NewTax() {
@@ -100,7 +100,7 @@ public class Taxes extends UdoDomainRepositoryAndFactory<Tax> {
     // //////////////////////////////////////
 
     @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 
 }

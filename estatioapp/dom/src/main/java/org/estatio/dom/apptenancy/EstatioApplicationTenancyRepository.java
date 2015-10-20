@@ -24,7 +24,7 @@ import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class ApplicationTenancyRepository {
+public class EstatioApplicationTenancyRepository {
 
     //region > getId
     public String getId() {

@@ -36,7 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -97,7 +97,7 @@ public class ProgramsTest {
         @Mock
         private DomainObjectContainer mockContainer;
         @Mock
-        private ApplicationTenancyRepository mockApplicationTenancyRepository;
+        private EstatioApplicationTenancyRepository mockEstatioApplicationTenancyRepository;
 
         Programs programs;
 
@@ -105,7 +105,7 @@ public class ProgramsTest {
         public void setup() {
             programs = new Programs();
             programs.setContainer(mockContainer);
-            programs.applicationTenancyRepository = mockApplicationTenancyRepository;
+            programs.estatioApplicationTenancyRepository = mockEstatioApplicationTenancyRepository;
         }
 
 

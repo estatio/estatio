@@ -53,7 +53,7 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.Dflt;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.asset.Property;
@@ -99,7 +99,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     }
 
     public List<ApplicationTenancy> choices8NewLease() {
-        return applicationTenancyRepository.propertyTenanciesForCurrentUser();
+        return estatioApplicationTenancyRepository.propertyTenanciesForCurrentUser();
     }
 
     public ApplicationTenancy default8NewLease() {
@@ -335,6 +335,6 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     ClockService clockService;
 	
     @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 }

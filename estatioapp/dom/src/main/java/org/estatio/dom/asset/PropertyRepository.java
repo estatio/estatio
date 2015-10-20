@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
@@ -56,9 +56,9 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
             final ApplicationTenancy countryApplicationTenancy) {
         final Property property = newTransientInstance();
 
-        final ApplicationTenancy propertyApplicationTenancy = applicationTenancyRepository.findOrCreatePropertyTenancy(countryApplicationTenancy, propertyReference);
-        applicationTenancyRepository.findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
-        applicationTenancyRepository.findOrCreateLocalTaTenancy(propertyApplicationTenancy);
+        final ApplicationTenancy propertyApplicationTenancy = estatioApplicationTenancyRepository.findOrCreatePropertyTenancy(countryApplicationTenancy, propertyReference);
+        estatioApplicationTenancyRepository.findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
+        estatioApplicationTenancyRepository.findOrCreateLocalTaTenancy(propertyApplicationTenancy);
 
         property.setApplicationTenancyPath(propertyApplicationTenancy.getPath());
         property.setReference(propertyReference);
@@ -115,7 +115,7 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     // //////////////////////////////////////
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject
     PropertyRepository propertyRepository;

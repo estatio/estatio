@@ -68,7 +68,7 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
@@ -1025,7 +1025,7 @@ public class Lease
     CommunicationChannels communicationChannels;
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject
     BreakOptions breakOptionsService;

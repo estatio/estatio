@@ -41,7 +41,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
 
 @DomainService(repositoryFor = Property.class)
@@ -75,7 +75,7 @@ public class PropertyMenu extends UdoDomainRepositoryAndFactory<Property> {
     }
 
     public List<ApplicationTenancy> choices6NewProperty() {
-        return applicationTenancyRepository.countryTenanciesForCurrentUser();
+        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
     public PropertyType default2NewProperty() {
@@ -108,7 +108,7 @@ public class PropertyMenu extends UdoDomainRepositoryAndFactory<Property> {
     // //////////////////////////////////////
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject
     PropertyRepository propertyRepository;

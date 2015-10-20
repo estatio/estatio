@@ -63,7 +63,7 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
-import org.estatio.dom.apptenancy.ApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
@@ -768,7 +768,7 @@ public class LeaseItem
     LeaseTerms leaseTerms;
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 
 }
