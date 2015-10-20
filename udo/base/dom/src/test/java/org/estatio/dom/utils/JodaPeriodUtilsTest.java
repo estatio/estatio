@@ -26,7 +26,7 @@ import org.junit.Test;
 
 public class JodaPeriodUtilsTest {
 
-    public static class AsPeriod extends JodaPeriodUtilsTest2 {
+    public static class AsPeriod extends JodaPeriodUtilsTest {
 
         @Test
         public void happyCase() {
@@ -50,7 +50,7 @@ public class JodaPeriodUtilsTest {
         }
     }
 
-    public static class AsString extends JodaPeriodUtilsTest2 {
+    public static class AsString extends JodaPeriodUtilsTest {
         @Test
         public void happyCase() throws Exception {
             Period period = new Period(new LocalDate(2000, 1, 1), new LocalDate(2006, 7, 2));
@@ -58,7 +58,7 @@ public class JodaPeriodUtilsTest {
         }
     }
 
-    public static class AsSimpleString extends JodaPeriodUtilsTest2 {
+    public static class AsSimpleString extends JodaPeriodUtilsTest {
         @Test
         public void happyCase() throws Exception {
             Period period = new Period(new LocalDate(2000, 1, 1), new LocalDate(2006, 7, 2));
