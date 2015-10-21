@@ -52,8 +52,8 @@ public class PropertyMenuTest {
         propertyRepository = new PropertyRepository() {
 
             @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
                 return (T) new Property();
             }
             @Override
@@ -94,7 +94,7 @@ public class PropertyMenuTest {
 
             propertyRepository.findPropertyByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
             assertThat(finderInteraction.getQueryName(), is("findByReference"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));

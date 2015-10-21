@@ -85,7 +85,7 @@ public class Countries extends UdoDomainRepositoryAndFactory<Country> {
     @Programmatic
     public Country findCountry(
             final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        return uniqueMatch("findByReference", "reference", reference);
     }
 
     @Programmatic

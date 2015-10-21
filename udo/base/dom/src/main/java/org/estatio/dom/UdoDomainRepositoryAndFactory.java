@@ -73,17 +73,6 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
         return allInstances(getEntityType());
     }
 
-
-    // //////////////////////////////////////
-
-    protected T mustMatch(final String queryName, final String param, final String arg) {
-        final T obj = firstMatch(queryName, param, arg);
-        if(obj == null) {
-            throw new RepositoryException(getClassName() + " '"  + arg + "' does not exist");
-        }
-        return obj;
-    }
-
     // //////////////////////////////////////
     
     protected Query newQuery(final String jdoql) {

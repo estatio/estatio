@@ -94,7 +94,7 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     // //////////////////////////////////////
 
     public Property findPropertyByReference(final String reference) {
-        return mustMatch("findByReference", "reference", reference);
+        return uniqueMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////

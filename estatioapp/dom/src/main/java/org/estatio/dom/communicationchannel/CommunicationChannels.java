@@ -20,40 +20,29 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 import java.util.SortedSet;
+
 import javax.inject.Inject;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
-//import org.estatio.dom.party.Party;
-
-@DomainService(menuOrder = "70", repositoryFor = CommunicationChannel.class)
-@Hidden
+@DomainService(repositoryFor = CommunicationChannel.class, nature = NatureOfService.DOMAIN)
 public class CommunicationChannels extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
     public CommunicationChannels() {
         super(CommunicationChannels.class, CommunicationChannel.class);
     }
 
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
+    @Programmatic
     public PostalAddress newPostal(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
-            // aggregate value types
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String address1,
@@ -63,7 +52,6 @@ public class CommunicationChannels extends UdoDomainRepositoryAndFactory<Communi
             final String city,
             final State state,
             final Country country
-            // CHECKSTYLE:ON ParameterNumber
             ) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
         pa.setType(type);
@@ -79,9 +67,7 @@ public class CommunicationChannels extends UdoDomainRepositoryAndFactory<Communi
         return pa;
     }
 
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
+    @Programmatic
     public EmailAddress newEmail(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
@@ -94,9 +80,7 @@ public class CommunicationChannels extends UdoDomainRepositoryAndFactory<Communi
         return ea;
     }
 
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)
+    @Programmatic
     public PhoneOrFaxNumber newPhoneOrFax(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
@@ -109,17 +93,7 @@ public class CommunicationChannels extends UdoDomainRepositoryAndFactory<Communi
         return pn;
     }
 
-    // //////////////////////////////////////
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
-    public List<CommunicationChannel> allCommunicationChannels() {
-        return allInstances(CommunicationChannel.class);
-    }
-
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @Programmatic
     public CommunicationChannel findByReferenceAndType(
             final String reference, final CommunicationChannelType type) {
         return firstMatch("findByReferenceAndType", "reference", reference, "type", type);
@@ -151,8 +125,6 @@ public class CommunicationChannels extends UdoDomainRepositoryAndFactory<Communi
         communicationChannels.remove(exclude);
         return communicationChannels;
     }
-
-    // //////////////////////////////////////
 
     @Inject
     CommunicationChannelOwnerLinks communicationChannelOwnerLinks;

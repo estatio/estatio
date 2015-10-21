@@ -25,7 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -45,6 +45,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
@@ -52,7 +55,6 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.Dflt;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -242,7 +244,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
-        return mustMatch("findByReference", "reference", reference);
+        return uniqueMatch("findByReference", "reference", reference);
     }
 
     @Programmatic

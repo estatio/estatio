@@ -63,7 +63,7 @@ public class Parties extends UdoDomainRepositoryAndFactory<Party> {
 
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public Party findPartyByReference(final String reference) {
-        return mustMatch("findByReference", "reference", reference);
+        return uniqueMatch("findByReference", "reference", reference);
     }
 
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)

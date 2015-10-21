@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -176,23 +175,9 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
         return communicationChannels.findByOwner(owner);
     }
 
-    @Programmatic
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
-    public CommunicationChannel findCommunicationChannelForType(
-            final CommunicationChannelOwner owner,
-            final CommunicationChannelType type) {
-        final SortedSet<CommunicationChannel> communicationChannels = this.communicationChannels(owner);
-        for (CommunicationChannel c : communicationChannels) {
-            if (c.getType().equals(type)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
     // //////////////////////////////////////
 
-    private CommunicationChannels communicationChannels;
+    public CommunicationChannels communicationChannels;
 
     public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {
         this.communicationChannels = communicationChannels;
