@@ -146,6 +146,8 @@ public class EstatioAppManifest implements AppManifest {
 
         props.put("isis.services.audit.objects", "all");
 
+        props.put("isis.services.eventbus.allowLateRegistration", "true");
+
         // uncomment to use log4jdbc instead
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
         // "net.sf.log4jdbc.DriverSpy");
