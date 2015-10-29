@@ -45,10 +45,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption;
 import org.estatio.dom.lease.tags.Activity;
@@ -109,6 +106,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(Guarantee.class);
         deleteFrom(Lease.class);
+        deleteFrom(LeaseType.class);
         deleteFrom(BankMandate.class);
 
         deleteFrom(FinancialAccountTransaction.class);
