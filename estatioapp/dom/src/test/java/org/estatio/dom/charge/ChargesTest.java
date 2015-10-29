@@ -18,13 +18,6 @@
  */
 package org.estatio.dom.charge;
 
-import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
@@ -32,6 +25,14 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.tax.Tax;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -49,6 +50,12 @@ public class ChargesTest {
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return null;
+            }
+
+            @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
                 return null;
             }
 
@@ -75,7 +82,7 @@ public class ChargesTest {
 
             charges.findByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Charge.class));
             assertThat(finderInteraction.getQueryName(), is("findByReference"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "*REF?1*"));
