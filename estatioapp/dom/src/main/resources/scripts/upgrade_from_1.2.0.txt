@@ -1,0 +1,8 @@
+000-drop-constraints.sql
+EST-536/EST-536--010-add-tables.sql
+EST-536/EST-536--020-migrate-data.sql
+EST-536/EST-536--040-drop-columns.sql
+EST-539/EST-539--010-add-tables.sql
+EST-539/EST-539--020-migrate-data.sql
+EST-539/EST-539--040-drop-columns.sql
+upgrade_from_1.2.0.sql

@@ -2,7 +2,7 @@
 /**
 * Stored procedure creates column with default and removes default constraint
 **/
-ALTER PROCEDURE addColumn
+CREATE PROCEDURE addColumn
 (
     @table VARCHAR(255),
     @column VARCHAR(255),
@@ -165,7 +165,6 @@ ALTER TABLE dbo.PartyRegistration ALTER COLUMN endDate DATE
 ALTER TABLE dbo.PartyRegistration ALTER COLUMN startDate DATE
 ALTER TABLE dbo.PartyRelationship ALTER COLUMN endDate DATE
 ALTER TABLE dbo.PartyRelationship ALTER COLUMN startDate DATE
-ALTER TABLE dbo.PaymentTerm ALTER COLUMN dueDate DATE NOT NULL
 ALTER TABLE dbo.Property ALTER COLUMN acquireDate DATE
 ALTER TABLE dbo.Property ALTER COLUMN disposalDate DATE
 ALTER TABLE dbo.Property ALTER COLUMN openingDate DATE
@@ -184,9 +183,6 @@ DROP TABLE [dbo].[Tag]
 GO
 DROP TABLE [dbo].[IsisApplicationSetting]
 GO
-DROP TABLE [dbo].[PaymentTerm]
-GO
-
 
 /**
 * Fix columns that have changed in the dom but were never upgraded
@@ -195,9 +191,10 @@ ALTER TABLE LandRegister ALTER COLUMN rendita DECIMAL(19,2)
 GO
 ALTER TABLE FinancialAccountTransaction ALTER COLUMN financialAccountId BIGINT NOT NULL
 GO
-ALTER TABLE LeaseTerm DROP COLUMN taxable
-GO
 
+/****** Object:  View [dbo].[InvoiceSummaryForInvoiceRun]    Script Date: 28-10-2015 13:44:53 ******/
+DROP VIEW [dbo].[InvoiceSummaryForInvoiceRun]
+GO
 
 /**
 * Drop all procedures
@@ -206,10 +203,3 @@ DROP PROCEDURE dbo.addColumn
 GO
 DROP PROCEDURE dbo.moveRenameDb
 GO
-
-
-
-
-SELECT * FROM Lease
-
-
