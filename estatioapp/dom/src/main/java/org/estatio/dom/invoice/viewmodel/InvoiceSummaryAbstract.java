@@ -28,6 +28,8 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
@@ -86,5 +88,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
 
     @Inject
     protected Invoices invoicesService;
+
+    @Inject
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 
 }

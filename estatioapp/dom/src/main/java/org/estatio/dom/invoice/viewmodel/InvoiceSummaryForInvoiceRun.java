@@ -35,6 +35,8 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.invoice.Invoice;
 
 /**
@@ -48,6 +50,7 @@ import org.estatio.dom.invoice.Invoice;
                 @Extension(vendorName = "datanucleus", key = "view-definition",
                         value = "CREATE VIEW \"InvoiceSummaryForInvoiceRun\" " +
                                 "( " +
+                                "  {this.atPath}, " +
                                 "  {this.runId}, " +
                                 "  {this.total}, " +
                                 "  {this.netAmount}, " +
@@ -55,6 +58,7 @@ import org.estatio.dom.invoice.Invoice;
                                 "  {this.grossAmount} " +
                                 ") AS " +
                                 "SELECT " +
+                                "   \"Invoice\".\"atPath\" , " +
                                 "   \"Invoice\".\"runId\" , " +
                                 "   COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
                                 "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
@@ -70,7 +74,7 @@ import org.estatio.dom.invoice.Invoice;
                                 "WHERE " +
                                 "   NOT \"Invoice\".\"runId\" IS NULL " +
                                 "GROUP BY " +
-                                "   \"Invoice\".\"runId\"")
+                                "   \"Invoice\".\"runId\", \"Invoice\".\"atPath\"")
         })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -95,6 +99,21 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
     }
 
     // //////////////////////////////////////
+
+    private String atPath;
+
+    @Property(hidden = Where.EVERYWHERE)
+    public String getAtPath() {
+        return atPath;
+    }
+
+    public void setAtPath(final String atPath) {
+        this.atPath = atPath;
+    }
+
+    public ApplicationTenancy getApplicationTenancy(){
+        return applicationTenancyRepository.findByPath(getAtPath());
+    }
 
     private String runId;
 

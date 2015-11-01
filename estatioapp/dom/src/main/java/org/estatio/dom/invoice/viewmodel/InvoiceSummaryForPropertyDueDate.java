@@ -36,6 +36,9 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
@@ -53,6 +56,7 @@ import org.estatio.dom.invoice.Invoice;
                 @Extension(vendorName = "datanucleus", key = "view-definition",
                         value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDate\" " +
                                 "( " +
+                                "  {this.atPath}, " +
                                 "  {this.reference}, " +
                                 "  {this.dueDate}, " +
                                 "  {this.total}, " +
@@ -61,7 +65,8 @@ import org.estatio.dom.invoice.Invoice;
                                 "  {this.grossAmount} " +
                                 ") AS " +
                                 "SELECT " +
-                                "   \"FixedAsset\".\"reference\" , " +
+                                "   \"Invoice\".\"atPath\", " +
+                                "   \"FixedAsset\".\"reference\", " +
                                 "   \"Invoice\".\"dueDate\", " +
                                 "   COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
                                 "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
@@ -75,6 +80,7 @@ import org.estatio.dom.invoice.Invoice;
                                 "  INNER JOIN \"InvoiceItem\" " +
                                 "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
                                 "GROUP BY " +
+                                " \"Invoice\".\"atPath\", " +
                                 " \"FixedAsset\".\"reference\", " +
                                 " \"Invoice\".\"dueDate\"")
         })
@@ -97,6 +103,21 @@ public class InvoiceSummaryForPropertyDueDate extends InvoiceSummaryAbstract {
     }
 
     // //////////////////////////////////////
+
+    private String atPath;
+
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+    public String getAtPath() {
+        return atPath;
+    }
+
+    public void setAtPath(final String atPath) {
+        this.atPath = atPath;
+    }
+
+    public ApplicationTenancy getApplicationTenancy(){
+        return applicationTenancyRepository.findByPath(getAtPath());
+    }
 
     private String reference;
 
