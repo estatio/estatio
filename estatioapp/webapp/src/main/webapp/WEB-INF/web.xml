@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
 
 
     <welcome-file-list>
-        <welcome-file>about/index.html</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
 
