@@ -18,7 +18,9 @@
  */
 package org.estatio.dom;
 
+import java.util.List;
+
 public interface Importable {
 
-    public void importData();
+    public List<Object> importData();
 }

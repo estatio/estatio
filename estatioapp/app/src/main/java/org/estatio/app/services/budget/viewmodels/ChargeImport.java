@@ -1,11 +1,9 @@
 package org.estatio.app.services.budget.viewmodels;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
@@ -17,8 +15,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import javax.inject.Inject;
+import java.util.List;
 
-@ViewModel
+@DomainObject(nature = Nature.VIEW_MODEL)
 public class ChargeImport implements Importable {
 
     private static int numberOfRecords = 0;
@@ -72,7 +71,7 @@ public class ChargeImport implements Importable {
 
     @Override
     @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
-    public void importData() {
+    public List<Object> importData() {
 
         ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath("/" + getApplicationTenancyPath());
         Tax tax = taxes.findByReference(getChargeTaxReference());
@@ -104,6 +103,8 @@ public class ChargeImport implements Importable {
             System.out.println("ERROR OR GARBAGE");
             container.informUser("ERRORS WERE FOUND!");
         }
+
+        return Lists.newArrayList();
     }
 
     @MemberOrder(sequence = "1")

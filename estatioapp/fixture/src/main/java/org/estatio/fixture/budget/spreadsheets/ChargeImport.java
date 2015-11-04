@@ -1,11 +1,10 @@
 package org.estatio.fixture.budget.spreadsheets;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
@@ -13,13 +12,16 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import javax.inject.Inject;
+import java.util.List;
 
-@ViewModel
-public class ChargeImport implements Importable {
+@DomainObject(nature = Nature.VIEW_MODEL)
+public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
     private static int numberOfRecords = 0;
     private static int numberOfChargeGroupsCreated = 0;
@@ -31,6 +33,11 @@ public class ChargeImport implements Importable {
     private String chargeDescription;
     private String chargeTaxReference;
     private String applicationTenancyPath;
+
+    @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
+        return importData();
+    }
 
     private ChargeGroup findOrCreateChargeGroup(String name) {
 
@@ -72,7 +79,7 @@ public class ChargeImport implements Importable {
 
     @Override
     @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
-    public void importData() {
+    public List<Object> importData() {
 
         ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath("/" + getApplicationTenancyPath());
         Tax tax = taxes.findByReference(getChargeTaxReference());
@@ -104,6 +111,8 @@ public class ChargeImport implements Importable {
             System.out.println("ERROR OR GARBAGE");
             container.informUser("ERRORS WERE FOUND!");
         }
+
+        return Lists.newArrayList();
     }
 
     @MemberOrder(sequence = "1")

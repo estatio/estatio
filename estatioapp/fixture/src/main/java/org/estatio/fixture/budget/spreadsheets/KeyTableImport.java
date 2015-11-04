@@ -1,7 +1,9 @@
 package org.estatio.fixture.budget.spreadsheets;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -13,6 +15,8 @@ import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTables;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
+import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ViewModel
-public class KeyTableImport implements Importable {
+public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
 
     private static int numberOfRecords = 0;
     private static int[] counter = new int[10];
@@ -51,6 +55,11 @@ public class KeyTableImport implements Importable {
     private BigDecimal keytableJSourceValue;
     private BigDecimal keytableJValue;
 
+    @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
+        return importData();
+    }
+
 
     private KeyItem findOrCreatKeyItem(
             final KeyTable keyTable,
@@ -68,7 +77,7 @@ public class KeyTableImport implements Importable {
     }
 
     @Override
-    public void importData() {
+    public List<Object> importData() {
 
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         LocalDate startDate = getStartDate();
@@ -174,6 +183,8 @@ public class KeyTableImport implements Importable {
                 System.out.println(unitReference);
             }
         }
+
+        return Lists.newArrayList();
     }
 
     public String getPropertyReference() {

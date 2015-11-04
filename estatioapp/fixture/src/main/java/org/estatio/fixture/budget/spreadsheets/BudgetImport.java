@@ -1,11 +1,10 @@
 package org.estatio.fixture.budget.spreadsheets;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -21,6 +20,8 @@ import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItems;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.joda.time.LocalDate;
 
@@ -29,8 +30,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@ViewModel
-public class BudgetImport implements Importable {
+@DomainObject(nature = Nature.VIEW_MODEL)
+public class BudgetImport implements ExcelFixtureRowHandler, Importable {
 
     private static int numberOfRecords = 0;
     private static int numberOfBudgetItemsCreated = 0;
@@ -52,6 +53,11 @@ public class BudgetImport implements Importable {
     private BigDecimal keytableHPercentage;
     private BigDecimal keytableIPercentage;
     private BigDecimal keytableJPercentage;
+
+    @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
+        return importData();
+    }
 
     private BudgetItem findOrCreateBudgetItem(
             final Property property,
@@ -82,7 +88,7 @@ public class BudgetImport implements Importable {
 
     @Override
     @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
-    public void importData() {
+    public List<Object> importData() {
 
         final Property property = propertyRepository.findPropertyByReference(getPropertyReference());
 
@@ -161,6 +167,8 @@ public class BudgetImport implements Importable {
             // REVIEW: ignore any garbage
             System.out.println("ERROR OR GARBAGE");
         }
+
+        return Lists.newArrayList();
     }
 
     @MemberOrder(sequence = "1")
