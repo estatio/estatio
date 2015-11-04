@@ -39,7 +39,7 @@ import org.estatio.domsettings.EstatioSettingsService;
 @DomainService
 @DomainServiceLayout(
         named = "Administration",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "120.2")
 public class CollectionNumerators extends UdoDomainService<CollectionNumerators> {
 

@@ -34,7 +34,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 @DomainService(menuOrder = "80", repositoryFor = Numerator.class)
 @DomainServiceLayout(
         named = "Administration",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "120.1"
 )
 public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
