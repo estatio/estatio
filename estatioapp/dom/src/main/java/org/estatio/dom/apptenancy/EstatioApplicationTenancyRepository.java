@@ -50,6 +50,11 @@ public class EstatioApplicationTenancyRepository {
                 allTenancies(), Predicates.isSelfOrChildOf(tenancy)));
     }
 
+    public List<ApplicationTenancy> childrenOf(final ApplicationTenancy tenancy) {
+        return Lists.newArrayList(Iterables.filter(
+                allTenancies(), Predicates.isChildOf(tenancy)));
+    }
+
     public List<ApplicationTenancy> countryTenanciesFor(final ApplicationTenancy tenancy) {
         return Lists.newArrayList(Iterables.filter(
                 allTenancies(), Predicates.isCountryTenancyFor(tenancy)));

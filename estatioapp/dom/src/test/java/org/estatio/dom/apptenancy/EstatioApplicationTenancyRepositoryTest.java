@@ -1,16 +1,21 @@
 package org.estatio.dom.apptenancy;
 
 import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import org.assertj.core.api.Assertions;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.geography.Country;
 
@@ -115,9 +120,6 @@ public class EstatioApplicationTenancyRepositoryTest {
         return country;
     }
 
-
-
-
     @Test
     public void testAllCountryTenancies() throws Exception {
         List<ApplicationTenancy> applicationTenancies = estatioApplicationTenancyRepository.allCountryTenancies();
@@ -140,6 +142,18 @@ public class EstatioApplicationTenancyRepositoryTest {
 
         // then
         Assertions.assertThat(applicationTenancies).containsExactly(grande);
+    }
+
+    @Test
+    public void testChildrenOf() throws Exception {
+        List<ApplicationTenancy> applicationTenancies;
+
+        // when
+        applicationTenancies = estatioApplicationTenancyRepository.childrenOf(france);
+
+        // then
+        Assertions.assertThat(applicationTenancies).containsExactly(franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
+
     }
 
     @Test
