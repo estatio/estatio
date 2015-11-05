@@ -203,6 +203,7 @@ public class LeaseItem
 
     @Action(domainEvent = LeaseItem.ResumeEvent.class)
     public LeaseItem resume(final @ParameterLayout(named = "Reason") String reason) {
+        doResume();
         return this;
     }
 

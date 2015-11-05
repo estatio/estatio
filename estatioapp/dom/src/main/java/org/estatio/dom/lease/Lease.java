@@ -749,7 +749,6 @@ public class Lease
         for (LeaseItem item : getItems()) {
             item.suspend(reason);
         }
-        setStatus(LeaseStatus.SUSPENDED);
         return this;
     }
 
