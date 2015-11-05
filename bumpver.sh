@@ -1,3 +1,4 @@
+#!/bin/bash
 VERSION=$1
 
 if [ ! "$VERSION" ]; then
