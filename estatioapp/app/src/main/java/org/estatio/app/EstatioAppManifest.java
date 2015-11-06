@@ -195,6 +195,9 @@ public class EstatioAppManifest implements AppManifest {
                 "terminate.*:fa-stop",
                 "pause.*:fa-pause",
                 "suspend.*:fa-pause",
+                "resume.*:fa-play",
+                "renew.*:fa-repeat",
+                "assign.*:fa-hand-o-right",
                 "approve.*:fa-thumbs-o-up",
                 "decline.*:fa-thumbs-o-down"));
 

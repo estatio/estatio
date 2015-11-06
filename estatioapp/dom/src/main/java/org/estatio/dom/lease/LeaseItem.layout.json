@@ -10,6 +10,7 @@
             "type": {},
             "status": {
               "actions": {
+                "resume": {},
                 "suspend": {},
                 "terminate": {},
                 "refreshStatus": {}
