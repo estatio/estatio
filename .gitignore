@@ -31,3 +31,6 @@ datanucleus.log
 /dom-xxx/
 
 rebel.xml
+
+_all.txt
+forsub.sh
