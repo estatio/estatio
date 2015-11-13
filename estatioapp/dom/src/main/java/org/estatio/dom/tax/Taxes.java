@@ -60,7 +60,7 @@ public class Taxes extends UdoDomainRepositoryAndFactory<Tax> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Tax newTax(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @Named("Name") @Optional String name,
             final ApplicationTenancy applicationTenancy) {
         final Tax tax = newTransientInstance();

@@ -58,7 +58,7 @@ public class EmailAddress extends CommunicationChannel {
     }
 
     public EmailAddress changeEmailAddress(
-            final @ParameterLayout(named = "Email Address") @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL) String address) {
+            final @ParameterLayout(named = "Email Address") @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String address) {
         setEmailAddress(address);
 
         return this;

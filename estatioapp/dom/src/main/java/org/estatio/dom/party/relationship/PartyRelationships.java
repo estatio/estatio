@@ -87,15 +87,15 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @ParameterLayout(named = "Reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE) String reference,
-            final @ParameterLayout(named = "Initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
+            final @ParameterLayout(named = "Reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
+            final @ParameterLayout(named = "Initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
             final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final @ParameterLayout(named = "Last name") String lastName,
             final @ParameterLayout(named = "Gender") PersonGenderType gender,
             final @ParameterLayout(named = "Relationship type") String relationshipType,
             final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @ParameterLayout(named = "Phone number") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber,
-            final @ParameterLayout(named = "Email address") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL) String emailAddress
+            final @ParameterLayout(named = "Phone number") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber,
+            final @ParameterLayout(named = "Email address") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress
             ) {
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();

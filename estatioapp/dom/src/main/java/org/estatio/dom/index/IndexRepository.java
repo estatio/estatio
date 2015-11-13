@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -32,6 +33,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
@@ -44,7 +46,7 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Index newIndex(
-            final String reference,
+            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
         final Index index = newTransientInstance();

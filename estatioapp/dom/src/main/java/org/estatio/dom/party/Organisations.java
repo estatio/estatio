@@ -19,21 +19,24 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Named;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.Dflt;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Organisation.class)
@@ -52,7 +55,7 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @Named("Name") String name,
             final ApplicationTenancy applicationTenancy) {
         final Organisation organisation = newTransientInstance(Organisation.class);

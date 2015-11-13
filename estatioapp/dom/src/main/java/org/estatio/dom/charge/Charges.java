@@ -63,7 +63,7 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
     @MemberOrder(sequence = "1")
     public Charge newCharge(
             final ApplicationTenancy applicationTenancy,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Name") String name,
             final @ParameterLayout(named = "Description") String description,
             final Tax tax,

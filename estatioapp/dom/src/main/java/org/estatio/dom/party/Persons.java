@@ -21,7 +21,7 @@ package org.estatio.dom.party;
 import java.util.List;
 
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -32,9 +32,11 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.RegexValidation;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Dflt;
+import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Person.class)
@@ -53,8 +55,8 @@ public class Persons extends UdoDomainRepositoryAndFactory<Person> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Person newPerson(
-            final @ParameterLayout(named = "reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE) String reference,
-            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
+            final @ParameterLayout(named = "reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
+            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
             final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final @ParameterLayout(named = "Last name") String lastName,
             final @ParameterLayout(named = "Gender") PersonGenderType gender,

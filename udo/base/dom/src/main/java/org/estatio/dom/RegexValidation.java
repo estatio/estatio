@@ -21,6 +21,7 @@ package org.estatio.dom;
 public final class RegexValidation {
 
     public static final String REFERENCE = "[-/_A-Z0-9]+";
+    public static final String REFERENCE_DESCRIPTION = "Only capital letters, numbers and these 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
 
     public static final class Currency {
         private Currency() {
@@ -35,7 +36,7 @@ public final class RegexValidation {
         }
 
         public static final String REFERENCE = "[A-Z,0-9,_,-,/]+";
-        public static final String REFERENCE_DESCRIPTION = "Only letters, numbers and these three symbols being: \"_\" , \"-\" and \"/\" are allowed";
+        public static final String REFERENCE_DESCRIPTION = "Only letters, numbers and these 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
         public static final String INITIALS = "[A-Z]+";
         public static final String INITIALS_DESCRIPTION = "Only letters are allowed";
     }

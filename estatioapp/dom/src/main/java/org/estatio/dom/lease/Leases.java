@@ -63,7 +63,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "1")
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Name") String name,
             final @ParameterLayout(named = "Type") LeaseType leaseType,
             final @ParameterLayout(named = "Start Date") LocalDate startDate,
