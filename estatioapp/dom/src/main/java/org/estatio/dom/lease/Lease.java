@@ -18,56 +18,15 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-
 import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.*;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -88,8 +47,19 @@ import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
+import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+import java.math.BigInteger;
+import java.util.*;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -479,6 +449,47 @@ public class Lease
                                   final ApplicationTenancy applicationTenancy) {
         return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate, applicationTenancy);
     }
+
+    public Agreement changePrevious(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Agreement previousAgreement) {
+        if (getPrevious()!=null) {
+            getPrevious().setNext(null);
+        }
+        if (previousAgreement!=null) {
+            previousAgreement.setNext(this);
+        }
+        return this;
+    }
+
+    public String validateChangePrevious(final Agreement previousAgreement) {
+        if (previousAgreement == null) {
+            // OK to set to null
+            return null;
+        }
+        if (previousAgreement.getNext() != null){
+            return "Not allowed: the agreement chosen already is already linked to a next.";
+        }
+        if (this.getInterval().overlaps(previousAgreement.getInterval())){
+            return "Not allowed: overlapping date intervals";
+        }
+        // case: interval previous not overlapping, but before this interval
+        if (previousAgreement.getEndDate()==null || this.getStartDate().isBefore(previousAgreement.getEndDate())){
+            return "Not allowed: previous agreement interval should be before this agreements interval";
+        }
+        Lease previousLease = (Lease) previousAgreement;
+        if (!this.getApplicationTenancyPath().equals(previousLease.getApplicationTenancyPath())) {
+            return "Not allowed: application tenancy should be equal";
+        }
+        return null;
+    }
+
+    public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
+
+        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
+
+    }
+
 
 
     @Action(hidden = Where.EVERYWHERE)

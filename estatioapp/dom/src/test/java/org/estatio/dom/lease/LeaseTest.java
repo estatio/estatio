@@ -18,44 +18,17 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import org.assertj.core.api.Assertions;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.Is;
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
+import org.assertj.core.api.Assertions;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementForTesting;
-import org.estatio.dom.agreement.AgreementRepository;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.agreement.*;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
@@ -68,14 +41,24 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class LeaseTest {
 
@@ -841,6 +824,99 @@ public class LeaseTest {
 
             assertNull(lease.getTenancyDuration());
         }
+    }
+
+    public static class ValidateChangePrevious extends AgreementTest {
+
+        Lease agreement;
+        Lease otherAgreement;
+        Lease previousAgreement;
+
+        @Before
+        public void setUp() throws Exception {
+            agreement = new Lease();
+            otherAgreement = new Lease();
+            previousAgreement = new Lease();
+        }
+
+        @Test
+        public void nullValueIsOK() {
+
+            // given
+            previousAgreement.setNext(otherAgreement);
+
+            // when, then
+            assertNull(agreement.validateChangePrevious(null));
+
+        }
+
+        @Test
+        public void previousHasNextAlready() {
+
+            // given
+            previousAgreement.setNext(otherAgreement);
+
+            // when, then
+            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: the agreement chosen already is already linked to a next."));
+
+        }
+
+        @Test
+        public void overlappingIntervals() {
+
+            // given
+            previousAgreement.setEndDate(new LocalDate("2000-01-01"));
+            previousAgreement.setApplicationTenancyPath("/SomePath");
+            agreement.setApplicationTenancyPath("/SomePath");
+
+            // when
+            agreement.setStartDate(new LocalDate("2000-01-01"));
+            // then
+            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: overlapping date intervals"));
+
+            // when
+            agreement.setStartDate(new LocalDate("2000-01-02"));
+            // then
+            assertNull(agreement.validateChangePrevious(previousAgreement));
+
+        }
+
+        @Test
+        public void previousAgreementIntervalNotBeforeStartdate() {
+
+            // given
+            previousAgreement.setStartDate(new LocalDate("1999-01-01"));
+            previousAgreement.setEndDate(new LocalDate("1999-12-31"));
+            previousAgreement.setApplicationTenancyPath("/SomePath");
+            agreement.setApplicationTenancyPath("/SomePath");
+            agreement.setStartDate(new LocalDate("1998-01-01"));
+            agreement.setEndDate(new LocalDate("1998-12-31"));
+
+            // then
+            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: previous agreement interval should be before this agreements interval"));
+
+        }
+
+        @Test
+        public void atPathNotTheSame() {
+
+            // given
+            previousAgreement.setEndDate(new LocalDate("2000-01-01"));
+            previousAgreement.setApplicationTenancyPath("/SomePath");
+            agreement.setStartDate(new LocalDate("2000-01-02"));
+
+            // when
+            agreement.setApplicationTenancyPath("/SomeOtherPath");
+            // then
+            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: application tenancy should be equal"));
+
+            // when
+            agreement.setApplicationTenancyPath("/SomePath");
+            // then
+            assertNull(agreement.validateChangePrevious(previousAgreement));
+
+        }
+
     }
 
 }

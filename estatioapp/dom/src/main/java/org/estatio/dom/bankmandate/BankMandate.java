@@ -18,22 +18,7 @@
  */
 package org.estatio.dom.bankmandate;
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.InheritanceStrategy;
-
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -41,6 +26,11 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.InheritanceStrategy;
+import java.util.List;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -147,6 +137,15 @@ public class BankMandate
 
     public String default1Change() {
         return getSepaMandateIdentifier();
+    }
+
+    // //////////////////////////////////////
+
+    @ActionLayout(hidden = Where.EVERYWHERE)
+    public Agreement changePrevious(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Agreement previousLease) {
+        return this;
     }
 
     // //////////////////////////////////////

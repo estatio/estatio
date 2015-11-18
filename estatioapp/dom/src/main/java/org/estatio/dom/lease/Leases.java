@@ -18,43 +18,13 @@
  */
 package org.estatio.dom.lease;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.clock.ClockService;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.agreement.*;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -64,6 +34,15 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 @DomainService(repositoryFor = Lease.class)
 @DomainServiceLayout(

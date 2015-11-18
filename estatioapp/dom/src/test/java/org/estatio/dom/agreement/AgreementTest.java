@@ -18,9 +18,18 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyForTesting;
+import org.estatio.dom.party.Person;
+import org.estatio.services.clock.ClockService;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -34,20 +43,9 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
-import org.estatio.dom.party.Person;
-import org.estatio.services.clock.ClockService;
+import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class AgreementTest {
@@ -83,6 +81,10 @@ public class AgreementTest {
                 @Override
                 org.estatio.dom.WithIntervalMutable.Helper<Agreement> getChangeDates() {
                     return mockChangeDates;
+                }
+                @Override
+                public Agreement changePrevious(Agreement previousAgreement) {
+                    return null;
                 }
             };
         }
@@ -221,6 +223,10 @@ public class AgreementTest {
                 return null;
             }
 
+            @Override
+            public Agreement changePrevious(Agreement previousAgreement) {
+                return null;
+            }
         }
 
         @Before
@@ -557,6 +563,10 @@ public class AgreementTest {
                     public LocalDate getEndDate() {
                         return effectiveEndDate;
                     }
+                    @Override
+                    public Agreement changePrevious(Agreement previousAgreement) {
+                        return null;
+                    }
                 };
             }
 
@@ -674,4 +684,5 @@ public class AgreementTest {
         }
 
     }
+
 }

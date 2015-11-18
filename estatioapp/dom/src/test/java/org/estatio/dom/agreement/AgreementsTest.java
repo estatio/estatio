@@ -18,15 +18,16 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -122,4 +123,5 @@ public class AgreementsTest {
         }
 
     }
+
 }

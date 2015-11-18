@@ -18,26 +18,7 @@
  */
 package org.estatio.dom.guarantee;
 
-import java.math.BigDecimal;
-import javax.inject.Inject;
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.JdoColumnLength;
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -45,6 +26,14 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+import java.math.BigDecimal;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE)
@@ -255,6 +244,13 @@ public class Guarantee
 
     public String default2Change() {
         return getComments();
+    }
+
+    @ActionLayout(hidden = Where.EVERYWHERE)
+    public Agreement changePrevious(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Agreement previousLease) {
+        return this;
     }
 
     @Inject

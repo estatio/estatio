@@ -18,17 +18,7 @@
  */
 package org.estatio.integtests.lease;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Property;
@@ -40,19 +30,19 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LeasesTest extends EstatioIntegrationTest {
 

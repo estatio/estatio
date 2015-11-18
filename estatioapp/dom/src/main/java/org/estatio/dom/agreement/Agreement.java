@@ -18,57 +18,22 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithReferenceUnique;
+import org.apache.isis.applib.annotation.*;
+import org.estatio.dom.*;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import javax.jdo.annotations.*;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -352,15 +317,7 @@ public abstract class Agreement
         this.previous = previous;
     }
 
-    public Agreement changePrevious(
-            final Agreement previousAgreement) {
-        setPrevious(previousAgreement);
-        return this;
-    }
-
-    public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
-        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
-    }
+    public abstract Agreement changePrevious(final Agreement previousAgreement);
 
     // //////////////////////////////////////
 

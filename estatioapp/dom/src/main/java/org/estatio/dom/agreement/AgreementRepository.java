@@ -18,13 +18,12 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.List;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
+
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

@@ -30,5 +30,8 @@ public class AgreementForTesting extends Agreement {
         return null;
     }
 
-
+    @Override
+    public Agreement changePrevious(Agreement previousAgreement) {
+        return null;
+    }
 }
