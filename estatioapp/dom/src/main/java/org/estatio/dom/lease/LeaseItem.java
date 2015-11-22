@@ -245,7 +245,7 @@ public class LeaseItem
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
-    @Title(sequence = "1", append = ":")
+    @Title(sequence = "1")
     public Lease getLease() {
         return lease;
     }
@@ -301,7 +301,7 @@ public class LeaseItem
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Title(sequence = "2")
+    @Title(sequence = "2", prepend = ":")
     public LeaseItemType getType() {
         return type;
     }
@@ -478,6 +478,7 @@ public class LeaseItem
     private Charge charge;
 
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "false")
+    @Title(sequence = "3", prepend = ":")
     public Charge getCharge() {
         return charge;
     }

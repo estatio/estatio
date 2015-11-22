@@ -101,7 +101,6 @@ public class Charge
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title(sequence = "1")
     @Property(regexPattern = RegexValidation.REFERENCE, editing = Editing.DISABLED)
     public String getReference() {
         return reference;
@@ -115,7 +114,7 @@ public class Charge
 
     private String name;
 
-    @Title(sequence = "2", prepend = "-")
+    @Title(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     public String getName() {
         return name;
