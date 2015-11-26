@@ -19,8 +19,7 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
-import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -37,6 +36,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -91,6 +93,13 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
     public List<Invoice> findInvoicesByRunId(final String runId) {
         return allMatches("findByRunId",
                 "runId", runId);
+    }
+
+    @Programmatic
+    public List<Invoice> findByRunIdAndApplicationTenancyPath(final String runId, final String applicationTenancyPath) {
+        return allMatches("findByRunIdAndApplicationTenancyPath",
+                "runId", runId,
+                "applicationTenancyPath", applicationTenancyPath);
     }
 
     @Programmatic

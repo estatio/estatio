@@ -180,8 +180,7 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Invoice> getInvoices() {
-        List<Invoice> findInvoicesByRunId = invoicesService.findInvoicesByRunId(runId);
-        return findInvoicesByRunId;
+        return invoicesService.findByRunIdAndApplicationTenancyPath(runId, getAtPath());
     }
 
 }

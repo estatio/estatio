@@ -129,6 +129,11 @@ import org.estatio.dom.party.Party;
                         "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE runId == :runId "),
         @javax.jdo.annotations.Query(
+                name = "findByRunIdAndApplicationTenancyPath", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE runId == :runId && applicationTenancyPath == :applicationTenancyPath"),
+        @javax.jdo.annotations.Query(
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
