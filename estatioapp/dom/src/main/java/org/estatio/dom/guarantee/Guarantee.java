@@ -56,11 +56,12 @@ import java.math.BigDecimal;
                         + "FROM org.estatio.dom.guarantee.Guarantee "
                         + "WHERE financialAccount == :financialAccount"),
         @javax.jdo.annotations.Query(
-                name = "matchByReferenceOrName", language = "JDOQL",
+                name = "matchByReferenceOrNameOrComments", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.guarantee.Guarantee "
-                        + "WHERE reference.matches(:referenceOrName)"
-                        + "|| name.matches(:referenceOrName)")
+                        + "WHERE reference.matches(:referenceOrNameOrComments)"
+                        + "|| name.matches(:referenceOrNameOrComments)"
+                        + "|| comments.matches(:referenceOrNameOrComments)")
 })
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Guarantees.class, autoCompleteAction = "autoComplete")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)

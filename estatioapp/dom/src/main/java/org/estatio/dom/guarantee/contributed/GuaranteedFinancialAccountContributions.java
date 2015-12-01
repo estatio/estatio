@@ -18,28 +18,24 @@
  */
 package org.estatio.dom.guarantee.contributed;
 
-import java.math.BigDecimal;
-
-import javax.inject.Inject;
-
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransactions;
 import org.estatio.dom.guarantee.Guarantees;
-
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import javax.inject.Inject;
+import java.math.BigDecimal;
 
 public class GuaranteedFinancialAccountContributions {
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public void newAdjustment(
             final FinancialAccount financialAccount, // contributee
-            final @Named("Transaction date") LocalDate transactionDate,
-            final @Named("Description") String description,
-            final @Named("Amount") BigDecimal amount
+            final LocalDate transactionDate,
+            final String description,
+            final BigDecimal amount
             ) {
         financialAccountTransactions.newTransaction(
                 financialAccount,
@@ -48,7 +44,6 @@ public class GuaranteedFinancialAccountContributions {
                 amount);
     }
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     public boolean hideNewAdjustment(
             final FinancialAccount financialAccount // contributee
     ) {

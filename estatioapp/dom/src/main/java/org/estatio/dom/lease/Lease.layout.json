@@ -225,6 +225,13 @@
           "render": {
             "value": "EAGERLY"
           }
+        },
+        "invoices" : {
+        },
+        "guarantees" : {
+          "actions": {
+            "newGuarantee": {}
+          }
         }
       }
     }

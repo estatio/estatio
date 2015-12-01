@@ -18,16 +18,6 @@
  */
 package org.estatio.integtests.guarantee;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import java.math.BigDecimal;
-import java.util.List;
-import javax.inject.Inject;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
@@ -35,6 +25,7 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
+import org.estatio.dom.guarantee.contributed.OnLease;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -43,6 +34,16 @@ import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 public class GuaranteesTest extends EstatioIntegrationTest {
 
@@ -64,6 +65,9 @@ public class GuaranteesTest extends EstatioIntegrationTest {
 
     @Inject
     Guarantees guarantees;
+
+    @Inject
+    OnLease onLease;
 
     @Inject
     FinancialAccounts financialAccounts;
@@ -186,13 +190,24 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         @Test
         public void findGuarantees() throws Exception {
 
-            List<Guarantee> allGuarantees = guarantees.allGuarantees();
-
             // when
             List<Guarantee> results = guarantees.findGuarantees(LeaseForOxfTopModel001Gb.REF + "*");
 
             // then
             assertThat(results.size(), is(1));
+        }
+
+        @Test
+        public void findGuaranteesByCommentAsWell() throws Exception {
+
+            // given
+            Guarantee guarantee = guarantees.findGuarantees(LeaseForOxfTopModel001Gb.REF + "*").get(0);
+
+            // when
+            guarantee.setComments("My special comment");
+
+            // then
+            assertThat(guarantees.findGuarantees("My special" + "*").size(), is(1));
         }
     }
 
@@ -216,7 +231,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
-            List<Guarantee> results = guarantees.guarantees(lease);
+            List<Guarantee> results = onLease.guarantees(lease);
 
             // then
             assertThat(results.size(), is(1));

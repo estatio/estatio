@@ -18,55 +18,27 @@
  */
 package org.estatio.dom.guarantee;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.RegexValidation;
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactions;
-import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.*;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
+import org.joda.time.LocalDate;
 
-@DomainService(repositoryFor = Guarantee.class)
-@DomainServiceLayout(
-        named = "Accounts",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "30.3")
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+@DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.DOMAIN)
 public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     @Override
@@ -78,21 +50,17 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
         super(Guarantees.class, Guarantee.class);
     }
 
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "guarantees", sequence = "1")
     public Guarantee newGuarantee(
             final Lease lease,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
-            final @ParameterLayout(named = "Name") String name,
+            final String reference,
+            final String name,
             final GuaranteeType guaranteeType,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
-            final @ParameterLayout(named = "Description") String description,
-            final @ParameterLayout(named = "Contractual amount") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal contractualAmount,
-            final @ParameterLayout(named = "Start amount") BigDecimal startAmount
-            ) {
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final String description,
+            final BigDecimal contractualAmount,
+            final BigDecimal startAmount
+    ) {
 
         AgreementRoleType artGuarantee = agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_GUARANTEE);
         Party leasePrimaryParty = lease.getPrimaryParty();
@@ -128,7 +96,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
                     leaseSecondaryParty);
             guarantee.setFinancialAccount(financialAccount);
             if (ObjectUtils.compare(startAmount, BigDecimal.ZERO) > 0) {
-                newTransaction(guarantee, startDate, null, startAmount);
+                financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), startDate, null, startAmount);
             }
         }
 
@@ -138,62 +106,30 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
     public List<Guarantee> findGuarantees(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName) {
-        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
-        return allMatches("matchByReferenceOrName", "referenceOrName", pattern);
+            final String refOrNameOrComments) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrNameOrComments);
+        return allMatches("matchByReferenceOrNameOrComments", "referenceOrNameOrComments", pattern);
     }
 
     // //////////////////////////////////////
 
-    @Programmatic
+
     public Guarantee findByReference(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(sequence = "99")
+
     public List<Guarantee> allGuarantees() {
         return allInstances();
     }
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<FinancialAccountTransaction> transactions(Guarantee guarantee) {
-        return financialAccountTransactions.transactions(guarantee.getFinancialAccount());
-    }
 
-    // //////////////////////////////////////
-
-    @NotInServiceMenu
-    public Guarantee newTransaction(
-            final Guarantee guarantee,
-            final @ParameterLayout(named = "Transaction date") LocalDate transactionDate,
-            final @ParameterLayout(named = "Description") String description,
-            final @ParameterLayout(named = "Amount") BigDecimal amount) {
-
-        financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
-        return guarantee;
-    }
-
-    public boolean hideNewTransaction(final Guarantee guarantee, final LocalDate transactionDate, final String description, final BigDecimal amount) {
-        return guarantee.getFinancialAccount() == null;
-    }
-
-    // //////////////////////////////////////
-
-    @NotInServiceMenu
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Guarantee> guarantees(Lease lease) {
+    public List<Guarantee> findByLease(final Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
 

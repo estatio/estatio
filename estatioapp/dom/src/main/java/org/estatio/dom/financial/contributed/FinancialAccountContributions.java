@@ -18,48 +18,39 @@
  */
 package org.estatio.dom.financial.contributed;
 
+import org.apache.isis.applib.annotation.*;
+import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.financial.*;
+import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
-
-import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.party.Party;
-
-@DomainService(menuOrder = "30")
-@Hidden
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class FinancialAccountContributions extends UdoDomainService<FinancialAccountContributions> {
 
     public FinancialAccountContributions() {
         super(FinancialAccountContributions.class);
     }
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @NotInServiceMenu
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "Financial Accounts", sequence = "13")
     public FinancialAccount addAccount(
             final Party owner,
             final FinancialAccountType financialAccountType,
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
-            final @Named("Name") String name) {
-        FinancialAccount account = financialAccountType.create(getContainer());
-        account.setOwner(owner);
-        account.setReference(reference);
-        account.setName(name);
-        persistIfNotAlready(account);
-        return account;
+            final @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final String name) {
+        return financialAccounts.newFinancialAccount(financialAccountType, reference, name, owner);
     }
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(name = "Financial Accounts", sequence = "13.5")
     public List<FinancialAccount> financialAccounts(final Party owner) {
         return financialAccounts.findAccountsByOwner(owner);
@@ -67,10 +58,36 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    public List<FinancialAccountTransaction> transactions(Guarantee guarantee) {
+        return financialAccountTransactions.transactions(guarantee.getFinancialAccount());
+    }
+
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Guarantee newTransaction(
+            final Guarantee guarantee,
+            final LocalDate transactionDate,
+            final String description,
+            final BigDecimal amount) {
+
+        financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
+        return guarantee;
+    }
+
+    public boolean hideNewTransaction(final Guarantee guarantee, final LocalDate transactionDate, final String description, final BigDecimal amount) {
+        return guarantee.getFinancialAccount() == null;
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
     private FinancialAccounts financialAccounts;
 
-    public void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
-        this.financialAccounts = financialAccounts;
-    }
+    @Inject
+    private FinancialAccountTransactions financialAccountTransactions;
 
 }
