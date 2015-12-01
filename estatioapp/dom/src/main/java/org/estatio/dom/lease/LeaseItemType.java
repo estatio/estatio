@@ -27,6 +27,7 @@ import org.estatio.dom.utils.StringUtils;
 public enum LeaseItemType implements PowerType<LeaseTerm> {
 
     RENT(LeaseTermForIndexable.class, true),
+    RENT_FIXED(LeaseTermForFixed.class, false),
     TURNOVER_RENT(LeaseTermForTurnoverRent.class, true),
     SERVICE_CHARGE(LeaseTermForServiceCharge.class, true),
     SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true),

@@ -13,6 +13,9 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.SERVICE_CHARGE_INDEXABLE),
     RENT(
             LeaseItemType.RENT),
+    RENT_FIXED(
+            LeaseItemType.RENT_FIXED
+    ),
     SERVICE_CHARGE(
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE),
@@ -26,6 +29,7 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.ENTRY_FEE),
     ALL(
             LeaseItemType.RENT,
+            LeaseItemType.RENT_FIXED,
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE,
             LeaseItemType.TURNOVER_RENT,
