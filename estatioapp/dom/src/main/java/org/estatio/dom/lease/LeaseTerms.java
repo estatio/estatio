@@ -18,25 +18,17 @@
  */
 package org.estatio.dom.lease;
 
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.security.UserMemento;
+import org.estatio.dom.EstatioUserRole;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.security.UserMemento;
-
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.EstatioUserRole;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
@@ -53,23 +45,42 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
             final LocalDate endDate) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         leaseTerm.setLeaseItem(leaseItem);
-        leaseTerm.modifyStartDate(startDate);
-        leaseTerm.modifyEndDate(endDate);
-        leaseTerm.setStatus(LeaseTermStatus.NEW);
-        // TOFIX: When changing the user in the integration test from 'tester' to 'estatio-admin' the getPrevious method returns null. Setting both sides of the bi-directional relationship makes them pass.
         leaseTerm.setPrevious(previous);
-
-        persistIfNotAlready(leaseTerm);
-
         if (previous != null) {
             previous.setNext(leaseTerm);
         }
+        leaseTerm.modifyStartDate(startDate);
+        leaseTerm.modifyEndDate(endDate);
+        // TOFIX: When changing the user in the integration test from 'tester' to 'estatio-admin' the getPrevious method returns null. Setting both sides of the bi-directional relationship makes them pass.
+
+        leaseTerm.initialize();
+        leaseTerm.align();
+
+        persistIfNotAlready(leaseTerm);
+
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated. Removing code below will fail integration tests
         // too.
         getContainer().flush();
         getIsisJdoSupport().refresh(leaseItem);
         return leaseTerm;
+    }
+
+    public String validateNewLeaseTerm(
+            final LeaseItem leaseItem,
+            final LeaseTerm previous,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (previous != null) {
+            if (startDate.isBefore(previous.getStartDate())) {
+                return String.format("Start date must be on or after %s", previous.getStartDate().toString());
+            }
+        }
+        final LocalDateInterval interval = LocalDateInterval.including(startDate, endDate);
+        if (!interval.isValid()) {
+            return String.format("From %s to %s is not a valid interval", startDate.toString(), endDate.toString());
+        }
+        return null;
     }
 
     @Deprecated
@@ -115,7 +126,7 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
                 "startDate", startDate);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
             final Property property,
@@ -126,7 +137,7 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
 
     // //////////////////////////////////////
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndType(
             final Property property,

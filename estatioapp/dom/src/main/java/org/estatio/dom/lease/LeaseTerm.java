@@ -18,45 +18,12 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.VersionStrategy;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.estatio.app.security.EstatioRole;
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
+import org.estatio.dom.*;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
@@ -65,6 +32,15 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResu
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.jdo.annotations.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -80,10 +56,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_sequence_IDX",
-                members = { "leaseItem", "sequence" }),
+                members = {"leaseItem", "sequence"}),
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_startDate_IDX",
-                members = { "leaseItem", "startDate" })
+                members = {"leaseItem", "startDate"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -480,9 +456,6 @@ public abstract class LeaseTerm
             return nextTerm;
         }
         nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
-        nextTerm.initialize();
-        align();
-        nextTerm.align();
         return nextTerm;
     }
 
@@ -495,7 +468,7 @@ public abstract class LeaseTerm
     public String validateCreateNext(
             final LocalDate nextStartDate,
             final LocalDate nextEndDate) {
-        return nextStartDate.isBefore(getStartDate()) ? "Cannot start before this start date" : null;
+        return terms.validateNewLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
     }
 
     public LocalDate default0CreateNext(
@@ -602,9 +575,9 @@ public abstract class LeaseTerm
     @Action(restrictTo = RestrictTo.PROTOTYPING)
     public String showCalculationResults() {
         return StringUtils.join(calculationResults(
-                getLeaseItem().getInvoicingFrequency(),
-                getStartDate(),
-                getStartDate().plusYears(2)),
+                        getLeaseItem().getInvoicingFrequency(),
+                        getStartDate(),
+                        getStartDate().plusYears(2)),
                 "\t");
     }
 
@@ -615,7 +588,7 @@ public abstract class LeaseTerm
             final InvoicingFrequency invoicingFrequency,
             final LocalDate startDueDate,
             final LocalDate nextDueDate
-            ) {
+    ) {
         return invoiceCalculationService.calculateDueDateRange(
                 this,
                 new InvoiceCalculationParameters(
@@ -651,7 +624,7 @@ public abstract class LeaseTerm
         this.invoiceCalculationService = invoiceCalculationService;
     }
 
-    private LeaseTerms terms;
+    LeaseTerms terms;
 
     public final void injectLeaseTerms(final LeaseTerms terms) {
         this.terms = terms;

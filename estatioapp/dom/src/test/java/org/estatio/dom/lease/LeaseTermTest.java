@@ -18,35 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
-import org.hamcrest.Description;
-import org.hamcrest.core.Is;
-import org.jmock.Expectations;
-import org.jmock.api.Action;
-import org.jmock.api.Invocation;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.WithIntervalMutable;
@@ -57,6 +31,23 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
+import org.hamcrest.Description;
+import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.jmock.Expectations;
+import org.jmock.api.Action;
+import org.jmock.api.Invocation;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.*;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class LeaseTermTest {
 
@@ -227,7 +218,7 @@ public class LeaseTermTest {
                 String itemStartDate,
                 String itemEndDate,
                 String termStartDate, String termEndDate
-                ) {
+        ) {
 
             Lease lease = new Lease();
             lease.setStartDate(parseDate(leaseStartDate));
@@ -287,7 +278,7 @@ public class LeaseTermTest {
                     .exercise(new LeaseTermForTesting());
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({"rawtypes", "unchecked"})
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
             return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[]) LeaseTermStatus.values());
         }
@@ -391,6 +382,7 @@ public class LeaseTermTest {
             term = new LeaseTermForTesting();
             term.setStartDate(new LocalDate(2014, 6, 1));
             term.setEndDate(new LocalDate(2014, 8, 31));
+            term.terms = new LeaseTerms();
         }
 
         @Test
@@ -410,7 +402,7 @@ public class LeaseTermTest {
 
         @Test
         public void tooEarly() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014, 5, 31), null), is("Cannot start before this start date"));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 5, 31), null), is("Start date must be on or after 2014-06-01"));
         }
 
         @Test

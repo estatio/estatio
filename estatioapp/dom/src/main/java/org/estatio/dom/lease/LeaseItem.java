@@ -18,47 +18,12 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Unique;
-import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
@@ -72,6 +37,20 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.VersionStrategy;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * An item component of an {@link #getLease() owning} {@link Lease}. Each is of
@@ -79,8 +58,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * defines three such: {@link LeaseItemType#RENT (indexable) rent},
  * {@link LeaseItemType#TURNOVER_RENT turnover rent} and
  * {@link LeaseItemType#SERVICE_CHARGE service charge}
- * 
- * <p>
+ * <p/>
+ * <p/>
  * Each item gives rise to a succession of {@link LeaseTerm}s, typically
  * generated on a quarterly basis. The lease terms (by implementing
  * <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s.
@@ -95,10 +74,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseItem_lease_type_sequence_IDX",
-                members = { "lease", "type", "sequence" }),
+                members = {"lease", "type", "sequence"}),
         @javax.jdo.annotations.Index(
                 name = "LeaseItem_lease_type_startDate_IDX",
-                members = { "lease", "type", "startDate" })
+                members = {"lease", "type", "startDate"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -128,7 +107,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& charge == :charge "
                         + "ORDER BY sequence ")
 })
-@Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = { "lease", "type", "startDate", "sequence" })
+@Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = {"lease", "type", "startDate", "sequence"})
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
@@ -383,7 +362,7 @@ public class LeaseItem
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final Charge charge
-            ) {
+    ) {
         final LeaseItem newItem = getLease().newItem(
                 this.getType(), charge, invoicingFrequency, paymentMethod, startDate, getApplicationTenancy());
         this.copyTerms(startDate, newItem);
@@ -400,13 +379,13 @@ public class LeaseItem
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final Charge charge
-            ) {
-        if(!choices3Copy().contains(charge)) {
+    ) {
+        if (!choices3Copy().contains(charge)) {
             return "Charge (with app tenancy '%s') is not valid for this lease item";
         }
         return null;
     }
-    
+
 
     // //////////////////////////////////////
 
@@ -458,7 +437,7 @@ public class LeaseItem
         this.invoicingFrequency = invoicingFrequency;
     }
 
-    
+
     // //////////////////////////////////////
 
     private PaymentMethod paymentMethod;
@@ -520,7 +499,7 @@ public class LeaseItem
     public PaymentMethod default0ChangePaymentMethod(
             final PaymentMethod paymentMethod,
             final String reason
-            ) {
+    ) {
         return getPaymentMethod();
     }
 
@@ -635,19 +614,21 @@ public class LeaseItem
     public LeaseTerm newTerm(
             final @ParameterLayout(named = "Start date") LocalDate startDate,
             final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        LeaseTerm term;
-        if (getType().autoCreateTerms() && !getTerms().isEmpty()) {
-            LeaseTerm lastTerm = getTerms().last();
-            term = lastTerm.createNext(startDate, endDate);
-            lastTerm.align();
-        }
-        else {
+        return leaseTerms.newLeaseTerm(this, lastInChain(), startDate, endDate);
+    }
 
-            term = leaseTerms.newLeaseTerm(this, null, startDate, endDate);
+    private LeaseTerm lastInChain() {
+        if (getType().autoCreateTerms() && !getTerms().isEmpty()) {
+            return getTerms().last();
         }
-        term.initialize();
-        term.align();
-        return term;
+        return null;
+    }
+
+    public String validateNewTerm(
+            final LocalDate startDate,
+            final LocalDate endDate
+    ) {
+        return leaseTerms.validateNewLeaseTerm(this, lastInChain(), startDate, endDate);
     }
 
     public LocalDate default0NewTerm(
@@ -711,7 +692,7 @@ public class LeaseItem
             final InvoicingFrequency invoicingFrequency,
             final LocalDate startDueDate,
             final LocalDate nextDueDate
-            ) {
+    ) {
         List<CalculationResult> results = new ArrayList<CalculationResult>();
         for (LeaseTerm term : getTerms()) {
             results.addAll(term.calculationResults(invoicingFrequency, startDueDate, nextDueDate));

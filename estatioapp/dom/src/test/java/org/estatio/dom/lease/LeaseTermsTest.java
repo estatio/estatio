@@ -18,22 +18,19 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigInteger;
-import java.util.List;
-
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
+import java.math.BigInteger;
+import java.util.List;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class LeaseTermsTest {
 
@@ -44,7 +41,8 @@ public class LeaseTermsTest {
     LeaseItem leaseItem;
     BigInteger sequence = BigInteger.TEN;
 
-    LocalDate date = new LocalDate(2013, 4, 1);;
+    LocalDate date = new LocalDate(2013, 4, 1);
+    ;
 
     @Before
     public void setup() {
@@ -120,5 +118,33 @@ public class LeaseTermsTest {
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }
     }
+
+    public static class NewLeaseTerm extends LeaseTermsTest {
+
+        @Test
+        public void validate() {
+            // valid
+            testValidate(null, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), null);
+            // valid
+            testValidate(null, null, new LocalDate(2014, 1, 1), new LocalDate(2013, 12, 31), null);
+            // invalid interval
+            testValidate(null, null, new LocalDate(2014, 1, 1), new LocalDate(2013, 12, 30), "From 2014-01-01 to 2013-12-30 is not a valid interval");
+
+            final LeaseTermForTesting previous = new LeaseTermForTesting();
+            previous.setStartDate(new LocalDate(2014, 1, 1));
+            // valid
+            testValidate(null, previous, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31), null);
+            // start date before start date of previous
+            testValidate(null, previous, new LocalDate(2013, 12, 31), new LocalDate(2014, 12, 31), "Start date must be on or after 2014-01-01");
+
+        }
+
+        private void testValidate(LeaseItem leaseItem, LeaseTerm previous, LocalDate startDate, LocalDate endDate, String value) {
+            assertThat(leaseTerms.validateNewLeaseTerm(leaseItem, previous, startDate, endDate), is(value));
+        }
+
+
+    }
+
 
 }
