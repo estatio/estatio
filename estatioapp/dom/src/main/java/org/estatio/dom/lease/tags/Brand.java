@@ -68,7 +68,12 @@ import org.estatio.dom.geography.Country;
         @javax.jdo.annotations.Query(
                 name = "findUniqueNames", language = "JDOQL",
                 value = "SELECT name "
-                        + "FROM org.estatio.dom.lease.tags.Brand")
+                        + "FROM org.estatio.dom.lease.tags.Brand ORDER BY name"),
+        @javax.jdo.annotations.Query(
+                name = "findUniqueGroups", language = "JDOQL",
+                value = "SELECT DISTINCT this.group "
+                        + "FROM org.estatio.dom.lease.tags.Brand WHERE this.group != null "
+                        + "ORDER BY this.group ")
 })
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Brands.class, autoCompleteAction = "autoComplete")
 public class Brand
@@ -148,26 +153,26 @@ public class Brand
 
     // //////////////////////////////////////
 
-    private Brand parentBrand;
+    private String group;
 
-    @Column(name = "parentBrandId",  allowsNull = "true")
-    public Brand getParentBrand() {
-        return parentBrand;
+    @Column(allowsNull = "true")
+    public String getGroup() {
+        return group;
     }
 
-    public void setParentBrand(Brand parentBrand) {
-        this.parentBrand = parentBrand;
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     // //////////////////////////////////////
 
     public Brand change(
             final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Parent brand") @Parameter(optionality = Optionality.OPTIONAL) Brand parentBrand,
+            final @ParameterLayout(named = "Group") @Parameter(optionality = Optionality.OPTIONAL) String group,
             final @ParameterLayout(named = "Coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage brandCoverage,
             final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
         setName(name);
-        setParentBrand(parentBrand);
+        setGroup(group);
         setCoverage(brandCoverage);
         setCountryOfOrigin(countryOfOrigin);
         return this;
@@ -177,8 +182,8 @@ public class Brand
         return this.getName();
     }
 
-    public Brand default1Change() {
-        return this.getParentBrand();
+    public String default1Change() {
+        return this.getGroup();
     }
 
     public BrandCoverage default2Change() {
