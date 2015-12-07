@@ -24,6 +24,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -80,6 +81,15 @@ public class Countries extends UdoDomainRepositoryAndFactory<Country> {
         country.setName(name);
         persist(country);
         return country;
+    }
+
+    @Programmatic
+    public Country findOrCreateCountry(
+            final String reference,
+            final String alpha2Code,
+            final String name) {
+        Country country = findCountry(reference);
+        return country == null ? createCountry(reference, alpha2Code, name) : country;
     }
 
     @Programmatic

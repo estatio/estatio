@@ -18,18 +18,32 @@
  */
 package org.estatio.dom.lease.tags;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import javax.inject.Inject;
-import javax.jdo.Query;
-import java.util.List;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -50,17 +64,21 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
             final @ParameterLayout(named = "Brand name") String name,
             final @ParameterLayout(named = "Brand coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
             final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
-            final @ParameterLayout(named = "Parent brand") @Parameter(optionality = Optionality.OPTIONAL) Brand parentBrand,
+            final @ParameterLayout(named = "Group") @Parameter(optionality = Optionality.OPTIONAL) String group,
             final @ParameterLayout(named = "Global or Country") ApplicationTenancy applicationTenancy) {
         Brand brand;
         brand = newTransientInstance(Brand.class);
         brand.setName(name);
         brand.setCoverage(coverage);
         brand.setCountryOfOrigin(countryOfOrigin);
-        brand.setParentBrand(parentBrand);
+        brand.setGroup(group);
         brand.setApplicationTenancyPath(applicationTenancy.getPath());
         persist(brand);
         return brand;
+    }
+
+    public List<String> choices3NewBrand() {
+        return findUniqueGroups();
     }
 
     public List<ApplicationTenancy> choices4NewBrand() {
@@ -82,12 +100,20 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
         return allInstances();
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<String> findUniqueNames() {
-        final Query query = newQuery("SELECT name FROM org.estatio.dom.lease.tags.Brand");
-        return (List<String>) query.execute();
+        List names = allMatches("findUniqueNames");
+        return names;
     }
+
+    @SuppressWarnings({ "unchecked" })
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
+    public List<String> findUniqueGroups() {
+        List groups = allMatches("findUniqueGroups");
+        return groups;
+    }
+
 
     @Action(hidden = Where.EVERYWHERE)
     public Brand findByName(final String name) {
@@ -121,5 +147,8 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
                 ? matchByName("*" + searchPhrase + "*")
                 : Lists.<Brand>newArrayList();
     }
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
 
 }

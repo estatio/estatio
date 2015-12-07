@@ -219,11 +219,12 @@ public class BankAccount
     }
 
     @Action(domainEvent = BankAccount.RemoveEvent.class)
-    public void remove(
+    public Object remove(
             @ParameterLayout(named = "Are you sure?") Boolean confirm) {
         if (confirm) {
             doRemove();
         }
+        return null;
     }
 
     @Programmatic
