@@ -62,7 +62,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
     public static class AllBrands extends BrandsIntegTest {
 
         @Test
-        public void xxx() throws Exception {
+        public void happyCase() throws Exception {
             // given
             // when
             final List<Brand> results = brands.allBrands();
@@ -75,7 +75,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
     public static class FindUniqueNames extends BrandsIntegTest {
 
         @Test
-        public void xxx() throws Exception {
+        public void happyCase() throws Exception {
             // given
             // when
             final List<String> results = brands.findUniqueNames();
@@ -87,7 +87,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
     public static class FindUniqueGroups extends BrandsIntegTest {
 
         @Test
-        public void xxx() throws Exception {
+        public void happyCase() throws Exception {
             // given
             // when
             final List<String> uniqueGroups = brands.findUniqueGroups();
