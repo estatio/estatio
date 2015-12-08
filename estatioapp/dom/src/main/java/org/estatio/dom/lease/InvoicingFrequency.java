@@ -136,9 +136,13 @@ public enum InvoicingFrequency {
         return new InvoicingInterval(interval, dueDateOfInterval(interval));
     }
 
-    public List<InvoicingInterval> intervalsInRange(final LocalDate periodStartDate, final LocalDate periodEndDate) {
+    public List<InvoicingInterval> intervalsInRange(final LocalDateInterval interval) {
+        return intervalsInRange(interval.startDate(), interval.endDateExcluding());
+    }
+
+    public List<InvoicingInterval> intervalsInRange(final LocalDate periodStartDate, final LocalDate nextPeriodStartDate) {
         List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
-        for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule)) {
+        for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, nextPeriodStartDate, this.rrule)) {
             invoicingIntervals.add(new InvoicingInterval(interval, dueDateOfInterval(interval)));
         }
         return invoicingIntervals;

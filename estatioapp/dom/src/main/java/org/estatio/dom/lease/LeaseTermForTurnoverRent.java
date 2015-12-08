@@ -36,6 +36,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -81,7 +82,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     public LeaseTermForTurnoverRent changeParameters(
             final @Named("Turnover rent rule") @Optional String newTurnoverRentRule,
-            final @Named("Total budgeted rent") @Optional BigDecimal newTotalBudgetedRent, 
+            final @Named("Total budgeted rent") @Optional BigDecimal newTotalBudgetedRent,
             final @Named("Audited Turnover") @Optional BigDecimal newAuditedTurnover) {
         setTurnoverRentRule(newTurnoverRentRule);
         setTotalBudgetedRent(newTotalBudgetedRent);
@@ -90,19 +91,19 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         doAlign();
         return this;
     }
-    
+
     public String default0ChangeParameters() {
         return getTurnoverRentRule();
     }
-    
+
     public BigDecimal default1ChangeParameters() {
         return getTotalBudgetedRent();
     }
-    
+
     public BigDecimal default2ChangeParameters() {
         return getAuditedTurnover();
     }
-   
+
     // //////////////////////////////////////
 
     private BigDecimal contractualRent;
@@ -161,7 +162,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public void setTotalBudgetedRent(final BigDecimal totalBudgetedRent) {
         this.totalBudgetedRent = totalBudgetedRent;
     }
-    
+
     // //////////////////////////////////////
 
     @Override
@@ -193,10 +194,8 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
             List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
             List<CalculationResult> calculationResults = new ArrayList<CalculationResult>();
             for (LeaseItem rentItem : rentItems) {
-                calculationResults.addAll(rentItem.calculationResults(
-                        rentItem.getInvoicingFrequency(),
-                        getStartDate(),
-                        getStartDate().plusYears(2)));
+                calculationResults.addAll(
+                        rentItem.calculationResults(getEffectiveInterval(), this.getEndDate().plusYears(1)));
             }
             // TODO: do prorata when intervals don't match
             for (CalculationResult result : calculationResults) {
@@ -240,6 +239,9 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         LeaseTermForTurnoverRent prev = (LeaseTermForTurnoverRent) getPrevious();
         if (prev != null) {
             setTurnoverRentRule(prev.getTurnoverRentRule());
+        }
+        if(getEndDate() == null){
+            setEndDate(LocalDateInterval.excluding(getStartDate(),nextStartDate()).endDate());
         }
     }
 

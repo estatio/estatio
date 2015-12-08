@@ -20,13 +20,16 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -36,11 +39,16 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRates;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.domsettings.EstatioSettingsService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -369,6 +377,64 @@ public class InvoiceCalculationServiceTest {
             }
 
         }
+
+    }
+
+    public static class CalculateDateRange extends InvoiceCalculationServiceTest  {
+
+        @Rule
+        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+
+        InvoiceCalculationService ic;
+
+        @Mock
+        EstatioSettingsService mockSettings;
+
+        @Before
+        public void setUp() throws Exception {
+            ic = new InvoiceCalculationService();
+            ic.estatioSettingsService = mockSettings;
+
+            context.checking(new Expectations() {
+                {
+                    allowing(mockSettings).fetchEpochDate();
+                    will(returnValue(new LocalDate(2013, 1, 1)));
+                }
+            });
+
+        }
+
+
+        @Test
+        public void testDateRange() throws Exception {
+
+            tester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-02-01/2015-02-01", 10000.00, "2014-01-01/2015-01-01", "2015-01-01", 1638.89, 2500.00, 2500.00, 2500.00);
+            tester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-02-01/2015-02-01", 10000.00, "2015-01-01/2016-01-01", "2015-01-01", 861.11, 0.00, 0.00, 0.00);
+            tester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2014-02-01/2015-02-01", 10000.00, "2015-01-01/2016-01-01", "2015-01-01", 861.11, 0.00, 0.00, 0.00);
+
+            tester(InvoicingFrequency.MONTHLY_IN_ADVANCE, "2014-02-01/2015-02-01", 10000.00, "2014-02-01/2015-02-01", "2015-01-01", 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33);
+        }
+
+        private void tester(final InvoicingFrequency invoicingFrequency, final String termInterval, final double termValue, final String caluculationInterval, final String dueDate, final Double... results) {
+            Lease lease = new Lease();
+            LeaseItem item = new LeaseItem(lease, invoicingFrequency);
+            LeaseTerm term = new LeaseTermForTesting(item, LocalDateInterval.parseString(termInterval), new BigDecimal(termValue));
+
+            final List<CalculationResult> calculationResults = ic.calculateDateRange(term, LocalDateInterval.parseString(caluculationInterval), new LocalDate(dueDate));
+
+            compareResults(calculationResults, results);
+        }
+
+        private void compareResults(List<CalculationResult> results, Double... value ){
+            assertThat(results.size(), is(value.length));
+            Arrays.asList(value);
+
+            for (int i= 0; i <results.size(); i++){
+                assertThat(results.get(i).value(),is(BigDecimal.valueOf(value[i]).setScale(2)));
+            }
+
+        }
+
 
     }
 

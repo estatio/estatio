@@ -22,9 +22,19 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
 public class LeaseTermForTesting extends LeaseTerm {
 
     public LeaseTermForTesting() {
+    }
+
+    public LeaseTermForTesting(LeaseItem leaseItem, LocalDateInterval interval, BigDecimal value) {
+        super();
+        this.value = value;
+        setStartDate(interval.startDate());
+        setEndDate(interval.endDate());
+        setLeaseItem(leaseItem);
     }
 
     public LeaseTermForTesting(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value) {

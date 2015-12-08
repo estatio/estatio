@@ -18,17 +18,25 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.security.UserMemento;
+
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
@@ -56,11 +64,13 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
         leaseTerm.initialize();
         leaseTerm.align();
 
-        persistIfNotAlready(leaseTerm);
-
+        if (previous != null) {
+            previous.setNext(leaseTerm);
+        }
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated. Removing code below will fail integration tests
         // too.
+        persistIfNotAlready(leaseTerm);
         getContainer().flush();
         getIsisJdoSupport().refresh(leaseItem);
         return leaseTerm;

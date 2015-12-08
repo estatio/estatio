@@ -18,29 +18,56 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.util.TitleBuffer;
-import org.estatio.app.security.EstatioRole;
-import org.estatio.dom.*;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
-import org.estatio.dom.invoice.InvoiceSource;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
-
-import javax.jdo.annotations.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.app.security.EstatioRole;
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
+import org.estatio.dom.invoice.InvoiceSource;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -575,8 +602,7 @@ public abstract class LeaseTerm
     @Action(restrictTo = RestrictTo.PROTOTYPING)
     public String showCalculationResults() {
         return StringUtils.join(calculationResults(
-                        getLeaseItem().getInvoicingFrequency(),
-                        getStartDate(),
+                        getEffectiveInterval(),
                         getStartDate().plusYears(2)),
                 "\t");
     }
@@ -585,28 +611,10 @@ public abstract class LeaseTerm
 
     @Programmatic
     public List<CalculationResult> calculationResults(
-            final InvoicingFrequency invoicingFrequency,
-            final LocalDate startDueDate,
-            final LocalDate nextDueDate
+            final LocalDateInterval interval,
+            final LocalDate dueDate
     ) {
-        return invoiceCalculationService.calculateDueDateRange(
-                this,
-                new InvoiceCalculationParameters(
-                        InvoiceRunType.NORMAL_RUN,
-                        startDueDate,
-                        startDueDate,
-                        nextDueDate));
-    }
-
-    // //////////////////////////////////////
-
-    public String validate() {
-        String validatedChangeDatesReason = getChangeDates().validateChangeDates(getStartDate(), getEndDate());
-        if (validatedChangeDatesReason != null) {
-            return validatedChangeDatesReason;
-        }
-        // other checks, if any...
-        return null;
+        return invoiceCalculationService.calculateDateRange(this, interval, dueDate);
     }
 
     // //////////////////////////////////////

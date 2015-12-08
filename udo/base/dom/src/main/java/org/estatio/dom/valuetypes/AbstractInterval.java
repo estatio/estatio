@@ -254,8 +254,12 @@ public abstract class AbstractInterval<T extends AbstractInterval<T>> {
         return ending == IntervalEnding.INCLUDING_END_DATE ? date.minusDays(1) : date;
     }
 
-    boolean isInfinite() {
+    public boolean isInfinite() {
         return startDate == null && endDate == null;
+    }
+
+    public boolean isOpenEnded() {
+        return endDate == null;
     }
 
 }

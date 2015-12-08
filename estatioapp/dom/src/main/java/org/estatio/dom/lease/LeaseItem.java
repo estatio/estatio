@@ -116,16 +116,22 @@ public class LeaseItem
 
     private static final int PAGE_SIZE = 15;
 
+    public LeaseItem() {
+        super("lease, type, sequence");
+    }
+
+    public LeaseItem(final Lease lease, final InvoicingFrequency invoicingFrequency) {
+        this();
+        this.lease = lease;
+        this.invoicingFrequency = invoicingFrequency;
+    }
+
     public static class Functions {
         public static Function<LeaseItem, LeaseItemStatus> GET_STATUS = new Function<LeaseItem, LeaseItemStatus>() {
             public LeaseItemStatus apply(final LeaseItem li) {
                 return li.getStatus();
             }
         };
-    }
-
-    public LeaseItem() {
-        super("lease, type, sequence");
     }
 
     // //////////////////////////////////////
@@ -689,13 +695,12 @@ public class LeaseItem
 
     @Programmatic
     public List<CalculationResult> calculationResults(
-            final InvoicingFrequency invoicingFrequency,
-            final LocalDate startDueDate,
-            final LocalDate nextDueDate
-    ) {
+            final LocalDateInterval interval,
+            final LocalDate dueDate
+            ) {
         List<CalculationResult> results = new ArrayList<CalculationResult>();
         for (LeaseTerm term : getTerms()) {
-            results.addAll(term.calculationResults(invoicingFrequency, startDueDate, nextDueDate));
+            results.addAll(term.calculationResults(interval, dueDate));
         }
         return results;
     }

@@ -20,7 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -30,6 +30,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -50,6 +53,8 @@ public class LeaseTermForTurnoverRentTest {
     public void setup() {
 
         term = new LeaseTermForTurnoverRent();
+        term.setStartDate(new LocalDate(2013,1,1));
+        term.setEndDate(new LocalDate(2013,12,31));
     }
 
     public static class DoAlign extends LeaseTermForTurnoverRentTest {
@@ -77,9 +82,9 @@ public class LeaseTermForTurnoverRentTest {
                             add(rentItem);
                         }
                     }));
-                    oneOf(rentItem).getInvoicingFrequency();
-                    will(returnValue(InvoicingFrequency.QUARTERLY_IN_ADVANCE));
-                    oneOf(rentItem).calculationResults(with(any(InvoicingFrequency.class)), with(any(LocalDate.class)), with(any(LocalDate.class)));
+                    oneOf(mockLease).getEffectiveInterval();
+                    will(returnValue(LocalDateInterval.excluding(new LocalDate(1980,1,1), null)));
+                    oneOf(rentItem).calculationResults(with(any(LocalDateInterval.class)), with(any(LocalDate.class)));
                     will(returnValue(new ArrayList<InvoiceCalculationService.CalculationResult>() {
                         private static final long serialVersionUID = -2212720554866561882L;
                         {
@@ -87,7 +92,6 @@ public class LeaseTermForTurnoverRentTest {
                                     new InvoicingInterval(LocalDateInterval.parseString("2013-01-01/2013-04-01"), new LocalDate(2013, 1, 1)),
                                     LocalDateInterval.parseString("2013-01-01/2013-04-01"),
                                     new BigDecimal("100000.00"),
-                                    BigDecimal.ZERO,
                                     BigDecimal.ZERO
                             ));
                         }
@@ -142,6 +146,36 @@ public class LeaseTermForTurnoverRentTest {
             return new BigDecimal(input);
         }
     }
+
+    public static class DoInitialize extends LeaseTermForTurnoverRentTest {
+
+        @Test
+        public void endDateIsSetWhenNotProvided() {
+            // given
+            LeaseTerm term = new LeaseTermForTurnoverRent();
+            term.setStartDate(new LocalDate(2014,1,1));
+            term.setFrequency(LeaseTermFrequency.YEARLY);
+            //when
+            term.doInitialize();
+            //then
+            assertThat(term.getEndDate(), is(new LocalDate(2014,12,31)));
+        }
+
+        @Test
+        public void useGivenEndDate() {
+            // given
+            LeaseTerm term = new LeaseTermForTurnoverRent();
+            term.setStartDate(new LocalDate(2014,1,1));
+            term.setEndDate(term.getStartDate().plusDays(1));
+            term.setFrequency(LeaseTermFrequency.YEARLY);
+            //when
+            term.doInitialize();
+            //then
+            assertThat(term.getEndDate(), is(term.getStartDate().plusDays(1)));
+        }
+
+    }
+
 
     public static class ValidateTurnoverRentRule extends LeaseTermForTurnoverRentTest {
 
