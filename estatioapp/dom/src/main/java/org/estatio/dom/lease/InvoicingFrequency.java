@@ -57,6 +57,10 @@ public enum InvoicingFrequency {
             "RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTH=2,5,8,11",
             PaidIn.ADVANCE,
             BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
+    QUARTERLY_IN_ADVANCE_PLUS2M(
+            "RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTH=3,6,9,12",
+            PaidIn.ADVANCE,
+            BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ARREARS(
             "RRULE:FREQ=MONTHLY;INTERVAL=3",
             PaidIn.ARREARS,

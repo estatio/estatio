@@ -16,6 +16,14 @@ public class InvoicingFrequencyTest {
     public void testIntervalContaining() {
         testRange(InvoicingFrequency.MONTHLY_IN_ADVANCE, "2010-01-01", "2010-01-01/2010-02-01");
         testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2010-01-01", "2010-01-01/2010-04-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, "2009-11-01", "2009-11-01/2010-02-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, "2010-02-01", "2010-02-01/2010-05-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, "2010-05-01", "2010-05-01/2010-08-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, "2010-08-01", "2010-08-01/2010-11-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2009-12-01", "2009-12-01/2010-03-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2010-03-01", "2010-03-01/2010-06-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2010-06-01", "2010-06-01/2010-09-01");
+        testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2010-09-01", "2010-09-01/2010-12-01");
         testRange(InvoicingFrequency.MONTHLY_IN_ADVANCE, "2010-01-01", "2010-01-01/2010-02-01");
         testRange(InvoicingFrequency.YEARLY_IN_ARREARS, "2010-01-01", "2010-01-01/2011-01-01");
     }
@@ -39,7 +47,11 @@ public class InvoicingFrequencyTest {
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2013-12-29/2014-04-01", 2);
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-29/2014-01-02", 1);
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-01-01/2014-01-01", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-01-01/2014-01-02", 1);
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2012-01-01/2014-01-01", 8);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2012-01-01/2012-03-01", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2012-01-01/2012-03-02", 1);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2012-03-01/2012-03-02", 1);
     }
 
     @Test
