@@ -18,20 +18,18 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.collect.Ordering;
-
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
-
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum InvoicingFrequency {
 
@@ -178,7 +176,7 @@ public enum InvoicingFrequency {
                     rangeInterval.endDateExcluding(),
                     this.rrule)) {
                 LocalDate dueDate = dueDateOfInterval(interval);
-                if (dueDate.compareTo(rangeInterval.endDateExcluding()) < 0) {
+                if (rangeInterval.contains(dueDate)) {
                     invoicingIntervals.add(new InvoicingInterval(interval, dueDate));
                 }
             }

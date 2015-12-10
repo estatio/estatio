@@ -18,11 +18,21 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
-
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+import org.estatio.dom.agreement.AgreementRoleRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
+import org.estatio.dom.tax.TaxRates;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.domsettings.EstatioSettingsService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -30,26 +40,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTesting;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.TaxRates;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.domsettings.EstatioSettingsService;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -252,7 +246,7 @@ public class InvoiceCalculationServiceTest {
                 leaseTerm.setStartDate(new LocalDate(2013, 1, 1));
                 leaseTerm.setEndDate(new LocalDate(2013, 3, 1));
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
-                calculateDueDateRange(leaseTerm, new LocalDate(2012, 1, 2), null, 0.00);
+                calculateDueDateRange(leaseTerm, new LocalDate(2012, 1, 2), null);
             }
 
             @Test
@@ -298,7 +292,7 @@ public class InvoiceCalculationServiceTest {
                 leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
                 calculateDueDateRange(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
-                        3296.70, 5000.00, 5000.00, 5000.00, 1722.22);
+                        5000.00, 5000.00, 5000.00, 1722.22);
                 // TODO: Since 2012 is a leap year, the keySum of the invoices is greater
                 // than the value of the term.....
             }
@@ -371,7 +365,7 @@ public class InvoiceCalculationServiceTest {
                 leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
                 calculateDueDateRange(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
-                        0.00, 0.00, 0.00, 0.00, 1722.22);
+                        0.00, 0.00, 0.00, 1722.22);
                 // TODO: Since 2012 is a leap year, the keySum of the invoices is greater
                 // than the value of the term.....
             }

@@ -1,15 +1,14 @@
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.List;
-
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class InvoicingFrequencyTest {
 
@@ -30,8 +29,15 @@ public class InvoicingFrequencyTest {
     @Test
     public void testIntervalsInDueDateRange() {
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2012-01-01/2014-04-01", 9);
-        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-31/2014-04-01", 2);
-        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-30/2013-12-31", 1);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-31/2014-04-01", 1);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-30/2013-12-31", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-29/2013-12-30", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2013-12-29/2013-12-30", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-01-02/2014-01-03", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2014-01-02/2014-01-03", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2013-12-29/2014-03-31", 1);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2013-12-29/2014-04-01", 2);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-29/2014-01-02", 1);
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-01-01/2014-01-01", 0);
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2012-01-01/2014-01-01", 8);
     }
