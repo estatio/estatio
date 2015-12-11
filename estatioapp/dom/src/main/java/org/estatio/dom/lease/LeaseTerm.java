@@ -190,7 +190,7 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Property(editing = Editing.DISABLED)
     @Override
     public LocalDate getStartDate() {
         return startDate;
