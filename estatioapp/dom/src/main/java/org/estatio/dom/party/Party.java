@@ -20,10 +20,12 @@ package org.estatio.dom.party;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
@@ -31,12 +33,14 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -150,6 +154,21 @@ public abstract class Party
 
     public void setRegistrations(final SortedSet<PartyRegistration> registrations) {
         this.registrations = registrations;
+    }
+
+    // //////////////////////////////////////
+
+    private String fiscalCode;
+
+    @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.FISCAL_CODE)
+    @Property(optionality = Optionality.OPTIONAL)
+    @MemberOrder(sequence = "1")
+    public String getFiscalCode() {
+        return fiscalCode;
+    }
+
+    public void setFiscalCode(String fiscalCode) {
+        this.fiscalCode = fiscalCode;
     }
 
     // //////////////////////////////////////

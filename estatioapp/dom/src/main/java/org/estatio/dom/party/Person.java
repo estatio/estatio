@@ -68,7 +68,6 @@ public class Person
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-
     // //////////////////////////////////////
 
     private String initials;

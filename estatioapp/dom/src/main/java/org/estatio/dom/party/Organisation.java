@@ -69,22 +69,6 @@ public class Organisation
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-
-    // //////////////////////////////////////
-
-    private String fiscalCode;
-
-    @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.FISCAL_CODE)
-    @Property(optionality = Optionality.OPTIONAL)
-    @MemberOrder(sequence = "1")
-    public String getFiscalCode() {
-        return fiscalCode;
-    }
-
-    public void setFiscalCode(final String fiscalCode) {
-        this.fiscalCode = fiscalCode;
-    }
-
     // //////////////////////////////////////
 
     private String vatCode;
@@ -102,14 +86,29 @@ public class Organisation
 
     // //////////////////////////////////////
 
+    private String companyRegistration;
+
+    @Property(optionality = Optionality.OPTIONAL)
+    public String getCompanyRegistration() {
+        return companyRegistration;
+    }
+
+    public void setCompanyRegistration(final String companyRegistration) {
+        this.companyRegistration = companyRegistration;
+    }
+
+    // //////////////////////////////////////
+
     @Property(optionality = Optionality.OPTIONAL)
     public Organisation change(
             final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Vat Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
-            final @ParameterLayout(named = "Fiscal Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
+            final @ParameterLayout(named = "Vat Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE) String vatCode,
+            final @ParameterLayout(named = "Fiscal Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE) String fiscalCode,
+            final @ParameterLayout(named = "Company Registration") @Parameter(optionality = Optionality.OPTIONAL) String companyRegistration) {
         setName(name);
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);
+        setCompanyRegistration(companyRegistration);
 
         return this;
     }
@@ -124,6 +123,10 @@ public class Organisation
 
     public String default2Change() {
         return getFiscalCode();
+    }
+
+    public String default3Change() {
+        return getCompanyRegistration();
     }
 
 }
