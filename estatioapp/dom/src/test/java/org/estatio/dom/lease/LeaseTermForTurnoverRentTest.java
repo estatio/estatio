@@ -18,9 +18,13 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -29,15 +33,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -82,8 +79,6 @@ public class LeaseTermForTurnoverRentTest {
                             add(rentItem);
                         }
                     }));
-                    oneOf(mockLease).getEffectiveInterval();
-                    will(returnValue(LocalDateInterval.excluding(new LocalDate(1980,1,1), null)));
                     oneOf(rentItem).calculationResults(with(any(LocalDateInterval.class)), with(any(LocalDate.class)));
                     will(returnValue(new ArrayList<InvoiceCalculationService.CalculationResult>() {
                         private static final long serialVersionUID = -2212720554866561882L;

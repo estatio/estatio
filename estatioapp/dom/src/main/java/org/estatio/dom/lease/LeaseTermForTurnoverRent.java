@@ -18,25 +18,21 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jdo.annotations.InheritanceStrategy;
-
 import com.google.common.base.Strings;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import javax.jdo.annotations.InheritanceStrategy;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -195,7 +191,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
             List<CalculationResult> calculationResults = new ArrayList<CalculationResult>();
             for (LeaseItem rentItem : rentItems) {
                 calculationResults.addAll(
-                        rentItem.calculationResults(getEffectiveInterval(), this.getEndDate().plusYears(1)));
+                        rentItem.calculationResults(getInterval(), this.getEndDate().plusYears(1)));
             }
             // TODO: do prorata when intervals don't match
             for (CalculationResult result : calculationResults) {
