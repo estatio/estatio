@@ -108,7 +108,7 @@ public class EstatioApplicationTenancyRepository {
             return countryTenancy;
         }
         final ApplicationTenancy rootTenancy = findOrCreateTenancyForGlobal();
-        return applicationTenancies.newTenancy(country.getName(), countryPath, rootTenancy);
+        return applicationTenancies.newTenancy(country.getReference(), countryPath, rootTenancy);
     }
 
     public ApplicationTenancy findOrCreateTenancyFor(final Property property) {

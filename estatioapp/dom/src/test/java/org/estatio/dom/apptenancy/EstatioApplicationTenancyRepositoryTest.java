@@ -238,7 +238,7 @@ public class EstatioApplicationTenancyRepositoryTest {
         // expect
         final ApplicationTenancy newlyCreatedTenancy = new ApplicationTenancy();
         context.checking(new Expectations() {{
-            oneOf(mockApplicationTenancies).newTenancy("United Kingdom", "/GBR", global);
+            oneOf(mockApplicationTenancies).newTenancy("GBR", "/GBR", global);
             will(returnValue(newlyCreatedTenancy));
         }});
 
