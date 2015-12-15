@@ -105,24 +105,35 @@ public class RegexValidationTest {
         // test
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0A-=-", true);
 
-        tester(RegexValidation.Lease.REFERENCE, "AA--A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "XZ--A0A0A0A-=-", false);
 
-        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A-A1&+=_-", true);
-        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0-/A1&/+", true);
-        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A-=_-//", true);
-        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A0-A1&+", true);
-        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A0A-=_-", true);
-        tester(RegexValidation.Lease.REFERENCE, "A--AA--A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "X-AAA-A0A-A1&+=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "Z-AAA-A0A0-/A1&/+", true);
+        tester(RegexValidation.Lease.REFERENCE, "X-AAA-A0A0A-=_-//", true);
+        tester(RegexValidation.Lease.REFERENCE, "Z-AAA-A0A0A0-A1&+", true);
+        tester(RegexValidation.Lease.REFERENCE, "X-AAA-A0A0A0A-=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "Z--AA--A0A0A0A-=-", false);
 
         // Used to be false. According to new constraints this should pass the
         // test
-        tester(RegexValidation.Lease.REFERENCE, "A-AAA-A0A0A0A-=-", true);
+        tester(RegexValidation.Lease.REFERENCE, "X-AAA-A0A0A0A-=-", true);
 
-        tester(RegexValidation.Lease.REFERENCE, "AA-AAA-A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "XZ-AAA-A0A0A0A-=-", false);
 
         tester(RegexValidation.Lease.REFERENCE, "POR-MOROGLI-016", true);
         tester(RegexValidation.Lease.REFERENCE, "POR-MOROGLI2-16", true);
         tester(RegexValidation.Lease.REFERENCE, "POR-MOROGLI2-1", true);
+        tester(RegexValidation.Lease.REFERENCE, "X-POR-MOROGLI2-1", true);
+
+        // Reopened EST-521 as a 16 character lease was being accepted
+        tester(RegexValidation.Lease.REFERENCE, "CAR-GUESS2-1112N", false);
+        tester(RegexValidation.Lease.REFERENCE, "CAR-GUES2-1112N", true);
+
+        tester(RegexValidation.Lease.REFERENCE, "X-CAR-GUESS2-1112N", false);
+        tester(RegexValidation.Lease.REFERENCE, "Z-CAR-GUES2-1112N", true);
+
+        tester(RegexValidation.Lease.REFERENCE, "X-CAR-GUESS2-1112N", false);
+        tester(RegexValidation.Lease.REFERENCE, "Z-CAR-GUES2-1112N", true);
     }
 
     private void tester(String regex, String pattern, boolean expected) {
