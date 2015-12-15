@@ -21,8 +21,10 @@ package org.estatio.fixture.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -80,11 +82,11 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final ExecutionContext executionContext) {
 
         final Lease lease = leases.findLeaseByReference(leaseRef);
-        final ApplicationTenancy leaseItemApplicationTenancy = applicationTenancies.findTenancyByPath(leaseItemAtPath);
+        final ApplicationTenancy leaseItemApplicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(lease.getProperty(), lease.getPrimaryParty());
 
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
-            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate(), leaseItemApplicationTenancy);
+            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
             li.setType(leaseItemType);
             li.setStatus(LeaseItemStatus.ACTIVE);
             li.setEndDate(lease.getEndDate());
@@ -335,7 +337,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     protected Charges charges;
 
     @Inject
-    protected ApplicationTenancies applicationTenancies;
+    protected ApplicationTenancyRepository applicationTenancies;
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

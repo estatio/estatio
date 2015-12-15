@@ -31,16 +31,12 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
@@ -65,11 +61,10 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
-            final LocalDate startDate,
-            final ApplicationTenancy applicationTenancy) {
+            final LocalDate startDate) {
         BigInteger nextSequence = nextSequenceFor(lease, type);
         LeaseItem leaseItem = newTransientInstance();
-        leaseItem.setApplicationTenancyPath(applicationTenancy.getPath());
+        leaseItem.setApplicationTenancyPath(estatioApplicationTenancyRepository.findOrCreateTenancyFor(lease.getProperty(), lease.getPrimaryParty()).getPath());
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
         leaseItem.setPaymentMethod(paymentMethod);
@@ -90,21 +85,12 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
         return lease.getStartDate();
     }
 
-    public ApplicationTenancy default6NewLeaseItem(final Lease lease) {
-        return Dflt.of(choices6NewLeaseItem(lease));
-    }
-
-    public List<ApplicationTenancy> choices6NewLeaseItem(final Lease lease) {
-        return estatioApplicationTenancyRepository.childrenOf(lease.getApplicationTenancy());
-    }
-
     public String validateNewLeaseItem(final Lease lease,
                                   final LeaseItemType type,
                                   final Charge charge,
                                   final InvoicingFrequency invoicingFrequency,
                                   final PaymentMethod paymentMethod,
-                                  final @Named("Start date") LocalDate startDate,
-                                  final ApplicationTenancy applicationTenancy) {
+                                  final LocalDate startDate) {
         final List<Charge> validCharges = choices2NewLeaseItem(lease);
         if(!validCharges.contains(charge)) {
             return String.format(
@@ -112,16 +98,8 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
                     charge.getApplicationTenancyPath());
         }
 
-        if (!lease.getApplicationTenancy().getChildren().contains(applicationTenancy)) {
-            return String.format(
-                    "Application tenancy '%s' is not a child app tenancy of this lease",
-                    applicationTenancy.getPath(),
-                    lease.getApplicationTenancyPath());
-        }
-
         return null;
     }
-
 
     private BigInteger nextSequenceFor(final Lease lease, final LeaseItemType type) {
         LeaseItem last = Iterables.getLast(findLeaseItemsByType(lease, type), null);

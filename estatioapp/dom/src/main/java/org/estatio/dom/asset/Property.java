@@ -72,8 +72,6 @@ public class Property
         extends FixedAsset<Property>
         implements Locatable, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
-    // //////////////////////////////////////
-
     private String applicationTenancyPath;
 
     @javax.jdo.annotations.Column(

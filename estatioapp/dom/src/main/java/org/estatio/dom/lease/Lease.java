@@ -18,15 +18,55 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.agreement.*;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -50,16 +90,6 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import java.math.BigInteger;
-import java.util.*;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -419,9 +449,8 @@ public class Lease
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final ApplicationTenancy applicationTenancy) {
-        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate, applicationTenancy);
+            final LocalDate startDate) {
+        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
         return leaseItem;
     }
 
@@ -433,21 +462,12 @@ public class Lease
         return leaseItems.default5NewLeaseItem(this);
     }
 
-    public List<ApplicationTenancy> choices5NewItem() {
-        return leaseItems.choices6NewLeaseItem(this);
-    }
-
-    public ApplicationTenancy default5NewItem() {
-        return leaseItems.default6NewLeaseItem(this);
-    }
-
     public String validateNewItem(final LeaseItemType type,
                                   final Charge charge,
                                   final InvoicingFrequency invoicingFrequency,
                                   final PaymentMethod paymentMethod,
-                                  final @Named("Start date") LocalDate startDate,
-                                  final ApplicationTenancy applicationTenancy) {
-        return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate, applicationTenancy);
+                                  final LocalDate startDate) {
+        return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
     }
 
     public Agreement changePrevious(
@@ -846,8 +866,8 @@ public class Lease
                     item.getCharge(),
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
-                    item.getStartDate(),
-                    item.getApplicationTenancy());
+                    item.getStartDate()
+            );
             item.copyTerms(startDate, newItem);
         }
     }

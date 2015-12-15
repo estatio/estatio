@@ -20,14 +20,19 @@ package org.estatio.integtests.lease;
 
 import java.math.BigInteger;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -39,9 +44,9 @@ import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -95,7 +100,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
 
             // when
             final ApplicationTenancy firstLocalAppTenancy = lease.getApplicationTenancy().getChildren().first();
-            LeaseItem newItem = leaseItems.newLeaseItem(lease, currentItem.getType(), currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1), firstLocalAppTenancy);
+            LeaseItem newItem = leaseItems.newLeaseItem(lease, currentItem.getType(), currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1));
             lease.getItems().add(newItem);
 
             // then
@@ -130,8 +135,12 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             // when
             final LeaseItem leaseItem = wrap(leaseItems).newLeaseItem(
                     leasePoison,
-                    LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
-                    leasePoison.getStartDate(), firstChildAppTenancy);
+                    LeaseItemType.DISCOUNT,
+                    charge,
+                    InvoicingFrequency.FIXED_IN_ADVANCE,
+                    PaymentMethod.DIRECT_DEBIT,
+                    leasePoison.getStartDate()
+            );
 
             // then
             Assertions.assertThat(leaseItem.getLease()).isEqualTo(leasePoison);
@@ -141,22 +150,6 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             Assertions.assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
             Assertions.assertThat(leaseItem.getSequence()).isEqualTo(VT.bi(1));
             Assertions.assertThat(leaseItem.getApplicationTenancy()).isEqualTo(firstChildAppTenancy);
-        }
-
-        @Test
-        public void invalidAppTenancy() throws Exception {
-
-            // given
-            final Charge charge = charges.findByReference(ChargeRefData.GB_DISCOUNT);
-            final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
-
-            expectedExceptions.expect(InvalidException.class);
-            expectedExceptions.expectMessage(containsString("not a child app tenancy of this lease"));
-
-            // when
-            wrap(leaseItems).newLeaseItem(
-                    leasePoison, LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
-                    leasePoison.getStartDate(), leaseAppTenancy);
         }
 
         @Test
@@ -172,7 +165,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             // when
             wrap(leaseItems).newLeaseItem(
                     leasePoison, LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
-                    leasePoison.getStartDate(), leaseAppTenancy);
+                    leasePoison.getStartDate());
         }
     }
 

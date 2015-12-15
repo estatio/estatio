@@ -20,8 +20,9 @@ package org.estatio.fixture.asset;
 
 import java.math.BigDecimal;
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.joda.time.LocalDate;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -59,8 +60,8 @@ public abstract class PropertyAbstract extends EstatioFixtureScript {
             final String locationStr,
             final ExecutionContext fixtureResults) {
 
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-        Property property = propertyMenu.newProperty(reference, name, type, city, country, acquireDate, applicationTenancy);
+        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
+        Property property = propertyMenu.newProperty(reference, name, type, city, country, acquireDate);
         property.setOpeningDate(openingDate);
         property.setLocation(Location.fromString(locationStr));
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
@@ -92,6 +93,6 @@ public abstract class PropertyAbstract extends EstatioFixtureScript {
     protected Parties parties;
 
     @Inject
-    protected ApplicationTenancies applicationTenancies;
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 
 }

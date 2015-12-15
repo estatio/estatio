@@ -370,7 +370,7 @@ public class LeaseItem
             final Charge charge
     ) {
         final LeaseItem newItem = getLease().newItem(
-                this.getType(), charge, invoicingFrequency, paymentMethod, startDate, getApplicationTenancy());
+                this.getType(), charge, invoicingFrequency, paymentMethod, startDate);
         this.copyTerms(startDate, newItem);
         this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;

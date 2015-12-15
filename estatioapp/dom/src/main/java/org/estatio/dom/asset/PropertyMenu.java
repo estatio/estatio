@@ -28,17 +28,11 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -60,32 +54,24 @@ public class PropertyMenu extends UdoDomainRepositoryAndFactory<Property> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Property newProperty(
-            final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String propertyReference,
-            final @ParameterLayout(named = "Name") String name,
+            @Parameter(regexPattern = RegexValidation.Property.REFERENCE)
+            final String propertyReference,
+            final String name,
             final PropertyType propertyType,
-            final @ParameterLayout(named = "City") @Parameter(optionality = Optionality.OPTIONAL) String city,
-            final @Parameter(optionality = Optionality.OPTIONAL) Country country,
-            final @Named("Acquire date") @Optional LocalDate acquireDate,
-            final @Named("Country-level Application Tenancy") ApplicationTenancy countryApplicationTenancy) {
+            final String city,
+            final Country country,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final LocalDate acquireDate) {
         return propertyRepository.newProperty(
                 propertyReference, name,
                 propertyType,
                 city, country,
-                acquireDate, countryApplicationTenancy);
-    }
-
-    public List<ApplicationTenancy> choices6NewProperty() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
+                acquireDate);
     }
 
     public PropertyType default2NewProperty() {
         return PropertyType.MIXED;
     }
-
-    public ApplicationTenancy default6NewProperty() {
-        return Dflt.of(choices6NewProperty());
-    }
-
 
     // //////////////////////////////////////
 

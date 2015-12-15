@@ -169,11 +169,8 @@ public class PropertyMenuTest {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockEstatioApplicationTenancyRepository).findOrCreatePropertyTenancy(countryApplicationTenancy, "REF-1");
+                    oneOf(mockEstatioApplicationTenancyRepository).findOrCreateTenancyFor(property);
                     will(returnValue(propertyApplicationTenancy));
-
-                    oneOf(mockEstatioApplicationTenancyRepository).findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
-                    oneOf(mockEstatioApplicationTenancyRepository).findOrCreateLocalTaTenancy(propertyApplicationTenancy);
 
                     oneOf(mockContainer).newTransientInstance(Property.class);
                     will(returnValue(property));
@@ -183,7 +180,7 @@ public class PropertyMenuTest {
             });
 
             // when
-            final Property newProperty = propertyMenu.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null, countryApplicationTenancy);
+            final Property newProperty = propertyMenu.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null);
 
             // then
             Assertions.assertThat(newProperty.getReference()).isEqualTo("REF-1");

@@ -55,16 +55,26 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
 
     public ApplicationTenancyLevel(final String path) {
         this.path = path;
+        this.name = "";
     }
 
-    //region > path
+    public ApplicationTenancyLevel(final String path, final String name) {
+        this.path = path;
+        this.name = name;
+    }
 
     private final String path;
+
     public String getPath() {
         return path;
     }
 
-    //endregion
+    private final String name;
+
+    public String getName() {
+        return name;
+    }
+
 
     //region > parentOf, childOf, peerOf
 

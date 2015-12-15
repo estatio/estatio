@@ -18,17 +18,47 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-import org.assertj.core.api.Assertions;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
-import org.estatio.dom.agreement.*;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementForTesting;
+import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementTest;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
@@ -41,24 +71,14 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.Is;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LeaseTest {
 
@@ -214,6 +234,9 @@ public class LeaseTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
+        @Mock
+        private EstatioApplicationTenancyRepository mockApplicationTenancyRepository;
+
         private LeaseItems leaseItems;
 
         @Before
@@ -222,8 +245,25 @@ public class LeaseTest {
             // this is actually a mini-integration test...
             leaseItems = new LeaseItems();
             leaseItems.setContainer(mockContainer);
+            leaseItems.estatioApplicationTenancyRepository = mockApplicationTenancyRepository;
 
-            lease = new Lease();
+
+            Property property = new Property();
+            Party party = new Party() {
+                @Override public ApplicationTenancy getApplicationTenancy() {
+                    return null;
+                }
+            };
+
+            lease = new Lease(){
+                @Override public Party getPrimaryParty() {
+                    return party;
+                }
+
+                @Override public Property getProperty() {
+                    return property;
+                }
+            };
             lease.leaseItems = leaseItems;
         }
 
@@ -232,22 +272,27 @@ public class LeaseTest {
         public void test() {
             assertThat(lease.getItems(), Matchers.empty());
 
+            final ApplicationTenancy leaseItemApplicationTenancy = new ApplicationTenancy();
+            leaseItemApplicationTenancy.setPath("/it/XXX/_");
+
             final LeaseItem leaseItem = new LeaseItem();
             context.checking(new Expectations() {
                 {
                     oneOf(mockContainer).newTransientInstance(LeaseItem.class);
                     will(returnValue(leaseItem));
+
                     oneOf(mockContainer).persistIfNotAlready(leaseItem);
                     oneOf(mockContainer).allMatches(with(any(QueryDefault.class)));
                     will(returnValue(new ArrayList<LeaseItem>()));
 
+                    oneOf(mockApplicationTenancyRepository);
+                    will(returnValue(leaseItemApplicationTenancy));
+
                 }
             });
 
-            final ApplicationTenancy leaseItemApplicationTenancy = new ApplicationTenancy();
-            leaseItemApplicationTenancy.setPath("/it/XXX/_");
 
-            final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null, leaseItemApplicationTenancy);
+            final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
             assertThat(newItem, is(leaseItem));
             assertThat(leaseItem.getLease(), is(lease));
             assertThat(leaseItem.getSequence(), is(BigInteger.ONE));

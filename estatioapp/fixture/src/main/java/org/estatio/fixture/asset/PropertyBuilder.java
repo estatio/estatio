@@ -19,12 +19,15 @@
 package org.estatio.fixture.asset;
 
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitType;
@@ -158,9 +161,9 @@ public class PropertyBuilder extends EstatioFixtureScript {
 
         defaultParam("numberOfUnits", executionContext, faker().values().anInt(10,20));
 
-        final ApplicationTenancy countryApplicationTenancy = applicationTenancies.findTenancyByPath("/" + getCountry().getReference());
+        final ApplicationTenancy countryApplicationTenancy = applicationTenancyRepository.findByPath("/" + getCountry().getReference());
 
-        this.property = propertyMenu.newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate(), countryApplicationTenancy);
+        this.property = propertyMenu.newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
 
         if(getOwner() != null) {
             wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
@@ -200,6 +203,6 @@ public class PropertyBuilder extends EstatioFixtureScript {
     protected Parties parties;
 
     @Inject
-    protected ApplicationTenancies applicationTenancies;
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 
 }

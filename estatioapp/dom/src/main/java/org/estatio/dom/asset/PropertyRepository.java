@@ -52,15 +52,9 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
             final PropertyType propertyType,
             final String city,
             final Country country,
-            final LocalDate acquireDate,
-            final ApplicationTenancy countryApplicationTenancy) {
+            final LocalDate acquireDate) {
         final Property property = newTransientInstance();
 
-        final ApplicationTenancy propertyApplicationTenancy = estatioApplicationTenancyRepository.findOrCreatePropertyTenancy(countryApplicationTenancy, propertyReference);
-        estatioApplicationTenancyRepository.findOrCreateLocalDefaultTenancy(propertyApplicationTenancy);
-        estatioApplicationTenancyRepository.findOrCreateLocalTaTenancy(propertyApplicationTenancy);
-
-        property.setApplicationTenancyPath(propertyApplicationTenancy.getPath());
         property.setReference(propertyReference);
         property.setName(name);
         property.setType(propertyType);
@@ -72,6 +66,9 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
         if (city != null && country != null && property.getLocation() == null) {
             property.lookupLocation(city.concat(", ").concat(country.getName()));
         }
+
+        final ApplicationTenancy propertyApplicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(property);
+        property.setApplicationTenancyPath(propertyApplicationTenancy.getPath());
 
         persistIfNotAlready(property);
         return property;

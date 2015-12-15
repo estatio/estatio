@@ -29,10 +29,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
@@ -64,8 +60,6 @@ public class PropertyMenuTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    PropertyMenu propertyMenu;
-    @Inject
     PropertyRepository propertyRepository;
 
     public static class AllPropertyMenu extends PropertyMenuTest {
@@ -73,7 +67,7 @@ public class PropertyMenuTest extends EstatioIntegrationTest {
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // when
-            final List<Property> allProperties = propertyMenu.allProperties();
+            final List<Property> allProperties = propertyRepository.allProperties();
 
             // then
             assertThat(allProperties.size(), is(2));
@@ -85,28 +79,28 @@ public class PropertyMenuTest extends EstatioIntegrationTest {
 
         @Test
         public void withReference() throws Exception {
-            final List<Property> props = propertyMenu.findProperties("OXF");
+            final List<Property> props = propertyRepository.findProperties("OXF");
             assertNotNull(props);
             assertThat(props.size(), is(1));
         }
 
         @Test
         public void withName() throws Exception {
-            final List<Property> props = propertyMenu.findProperties("Oxford Super Mall");
+            final List<Property> props = propertyRepository.findProperties("Oxford Super Mall");
             assertNotNull(props);
             assertThat(props.size(), is(1));
         }
 
         @Test
         public void withWildcard() throws Exception {
-            final List<Property> props = propertyMenu.findProperties("Oxford*");
+            final List<Property> props = propertyRepository.findProperties("Oxford*");
             assertNotNull(props);
             assertThat(props.size(), is(1));
         }
 
         @Test
         public void withWildcard_returningMultiple() throws Exception {
-            final List<Property> props = propertyMenu.findProperties("*");
+            final List<Property> props = propertyRepository.findProperties("*");
             assertNotNull(props);
             assertThat(props.size(), is(2));
         }
@@ -130,22 +124,14 @@ public class PropertyMenuTest extends EstatioIntegrationTest {
         @Inject
         private Countries countries;
 
-        @Inject
-        private ApplicationTenancies applicationTenancies;
-
         @Test
         public void happyCase() throws Exception {
 
             // given
-            final ApplicationTenancy countryAppTenancy = applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR);
-
             final Country gbrCountry = countries.findCountry(CountriesRefData.GBR);
 
-            Assertions.assertThat(countryAppTenancy).isNotNull();
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN")).isNull();
-
             // when
-            final Property property = propertyMenu.newProperty("ARN", "Arndale", PropertyType.RETAIL_PARK, "Manchester", gbrCountry, new LocalDate(2014,4,1), countryAppTenancy);
+            final Property property = propertyRepository.newProperty("ARN", "Arndale", PropertyType.RETAIL_PARK, "Manchester", gbrCountry, new LocalDate(2014,4,1));
 
             // then
             Assertions.assertThat(property.getName()).isEqualTo("Arndale");
@@ -153,16 +139,7 @@ public class PropertyMenuTest extends EstatioIntegrationTest {
             Assertions.assertThat(property.getCountry()).isEqualTo(gbrCountry);
             Assertions.assertThat(property.getCity()).isEqualTo("Manchester");
             Assertions.assertThat(property.getAcquireDate()).isEqualTo(new LocalDate(2014, 4, 1));
-
-            final ApplicationTenancy propertyAppTenancy = applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN");
-            Assertions.assertThat(propertyAppTenancy).isNotNull();
-
-            Assertions.assertThat(property.getApplicationTenancy()).isEqualTo(propertyAppTenancy);
-            Assertions.assertThat(propertyAppTenancy.getParent()).isEqualTo(countryAppTenancy);
-
-            // and also
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN/_")).isNotNull();
-            Assertions.assertThat(applicationTenancies.findTenancyByPath("/" + CountriesRefData.GBR + "/ARN/ta")).isNotNull();
+            Assertions.assertThat(property.getApplicationTenancy().getPath()).isEqualTo("/" + CountriesRefData.GBR + "/ARN");
 
         }
     }

@@ -31,7 +31,8 @@ public enum FixedAssetRoleType implements TitledEnum {
     PROPERTY_OWNER, 
     PROPERTY_MANAGER, 
     ASSET_MANAGER, 
-    PROPERTY_CONTACT;
+    PROPERTY_CONTACT,
+    TENANTS_ASSOCIATION;
 
     public String title() {
         return StringUtils.enumTitle(this.toString());

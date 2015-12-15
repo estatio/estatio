@@ -12,25 +12,21 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
 public class EstatioApplicationTenancyRepository {
-
-    //region > getId
-    public String getId() {
-        return "EstatioApplicationTenancyRepository";
-    }
-    //endregion
 
     public List<ApplicationTenancy> allTenancies() {
         return applicationTenancies.allTenancies();
@@ -65,6 +61,8 @@ public class EstatioApplicationTenancyRepository {
                 allTenancies(), Predicates.isGlobalOrCountryTenancyFor(tenancy)));
     }
 
+    // //////////////////////////////////////
+
     public List<ApplicationTenancy> countryTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
         return countryTenanciesFor(currentUser.getTenancy());
@@ -87,59 +85,69 @@ public class EstatioApplicationTenancyRepository {
 
     // //////////////////////////////////////
 
-    public ApplicationTenancy findOrCreateCountryTenancy(final Country country) {
+    protected String pathFor(final Country country) {
+        return String.format("/%s", country.getReference());
+    }
 
-        final String countryPath = String.format("/%s", country.getReference());
+    protected String pathFor(final Property property) {
+        return pathFor(property.getCountry()).concat(String.format("/%s", property.getReference()));
+    }
 
-        for (final ApplicationTenancy countryTenancy : allCountryTenancies()) {
-            if (countryTenancy.getPath().equals(countryPath)) {
-                return countryTenancy;
-            }
+    protected String pathFor(final Property property, final Party party) {
+        return pathFor(property).concat(String.format("/%s", party.getReference()));
+    }
+
+    private ApplicationTenancy findOrCreateTenancyForGlobal() {
+        return applicationTenancies.findByPath("/");
+    }
+
+    public ApplicationTenancy findOrCreateTenancyFor(final Country country) {
+        final String countryPath = pathFor(country);
+        ApplicationTenancy countryTenancy = applicationTenancies.findByPath(countryPath);
+        if (countryTenancy != null){
+            return countryTenancy;
         }
-
-        final ApplicationTenancy rootTenancy = applicationTenancies.findTenancyByPath("/");
+        final ApplicationTenancy rootTenancy = findOrCreateTenancyForGlobal();
         return applicationTenancies.newTenancy(country.getName(), countryPath, rootTenancy);
     }
 
-    public ApplicationTenancy findOrCreatePropertyTenancy(final Property property) {
-        return findOrCreatePropertyTenancy(findOrCreateCountryTenancy(property.getCountry()), property.getReference());
+    public ApplicationTenancy findOrCreateTenancyFor(final Property property) {
+        ApplicationTenancy propertyTenancy = applicationTenancies.findByPath(pathFor(property));
+        if (propertyTenancy != null){
+            return propertyTenancy;
+        }
+        final ApplicationTenancy countryApplicationTenancy = findOrCreateTenancyFor(property.getCountry());
+        final String tenancyName = String.format("%s / %s ", countryApplicationTenancy.getName(), property.getReference());
+        return applicationTenancies.newTenancy(tenancyName, pathFor(property), countryApplicationTenancy);
     }
 
-    public ApplicationTenancy findOrCreateLeaseTenancy(final Lease lease) {
-        final ApplicationTenancy propertyTenancy = findOrCreatePropertyTenancy(lease.getProperty());
-        return findOrCreateLocalDefaultTenancy(propertyTenancy);
+    public ApplicationTenancy findOrCreateTenancyFor(final Property property, final Party party) {
+        ApplicationTenancy propertyPartyTenancy = applicationTenancies.findByPath(pathFor(property, party));
+        if (propertyPartyTenancy != null){
+            return propertyPartyTenancy;
+        }
+        final ApplicationTenancy propertyApplicationTenancy = findOrCreateTenancyFor(property);
+        final String tenancyName = String.format("%s / %s ", propertyApplicationTenancy.getName(), party.getReference());
+        return applicationTenancies.newTenancy(tenancyName, pathFor(property,party), propertyApplicationTenancy);
     }
 
-    public ApplicationTenancy findOrCreatePropertyTenancy(final ApplicationTenancy countryApplicationTenancy, final String propertyReference) {
+    public ApplicationTenancy findOrCreateTenancyFor(final Lease lease) {
+        return findOrCreateTenancyFor(lease.getProperty());
+    }
 
-        final ApplicationTenancyLevel countryAppTenancyLevel = ApplicationTenancyLevel.of(countryApplicationTenancy);
-        if (!countryAppTenancyLevel.isCountry()) {
-            throw new IllegalArgumentException(String.format("Application tenancy '%s' is not a country-level", countryApplicationTenancy));
-        }
-
-        final ApplicationTenancyLevel propertyAppTenancyLevel = countryAppTenancyLevel.child(propertyReference);
-        final ApplicationTenancy propertyApplicationTenancy = applicationTenancies.findTenancyByPath(propertyAppTenancyLevel.getPath());
-        if (propertyApplicationTenancy != null) {
-            return propertyApplicationTenancy;
-        }
-
-        final String tenancyName = String.format("%s (%s)", propertyReference, countryApplicationTenancy.getName());
-        return applicationTenancies.newTenancy(tenancyName, propertyAppTenancyLevel.getPath(), countryApplicationTenancy);
+    public ApplicationTenancy findOrCreateTenancyFor(final LeaseItem leaseItem) {
+        return findOrCreateTenancyFor(leaseItem.getLease().getProperty(), leaseItem.getLease().getPrimaryParty());
     }
 
     public ApplicationTenancy findOrCreateLocalDefaultTenancy(final ApplicationTenancy propertyTenancy) {
         return findOrCreateLocalNamedTenancy(propertyTenancy, "_", "Default");
     }
 
-    public ApplicationTenancy findOrCreateLocalTaTenancy(final ApplicationTenancy propertyTenancy) {
-        return findOrCreateLocalNamedTenancy(propertyTenancy, "ta", "TA");
-    }
-
     public ApplicationTenancy findOrCreateLocalNamedTenancy(final ApplicationTenancy propertyTenancy, final String child, final String suffix) {
         ApplicationTenancyLevel propertyLevel = ApplicationTenancyLevel.of(propertyTenancy);
 
         ApplicationTenancyLevel localDefaultLevel = propertyLevel.child(child);
-        ApplicationTenancy childTenancy = applicationTenancies.findTenancyByPath(localDefaultLevel.getPath());
+        ApplicationTenancy childTenancy = applicationTenancies.findByPath(localDefaultLevel.getPath());
         if (childTenancy == null) {
             childTenancy = applicationTenancies.newTenancy(propertyTenancy.getName() + " " + suffix, localDefaultLevel.getPath(), propertyTenancy);
         }
@@ -166,7 +174,7 @@ public class EstatioApplicationTenancyRepository {
         }
 
         public static Predicate<ApplicationTenancy> isPropertyOf(final Country country) {
-            final String countryPath = "/" + country.getAlpha2Code().toLowerCase();
+            final String countryPath = "/" + country.getReference();
             final ApplicationTenancyLevel countryLevel = ApplicationTenancyLevel.of(countryPath);
             return candidate -> {
                 ApplicationTenancyLevel candidateLevel = ApplicationTenancyLevel.of(candidate);
@@ -222,7 +230,7 @@ public class EstatioApplicationTenancyRepository {
     // //////////////////////////////////////
 
     @Inject
-    ApplicationTenancies applicationTenancies;
+    ApplicationTenancyRepository applicationTenancies;
 
     @Inject
     private MeService meService;
