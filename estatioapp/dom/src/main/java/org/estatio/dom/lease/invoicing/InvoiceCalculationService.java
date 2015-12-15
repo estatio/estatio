@@ -18,18 +18,8 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import javax.inject.Inject;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -41,6 +31,17 @@ import org.estatio.dom.lease.*;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.domsettings.EstatioSettingsService;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50")
@@ -210,6 +211,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
      * @param dueDate
      * @return
      */
+    @Programmatic
     public List<CalculationResult> calculateDateRange(
             final LeaseTerm term,
             final LocalDateInterval interval,

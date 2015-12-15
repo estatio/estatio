@@ -1,0 +1,85 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "type": {},
+            "leaseItem": {},
+            "frequency": {},
+            "sequence": {},
+            "status": {}
+          }
+        },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
+          }
+        }
+      }
+    }, 
+    {
+      "span": 4,
+      "memberGroups": {
+        "Rental Fee": {
+          "members": {
+            "percentage": {},
+            "originalValue": {
+              "actions": {
+                "changeParameters": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Values": {
+          "members": {
+            "effectiveValue": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {
+              "actions": {
+                "createNext": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 12,
+      "collections": {
+        "invoiceItems": {
+          "actions": {
+            "calculate": {}
+          }
+        }
+      }
+    }
+  ],
+  "actions": {
+    "verify": {},
+    "verifyUntil": {}
+  }
+}

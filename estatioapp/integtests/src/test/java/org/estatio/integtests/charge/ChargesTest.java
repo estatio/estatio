@@ -18,23 +18,20 @@
  */
 package org.estatio.integtests.charge;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.List;
 
 public class ChargesTest extends EstatioIntegrationTest {
 
@@ -81,7 +78,8 @@ public class ChargesTest extends EstatioIntegrationTest {
                     charges.findByReference(ChargeRefData.GB_ENTRY_FEE),
                     charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE_INDEXABLE),
                     charges.findByReference(ChargeRefData.GB_TAX),
-                    charges.findByReference(ChargeRefData.GB_TURNOVER_RENT));
+                    charges.findByReference(ChargeRefData.GB_TURNOVER_RENT),
+                    charges.findByReference(ChargeRefData.GB_PERCENTAGE));
 
         }
 

@@ -18,37 +18,22 @@
  */
 package org.estatio.fixture.lease;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import javax.inject.Inject;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
-import org.joda.time.LocalDate;
-
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForFixed;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTermForTax;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.charge.ChargeRefData;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
@@ -123,6 +108,29 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 ChargeRefData.IT_RENT,
                 executionContext);
     }
+
+    protected LeaseTerm createLeaseTermForPercentage(
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal percentage,
+            final ExecutionContext executionContext) {
+
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_PERCENTAGE,
+                LeaseItemType.RENTAL_FEE,
+                InvoicingFrequency.YEARLY_IN_ARREARS,
+                executionContext);
+        final LeaseTermForPercentage leaseTerm = (LeaseTermForPercentage) leaseItem.newTerm(startDate, endDate);
+
+        leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
+        leaseTerm.setPercentage(percentage);
+
+        return executionContext.addResult(this, leaseTerm);
+    }
+
 
     protected LeaseTerm createLeaseTermForIndexableServiceCharge(
             final String leaseRef,
