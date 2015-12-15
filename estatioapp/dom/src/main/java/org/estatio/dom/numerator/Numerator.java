@@ -20,6 +20,7 @@ package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -29,7 +30,9 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
@@ -37,8 +40,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
-import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
+import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Generates a sequence of values (eg <tt>XYZ-00101</tt>, <tt>XYZ-00102</tt>,
@@ -65,22 +71,24 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByNameAndObjectTypeAndObjectIdentifier", language = "JDOQL",
+                name = "findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.numerator.Numerator "
+                        + "WHERE name == :name "
+                        + "&& objectIdentifier == :objectIdentifier "
+                        + "&& objectType == :objectType "
+                        + "&& applicationTenancyPath == :applicationTenancyPath "),
+        @javax.jdo.annotations.Query(
+                name = "findByNameAndApplicationTenancyPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.numerator.Numerator "
                         + "WHERE name == :name"
-                        + "&& objectIdentifier == :objectIdentifier"
-                        + "&& objectType == :objectType"),
-        @javax.jdo.annotations.Query(
-                name = "findByName", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.numerator.Numerator "
-                        + "WHERE name == :name")
+                        + "&& applicationTenancyPath == :applicationTenancyPath ")
 })
 @Immutable
 public class Numerator
         extends EstatioDomainObject<Numerator>
-        implements Comparable<Numerator>, BookmarkHolder, WithApplicationTenancyGlobal {
+        implements Comparable<Numerator>, BookmarkHolder, WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
     public Numerator() {
         super("name, objectType, objectIdentifier, format");
@@ -88,12 +96,17 @@ public class Numerator
 
     // //////////////////////////////////////
 
+    @Getter @Setter
+    @Column(name = "atPath")
+    @Property(hidden = Where.EVERYWHERE)
+    private String applicationTenancyPath;
+
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

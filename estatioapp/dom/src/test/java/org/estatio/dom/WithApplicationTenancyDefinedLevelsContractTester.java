@@ -21,6 +21,8 @@ package org.estatio.dom;
 import java.util.List;
 import com.google.common.collect.Lists;
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
+import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
@@ -37,6 +39,7 @@ public class WithApplicationTenancyDefinedLevelsContractTester<T extends WithApp
     }
 
     private static List<Class<?>> markerInterfaces = Lists.newArrayList(
+            WithApplicationTenancyAny.class,
             WithApplicationTenancyGlobal.class,
             WithApplicationTenancyGlobalAndCountry.class,
             WithApplicationTenancyCountry.class,

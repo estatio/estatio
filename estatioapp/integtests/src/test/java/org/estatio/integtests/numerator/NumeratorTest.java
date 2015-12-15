@@ -23,6 +23,10 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -58,14 +62,22 @@ public class NumeratorTest extends EstatioIntegrationTest {
     PropertyMenu propertyMenu;
     @Inject
     PropertyRepository propertyRepository;
+    @Inject
+    EstatioApplicationTenancyRepository applicationTenancyRepository;
 
     Property propertyOxf;
     Property propertyKal;
+
+    ApplicationTenancy applicationTenancyOxf;
+    ApplicationTenancy applicationTenancyKal;
+
 
     @Before
     public void setUp() throws Exception {
         propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
+        applicationTenancyKal = applicationTenancyRepository.findOrCreateTenancyFor(propertyKal);
+        applicationTenancyOxf = applicationTenancyRepository.findOrCreateTenancyFor(propertyOxf);
     }
 
 
@@ -74,9 +86,9 @@ public class NumeratorTest extends EstatioIntegrationTest {
         @Test
         public void whenExist() throws Exception {
 
-            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"));
-            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"));
-            numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"),  applicationTenancyOxf);
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+            numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
             assertThat(numerators.allNumerators().size(), is(3));
         }
@@ -89,12 +101,12 @@ public class NumeratorTest extends EstatioIntegrationTest {
         public void whenExists() throws Exception {
 
             // given
-            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"));
-            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"));
-            numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+            numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
             // when
-            Numerator in = numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+            Numerator in = numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, applicationTenancyOxf);
 
             // then
             assertThat(in.getLastIncrement(), is(new BigInteger("1000")));
@@ -108,12 +120,12 @@ public class NumeratorTest extends EstatioIntegrationTest {
         public void whenExists() throws Exception {
 
             // given
-            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"));
-            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"));
-            numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+            numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
             // when
-            Numerator in = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf);
+            Numerator in = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, applicationTenancyOxf);
 
             // then
             assertThat(in.getLastIncrement(), is(new BigInteger("10")));
@@ -131,9 +143,9 @@ public class NumeratorTest extends EstatioIntegrationTest {
         public void setUp() throws Exception {
             super.setUp();
 
-            scopedNumerator = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"));
-            scopedNumerator2 = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"));
-            globalNumerator = numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+            scopedNumerator = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"),applicationTenancyOxf );
+            scopedNumerator2 = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"),applicationTenancyKal );
+            globalNumerator = numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
         }
 
         @Test

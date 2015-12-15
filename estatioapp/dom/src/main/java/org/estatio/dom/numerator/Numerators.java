@@ -20,15 +20,18 @@ package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
 import java.util.List;
+
 import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "80", repositoryFor = Numerator.class)
@@ -55,28 +58,31 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
 
     @Programmatic
     public Numerator findGlobalNumerator(
-            final @Named("Name") String numeratorName) {
-        return findNumerator(numeratorName, null);
+            final String numeratorName,
+            final ApplicationTenancy applicationTenancy) {
+        return findNumerator(numeratorName, null, applicationTenancy);
     }
     
     @Programmatic
     public Numerator findScopedNumerator(
-            final @Named("Name") String numeratorName, 
-            final @Named("Scoped to") Object scopedTo) {
-        return findNumerator(numeratorName, scopedTo);
+            final String numeratorName,
+            final Object scopedTo,
+            final ApplicationTenancy applicationTenancy) {
+        return findNumerator(numeratorName, scopedTo, applicationTenancy);
     }
 
-    private Numerator findNumerator(final String numeratorName, final Object scopedToIfAny) {
+    private Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
         if(scopedToIfAny == null) {
-            return firstMatch("findByName", "name", numeratorName);
+            return firstMatch("findByNameAndApplicationTenancyPath", "name", numeratorName, "applicationTenancyPath", applicationTenancy.getPath());
         } else {
             final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
             final String objectType = bookmark.getObjectType();
             final String objectIdentifier = bookmark.getIdentifier();
-            return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", 
+            return firstMatch("findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath",
                     "name", numeratorName, 
                     "objectType", objectType, 
-                    "objectIdentifier", objectIdentifier);
+                    "objectIdentifier", objectIdentifier,
+                    "applicationTenancyPath" ,applicationTenancy.getPath());
         }
     }
 
@@ -86,9 +92,10 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
     public Numerator createGlobalNumerator(
             final String numeratorName,
             final String format,
-            final BigInteger lastIncrement) {
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancy) {
 
-        return findOrCreateNumerator(numeratorName, null, format, lastIncrement);
+        return findOrCreateNumerator(numeratorName, null, format, lastIncrement, applicationTenancy);
     }
 
     @Programmatic
@@ -96,16 +103,17 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
             final String numeratorName,
             final Object scopedTo,
             final String format,
-            final BigInteger lastIncrement) {
+            final BigInteger lastIncrement, final ApplicationTenancy applicationTenancy) {
 
-        return findOrCreateNumerator(numeratorName, scopedTo, format, lastIncrement);
+        return findOrCreateNumerator(numeratorName, scopedTo, format, lastIncrement, applicationTenancy);
     }
 
     private Numerator findOrCreateNumerator(
             final String numeratorName,
             final Object scopedToIfAny,
             final String format,
-            final BigInteger lastIncrement) {
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancy) {
 
         // validate
         try {
@@ -115,7 +123,7 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
         }
 
         // existing?
-        final Numerator existingIfAny = findNumerator(numeratorName, scopedToIfAny);
+        final Numerator existingIfAny = findNumerator(numeratorName, scopedToIfAny, applicationTenancy);
         if(existingIfAny != null) {
             String msg = "'" + numeratorName + "' numerator already exists";
             if(scopedToIfAny != null) {
@@ -126,16 +134,18 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
         }
 
         // else create
-        return createNumerator(numeratorName, scopedToIfAny, format, lastIncrement);
+        return createNumerator(numeratorName, scopedToIfAny, format, lastIncrement, applicationTenancy);
     }
 
     private Numerator createNumerator(
             final String numeratorName,
             final Object scopedToIfAny,
             final String format,
-            final BigInteger lastIncrement) {
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancy) {
         final Numerator numerator = newTransientInstance();
         numerator.setName(numeratorName);
+        numerator.setApplicationTenancyPath(applicationTenancy.getPath());
         if(scopedToIfAny != null) {
             final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
             numerator.setObjectType(bookmark.getObjectType());

@@ -26,8 +26,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
@@ -41,18 +42,18 @@ import org.estatio.domsettings.EstatioSettingsService;
         named = "Administration",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "120.2")
-public class CollectionNumerators extends UdoDomainService<CollectionNumerators> {
+public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumeratorRepository> {
 
-    public CollectionNumerators() {
-        super(CollectionNumerators.class);
+    public EstatioNumeratorRepository() {
+        super(EstatioNumeratorRepository.class);
     }
 
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
-    public Numerator findCollectionNumberNumerator() {
-        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+    public Numerator findCollectionNumberNumerator(final ApplicationTenancy applicationTenancy) {
+        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, applicationTenancy);
     }
 
     // //////////////////////////////////////
@@ -61,10 +62,11 @@ public class CollectionNumerators extends UdoDomainService<CollectionNumerators>
     @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "2")
     public Numerator createCollectionNumberNumerator(
-            final @ParameterLayout(named = "Format") String format,
-            final @ParameterLayout(named = "Last value") BigInteger lastIncrement) {
+            final String format,
+            final BigInteger lastValue,
+            final ApplicationTenancy applicationTenancy) {
 
-        return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
+        return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastValue, applicationTenancy);
     }
 
     public String default0CreateCollectionNumberNumerator() {
@@ -81,8 +83,9 @@ public class CollectionNumerators extends UdoDomainService<CollectionNumerators>
     @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "3")
     public Numerator findInvoiceNumberNumerator(
-            final FixedAsset fixedAsset) {
-        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset);
+            final FixedAsset fixedAsset,
+            final ApplicationTenancy applicationTenancy) {
+        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset, applicationTenancy);
     }
 
     // //////////////////////////////////////
@@ -92,10 +95,11 @@ public class CollectionNumerators extends UdoDomainService<CollectionNumerators>
     @MemberOrder(sequence = "4")
     public Numerator createInvoiceNumberNumerator(
             final Property property,
-            final @ParameterLayout(named = "Format") String format,
-            final @ParameterLayout(named = "Last value") BigInteger lastIncrement) {
+            final String format,
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancy) {
         return numerators.createScopedNumerator(
-                Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
+                Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement, applicationTenancy);
     }
 
     public String default1CreateInvoiceNumberNumerator() {

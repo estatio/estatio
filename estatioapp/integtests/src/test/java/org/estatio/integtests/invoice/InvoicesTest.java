@@ -22,7 +22,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.ws.rs.HEAD;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -35,13 +34,13 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.CollectionNumerators;
+import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -79,7 +78,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
     @Inject
     Invoices invoices;
     @Inject
-    CollectionNumerators collectionNumerators;
+    EstatioNumeratorRepository estatioNumeratorRepository;
 
     @Inject
     Parties parties;
@@ -90,10 +89,11 @@ public class InvoicesTest extends EstatioIntegrationTest {
     @Inject
     PropertyMenu propertyMenu;
     @Inject
-    ApplicationTenancies applicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
     BookmarkService bookmarkService;
+
 
     public static class CreateCollectionNumberNumerator extends InvoicesTest {
 
@@ -110,7 +110,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Test
         public void createThenFind() throws Exception {
             // when
-            Numerator numerator = collectionNumerators.createCollectionNumberNumerator("%09d", BigInteger.TEN);
+            Numerator numerator = estatioNumeratorRepository.createCollectionNumberNumerator("%09d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
             // then
             assertThat(numerator, is(notNullValue()));
             assertThat(numerator.getName(), is(Constants.COLLECTION_NUMBER_NUMERATOR_NAME));
@@ -121,7 +121,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenNone() throws Exception {
-            Numerator numerator = collectionNumerators.findCollectionNumberNumerator();
+            Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator(applicationTenancyRepository.findByPath("/"));
             assertThat(numerator, is(nullValue()));
         }
 
@@ -159,11 +159,11 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void whenNoneForProperty() throws Exception {
 
             // given
-            Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(propertyOxf);
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
             Assert.assertNull(numerator);
 
             // when
-            numerator = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
+            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
 
             // then
             Assert.assertNotNull(numerator);
@@ -177,11 +177,11 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void canCreateOnePerProperty() throws Exception {
 
             // given
-            Numerator numerator1 = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
+            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
             Assert.assertNotNull(numerator1);
 
             // when
-            Numerator numerator2 = collectionNumerators.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO);
+            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/"));
 
             // then
             Assert.assertNotNull(numerator2);
@@ -197,13 +197,13 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
 
             // given
-            Numerator numerator1 = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
+            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
             Assert.assertNotNull(numerator1);
 
             assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
 
             // when
-            Numerator numerator2 = collectionNumerators.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO);
+            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/"));
 
             // then
             Assert.assertNotNull(numerator2);
@@ -238,7 +238,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Test
         public void whenNone() throws Exception {
             // when
-            Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(propertyOxf);
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
             // then
             Assert.assertNull(numerator);
         }
@@ -274,7 +274,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForNl.PATH);
+            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForNl.PATH);
             seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_SELLER);
             buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
@@ -362,7 +362,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
+            final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
             final Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
             final Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
             final Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
@@ -410,7 +410,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
+            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
             seller = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
             buyer = parties.findPartyByReference(OrganisationForPoisonGb.REF);
             lease = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);

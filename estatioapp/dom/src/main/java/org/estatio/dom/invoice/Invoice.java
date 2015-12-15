@@ -23,14 +23,17 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -48,11 +51,13 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.charge.Charge;
@@ -158,7 +163,7 @@ import org.estatio.dom.party.Party;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Invoice
         extends EstatioDomainObject<Invoice>
-        implements WithApplicationTenancyPropertyLocal, WithApplicationTenancyPathPersisted {
+        implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
     public Invoice() {
         super("invoiceNumber, collectionNumber, buyer, dueDate, lease, uuid");
@@ -526,7 +531,7 @@ public class Invoice
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
-        final Numerator numerator = collectionNumerators.findCollectionNumberNumerator();
+        final Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator(getApplicationTenancy());
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
@@ -558,7 +563,7 @@ public class Invoice
         if (disableCollect(true) != null) {
             return this;
         }
-        final Numerator numerator = collectionNumerators.findCollectionNumberNumerator();
+        final Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator(getApplicationTenancy());
         setCollectionNumber(numerator.nextIncrementStr());
         return this;
     }
@@ -590,7 +595,7 @@ public class Invoice
                     getContainer().titleOf(this)));
             return this;
         }
-        final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
+        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         setInvoiceNumber(numerator.nextIncrementStr());
         setInvoiceDate(invoiceDate);
         this.setStatus(InvoiceStatus.INVOICED);
@@ -602,7 +607,7 @@ public class Invoice
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
-        final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
+        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
@@ -619,7 +624,8 @@ public class Invoice
         if (getDueDate() != null && getDueDate().compareTo(invoiceDate) < 0) {
             return false;
         }
-        final Numerator numerator = collectionNumerators.findInvoiceNumberNumerator(getFixedAsset());
+        final ApplicationTenancy applicationTenancy = getApplicationTenancy();
+        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), applicationTenancy);
         if (numerator != null) {
             final String invoiceNumber = numerator.lastIncrementStr();
             if (invoiceNumber != null) {
@@ -769,7 +775,7 @@ public class Invoice
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    CollectionNumerators collectionNumerators;
+    EstatioNumeratorRepository estatioNumeratorRepository;
 
     @javax.inject.Inject
     Invoices invoices;

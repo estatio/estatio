@@ -31,6 +31,9 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Property;
@@ -57,10 +60,15 @@ public class NumeratorsTest {
 
     Bookmark propertyBookmark;
 
+    ApplicationTenancy applicationTenancy;
+
     @Before
     public void setup() {
 
         propertyBookmark = new Bookmark("PROP", "123");
+
+        applicationTenancy = new ApplicationTenancy();
+        applicationTenancy.setPath("/");
 
         context.checking(new Expectations() {
             {
@@ -93,16 +101,16 @@ public class NumeratorsTest {
         @Test
         public void findNumeratorByType() {
 
-            numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty);
+            numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, applicationTenancy);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Numerator.class));
-            assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndObjectIdentifier"));
+            assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)Constants.INVOICE_NUMBER_NUMERATOR_NAME));
             assertThat(finderInteraction.getArgumentsByParameterName().get("objectType"), is((Object)"PROP"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("objectIdentifier"), is((Object)"123"));
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
         }
     }
 

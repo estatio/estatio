@@ -18,30 +18,53 @@
  */
 package org.estatio.fixturescripts;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.inject.Inject;
+
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleRepository;
+import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.CollectionNumerators;
+import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.numerator.Numerator;
 
 import static org.estatio.integtests.VT.bi;
 
 public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
+
     @Override
     protected void execute(ExecutionContext fixtureResults) {
+        final List<FixedAssetRoleType> roleTypes = Arrays.asList(FixedAssetRoleType.PROPERTY_OWNER, FixedAssetRoleType.TENANTS_ASSOCIATION);
         for (Property property : propertyMenu.allProperties()) {
-            final Numerator numerator = collectionNumerators.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0));
-            fixtureResults.addResult(this, property.getReference(), numerator);
+            for (FixedAssetRole fixedAssetRole : fixedAssetRoleRepository.findAllForProperty(property)){
+                if (roleTypes.contains(fixedAssetRole.getType())) {
+                    ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(property, fixedAssetRole.getParty());
+                    final Numerator numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0), applicationTenancy);
+                    fixtureResults.addResult(this, property.getReference(), numerator);
+                }
+            }
         }
     }
-
     // //////////////////////////////////////
 
-    @javax.inject.Inject
-    CollectionNumerators collectionNumerators;
+    @Inject
+    EstatioNumeratorRepository estatioNumeratorRepository;
 
-    @javax.inject.Inject
+    @Inject
     PropertyMenu propertyMenu;
 
+    @Inject
+    FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 }

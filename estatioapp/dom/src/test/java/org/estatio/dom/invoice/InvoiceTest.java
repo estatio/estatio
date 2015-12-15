@@ -21,17 +21,22 @@ package org.estatio.dom.invoice;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -43,6 +48,7 @@ import org.estatio.services.clock.ClockService;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -60,7 +66,7 @@ public class InvoiceTest {
     Invoices mockInvoices;
 
     @Mock
-    CollectionNumerators mockCollectionNumerators;
+    EstatioNumeratorRepository mockEstatioNumeratorRepository;
 
     @Mock
     ClockService mockClockService;
@@ -75,11 +81,15 @@ public class InvoiceTest {
     @Ignoring
     DomainObjectContainer mockContainer;
 
+    ApplicationTenancy applicationTenancy;
+
     @Before
     public void setUp() throws Exception {
         numerator = new Numerator();
         numerator.setFormat("XXX-%05d");
         numerator.setLastIncrement(BigInteger.TEN);
+        applicationTenancy = new ApplicationTenancy();
+        applicationTenancy.setPath("/");
 
         context.checking(new Expectations() {
             {
@@ -93,7 +103,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockCollectionNumerators).findInvoiceNumberNumerator(with(any(Property.class)));
+                allowing(mockEstatioNumeratorRepository).findInvoiceNumberNumerator(with(any(Property.class)), with(any(ApplicationTenancy.class)));
                 will(returnValue(numerator));
             }
         });
@@ -102,7 +112,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnCollectionNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockCollectionNumerators).findCollectionNumberNumerator();
+                allowing(mockEstatioNumeratorRepository).findCollectionNumberNumerator(applicationTenancy);
                 will(returnValue(numerator));
             }
         });
@@ -133,11 +143,15 @@ public class InvoiceTest {
             public FixedAsset getFixedAsset() {
                 return fixedAsset;
             }
+
+            @Override public ApplicationTenancy getApplicationTenancy() {
+                return applicationTenancy;
+            }
         };
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
         invoice.invoices = mockInvoices;
-        invoice.collectionNumerators = mockCollectionNumerators;
+        invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
         invoice.injectClockService(mockClockService);
         return invoice;
     }
@@ -209,10 +223,14 @@ public class InvoiceTest {
                 public InvoiceStatus getStatus() {
                     return status;
                 }
+
+                @Override public ApplicationTenancy getApplicationTenancy() {
+                    return applicationTenancy;
+                }
             };
             invoice.setContainer(mockContainer);
             invoice.invoices = mockInvoices;
-            invoice.collectionNumerators = mockCollectionNumerators;
+            invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
             return invoice;
         }
 
@@ -345,10 +363,14 @@ public class InvoiceTest {
 
         @Before
         public void setUp() throws Exception {
-            invoice = new Invoice();
+            invoice = new Invoice() {
+                @Override public ApplicationTenancy getApplicationTenancy() {
+                    return new ApplicationTenancy();
+                };
+            };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
             invoice.invoices = mockInvoices;
-            invoice.collectionNumerators = mockCollectionNumerators;
+            invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
             invoice.setFixedAsset(invoiceProperty);
         }
 
@@ -362,6 +384,7 @@ public class InvoiceTest {
             // given
             allowingMockInvoicesToReturnNumerator(numerator);
             allowingMockInvoicesToReturnInvoice("XXX-0010", new LocalDate(2012, 1, 1));
+            assertNotNull("App tenancy can't be null", invoice.getApplicationTenancy());
 
             // when,then
             assertTrue(invoice.validInvoiceDate(new LocalDate(2012, 2, 1)));

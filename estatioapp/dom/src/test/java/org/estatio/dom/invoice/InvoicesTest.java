@@ -21,19 +21,23 @@ package org.estatio.dom.invoice;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Property;
@@ -52,7 +56,7 @@ public class InvoicesTest {
     FinderInteraction finderInteraction;
 
     Invoices invoices;
-    CollectionNumerators collectionNumerators;
+    EstatioNumeratorRepository estatioNumeratorRepository;
 
     Party seller;
     Party buyer;
@@ -94,7 +98,7 @@ public class InvoicesTest {
                 return null;
             }
         };
-        collectionNumerators = new CollectionNumerators() {
+        estatioNumeratorRepository = new EstatioNumeratorRepository() {
         };
     }
 
@@ -184,6 +188,8 @@ public class InvoicesTest {
 
         private String format;
         private BigInteger lastIncrement;
+        private ApplicationTenancy applicationTenancy;
+
 
         @Before
         public void setUp() throws Exception {
@@ -191,8 +197,11 @@ public class InvoicesTest {
             lastIncrement = BigInteger.TEN;
 
             invoices = new Invoices();
-            collectionNumerators = new CollectionNumerators();
-            collectionNumerators.numerators = mockNumerators;
+            estatioNumeratorRepository = new EstatioNumeratorRepository();
+            estatioNumeratorRepository.numerators = mockNumerators;
+
+            applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath("/");
         }
 
 
@@ -200,30 +209,30 @@ public class InvoicesTest {
         public void findCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+                    oneOf(mockNumerators).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, applicationTenancy);
                 }
             });
-            collectionNumerators.findCollectionNumberNumerator();
+            estatioNumeratorRepository.findCollectionNumberNumerator(applicationTenancy);
         }
 
         @Test
         public void createCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
+                    oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
                 }
             });
-            collectionNumerators.createCollectionNumberNumerator(format, lastIncrement);
+            estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement, applicationTenancy);
         }
 
         @Hidden
         public void findInvoiceNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
+                    oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
                 }
             });
-            collectionNumerators.findInvoiceNumberNumerator(mockProperty);
+            estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, applicationTenancy);
         }
 
         @Hidden
@@ -234,10 +243,10 @@ public class InvoicesTest {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, format, lastIncrement);
+                    oneOf(mockNumerators).createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, format, lastIncrement, applicationTenancy);
                 }
             });
-            collectionNumerators.createInvoiceNumberNumerator(mockProperty, format, lastIncrement);
+            estatioNumeratorRepository.createInvoiceNumberNumerator(mockProperty, format, lastIncrement, applicationTenancy);
         }
 
 

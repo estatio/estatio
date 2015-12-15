@@ -16,7 +16,6 @@
  * Each invoice is named by {@link org.estatio.dom.asset.Property},eg <i>CAR-01234</i> for the
  * Property with {@link org.estatio.dom.asset.Property#getReference() reference} of <i>CAR</i>.  The tracking of the 
  * &quot;next&quot; number is managed not by the property but by a {@link org.estatio.dom.numerator.Numerator} 
- * {@link org.estatio.dom.numerator.Numerator#getObjectIdentifier() scoped} to the property.  The
- * {@link org.estatio.dom.invoice.InvoiceNumeratorContributions} class contributes this numerator to the property. 
+ * {@link org.estatio.dom.numerator.Numerator#getObjectIdentifier() scoped} to the property.
  */
 package org.estatio.dom.invoice;
