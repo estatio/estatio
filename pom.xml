@@ -43,7 +43,7 @@ mvn clean install -DskipTests -o
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.3.1</version>
     <packaging>pom</packaging>
 
     <name>Estatio (Open Source)</name>
@@ -589,12 +589,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-agreement</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-agreement</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -602,12 +602,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-base</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-base</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -615,12 +615,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-charge</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-charge</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -628,12 +628,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-communicationchannel</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-communicationchannel</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -641,12 +641,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -654,12 +654,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-event</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-event</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -667,12 +667,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-geography</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-geography</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -680,12 +680,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-invoice</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-invoice</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -693,12 +693,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-numerator</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-numerator</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -706,12 +706,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-party</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-party</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -719,12 +719,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-tag</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-tag</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -732,12 +732,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-tax</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-tax</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -747,12 +747,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-canonical</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-canonical</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -760,12 +760,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-canonicalmappings</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-canonicalmappings</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -773,12 +773,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -786,12 +786,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-app</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-app</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -799,19 +799,19 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-integtests</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-webapp</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.3.1</version>
             </dependency>
 
 
