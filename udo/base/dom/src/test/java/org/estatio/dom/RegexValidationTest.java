@@ -19,8 +19,7 @@ package org.estatio.dom;
  *  under the License.
  */
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import java.util.regex.Pattern;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -29,13 +28,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.core.metamodel.facetapi.FacetHolder;
-import org.apache.isis.core.metamodel.facets.object.regex.annotation.RegExFacetOnTypeAnnotation;
+import org.apache.isis.core.metamodel.facets.objectvalue.regex.RegExFacet;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class RegexValidationTest {
 
     private final Mockery context = new JUnit4Mockery();
 
-    private RegExFacetOnTypeAnnotation regExFacetOnTypeAnnotation;
+    private RegExFacet regExFacetOnTypeAnnotation;
     private FacetHolder facetHolder;
 
     @Before
@@ -137,7 +139,6 @@ public class RegexValidationTest {
     }
 
     private void tester(String regex, String pattern, boolean expected) {
-        regExFacetOnTypeAnnotation = new RegExFacetOnTypeAnnotation(regex, "", expected, facetHolder);
-        assertThat(regExFacetOnTypeAnnotation.doesNotMatch(pattern), equalTo(!expected));
+        assertThat( Pattern.compile(regex, 0).matcher(pattern).matches(), equalTo(expected));
     }
 }
