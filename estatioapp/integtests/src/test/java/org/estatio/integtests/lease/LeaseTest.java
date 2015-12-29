@@ -23,6 +23,7 @@ import java.util.SortedSet;
 import javax.inject.Inject;
 
 import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,8 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
@@ -50,6 +53,7 @@ import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.party.OrganisationForMediaXGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
@@ -65,6 +69,9 @@ public class LeaseTest extends EstatioIntegrationTest {
     @Inject
     Leases leases;
 
+    @Inject
+    Parties parties;
+
     public static class Assign extends LeaseTest {
 
         @Before
@@ -73,30 +80,39 @@ public class LeaseTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
             });
         }
 
-        private Lease leasePoison;
-        private Lease leaseMediax;
-
-        @Before
-        public void setup() {
-            leasePoison = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
-            leaseMediax = leases.findLeaseByReference(LeaseForOxfMediaX002Gb.REF);
-        }
-
         @Test
         public void happyCase() throws Exception {
-            final String newReference = "OXF-MEDIA-003";
-            Lease newLease = leasePoison.assign(
+            // given
+            final String newReference = "OXF-MEDIA-001";
+            final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            final Party newParty = parties.findPartyByReference(OrganisationForMediaXGb.REF);
+            final LocalDate newStartDate = VT.ld(2014, 1, 1);
+
+            // when
+            Lease newLease = lease.assign(
                     newReference,
-                    "Reassigned",
-                    leaseMediax.getSecondaryParty(),
-                    VT.ld(2014, 1, 1),
+                    newReference,
+                    newParty,
+                    newStartDate,
                     true);
+
+            // then
+            assertThat(newLease.getReference(), is(newReference));
+            assertThat(newLease.getName(), is(newReference));
+            assertThat(newLease.getStartDate(), is(lease.getStartDate()));
+            assertThat(newLease.getEndDate(), is(lease.getEndDate()));
+            assertThat(newLease.getTenancyStartDate(), is(newStartDate));
+            assertThat(newLease.getTenancyEndDate(), is(lease.getEndDate()));
+            assertThat(newLease.getPrimaryParty(), is(lease.getPrimaryParty()));
+            assertThat(newLease.getSecondaryParty(), is(newParty));
+            assertThat(newLease.getItems().size(), is(lease.getItems().size()));
+
+            assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
         }
     }
 

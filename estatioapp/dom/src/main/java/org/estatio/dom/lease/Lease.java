@@ -849,10 +849,11 @@ public class Lease
                 endDate,
                 tenancyStartDate,
                 tenancyEndDate,
-                this.getPrimaryParty(), tenant);
+                this.getPrimaryParty(),
+                tenant);
 
-        copyItemsAndTerms(newLease, tenancyStartDate);
         copyOccupancies(newLease, tenancyStartDate);
+        copyItemsAndTerms(newLease, tenancyStartDate);
         breakOptionsService.copyBreakOptions(this, newLease, tenancyStartDate);
         copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
         this.setNext(newLease);
