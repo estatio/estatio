@@ -52,8 +52,8 @@ public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumerato
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
-    public Numerator findCollectionNumberNumerator(final ApplicationTenancy applicationTenancy) {
-        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, applicationTenancy);
+    public Numerator findCollectionNumberNumerator() {
+        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
     }
 
     // //////////////////////////////////////

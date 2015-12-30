@@ -209,10 +209,10 @@ public class InvoicesTest {
         public void findCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, applicationTenancy);
+                    oneOf(mockNumerators).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
                 }
             });
-            estatioNumeratorRepository.findCollectionNumberNumerator(applicationTenancy);
+            estatioNumeratorRepository.findCollectionNumberNumerator();
         }
 
         @Test

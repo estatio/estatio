@@ -121,7 +121,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenNone() throws Exception {
-            Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator(applicationTenancyRepository.findByPath("/"));
+            Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator();
             assertThat(numerator, is(nullValue()));
         }
 

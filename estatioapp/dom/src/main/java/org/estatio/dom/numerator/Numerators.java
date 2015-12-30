@@ -73,7 +73,9 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
 
     private Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
         if(scopedToIfAny == null) {
-            return firstMatch("findByNameAndApplicationTenancyPath", "name", numeratorName, "applicationTenancyPath", applicationTenancy.getPath());
+            return firstMatch("findByNameAndApplicationTenancyPath",
+                    "name", numeratorName,
+                    "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
         } else {
             final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
             final String objectType = bookmark.getObjectType();
@@ -82,7 +84,7 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
                     "name", numeratorName, 
                     "objectType", objectType, 
                     "objectIdentifier", objectIdentifier,
-                    "applicationTenancyPath" ,applicationTenancy.getPath());
+                    "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
         }
     }
 

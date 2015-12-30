@@ -531,7 +531,7 @@ public class Invoice
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
-        final Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator(getApplicationTenancy());
+        final Numerator numerator = collectionNumerator();
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
@@ -563,9 +563,13 @@ public class Invoice
         if (disableCollect(true) != null) {
             return this;
         }
-        final Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator(getApplicationTenancy());
+        final Numerator numerator = collectionNumerator();
         setCollectionNumber(numerator.nextIncrementStr());
         return this;
+    }
+
+    private Numerator collectionNumerator() {
+        return estatioNumeratorRepository.findCollectionNumberNumerator();
     }
 
     @Programmatic

@@ -112,7 +112,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnCollectionNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockEstatioNumeratorRepository).findCollectionNumberNumerator(applicationTenancy);
+                allowing(mockEstatioNumeratorRepository).findCollectionNumberNumerator();
                 will(returnValue(numerator));
             }
         });

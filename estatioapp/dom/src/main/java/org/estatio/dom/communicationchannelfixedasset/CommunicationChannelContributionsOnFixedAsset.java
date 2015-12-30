@@ -20,7 +20,7 @@ package org.estatio.dom.communicationchannelfixedasset;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.estatio.dom.asset.FixedAsset;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 
@@ -43,7 +43,8 @@ public class CommunicationChannelContributionsOnFixedAsset extends Communication
      * </p>
      */
     public boolean hideCommunicationChannels(final CommunicationChannelOwner owner) {
-        return owner instanceof FixedAsset;
+        //return owner instanceof FixedAsset;
+        return false;
     }
 
 }
