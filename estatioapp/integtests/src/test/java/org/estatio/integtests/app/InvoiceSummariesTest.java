@@ -19,19 +19,22 @@
 package org.estatio.integtests.app;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
+
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class InvoiceSummariesTest extends EstatioIntegrationTest {
@@ -52,16 +55,13 @@ public class InvoiceSummariesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private InvoiceSummariesForPropertyDueDate invoiceSummaries;
+        private InvoiceSummariesForPropertyDueDateStatus invoiceSummaries;
 
         @Test
         public void whenPresent() throws Exception {
-            final List<InvoiceSummaryForPropertyDueDate> summaries =
-                    invoiceSummaries.allInvoicesByPropertyDueDate();
+            final List<InvoiceSummaryForPropertyDueDateStatus> summaries =
+                    invoiceSummaries.allNewInvoices();
             assertThat(summaries.size(), is(2));
-            InvoiceSummaryForPropertyDueDate summary = summaries.get(0);
-            Property property = summary.getProperty();
-            assertThat(property, is(not(nullValue())));
         }
 
     }

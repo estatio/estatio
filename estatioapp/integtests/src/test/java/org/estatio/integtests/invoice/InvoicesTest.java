@@ -300,37 +300,37 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
             assertThat(invoices.allInvoices().size(), is(2));
 
-            List<Invoice> invoiceList = invoices.findInvoices(lease);
+            List<Invoice> invoiceList = invoices.findByLease(lease);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byParty() {
-            List<Invoice> invoiceList = invoices.findInvoices(buyer);
+            List<Invoice> invoiceList = invoices.findByBuyer(buyer);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byPropertyAndStatus() {
-            List<Invoice> invoiceList = invoices.findInvoices(propertyKal, InvoiceStatus.NEW);
+            List<Invoice> invoiceList = invoices.findByFixedAssetAndStatus(propertyKal, InvoiceStatus.NEW);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byStatus() {
-            List<Invoice> invoiceList = invoices.findInvoices(InvoiceStatus.NEW);
+            List<Invoice> invoiceList = invoices.findByStatus(InvoiceStatus.NEW);
             assertThat(invoiceList.size(), is(2));
         }
 
         @Test
         public void byPropertyDueDate() {
-            List<Invoice> invoiceList = invoices.findInvoices(propertyKal, VT.ld(2012, 1, 1));
+            List<Invoice> invoiceList = invoices.findByFixedAssetAndDueDate(propertyKal, VT.ld(2012, 1, 1));
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byPropertyDueDateStatus() {
-            List<Invoice> invoiceList = invoices.findInvoices(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
+            List<Invoice> invoiceList = invoices.findByFixedAssetAndDueDateAndStatus(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
             assertThat(invoiceList.size(), is(1));
         }
 

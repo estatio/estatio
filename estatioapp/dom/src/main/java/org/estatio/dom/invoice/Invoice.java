@@ -40,7 +40,6 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -49,7 +48,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -97,6 +95,15 @@ import org.estatio.dom.party.Party;
                         "status == :status " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
+                name = "findByApplicationTenancyPathAndSellerAndDueDateAndStatus", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE " +
+                        "seller == :seller && " +
+                        "applicationTenancyPath == :applicationTenancyPath && " +
+                        "status == :status && " +
+                        "dueDate == :dueDate " +
+                        "ORDER BY invoiceNumber"),
+        @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndDueDateAndStatus", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE " +
@@ -122,12 +129,19 @@ import org.estatio.dom.party.Party;
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE buyer == :buyer " +
-                        "ORDER BY invoiceNumber"),
+                        "ORDER BY invoiceDate DESC"),
+        @javax.jdo.annotations.Query(
+                name = "findBySeller", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE seller == :seller " +
+                        "ORDER BY invoiceDate DESC"),
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE lease == :lease "),
+                        "WHERE lease == :lease " +
+                        "ORDER BY invoiceDate DESC"),
         @javax.jdo.annotations.Query(
                 name = "findByRunId", language = "JDOQL",
                 value = "SELECT " +
@@ -189,7 +203,7 @@ public class Invoice
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public String getApplicationTenancyPath() {
         return applicationTenancyPath;
     }
@@ -234,7 +248,6 @@ public class Invoice
     private Party buyer;
 
     @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
-    @Property(editing = Editing.DISABLED)
     public Party getBuyer() {
         return buyer;
 
@@ -249,7 +262,7 @@ public class Invoice
     private Party seller;
 
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
-    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED)
+    @Property(hidden = Where.ALL_TABLES)
     public Party getSeller() {
         return seller;
     }
@@ -263,7 +276,7 @@ public class Invoice
     private String collectionNumber;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
-    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED)
+    @Property(hidden = Where.ALL_TABLES)
     public String getCollectionNumber() {
         return collectionNumber;
     }
@@ -277,7 +290,7 @@ public class Invoice
     private String invoiceNumber;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
-    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED)
+    @Property(hidden = Where.ALL_TABLES)
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -290,7 +303,7 @@ public class Invoice
 
     private String runId;
 
-    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     public String getRunId() {
         return runId;
     }
@@ -304,7 +317,7 @@ public class Invoice
     private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "true")
-    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Property(optionality = Optionality.OPTIONAL)
     public Lease getLease() {
         return lease;
     }
@@ -319,7 +332,6 @@ public class Invoice
     private LocalDate invoiceDate;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    @Property(editing = Editing.DISABLED)
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -334,7 +346,6 @@ public class Invoice
     private LocalDate dueDate;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Property(editing = Editing.DISABLED)
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -366,7 +377,6 @@ public class Invoice
     private InvoiceStatus status;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
-    @Property(editing = Editing.DISABLED)
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -381,7 +391,7 @@ public class Invoice
 
     // REVIEW: invoice generation is not populating this field.
     @javax.jdo.annotations.Column(name = "currencyId", allowsNull = "true")
-    @Property(editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @Property(hidden = Where.ALL_TABLES)
     public Currency getCurrency() {
         return currency;
     }
@@ -425,7 +435,6 @@ public class Invoice
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")
     private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
 
-    @Property(editing = Editing.DISABLED)
     @CollectionLayout(render = RenderType.EAGERLY)
     public SortedSet<InvoiceItem> getItems() {
         return items;
@@ -633,7 +642,7 @@ public class Invoice
         if (numerator != null) {
             final String invoiceNumber = numerator.lastIncrementStr();
             if (invoiceNumber != null) {
-                List<Invoice> result = invoices.findInvoicesByInvoiceNumber(invoiceNumber);
+                List<Invoice> result = invoices.findByInvoiceNumber(invoiceNumber);
                 if (result.size() > 0) {
                     return result.get(0).getInvoiceDate().compareTo(invoiceDate) <= 0;
                 }
@@ -704,7 +713,7 @@ public class Invoice
      */
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     // for the moment, might be generalized (to the user) in the future
-    @Property(editing = Editing.DISABLED, hidden = Where.PARENTED_TABLES)
+    @Property(hidden = Where.PARENTED_TABLES)
     @PropertyLayout(named = "Property")
     public FixedAsset getFixedAsset() {
         return fixedAsset;
@@ -731,27 +740,13 @@ public class Invoice
      * that they relate to the same bank mandate (if they are to be paid by bank
      * mandate).
      */
-    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     public BankMandate getPaidBy() {
         return paidBy;
     }
 
     public void setPaidBy(final BankMandate paidBy) {
         this.paidBy = paidBy;
-    }
-
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
-    public Invoice submitToCoda() {
-        doCollect();
-        return this;
-    }
-
-    public String disableSubmitToCoda() {
-        return getStatus() == InvoiceStatus.INVOICED || getStatus() == InvoiceStatus.APPROVED
-                ? null
-                : "Must be approved or invoiced";
     }
 
     // //////////////////////////////////////

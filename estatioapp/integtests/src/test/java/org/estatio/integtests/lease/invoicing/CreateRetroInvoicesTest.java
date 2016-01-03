@@ -18,9 +18,6 @@
  */
 package org.estatio.integtests.lease.invoicing;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
 import java.util.SortedSet;
 
@@ -50,6 +47,9 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
 
@@ -119,7 +119,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
             creator.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
 
             // then
-            assertThat(invoices.findInvoices(lease).size(), is(8));
+            assertThat(invoices.findByLease(lease).size(), is(8));
 
             // and given
             lease.terminate(VT.ld(2013, 10, 1), true);
@@ -128,7 +128,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
             invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2014, 2, 1), VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
 
             // then
-            List<Invoice> invoicesList = invoices.findInvoices(lease);
+            List<Invoice> invoicesList = invoices.findByLease(lease);
             assertThat(invoicesList.size(), is(9));
             Invoice invoice = invoicesList.get(8);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));

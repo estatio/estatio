@@ -5,11 +5,7 @@
       "memberGroups": {
         "General": {
           "members": {
-            "runId": {}
-          }
-        },
-        "Application Level": {
-          "members": {
+            "runId": {},
             "applicationTenancy": {
               "hidden": {"where": "ALL_TABLES"},
               "disabled": {}

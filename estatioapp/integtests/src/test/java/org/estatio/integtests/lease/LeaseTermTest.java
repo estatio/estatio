@@ -18,30 +18,47 @@
  */
 package org.estatio.integtests.lease;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.DisabledException;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.*;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioFixtureScript;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.*;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.SortedSet;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 
-import static org.hamcrest.CoreMatchers.*;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.Leases;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertNotNull;
@@ -147,7 +164,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
 
                 // and given
-                Assert.assertThat(invoices.findInvoices(lease), not(empty()));
+                Assert.assertThat(invoices.findByLease(lease), not(empty()));
 
                 // then
                 expectedExceptions.expect(DisabledException.class);
@@ -186,7 +203,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
 
                 // and given
-                assertThat(invoices.findInvoices(lease), empty());
+                assertThat(invoices.findByLease(lease), empty());
 
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);
@@ -224,7 +241,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.ANNUAL));
 
                 // and given
-                assertThat(invoices.findInvoices(lease), not(empty()));
+                assertThat(invoices.findByLease(lease), not(empty()));
 
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);

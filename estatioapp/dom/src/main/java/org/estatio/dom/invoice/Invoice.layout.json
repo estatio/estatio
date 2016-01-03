@@ -5,42 +5,11 @@
       "memberGroups": {
         "General": {
           "members": {
-            "number": {},
-            "collectionNumber": {},
-            "invoiceNumber": {},
-            "lastItemSequence": {},
-            "status": {}
-          }
-        },
-        "Detail": {
-          "members": {
-            "source": {},
-            "property": {},
-            "lease": {},
-            "paymentMethod": {
-              "actions": {
-                "changePaymentMethod": {}
-              }
-            }
-          }
-        },
-        "Application Level": {
-          "members": {
-            "applicationTenancy": {
-              "hidden": {"where": "ALL_TABLES"},
-              "disabled": {}
-            }
-          }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Parties": {
-          "members": {
+            "seller": {},
             "buyer": {},
-            "seller": {}
+            "status": {},
+            "invoiceNumber": {},
+            "collectionNumber": {}
           }
         },
         "Dates": {
@@ -50,6 +19,37 @@
               "actions": {
                 "changeDueDate": {}
               }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "RelatedTo": {
+          "members": {
+            "fixedAsset": {},
+            "lease": {}
+          }
+        },
+        "Payment": {
+          "members": {
+            "paymentMethod": {
+              "actions": {
+                "changePaymentMethod": {}
+              }
+            },
+            "paidBy": {}
+          }
+        },
+        "Payment": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "disabled": {}
             }
           }
         }

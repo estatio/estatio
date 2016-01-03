@@ -144,7 +144,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final ExecutionContext executionContext) {
         invoiceCalculationService.calculateAndInvoice(parameters);
 
-        for (Invoice invoice : invoices.findInvoices(InvoiceStatus.NEW)) {
+        for (Invoice invoice : invoices.findByStatus(InvoiceStatus.NEW)) {
             invoice.setStatus(InvoiceStatus.HISTORIC);
             invoice.setRunId(null);
             executionContext.addResult(this, invoice.getInvoiceNumber(), invoice);

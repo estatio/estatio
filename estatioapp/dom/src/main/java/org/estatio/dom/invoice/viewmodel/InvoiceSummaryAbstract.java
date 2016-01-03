@@ -87,7 +87,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     // //////////////////////////////////////
 
     @Inject
-    protected Invoices invoicesService;
+    protected Invoices invoiceRepository;
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;

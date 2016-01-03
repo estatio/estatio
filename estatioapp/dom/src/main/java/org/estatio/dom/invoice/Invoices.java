@@ -23,15 +23,10 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -47,7 +42,6 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.StringUtils;
 import org.estatio.domsettings.EstatioSettingsService;
 
 @DomainService(repositoryFor = Invoice.class)
@@ -61,33 +55,23 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
         super(Invoices.class, Invoice.class);
     }
 
-    // //////////////////////////////////////
-
-    @NotInServiceMenu
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(named = "Invoices", contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> findInvoices(final Lease lease) {
-        return allMatches("findByLease",
-                "lease", lease);
+    @Programmatic
+    public List<Invoice> findMatchingInvoices(
+            final Party seller,
+            final Party buyer,
+            final PaymentMethod paymentMethod,
+            final Lease lease,
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dueDate) {
+        return allMatches(
+                "findMatchingInvoices",
+                "seller", seller,
+                "buyer", buyer,
+                "paymentMethod", paymentMethod,
+                "lease", lease,
+                "status", invoiceStatus,
+                "dueDate", dueDate);
     }
-
-    @NotInServiceMenu
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(named = "Invoices", contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> findInvoices(final Party party) {
-        return allMatches("findByBuyer",
-                "buyer", party);
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "3")
-    public List<Invoice> findInvoicesByInvoiceNumber(
-            final @ParameterLayout(named = "Invoice number") String invoiceNumber) {
-        return allMatches("findByInvoiceNumber",
-                "invoiceNumber", StringUtils.wildcardToCaseInsensitiveRegex(invoiceNumber));
-    }
-
-    // //////////////////////////////////////
 
     @Programmatic
     public List<Invoice> findInvoicesByRunId(final String runId) {
@@ -103,14 +87,37 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     @Programmatic
-    public List<Invoice> findInvoices(
+    public List<Invoice> findByStatus(
             final InvoiceStatus status) {
         return allMatches("findByStatus",
                 "status", status);
     }
 
     @Programmatic
-    public List<Invoice> findInvoices(
+    public List<Invoice> findByLease(final Lease lease) {
+        return allMatches("findByLease", "lease", lease);
+    }
+
+    @Programmatic
+    public List<Invoice> findByBuyer(final Party party) {
+        return allMatches("findByBuyer",
+                "buyer", party);
+    }
+
+    @Programmatic
+    public List<Invoice> findBySeller(final Party party) {
+        return allMatches("findBySeller",
+                "seller", party);
+    }
+
+    @Programmatic
+    public List<Invoice> findByInvoiceNumber(final String invoiceNumber) {
+        return allMatches("findByInvoiceNumber",
+                "invoiceNumber", invoiceNumber);
+    }
+
+    @Programmatic
+    public List<Invoice> findByFixedAssetAndStatus(
             final FixedAsset fixedAsset,
             final InvoiceStatus status) {
         return allMatches("findByFixedAssetAndStatus",
@@ -119,7 +126,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     @Programmatic
-    public List<Invoice> findInvoices(
+    public List<Invoice> findByFixedAssetAndDueDate(
             final FixedAsset fixedAsset,
             final LocalDate dueDate) {
         return allMatches("findByFixedAssetAndDueDate",
@@ -127,23 +134,30 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
                 "dueDate", dueDate);
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
-    public List<Invoice> findInvoices(
+    @Programmatic
+    public List<Invoice> findByFixedAssetAndDueDateAndStatus(
             final FixedAsset fixedAsset,
-            final @ParameterLayout(named = "Due Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate dueDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) InvoiceStatus status) {
-        if (status == null) {
-            return findInvoices(fixedAsset, dueDate);
-        } else if (dueDate == null) {
-            return findInvoices(fixedAsset, status);
-        } else {
-            return allMatches("findByFixedAssetAndDueDateAndStatus",
-                    "fixedAsset", fixedAsset,
-                    "dueDate", dueDate,
-                    "status", status);
-        }
+            final LocalDate dueDate,
+            final InvoiceStatus status) {
+        return allMatches("findByFixedAssetAndDueDateAndStatus",
+                "fixedAsset", fixedAsset,
+                "dueDate", dueDate,
+                "status", status);
     }
+
+    @Programmatic
+    public List<Invoice> findByApplicationTenancyPathAndSellerAndDueDateAndStatus(
+            final String applicationTenancyPath,
+            final Party seller,
+            final LocalDate dueDate,
+            final InvoiceStatus status) {
+        return allMatches("findByApplicationTenancyPathAndSellerAndDueDateAndStatus",
+                "applicationTenancyPath", applicationTenancyPath,
+                "seller", seller,
+                "dueDate", dueDate,
+                "status", status);
+    }
+
 
     // //////////////////////////////////////
 
@@ -253,24 +267,6 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
         return invoices.get(0);
     }
 
-    @Programmatic
-    public List<Invoice> findMatchingInvoices(
-            final Party seller,
-            final Party buyer,
-            final PaymentMethod paymentMethod,
-            final Lease lease,
-            final InvoiceStatus invoiceStatus,
-            final LocalDate dueDate) {
-        return allMatches(
-                "findMatchingInvoices",
-                "seller", seller,
-                "buyer", buyer,
-                "paymentMethod", paymentMethod,
-                "lease", lease,
-                "status", invoiceStatus,
-                "dueDate", dueDate);
-    }
-
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
@@ -283,7 +279,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Programmatic
     public void removeRuns(InvoiceCalculationParameters parameters) {
-        List<Invoice> invoices = findInvoices(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
+        List<Invoice> invoices = findByFixedAssetAndDueDateAndStatus(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
         for (Invoice invoice : invoices) {
             invoice.remove();
         }
@@ -299,7 +295,5 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @javax.inject.Inject
     private MeService meService;
-
-
 
 }

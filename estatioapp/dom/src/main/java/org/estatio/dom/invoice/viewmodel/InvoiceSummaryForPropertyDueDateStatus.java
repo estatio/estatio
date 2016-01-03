@@ -27,12 +27,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
@@ -40,10 +37,14 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.asset.PropertyMenu;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
@@ -53,7 +54,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
                         value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDateStatus\" " +
                                 "( " +
                                 "  {this.atPath}, " +
-                                "  {this.reference}, " +
+                                "  {this.sellerReference}, " +
                                 "  {this.dueDate}, " +
                                 "  {this.status}, " +
                                 "  {this.total}, " +
@@ -63,7 +64,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
                                 ") AS " +
                                 "SELECT " +
                                 "  \"Invoice\".\"atPath\", " +
-                                "  \"FixedAsset\".\"reference\" , " +
+                                "  \"Party\".\"reference\" , " +
                                 "  \"Invoice\".\"dueDate\", " +
                                 "  \"Invoice\".\"status\", " +
                                 "  COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
@@ -71,15 +72,13 @@ import org.estatio.dom.invoice.InvoiceStatus;
                                 "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
                                 "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
                                 "FROM \"Invoice\" " +
-                                "  INNER JOIN \"Lease\" " +
-                                "    ON \"Lease\".\"id\" = \"Invoice\".\"leaseId\" " +
-                                "  INNER JOIN \"FixedAsset\"  " +
-                                "    ON \"FixedAsset\".\"id\"  = \"Invoice\".\"fixedAssetId\" " +
                                 "  INNER JOIN \"InvoiceItem\" " +
                                 "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
+                                "  INNER JOIN \"Party\" " +
+                                "    ON \"Party\".\"id\" = \"Invoice\".\"sellerPartyId\" " +
                                 "GROUP BY " +
                                 "  \"Invoice\".\"atPath\", " +
-                                "  \"FixedAsset\".\"reference\", " +
+                                "  \"Party\".\"reference\", " +
                                 "  \"Invoice\".\"dueDate\", " +
                                 "  \"Invoice\".\"status\"")
         })
@@ -92,9 +91,8 @@ import org.estatio.dom.invoice.InvoiceStatus;
                         "status == :status ")
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Bookmarkable
-@Immutable
 @ViewModel
+@Immutable
 public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstract {
 
     public String iconName() {
@@ -103,137 +101,58 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     // //////////////////////////////////////
 
-    private String atPath;
-
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
-    public String getAtPath() {
-        return atPath;
-    }
-
-    public void setAtPath(final String atPath) {
-        this.atPath = atPath;
-    }
+    @Getter @Setter
+    private String atPath;
 
     public ApplicationTenancy getApplicationTenancy(){
         return applicationTenancyRepository.findByPath(getAtPath());
     }
 
-    private String reference;
-
-    @Hidden
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
-
-    // //////////////////////////////////////
-
-    private InvoiceStatus status;
-
-    public InvoiceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(InvoiceStatus status) {
-        this.status = status;
-    }
-
-    // //////////////////////////////////////
-
-    private LocalDate dueDate;
-
+    @Getter @Setter
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
     @Title(sequence = "2", prepend = " - ")
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(final LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    // //////////////////////////////////////
-
-    private int total;
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(final int total) {
-        this.total = total;
-    }
-
-    // //////////////////////////////////////
-
-    private BigDecimal vatAmount;
-
-    @Hidden
-    public BigDecimal getVatAmount() {
-        return vatAmount;
-    }
-
-    public void setVatAmount(final BigDecimal vatAmount) {
-        this.vatAmount = vatAmount;
-    }
-
-    // //////////////////////////////////////
-
-    private BigDecimal netAmount;
-
-    public BigDecimal getNetAmount() {
-        return netAmount;
-    }
-
-    public void setNetAmount(final BigDecimal netAmount) {
-        this.netAmount = netAmount;
-    }
-
-    // //////////////////////////////////////
-
-    private BigDecimal grossAmount;
-
-    public BigDecimal getGrossAmount() {
-        return grossAmount;
-    }
-
-    public void setGrossAmount(final BigDecimal grossAmount) {
-        this.grossAmount = grossAmount;
-    }
-
-    // //////////////////////////////////////
+    private String sellerReference;
 
     /**
      * Annotated as {@link javax.jdo.annotations.NotPersistent not persistent}
      * because not mapped in the <tt>view-definition</tt>.
      */
     @javax.jdo.annotations.NotPersistent
-    private Property property;
+    private Party seller;
 
-    /**
-     * Lazily loaded from the {@link #getReference() reference}, provides access
-     * to the underlying {@link Property}.
-     */
-    @Optional
-    @Title(sequence = "1")
-    public Property getProperty() {
-        if (property == null) {
-            setProperty(propertyRepository.findPropertyByReference(getReference()));
+    public Party getSeller() {
+        if (seller == null) {
+            seller = parties.findPartyByReference(getSellerReference());
         }
-        return property;
+        return seller;
     }
 
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
+    @Getter @Setter
+    private InvoiceStatus status;
+
+    @Getter @Setter
+    @Title(sequence = "3", prepend = " - ")
+    private LocalDate dueDate;
+
+    @Getter @Setter
+    private int total;
+
+    @Getter @Setter
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+    private BigDecimal vatAmount;
+
+    @Getter @Setter
+    private BigDecimal netAmount;
+
+    @Getter @Setter
+    private BigDecimal grossAmount;
 
     // //////////////////////////////////////
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public List<Invoice> getInvoices() {
-        return invoicesService.findInvoices(getProperty(), getDueDate(), getStatus());
+        return invoiceRepository.findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
     }
 
     // //////////////////////////////////////
@@ -243,5 +162,8 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     @Inject
     PropertyMenu propertyMenu;
+
+    @Inject
+    Parties parties;
 
 }
