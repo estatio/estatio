@@ -19,15 +19,20 @@ package org.estatio.domsettings;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
+
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.isisaddons.module.settings.dom.SettingAbstract;
 import org.isisaddons.module.settings.dom.SettingType;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.query.QueryDefault;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 /**
@@ -128,7 +133,6 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     private void installDefaultsIfRequired() {
         createSettingsIfRequired(ApplicationSettingKey.values());
         createSettingsIfRequired(org.estatio.dom.lease.ApplicationSettingKey.values());
-        createSettingsIfRequired(org.estatio.dom.invoice.ApplicationSettingKey.values());
     }
 
     private void createSettingsIfRequired(final ApplicationSettingCreator[] values) {

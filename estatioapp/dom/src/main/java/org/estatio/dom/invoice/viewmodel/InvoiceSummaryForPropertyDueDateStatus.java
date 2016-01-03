@@ -103,6 +103,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
+    @Title(sequence = "1")
     private String atPath;
 
     public ApplicationTenancy getApplicationTenancy(){
