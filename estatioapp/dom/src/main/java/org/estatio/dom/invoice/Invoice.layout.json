@@ -7,11 +7,25 @@
           "members": {
             "seller": {},
             "buyer": {},
-            "status": {},
+            "collectionNumber": {},
             "invoiceNumber": {},
-            "collectionNumber": {}
+            "lastItemSequence": {},
+            "status": {}
           }
         },
+        "Application Level": {
+          "members": {
+            "applicationTenancy": {
+              "hidden": {"where": "ALL_TABLES"},
+              "disabled": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
         "Dates": {
           "members": {
             "invoiceDate": {},
@@ -21,12 +35,7 @@
               }
             }
           }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
+        },
         "RelatedTo": {
           "members": {
             "fixedAsset": {},
@@ -41,16 +50,6 @@
               }
             },
             "paidBy": {}
-          }
-        },
-        "Payment": {
-          "members": {
-            "applicationTenancy": {
-              "hidden": {
-                "where": "ALL_TABLES"
-              },
-              "disabled": {}
-            }
           }
         }
       }
