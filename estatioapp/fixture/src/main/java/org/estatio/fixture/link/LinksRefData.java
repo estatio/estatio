@@ -19,46 +19,69 @@
 package org.estatio.fixture.link;
 
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 import org.estatio.domlink.Link;
-import org.estatio.domlink.Links;
+import org.estatio.domlink.LinkRepository;
 
 public class LinksRefData extends EstatioFixtureScript {
 
     @Inject
-    private ApplicationTenancies applicationTenancies;
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        ApplicationTenancy italyAppTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForIt.PATH);
+        ApplicationTenancy italyAppTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForIt.PATH);
+        final String url = "${reportServerBaseUrl}";
 
-        newLink(italyAppTenancy, Invoice.class,
+        newLink(italyAppTenancy,
+                Invoice.class,
                 "Preliminary letter",
-                "${reportServerBaseUrl}/reportserver?/Estatio/"
-                        + "Preliminary+Letter&id=${this.id}&rs:Command=Render", executionContext);
-        newLink(italyAppTenancy, Invoice.class,
+                url
+                        + "Preliminary+Letter"
+                        + "&id=${this.id}"
+                        + "&rs:Command=Render",
+                executionContext);
+        newLink(italyAppTenancy,
+                Invoice.class,
                 "Invoice",
-                "${reportServerBaseUrl}/reportserver?/Estatio/"
-                + "Invoice&id=${this.id}&rs:Command=Render", executionContext);
+                url
+                        + "Invoice"
+                        + "&id=${this.id}"
+                        + "&rs:Command=Render",
+                executionContext);
 
-        newLink(italyAppTenancy, InvoiceSummaryForPropertyDueDateStatus.class,
+        newLink(italyAppTenancy,
+                InvoiceSummaryForPropertyDueDateStatus.class,
                 "Invoices overview",
-                "${reportServerBaseUrl}/ReportServer/Pages/ReportViewer.aspx?/Estatio/"
-                + "Invoices&dueDate=${this.dueDate}&propertyId=${this.property.id}&rs:Command=Render", executionContext);
-        newLink(italyAppTenancy, InvoiceSummaryForPropertyDueDateStatus.class,
+                url
+                        + "Invoices"
+                        + "&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}"
+                        + "&rs:Command=Render",
+                executionContext);
+        newLink(italyAppTenancy,
+                InvoiceSummaryForPropertyDueDateStatus.class,
                 "Preliminary letter",
-                "${reportServerBaseUrl}/ReportServer/Pages/ReportViewer.aspx?/Estatio/"
-                + "Preliminary+Letter&dueDate=${this.dueDate}&propertyId=${this.property.id}&rs:Command=Render", executionContext);
-        newLink(italyAppTenancy, InvoiceSummaryForPropertyDueDateStatus.class,
+                url
+                        + "Preliminary+Letter"
+                        + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
+                        + "&rs:Command=Render",
+                executionContext);
+        newLink(italyAppTenancy,
+                InvoiceSummaryForPropertyDueDateStatus.class,
                 "Invoice",
-                "${reportServerBaseUrl}/ReportServer/Pages/ReportViewer.aspx?/Estatio/"
-                + "Invoice&dueDate=${this.dueDate}&propertyId=${this.property.id}&rs:Command=Render", executionContext);
+                url
+                        + "Invoice"
+                        + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
+                        + "&rs:Command=Render",
+                executionContext);
     }
 
     private Link newLink(
@@ -67,11 +90,11 @@ public class LinksRefData extends EstatioFixtureScript {
             final String name,
             final String urlTemplate,
             final ExecutionContext executionContext) {
-        final Link link = links.newLink(applicationTenancy, clsClass, name, urlTemplate);
+        final Link link = linkRepository.newLink(applicationTenancy, clsClass, name, urlTemplate);
         return executionContext.addResult(this, link.getName(), link);
     }
 
     @javax.inject.Inject
-    private Links links;
+    private LinkRepository linkRepository;
 
 }

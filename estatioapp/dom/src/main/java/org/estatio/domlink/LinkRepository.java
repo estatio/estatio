@@ -25,17 +25,19 @@ import java.util.concurrent.Callable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "99", repositoryFor = Link.class, nature = NatureOfService.DOMAIN)
-public class Links extends UdoDomainRepositoryAndFactory<Link> {
+@DomainService(repositoryFor = Link.class, nature = NatureOfService.DOMAIN)
+public class LinkRepository extends UdoDomainRepositoryAndFactory<Link> {
 
     /**
      * Cache link count (across sessions), so can quickly know whether any given
@@ -54,8 +56,8 @@ public class Links extends UdoDomainRepositoryAndFactory<Link> {
      */
     private Map<Class<?>, Integer> linksByClass = Maps.newHashMap();
 
-    public Links() {
-        super(Links.class, Link.class);
+    public LinkRepository() {
+        super(LinkRepository.class, Link.class);
     }
 
     @Programmatic
@@ -103,7 +105,7 @@ public class Links extends UdoDomainRepositoryAndFactory<Link> {
 
                         return links;
                     }
-                }, Links.class, "findAllForClassHierarchy", cls);
+                }, LinkRepository.class, "findAllForClassHierarchy", cls);
     }
 
     public List<Link> findByClassName(final String className) {
@@ -112,26 +114,22 @@ public class Links extends UdoDomainRepositoryAndFactory<Link> {
                 "className", className));
     }
 
+    @Programmatic
+    public List<Link> allLinks() {
+        return allInstances();
+    }
+
     // //////////////////////////////////////
 
-    @Programmatic
     public Link newLink(
             final ApplicationTenancy applicationTenancy,
             final Class<?> cls,
             final String name,
             final String urlTemplate) {
-        return newLink(applicationTenancy, cls.getName(), name, urlTemplate);
-    }
-
-    private Link newLink(
-            final ApplicationTenancy applicationTenancy,
-            final String className,
-            final String name,
-            final String urlTemplate) {
         final Link link = newTransientInstance();
         link.setName(name);
         link.setUrlTemplate(urlTemplate);
-        link.setClassName(className);
+        link.setClassName(cls.getName());
         link.setApplicationTenancyPath(applicationTenancy.getPath());
         persist(link);
         return link;

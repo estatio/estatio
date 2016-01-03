@@ -22,31 +22,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Root;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-
-import org.estatio.dom.UdoDomainService;
 import org.estatio.domsettings.EstatioSettingsService;
 
-@DomainService(menuOrder = "99")
-public class LinkContributions extends UdoDomainService<LinkContributions> {
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+public class LinkContributions  {
 
-    public LinkContributions() {
-        super(LinkContributions.class);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @NotInServiceMenu
-    @Named("Reports")
-    public URL openLink(
-            final Object domainObject, 
-            final @Named("Report") Link link) throws MalformedURLException {
+    @Action(semantics = SemanticsOf.SAFE)
+    public URL links(
+            final Object domainObject,
+            final Link link) throws MalformedURLException {
         final Root root = new Root(domainObject){
             @SuppressWarnings("unused")
             public String getReportServerBaseUrl() {
@@ -57,18 +49,17 @@ public class LinkContributions extends UdoDomainService<LinkContributions> {
         return new URL(urlStr);
     }
     
-    public boolean hideOpenLink(final Object domainObject, final Link link) {
+    public boolean hideLinks(final Object domainObject, final Link link) {
          return allForClassHierarchyOf(domainObject).isEmpty();
     }
 
-    public List<Link> choices1OpenLink(final Object domainObject, final Link link) {
+    public List<Link> choices1Links(final Object domainObject, final Link link) {
         return allForClassHierarchyOf(domainObject);
     }
 
     private List<Link> allForClassHierarchyOf(final Object domainObject) {
-        return links.findAllForClassHierarchy(domainObject);
+        return linkRepository.findAllForClassHierarchy(domainObject);
     }
-
 
     // //////////////////////////////////////
 
@@ -76,7 +67,7 @@ public class LinkContributions extends UdoDomainService<LinkContributions> {
     private StringInterpolatorService stringInterpolator;
 
     @javax.inject.Inject
-    private Links links;
+    private LinkRepository linkRepository;
     
     @javax.inject.Inject
     private EstatioSettingsService estatioSettingsService;
