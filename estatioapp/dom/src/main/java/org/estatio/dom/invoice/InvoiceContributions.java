@@ -2,7 +2,7 @@ package org.estatio.dom.invoice;
 
 import java.util.List;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -14,7 +14,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 
-//Using @Mixin throws an NPE
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class InvoiceContributions {
 
