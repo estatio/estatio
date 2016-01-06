@@ -121,7 +121,10 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
 
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public LeaseItem findLeaseItem(
-            final Lease lease, final LeaseItemType type, final LocalDate startDate, final BigInteger sequence) {
+            final Lease lease,
+            final LeaseItemType type,
+            final LocalDate startDate,
+            final BigInteger sequence) {
         return firstMatch("findByLeaseAndTypeAndStartDateAndSequence",
                 "lease", lease,
                 "type", type,
@@ -133,7 +136,9 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
     public List<LeaseItem> findLeaseItemsByType(
             final Lease lease,
             final LeaseItemType type) {
-        return allMatches("findByLeaseAndType", "lease", lease, "type", type);
+        return allMatches("findByLeaseAndType",
+                "lease", lease,
+                "type", type);
     }
 
     @Programmatic
@@ -141,9 +146,24 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
             final Lease lease,
             final LeaseItemType type,
             final Charge charge) {
-        return firstMatch("findByLeaseAndTypeAndCharge", "lease", lease, "type", type, "charge", charge);
+        return firstMatch("findByLeaseAndTypeAndCharge",
+                "lease", lease,
+                "type", type,
+                "charge", charge);
     }
 
+    @Programmatic
+    public LeaseItem findByLeaseAndTypeAndChargeAndStartDate(
+            final Lease lease,
+            final LeaseItemType type,
+            final Charge charge,
+            final LocalDate startDate) {
+        return firstMatch("findByLeaseAndTypeAndChargeAndStartDate",
+                "lease", lease,
+                "type", type,
+                "charge", charge,
+                "startDate", startDate);
+    }
 
     // //////////////////////////////////////
 

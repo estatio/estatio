@@ -22,7 +22,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -34,11 +34,14 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.charge.Charge;
 import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 import org.estatio.services.clock.ClockService;
 
@@ -186,7 +189,7 @@ public class LeaseItemTest {
         @Test
         public void happyCase() throws Exception {
             assertThat(lease.toString(), is("Lease{reference=A}"));
-            assertThat(leaseItem.toString(), is("LeaseItem{lease=A, type=null, sequence=null}"));
+            assertThat(leaseItem.toString(), is("LeaseItem{lease=A, type=null, charge=null, startDate=null, sequence=null}"));
         }
     }
 

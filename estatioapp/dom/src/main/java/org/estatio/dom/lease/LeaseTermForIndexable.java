@@ -326,19 +326,13 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     @Programmatic
     public void doInitialize() {
 
-        final LeaseTermForIndexable previousTerm = (LeaseTermForIndexable) getPrevious();
-        if (previousTerm != null) {
-            setIndexationMethod(previousTerm.getIndexationMethod());
-            getIndexationMethod().doInitialze(this);
-            LeaseTermFrequency frequency = previousTerm.getFrequency();
-            if (frequency != null) {
-                setIndex(previousTerm.getIndex());
-                setNextIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
-                setEffectiveDate(frequency.nextDate(previousTerm.getEffectiveDate()));
-                setBaseValue(previousTerm.getSettledValue());
-                setLevellingPercentage(previousTerm.getLevellingPercentage());
+        final LeaseTermForIndexable previous = (LeaseTermForIndexable) getPrevious();
+        if (previous != null) {
+            setIndexationMethod(previous.getIndexationMethod());
+            setIndex(previous.getIndex());
+            setLevellingPercentage(previous.getLevellingPercentage());
 
-            }
+            getIndexationMethod().doInitialze(this);
         }
 
     }

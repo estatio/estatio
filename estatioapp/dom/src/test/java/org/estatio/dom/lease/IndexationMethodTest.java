@@ -19,6 +19,10 @@ public class IndexationMethodTest {
         term2 = new LeaseTermForIndexable();
         term1.setNext(term2);
         term2.setPrevious(term1);
+
+        term1.setBaseIndexStartDate(new LocalDate(2012, 1, 1));
+        term1.setNextIndexStartDate(new LocalDate(2013, 1, 1));
+        term1.setFrequency(LeaseTermFrequency.YEARLY);
     }
 
     public static class DoInitialze extends IndexationMethodTest {
@@ -27,25 +31,26 @@ public class IndexationMethodTest {
         public void withBaseIndex() throws Exception {
             //given
             term1.setIndexationMethod(IndexationMethod.BASE_INDEX);
-            term1.setBaseIndexStartDate(new LocalDate(2012, 1, 1));
             //when
-            term2.doInitialize();
+            term1.initialize();
+            term2.initialize();
             //then
             assertThat(term2.getBaseIndexStartDate()).isEqualTo(term1.getBaseIndexStartDate());
+            assertThat(term2.getNextIndexStartDate()).isEqualTo(term1.getNextIndexStartDate().plusYears(1));
         }
 
         @Test
         public void withLastKnownIndex() throws Exception {
             //given
             term1.setIndexationMethod(IndexationMethod.LAST_KNOWN_INDEX);
-            term1.setBaseIndexStartDate(new LocalDate(2012, 1, 1));
-            term1.setNextIndexStartDate(new LocalDate(2013, 1, 1));
-            term1.setFrequency(LeaseTermFrequency.YEARLY);
             //when
-            term2.doInitialize();
+            term1.initialize();
+            term2.initialize();
             //then
             assertThat(term2.getBaseIndexStartDate()).isEqualTo(term1.getNextIndexStartDate());
+            assertThat(term2.getNextIndexStartDate()).isEqualTo(term1.getNextIndexStartDate().plusYears(1));
         }
+
 
 
     }

@@ -129,7 +129,7 @@ public class LeaseTermForIndexableTest {
         term.setLeaseItem(item);
 
         term.setStartDate(new LocalDate(2011, 1, 1));
-        term.doInitialize();
+        term.initialize();
 
         context.checking(new Expectations() {
             {
@@ -219,7 +219,7 @@ public class LeaseTermForIndexableTest {
             term.setNext(nextTerm);
             nextTerm.setPrevious(term);
             // when
-            nextTerm.doInitialize();
+            nextTerm.initialize();
             // then
             assertThat(nextTerm.getBaseIndexStartDate(), is(term.getNextIndexStartDate()));
             assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
@@ -233,7 +233,7 @@ public class LeaseTermForIndexableTest {
             term.setNext(nextTerm);
             nextTerm.setPrevious(term);
             // when
-            nextTerm.doInitialize();
+            nextTerm.initialize();
             // then
             assertThat(nextTerm.getBaseIndexStartDate(), is(term.getBaseIndexStartDate()));
             assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));

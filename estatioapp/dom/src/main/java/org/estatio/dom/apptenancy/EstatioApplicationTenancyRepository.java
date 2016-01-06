@@ -117,7 +117,7 @@ public class EstatioApplicationTenancyRepository {
             return propertyTenancy;
         }
         final ApplicationTenancy countryApplicationTenancy = findOrCreateTenancyFor(property.getCountry());
-        final String tenancyName = String.format("%s / %s ", countryApplicationTenancy.getName(), property.getReference());
+        final String tenancyName = String.format("%s/%s ", countryApplicationTenancy.getPath(), property.getReference());
         return applicationTenancies.newTenancy(tenancyName, pathFor(property), countryApplicationTenancy);
     }
 
@@ -127,7 +127,7 @@ public class EstatioApplicationTenancyRepository {
             return propertyPartyTenancy;
         }
         final ApplicationTenancy propertyApplicationTenancy = findOrCreateTenancyFor(property);
-        final String tenancyName = String.format("%s / %s ", propertyApplicationTenancy.getName(), party.getReference());
+        final String tenancyName = String.format("%s/%s ", propertyApplicationTenancy.getPath(), party.getReference());
         return applicationTenancies.newTenancy(tenancyName, pathFor(property,party), propertyApplicationTenancy);
     }
 

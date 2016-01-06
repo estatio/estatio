@@ -67,13 +67,14 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final Party party,
             final AgreementRoleType type,
             final LocalDate date) {
+        final LocalDate queryDate = date == null ? new LocalDate(1980, 1, 1) : date;
         return firstMatch(
                 "findByAgreementAndPartyAndTypeAndContainsDate",
                 "agreement", agreement,
                 "party", party,
                 "type", type,
-                "startDate", date,
-                "endDate", LocalDateInterval.endDateFromStartDate(date));
+                "startDate", queryDate,
+                "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
     }
 
     // //////////////////////////////////////
@@ -82,12 +83,13 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final Agreement agreement,
             final AgreementRoleType type,
             final LocalDate date) {
+        final LocalDate queryDate = date == null ? new LocalDate(1980, 1, 1) : date;
         return firstMatch(
                 "findByAgreementAndTypeAndContainsDate",
                 "agreement", agreement,
                 "type", type,
-                "startDate", date,
-                "endDate", LocalDateInterval.endDateFromStartDate(date));
+                "startDate", queryDate,
+                "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
     }
 
     // //////////////////////////////////////
@@ -113,12 +115,13 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final Party party,
             final AgreementRoleType type,
             final LocalDate date) {
+        final LocalDate queryDate = date == null ? new LocalDate(1980, 1, 1) : date;
         return allMatches(
                 "findByPartyAndTypeAndContainsDate",
                 "party", party,
                 "type", type,
-                "startDate", date,
-                "endDate", LocalDateInterval.endDateFromStartDate(date));
+                "startDate", queryDate,
+                "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
     }
 
 

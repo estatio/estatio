@@ -18,12 +18,47 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
@@ -37,20 +72,6 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Unique;
-import javax.jdo.annotations.VersionStrategy;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * An item component of an {@link #getLease() owning} {@link Lease}. Each is of
@@ -105,9 +126,20 @@ import java.util.TreeSet;
                         + "WHERE lease == :lease "
                         + "&& type == :type "
                         + "&& charge == :charge "
+                        + "ORDER BY sequence "),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndTypeAndChargeAndStartDate",
+                language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItem "
+                        + "WHERE lease == :lease "
+                        + "&& type == :type "
+                        + "&& charge == :charge "
+                        + "&& startDate == :startDate "
                         + "ORDER BY sequence ")
+
 })
-@Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = {"lease", "type", "startDate", "sequence"})
+@Unique(name = "LeaseItem_lease_type_charge_startDate_sequence_UNQ", members = {"lease", "type", "charge", "startDate", "sequence"})
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
@@ -117,7 +149,7 @@ public class LeaseItem
     private static final int PAGE_SIZE = 15;
 
     public LeaseItem() {
-        super("lease, type, sequence");
+        super("lease, type, charge, startDate, sequence");
     }
 
     public LeaseItem(final Lease lease, final InvoicingFrequency invoicingFrequency) {

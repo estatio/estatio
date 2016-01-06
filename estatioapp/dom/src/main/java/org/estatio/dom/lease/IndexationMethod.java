@@ -1,13 +1,18 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.utils.MathUtils;
-
 public enum IndexationMethod {
     BASE_INDEX {
         @Override
         public void doInitialze(LeaseTermForIndexable term) {
-            if (term.getPrevious() != null) {
-                term.setBaseIndexStartDate(((LeaseTermForIndexable) term.getPrevious()).getBaseIndexStartDate());
+            final LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
+            if (previous != null) {
+                term.setBaseValue(previous.getBaseValue());
+                LeaseTermFrequency frequency = term.getFrequency();
+                term.setBaseIndexStartDate(previous.getBaseIndexStartDate());
+                if (term.getFrequency() != null) {
+                    term.setNextIndexStartDate(frequency.nextDate(previous.getNextIndexStartDate()));
+                    term.setEffectiveDate(frequency.nextDate(previous.getEffectiveDate()));
+                }
             }
         }
 
@@ -22,8 +27,15 @@ public enum IndexationMethod {
     LAST_KNOWN_INDEX {
         @Override
         public void doInitialze(LeaseTermForIndexable term) {
-            if (term.getPrevious() != null) {
-                term.setBaseIndexStartDate(((LeaseTermForIndexable) term.getPrevious()).getNextIndexStartDate());
+            final LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
+            if (previous != null) {
+                term.setBaseValue(previous.getEffectiveValue());
+                LeaseTermFrequency frequency = term.getFrequency();
+                term.setBaseIndexStartDate(previous.getNextIndexStartDate());
+                if (term.getFrequency() != null) {
+                    term.setNextIndexStartDate(frequency.nextDate(previous.getNextIndexStartDate()));
+                    term.setEffectiveDate(frequency.nextDate(previous.getEffectiveDate()));
+                }
             }
         }
 
@@ -31,10 +43,7 @@ public enum IndexationMethod {
         public void doAlign(LeaseTermForIndexable term) {
             LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
             if (previous != null && term.getBaseValue() == null) {
-                term.setBaseValue(MathUtils.firstNonZero(
-                        previous.getSettledValue(),
-                        previous.getIndexedValue(),
-                        previous.getBaseValue()));
+                term.setBaseValue(previous.getEffectiveValue());
             }
         }
     };

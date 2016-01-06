@@ -505,19 +505,24 @@ public class Lease
     }
 
     public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
-
         return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
-
     }
 
-
-
-    @Action(hidden = Where.EVERYWHERE)
+    @Programmatic
     public LeaseItem findItem(
             final LeaseItemType itemType,
             final LocalDate itemStartDate,
             final BigInteger sequence) {
         return leaseItems.findLeaseItem(this, itemType, itemStartDate, sequence);
+    }
+
+    @Programmatic
+    public LeaseItem findItem(
+            final LeaseItemType itemType,
+            final Charge charge,
+            final LocalDate itemStartDate
+    ) {
+        return leaseItems.findByLeaseAndTypeAndChargeAndStartDate(this, itemType, charge, itemStartDate);
     }
 
     @Programmatic
