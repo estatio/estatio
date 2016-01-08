@@ -49,4 +49,14 @@ public final class MathUtils {
         }
         return BigDecimal.ZERO;
     }
+
+    public static BigDecimal max(BigDecimal... input){
+        BigDecimal max = BigDecimal.ZERO;
+        for (BigDecimal value : input){
+            if (value != null){
+                max = max.max(value);
+            }
+        }
+        return max;
+    }
 }

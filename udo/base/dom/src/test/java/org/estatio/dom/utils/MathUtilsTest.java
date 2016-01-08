@@ -58,5 +58,12 @@ public class MathUtilsTest {
         }
     }
 
+    public static class Max extends MathUtilsTest {
+
+        @Test
+        public void happyCase() throws Exception {
+            assertThat(MathUtils.max(null, BigDecimal.ZERO, new BigDecimal("123.45"), new BigDecimal("123")), is(new BigDecimal("123.45")));
+        }
+    }
 
 }
