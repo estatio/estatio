@@ -19,19 +19,23 @@
 package org.estatio.dom.index;
 
 import java.math.BigDecimal;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -75,8 +79,6 @@ public class IndexValue
         super("indexBase, startDate desc");
     }
 
-    // //////////////////////////////////////
-
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
@@ -84,9 +86,6 @@ public class IndexValue
     public ApplicationTenancy getApplicationTenancy() {
         return getIndexBase().getApplicationTenancy();
     }
-
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
@@ -103,8 +102,6 @@ public class IndexValue
         this.startDate = startDate;
     }
 
-    // //////////////////////////////////////
-
     private IndexBase indexBase;
 
     @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
@@ -118,24 +115,6 @@ public class IndexValue
         this.indexBase = indexBase;
     }
 
-    public void modifyIndexBase(final IndexBase indexBase) {
-        IndexBase currentIndexBase = getIndexBase();
-        if (indexBase == null || indexBase.equals(currentIndexBase)) {
-            return;
-        }
-        indexBase.addToValues(this);
-    }
-
-    public void clearIndexBase() {
-        IndexBase currentIndexBase = getIndexBase();
-        if (currentIndexBase == null) {
-            return;
-        }
-        currentIndexBase.removeFromValues(this);
-    }
-
-    // //////////////////////////////////////
-
     private BigDecimal value;
 
     @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull = "false")
@@ -147,14 +126,10 @@ public class IndexValue
         this.value = value;
     }
 
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT, domainEvent = UpdateEvent.class)
     public void remove() {
         getContainer().remove(this);
     }
-
-    // //////////////////////////////////////
 
     public static class UpdateEvent extends ActionDomainEvent<IndexValue> {
         private static final long serialVersionUID = 1L;
@@ -165,7 +140,6 @@ public class IndexValue
                 final Object... arguments) {
             super(source, identifier, arguments);
         }
-
-    }
+   }
 
 }

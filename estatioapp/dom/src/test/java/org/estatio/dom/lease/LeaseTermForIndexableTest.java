@@ -36,9 +36,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.IndexValues;
+import org.estatio.dom.index.IndexValueRepository;
+import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationService;
 import org.estatio.services.clock.ClockService;
 
@@ -54,15 +53,6 @@ public class LeaseTermForIndexableTest {
     LeaseItem item;
     LeaseTermForIndexable term;
 
-    Index i;
-
-    IndexBase ib1;
-    IndexBase ib2;
-    IndexValue iv1;
-    IndexValue iv2;
-
-    IndexationService indexationService;
-
     final LocalDate now = LocalDate.now();
 
     @Mock
@@ -72,36 +62,13 @@ public class LeaseTermForIndexableTest {
     LeaseTerms mockLeaseTerms;
 
     @Mock
-    IndexValues mockIndexValues;
+    IndexValueRepository mockIndexValueRepository;
+
+    @Mock
+    Index mockIndex;
 
     @Before
     public void setup() {
-
-        i = new Index();
-
-        i.injectIndexValues(mockIndexValues);
-
-        ib1 = new IndexBase();
-        ib1.setStartDate(new LocalDate(2000, 1, 1));
-
-        ib1.setIndex(i);
-
-        ib2 = new IndexBase();
-        ib2.setFactor(BigDecimal.valueOf(1.373));
-        ib2.modifyPrevious(ib1);
-        ib2.setStartDate(new LocalDate(2011, 1, 1));
-
-        ib2.setIndex(i);
-
-        iv1 = new IndexValue();
-        iv1.setStartDate(new LocalDate(2010, 1, 1));
-        iv1.setValue(BigDecimal.valueOf(137.6));
-        ib1.addToValues(iv1);
-
-        iv2 = new IndexValue();
-        iv2.setStartDate(new LocalDate(2011, 1, 1));
-        iv2.setValue(BigDecimal.valueOf(101.2));
-        ib2.addToValues(iv2);
 
         lease = new Lease();
         lease.setStartDate(new LocalDate(2011,1,1));
@@ -120,10 +87,13 @@ public class LeaseTermForIndexableTest {
         term.injectClockService(mockClockService);
         term.injectIndexationService(new IndexationService());
         term.setFrequency(LeaseTermFrequency.YEARLY);
-        term.setBaseIndexStartDate(iv1.getStartDate());
-        term.setNextIndexStartDate(iv2.getStartDate());
+        term.setBaseIndexStartDate(new LocalDate(2010, 1, 1));
+        term.setNextIndexStartDate(new LocalDate(2011, 1, 1));
         term.setBaseValue(BigDecimal.valueOf(23456.78));
-        term.setIndex(i);
+        term.setIndex(mockIndex);
+        term.setBaseIndexValue(BigDecimal.valueOf(137.6));
+        term.setNextIndexValue(BigDecimal.valueOf(101.2));
+        term.setRebaseFactor(BigDecimal.valueOf(1.373));
 
         item.getTerms().add(term);
         term.setLeaseItem(item);
@@ -146,10 +116,7 @@ public class LeaseTermForIndexableTest {
         public void happyCase() {
             context.checking(new Expectations() {
                 {
-                    allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2010, 1, 1)));
-                    will(returnValue(iv1));
-                    allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2011, 1, 1)));
-                    will(returnValue(iv2));
+                    allowing(mockIndex).initialize(with(any(Indexable.class)));
                 }
             });
             term.align();
@@ -160,10 +127,7 @@ public class LeaseTermForIndexableTest {
         public void whenEmptyIndex() {
             context.checking(new Expectations() {
                 {
-                    allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2010, 1, 1)));
-                    will(returnValue(iv1));
-                    allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2011, 1, 1)));
-                    will(returnValue(iv2));
+                    allowing(mockIndex).initialize(with(any(Indexable.class)));
                 }
             });
             term.align();

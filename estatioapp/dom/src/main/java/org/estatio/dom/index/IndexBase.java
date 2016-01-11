@@ -21,20 +21,35 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
@@ -48,15 +63,15 @@ import org.estatio.dom.utils.MathUtils;
  * 
  * @see Index
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Version(
+@Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
+@Queries({
+        @Query(
                 name = "findByIndexAndDate", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.index.IndexBase " +
@@ -71,11 +86,8 @@ public class IndexBase
 
     public static final int FACTOR_SCALE = 4;
 
-    public IndexBase() {
-        super("index, startDate desc");
+    public IndexBase() {super("index, startDate desc");
     }
-
-    // //////////////////////////////////////
 
     @PropertyLayout(
             named = "Application Level",
@@ -85,11 +97,9 @@ public class IndexBase
         return getIndex().getApplicationTenancy();
     }
 
-    // //////////////////////////////////////
-
     private Index index;
 
-    @javax.jdo.annotations.Column(name = "indexId", allowsNull = "false")
+    @Column(name = "indexId", allowsNull = "false")
     @Title(sequence = "1", append = ", ")
     public Index getIndex() {
         return index;
@@ -99,12 +109,10 @@ public class IndexBase
         this.index = index;
     }
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent
+    @Persistent
     private LocalDate startDate;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Column(allowsNull = "false")
     @Title(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
@@ -114,26 +122,8 @@ public class IndexBase
         this.startDate = startDate;
     }
 
-    public void modifyStartDate(final LocalDate startDate) {
-        final LocalDate currentStartDate = getStartDate();
-        if (startDate == null || startDate.equals(currentStartDate)) {
-            return;
-        }
-        setStartDate(startDate);
-    }
-
-    public void clearStartDate() {
-        LocalDate currentStartDate = getStartDate();
-        if (currentStartDate == null) {
-            return;
-        }
-        setStartDate(null);
-    }
-
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(scale = FACTOR_SCALE)
+    @Persistent
+    @Column(scale = FACTOR_SCALE)
     private BigDecimal factor;
 
     @Property(optionality = Optionality.OPTIONAL)
@@ -156,13 +146,9 @@ public class IndexBase
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "previousIndexBaseId")
-    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    @Persistent(mappedBy = "next")
     private IndexBase previous;
 
-    /**
-     * @see #getNext()
-     */
     @Property(optionality = Optionality.OPTIONAL)
     public IndexBase getPrevious() {
         return previous;
@@ -172,21 +158,9 @@ public class IndexBase
         this.previous = previous;
     }
 
-    public void modifyPrevious(final IndexBase previous) {
-        setPrevious(previous);
-        if (previous != null) {
-            previous.setNext(this);
-        }
-    }
-
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(name = "nextIndexBaseId")
+    @Column(name = "nextIndexBaseId")
     private IndexBase next;
 
-    /**
-     * @see #getPrevious()
-     */
     @Property(optionality = Optionality.OPTIONAL)
     public IndexBase getNext() {
         return next;
@@ -196,9 +170,7 @@ public class IndexBase
         this.next = nextBase;
     }
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent(mappedBy = "indexBase")
+    @Persistent(mappedBy = "indexBase")
     private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
 
     @CollectionLayout(render = RenderType.EAGERLY)
@@ -210,31 +182,26 @@ public class IndexBase
         this.values = values;
     }
 
-    public void addToValues(final IndexValue value) {
-        if (value == null || getValues().contains(value)) {
-            return;
-        }
-        value.clearIndexBase();
-        value.setIndexBase(this);
-        getValues().add(value);
-    }
-
-    public void removeFromValues(final IndexValue value) {
-        // check for no-op
-        if (value == null || !getValues().contains(value)) {
-            return;
-        }
-        value.setIndexBase(null);
-        getValues().remove(value);
-    }
-
-    // //////////////////////////////////////
-
     @Programmatic
     public BigDecimal factorForDate(final LocalDate date) {
         return date.isBefore(getStartDate())
-                ? getFactor().multiply(getPrevious().factorForDate(date))
+                ? getFactor().multiply(getPrevious() == null ? BigDecimal.ONE : getPrevious().factorForDate(date))
                 : BigDecimal.ONE;
     }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IndexValue newIndexValue(
+            final LocalDate startDate,
+            final BigDecimal value){
+        return indexValueRepository.findOrCreate(this, startDate, value);
+    }
+
+    public LocalDate default0NewIndexValue() {
+        IndexValue last = indexValueRepository.findLastByIndex(getIndex());
+        return last == null ? null : last.getStartDate().plusMonths(1);
+    }
+
+    @Inject
+    IndexValueRepository indexValueRepository;
 
 }

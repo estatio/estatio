@@ -24,9 +24,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.index.Index;
+import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.IndexValues;
-import org.estatio.dom.index.Indices;
+import org.estatio.dom.index.IndexValueRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.index.IndexRefData;
@@ -39,9 +39,9 @@ import static org.junit.Assert.assertThat;
 public class IndexValuesTest extends EstatioIntegrationTest {
 
     @Inject
-    Indices indices;
+    IndexRepository indexRepository;
     @Inject
-    IndexValues indexValues;
+    IndexValueRepository indexValueRepository;
 
 
     public static class FindIndexValueByIndexAndStartDate extends IndexValuesTest {
@@ -54,10 +54,10 @@ public class IndexValuesTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indices.findIndex(IndexRefData.IT_REF);
+            Index index = indexRepository.findIndex(IndexRefData.IT_REF);
             // when, then
-            assertThat(indexValues.findIndexValueByIndexAndStartDate(index, VT.ld(2013, 1, 1)).getValue(), is(VT.bd("106.7000")));
-            assertThat(indexValues.findIndexValueByIndexAndStartDate(index, VT.ld(2013, 10, 1)).getValue(), is(VT.bd("107.1000")));
+            assertThat(indexValueRepository.findByIndexAndStartDate(index, VT.ld(2013, 1, 1)).getValue(), is(VT.bd("106.7000")));
+            assertThat(indexValueRepository.findByIndexAndStartDate(index, VT.ld(2013, 10, 1)).getValue(), is(VT.bd("107.1000")));
         }
 
     }
@@ -76,8 +76,8 @@ public class IndexValuesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Index index = indices.findIndex(IndexRefData.IT_REF);
-            final IndexValue indexValue = indexValues.findLastByIndex(index);
+            Index index = indexRepository.findIndex(IndexRefData.IT_REF);
+            final IndexValue indexValue = indexValueRepository.findLastByIndex(index);
             assertThat(indexValue.getStartDate(), is(VT.ld(2013, 12, 01)));
         }
 

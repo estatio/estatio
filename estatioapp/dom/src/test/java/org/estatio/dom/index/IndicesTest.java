@@ -33,12 +33,12 @@ public class IndicesTest {
 
     FinderInteraction finderInteraction;
 
-    Indices indices;
+    IndexRepository indexRepository;
 
     @Before
     public void setup() {
         
-        indices = new Indices() {
+        indexRepository = new IndexRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -63,7 +63,7 @@ public class IndicesTest {
         @Test
         public void happyCase() {
 
-            indices.findIndex("REF-1");
+            indexRepository.findIndex("REF-1");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Index.class));
@@ -78,7 +78,7 @@ public class IndicesTest {
         @Test
         public void happyCase() {
 
-            indices.allIndices();
+            indexRepository.allIndices();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

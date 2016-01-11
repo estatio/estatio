@@ -23,42 +23,26 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(repositoryFor = IndexBase.class)
-@DomainServiceLayout(
-        named = "Indices",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "60.3")
-public class IndexBases
+@DomainService(repositoryFor = IndexBase.class, nature = NatureOfService.DOMAIN)
+public class IndexBaseRepository
         extends UdoDomainRepositoryAndFactory<IndexBase> {
 
-    public IndexBases() {
-        super(IndexBases.class, IndexBase.class);
+    public IndexBaseRepository() {
+        super(IndexBaseRepository.class, IndexBase.class);
     }
 
-    // //////////////////////////////////////
-
-    @MemberOrder(sequence = "1")
-    @NotInServiceMenu
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public IndexBase newIndexBase(
-            final @ParameterLayout(named = "Index") Index index,
-            final @ParameterLayout(named = "Previous Base") IndexBase previousBase,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "Factor") BigDecimal factor) {
+            final Index index,
+            final IndexBase previousBase,
+            final LocalDate startDate,
+            final BigDecimal factor) {
         IndexBase indexBase = newTransientInstance();
-        indexBase.modifyPrevious(previousBase);
+        indexBase.setPrevious(previousBase);
         indexBase.setStartDate(startDate);
         indexBase.setFactor(factor);
         indexBase.setIndex(index);
@@ -66,17 +50,31 @@ public class IndexBases
         return indexBase;
     }
 
-    // //////////////////////////////////////
+    public IndexBase findOrCreate(
+            final Index index,
+            final LocalDate startDate,
+            final BigDecimal factor) {
+        final IndexBase indexBase = findByIndexAndDate(index, startDate);
+        if (indexBase == null || indexBase.getStartDate().isBefore(startDate)) {
+            return findOrCreate(index, indexBase, startDate, factor);
+        }
+        return indexBase;
+    }
 
-    @Programmatic
+    public IndexBase findOrCreate(
+        final Index index,
+        final IndexBase previousBase,
+        final LocalDate startDate,
+        final BigDecimal factor) {
+        final IndexBase indexBase = findByIndexAndDate(index, startDate);
+        return indexBase != null ? indexBase : newIndexBase(index, previousBase, startDate, factor);
+    }
+
     public IndexBase findByIndexAndDate(final Index index, final LocalDate date) {
+        // The is deliberately a firstmatch
         return firstMatch("findByIndexAndDate", "index", index, "date", date);
     }
 
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(sequence = "99")
     public List<IndexBase> allIndexBases() {
         return allInstances();
     }

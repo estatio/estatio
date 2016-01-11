@@ -34,7 +34,7 @@ import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.index.Index;
-import org.estatio.dom.index.Indices;
+import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermsForIndexable;
 import org.estatio.dom.lease.Leases;
@@ -61,7 +61,7 @@ public class LeaseTermsForIndexableTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
-    Indices indexes;
+    IndexRepository indexes;
 
     @Inject
     LeaseTermsForIndexable leaseTerms;

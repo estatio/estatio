@@ -19,39 +19,33 @@
 package org.estatio.dom.index;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Dflt;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
-@DomainService(repositoryFor = Index.class)
-@DomainServiceLayout(
-        named = "Indices",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "60.2")
-public class Indices extends UdoDomainRepositoryAndFactory<Index> {
+@DomainService(repositoryFor = Index.class, nature = NatureOfService.DOMAIN)
+public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
 
-    public Indices() {
-        super(Indices.class, Index.class);
+    public IndexRepository() {
+        super(IndexRepository.class, Index.class);
     }
 
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
     public Index newIndex(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
-            final @ParameterLayout(named = "Name") String name,
+            final String reference,
+            final String name,
             final ApplicationTenancy applicationTenancy) {
         final Index index = newTransientInstance();
         index.setApplicationTenancyPath(applicationTenancy.getPath());
@@ -69,15 +63,10 @@ public class Indices extends UdoDomainRepositoryAndFactory<Index> {
         return Dflt.of(choices2NewIndex());
     }
 
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
     public List<Index> allIndices() {
         return allInstances();
     }
-
-    // //////////////////////////////////////
 
     @Programmatic
     public Index findIndex(final @ParameterLayout(named = "Reference") String reference) {
@@ -95,8 +84,6 @@ public class Indices extends UdoDomainRepositoryAndFactory<Index> {
         }
         return index;
     }
-
-    // //////////////////////////////////////
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

@@ -81,19 +81,19 @@ public class IndexRefData extends EstatioFixtureScript {
     private Index createIndex(
             final ApplicationTenancy applicationTenancy,
             final String reference, final String name, final ExecutionContext executionContext) {
-        final Index index = indices.newIndex(reference, name, applicationTenancy);
+        final Index index = indexRepository.newIndex(reference, name, applicationTenancy);
         return executionContext.addResult(this, index.getReference(), index);
     }
 
     private IndexBase createIndexBase(final Index index, final IndexBase previousBase, final int year, final double factor, final ExecutionContext executionContext) {
-        final IndexBase indexBase = indexBases.newIndexBase(index, previousBase, ld(year, 1, 1), BigDecimal.valueOf(factor));
+        final IndexBase indexBase = indexBaseRepository.newIndexBase(index, previousBase, ld(year, 1, 1), BigDecimal.valueOf(factor));
         return executionContext.addResult(this, indexBase);
     }
 
     private void createIndexValues(final IndexBase indexBase, final int year, final double[] values, final double average, final ExecutionContext executionContext) {
         int i = 0;
         for (final double value : values) {
-            final IndexValue indexValue = indexValues.newIndexValue(indexBase, ld(year, i + 1, 1), BigDecimal.valueOf(value));
+            final IndexValue indexValue = indexValueRepository.create(indexBase, ld(year, i + 1, 1), BigDecimal.valueOf(value));
             executionContext.addResult(this, indexValue);
             i++;
         }
@@ -102,13 +102,13 @@ public class IndexRefData extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    private Indices indices;
+    private IndexRepository indexRepository;
 
     @Inject
-    private IndexBases indexBases;
+    private IndexBaseRepository indexBaseRepository;
 
     @Inject
-    private IndexValues indexValues;
+    private IndexValueRepository indexValueRepository;
 
     @Inject
     private ApplicationTenancies applicationTenancies;

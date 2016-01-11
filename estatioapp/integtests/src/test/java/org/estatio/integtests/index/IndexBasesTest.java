@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexBases;
-import org.estatio.dom.index.Indices;
+import org.estatio.dom.index.IndexBaseRepository;
+import org.estatio.dom.index.IndexRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -43,16 +43,16 @@ public class IndexBasesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Indices indices;
+        private IndexRepository indexRepository;
         @Inject
-        private IndexBases indexBases;
+        private IndexBaseRepository indexBaseRepository;
 
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indices.findIndex(IndexRefData.IT_REF);
+            Index index = indexRepository.findIndex(IndexRefData.IT_REF);
             // when
-            final IndexBase indexBase = indexBases.findByIndexAndDate(index, VT.ld(2013, 1, 1));
+            final IndexBase indexBase = indexBaseRepository.findByIndexAndDate(index, VT.ld(2013, 1, 1));
             // then
             assertThat(indexBase.getStartDate(), is(VT.ld(2011, 1, 1)));
         }

@@ -32,12 +32,12 @@ public class IndexBasesTest {
 
     FinderInteraction finderInteraction;
 
-    IndexBases indexBases;
+    IndexBaseRepository indexBaseRepository;
 
     @Before
     public void setup() {
 
-        indexBases = new IndexBases() {
+        indexBaseRepository = new IndexBaseRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -64,7 +64,7 @@ public class IndexBasesTest {
         @Test
         public void happyCase() {
 
-            indexBases.allIndexBases();
+            indexBaseRepository.allIndexBases();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

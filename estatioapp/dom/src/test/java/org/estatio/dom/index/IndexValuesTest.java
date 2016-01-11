@@ -56,7 +56,7 @@ public class IndexValuesTest {
 
     FinderInteraction finderInteraction;
 
-    IndexValues indexValues;
+    IndexValueRepository indexValueRepository;
 
     Index index;
 
@@ -68,7 +68,7 @@ public class IndexValuesTest {
         index = new Index();
         startDate = new LocalDate(2013, 4, 1);
 
-        indexValues = new IndexValues() {
+        indexValueRepository = new IndexValueRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -89,7 +89,7 @@ public class IndexValuesTest {
             }
         };
 
-        indexValues.queryResultsCache = mockQueryResultsCache;
+        indexValueRepository.queryResultsCache = mockQueryResultsCache;
     }
 
     public static class FindIndexValueByIndexAndStartDate extends IndexValuesTest {
@@ -102,7 +102,7 @@ public class IndexValuesTest {
                 {
                     oneOf(mockQueryResultsCache).execute(
                             with(any(Callable.class)),
-                            with(classEqualTo(IndexValues.class)),
+                            with(classEqualTo(IndexValueRepository.class)),
                             with(equalTo("findIndexValueByIndexAndStartDate")),
                             with(arrayOf(index, startDate)));
                     will(executeCallableAndReturn());
@@ -110,7 +110,7 @@ public class IndexValuesTest {
             });
 
             // when
-            indexValues.findIndexValueByIndexAndStartDate(index, startDate);
+            indexValueRepository.findByIndexAndStartDate(index, startDate);
 
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));

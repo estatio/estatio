@@ -31,8 +31,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexValues;
-import org.estatio.dom.index.Indices;
+import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -80,9 +79,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     @Inject
     EstatioNumeratorRepository estatioNumeratorRepository;
     @Inject
-    Indices indices;
-    @Inject
-    IndexValues indexValues;
+    IndexRepository indexRepository;
     @Inject
     InvoiceItemsForLease invoiceItemsForLease;
 
@@ -172,9 +169,9 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         public void step4_indexation() throws Exception {
-            Index index = indices.findIndex("ISTAT-FOI");
-            indexValues.newIndexValue(index, VT.ld(2013, 11, 1), VT.bd(110));
-            indexValues.newIndexValue(index, VT.ld(2014, 12, 1), VT.bd(115));
+            Index index = indexRepository.findIndex("ISTAT-FOI");
+            index.newIndexValue(VT.ld(2013, 11, 1), VT.bd(110));
+            index.newIndexValue(VT.ld(2014, 12, 1), VT.bd(115));
 
             nextTransaction();
 

@@ -22,21 +22,34 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -62,21 +75,21 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
  * {@link IndexBase#getValues() hold} the {@link IndexValue}s. The rebasing
  * {@link IndexBase#getFactor() factor} is held in {@link IndexBase}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Version(
+@Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Uniques({
-        @javax.jdo.annotations.Unique(
+@Uniques({
+        @Unique(
                 name = "Index_reference_UNQ", members = {"applicationTenancyPath","reference"}),
-        @javax.jdo.annotations.Unique(
+        @Unique(
                 name = "Index_name_UNQ", members = {"name"})
 })
-@javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
+@Queries({
+        @Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.index.Index "
@@ -95,12 +108,12 @@ public class Index
 
     private String applicationTenancyPath;
 
-    @javax.jdo.annotations.Column(
+    @Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public String getApplicationTenancyPath() {
         return applicationTenancyPath;
     }
@@ -121,7 +134,7 @@ public class Index
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
     public String getReference() {
         return reference;
@@ -135,8 +148,8 @@ public class Index
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title
+    @Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @Title()
     public String getName() {
         return name;
     }
@@ -147,7 +160,7 @@ public class Index
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "index")
+    @Persistent(mappedBy = "index")
     private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
     @CollectionLayout(render = RenderType.EAGERLY)
@@ -159,12 +172,28 @@ public class Index
         this.indexBases = indexBases;
     }
 
-    // //////////////////////////////////////
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    public IndexValue newIndexValue(
+            final LocalDate startDate,
+            final BigDecimal value) {
+        IndexBase indexBase = indexBaseRepository.findByIndexAndDate(this, startDate);
+        return indexBase.newIndexValue(startDate, value);
+    }
+
+    public LocalDate default0NewIndexValue(){
+        final IndexValue last = indexValueRepository.findLastByIndex(this);
+        if (last == null){
+            return null;
+        }
+        return last.getStartDate().plusMonths(1);
+    }
+
 
     @Programmatic
     public BigDecimal getIndexValueForDate(final LocalDate date) {
         if (date != null) {
-            IndexValue indexValue = indexValues.findIndexValueByIndexAndStartDate(this, date);
+            IndexValue indexValue = indexValueRepository.findByIndexAndStartDate(this, date);
             return indexValue == null ? null : indexValue.getValue();
         }
         return null;
@@ -175,14 +204,17 @@ public class Index
         if (baseIndexStartDate == null || nextIndexStartDate == null) {
             return null;
         }
-        IndexValue nextIndexValue = indexValues.findIndexValueByIndexAndStartDate(this, nextIndexStartDate);
-        // TODO: check efficiency.. seems to retrieve every single index value
-        // for the last 15 years...
+        IndexValue nextIndexValue = indexValueRepository.findByIndexAndStartDate(this, nextIndexStartDate);
         if (nextIndexValue != null) {
             final BigDecimal rebaseFactor = nextIndexValue.getIndexBase().factorForDate(baseIndexStartDate);
             return rebaseFactor;
         }
         return null;
+    }
+
+    @Programmatic
+    public IndexBase findOrCreateBase(final LocalDate indexBaseStartDate, final BigDecimal indexBaseFactor) {
+        return indexBaseRepository.findOrCreate(this, indexBaseStartDate, indexBaseFactor);
     }
 
     @Programmatic
@@ -194,10 +226,10 @@ public class Index
 
     // //////////////////////////////////////
 
-    private IndexValues indexValues;
+    @Inject
+    public IndexValueRepository indexValueRepository;
 
-    public final void injectIndexValues(final IndexValues indexValues) {
-        this.indexValues = indexValues;
-    }
+    @Inject
+    private IndexBaseRepository indexBaseRepository;
 
 }
