@@ -21,8 +21,10 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.UdoDomainService;
 
 @DomainService(menuOrder = "60")
@@ -36,21 +38,18 @@ public class IndexationService extends UdoDomainService<IndexationService> {
 
     @Programmatic
     public void indexate(final Indexable input) {
-
         final IndexationResult indexationResult;
         indexationResult = indexateToResult(input);
         indexationResult.apply(input);
     }
 
     private IndexationResult indexateToResult(final Indexable input) {
-        final Index index = input.getIndex();
-        if (index == null) {
+        if (input.getIndex() == null ||
+                input.getBaseIndexStartDate() == null ||
+                input.getNextIndexStartDate() == null ||
+                input.getBaseIndexStartDate().compareTo(input.getNextIndexStartDate()) > 0) {
             return IndexationResult.NULL;
         }
-        return indexateWithIndexToResult(input);
-    }
-
-    private IndexationResult indexateWithIndexToResult(final Indexable input) {
         final Index index = input.getIndex();
         BigDecimal indexedValue = null;
         BigDecimal indexationPercentage = null;

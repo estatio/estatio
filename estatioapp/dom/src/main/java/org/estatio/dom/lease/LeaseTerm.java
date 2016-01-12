@@ -526,6 +526,9 @@ public abstract class LeaseTerm
         doInitialize();
     }
 
+    /**
+     * Optional hook for subclasses to do additional initialization.
+     */
     @Programmatic
     protected void doInitialize() {
     }
@@ -543,7 +546,7 @@ public abstract class LeaseTerm
     }
 
     /**
-     * Optional hook for subclasses to do additional initialization.
+     * Optional hook for subclasses to do additional alignment.
      */
     @Programmatic
     protected void doAlign() {

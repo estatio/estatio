@@ -27,6 +27,7 @@ import org.estatio.dom.utils.StringUtils;
 public enum LeaseTermFrequency {
 
     YEARLY("RRULE:FREQ=YEARLY;INTERVAL=1"),
+    YEARLY_3("RRULE:FREQ=YEARLY;INTERVAL=3"),
     NO_FREQUENCY(null);
 
     private LeaseTermFrequency(final String rrule) {

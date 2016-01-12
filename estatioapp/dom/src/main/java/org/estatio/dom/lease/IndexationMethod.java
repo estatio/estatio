@@ -1,11 +1,14 @@
 package org.estatio.dom.lease;
 
+import org.estatio.dom.index.Indexable;
+import org.estatio.dom.utils.MathUtils;
+
 public enum IndexationMethod {
     BASE_INDEX {
         @Override
-        public void doInitialze(LeaseTermForIndexable term) {
-            final LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
+        public void doInitialze(Indexable term, Indexable previous) {
             if (previous != null) {
+                // Base value is copied on initialisation, never updated
                 term.setBaseValue(previous.getBaseValue());
                 LeaseTermFrequency frequency = term.getFrequency();
                 term.setBaseIndexStartDate(previous.getBaseIndexStartDate());
@@ -17,19 +20,23 @@ public enum IndexationMethod {
         }
 
         @Override
-        public void doAlign(LeaseTermForIndexable term) {
-            LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
-            if (previous != null) {
-                term.setBaseValue(previous.getBaseValue());
-            }
+        public void doAlignBeforeIndexation(final Indexable term, final Indexable previous) {
+            // Nothing to do before with base indexe methond
+        }
+
+        @Override
+        public void doAlignAfterIndexation(final Indexable term, final Indexable previous) {
+            term.setEffectiveIndexedValue(
+                    MathUtils.max(
+                            term.getBaseValue(),
+                            term.getIndexedValue(),
+                            previous == null ? null : previous.getEffectiveIndexedValue()));
         }
     },
     LAST_KNOWN_INDEX {
         @Override
-        public void doInitialze(LeaseTermForIndexable term) {
-            final LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
+        public void doInitialze(Indexable term, Indexable previous) {
             if (previous != null) {
-                term.setBaseValue(previous.getEffectiveValue());
                 LeaseTermFrequency frequency = term.getFrequency();
                 term.setBaseIndexStartDate(previous.getNextIndexStartDate());
                 if (term.getFrequency() != null) {
@@ -40,16 +47,37 @@ public enum IndexationMethod {
         }
 
         @Override
-        public void doAlign(LeaseTermForIndexable term) {
-            LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
-            if (previous != null && term.getBaseValue() == null) {
-                term.setBaseValue(previous.getEffectiveValue());
+        public void doAlignBeforeIndexation(Indexable term, Indexable previous) {
+            if (previous != null) {
+                //base value changes when previous term have been changed
+                term.setBaseValue(
+                        MathUtils.firstNonZero(
+                                previous.getSettledValue(),
+                                MathUtils.max(
+                                        previous.getBaseValue(),
+                                        previous.getIndexedValue(),
+                                        previous.getEffectiveIndexedValue())));
+            }
+        }
+
+        @Override
+        public void doAlignAfterIndexation(final Indexable term, final Indexable previous) {
+            if (previous != null) {
+                term.setEffectiveIndexedValue(
+                        MathUtils.firstNonZero(
+                                previous.getSettledValue(),
+                                MathUtils.max(
+                                        term.getBaseValue(),
+                                        term.getIndexedValue(),
+                                        previous.getEffectiveIndexedValue())));
             }
         }
     };
 
-    public abstract void doInitialze(LeaseTermForIndexable term);
+    public abstract void doInitialze(Indexable term, Indexable previous);
 
-    public abstract void doAlign(LeaseTermForIndexable term);
+    public abstract void doAlignBeforeIndexation(Indexable term, Indexable previous);
+
+    public abstract void doAlignAfterIndexation(Indexable term, Indexable previous);
 
 }

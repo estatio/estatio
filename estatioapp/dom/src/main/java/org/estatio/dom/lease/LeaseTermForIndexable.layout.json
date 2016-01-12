@@ -63,6 +63,7 @@
           "members": {
             "baseValue": {},
             "indexedValue": {},
+            "effectiveIndexedValue": {},
             "settledValue": {
               "actions": {
                 "changeValues": {}

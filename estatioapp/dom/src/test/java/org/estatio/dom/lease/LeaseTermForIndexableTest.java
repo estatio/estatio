@@ -94,6 +94,7 @@ public class LeaseTermForIndexableTest {
         term.setBaseIndexValue(BigDecimal.valueOf(137.6));
         term.setNextIndexValue(BigDecimal.valueOf(101.2));
         term.setRebaseFactor(BigDecimal.valueOf(1.373));
+        term.setIndexationMethod(IndexationMethod.LAST_KNOWN_INDEX);
 
         item.getTerms().add(term);
         term.setLeaseItem(item);
@@ -119,6 +120,7 @@ public class LeaseTermForIndexableTest {
                     allowing(mockIndex).initialize(with(any(Indexable.class)));
                 }
             });
+
             term.align();
             Assert.assertEquals(new BigDecimal("23691.35"), term.getIndexedValue());
         }
@@ -224,5 +226,6 @@ public class LeaseTermForIndexableTest {
         }
 
     }
+
 
 }
