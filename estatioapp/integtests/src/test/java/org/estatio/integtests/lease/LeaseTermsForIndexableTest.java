@@ -76,7 +76,7 @@ public class LeaseTermsForIndexableTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            index = indexes.findIndex(IndexRefData.IT_REF);
+            index = indexes.findByReference(IndexRefData.IT_REF);
         }
 
         @Test

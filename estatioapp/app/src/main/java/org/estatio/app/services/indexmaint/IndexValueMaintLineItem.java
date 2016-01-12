@@ -302,7 +302,7 @@ public class IndexValueMaintLineItem {
         // if existing index, ensure valueStartDate is:
         // * either for an existing month,
         // * or follows on from previous by no more than 1 month
-        Index index = indexRepository.findIndex(reference);
+        Index index = indexRepository.findByReference(reference);
         boolean existingIndex = index != null;
         scratchpad.put("index", index);
         if (existingIndex) {

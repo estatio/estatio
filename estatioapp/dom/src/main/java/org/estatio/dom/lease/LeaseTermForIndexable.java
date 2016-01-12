@@ -84,7 +84,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     }
 
     public List<Index> choicesIndex() {
-        return indexRepository.allIndices();
+        return indexRepository.all();
     }
 
     // ///////////////////////////////////////////

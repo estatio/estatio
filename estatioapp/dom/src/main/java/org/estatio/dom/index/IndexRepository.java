@@ -64,12 +64,12 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<Index> allIndices() {
+    public List<Index> all() {
         return allInstances();
     }
 
     @Programmatic
-    public Index findIndex(final @ParameterLayout(named = "Reference") String reference) {
+    public Index findByReference(final @ParameterLayout(named = "Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
@@ -78,7 +78,7 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
             final ApplicationTenancy applicationTenancy,
             final String reference,
             final String name) {
-        Index index = findIndex(reference);
+        Index index = findByReference(reference);
         if (index == null) {
             index = newIndex(reference, name, applicationTenancy);
         }

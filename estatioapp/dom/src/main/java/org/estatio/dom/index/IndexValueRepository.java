@@ -19,6 +19,7 @@
 package org.estatio.dom.index;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
@@ -94,6 +95,10 @@ public class IndexValueRepository
             final Index index) {
         return firstMatch("findLastByIndex",
                 "index", index);
+    }
+
+    public List<IndexValue> all() {
+        return allInstances();
     }
 
     @Inject

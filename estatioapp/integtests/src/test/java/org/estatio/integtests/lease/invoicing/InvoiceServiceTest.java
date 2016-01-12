@@ -169,7 +169,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         public void step4_indexation() throws Exception {
-            Index index = indexRepository.findIndex("ISTAT-FOI");
+            Index index = indexRepository.findByReference("ISTAT-FOI");
             index.newIndexValue(VT.ld(2013, 11, 1), VT.bd(110));
             index.newIndexValue(VT.ld(2014, 12, 1), VT.bd(115));
 

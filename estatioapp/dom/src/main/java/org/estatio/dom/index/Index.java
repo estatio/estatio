@@ -84,7 +84,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
         column = "version")
 @Uniques({
         @Unique(
-                name = "Index_reference_UNQ", members = {"applicationTenancyPath","reference"}),
+                name = "Index_reference_UNQ", members = {"reference"}),
         @Unique(
                 name = "Index_name_UNQ", members = {"name"})
 })

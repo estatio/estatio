@@ -63,7 +63,7 @@ public class IndicesTest {
         @Test
         public void happyCase() {
 
-            indexRepository.findIndex("REF-1");
+            indexRepository.findByReference("REF-1");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Index.class));
@@ -78,7 +78,7 @@ public class IndicesTest {
         @Test
         public void happyCase() {
 
-            indexRepository.allIndices();
+            indexRepository.all();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

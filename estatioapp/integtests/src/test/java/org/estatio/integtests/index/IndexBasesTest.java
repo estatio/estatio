@@ -50,7 +50,7 @@ public class IndexBasesTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indexRepository.findIndex(IndexRefData.IT_REF);
+            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
             // when
             final IndexBase indexBase = indexBaseRepository.findByIndexAndDate(index, VT.ld(2013, 1, 1));
             // then

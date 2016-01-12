@@ -44,7 +44,7 @@ public class IndicesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenExists() throws Exception {
-            final Index index = indexRepository.findIndex(IndexRefData.IT_REF);
+            final Index index = indexRepository.findByReference(IndexRefData.IT_REF);
             assertThat(index.getReference(), is(IndexRefData.IT_REF));
         }
 

@@ -61,7 +61,7 @@ public class IndexMenu {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "60.3")
     public List<Index> allIndices() {
-        return indexRepository.allIndices();
+        return indexRepository.all();
     }
 
     @Inject

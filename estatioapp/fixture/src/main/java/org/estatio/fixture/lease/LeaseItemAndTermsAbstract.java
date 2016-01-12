@@ -184,7 +184,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         leaseTerm.setBaseIndexStartDate(baseIndexStartDate);
         leaseTerm.setNextIndexStartDate(nextIndexStartDate);
         leaseTerm.setEffectiveDate(effectiveDate);
-        leaseTerm.setIndex(indexRepository.findIndex(indexReference));
+        leaseTerm.setIndex(indexRepository.findByReference(indexReference));
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
 

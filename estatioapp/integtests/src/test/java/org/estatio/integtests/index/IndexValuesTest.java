@@ -54,7 +54,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indexRepository.findIndex(IndexRefData.IT_REF);
+            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
             // when, then
             assertThat(indexValueRepository.findByIndexAndStartDate(index, VT.ld(2013, 1, 1)).getValue(), is(VT.bd("106.7000")));
             assertThat(indexValueRepository.findByIndexAndStartDate(index, VT.ld(2013, 10, 1)).getValue(), is(VT.bd("107.1000")));
@@ -76,7 +76,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Index index = indexRepository.findIndex(IndexRefData.IT_REF);
+            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
             final IndexValue indexValue = indexValueRepository.findLastByIndex(index);
             assertThat(indexValue.getStartDate(), is(VT.ld(2013, 12, 01)));
         }
