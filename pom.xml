@@ -85,7 +85,7 @@ mvn clean install -DskipTests -o
 
         <isis-module-audit.version>1.11.0-SNAPSHOT</isis-module-audit.version>
         <isis-module-command.version>1.11.0-SNAPSHOT</isis-module-command.version>
-        <isis-module-security.version>1.11.0-SNAPSHOT</isis-module-security.version>
+        <isis-module-security.version>1.12.0-SNAPSHOT</isis-module-security.version>
         <isis-module-sessionlogger.version>1.11.0-SNAPSHOT</isis-module-sessionlogger.version>
         <isis-module-settings.version>1.11.0-SNAPSHOT</isis-module-settings.version>
 
