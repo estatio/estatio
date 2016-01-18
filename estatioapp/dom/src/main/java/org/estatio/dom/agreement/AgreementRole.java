@@ -21,18 +21,22 @@ package org.estatio.dom.agreement;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
@@ -44,18 +48,21 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -412,12 +419,12 @@ public class AgreementRole
     }
 
     public List<CommunicationChannel> choices1AddCommunicationChannel() {
-        return Lists.newArrayList(communicationChannelContributions.communicationChannels(getParty()));
+        return Lists.newArrayList(communicationChannelRepository.findByOwner(getParty()));
     }
 
     public CommunicationChannel default1AddCommunicationChannel() {
         final SortedSet<CommunicationChannel> partyChannels =
-                communicationChannelContributions.communicationChannels(getParty());
+                communicationChannelRepository.findByOwner(getParty());
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
@@ -433,7 +440,7 @@ public class AgreementRole
             return "Add a successor/predecessor from existing communication channel";
         }
         final SortedSet<CommunicationChannel> partyChannels =
-                communicationChannelContributions.communicationChannels(getParty());
+                communicationChannelRepository.findByOwner(getParty());
         if (!partyChannels.contains(communicationChannel)) {
             return "Communication channel must be one of those of this party";
         }
@@ -593,17 +600,10 @@ public class AgreementRole
 
     // //////////////////////////////////////
 
-    private CommunicationChannelContributions communicationChannelContributions;
+    @Inject
+    private CommunicationChannels communicationChannelRepository;
 
-    public final void injectCommunicationChannelContributions(
-            final CommunicationChannelContributions communicationChannelContributions) {
-        this.communicationChannelContributions = communicationChannelContributions;
-    }
-
+    @Inject
     private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
 
-    public final void injectAgreementRoleCommunicationChannels(
-            final AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository) {
-        this.agreementRoleCommunicationChannelRepository = agreementRoleCommunicationChannelRepository;
-    }
 }

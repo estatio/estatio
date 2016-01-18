@@ -18,12 +18,15 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
-
-import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -59,5 +62,15 @@ public class AgreementRepository extends UdoDomainRepositoryAndFactory<Agreement
                 "roleType", agreementRoleType,
                 "party", party);
     }
+
+    public List<Agreement> findByTypeTitleAndReferenceOrName(
+            final String titleOfAgreementType,
+            final String regex) {
+        final AgreementType agreementType = agreementTypeRepository.find(titleOfAgreementType);
+        return findByTypeAndReferenceOrName(agreementType, regex);
+    }
+
+    @Inject
+    AgreementTypeRepository agreementTypeRepository;
 
 }

@@ -37,7 +37,7 @@
       }
     },
     {
-      "span": 4,
+      "span": 2,
       "memberGroups": {
         "Dates": {
           "members": {
@@ -68,7 +68,7 @@
       "memberGroups": {}
     },
     {
-      "span": 4,
+      "span": 6,
       "collections": {
         "roles": {
           "actions": {

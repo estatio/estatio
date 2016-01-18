@@ -25,12 +25,14 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.dom.utils.StringUtils;
 
 @DomainService(
     nature = NatureOfService.VIEW
@@ -46,23 +48,21 @@ public class BankMandateMenu extends UdoDomainService<BankMandateMenu> {
         super(BankMandateMenu.class);
     }
 
-    // //////////////////////////////////////
+    public List<Agreement> findBankMandates(final String search){
+        return agreementRepository.findByTypeTitleAndReferenceOrName(
+                BankMandateConstants.AT_MANDATE,
+                StringUtils.wildcardToCaseInsensitiveRegex(search));
+    }
 
-    @Action(
-            semantics = SemanticsOf.SAFE,
-            restrictTo = RestrictTo.PROTOTYPING
-    )
-    @MemberOrder(
-            name = "Accounts",
-            sequence = "99"
-    )
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<BankMandate> allBankMandates() {
         return bankMandateRepository.allBankMandates();
     }
 
-    // //////////////////////////////////////
-
     @Inject
     protected BankMandateRepository bankMandateRepository;
+
+    @Inject
+    private AgreementRepository agreementRepository;
 
 }
