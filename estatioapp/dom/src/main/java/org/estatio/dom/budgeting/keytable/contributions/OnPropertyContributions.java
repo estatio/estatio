@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -36,7 +37,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
@@ -46,7 +46,7 @@ public class OnPropertyContributions {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
     public List<KeyTable> keyTables(Property property){
-        return keyTables.findByProperty(property);
+        return keyTableRepository.findByProperty(property);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -59,7 +59,7 @@ public class OnPropertyContributions {
             final @ParameterLayout(named = "Foundation Value Type") FoundationValueType foundationValueType,
             final @ParameterLayout(named = "Key Value Method") KeyValueMethod keyValueMethod,
             final @ParameterLayout(named = "Number Of Digits") Integer numberOfDigits) {
-        return keyTables.newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
+        return keyTableRepository.newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
     }
 
     public String validateNewKeyTable(
@@ -70,10 +70,10 @@ public class OnPropertyContributions {
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits) {
-        return keyTables.validateNewKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
+        return keyTableRepository.validateNewKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
     }
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 
 }

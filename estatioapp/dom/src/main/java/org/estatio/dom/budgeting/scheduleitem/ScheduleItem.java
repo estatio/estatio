@@ -25,6 +25,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.schedule.Schedule;
+import org.estatio.dom.charge.Charge;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import javax.jdo.annotations.*;
@@ -80,7 +81,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
     private Schedule schedule;
 
     @Column(allowsNull = "false", name = "scheduleId")
-    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     public Schedule getSchedule() {
         return schedule;
     }
@@ -104,6 +105,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
         this.keyTable = keyTable;
     }
 
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public ScheduleItem changeKeyTable(final @ParameterLayout(named = "KeyTable") KeyTable keyTable) {
         setKeyTable(keyTable);
         return this;
@@ -149,6 +151,7 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
         this.percentage = percentage;
     }
 
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public ScheduleItem updatePercentage(final BigDecimal percentage) {
         setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
         return this;
@@ -167,6 +170,12 @@ public class ScheduleItem extends EstatioDomainObject<ScheduleItem> implements W
 
     //endregion
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public Charge getCharge(){
+        return getSchedule().getCharge();
+    }
+
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public Schedule deleteScheduleItem(final boolean confirmDelete) {
         removeIfNotAlready(this);
         return this.getSchedule();

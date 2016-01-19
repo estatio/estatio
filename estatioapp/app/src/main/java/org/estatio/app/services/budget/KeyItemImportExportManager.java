@@ -22,7 +22,7 @@ import org.apache.isis.applib.value.Blob;
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import javax.inject.Inject;
@@ -181,6 +181,6 @@ public class KeyItemImportExportManager extends EstatioViewModel {
     private KeyItemImportExportService keyItemImportExportService;
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 
 }

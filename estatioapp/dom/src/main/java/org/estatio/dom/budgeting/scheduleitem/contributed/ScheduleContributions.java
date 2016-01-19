@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItems;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.schedule.Schedule;
 import org.estatio.dom.budgeting.schedule.Schedules;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
@@ -49,7 +49,7 @@ public class ScheduleContributions {
             final KeyTable keyTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage) {
-        return keyTables.findByProperty(schedule.getProperty());
+        return keyTableRepository.findByProperty(schedule.getProperty());
     }
 
     public List<BudgetItem> choices2CreateScheduleItem(
@@ -87,6 +87,6 @@ public class ScheduleContributions {
     private Schedules schedules;
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 
 }

@@ -25,7 +25,7 @@ import org.estatio.dom.asset.*;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItems;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
@@ -249,7 +249,7 @@ public class KeyItemImportExportLineItem
     @Programmatic
     public KeyTable getKeyTable() {
         if (keyTable == null) {
-            keyTable = keyTables.findByPropertyAndNameAndStartDate(getProperty(), getKeyTableName(), getStartDate());
+            keyTable = keyTableRepository.findByPropertyAndNameAndStartDate(getProperty(), getKeyTableName(), getStartDate());
         }
         return keyTable;
     }
@@ -305,7 +305,7 @@ public class KeyItemImportExportLineItem
     private DomainObjectContainer container;
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 
     @Inject
     PropertyRepository propertyRepository;

@@ -112,7 +112,8 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         this.budgetedValue = budgetedValue;
     }
 
-    public BudgetItem changeBudgetedValue(final @ParameterLayout(named = "Value") BigDecimal value) {
+    @Action(hidden = Where.EVERYWHERE)
+    public BudgetItem changeBudgetedValue(final BigDecimal value) {
         setBudgetedValue(value);
         return this;
     }
@@ -142,7 +143,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         this.auditedValue = auditedValue;
     }
 
-    public BudgetItem changeAuditedValue(final @ParameterLayout(named = "Value") BigDecimal value) {
+    public BudgetItem changeAuditedValue(final BigDecimal value) {
         setAuditedValue(value);
         return this;
     }
@@ -170,7 +171,8 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         this.charge = charge;
     }
 
-    public BudgetItem changeCharge(final @ParameterLayout(named = "Charge") Charge charge) {
+    @Action(hidden = Where.EVERYWHERE)
+    public BudgetItem changeCharge(final Charge charge) {
         setCharge(charge);
         return this;
     }

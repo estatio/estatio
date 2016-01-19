@@ -21,7 +21,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 
 /**
  * Created by jodo on 16/09/15.
@@ -34,7 +34,7 @@ public class PropertyContributions {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
     public List<Budget> budgets(Property property) {
-        return budgets.findByProperty(property);
+        return budgetRepository.findByProperty(property);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -43,17 +43,17 @@ public class PropertyContributions {
             final @ParameterLayout(named = "Property") Property property,
             final @ParameterLayout(named = "Start Date") LocalDate startDate,
             final @ParameterLayout(named = "End Date") LocalDate endDate) {
-        return budgets.newBudget(property, startDate, endDate);
+        return budgetRepository.newBudget(property, startDate, endDate);
     }
 
     public String validateNewBudget(
             final Property property,
             final LocalDate startDate,
             final LocalDate endDate) {
-        return budgets.validateNewBudget(property, startDate, endDate);
+        return budgetRepository.validateNewBudget(property, startDate, endDate);
     }
 
     @Inject
-    private Budgets budgets;
+    private BudgetRepository budgetRepository;
 
 }

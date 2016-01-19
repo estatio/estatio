@@ -18,36 +18,8 @@
  */
 package org.estatio.dom.budgeting.budget;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -57,6 +29,13 @@ import org.estatio.dom.budgeting.keyitem.contributions.OccupanciesOnKeyItemContr
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.*;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -80,7 +59,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "FROM org.estatio.dom.budgeting.budget.Budget " +
                         "WHERE property == :property && startDate == :startDate")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Budgets.class)
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BudgetRepository.class)
 public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty {
 
     public Budget() {
@@ -174,7 +153,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     }
 
     @Override
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, hidden = Where.EVERYWHERE)
     public Budget changeDates(
             final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @ParameterLayout(named = "End date") @Parameter(optionality =  Optionality.OPTIONAL) LocalDate endDate) {
@@ -196,8 +175,8 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
             final LocalDate startDate,
             final LocalDate endDate) {
 
-        if (budgets.validateNewBudget(getProperty(),startDate,endDate) != null) {
-            for (Budget budget : budgets.findByProperty(property)) {
+        if (budgetRepository.validateNewBudget(getProperty(),startDate,endDate) != null) {
+            for (Budget budget : budgetRepository.findByProperty(property)) {
                 if (!budget.equals(this) && budget.getInterval().overlaps(new LocalDateInterval(startDate, endDate))) {
                     return "A budget cannot overlap an existing budget.";
                 }
@@ -230,7 +209,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
 
     // //////////////////////////////////////
 
-    @Action()
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout()
     public Budget removeAllBudgetItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
         for (BudgetItem budgetItem : this.getItems()) {
@@ -259,6 +238,6 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     private LeaseTerms leaseTerms;
 
     @Inject
-    private Budgets budgets;
+    private BudgetRepository budgetRepository;
 
 }

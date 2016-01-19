@@ -16,24 +16,14 @@
  */
 package org.estatio.dom.budgeting.keyitem.contributions;
 
-import java.math.BigDecimal;
-
-import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItems;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
@@ -43,13 +33,10 @@ public class KeyTableContributions {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    @MemberOrder(name = "items", sequence = "1")
     public KeyItem newItem(
             final KeyTable keyTable,
             final Unit unit,
-            @ParameterLayout(named = "sourceValue")
             final BigDecimal sourceValue,
-            @ParameterLayout(named = "keyValue")
             final BigDecimal keyValue) {
 
         return keyItems.newItem(keyTable, unit, sourceValue, keyValue);

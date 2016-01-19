@@ -1,23 +1,20 @@
 package org.estatio.integtests.budget;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BudgetRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
-    Budgets budgetRepository;
+    BudgetRepository budgetRepository;
 
     @Inject
     PropertyRepository propertyRepository;
@@ -105,6 +102,38 @@ public class BudgetRepositoryTest extends EstatioIntegrationTest {
         }
 
     }
+
+    public static class FindByPropertyAndDate extends BudgetRepositoryTest {
+
+        @Test
+        public void happyCase() throws Exception {
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            // when
+            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
+            // then
+            assertThat(budget.getProperty()).isEqualTo(property);
+            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 01, 01));
+            assertThat(budget.getEndDate()).isEqualTo(new LocalDate(2015, 12, 31));
+
+            // and when end date is given
+            final Budget budget2 = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 12, 31));
+            // then find the same budget
+            assertThat(budget2).isEqualTo(budget);
+
+            // and when end some date in interval is given
+            final Budget budget3 = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 7, 1));
+            // then find the same budget
+            assertThat(budget3).isEqualTo(budget);
+
+
+            // and when
+            final Budget budgetNotToBeFound = budgetRepository.findByPropertyAndDate(property, new LocalDate(2014, 12, 31));
+            //then
+            assertThat(budgetNotToBeFound).isEqualTo(null);
+        }
+    }
+
 
 
 

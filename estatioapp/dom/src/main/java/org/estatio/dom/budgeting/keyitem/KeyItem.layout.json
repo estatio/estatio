@@ -24,6 +24,21 @@
                 },
                 "Values": {
                     "members": {
+                        "sourceValue": {
+                            "propertyLayout": {
+                                "named": "Source Value",
+                                "typicalLength": 10
+                            },
+                            "actions": {
+                                "changeSourceValue": {
+                                    "actionLayout": {
+                                        "cssClass": "btn-primary",
+                                        "cssClassFa": "fa fa-fw fa-edit",
+                                        "named": "Change Source Value"
+                                    }
+                                }
+                            }
+                        },
                         "value": {
                             "propertyLayout": {
                                 "named": "Value",
@@ -50,21 +65,6 @@
                                         "cssClass": "btn-primary",
                                         "cssClassFa": "fa fa-fw fa-edit",
                                         "named": "Change Audited Value"
-                                    }
-                                }
-                            }
-                        },
-                        "sourceValue": {
-                            "propertyLayout": {
-                                "named": "Source Value",
-                                "typicalLength": 10
-                            },
-                            "actions": {
-                                "changeSourceValue": {
-                                    "actionLayout": {
-                                        "cssClass": "btn-primary",
-                                        "cssClassFa": "fa fa-fw fa-edit",
-                                        "named": "Change Source Value"
                                     }
                                 }
                             }

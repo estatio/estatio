@@ -26,10 +26,10 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.schedule.Schedule;
 import org.estatio.dom.budgeting.schedule.Schedules;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItems;
@@ -75,12 +75,12 @@ public abstract class ScheduleAbstact extends EstatioFixtureScript {
     protected PropertyRepository propertyRepository;
 
     @Inject
-    protected Budgets budgetRepository;
+    protected BudgetRepository budgetRepository;
 
     @Inject
     protected Charges chargesRepository;
 
     @Inject
-    protected KeyTables keyTableRepository;
+    protected KeyTableRepository keyTableRepository;
 
 }

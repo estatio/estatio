@@ -27,7 +27,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
@@ -35,7 +34,7 @@ import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItems;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -62,7 +61,7 @@ public class KeyTableTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    KeyTables tables;
+    KeyTableRepository tables;
 
     @Inject
     PropertyRepository propertyRepository;

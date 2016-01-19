@@ -8,11 +8,11 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItems;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.schedule.Schedule;
 import org.estatio.dom.budgeting.schedule.Schedules;
 import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
@@ -119,7 +119,7 @@ public class BudgetImport implements Importable {
 
         List<KeyTable> tables = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            KeyTable keyTable = keyTables.findByPropertyAndNameAndStartDate(property, names[i], startDate);
+            KeyTable keyTable = keyTableRepository.findByPropertyAndNameAndStartDate(property, names[i], startDate);
             tables.add(keyTable);
         }
 
@@ -130,7 +130,7 @@ public class BudgetImport implements Importable {
             Charge sourceCharge = charges.findByReference(getChargeReference());
 
             //create budget
-            Budget budget = budgets.findOrCreateBudget(property, startDate, endDate);
+            Budget budget = budgetRepository.findOrCreateBudget(property, startDate, endDate);
 
             //create schedule
             Schedule schedule = schedules.findOrCreateSchedule(property, budget, startDate, endDate, targetCharge, Schedule.Status.OPEN);
@@ -319,7 +319,7 @@ public class BudgetImport implements Importable {
     private Charges charges;
 
     @Inject
-    private Budgets budgets;
+    private BudgetRepository budgetRepository;
 
     @Inject
     private BudgetItems budgetItems;
@@ -334,7 +334,7 @@ public class BudgetImport implements Importable {
     private PropertyRepository propertyRepository;
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 
     @Inject
     private ApplicationTenancyRepository applicationTenancyRepository;

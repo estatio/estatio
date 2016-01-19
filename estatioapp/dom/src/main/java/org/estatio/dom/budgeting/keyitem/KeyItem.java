@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.budgeting.keyitem;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.estatio.dom.EstatioDomainObject;
@@ -64,47 +66,26 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
     //endregion
 
-    private KeyTable keyTable;
 
     @javax.jdo.annotations.Column(name="keyTableId", allowsNull = "false")
-    @MemberOrder(sequence = "1")
     @PropertyLayout(hidden = Where.PARENTED_TABLES )
-    public KeyTable getKeyTable() {
-        return keyTable;
-    }
+    @Getter @Setter
+    private KeyTable keyTable;
 
-    public void setKeyTable(KeyTable keyTable) {
-        this.keyTable = keyTable;
-    }
 
     // //////////////////////////////////////
-
-    private Unit unit;
 
     @javax.jdo.annotations.Column(name="unitId", allowsNull = "false")
-    @MemberOrder(sequence = "1")
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
-    }
+    @Getter @Setter
+    private Unit unit;
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
+    @Getter @Setter
     private BigDecimal sourceValue;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
-    @MemberOrder(sequence = "3")
-    public BigDecimal getSourceValue() {
-        return sourceValue;
-    }
-
-    public void setSourceValue(BigDecimal sourceValue) {
-        this.sourceValue = sourceValue;
-    }
-
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyItem changeSourceValue(final @ParameterLayout(named = "Source value") BigDecimal sourceValue) {
         setSourceValue(sourceValue.setScale(2, BigDecimal.ROUND_HALF_UP));
         return this;
@@ -123,19 +104,11 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
+    @Getter @Setter
     private BigDecimal value;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(BigDecimal value) {
-
-        this.value = value;
-
-    }
-
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyItem changeValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
         setValue(keyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
@@ -153,17 +126,12 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
 
     //region > auditedValue (property)
+    @javax.jdo.annotations.Column(allowsNull = "true", scale = 6)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
     private BigDecimal auditedValue;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", scale = 6)
-    public BigDecimal getAuditedValue() {
-        return auditedValue;
-    }
-
-    public void setAuditedValue(final BigDecimal auditedValue) {
-        this.auditedValue = auditedValue;
-    }
-
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyItem changeAuditedValue(final BigDecimal auditedKeyValue) {
         setAuditedValue(auditedKeyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
@@ -186,6 +154,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     //endregion
 
     //region > deleteBudgetKeyItem
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public KeyTable deleteBudgetKeyItem(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
         removeIfNotAlready(this);
         return this.getKeyTable();
@@ -202,7 +171,6 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
 
     @Override
-    @MemberOrder(sequence = "4")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getKeyTable().getApplicationTenancy();

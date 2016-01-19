@@ -41,15 +41,15 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by jodo on 30/04/15.
  */
-public class KeytablesTest {
+public class KeytableRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    KeyTables keyTables;
+    KeyTableRepository keyTableRepository;
 
     @Before
     public void setup() {
-        keyTables = new KeyTables() {
+        keyTableRepository = new KeyTableRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -77,7 +77,7 @@ public class KeytablesTest {
         };
     }
 
-    public static class FindByPropertyAndNameAndStartDate extends KeytablesTest {
+    public static class FindByPropertyAndNameAndStartDate extends KeytableRepositoryTest {
 
         @Test
         public void happyCase() {
@@ -85,7 +85,7 @@ public class KeytablesTest {
             Property property = new PropertyForTesting();
             String name = "KeyTableName";
             LocalDate startDate = new LocalDate();
-            keyTables.findByPropertyAndNameAndStartDate(property, name, startDate);
+            keyTableRepository.findByPropertyAndNameAndStartDate(property, name, startDate);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
@@ -100,13 +100,36 @@ public class KeytablesTest {
 
     }
 
-    public static class FindByProperty extends KeytablesTest {
+    public static class FindByPropertyAndStartDateAndEndDate extends KeytableRepositoryTest {
+
+        @Test
+        public void happyCase() {
+
+            Property property = new Property();
+            LocalDate startDate = new LocalDate();
+            LocalDate endDate = new LocalDate();
+            keyTableRepository.findByPropertyAndStartDateAndEndDate(property, startDate, endDate);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
+            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndStartDateAndEndDate"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) endDate));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+        }
+
+
+
+    }
+
+    public static class FindByProperty extends KeytableRepositoryTest {
 
         @Test
         public void anotherHappyCase() {
 
             Property property = new PropertyForTesting();
-            keyTables.findByProperty(property);
+            keyTableRepository.findByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
@@ -116,7 +139,7 @@ public class KeytablesTest {
         }
     }
 
-    public static class NewKeyTable extends KeytablesTest {
+    public static class NewKeyTable extends KeytableRepositoryTest {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -124,17 +147,17 @@ public class KeytablesTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        KeyTables keyTablesRepo;
+        KeyTableRepository keyTableRepositoryRepo;
 
         @Before
         public void setup() {
-            keyTablesRepo = new KeyTables() {
+            keyTableRepositoryRepo = new KeyTableRepository() {
                 @Override
                 public List<KeyTable> findByProperty(final Property property) {
                     return Arrays.asList(new KeyTable(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
                 }
             };
-            keyTablesRepo.setContainer(mockContainer);
+            keyTableRepositoryRepo.setContainer(mockContainer);
         }
 
         @Test
@@ -157,7 +180,7 @@ public class KeytablesTest {
             });
 
             //when
-            KeyTable newKeyTable = keyTablesRepo.newKeyTable(
+            KeyTable newKeyTable = keyTableRepositoryRepo.newKeyTable(
                     property,
                     "new keyTable",
                     startDate,
@@ -179,7 +202,7 @@ public class KeytablesTest {
         @Test
         public void validateNewKeyTable() {
 
-            KeyTables tables = new KeyTables(){
+            KeyTableRepository tables = new KeyTableRepository(){
                 @Override
                 public KeyTable findByPropertyAndNameAndStartDate(Property property, String name, LocalDate startDate) {
                     return null;

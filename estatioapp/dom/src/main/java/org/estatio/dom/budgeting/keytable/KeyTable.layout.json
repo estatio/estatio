@@ -105,6 +105,13 @@
                         }
                     }
 
+                },
+                "Validation" : {
+                    "members" : {
+                        "valid" : {},
+                        "validForKeyValues": {},
+                        "validForUnits" : {}
+                    }
                 }
             }
         },
@@ -118,7 +125,49 @@
         },
         {
             "span": 8,
-            "collections": { }
+            "collections": {
+                "items": {
+                    "collectionLayout": {
+                        "named": "Items",
+                        "paged": 10,
+                        "render": "EAGERLY"
+                    },
+                    "actions": {
+                        "newItem": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "cssClassFa": "fa fa-fw fa-plus",
+                                "named": "New Item"
+                            }
+                        },
+                        "distributeSourceValues": {
+                            "actionLayout": {
+                                "cssClass": "btn-warning",
+                                "named": "Distribute Source Values"
+                            }
+                        },
+                        "generateItems": {
+                            "actionLayout": {
+                                "cssClass": "btn-warning",
+                                "named": "Generate Items"
+                            }
+                        },
+                        "deleteItems": {
+                            "actionLayout": {
+                                "cssClass": "btn-warning",
+                                "named": "Delete Items"
+                            }
+                        }
+                    }
+                },
+                "scheduleItems" : {
+                    "collectionLayout": {
+                        "named": "Schedule Items",
+                        "paged": 10,
+                        "render": "EAGERLY"
+                    }
+                }
+            }
         }
     ],
     "actions": {

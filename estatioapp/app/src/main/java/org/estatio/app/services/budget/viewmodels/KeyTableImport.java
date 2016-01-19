@@ -12,7 +12,7 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItems;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.joda.time.LocalDate;
 
@@ -122,7 +122,7 @@ public class KeyTableImport implements Importable {
             // find or create key tables (key value method: Promille)
             for (int i=0; i<8; i++){
 
-                KeyTable table = keyTables.findOrCreateBudgetKeyTable(
+                KeyTable table = keyTableRepository.findOrCreateBudgetKeyTable(
                         property,
                         names[i],
                         startDate,
@@ -142,7 +142,7 @@ public class KeyTableImport implements Importable {
             // NB. last two keytable (key value method: DEFAULT)
             for (int i=8; i<10; i++){
 
-                KeyTable table = keyTables.findOrCreateBudgetKeyTable(
+                KeyTable table = keyTableRepository.findOrCreateBudgetKeyTable(
                         property,
                         names[i],
                         startDate,
@@ -407,7 +407,7 @@ public class KeyTableImport implements Importable {
     private UnitRepository unitRepository;
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 
     @Inject
     private KeyItems keyItems;

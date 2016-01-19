@@ -18,28 +18,20 @@
  */
 package org.estatio.dom.budgeting.budget;
 
-import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import java.util.List;
 
 @DomainService(repositoryFor = Budget.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
-public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
+public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
 
-    public Budgets() {
-        super(Budgets.class, Budget.class);
+    public BudgetRepository() {
+        super(BudgetRepository.class, Budget.class);
     }
 
     // //////////////////////////////////////
@@ -98,6 +90,21 @@ public class Budgets extends UdoDomainRepositoryAndFactory<Budget> {
     @Programmatic
     public List<Budget> findByProperty(Property property){
         return allMatches("findByProperty", "property", property);
+    }
+
+    /*
+    returns first budget of a property with date between budget start and end
+     */
+    @Programmatic
+    public Budget findByPropertyAndDate(Property property, LocalDate date){
+        List<Budget> allBudgetsOfProperty = allMatches("findByProperty", "property", property);
+        for (Budget budget : allBudgetsOfProperty) {
+            LocalDateInterval budgetInterval = new LocalDateInterval(budget.getStartDate(), budget.getEndDate());
+            if (budgetInterval.contains(date)) {
+                return budget;
+            }
+        }
+        return null;
     }
 
     @Programmatic

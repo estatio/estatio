@@ -17,9 +17,13 @@
 
 package org.estatio.dom.budgeting.budget;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.PropertyForTesting;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -27,14 +31,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,15 +40,15 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by jodo on 30/04/15.
  */
-public class BudgetsTest {
+public class BudgetRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    Budgets budgets;
+    BudgetRepository budgetRepository;
 
     @Before
     public void setup() {
-        budgets = new Budgets() {
+        budgetRepository = new BudgetRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -78,13 +76,13 @@ public class BudgetsTest {
         };
     }
 
-    public static class FindByProperty extends BudgetsTest {
+    public static class FindByProperty extends BudgetRepositoryTest {
 
         @Test
         public void happyCase() {
 
             Property property = new PropertyForTesting();
-            budgets.findByProperty(property);
+            budgetRepository.findByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
@@ -95,14 +93,14 @@ public class BudgetsTest {
 
     }
 
-    public static class FindByPropertyAndDates extends BudgetsTest {
+    public static class FindByPropertyAndDates extends BudgetRepositoryTest {
 
         @Test
         public void happyCase() {
 
             Property property = new PropertyForTesting();
             LocalDate startDate = new LocalDate();
-            budgets.findByPropertyAndStartDate(property, startDate);
+            budgetRepository.findByPropertyAndStartDate(property, startDate);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
@@ -114,7 +112,7 @@ public class BudgetsTest {
 
     }
 
-    public static class NewBudget extends BudgetsTest {
+    public static class NewBudget extends BudgetRepositoryTest {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -122,17 +120,17 @@ public class BudgetsTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        Budgets budgets;
+        BudgetRepository budgetRepository;
 
         @Before
         public void setup() {
-            budgets = new Budgets(){
+            budgetRepository = new BudgetRepository(){
                 @Override
                 public List<Budget> findByProperty(final Property property) {
                     return Arrays.asList(new Budget(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
                 }
             };
-            budgets.setContainer(mockContainer);
+            budgetRepository.setContainer(mockContainer);
         }
 
         @Test
@@ -155,7 +153,7 @@ public class BudgetsTest {
             });
 
             //when
-            Budget newBudget = budgets.newBudget(property, startDate, endDate);
+            Budget newBudget = budgetRepository.newBudget(property, startDate, endDate);
 
             //then
             assertThat(newBudget.getProperty(), is(property));
@@ -167,7 +165,7 @@ public class BudgetsTest {
         @Test
         public void overlappingDates() {
 
-            assertThat(budgets.validateNewBudget(null, new LocalDate(2011,1,1), new LocalDate(2011,12,31)),
+            assertThat(budgetRepository.validateNewBudget(null, new LocalDate(2011,1,1), new LocalDate(2011,12,31)),
                     is("A budget cannot overlap an existing budget."));
         }
 
@@ -180,7 +178,7 @@ public class BudgetsTest {
             LocalDate endDate = new LocalDate(2015,01,01);
 
             //when
-            String validateBudget = budgets.validateNewBudget(property, startDate, endDate);
+            String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
 
             //then
             assertThat(validateBudget, is("End date can not be before start date"));

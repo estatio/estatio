@@ -21,6 +21,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
@@ -28,10 +29,10 @@ import java.util.List;
 
 @DomainService(repositoryFor = KeyTable.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
-public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
+public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> {
 
-    public KeyTables() {
-        super(KeyTables.class, KeyTable.class);
+    public KeyTableRepository() {
+        super(KeyTableRepository.class, KeyTable.class);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -114,6 +115,14 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
 
     // //////////////////////////////////////
 
+    public List<KeyTable> findByBudget(Budget budget) {
+        return findByPropertyAndStartDateAndEndDate(budget.getProperty(), budget.getStartDate(), budget.getEndDate());
+    }
+
+    public List<KeyTable> findByPropertyAndStartDateAndEndDate(Property property, LocalDate startDate, LocalDate endDate) {
+        return allMatches("findByPropertyAndStartDateAndEndDate", "property", property, "startDate", startDate, "endDate", endDate);
+    }
+
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<KeyTable> autoComplete(final String search) {
         return allMatches("findKeyTableByNameMatches", "name", search.toLowerCase());
@@ -121,5 +130,6 @@ public class KeyTables extends UdoDomainRepositoryAndFactory<KeyTable> {
 
     @Inject
     private IsisJdoSupport isisJdoSupport;
+
 
 }

@@ -34,7 +34,7 @@ public class KeyTableMenu {
             final @ParameterLayout(named = "Foundation Value Type") FoundationValueType foundationValueType,
             final @ParameterLayout(named = "Key Value Method") KeyValueMethod keyValueMethod,
             final @ParameterLayout(named = "Number Of Digits") Integer numberOfDigits) {
-        return keyTables.newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
+        return keyTableRepository.newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
     }
 
     public String validateNewKeyTable(
@@ -45,21 +45,21 @@ public class KeyTableMenu {
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits) {
-        return keyTables.validateNewKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
+        return keyTableRepository.validateNewKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
     }
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.SAFE)
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<KeyTable> allKeyTables() {
-        return keyTables.allKeyTables();
+        return keyTableRepository.allKeyTables();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<KeyTable> findBudgetKeyTableByProperty(Property property) {
-        return keyTables.findByProperty(property);
+        return keyTableRepository.findByProperty(property);
     }
 
     @Inject
-    private KeyTables keyTables;
+    private KeyTableRepository keyTableRepository;
 }

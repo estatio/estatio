@@ -13,7 +13,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItems;
 import org.estatio.dom.charge.Charge;
@@ -35,7 +35,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
     BudgetItems budgetItemRepository;
 
     @Inject
-    Budgets budgetRepository;
+    BudgetRepository budgetRepository;
 
     @Inject
     PropertyRepository propertyRepository;

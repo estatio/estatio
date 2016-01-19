@@ -22,7 +22,7 @@ import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.charge.Charge;
 import org.joda.time.LocalDate;
 
@@ -97,5 +97,5 @@ public class BudgetItems extends UdoDomainRepositoryAndFactory<BudgetItem> {
     }
 
     @Inject
-    Budgets budgets;
+    BudgetRepository budgetRepository;
 }

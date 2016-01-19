@@ -2,6 +2,7 @@ package org.estatio.integtests.budget;
 
 import javax.inject.Inject;
 
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +15,6 @@ import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItems;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTables;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.KeyTablesForOxf;
@@ -37,7 +37,7 @@ public class KeyItemRepositoryTest extends EstatioIntegrationTest {
     UnitRepository unitRepository;
 
     @Inject
-    KeyTables keyTableRepository;
+    KeyTableRepository keyTableRepository;
 
     @Inject
 

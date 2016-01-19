@@ -11,7 +11,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BudgetTest extends EstatioIntegrationTest {
 
     @Inject
-    Budgets budgetRepository;
+    BudgetRepository budgetRepository;
 
     @Inject
     PropertyRepository propertyRepository;

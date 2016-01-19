@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.budgeting.keytable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
@@ -57,6 +59,13 @@ import java.util.*;
                         + "&& property == :property "
                         + "&& startDate == :startDate"),
         @Query(
+                name = "findByPropertyAndStartDateAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.keytable.KeyTable " +
+                        "WHERE property == :property "
+                        + "&& startDate == :startDate "
+                        + "&& endDate == :endDate"),
+        @Query(
                 name = "findKeyTableByNameMatches", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.keytable.KeyTable " +
@@ -69,7 +78,7 @@ import java.util.*;
 })
 @Unique(name = "KeyTable_property_name_startDate", members = { "property", "name", "startDate" })
 @DomainObject(editing = Editing.DISABLED,
-        autoCompleteRepository = KeyTables.class,
+        autoCompleteRepository = KeyTableRepository.class,
         autoCompleteAction = "autoComplete")
 public class KeyTable extends EstatioDomainObject<Budget> implements WithIntervalMutable<KeyTable>, WithApplicationTenancyProperty {
 
@@ -91,32 +100,16 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
         return this.getName();
     }
 
+    @Column(name = "propertyId", allowsNull = "false")
+    @PropertyLayout(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private Property property;
 
-    @Column(name = "propertyId", allowsNull = "false")
-    @MemberOrder(sequence = "2")
-    @PropertyLayout(hidden = Where.PARENTED_TABLES)
-    public Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(Property property) {
-        this.property = property;
-    }
 
     // //////////////////////////////////////
-
-    private String name;
-
     @Column(allowsNull = "false")
-    @MemberOrder(sequence = "1")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     public KeyTable changeName(final String name) {
         setName(name);
@@ -139,30 +132,16 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // //////////////////////////////////////
 
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Getter @Setter
     private LocalDate startDate;
-
-    @MemberOrder(sequence = "3")
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
 
     // //////////////////////////////////////
 
-    private LocalDate endDate;
-
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     @Column(allowsNull = "true")
-    @MemberOrder(sequence = "4")
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
     // //////////////////////////////////////
 
@@ -195,7 +174,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     }
 
     @Override
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, hidden = Where.EVERYWHERE)
     public KeyTable changeDates(
             final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
@@ -221,18 +200,11 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // //////////////////////////////////////
 
+    @Column(name = "foundationValueTypeId", allowsNull = "false")
+    @Getter @Setter
     private FoundationValueType foundationValueType;
 
-    @Column(name = "foundationValueTypeId", allowsNull = "false")
-    @MemberOrder(sequence = "5")
-    public FoundationValueType getFoundationValueType() {
-        return foundationValueType;
-    }
-
-    public void setFoundationValueType(FoundationValueType foundationValueType) {
-        this.foundationValueType = foundationValueType;
-    }
-
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyTable changeFoundationValueType(
             final @ParameterLayout(named = "Foundation value type") FoundationValueType foundationValueType) {
         setFoundationValueType(foundationValueType);
@@ -252,18 +224,11 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // //////////////////////////////////////
 
+    @Column(name = "keyValueMethodId", allowsNull = "false")
+    @Getter @Setter
     private KeyValueMethod keyValueMethod;
 
-    @Column(name = "keyValueMethodId", allowsNull = "false")
-    @MemberOrder(sequence = "6")
-    public KeyValueMethod getKeyValueMethod() {
-        return keyValueMethod;
-    }
-
-    public void setKeyValueMethod(KeyValueMethod keyValueMethod) {
-        this.keyValueMethod = keyValueMethod;
-    }
-
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyTable changeKeyValueMethod(
             final @ParameterLayout(named = "Key value method") KeyValueMethod keyValueMethod) {
         setKeyValueMethod(keyValueMethod);
@@ -282,18 +247,12 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     }
 
     //region > precision (property)
-    private Integer precision;
 
     @Column(allowsNull = "false")
-    @MemberOrder(sequence = "7")
-    public Integer getPrecision() {
-        return precision;
-    }
+    @Getter @Setter
+    private Integer precision;
 
-    public void setPrecision(final Integer precision) {
-        this.precision = precision;
-    }
-
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyTable changePrecision(
             final Integer numberOfDigits) {
         setPrecision(numberOfDigits);
@@ -326,9 +285,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // /////////////////////////////////////
 
-    @MemberOrder(name = "items", sequence = "2")
     public KeyTable generateItems(
-//            @ParameterLayout(named = "Are you sure?")
             @Parameter(optionality = Optionality.OPTIONAL)
             boolean confirmGenerate) {
 
@@ -386,7 +343,6 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     @MemberOrder(name = "items", sequence = "4")
     public KeyTable distributeSourceValues(
-//            @ParameterLayout(named = "Are you sure? (All current Target Values will be overwritten.)")
             @Parameter(optionality = Optionality.OPTIONAL)
             boolean confirmDistribute) {
 
@@ -403,24 +359,22 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     // //////////////////////////////////////
 
     @Override
-    @MemberOrder(sequence = "7")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getProperty().getApplicationTenancy();
     }
 
     // //////////////////////////////////////
-    @MemberOrder(name = "validation", sequence = "1")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public boolean isValid() {
         return (this.isValidForKeyValues() && this.isValidForUnits());
     }
 
-    @MemberOrder(name = "validation", sequence = "2")
     public boolean isValidForKeyValues() {
         return getKeyValueMethod().isValid(this);
     }
 
-    @MemberOrder(name = "validation", sequence = "3")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public boolean isValidForUnits() {
         for (KeyItem item : this.getItems()) {
             if (!this.unitIntervalValidForThisKeyTable(item.getUnit())) {
@@ -440,7 +394,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "items", sequence = "3")
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public KeyTable deleteItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
 
         for (KeyItem keyItem : getItems()) {
@@ -460,6 +414,6 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithInterva
     UnitRepository unitRepository;
 
     @Inject
-    private KeyTables keyTableRepository;
+    private KeyTableRepository keyTableRepository;
 
 }

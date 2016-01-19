@@ -89,7 +89,7 @@
                         }
                     }
                 },
-                "schedules": {
+                "scheduleItems": {
                     "collectionLayout": {
                         "paged": 10,
                         "render": "EAGERLY"
@@ -100,6 +100,21 @@
                                 "cssClass": "btn-primary",
                                 "cssClassFa": "fa fa-fw fa-plus",
                                 "named": "Create schedule"
+                            }
+                        }
+                    }
+                },
+                "keyTables": {
+                    "collectionLayout": {
+                        "paged": 10,
+                        "render": "EAGERLY"
+                    },
+                    "actions" : {
+                        "createKeyTable": {
+                            "actionLayout": {
+                                "cssClass": "btn-primary",
+                                "cssClassFa": "fa fa-fw fa-plus",
+                                "named": "Create key table"
                             }
                         }
                     }

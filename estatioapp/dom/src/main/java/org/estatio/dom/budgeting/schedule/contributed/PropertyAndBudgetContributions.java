@@ -1,34 +1,22 @@
 package org.estatio.dom.budgeting.schedule.contributed;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.Budgets;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.schedule.Schedule;
 import org.estatio.dom.budgeting.schedule.Schedules;
+import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
+import org.estatio.dom.budgeting.scheduleitem.ScheduleItems;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
 
-/**
- * Created by jodo on 10/09/15.
- */
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class PropertyAndBudgetContributions {
 
@@ -69,7 +57,7 @@ public class PropertyAndBudgetContributions {
             final LocalDate startDate,
             final LocalDate endDate,
             final Charge charge) {
-        return budgets.findByProperty(property);
+        return budgetRepository.findByProperty(property);
     }
 
     public String validateCreateSchedule(
@@ -102,15 +90,21 @@ public class PropertyAndBudgetContributions {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.EAGERLY)
-    public List<Schedule> schedules(final Budget budget) {
-        return schedules.findByBudget(budget);
+    public List<ScheduleItem> scheduleItems(final Budget budget) {
+        List<ScheduleItem> results = new ArrayList<>();
+        for (Schedule schedule : schedules.findByBudget(budget)) {
+            results.addAll(scheduleItems.findBySchedule(schedule));
+        }
+        return results;
     }
 
-
     @Inject
-    Budgets budgets;
+    BudgetRepository budgetRepository;
 
     @Inject
     Schedules schedules;
+
+    @Inject
+    ScheduleItems scheduleItems;
 
 }
