@@ -33,6 +33,7 @@ public class ChargeGroupRefData extends EstatioFixtureScript {
     public static final String REF_SERVICE_CHARGE = "SERVICE_CHARGE";
     public static final String REF_TURNOVER_RENT = "TURNOVER_RENT";
     public static final String REF_PERCENTAGE = "RENTAL_FEE";
+    public static final String REF_DEPOSIT = "DEPOSIT";
     public static final String REF_DISCOUNT = "DISCOUNT";
     public static final String REF_ENTRY_FEE = "ENTRY_FEE";
     public static final String REF_TAX = "TAX";
@@ -50,6 +51,7 @@ public class ChargeGroupRefData extends EstatioFixtureScript {
         createChargeGroup(REF_SERVICE_CHARGE, "Service Charge", executionContext);
         createChargeGroup(REF_TURNOVER_RENT, "Turnover Rent", executionContext);
         createChargeGroup(REF_PERCENTAGE, "Rental Fee", executionContext);
+        createChargeGroup(REF_DEPOSIT, "Deposit", executionContext);
         createChargeGroup(REF_DISCOUNT, "Discount", executionContext);
         createChargeGroup(REF_ENTRY_FEE, "Entry Fee", executionContext);
         createChargeGroup(REF_TAX, "Tax", executionContext);

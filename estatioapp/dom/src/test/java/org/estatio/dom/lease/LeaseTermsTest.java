@@ -121,21 +121,33 @@ public class LeaseTermsTest {
 
     public static class NewLeaseTerm extends LeaseTermsTest {
 
+        @Before
+        public void setUp(){
+            leaseItem.setType(LeaseItemType.RENT); // or any other type except deposit
+        }
+
+
         @Test
         public void validate() {
             // valid
-            testValidate(null, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), null);
+            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), null);
             // valid
-            testValidate(null, null, new LocalDate(2014, 1, 1), new LocalDate(2013, 12, 31), null);
+            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2013, 12, 31), null);
             // invalid interval
-            testValidate(null, null, new LocalDate(2014, 1, 1), new LocalDate(2013, 12, 30), "From 2014-01-01 to 2013-12-30 is not a valid interval");
+            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2013, 12, 30), "From 2014-01-01 to 2013-12-30 is not a valid interval");
 
             final LeaseTermForTesting previous = new LeaseTermForTesting();
             previous.setStartDate(new LocalDate(2014, 1, 1));
             // valid
-            testValidate(null, previous, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31), null);
+            testValidate(leaseItem, previous, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31), null);
             // start date before start date of previous
-            testValidate(null, previous, new LocalDate(2013, 12, 31), new LocalDate(2014, 12, 31), "Start date must be on or after 2014-01-01");
+            testValidate(leaseItem, previous, new LocalDate(2013, 12, 31), new LocalDate(2014, 12, 31), "Start date must be on or after 2014-01-01");
+
+            // a term of type deposit should have no end date
+            // when
+            leaseItem.setType(LeaseItemType.DEPOSIT);
+            // then
+            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), "A deposit term should have no end date");
 
         }
 

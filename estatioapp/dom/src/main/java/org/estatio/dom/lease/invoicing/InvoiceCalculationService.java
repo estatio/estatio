@@ -122,7 +122,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     }
 
     private LocalDate systemEpochDate() {
-        return estatioSettingsService.fetchEpochDate();
+        return estatioSettingsService == null ? new LocalDate(1980,1,1) : estatioSettingsService.fetchEpochDate();
     }
 
     private String interactionId;
@@ -194,7 +194,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
         if (dueDateRangeInterval.isValid()) {
             final List<InvoicingInterval> intervals = leaseTerm.getLeaseItem().getInvoicingFrequency().intervalsInDueDateRange(
                     dueDateRangeInterval,
-                    leaseTerm.getEffectiveInterval());
+                    leaseTerm.getInterval());
 
             final LocalDate dueDateForCalculation
                     = parameters.dueDateRange().endDateExcluding().minusDays(1);
@@ -243,7 +243,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                 results2.add(new CalculationResult(invoicingInterval));
             } else {
                 final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
-                final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
+                final BigDecimal frequencyDays = leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ? null : new BigDecimal(invoicingInterval.days());
                 final BigDecimal rangeFactor =
                         leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ?
                                 BigDecimal.ONE :

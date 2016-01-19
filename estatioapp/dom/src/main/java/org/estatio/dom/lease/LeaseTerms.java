@@ -18,25 +18,17 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.security.UserMemento;
-
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
@@ -89,6 +81,10 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
         final LocalDateInterval interval = LocalDateInterval.including(startDate, endDate);
         if (!interval.isValid()) {
             return String.format("From %s to %s is not a valid interval", startDate.toString(), endDate.toString());
+        }
+        // a term of type deposit should have no end date
+        if (leaseItem.getType() == LeaseItemType.DEPOSIT && endDate != null) {
+            return "A deposit term should have no end date";
         }
         return null;
     }

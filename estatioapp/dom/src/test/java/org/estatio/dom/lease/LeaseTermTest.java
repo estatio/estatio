@@ -377,9 +377,14 @@ public class LeaseTermTest {
 
     public static class ValidateCreateNext extends LeaseTermTest {
 
+        private LeaseItem leaseItem;
+
         @Before
         public void setUp() throws Exception {
+            leaseItem = new LeaseItem();
+            leaseItem.setType(LeaseItemType.RENT); // or any other type except deposit
             term = new LeaseTermForTesting();
+            term.setLeaseItem(leaseItem);
             term.setStartDate(new LocalDate(2014, 6, 1));
             term.setEndDate(new LocalDate(2014, 8, 31));
             term.terms = new LeaseTerms();

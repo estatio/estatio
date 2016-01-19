@@ -131,6 +131,29 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         return executionContext.addResult(this, leaseTerm);
     }
 
+    protected LeaseTerm createLeaseTermForDeposit(
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final DepositType depositType,
+            final BigDecimal excludedAmount,
+            final ExecutionContext executionContext) {
+
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.IT_DEPOSIT,
+                LeaseItemType.DEPOSIT,
+                InvoicingFrequency.FIXED_IN_ADVANCE,
+                executionContext);
+        final LeaseTermForDeposit leaseTerm = (LeaseTermForDeposit) leaseItem.newTerm(startDate, endDate);
+
+        leaseTerm.setDepositType(depositType);
+        leaseTerm.setExcludedAmount(excludedAmount);
+
+        return executionContext.addResult(this, leaseTerm);
+    }
+
 
     protected LeaseTerm createLeaseTermForIndexableServiceCharge(
             final String leaseRef,

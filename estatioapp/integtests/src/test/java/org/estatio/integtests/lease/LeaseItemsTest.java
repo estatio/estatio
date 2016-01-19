@@ -18,30 +18,14 @@
  */
 package org.estatio.integtests.lease;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
+import org.assertj.core.api.Assertions;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItems;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
@@ -49,6 +33,13 @@ import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.math.BigInteger;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -165,6 +156,21 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
             // when
             wrap(leaseItems).newLeaseItem(
                     leasePoison, LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
+                    leasePoison.getStartDate());
+        }
+
+        @Test
+        public void invalidDepositItem() throws Exception {
+
+            // given
+            final Charge charge = charges.findByReference(ChargeRefData.GB_DEPOSIT);
+
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage(containsString("A leaseItem of type DEPOSIT should always have a fixed invoicing frequency"));
+
+            // when
+            wrap(leaseItems).newLeaseItem(
+                    leasePoison, LeaseItemType.DEPOSIT, charge, InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate());
         }
     }

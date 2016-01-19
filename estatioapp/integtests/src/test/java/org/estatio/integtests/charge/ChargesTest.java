@@ -79,7 +79,8 @@ public class ChargesTest extends EstatioIntegrationTest {
                     charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE_INDEXABLE),
                     charges.findByReference(ChargeRefData.GB_TAX),
                     charges.findByReference(ChargeRefData.GB_TURNOVER_RENT),
-                    charges.findByReference(ChargeRefData.GB_PERCENTAGE));
+                    charges.findByReference(ChargeRefData.GB_PERCENTAGE),
+                    charges.findByReference(ChargeRefData.GB_DEPOSIT));
 
         }
 

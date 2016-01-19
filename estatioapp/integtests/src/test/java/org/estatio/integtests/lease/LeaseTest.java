@@ -136,7 +136,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
             // given
             Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(lease.getItems().size(), is(7));
+            assertThat(lease.getItems().size(), is(8));
 
             // when
             LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
@@ -166,7 +166,7 @@ public class LeaseTest extends EstatioIntegrationTest {
         @Test
         public void whenNonEmpty() throws Exception {
             Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(lease.getItems().size(), is(7));
+            assertThat(lease.getItems().size(), is(8));
         }
     }
 

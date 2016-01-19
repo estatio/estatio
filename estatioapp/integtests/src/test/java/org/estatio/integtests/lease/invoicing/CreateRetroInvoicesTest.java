@@ -18,25 +18,11 @@
  */
 package org.estatio.integtests.lease.invoicing;
 
-import java.util.List;
-import java.util.SortedSet;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
@@ -47,6 +33,13 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.SortedSet;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -119,7 +112,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
             creator.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
 
             // then
-            assertThat(invoices.findByLease(lease).size(), is(8));
+            assertThat(invoices.findByLease(lease).size(), is(10));
 
             // and given
             lease.terminate(VT.ld(2013, 10, 1), true);
@@ -129,8 +122,8 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
 
             // then
             List<Invoice> invoicesList = invoices.findByLease(lease);
-            assertThat(invoicesList.size(), is(9));
-            Invoice invoice = invoicesList.get(8);
+            assertThat(invoicesList.size(), is(11));
+            Invoice invoice = invoicesList.get(10);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
             assertThat(invoice.getGrossAmount(), is(VT.bd("-8170.01")));
 

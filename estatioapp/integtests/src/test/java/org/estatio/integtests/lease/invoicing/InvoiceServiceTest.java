@@ -18,47 +18,32 @@
  */
 package org.estatio.integtests.lease.invoicing;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.invoicing.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -87,6 +72,8 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     LeaseItem rItem;
     LeaseItem sItem;
     LeaseItem tItem;
+    LeaseItem dItem;
+    LeaseItem rfItem;
 
 
     public static class Lifecycle extends InvoiceServiceTest {
@@ -114,6 +101,8 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
             sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
             tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
+            dItem = lease.findFirstItemOfType(LeaseItemType.DEPOSIT);
+            rfItem = lease.findFirstItemOfType(LeaseItemType.RENTAL_FEE);
         }
 
         @Test
@@ -134,6 +123,8 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(rItem.getTerms().size(), is(2));
             assertThat(sItem.getTerms().size(), is(2));
             assertThat(tItem.getTerms().size(), is(2));
+            assertThat(dItem.getTerms().size(), is(1));
+            assertThat(rfItem.getTerms().size(), is(1));
 
             final LeaseTermForIndexable last = (LeaseTermForIndexable) rItem.getTerms().last();
             final LeaseTermForIndexable first = (LeaseTermForIndexable) rItem.getTerms().first();
@@ -142,6 +133,8 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
             assertThat(last.getStartDate(), is(VT.ld(2015, 1, 1)));
             assertThat(invoices.findByLease(lease).size(), is(0));
+            assertThat(dItem.getTerms().last().getEffectiveValue(), is(VT.bd(70000).setScale(2)));
+            assertThat(rfItem.getTerms().last().getEffectiveValue(), is(VT.bd(2250).setScale(2)));
         }
 
         public void step2_calculate() throws Exception {

@@ -18,30 +18,18 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.google.common.collect.Iterables;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.math.BigInteger;
+import java.util.List;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseItem.class)
 @Hidden
@@ -96,6 +84,15 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
             return String.format(
                     "Charge (with app tenancy level '%s') is not valid for this lease",
                     charge.getApplicationTenancyPath());
+        }
+
+        //temporarily added to secure valid deposit item
+        if (type==LeaseItemType.DEPOSIT &&
+                (   invoicingFrequency!=InvoicingFrequency.FIXED_IN_ADVANCE
+                    || invoicingFrequency!=InvoicingFrequency.FIXED_IN_ARREARS
+                )
+                ){
+            return "A leaseItem of type DEPOSIT should always have a fixed invoicing frequency";
         }
 
         return null;
