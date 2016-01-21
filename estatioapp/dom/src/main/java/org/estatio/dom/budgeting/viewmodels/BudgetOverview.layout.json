@@ -1,0 +1,67 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "Budget": {
+          "members": {
+            "budget": {
+              "propertyLayout": {
+                "named": "Budget"
+              }
+            },
+            "totalBudgetedValue": {
+              "propertyLayout": {
+                "named": "Total Budgeted Value",
+                "typicalLength": 10
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "lines": {
+          "collectionLayout": {
+            "named": "Lines",
+            "paged": 10,
+            "render": "EAGERLY"
+          }
+        }
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "cssClassFa": "fa fa-fw fa-download",
+        "named": "Download Layout",
+        "contributed": "AS_ACTION"
+      }
+    },
+    "recentChanges": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Recent Changes",
+        "contributed": "AS_ACTION"
+      }
+    },
+    "links": {
+      "actionLayout": {
+        "cssClass": "btn-primary",
+        "named": "Links"
+      }
+    }
+  }
+}

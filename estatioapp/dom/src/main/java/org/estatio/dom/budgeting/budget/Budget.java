@@ -26,6 +26,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.contributions.OccupanciesOnKeyItemContributions;
+import org.estatio.dom.budgeting.viewmodels.BudgetOverview;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -34,6 +35,7 @@ import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.*;
+import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -227,6 +229,19 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     }
 
     // //////////////////////////////////////
+
+    @Programmatic
+    public BigDecimal getTotalBudgetedValue(){
+        BigDecimal total = BigDecimal.ZERO;
+        for (BudgetItem item : getItems()){
+            total = total.add(item.getBudgetedValue());
+        }
+        return total;
+    }
+
+    public BudgetOverview BudgetOverview(){
+        return new BudgetOverview(this);
+    }
 
     @Inject
     private LeaseItems leaseItems;
