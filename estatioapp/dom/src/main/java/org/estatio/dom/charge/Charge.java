@@ -21,6 +21,7 @@ package org.estatio.dom.charge;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Hidden;
@@ -29,8 +30,9 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
@@ -70,7 +72,9 @@ public class Charge
         super("reference");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return String.format("%s [%s]", getName(), getReference());
+    }
 
     private String applicationTenancyPath;
 
@@ -114,7 +118,6 @@ public class Charge
 
     private String name;
 
-    @Title(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     public String getName() {
         return name;
