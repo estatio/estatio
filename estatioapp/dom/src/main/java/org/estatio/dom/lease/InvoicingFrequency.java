@@ -171,8 +171,9 @@ public enum InvoicingFrequency {
         List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
         if (rrule == null) {
             LocalDate dueDateOfSourceInterval = dueDateOfInterval(sourceInterval);
-            invoicingIntervals.add(new InvoicingInterval(sourceInterval, dueDateOfSourceInterval));
-
+            if (rangeInterval.contains(dueDateOfSourceInterval)) {
+                invoicingIntervals.add(new InvoicingInterval(sourceInterval, dueDateOfSourceInterval));
+            }
         } else {
             for (Interval interval : CalendarUtils.intervalsInRange(
                     rangeInterval.startDate(),
