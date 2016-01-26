@@ -52,7 +52,7 @@ public class TaxRepositoryTest extends EstatioIntegrationTest {
     EstatioApplicationTenancyRepository applicationTenancyRepository;
 
     @Before
-    public void setupData() {
+    public void setup() {
         runFixtureScript(new EstatioBaseLineFixture());
     }
 

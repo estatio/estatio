@@ -19,8 +19,9 @@
 package org.estatio.fixture.tax;
 
 import java.util.List;
+
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -32,20 +33,14 @@ import org.estatio.fixture.EstatioFixtureScript;
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-
 public class TaxRefData extends EstatioFixtureScript {
 
     private static final String SUFFIX_VATSTD = "-VATSTD";
+    public static final String NL_VATSTD = "NLD-VATSTD";
 
     public static final String vatStdFor(final String country2AlphaCode) {
         return country2AlphaCode.toUpperCase() + SUFFIX_VATSTD;
     }
-
-    public static final String IT_VATSTD = "IT-VATSTD";
-    public static final String NL_VATSTD = "NL-VATSTD";
-    public static final String GB_VATSTD = "GB-VATSTD";
-    public static final String FR_VATSTD = "FR-VATSTD";
-    public static final String SE_VATSTD = "SE-VATSTD";
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -54,12 +49,12 @@ public class TaxRefData extends EstatioFixtureScript {
 
         for (final ApplicationTenancy countryTenancy : countryTenancies) {
 
-            final String country2AlphaCode = countryTenancy.getPath().substring(1).toUpperCase();
+            final String countryPrefix = countryTenancy.getPath().substring(1).toUpperCase();
 
-            final String reference = country2AlphaCode + SUFFIX_VATSTD;
+            final String reference = countryPrefix + SUFFIX_VATSTD;
             final Tax tax = taxes.newTax(
                     reference,
-                    "Value Added Tax (Standard, " + country2AlphaCode + ")",
+                    "Value Added Tax (Standard, " + countryPrefix + ")",
                     countryTenancy);
             executionContext.addResult(this, tax.getReference(), tax);
 
@@ -71,12 +66,8 @@ public class TaxRefData extends EstatioFixtureScript {
         }
     }
 
-    // //////////////////////////////////////
-
     @Inject
     private Taxes taxes;
-    @Inject
-    private ApplicationTenancies applicationTenancies;
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 

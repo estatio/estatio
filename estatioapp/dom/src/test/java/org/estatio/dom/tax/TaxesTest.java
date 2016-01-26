@@ -19,10 +19,13 @@
 package org.estatio.dom.tax;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
@@ -55,16 +58,22 @@ public class TaxesTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
+            @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
+                return null;
+            }
+
         };
     }
 
-    public static class FindTaxByAtPathAndReference extends TaxesTest {
+    public static class FindByReference extends TaxesTest {
         @Test
         public void happyCase() {
 
             taxes.findByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Tax.class));
             assertThat(finderInteraction.getQueryName(), is("findByReference"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));

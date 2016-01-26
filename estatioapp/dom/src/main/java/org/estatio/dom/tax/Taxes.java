@@ -91,7 +91,7 @@ public class Taxes extends UdoDomainRepositoryAndFactory<Tax> {
 
     @Programmatic
     public Tax findByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        return uniqueMatch("findByReference", "reference", reference);
     }
 
     @Programmatic
