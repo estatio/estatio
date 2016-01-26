@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -230,6 +231,21 @@ public abstract class InvoiceItem
 
     public void setTax(final Tax tax) {
         this.tax = tax;
+    }
+
+    @MemberOrder(name = "tax", sequence = "1")
+    public InvoiceItem changeTax(final Tax tax){
+        setTax(tax);
+        this.calculateTax();
+        return this;
+    }
+
+    public Tax default0ChangeTax(final Tax tax){
+        return getTax();
+    }
+
+    public String disableChangeTax(final Tax tax){
+        return getSource() == null ? null : "Cannot change tax on a generated invoice item";
     }
 
     // //////////////////////////////////////

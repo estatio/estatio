@@ -18,23 +18,30 @@
  */
 package org.estatio.dom.tax;
 
+import java.util.Collection;
 import java.util.List;
+
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.*;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.Dflt;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(repositoryFor = Tax.class)
@@ -96,7 +103,15 @@ public class Taxes extends UdoDomainRepositoryAndFactory<Tax> {
         return tax;
     }
 
-    
+    @Programmatic
+    public Collection<Tax> findByApplicationTenancy(final ApplicationTenancy applicationTenancy) {
+        return Collections2.filter(allInstances(), new Predicate<Tax>() {
+            @Override public boolean apply(final Tax tax) {
+                return tax.getApplicationTenancy().equals(applicationTenancy);
+            }
+        });
+    }
+
     // //////////////////////////////////////
 
     @Inject
