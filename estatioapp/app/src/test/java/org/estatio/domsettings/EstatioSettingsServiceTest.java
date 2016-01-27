@@ -18,22 +18,21 @@
  */
 package org.estatio.domsettings;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.SettingAbstract;
-import org.isisaddons.module.settings.dom.SettingType;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
-import org.estatio.domsettings.EstatioSettingsService;
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.isisaddons.module.settings.dom.SettingAbstract;
+import org.isisaddons.module.settings.dom.SettingType;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -87,8 +86,7 @@ public class EstatioSettingsServiceTest {
     
     @Before
     public void setUp() throws Exception {
-        estatioSettingsService.injectApplicationSettings(mockApplicationSettingsService);
-        estatioSettingsService.setContainer(mockDomainObjectContainer);
+        estatioSettingsService.applicationSettingsService = mockApplicationSettingsService;
     }
     
     @Test
@@ -96,7 +94,7 @@ public class EstatioSettingsServiceTest {
         final LocalDate date = new LocalDate(2013,4,1);
         context.checking(new Expectations() {
             {
-                oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);
+                oneOf(mockApplicationSettingsService).find(ApplicationSettingKey.epochDate);
                 will(returnValue(new ApplicationSettingForTesting(date.toString(SettingAbstract.DATE_FORMATTER), SettingType.LOCAL_DATE)));
             }
         });
@@ -108,7 +106,7 @@ public class EstatioSettingsServiceTest {
     public void whenNull() {
         context.checking(new Expectations() {
             {
-                oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);
+                oneOf(mockApplicationSettingsService).find(ApplicationSettingKey.epochDate);
                 will(returnValue(null));
             }
         });

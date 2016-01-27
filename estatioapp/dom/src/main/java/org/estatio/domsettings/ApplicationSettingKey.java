@@ -37,7 +37,7 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
      * One of the design principles for Estatio was to ensure that it would not
      * require invoices from the predecessor system.
      */
-    epochDate(LocalDate.class, "Epoch date", new LocalDate(2013,4,1)),
+    epochDate(LocalDate.class, "Epoch date", new LocalDate(2010,1,1)),
     reportServerBaseUrl(String.class, "Report server base URL", "http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio+Italy+(prod)/");
     
     private final Object defaultValue;

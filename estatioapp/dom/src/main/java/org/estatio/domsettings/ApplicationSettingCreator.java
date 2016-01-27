@@ -62,7 +62,7 @@ public interface ApplicationSettingCreator {
             }
         }
 
-        private static String getKey(final ApplicationSettingCreator creator) {
+        public static String getKey(final ApplicationSettingCreator creator) {
             return creator.getClass().getPackage().getName()+"."+creator.name();
         }
     }

@@ -48,6 +48,11 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     }
 
     @Programmatic
+    public ApplicationSetting find(final ApplicationSettingCreator creator) {
+        return (ApplicationSettingForEstatio) find(ApplicationSettingCreator.Helper.getKey(creator));
+    }
+
+    @Programmatic
     @Override
     public ApplicationSetting find(final String key) {
         return firstMatch(

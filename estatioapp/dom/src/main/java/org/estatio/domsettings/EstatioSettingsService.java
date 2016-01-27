@@ -20,6 +20,8 @@ package org.estatio.domsettings;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -50,14 +52,9 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     }
 
     /**
-     * @see ApplicationSettingKey#epochDate
-     */
-    public final static String EPOCH_DATE_KEY = ApplicationSettingKey.epochDate.name();
-
-    /**
      * @see ApplicationSettingKey#reportServerBaseUrl
      */
-    public final static String REPORT_SERVER_BASE_URL_KEY = ApplicationSettingKey.reportServerBaseUrl.name();
+    public final static String REPORT_SERVER_BASE_URL_KEY = ApplicationSettingCreator.Helper.getKey(ApplicationSettingKey.reportServerBaseUrl);
 
     // //////////////////////////////////////
 
@@ -78,7 +75,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     public LocalDate fetchEpochDate() {
         if (cachedEpochDate == null) {
             // getApplicationSettings().installDefaultsIfRequired();
-            final ApplicationSetting epochDate = applicationSettingsService.find(EPOCH_DATE_KEY);
+            final ApplicationSetting epochDate = applicationSettingsService.find(ApplicationSettingKey.epochDate);
             if (epochDate != null) {
                 cachedEpochDate = epochDate.valueAsLocalDate();
             }
@@ -93,7 +90,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     public void updateEpochDate(
             final LocalDate newEpochDate) {
         // getApplicationSettings().installDefaultsIfRequired();
-        final ApplicationSettingForEstatio setting = find(EPOCH_DATE_KEY);
+        final ApplicationSettingForEstatio setting = (ApplicationSettingForEstatio) applicationSettingsService.find(ApplicationSettingKey.epochDate);
         if (setting != null) {
             if (newEpochDate != null) {
                 setting.updateAsLocalDate(newEpochDate);
@@ -102,7 +99,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
             }
         } else {
             if (newEpochDate != null) {
-                getApplicationSettings().newLocalDate(EPOCH_DATE_KEY, "Cutover date to Estatio", newEpochDate);
+                applicationSettingsService.newLocalDate(ApplicationSettingCreator.Helper.getKey(ApplicationSettingKey.epochDate), "Cutover date to Estatio", newEpochDate);
             } // else no-op
         }
         cachedEpochDate = null;
@@ -128,7 +125,6 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
         return cachedReportServerBaseUrl;
     }
 
-
     // //////////////////////////////////////
 
     @Programmatic
@@ -136,26 +132,11 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
         return applicationSettingsService.listAll();
     }
 
-    private ApplicationSettingForEstatio find(final String key) {
-        return (ApplicationSettingForEstatio) getApplicationSettings().find(key);
-    }
-
     // //////////////////////////////////////
 
-    protected ApplicationSettingsServiceForEstatio applicationSettingsService;
+    @Inject ApplicationSettingsServiceForEstatio applicationSettingsService;
 
-    private ApplicationSettingsServiceForEstatio getApplicationSettings() {
-        return (ApplicationSettingsServiceForEstatio) applicationSettingsService;
-    }
-
-    public final void injectApplicationSettings(final ApplicationSettingsServiceForEstatio applicationSettings) {
-        this.applicationSettingsService = applicationSettings;
-    }
-
+    @Inject
     private Currencies currencies;
-
-    public final void injectCurrencies(final Currencies currencies) {
-        this.currencies = currencies;
-    }
 
 }
