@@ -23,10 +23,13 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -81,10 +84,16 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
+    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public InvoiceSummaryAbstract saveAllAsHistoric() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.saveAsHistoric();
+        }
+        return this;
+    }
+
     @Render(Type.EAGERLY)
     public abstract List<Invoice> getInvoices();
-
-    // //////////////////////////////////////
 
     @Inject
     protected Invoices invoiceRepository;

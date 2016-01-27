@@ -93,7 +93,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
         @Test
         public void whenPresent() {
             // when
-            SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), lease);
+            SortedSet<LocalDate> dueDates = lease.dueDatesInRange(VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
             // then
             assertThat(dueDates.size(), is(10));
         }
@@ -105,7 +105,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
         @Test
         public void step1_retroRun() {
             // given
-            SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), lease);
+            SortedSet<LocalDate> dueDates = lease.dueDatesInRange(VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
             assertThat(dueDates.size(), is(10));
 
             // when

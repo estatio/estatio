@@ -48,6 +48,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -771,7 +773,11 @@ public class Invoice
         getContainer().remove(this);
     }
 
-    // //////////////////////////////////////
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)
+    public void saveAsHistoric() {
+        setStatus(InvoiceStatus.HISTORIC);
+        setRunId(null);
+    }
 
     @javax.inject.Inject
     EstatioNumeratorRepository estatioNumeratorRepository;
@@ -781,5 +787,4 @@ public class Invoice
 
     @javax.inject.Inject
     InvoiceItems invoiceItems;
-
 }

@@ -31,8 +31,8 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -68,6 +68,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
@@ -158,15 +159,16 @@ public class LeaseItem
         this.invoicingFrequency = invoicingFrequency;
     }
 
-    public static class Functions {
-        public static Function<LeaseItem, LeaseItemStatus> GET_STATUS = new Function<LeaseItem, LeaseItemStatus>() {
-            public LeaseItemStatus apply(final LeaseItem li) {
-                return li.getStatus();
-            }
-        };
+    @Programmatic
+    public SortedSet<LocalDate> dueDatesInRange(LocalDate startDueDate, LocalDate nextDueDate) {
+        final SortedSet<LocalDate> dates = Sets.newTreeSet();
+        List<InvoicingInterval> invoiceIntervals = getInvoicingFrequency().intervalsInDueDateRange(
+                startDueDate, nextDueDate);
+        for (InvoicingInterval interval : invoiceIntervals) {
+            dates.add(interval.dueDate());
+        }
+        return dates;
     }
-
-    // //////////////////////////////////////
 
     private String applicationTenancyPath;
 

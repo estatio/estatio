@@ -19,27 +19,28 @@
 package org.estatio.fixturescripts;
 
 import java.util.List;
-import java.util.SortedSet;
+
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.asset.PropertyMenu;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -123,7 +124,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final LocalDate startDueDate,
             final LocalDate nextDueDate,
             final ExecutionContext fixtureResults) {
-        for (LocalDate dueDate : findDueDatesForLease(startDueDate, nextDueDate, lease)) {
+        for (LocalDate dueDate : lease.dueDatesInRange(startDueDate, nextDueDate)) {
             InvoiceCalculationParameters parameters =
                     new InvoiceCalculationParameters(
                             lease,
@@ -145,35 +146,11 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
         invoiceCalculationService.calculateAndInvoice(parameters);
 
         for (Invoice invoice : invoices.findByStatus(InvoiceStatus.NEW)) {
-            invoice.setStatus(InvoiceStatus.HISTORIC);
-            invoice.setRunId(null);
+            invoice.saveAsHistoric();
             executionContext.addResult(this, invoice.getInvoiceNumber(), invoice);
         }
         return executionContext;
     }
-
-    // //////////////////////////////////////
-
-    @Programmatic
-    public SortedSet<LocalDate> findDueDatesForLease(LocalDate startDueDate, LocalDate nextDueDate, Lease lease) {
-        final SortedSet<LocalDate> dates = Sets.newTreeSet();
-        for (LeaseItem leaseItem : lease.getItems()) {
-            dates.addAll(findDueDatesForLeaseItem(startDueDate, nextDueDate, leaseItem));
-        }
-        return dates;
-    }
-
-    private SortedSet<LocalDate> findDueDatesForLeaseItem(LocalDate startDueDate, LocalDate nextDueDate, LeaseItem leaseItem) {
-        final SortedSet<LocalDate> dates = Sets.newTreeSet();
-        List<InvoicingInterval> invoiceIntervals = leaseItem.getInvoicingFrequency().intervalsInDueDateRange(
-                startDueDate, ObjectUtils.firstNonNull(leaseItem.getNextDueDate(), nextDueDate));
-        for (InvoicingInterval interval : invoiceIntervals) {
-            dates.add(interval.dueDate());
-        }
-        return dates;
-    }
-
-    // //////////////////////////////////////
 
     @Inject
     public Invoices invoices;

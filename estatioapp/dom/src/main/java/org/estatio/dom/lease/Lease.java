@@ -30,6 +30,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -212,7 +213,7 @@ public class Lease
     public LeaseStatus getEffectiveStatus() {
         List<LeaseItem> all = Lists.newArrayList(getItems());
         int itemCount = getItems().size();
-        List<LeaseItemStatus> statusList = Lists.transform(all, LeaseItem.Functions.GET_STATUS);
+        List<LeaseItemStatus> statusList = Lists.transform(all, leaseItem -> leaseItem.getStatus());
         int suspensionCount = Collections.frequency(statusList, LeaseItemStatus.SUSPENDED);
         if (suspensionCount > 0) {
             if (itemCount == suspensionCount) {
@@ -971,6 +972,15 @@ public class Lease
             getContainer().remove(this);
         }
         return success;
+    }
+
+    @Programmatic
+    public SortedSet<LocalDate> dueDatesInRange(LocalDate startDueDate, LocalDate nextDueDate) {
+        final SortedSet<LocalDate> dates = Sets.newTreeSet();
+        for (LeaseItem leaseItem : getItems()) {
+            dates.addAll(leaseItem.dueDatesInRange(startDueDate, nextDueDate));
+        }
+        return dates;
     }
 
     // //////////////////////////////////////
