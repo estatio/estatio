@@ -18,21 +18,32 @@
  */
 package org.estatio.dom.charge;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.geography.Country;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import javax.inject.Inject;
-import java.util.List;
 
 @DomainService(repositoryFor = Charge.class)
 @DomainServiceLayout(
@@ -81,15 +92,6 @@ public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
     @MemberOrder(sequence = "2")
     public List<Charge> allCharges() {
         return allInstances();
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2.1")
-    public List<Charge> findChargesForCountry(final Country country) {
-        final String countryPath = "/" + country.getAlpha2Code();
-        return chargesForCountry(countryPath);
     }
 
     @Programmatic
