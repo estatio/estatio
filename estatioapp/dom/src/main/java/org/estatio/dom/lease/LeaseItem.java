@@ -593,7 +593,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent
     private LocalDate epochDate;
 
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.EVERYWHERE)
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     public LocalDate getEpochDate() {
         return epochDate;
     }
