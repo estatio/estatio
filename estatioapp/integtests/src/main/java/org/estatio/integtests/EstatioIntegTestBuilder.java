@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import org.apache.log4j.Level;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
@@ -30,6 +31,8 @@ import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechani
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
+import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.estatio.app.EstatioAppManifest;
 
@@ -55,6 +58,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
             appendEstatioClockService(additionalServices);
             appendOptionalServicesForSecurityModule(additionalServices);
              appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
+            additionalServices.add(FakeLookupLocationService.class);
             return additionalServices;
         }
     }
@@ -74,6 +78,21 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
         @Override
         public <T> List<T> fromExcel(Blob excelBlob, Class<T> cls) throws Exception {
+            return null;
+        }
+    }
+
+    @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "1")
+    public static class FakeLookupLocationService extends LocationLookupService {
+
+        public FakeLookupLocationService(){}
+
+        public String getId() {
+            return getClass().getName();
+        }
+
+        @Override
+        public Location lookup(final String description) {
             return null;
         }
     }
