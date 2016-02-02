@@ -29,7 +29,7 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndicesTest {
+public class IndexRepositoryTest {
 
     FinderInteraction finderInteraction;
 
@@ -58,7 +58,7 @@ public class IndicesTest {
         };
     }
 
-    public static class FindIndexByReference extends IndicesTest {
+    public static class FindIndexByReference extends IndexRepositoryTest {
 
         @Test
         public void happyCase() {
@@ -73,7 +73,7 @@ public class IndicesTest {
         }
 
     }
-    public static class AllIndices extends IndicesTest {
+    public static class AllIndices extends IndexRepositoryTest {
 
         @Test
         public void happyCase() {

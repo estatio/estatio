@@ -54,13 +54,14 @@ import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.index.api.IndexValueCreator;
 import org.estatio.dom.utils.MathUtils;
 
 /**
  * Represents the periodic rebasing of an {@link Index}, and
  * {@link #getValues() holds} the {@link IndexValue value}s until the
  * {@link #getNext() next} rebasing.
- * 
+ *
  * @see Index
  */
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -76,17 +77,25 @@ import org.estatio.dom.utils.MathUtils;
                 value = "SELECT " +
                         "FROM org.estatio.dom.index.IndexBase " +
                         "WHERE index == :index " +
+                        "&& startDate == :date " +
+                        "ORDER BY startDate DESC "),
+        @Query(
+                name = "findByIndexAndActiveOnDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.index.IndexBase " +
+                        "WHERE index == :index " +
                         "&& startDate <= :date " +
                         "ORDER BY startDate DESC ")
 })
 @DomainObject(editing = Editing.DISABLED)
 public class IndexBase
         extends EstatioDomainObject<IndexBase>
-        implements WithStartDate, Chained<IndexBase>, WithApplicationTenancyCountry {
+        implements WithStartDate, Chained<IndexBase>, WithApplicationTenancyCountry, IndexValueCreator {
 
     public static final int FACTOR_SCALE = 4;
 
-    public IndexBase() {super("index, startDate desc");
+    public IndexBase() {
+        super("index, startDate desc");
     }
 
     @PropertyLayout(
@@ -189,10 +198,10 @@ public class IndexBase
                 : BigDecimal.ONE;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Override @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IndexValue newIndexValue(
             final LocalDate startDate,
-            final BigDecimal value){
+            final BigDecimal value) {
         return indexValueRepository.findOrCreate(this, startDate, value);
     }
 

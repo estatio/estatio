@@ -60,6 +60,9 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.index.api.IndexBaseCreator;
+import org.estatio.dom.index.api.IndexValueCreator;
+import org.estatio.dom.lease.indexation.Indexable;
 
 /**
  * Represents an externally-defined index (eg the retail price index) which
@@ -98,11 +101,22 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Index
         extends EstatioDomainObject<Index>
-        implements WithReferenceComparable<Index>, WithNameUnique, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
+        implements WithReferenceComparable<Index>, WithNameUnique, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted, IndexBaseCreator, IndexValueCreator {
 
     public Index() {
         super("reference");
     }
+
+    public Index(
+            final String reference,
+            final String name,
+            final ApplicationTenancy applicationTenancy){
+        super("reference");
+        this.reference = reference;
+        this.name = name;
+        this.applicationTenancyPath = applicationTenancy.getPath();
+    }
+
 
     // //////////////////////////////////////
 
@@ -174,10 +188,11 @@ public class Index
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
+    @Override
     public IndexValue newIndexValue(
             final LocalDate startDate,
             final BigDecimal value) {
-        IndexBase indexBase = indexBaseRepository.findByIndexAndDate(this, startDate);
+        IndexBase indexBase = indexBaseRepository.findByIndexAndActiveOnDate(this, startDate);
         return indexBase.newIndexValue(startDate, value);
     }
 
@@ -213,9 +228,17 @@ public class Index
     }
 
     @Programmatic
+    @Override
     public IndexBase findOrCreateBase(final LocalDate indexBaseStartDate, final BigDecimal indexBaseFactor) {
         return indexBaseRepository.findOrCreate(this, indexBaseStartDate, indexBaseFactor);
     }
+
+    @Programmatic
+    @Override
+    public IndexBase createBase(final LocalDate indexBaseStartDate, final BigDecimal indexBaseFactor) {
+        return indexBaseRepository.newIndexBase(this, indexBaseRepository.findByIndexAndDate(this, indexBaseStartDate), indexBaseStartDate, indexBaseFactor);
+    }
+
 
     @Programmatic
     public void initialize(final Indexable input) {

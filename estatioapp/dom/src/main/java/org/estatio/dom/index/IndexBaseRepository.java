@@ -54,12 +54,13 @@ public class IndexBaseRepository
             final Index index,
             final LocalDate startDate,
             final BigDecimal factor) {
-        final IndexBase indexBase = findByIndexAndDate(index, startDate);
+        final IndexBase indexBase = findByIndexAndActiveOnDate(index, startDate);
         if (indexBase == null || indexBase.getStartDate().isBefore(startDate)) {
             return findOrCreate(index, indexBase, startDate, factor);
         }
         return indexBase;
     }
+
 
     public IndexBase findOrCreate(
         final Index index,
@@ -70,9 +71,13 @@ public class IndexBaseRepository
         return indexBase != null ? indexBase : newIndexBase(index, previousBase, startDate, factor);
     }
 
-    public IndexBase findByIndexAndDate(final Index index, final LocalDate date) {
+    public IndexBase findByIndexAndActiveOnDate(final Index index, final LocalDate date) {
         // The is deliberately a firstmatch
-        return firstMatch("findByIndexAndDate", "index", index, "date", date);
+        return firstMatch("findByIndexAndActiveOnDate", "index", index, "date", date);
+    }
+
+    public IndexBase findByIndexAndDate(final Index index, final LocalDate date) {
+        return uniqueMatch("findByIndexAndDate", "index", index, "date", date);
     }
 
     public List<IndexBase> allIndexBases() {

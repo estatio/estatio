@@ -28,7 +28,7 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndexBasesTest {
+public class IndexBaseRepositoryTest {
 
     FinderInteraction finderInteraction;
 
@@ -59,7 +59,7 @@ public class IndexBasesTest {
         };
     }
 
-    public static class AllIndexBases extends IndexBasesTest {
+    public static class AllIndexBases extends IndexBaseRepositoryTest {
 
         @Test
         public void happyCase() {

@@ -34,9 +34,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.index.api.IndexCreator;
+import org.estatio.dom.index.api.IndexFinder;
 
 @DomainService(repositoryFor = Index.class, nature = NatureOfService.DOMAIN)
-public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
+public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implements IndexFinder, IndexCreator{
 
     public IndexRepository() {
         super(IndexRepository.class, Index.class);
@@ -47,10 +49,8 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
             final String reference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
-        final Index index = newTransientInstance();
-        index.setApplicationTenancyPath(applicationTenancy.getPath());
-        index.setReference(reference);
-        index.setName(name);
+        final Index index = new Index(reference, name, applicationTenancy);
+        getContainer().injectServicesInto(index);
         persist(index);
         return index;
     }
@@ -69,11 +69,13 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> {
     }
 
     @Programmatic
+    @Override
     public Index findByReference(final @ParameterLayout(named = "Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     @Programmatic
+    @Override
     public Index findOrCreateIndex(
             final ApplicationTenancy applicationTenancy,
             final String reference,

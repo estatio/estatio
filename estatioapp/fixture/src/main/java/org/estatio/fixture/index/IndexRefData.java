@@ -19,10 +19,16 @@
 package org.estatio.fixture.index;
 
 import java.math.BigDecimal;
+
 import javax.inject.Inject;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.estatio.dom.index.*;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.IndexBase;
+import org.estatio.dom.index.IndexValue;
+import org.estatio.dom.index.api.IndexCreator;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
@@ -39,7 +45,7 @@ public class IndexRefData extends EstatioFixtureScript {
 
         // Source http://www.istat.it/it/archivio/30440
 
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
+        final ApplicationTenancy applicationTenancy = applicationTenancies.findByPath(AT_PATH);
 
         final Index index = createIndex(applicationTenancy, IT_REF, "ISTAT FOI", executionContext);
 
@@ -80,20 +86,22 @@ public class IndexRefData extends EstatioFixtureScript {
 
     private Index createIndex(
             final ApplicationTenancy applicationTenancy,
-            final String reference, final String name, final ExecutionContext executionContext) {
-        final Index index = indexRepository.newIndex(reference, name, applicationTenancy);
+            final String reference,
+            final String name,
+            final ExecutionContext executionContext) {
+        final Index index = indexRepository.findOrCreateIndex(applicationTenancy, reference, name);
         return executionContext.addResult(this, index.getReference(), index);
     }
 
     private IndexBase createIndexBase(final Index index, final IndexBase previousBase, final int year, final double factor, final ExecutionContext executionContext) {
-        final IndexBase indexBase = indexBaseRepository.newIndexBase(index, previousBase, ld(year, 1, 1), BigDecimal.valueOf(factor));
+        final IndexBase indexBase = index.findOrCreateBase(ld(year, 1, 1), BigDecimal.valueOf(factor));
         return executionContext.addResult(this, indexBase);
     }
 
     private void createIndexValues(final IndexBase indexBase, final int year, final double[] values, final double average, final ExecutionContext executionContext) {
         int i = 0;
         for (final double value : values) {
-            final IndexValue indexValue = indexValueRepository.create(indexBase, ld(year, i + 1, 1), BigDecimal.valueOf(value));
+            final IndexValue indexValue = indexBase.newIndexValue(ld(year, i + 1, 1), BigDecimal.valueOf(value));
             executionContext.addResult(this, indexValue);
             i++;
         }
@@ -102,15 +110,9 @@ public class IndexRefData extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    private IndexRepository indexRepository;
+    private IndexCreator indexRepository;
 
     @Inject
-    private IndexBaseRepository indexBaseRepository;
-
-    @Inject
-    private IndexValueRepository indexValueRepository;
-
-    @Inject
-    private ApplicationTenancies applicationTenancies;
+    private ApplicationTenancyRepository applicationTenancies;
 
 }
