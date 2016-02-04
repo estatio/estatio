@@ -19,6 +19,7 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.SortedSet;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -26,7 +27,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
-import org.apache.isis.applib.Identifier;
+
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -217,9 +218,13 @@ public abstract class CommunicationChannel
     // //////////////////////////////////////
 
     public CommunicationChannel change(
-            final @ParameterLayout(named = "Description", multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @ParameterLayout(named = "Legal") @Parameter(optionality = Optionality.OPTIONAL) boolean legal,
-            final @ParameterLayout(named = "Purpose") @Parameter(optionality = Optionality.OPTIONAL) CommunicationChannelPurposeType purpose) {
+            @Parameter(optionality = Optionality.OPTIONAL)
+            @ParameterLayout(multiLine = 3)
+            final String description,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final boolean legal,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final CommunicationChannelPurposeType purpose) {
         setLegal(legal);
         setPurpose(purpose);
         setDescription(description);
@@ -238,29 +243,20 @@ public abstract class CommunicationChannel
         return getPurpose();
     }
 
-    // //////////////////////////////////////
-
     public static class RemoveEvent extends ActionDomainEvent<CommunicationChannel> {
         private static final long serialVersionUID = 1L;
-
-        public RemoveEvent(
-                final CommunicationChannel source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
-
         public CommunicationChannel getReplacement() {
             return (CommunicationChannel) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
     }
 
     @Action(domainEvent = CommunicationChannel.RemoveEvent.class)
-    public void remove(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) CommunicationChannel replacement) {
+    public void remove(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final CommunicationChannel replaceWith) {
         removeOwnerLink();
         getContainer().remove(this);
     }
-
 
     public SortedSet<CommunicationChannel> choices0Remove() {
         return communicationChannels.findOtherByOwnerAndType(getOwner(), getType(), this);

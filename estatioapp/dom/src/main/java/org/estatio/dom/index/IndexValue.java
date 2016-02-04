@@ -40,6 +40,9 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Holds the {@link #getValue() value} of an {@link #getIndexBase() index
  * (base)} from a particular {@link #getStartDate() point in time} (until
@@ -88,43 +91,21 @@ public class IndexValue
     }
 
     @javax.jdo.annotations.Persistent
-    private LocalDate startDate;
-
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
+    @Getter @Setter
+    private LocalDate startDate;
 
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    private IndexBase indexBase;
 
     @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     @Title(sequence = "1")
-    public IndexBase getIndexBase() {
-        return indexBase;
-    }
-
-    public void setIndexBase(final IndexBase indexBase) {
-        this.indexBase = indexBase;
-    }
-
-    private BigDecimal value;
+    @Getter @Setter
+    private IndexBase indexBase;
 
     @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull = "false")
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(final BigDecimal value) {
-        this.value = value;
-    }
+    @Getter @Setter
+    private BigDecimal value;
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT, domainEvent = UpdateEvent.class)
     public void remove() {

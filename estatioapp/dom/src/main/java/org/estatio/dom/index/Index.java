@@ -64,6 +64,9 @@ import org.estatio.dom.index.api.IndexBaseCreator;
 import org.estatio.dom.index.api.IndexValueCreator;
 import org.estatio.dom.lease.indexation.Indexable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents an externally-defined index (eg the retail price index) which
  * provides values for a sequence of dates (typically monthly). The values are
@@ -117,24 +120,10 @@ public class Index
         this.applicationTenancyPath = applicationTenancy.getPath();
     }
 
-
-    // //////////////////////////////////////
-
-    private String applicationTenancyPath;
-
-    @Column(
-            length = ApplicationTenancy.MAX_LENGTH_PATH,
-            allowsNull = "false",
-            name = "atPath"
-    )
+    @Column(length = ApplicationTenancy.MAX_LENGTH_PATH, allowsNull = "false", name = "atPath")
     @Property(hidden = Where.EVERYWHERE)
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -144,47 +133,20 @@ public class Index
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-    // //////////////////////////////////////
-
-    private String reference;
-
     @Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
-
-    // //////////////////////////////////////
-
-    private String name;
+    @Getter @Setter
+    private String reference;
 
     @Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title()
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    // //////////////////////////////////////
+    @Getter @Setter
+    private String name;
 
     @Persistent(mappedBy = "index")
-    private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<IndexBase> getIndexBases() {
-        return indexBases;
-    }
-
-    public void setIndexBases(final SortedSet<IndexBase> indexBases) {
-        this.indexBases = indexBases;
-    }
+    @Getter @Setter
+    private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -203,7 +165,6 @@ public class Index
         }
         return last.getStartDate().plusMonths(1);
     }
-
 
     @Programmatic
     public BigDecimal getIndexValueForDate(final LocalDate date) {
@@ -239,15 +200,12 @@ public class Index
         return indexBaseRepository.newIndexBase(this, indexBaseRepository.findByIndexAndDate(this, indexBaseStartDate), indexBaseStartDate, indexBaseFactor);
     }
 
-
     @Programmatic
     public void initialize(final Indexable input) {
         input.setBaseIndexValue(getIndexValueForDate(input.getBaseIndexStartDate()));
         input.setNextIndexValue(getIndexValueForDate(input.getNextIndexStartDate()));
         input.setRebaseFactor(getRebaseFactorForDates(input.getBaseIndexStartDate(), input.getNextIndexStartDate()));
     }
-
-    // //////////////////////////////////////
 
     @Inject
     public IndexValueRepository indexValueRepository;

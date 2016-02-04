@@ -35,7 +35,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class AgreementsTest extends EstatioIntegrationTest {
+public class AgreementRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -71,7 +71,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
 
     Lease lease;
 
-    public static class FindByTypeAndReferenceOrName extends AgreementsTest {
+    public static class FindByTypeAndReferenceOrName extends AgreementRepositoryTest {
 
         @Test
         public void whenPresent() throws Exception {
@@ -82,7 +82,7 @@ public class AgreementsTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindAgreementByReference extends AgreementsTest {
+    public static class FindAgreementByReference extends AgreementRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {

@@ -18,17 +18,33 @@
  */
 package org.estatio.dom.financial.contributed;
 
-import org.apache.isis.applib.annotation.*;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.financial.*;
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountTransaction;
+import org.estatio.dom.financial.FinancialAccountTransactions;
+import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class FinancialAccountContributions extends UdoDomainService<FinancialAccountContributions> {
@@ -38,7 +54,7 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "Financial Accounts", sequence = "13")
+    @MemberOrder(name = "financialAccounts", sequence = "1")
     public FinancialAccount addAccount(
             final Party owner,
             final FinancialAccountType financialAccountType,
@@ -51,7 +67,6 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @MemberOrder(name = "Financial Accounts", sequence = "13.5")
     public List<FinancialAccount> financialAccounts(final Party owner) {
         return financialAccounts.findAccountsByOwner(owner);
     }

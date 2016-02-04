@@ -57,6 +57,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.index.api.IndexValueCreator;
 import org.estatio.dom.utils.MathUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents the periodic rebasing of an {@link Index}, and
  * {@link #getValues() holds} the {@link IndexValue value}s until the
@@ -106,43 +109,23 @@ public class IndexBase
         return getIndex().getApplicationTenancy();
     }
 
-    private Index index;
-
     @Column(name = "indexId", allowsNull = "false")
     @Title(sequence = "1", append = ", ")
-    public Index getIndex() {
-        return index;
-    }
+    @Getter @Setter
+    private Index index;
 
-    public void setIndex(final Index index) {
-        this.index = index;
-    }
 
     @Persistent
-    private LocalDate startDate;
-
     @Column(allowsNull = "false")
     @Title(sequence = "2")
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
+    @Getter @Setter
+    private LocalDate startDate;
 
     @Persistent
     @Column(scale = FACTOR_SCALE)
-    private BigDecimal factor;
-
     @Property(optionality = Optionality.OPTIONAL)
-    public BigDecimal getFactor() {
-        return factor;
-    }
-
-    public void setFactor(final BigDecimal factor) {
-        this.factor = factor;
-    }
+    @Getter @Setter
+    private BigDecimal factor;
 
     public String validateFactor(final BigDecimal factor) {
         if (getPrevious() == null) {
@@ -153,43 +136,20 @@ public class IndexBase
                 : null;
     }
 
-    // //////////////////////////////////////
-
     @Persistent(mappedBy = "next")
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private IndexBase previous;
 
-    @Property(optionality = Optionality.OPTIONAL)
-    public IndexBase getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(final IndexBase previous) {
-        this.previous = previous;
-    }
-
     @Column(name = "nextIndexBaseId")
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private IndexBase next;
 
-    @Property(optionality = Optionality.OPTIONAL)
-    public IndexBase getNext() {
-        return next;
-    }
-
-    public void setNext(final IndexBase nextBase) {
-        this.next = nextBase;
-    }
-
     @Persistent(mappedBy = "indexBase")
-    private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<IndexValue> getValues() {
-        return values;
-    }
-
-    public void setValues(final SortedSet<IndexValue> values) {
-        this.values = values;
-    }
+    @Getter @Setter
+    private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
 
     @Programmatic
     public BigDecimal factorForDate(final LocalDate date) {
@@ -198,7 +158,8 @@ public class IndexBase
                 : BigDecimal.ONE;
     }
 
-    @Override @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Override
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IndexValue newIndexValue(
             final LocalDate startDate,
             final BigDecimal value) {
