@@ -18,23 +18,22 @@
  */
 package org.estatio.dom.budgeting.budgetitem;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.BudgetCalculationContributionServices;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.OccupancyContributions;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import javax.inject.Inject;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
+import javax.jdo.annotations.*;
 import java.math.BigDecimal;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -65,52 +64,27 @@ import java.math.BigDecimal;
                     + "&& charge == :charge "
                     + "&& budget.startDate == :startDate")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BudgetItems.class)
+@DomainObject(autoCompleteRepository = BudgetItemRepository.class)
 public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty {
-
 
     public BudgetItem() {
         super("budget, charge, budgetedValue");
     }
 
-    //region > identificatiom
     public TranslatableString title() {
         return TranslatableString.tr(
                 "{name}", "name",
-                "Budget item - "
-                .concat(getCharge().getReference())
-                .concat(" - ")
-                .concat(getBudgetedValue().toString())
-                .concat(" - ")
-                .concat(getBudget().getProperty().getName())
-        );
+                "Budget item ");
     }
-    //endregion
 
+    @Column(name="budgetId", allowsNull = "false")
+    @PropertyLayout(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private Budget budget;
 
-    @javax.jdo.annotations.Column(name="budgetId", allowsNull = "false")
-    @PropertyLayout(hidden = Where.PARENTED_TABLES)
-    public Budget getBudget() {
-        return budget;
-    }
-
-    public void setBudget(Budget budget) {
-        this.budget = budget;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "false", scale = 2)
+    @Getter @Setter
     private BigDecimal budgetedValue;
-
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 2)
-    public BigDecimal getBudgetedValue() {
-        return budgetedValue;
-    }
-
-    public void setBudgetedValue(BigDecimal budgetedValue) {
-        this.budgetedValue = budgetedValue;
-    }
 
     @Action(hidden = Where.EVERYWHERE)
     public BudgetItem changeBudgetedValue(final BigDecimal value) {
@@ -129,19 +103,9 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         return null;
     }
 
-    // //////////////////////////////////////
-
-    //region > auditedValue (property)
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
     private BigDecimal auditedValue;
-
-    @javax.jdo.annotations.Column(allowsNull = "true", scale = 2)
-    public BigDecimal getAuditedValue() {
-        return auditedValue;
-    }
-
-    public void setAuditedValue(final BigDecimal auditedValue) {
-        this.auditedValue = auditedValue;
-    }
 
     public BudgetItem changeAuditedValue(final BigDecimal value) {
         setAuditedValue(value);
@@ -158,18 +122,10 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         }
         return null;
     }
-    //endregion
 
+    @Column(name="chargeId", allowsNull = "false")
+    @Getter @Setter
     private Charge charge;
-
-    @javax.jdo.annotations.Column(name="chargeId", allowsNull = "false")
-    public Charge getCharge() {
-        return charge;
-    }
-
-    public void setCharge(Charge charge) {
-        this.charge = charge;
-    }
 
     @Action(hidden = Where.EVERYWHERE)
     public BudgetItem changeCharge(final Charge charge) {
@@ -191,7 +147,11 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
         return null;
     }
 
-    // //////////////////////////////////////
+    @CollectionLayout(render= RenderType.EAGERLY)
+    @Persistent(mappedBy = "budgetItem", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<BudgetItemAllocation> budgetItemAllocations = new TreeSet<>();
+
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
@@ -200,15 +160,6 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     }
 
     @Inject
-    private Leases leases;
-
-    @Inject
-    private BudgetCalculationContributionServices budgetCalculationContributionServices;
-
-    @Inject
-    OccupancyContributions occupancies;
-
-    @Inject
-    private BudgetItems budgetItemRepository;
+    private BudgetItemRepository budgetItemRepository;
 
 }

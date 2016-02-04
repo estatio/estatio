@@ -8,9 +8,6 @@ import org.joda.time.LocalDate;
 import javax.inject.Inject;
 import java.util.List;
 
-/**
- * Created by jodo on 14/09/15.
- */
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
 public class BudgetMenu {
@@ -24,9 +21,9 @@ public class BudgetMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Budget newBudget(
-            final @ParameterLayout(named = "Property") Property property,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final Property property,
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return budgetRepository.newBudget(property, startDate, endDate);
     }
 

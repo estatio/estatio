@@ -8,8 +8,10 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keyitem.KeyItems;
+import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
@@ -58,10 +60,10 @@ public class KeyTableImport implements Importable {
             final BigDecimal sourcevalue,
             final BigDecimal value){
 
-        KeyItem keyItem = keyItems.findByKeyTableAndUnit(keyTable, unit);
+        KeyItem keyItem = keyItemRepository.findByKeyTableAndUnit(keyTable, unit);
         if (keyItem == null) {
 
-            keyItem = keyItems.newItem(keyTable, unit, sourcevalue, value);
+            keyItem = keyItemRepository.newItem(keyTable, unit, sourcevalue, value);
         }
 
         return keyItem;
@@ -74,6 +76,7 @@ public class KeyTableImport implements Importable {
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         LocalDate startDate = getStartDate();
         LocalDate endDate = getEndDate();
+        Budget budget = budgetRepository.findOrCreateBudget(property, startDate, endDate);
 
         List<KeyTable> tables = new ArrayList<>();
         String[] names = {
@@ -123,10 +126,8 @@ public class KeyTableImport implements Importable {
             for (int i=0; i<8; i++){
 
                 KeyTable table = keyTableRepository.findOrCreateBudgetKeyTable(
-                        property,
+                        budget,
                         names[i],
-                        startDate,
-                        endDate,
                         FoundationValueType.MANUAL,
                         KeyValueMethod.PROMILLE,
                         3);
@@ -143,10 +144,8 @@ public class KeyTableImport implements Importable {
             for (int i=8; i<10; i++){
 
                 KeyTable table = keyTableRepository.findOrCreateBudgetKeyTable(
-                        property,
+                        budget,
                         names[i],
-                        startDate,
-                        endDate,
                         FoundationValueType.MANUAL,
                         KeyValueMethod.DEFAULT,
                         3);
@@ -410,6 +409,9 @@ public class KeyTableImport implements Importable {
     private KeyTableRepository keyTableRepository;
 
     @Inject
-    private KeyItems keyItems;
+    private KeyItemRepository keyItemRepository;
+
+    @Inject
+    private BudgetRepository budgetRepository;
 
 }

@@ -18,39 +18,31 @@
  */
 package org.estatio.integtests.lease;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.SortedSet;
-import javax.inject.Inject;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.assertj.core.api.Assertions;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.*;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.Leases;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.charge.ChargeRefData;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.SortedSet;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class LeaseItemTest extends EstatioIntegrationTest {
 
@@ -170,11 +162,11 @@ public class LeaseItemTest extends EstatioIntegrationTest {
 
             // given
             LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
-            final Charge charge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
+            final Charge charge = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
             Assertions.assertThat(leaseItem.getCharge()).isEqualTo(charge);
 
             // when
-            final Charge newCharge = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            final Charge newCharge = charges.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
             final LeaseItem leaseItemReturned = wrap(leaseItem).changeCharge(newCharge);
 
             // then

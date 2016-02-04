@@ -22,11 +22,10 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -82,62 +80,41 @@ public class KeytableRepositoryTest {
         @Test
         public void happyCase() {
 
-            Property property = new PropertyForTesting();
+            Budget budget = new BudgetForTesting();
             String name = "KeyTableName";
-            LocalDate startDate = new LocalDate();
-            keyTableRepository.findByPropertyAndNameAndStartDate(property, name, startDate);
+            keyTableRepository.findByBudgetAndName(budget, name);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
-            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndNameAndStartDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
+            assertThat(finderInteraction.getQueryName(), is("findByBudgetAndName"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
             assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) name));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
         }
 
 
 
     }
 
-    public static class FindByPropertyAndStartDateAndEndDate extends KeytableRepositoryTest {
+    public static class FindByBudget extends KeytableRepositoryTest {
 
         @Test
         public void happyCase() {
 
-            Property property = new Property();
-            LocalDate startDate = new LocalDate();
-            LocalDate endDate = new LocalDate();
-            keyTableRepository.findByPropertyAndStartDateAndEndDate(property, startDate, endDate);
+            Budget budget = new BudgetForTesting();
+            keyTableRepository.findByBudget(budget);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
-            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndStartDateAndEndDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) endDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
-        }
-
-
-
-    }
-
-    public static class FindByProperty extends KeytableRepositoryTest {
-
-        @Test
-        public void anotherHappyCase() {
-
-            Property property = new PropertyForTesting();
-            keyTableRepository.findByProperty(property);
-
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
-            assertThat(finderInteraction.getQueryName(), is("findByProperty"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
+            assertThat(finderInteraction.getQueryName(), is("findByBudget"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
         }
+
+
+
     }
+
 
     public static class NewKeyTable extends KeytableRepositoryTest {
 
@@ -153,8 +130,8 @@ public class KeytableRepositoryTest {
         public void setup() {
             keyTableRepositoryRepo = new KeyTableRepository() {
                 @Override
-                public List<KeyTable> findByProperty(final Property property) {
-                    return Arrays.asList(new KeyTable(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
+                public List<KeyTable> findByBudget(final Budget budget) {
+                    return Arrays.asList(new KeyTable());
                 }
             };
             keyTableRepositoryRepo.setContainer(mockContainer);
@@ -164,9 +141,7 @@ public class KeytableRepositoryTest {
         public void newKeyTable() {
 
             //given
-            Property property = new PropertyForTesting();
-            LocalDate startDate = new LocalDate(2015, 01, 01);
-            LocalDate endDate = new LocalDate(2015, 12, 31);
+            Budget budget = new BudgetForTesting();
             final KeyTable keyTable = new KeyTable();
 
             // expect
@@ -181,39 +156,20 @@ public class KeytableRepositoryTest {
 
             //when
             KeyTable newKeyTable = keyTableRepositoryRepo.newKeyTable(
-                    property,
+                    budget,
                     "new keyTable",
-                    startDate,
-                    endDate,
                     FoundationValueType.AREA,
                     KeyValueMethod.PERCENT,
                     6);
 
             //then
-            assertThat(newKeyTable.getProperty(), is(property));
-            assertThat(newKeyTable.getStartDate(), is(startDate));
-            assertThat(newKeyTable.getEndDate(), is(endDate));
+            assertThat(newKeyTable.getBudget(), is(budget));
             assertThat(newKeyTable.getName(), is("new keyTable"));
             assertThat(newKeyTable.getFoundationValueType(), is(FoundationValueType.AREA));
             assertThat(newKeyTable.getKeyValueMethod(), is(KeyValueMethod.PERCENT));
             assertThat(newKeyTable.getPrecision(), is(6));
         }
 
-        @Test
-        public void validateNewKeyTable() {
-
-            KeyTableRepository tables = new KeyTableRepository(){
-                @Override
-                public KeyTable findByPropertyAndNameAndStartDate(Property property, String name, LocalDate startDate) {
-                    return null;
-                }};
-
-            assertThat(tables.validateNewKeyTable(null, null, new LocalDate(2011, 1, 1), new LocalDate(2010, 12, 31), null, null, null),
-                    is("End date can not be before start date"));
-            assertThat(tables.validateNewKeyTable(null, null, new LocalDate(2011, 1, 1), new LocalDate(2011, 1, 1), null, null, null),
-                    is(nullValue()));
-
-        }
     }
 
 }

@@ -17,15 +17,18 @@
 
 package org.estatio.dom.budgeting.budget;
 
-import org.junit.Test;
-
+import org.assertj.core.api.Assertions;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.charge.Charge;
+import org.junit.Test;
 
-/**
- * Created by jodo on 22/04/15.
- */
+import java.util.Arrays;
+import java.util.List;
+
 public class BudgetTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
@@ -40,4 +43,103 @@ public class BudgetTest {
 
     }
 
+
+    public static class GetTargetChargesTest extends BudgetTest {
+
+        List<Charge> charges;
+
+        @Test
+        public void noCharges() {
+
+            // given
+            Budget budget = new Budget();
+
+            // when
+            charges = budget.getTargetCharges();
+
+            // then
+            Assertions.assertThat(charges.size()).isEqualTo(0);
+
+        }
+
+        @Test
+        public void withNoCharges() {
+
+            // given
+            Budget budget = new Budget();
+            budget.getItems().add(createItemFor(budget, "1"));
+            budget.getItems().add(createItemFor(budget, "2"));
+
+            // when
+            charges = budget.getTargetCharges();
+
+            // then
+            Assertions.assertThat(charges.size()).isEqualTo(2);
+            Assertions.assertThat(charges.get(0).getReference()).isEqualTo("target1");
+
+        }
+
+        public void withDoubleCharges() {
+
+            // given
+            Budget budget = new Budget();
+            budget.getItems().add(createItemFor(budget, "0"));
+            budget.getItems().addAll(createTwoItemsWithSameAllocationFor(budget, "1", "2"));
+
+            // when
+            charges = budget.getTargetCharges();
+
+            // then
+            Assertions.assertThat(budget.getItems().size()).isEqualTo(3);
+            Assertions.assertThat(charges.size()).isEqualTo(2);
+            Assertions.assertThat(charges.get(0).getReference()).isEqualTo("target0");
+            Assertions.assertThat(charges.get(1).getReference()).isEqualTo("target2");
+
+        }
+
+        private BudgetItem createItemFor(final Budget budget, final String uniqueString){
+
+            BudgetItem newItem = new BudgetItem();
+            Charge charge = new Charge();
+            charge.setReference(uniqueString);
+            newItem.setCharge(charge);
+
+            BudgetItemAllocation allocation = new BudgetItemAllocation();
+            Charge targetCharge = new Charge();
+            targetCharge.setReference("target".concat(uniqueString));
+            allocation.setCharge(targetCharge);
+            allocation.setBudgetItem(newItem);
+
+            newItem.getBudgetItemAllocations().add(allocation);
+
+            return newItem;
+        }
+
+
+        private List<BudgetItem> createTwoItemsWithSameAllocationFor(final Budget budget, final String str1, final String str2){
+
+            BudgetItem newItem1 = new BudgetItem();
+            Charge charge1 = new Charge();
+            charge1.setReference(str1);
+            newItem1.setCharge(charge1);
+
+            BudgetItem newItem2 = new BudgetItem();
+            Charge charge2 = new Charge();
+            charge2.setReference(str2);
+            newItem2.setCharge(charge2);
+
+            BudgetItemAllocation allocation = new BudgetItemAllocation();
+            Charge targetCharge = new Charge();
+            targetCharge.setReference("target".concat(str1));
+            allocation.setCharge(targetCharge);
+            allocation.setBudgetItem(newItem1);
+
+            newItem1.getBudgetItemAllocations().add(allocation);
+            newItem2.getBudgetItemAllocations().add(allocation);
+
+            return Arrays.asList(newItem1, newItem2);
+        }
+
+    }
+    
 }

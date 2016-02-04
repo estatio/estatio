@@ -17,18 +17,16 @@
 
 package org.estatio.fixture.budget;
 
-import javax.inject.Inject;
-
-import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.joda.time.LocalDate;
-
-import org.estatio.dom.asset.PropertyMenu;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.fixture.EstatioFixtureScript;
+
+import javax.inject.Inject;
 
 /**
  * Created by jodo on 22/04/15.
@@ -36,15 +34,13 @@ import org.estatio.fixture.EstatioFixtureScript;
 public abstract class KeyTableAbstact extends EstatioFixtureScript {
 
     protected KeyTable createKeyTable(
-            final Property property,
+            final Budget budget,
             final String name,
-            final LocalDate startDate,
-            final LocalDate endDate,
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits,
             final ExecutionContext fixtureResults){
-        KeyTable keyTable = keyTableRepository.newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, numberOfDigits);
+        KeyTable keyTable = keyTableRepository.newKeyTable(budget, name, foundationValueType, keyValueMethod, numberOfDigits);
         keyTable.generateItems(true);
         return fixtureResults.addResult(this, keyTable);
     }
@@ -54,6 +50,8 @@ public abstract class KeyTableAbstact extends EstatioFixtureScript {
 
     @Inject
     PropertyRepository propertyRepository;
+
     @Inject
-    protected PropertyMenu propertyMenu;
+    BudgetRepository budgetRepository;
+
 }

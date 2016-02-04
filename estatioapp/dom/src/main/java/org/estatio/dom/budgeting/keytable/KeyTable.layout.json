@@ -160,9 +160,9 @@
                         }
                     }
                 },
-                "scheduleItems" : {
+                "budgetItemAllocations" : {
                     "collectionLayout": {
-                        "named": "Schedule Items",
+                        "named": "Budget Item Allocations",
                         "paged": 10,
                         "render": "EAGERLY"
                     }
@@ -191,7 +191,7 @@
                 "named": "Reports"
             }
         },
-        "createScheduleItem": {
+        "createBudgetItemAllocation": {
             "actionLayout": {
                 "cssClass": "btn-primary",
                 "cssClassFa": "fa fa-fw fa-edit",

@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItems;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -40,7 +40,7 @@ public abstract class BudgetItemAbstact extends EstatioFixtureScript {
             final Charge charge,
             final ExecutionContext fixtureResults
     ){
-        BudgetItem budgetItem = budgetItems.newBudgetItem(
+        BudgetItem budgetItem = budgetItemRepository.newBudgetItem(
                 budget,
                 value,
                 charge);
@@ -48,7 +48,7 @@ public abstract class BudgetItemAbstact extends EstatioFixtureScript {
     }
 
     @Inject
-    protected BudgetItems budgetItems;
+    protected BudgetItemRepository budgetItemRepository;
 
     @Inject
     protected PropertyMenu propertyMenu;

@@ -43,11 +43,11 @@ public class BudgetItemsTest {
 
     FinderInteraction finderInteraction;
 
-    BudgetItems budgetItems;
+    BudgetItemRepository budgetItemRepository;
 
     @Before
     public void setup() {
-        budgetItems = new BudgetItems() {
+        budgetItemRepository = new BudgetItemRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -81,7 +81,7 @@ public class BudgetItemsTest {
         public void happyCase() {
 
             Budget budget = new BudgetForTesting();
-            budgetItems.findByBudget(budget);
+            budgetItemRepository.findByBudget(budget);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
@@ -99,7 +99,7 @@ public class BudgetItemsTest {
 
             Budget budget = new Budget();
             Charge charge = new Charge();
-            budgetItems.findByBudgetAndCharge(budget, charge);
+            budgetItemRepository.findByBudgetAndCharge(budget, charge);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
@@ -119,7 +119,7 @@ public class BudgetItemsTest {
             Property property = new Property();
             Charge charge = new Charge();
             LocalDate startDate = new LocalDate();
-            budgetItems.findByPropertyAndChargeAndStartDate(property, charge, startDate);
+            budgetItemRepository.findByPropertyAndChargeAndStartDate(property, charge, startDate);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
@@ -145,9 +145,9 @@ public class BudgetItemsTest {
             BigDecimal zeroValue = BigDecimal.ZERO;
             BigDecimal positiveValue = new BigDecimal(0.01);
             //then
-            assertThat(budgetItems.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be negative"));
-            assertThat(budgetItems.validateNewBudgetItem(budget,zeroValue,charge), is(nullValue()));
-            assertThat(budgetItems.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be negative"));
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget,zeroValue,charge), is(nullValue()));
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
 
         }
 

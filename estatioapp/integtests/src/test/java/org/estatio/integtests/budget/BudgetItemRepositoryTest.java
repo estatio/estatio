@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,6 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItems;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
-    BudgetItems budgetItemRepository;
+    BudgetItemRepository budgetItemRepository;
 
     @Inject
     BudgetRepository budgetRepository;

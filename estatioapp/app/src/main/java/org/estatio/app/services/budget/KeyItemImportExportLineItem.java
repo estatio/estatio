@@ -16,14 +16,18 @@
  */
 package org.estatio.app.services.budget;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.*;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keyitem.KeyItems;
+import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.joda.time.LocalDate;
@@ -53,12 +57,12 @@ public class KeyItemImportExportLineItem
 
     public KeyItemImportExportLineItem(final KeyItem keyItem) {
         this.keyItem = keyItem;
-        this.propertyReference = keyItem.getKeyTable().getProperty().getReference();
+        this.propertyReference = keyItem.getKeyTable().getBudget().getProperty().getReference();
         this.unitReference = keyItem.getUnit().getReference();
         this.sourceValue = keyItem.getSourceValue();
         this.keyValue = keyItem.getValue();
         this.keyTableName = keyItem.getKeyTable().getName();
-        this.startDate = keyItem.getKeyTable().getStartDate();
+        this.startDate = keyItem.getKeyTable().getBudget().getStartDate();
     }
 
     public KeyItemImportExportLineItem(final KeyItemImportExportLineItem item) {
@@ -77,99 +81,39 @@ public class KeyItemImportExportLineItem
         return "";
     }
 
+    @MemberOrder(sequence = "1")
+    @Getter @Setter
     private String keyTableName;
 
-    @MemberOrder(sequence = "1")
-    public String getKeyTableName() {
-        return keyTableName;
-    }
-
-    public void setKeyTableName(final String keyTableName) {
-        this.keyTableName = keyTableName;
-    }
-
+    @MemberOrder(sequence = "2")
+    @Getter @Setter
     private String unitReference;
 
-    @MemberOrder(sequence = "2")
-    public String getUnitReference() {
-        return unitReference;
-    }
-
-    public void setUnitReference(final String unitReference) {
-        this.unitReference = unitReference;
-    }
-
+    @MemberOrder(sequence = "3")
+    @Getter @Setter
     private String propertyReference;
 
-    @MemberOrder(sequence = "3")
-    public String getPropertyReference() {
-        return propertyReference;
-    }
-
-    public void setPropertyReference(final String propertyReference) {
-        this.propertyReference = propertyReference;
-    }
-
-
-    private LocalDate startDate;
-
     @MemberOrder(sequence = "4")
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    private BigDecimal sourceValue;
+    @Getter @Setter
+    private LocalDate startDate;
 
     @Column(scale = 6)
     @MemberOrder(sequence = "5")
-    public BigDecimal getSourceValue() {
-        return sourceValue;
-    }
-
-    public void setSourceValue(final BigDecimal sourceValue) {
-        this.sourceValue = sourceValue;
-    }
-
-    private BigDecimal keyValue;
+    @Getter @Setter
+    private BigDecimal sourceValue;
 
     @Column(scale = 6)
     @MemberOrder(sequence = "6")
-    public BigDecimal getKeyValue() {
-        return keyValue;
-    }
-
-    public void setKeyValue(BigDecimal keyValue) {
-        this.keyValue = keyValue;
-    }
-
-    private Status status;
-
-    @MemberOrder(sequence = "6")
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-
-
-    private String comments;
+    @Getter @Setter
+    private BigDecimal keyValue;
 
     @MemberOrder(sequence = "7")
-    public String getComments() {
-        return comments;
-    }
+    @Getter @Setter
+    private Status status;
 
-    public void setComments(final String comments) {
-        this.comments = comments;
-    }
-
-
+    @MemberOrder(sequence = "8")
+    @Getter @Setter
+    private String comments;
 
     // //////////////////////////////////////
     // apply
@@ -249,7 +193,8 @@ public class KeyItemImportExportLineItem
     @Programmatic
     public KeyTable getKeyTable() {
         if (keyTable == null) {
-            keyTable = keyTableRepository.findByPropertyAndNameAndStartDate(getProperty(), getKeyTableName(), getStartDate());
+            Budget budget = budgetRepository.findByPropertyAndStartDate(getProperty(),getStartDate());
+            keyTable = keyTableRepository.findByBudgetAndName(budget, getKeyTableName());
         }
         return keyTable;
     }
@@ -259,7 +204,7 @@ public class KeyItemImportExportLineItem
     @Programmatic
     public KeyItem getKeyItem() {
         if (keyItem == null) {
-            keyItem = keyItems.findByKeyTableAndUnit(getKeyTable(), getUnit());
+            keyItem = keyItemRepository.findByKeyTableAndUnit(getKeyTable(), getUnit());
         }
         return keyItem;
     }
@@ -291,7 +236,7 @@ public class KeyItemImportExportLineItem
     private KeyItemImportExportService keyItemImportExportService;
 
     @javax.inject.Inject
-    private KeyItems keyItems;
+    private KeyItemRepository keyItemRepository;
 
     @javax.inject.Inject
     private ActionInvocationContext actionInvocationContext;
@@ -309,5 +254,8 @@ public class KeyItemImportExportLineItem
 
     @Inject
     PropertyRepository propertyRepository;
+
+    @Inject
+    private BudgetRepository budgetRepository;
 
 }

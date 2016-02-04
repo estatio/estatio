@@ -17,11 +17,10 @@
 
 package org.estatio.dom.budgeting.keytable;
 
-import org.junit.Test;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetForTesting;
+import org.junit.Test;
 
 /**
  * Created by jodo on 22/04/15.
@@ -34,7 +33,7 @@ public class KeyTableTest {
         public void test() {
             final KeyTable pojo = new KeyTable();
             newPojoTester()
-                    .withFixture(pojos(Property.class, PropertyForTesting.class))
+                    .withFixture(pojos(Budget.class, BudgetForTesting.class))
                     .exercise(pojo);
         }
 

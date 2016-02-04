@@ -38,9 +38,9 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Budget newBudget(
-            final @ParameterLayout(named = "Property") Property property,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final Property property,
+            final LocalDate startDate,
+            final LocalDate endDate) {
         Budget budget = newTransientInstance();
         budget.setProperty(property);
         budget.setStartDate(startDate);
@@ -54,6 +54,11 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
             final Property property,
             final LocalDate startDate,
             final LocalDate endDate) {
+
+        if (startDate == null) {
+            return "Start date is mandatory";
+        }
+
         if (!new LocalDateInterval(startDate, endDate).isValid()) {
             return "End date can not be before start date";
         }
@@ -69,9 +74,9 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
 
     @Programmatic
     public Budget findOrCreateBudget(
-            final @ParameterLayout(named = "Property") Property property,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final Property property,
+            final LocalDate startDate,
+            final LocalDate endDate) {
 
         if (findByPropertyAndStartDate(property, startDate)!= null){
             return findByPropertyAndStartDate(property, startDate);

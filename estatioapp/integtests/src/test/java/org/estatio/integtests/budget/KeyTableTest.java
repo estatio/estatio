@@ -16,22 +16,11 @@
  */
 package org.estatio.integtests.budget;
 
-import java.math.BigDecimal;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitMenu;
-import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.budgeting.keyitem.KeyItems;
+import org.estatio.dom.asset.*;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
@@ -40,6 +29,13 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.KeyTablesForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,6 +62,9 @@ public class KeyTableTest extends EstatioIntegrationTest {
     @Inject
     PropertyRepository propertyRepository;
 
+    @Inject
+    BudgetRepository budgetRepository;
+
     protected KeyTable keyTable =  new KeyTable();
 
     public static class AllKeyTables extends KeyTableTest {
@@ -82,10 +81,10 @@ public class KeyTableTest extends EstatioIntegrationTest {
         public void whenSetUp() throws Exception {
 
             //given
-            keyTable = tables.findByPropertyAndNameAndStartDate(propertyRepository.findPropertyByReference(PropertyForOxfGb.REF), KeyTablesForOxf.NAME, KeyTablesForOxf.STARTDATE);
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByProperty(property).get(0);
+            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME);
             assertThat(keyTable.getName().equals(KeyTablesForOxf.NAME));
-            assertThat(keyTable.getStartDate().equals(KeyTablesForOxf.STARTDATE));
-            assertThat(keyTable.getEndDate().equals(KeyTablesForOxf.ENDDATE));
             assertThat(keyTable.getFoundationValueType().equals(KeyTablesForOxf.BUDGET_FOUNDATION_VALUE_TYPE));
             assertThat(keyTable.getKeyValueMethod().equals(KeyTablesForOxf.BUDGET_KEY_VALUE_METHOD));
             assertThat(keyTable.isValidForKeyValues() == true);
@@ -93,14 +92,11 @@ public class KeyTableTest extends EstatioIntegrationTest {
 
             //when
             keyTable.changeName("something else");
-            keyTable.changeDates(new LocalDate(2015, 07, 01), new LocalDate(2015, 12, 31));
             keyTable.changeFoundationValueType(FoundationValueType.COUNT);
             keyTable.changeKeyValueMethod(KeyValueMethod.DEFAULT);
 
             //then
             assertThat(keyTable.getName().equals("something else"));
-            assertThat(keyTable.getStartDate().equals(new LocalDate(2015, 07, 01)));
-            assertThat(keyTable.getEndDate().equals(new LocalDate(2015,12,31)));
             assertThat(keyTable.getFoundationValueType().equals(FoundationValueType.COUNT));
             assertThat(keyTable.getKeyValueMethod().equals(KeyValueMethod.DEFAULT));
             //due to changing KeyValueMethod
@@ -110,10 +106,10 @@ public class KeyTableTest extends EstatioIntegrationTest {
 
     }
 
-    public static class generateKeyItemsTest extends KeyTableTest {
+    public static class generateKeyItemRepositoryTest extends KeyTableTest {
 
         @Inject
-        KeyItems items;
+        KeyItemRepository items;
 
         @Inject
         UnitMenu unitMenu;
@@ -124,7 +120,9 @@ public class KeyTableTest extends EstatioIntegrationTest {
         public void whenSetUp() throws Exception {
 
             //given
-            keyTable = tables.findByPropertyAndNameAndStartDate(propertyRepository.findPropertyByReference(PropertyForOxfGb.REF), KeyTablesForOxf.NAME, KeyTablesForOxf.STARTDATE);
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByProperty(property).get(0);
+            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME);
 
             //when
             keyTable.generateItems(true);
@@ -139,7 +137,9 @@ public class KeyTableTest extends EstatioIntegrationTest {
         public void whenSetUpWithNullValues() throws Exception {
 
             //given
-            keyTable = tables.findByPropertyAndNameAndStartDate(propertyRepository.findPropertyByReference(PropertyForOxfGb.REF), KeyTablesForOxf.NAME, KeyTablesForOxf.STARTDATE);
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByProperty(property).get(0);
+            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME);
             unitWithAreaNull = unitRepository.findUnitByReference("OXF-001");
             unitWithAreaNull.setArea(null);
 
@@ -162,7 +162,9 @@ public class KeyTableTest extends EstatioIntegrationTest {
         public void whenSetUpWithUnitsNotInKeyTablePeriod() throws Exception {
 
             //given
-            keyTable = tables.findByPropertyAndNameAndStartDate(propertyRepository.findPropertyByReference(PropertyForOxfGb.REF), KeyTablesForOxf.NAME, KeyTablesForOxf.STARTDATE);
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByProperty(property).get(0);
+            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME);
 
             //when
             unitNotIncludedWithEndDateOnly = unitRepository.findUnitByReference("OXF-001");
@@ -191,8 +193,6 @@ public class KeyTableTest extends EstatioIntegrationTest {
             keyTable.generateItems(true);
 
             //then
-            assertThat(keyTable.getStartDate().equals(new LocalDate(2015,01,01)));
-            assertThat(keyTable.getStartDate().equals(new LocalDate(2015,12,31)));
             Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncludedWithEndDateOnly));
             Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncluded));
             Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncludedWithStartDateOnly));

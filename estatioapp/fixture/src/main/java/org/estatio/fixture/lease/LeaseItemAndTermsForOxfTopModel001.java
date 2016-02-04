@@ -29,6 +29,7 @@ public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstrac
 
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
+        executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());

@@ -226,7 +226,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
         final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.IT_SERVICE_CHARGE,
+                ChargeRefData.GB_SERVICE_CHARGE,
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
@@ -237,6 +237,24 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
         return executionContext.addResult(this, leaseTerm);
     }
+
+    // //////////////////////////////////////
+
+    protected LeaseItem createLeaseItemForServiceChargeBudgeted(
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final ExecutionContext executionContext) {
+
+        final LeaseItem leaseItemServiceChargeBudgeted = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.GB_SERVICE_CHARGE,
+                LeaseItemType.SERVICE_CHARGE_BUDGETED,
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                executionContext);
+
+        return executionContext.addResult(this, leaseItemServiceChargeBudgeted);
+    }
+
 
     // //////////////////////////////////////
 

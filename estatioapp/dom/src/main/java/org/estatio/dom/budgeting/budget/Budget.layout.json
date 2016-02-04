@@ -29,6 +29,15 @@
                                         "cssClassFa": "fa fa-fw fa-edit",
                                         "named": "Change Dates"
                                     }
+                                },
+                                "calculate" : {
+
+                                },
+                                "assignCalculationsToLeases": {
+
+                                },
+                                "budgetOverview" : {
+
                                 }
                             }
                         },

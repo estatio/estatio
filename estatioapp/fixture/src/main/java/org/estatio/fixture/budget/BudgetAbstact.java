@@ -27,7 +27,7 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItems;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioFixtureScript;
@@ -53,14 +53,14 @@ public abstract class BudgetAbstact extends EstatioFixtureScript {
             final BigDecimal value,
             final Charge charge
     ){
-        budgetItems.newBudgetItem(budget, value, charge);
+        budgetItemRepository.newBudgetItem(budget, value, charge);
     }
 
     @Inject
     protected BudgetRepository budgetRepository;
 
     @Inject
-    protected BudgetItems budgetItems;
+    protected BudgetItemRepository budgetItemRepository;
 
     @Inject
     protected PropertyRepository propertyRepository;

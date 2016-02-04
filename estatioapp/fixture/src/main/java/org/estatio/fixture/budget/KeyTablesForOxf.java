@@ -17,9 +17,8 @@
 
 package org.estatio.fixture.budget;
 
-import org.joda.time.LocalDate;
-
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -31,8 +30,6 @@ public class KeyTablesForOxf extends KeyTableAbstact {
 
     public static final String NAME = "Service Charges By Area year 2015";
     public static final String NAME2 = "Service Charges By Count year 2015";
-    public static final LocalDate STARTDATE = new LocalDate(2015, 01, 01);
-    public static final LocalDate ENDDATE = new LocalDate(2015, 12, 31);
     public static final FoundationValueType BUDGET_FOUNDATION_VALUE_TYPE = FoundationValueType.AREA;
     public static final FoundationValueType BUDGET_FOUNDATION_VALUE_TYPE2 = FoundationValueType.COUNT;
     public static final KeyValueMethod BUDGET_KEY_VALUE_METHOD = KeyValueMethod.PROMILLE;
@@ -43,12 +40,14 @@ public class KeyTablesForOxf extends KeyTableAbstact {
         // prereqs
         if (isExecutePrereqs()) {
             executionContext.executeChild(this, new PropertyForOxfGb());
+            executionContext.executeChild(this, new BudgetsForOxf());
         }
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        Budget budget = budgetRepository.findByProperty(property).get(0);
 
-        createKeyTable(property, NAME, STARTDATE, ENDDATE, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
-        createKeyTable(property, NAME2, STARTDATE, ENDDATE, BUDGET_FOUNDATION_VALUE_TYPE2, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
+        createKeyTable(budget, NAME, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
+        createKeyTable(budget, NAME2, BUDGET_FOUNDATION_VALUE_TYPE2, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
     }
 }

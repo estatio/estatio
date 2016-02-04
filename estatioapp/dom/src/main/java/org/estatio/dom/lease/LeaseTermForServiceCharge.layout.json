@@ -75,6 +75,9 @@
           "actions": {
             "calculate": {}
           }
+        },
+        "budgetCalculations" : {
+
         }
       }
     }

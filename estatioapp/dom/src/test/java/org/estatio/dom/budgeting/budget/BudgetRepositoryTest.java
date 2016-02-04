@@ -185,6 +185,22 @@ public class BudgetRepositoryTest {
 
         }
 
+        @Test
+        public void emptyStartDate() {
+
+            //given
+            Property property = new PropertyForTesting();
+            LocalDate startDate = null;
+            LocalDate endDate = new LocalDate(2015,01,01);
+
+            //when
+            String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
+
+            //then
+            assertThat(validateBudget, is("Start date is mandatory"));
+
+        }
+
     }
 
 }

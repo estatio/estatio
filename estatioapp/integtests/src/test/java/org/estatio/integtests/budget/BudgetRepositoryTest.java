@@ -5,9 +5,12 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
+import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -38,6 +41,7 @@ public class BudgetRepositoryTest extends EstatioIntegrationTest {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
+                executionContext.executeChild(this, new BudgetItemAllocationsForOxf());
             }
         });
     }
@@ -135,6 +139,25 @@ public class BudgetRepositoryTest extends EstatioIntegrationTest {
     }
 
 
+    public static class GetTargetCharges extends BudgetRepositoryTest {
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
+
+            // when
+            List<Charge> targetCharges = budget.getTargetCharges();
+
+            // then
+            assertThat(targetCharges.size()).isEqualTo(1);
+            assertThat(targetCharges.get(0).getReference()).isEqualTo(ChargeRefData.GB_SERVICE_CHARGE);
+
+        }
+
+    }
 
 
 }

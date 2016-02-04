@@ -16,14 +16,9 @@
  */
 package org.estatio.dom.budgeting.keytable;
 
-import com.google.inject.Inject;
 import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -37,18 +32,14 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public KeyTable newKeyTable(
-            final @ParameterLayout(named = "Property") Property property,
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") LocalDate endDate,
-            final @ParameterLayout(named = "Foundation Value Type") FoundationValueType foundationValueType,
-            final @ParameterLayout(named = "Key Value Method") KeyValueMethod keyValueMethod,
-            final @ParameterLayout(named = "Number Of Digits") Integer numberOfDigits) {
+            final Budget budget,
+            final String name,
+            final FoundationValueType foundationValueType,
+            final KeyValueMethod keyValueMethod,
+            final Integer numberOfDigits) {
         KeyTable keyTable = newTransientInstance();
-        keyTable.setProperty(property);
+        keyTable.setBudget(budget);
         keyTable.setName(name);
-        keyTable.setStartDate(startDate);
-        keyTable.setEndDate(endDate);
         keyTable.setFoundationValueType(foundationValueType);
         keyTable.setKeyValueMethod(keyValueMethod);
         keyTable.setPrecision(numberOfDigits);
@@ -58,18 +49,13 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
     }
 
     public String validateNewKeyTable(
-            final Property property,
+            final Budget budget,
             final String name,
-            final LocalDate startDate,
-            final LocalDate endDate,
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits) {
-        if (!new LocalDateInterval(startDate, endDate.minusDays(1)).isValid()) {
-            return "End date can not be before start date";
-        }
-        if (findByPropertyAndNameAndStartDate(property, name, startDate)!=null) {
-            return "There is already a keytable with this name for this property and startdate";
+        if (findByBudgetAndName(budget, name)!=null) {
+            return "There is already a keytable with this name for this budget";
         }
 
         return null;
@@ -77,19 +63,17 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
 
     @Programmatic
     public KeyTable findOrCreateBudgetKeyTable(
-            final Property property,
+            final Budget budget,
             final String name,
-            final LocalDate startDate,
-            final LocalDate endDate,
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer precision
     ) {
-        final KeyTable keyTable = findByPropertyAndNameAndStartDate(property, name, startDate);
+        final KeyTable keyTable = findByBudgetAndName(budget, name);
         if (keyTable !=null) {
             return keyTable;
         } else {
-            return newKeyTable(property, name, startDate, endDate, foundationValueType, keyValueMethod, precision);
+            return newKeyTable(budget, name, foundationValueType, keyValueMethod, precision);
         }
     }
 
@@ -99,37 +83,21 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
         return allInstances();
     }
 
-    // //////////////////////////////////////
 
     @Programmatic
-    public List<KeyTable> findByProperty(Property property) {
-        return allMatches("findByProperty", "property", property);
+    public KeyTable findByBudgetAndName(final Budget budget, final String name) {
+        return uniqueMatch("findByBudgetAndName", "budget", budget, "name", name);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
-    public KeyTable findByPropertyAndNameAndStartDate(final Property property, final String name, LocalDate startDate) {
-        return uniqueMatch("findByPropertyAndNameAndStartDate", "property", property, "name", name, "startDate", startDate);
-    }
-
-    // //////////////////////////////////////
 
     public List<KeyTable> findByBudget(Budget budget) {
-        return findByPropertyAndStartDateAndEndDate(budget.getProperty(), budget.getStartDate(), budget.getEndDate());
+        return allMatches("findByBudget", "budget", budget);
     }
 
-    public List<KeyTable> findByPropertyAndStartDateAndEndDate(Property property, LocalDate startDate, LocalDate endDate) {
-        return allMatches("findByPropertyAndStartDateAndEndDate", "property", property, "startDate", startDate, "endDate", endDate);
-    }
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<KeyTable> autoComplete(final String search) {
         return allMatches("findKeyTableByNameMatches", "name", search.toLowerCase());
     }
-
-    @Inject
-    private IsisJdoSupport isisJdoSupport;
-
 
 }

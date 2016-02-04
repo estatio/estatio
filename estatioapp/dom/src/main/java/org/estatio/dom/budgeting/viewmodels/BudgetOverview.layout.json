@@ -11,10 +11,8 @@
               }
             },
             "totalBudgetedValue": {
-              "propertyLayout": {
-                "named": "Total Budgeted Value",
-                "typicalLength": 10
-              }
+            },
+            "totalAuditedValue": {
             }
           }
         }
@@ -31,12 +29,9 @@
     {
       "span": 8,
       "collections": {
-        "lines": {
-          "collectionLayout": {
-            "named": "Lines",
-            "paged": 10,
-            "render": "EAGERLY"
-          }
+        "budgeted": {
+        },
+        "audited": {
         }
       }
     }

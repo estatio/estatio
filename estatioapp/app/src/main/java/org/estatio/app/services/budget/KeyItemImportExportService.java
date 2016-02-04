@@ -23,7 +23,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.memento.MementoService;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keyitem.KeyItems;
+import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import javax.annotation.PostConstruct;
@@ -74,7 +74,7 @@ public class KeyItemImportExportService {
     private MementoService mementoService;
 
     @Inject
-    private KeyItems keyItems;
+    private KeyItemRepository keyItemRepository;
 
 
 }

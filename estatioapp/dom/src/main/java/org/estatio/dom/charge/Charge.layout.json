@@ -44,7 +44,7 @@
         }
     ],
     "actions": {
-        "createSchedule": {
+        "createBudgetItemAllocation": {
             "actionLayout": {
                 "hidden": "ANYWHERE"
             }

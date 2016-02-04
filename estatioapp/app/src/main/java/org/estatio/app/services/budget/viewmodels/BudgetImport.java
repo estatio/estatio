@@ -10,13 +10,11 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItems;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.estatio.dom.budgeting.schedule.Schedule;
-import org.estatio.dom.budgeting.schedule.Schedules;
-import org.estatio.dom.budgeting.scheduleitem.ScheduleItem;
-import org.estatio.dom.budgeting.scheduleitem.ScheduleItems;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -58,25 +56,25 @@ public class BudgetImport implements Importable {
             final Budget budget,
             final BigDecimal budgetedValue,
             final Charge charge){
-        BudgetItem budgetItem = budgetItems.findByPropertyAndChargeAndStartDate(property, charge, startDate);
+        BudgetItem budgetItem = budgetItemRepository.findByPropertyAndChargeAndStartDate(property, charge, startDate);
         if (budgetItem==null) {
-            budgetItem = budgetItems.newBudgetItem(budget, budgetedValue, charge);
+            budgetItem = budgetItemRepository.newBudgetItem(budget, budgetedValue, charge);
             numberOfBudgetItemsCreated ++;
         }
         return budgetItem;
     }
 
-    private ScheduleItem findOrCreateScheduleItem(
-            final Schedule schedule,
+    private BudgetItemAllocation findOrCreateBudgetItemAllocation(
+            final Charge charge,
             final KeyTable keyTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage){
 
-        ScheduleItem scheduleItem = scheduleItems.findByScheduleAndBudgetItemAndKeyTable(schedule, budgetItem, keyTable);
-        if (scheduleItem == null) {
-            scheduleItem = scheduleItems.newScheduleItem(schedule, keyTable, budgetItem, percentage);
+        BudgetItemAllocation budgetItemAllocation = budgetItemAllocationRepository.findByChargeAndBudgetItemAndKeyTable(charge, budgetItem, keyTable);
+        if (budgetItemAllocation == null) {
+            budgetItemAllocation = budgetItemAllocationRepository.newBudgetItemAllocation(charge, keyTable, budgetItem, percentage);
         }
-        return scheduleItem;
+        return budgetItemAllocation;
     }
 
     @Override
@@ -91,6 +89,9 @@ public class BudgetImport implements Importable {
         final Charge targetCharge = charges.findByReference(targetChargeRef);
         final LocalDate startDate = getStartDate();
         final LocalDate endDate = getEndDate();
+
+        //find or create budget
+        Budget budget = budgetRepository.findOrCreateBudget(property, startDate, endDate);
 
         List<BigDecimal> percentages = new ArrayList<>();
         percentages.add(getKeytableAPercentage());
@@ -119,7 +120,7 @@ public class BudgetImport implements Importable {
 
         List<KeyTable> tables = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            KeyTable keyTable = keyTableRepository.findByPropertyAndNameAndStartDate(property, names[i], startDate);
+            KeyTable keyTable = keyTableRepository.findByBudgetAndName(budget, names[i]);
             tables.add(keyTable);
         }
 
@@ -129,12 +130,6 @@ public class BudgetImport implements Importable {
 
             Charge sourceCharge = charges.findByReference(getChargeReference());
 
-            //create budget
-            Budget budget = budgetRepository.findOrCreateBudget(property, startDate, endDate);
-
-            //create schedule
-            Schedule schedule = schedules.findOrCreateSchedule(property, budget, startDate, endDate, targetCharge, Schedule.Status.OPEN);
-
             //find or create budget item
             BudgetItem budgetItem = findOrCreateBudgetItem(property, startDate, budget, getBudgetedValue(), sourceCharge);
 
@@ -142,7 +137,7 @@ public class BudgetImport implements Importable {
             for (int i = 0; i < 10; i++) {
                 if (percentages.get(i) != null) {
                     //find or create schedule item
-                    findOrCreateScheduleItem(schedule, tables.get(i), budgetItem, percentages.get(i));
+                    findOrCreateBudgetItemAllocation(targetCharge, tables.get(i), budgetItem, percentages.get(i));
                     counter[i]++;
                 }
             }
@@ -322,13 +317,10 @@ public class BudgetImport implements Importable {
     private BudgetRepository budgetRepository;
 
     @Inject
-    private BudgetItems budgetItems;
+    private BudgetItemRepository budgetItemRepository;
 
     @Inject
-    private Schedules schedules;
-
-    @Inject
-    private ScheduleItems scheduleItems;
+    private BudgetItemAllocationRepository budgetItemAllocationRepository;
 
     @Inject
     private PropertyRepository propertyRepository;

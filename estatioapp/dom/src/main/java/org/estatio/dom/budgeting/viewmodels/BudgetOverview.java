@@ -5,11 +5,13 @@ import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.budgeting.BudgetCalculation;
-import org.estatio.dom.budgeting.BudgetCalculationContributionServices;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.schedule.Schedule;
-import org.estatio.dom.budgeting.schedule.Schedules;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.dom.budgeting.budgetcalculation.CalculationType;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 
@@ -28,6 +30,7 @@ public class BudgetOverview extends EstatioViewModel {
 
         this.budget = budget;
         this.totalBudgetedValue = budget.getTotalBudgetedValue();
+        this.totalAuditedValue = budget.getTotalAuditedValue();
 
     }
 
@@ -37,30 +40,68 @@ public class BudgetOverview extends EstatioViewModel {
     @Getter @Setter
     private BigDecimal totalBudgetedValue;
 
+    @Getter @Setter
+    private BigDecimal totalAuditedValue;
+
     @Action(semantics = SemanticsOf.SAFE)
     @CollectionLayout(render = RenderType.EAGERLY)
-    public List<BudgetOverviewLine> getLines(){
+    public List<BudgetOverviewLine> getBudgeted(){
         List<BudgetOverviewLine> lines = new ArrayList<>();
 
-        for (Schedule schedule : scheduleRepo.findByBudget(budget)){
+        for (BudgetItem budgetItem : budget.getItems()) {
+            for (BudgetItemAllocation budgetItemAllocation : budgetItemAllocationRepository.findByBudgetItem(budgetItem)) {
 
-            for (BudgetCalculation calculation :  budgetCalculationContributionServices.distributionOverUnits(schedule)) {
+                for (BudgetCalculation calculation : budgetCalculationRepository.findByBudgetItemAllocationAndCalculationType(budgetItemAllocation, CalculationType.BUDGETED)) {
 
-                List<Occupancy> occupancyList = occupancies.occupanciesByUnitAndInterval(calculation.getUnit(), budget.getInterval());
-                if (occupancyList.size() == 0) {
+                    List<Occupancy> occupancyList = occupancies.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), budget.getInterval());
+                    if (occupancyList.size() == 0) {
 
-                    lines.add(new BudgetOverviewLine(null, calculation.getUnit(), schedule.getCharge(), calculation.getValue()));
+                        lines = aggregateByCharge(new BudgetOverviewLine(null, calculation.getKeyItem().getUnit(), budgetItemAllocation.getCharge(), calculation.getValue()), lines);
 
-                } else {
+                    } else {
 
-                    for (Occupancy o : occupancyList) {
-                        lines.add(new BudgetOverviewLine(o, calculation.getUnit(), schedule.getCharge(), calculation.getValue()));
+                        for (Occupancy o : occupancyList) {
+                            lines = aggregateByCharge(new BudgetOverviewLine(o, calculation.getKeyItem().getUnit(), budgetItemAllocation.getCharge(), calculation.getValue()), lines);
+                        }
+
                     }
 
                 }
 
             }
+        }
 
+        Collections.sort(lines);
+
+        return lines;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    public List<BudgetOverviewLine> getAudited(){
+        List<BudgetOverviewLine> lines = new ArrayList<>();
+
+        for (BudgetItem budgetItem : budget.getItems()) {
+            for (BudgetItemAllocation budgetItemAllocation : budgetItemAllocationRepository.findByBudgetItem(budgetItem)) {
+
+                for (BudgetCalculation calculation : budgetCalculationRepository.findByBudgetItemAllocationAndCalculationType(budgetItemAllocation, CalculationType.AUDITED)) {
+
+                    List<Occupancy> occupancyList = occupancies.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), budget.getInterval());
+                    if (occupancyList.size() == 0) {
+
+                        lines = aggregateByCharge(new BudgetOverviewLine(null, calculation.getKeyItem().getUnit(), budgetItemAllocation.getCharge(), calculation.getValue()), lines);
+
+                    } else {
+
+                        for (Occupancy o : occupancyList) {
+                            lines = aggregateByCharge(new BudgetOverviewLine(o, calculation.getKeyItem().getUnit(), budgetItemAllocation.getCharge(), calculation.getValue()), lines);
+                        }
+
+                    }
+
+                }
+
+            }
         }
 
         Collections.sort(lines);
@@ -72,12 +113,33 @@ public class BudgetOverview extends EstatioViewModel {
         return TranslatableString.tr("{name}", "name", "Budget overview");
     }
 
+    List<BudgetOverviewLine> aggregateByCharge(BudgetOverviewLine lineToBeMerged, List<BudgetOverviewLine> list) {
+
+        for (BudgetOverviewLine line : list){
+            if (lineToBeMerged.getOccupancy() != null) {
+                if (lineToBeMerged.getOccupancy().equals(line.getOccupancy()) && lineToBeMerged.getCharge().equals(line.getCharge())) {
+                    BigDecimal newAmount = line.getAmount().add(lineToBeMerged.getAmount());
+                    line.setAmount(newAmount);
+                    return list;
+                }
+            } else {
+                if (lineToBeMerged.getUnit().equals(line.getUnit()) && lineToBeMerged.getCharge().equals(line.getCharge())) {
+                    BigDecimal newAmount = line.getAmount().add(lineToBeMerged.getAmount());
+                    line.setAmount(newAmount);
+                    return list;
+                }
+            }
+        }
+        // when no merge has taken place
+        list.add(lineToBeMerged);
+        return list;
+    }
 
     @Inject
-    private Schedules scheduleRepo;
+    BudgetItemAllocationRepository budgetItemAllocationRepository;
 
     @Inject
-    private BudgetCalculationContributionServices budgetCalculationContributionServices;
+    private BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
     private Occupancies occupancies;

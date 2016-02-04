@@ -46,52 +46,25 @@ public class KeyTableRepositoryTest extends EstatioIntegrationTest {
         });
     }
 
-    public static class FindByProperty extends KeyTableRepositoryTest {
+
+    public static class FindByBudgetAndName extends KeyTableRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByProperty(property).get(0);
+
             // when
-            final List<KeyTable> keyTableList = keyTableRepository.findByProperty(property);
-            // then
-            assertThat(keyTableList.size()).isEqualTo(2);
-
-        }
-
-    }
-
-    public static class FindByPropertyAndNameAndStartDate extends KeyTableRepositoryTest {
-
-        @Test
-        public void happyCase() throws Exception {
-            // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            // when
-            final KeyTable keyTable = keyTableRepository.findByPropertyAndNameAndStartDate(property, KeyTablesForOxf.NAME, KeyTablesForOxf.STARTDATE);
+            final KeyTable keyTable = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME);
             // then
             assertThat(keyTable.getName()).isEqualTo(KeyTablesForOxf.NAME);
-            assertThat(keyTable.getProperty()).isEqualTo(property);
+            assertThat(keyTable.getBudget().getProperty()).isEqualTo(property);
 
         }
 
     }
 
-    public static class FindByPropertyAndStartDateAndEndDate extends KeyTableRepositoryTest {
-
-        @Test
-        public void happyCase() throws Exception {
-            // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            // when
-            final List<KeyTable> keyTables = keyTableRepository.findByPropertyAndStartDateAndEndDate(property, KeyTablesForOxf.STARTDATE, KeyTablesForOxf.ENDDATE);
-            // then
-            assertThat(keyTables.size()).isEqualTo(2);
-            assertThat(keyTables.get(0).getProperty()).isEqualTo(property);
-
-        }
-
-    }
 
     public static class FindByBudget extends KeyTableRepositoryTest {
 
@@ -105,13 +78,12 @@ public class KeyTableRepositoryTest extends EstatioIntegrationTest {
             final List<KeyTable> keyTables = keyTableRepository.findByBudget(budget);
             // then
             assertThat(keyTables.size()).isEqualTo(2);
-            assertThat(keyTables.get(0).getProperty()).isEqualTo(property);
-            assertThat(keyTables.get(0).getStartDate()).isEqualTo(budget.getStartDate());
-            assertThat(keyTables.get(0).getEndDate()).isEqualTo(budget.getEndDate());
+            assertThat(keyTables.get(0).getBudget()).isEqualTo(budget);
         }
 
-        @Inject
-        private BudgetRepository budgetRepository;
     }
+
+    @Inject
+    BudgetRepository budgetRepository;
 
 }

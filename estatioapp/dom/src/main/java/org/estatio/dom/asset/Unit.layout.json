@@ -71,7 +71,7 @@
     }
   ],
   "actions": {
-    "newBudgetKeyItem": {
+    "newItem": {
       "actionLayout": {
         "cssClass": "btn-primary",
         "cssClassFa": "fa fa-fw fa-plus",

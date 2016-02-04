@@ -29,10 +29,7 @@ import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
+import javax.jdo.annotations.*;
 import java.math.BigDecimal;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -67,7 +64,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     //endregion
 
 
-    @javax.jdo.annotations.Column(name="keyTableId", allowsNull = "false")
+    @Column(name="keyTableId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES )
     @Getter @Setter
     private KeyTable keyTable;
@@ -75,18 +72,18 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="unitId", allowsNull = "false")
+    @Column(name="unitId", allowsNull = "false")
     @Getter @Setter
     private Unit unit;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
+    @Column(allowsNull = "false", scale = 6)
     @Getter @Setter
     private BigDecimal sourceValue;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyItem changeSourceValue(final @ParameterLayout(named = "Source value") BigDecimal sourceValue) {
+    public KeyItem changeSourceValue(final BigDecimal sourceValue) {
         setSourceValue(sourceValue.setScale(2, BigDecimal.ROUND_HALF_UP));
         return this;
     }
@@ -104,7 +101,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", scale = 6)
+    @Column(allowsNull = "false", scale = 6)
     @Getter @Setter
     private BigDecimal value;
 
@@ -126,7 +123,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
 
     //region > auditedValue (property)
-    @javax.jdo.annotations.Column(allowsNull = "true", scale = 6)
+    @Column(allowsNull = "true", scale = 6)
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private BigDecimal auditedValue;

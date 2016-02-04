@@ -22,6 +22,9 @@
                     "cssClassFa": "fa fa-fw fa-edit",
                     "named": "Change Charge"
                   }
+                },
+                "calculate" : {
+
                 }
               }
             },
@@ -67,7 +70,23 @@
     },
     {
       "span": 8,
-      "collections": {}
+      "collections": {
+        "budgetItemAllocations": {
+          "collectionLayout": {
+            "named": "Allocations",
+            "paged": 10,
+            "render": "EAGERLY"
+          },
+          "actions": {
+            "createBudgetItemAllocation": {
+              "actionLayout": {
+                "cssClass": "btn-primary",
+                "cssClassFa": "fa fa-fw fa-edit"
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "actions": {
@@ -77,13 +96,6 @@
         "cssClassFa": "fa fa-fw fa-download",
         "named": "Download Layout",
         "contributed": "AS_ACTION"
-      }
-    },
-    "createScheduleItem": {
-      "actionLayout": {
-        "cssClass": "btn-primary",
-        "cssClassFa": "fa fa-fw fa-edit",
-        "hidden": "EVERYWHERE"
       }
     },
     "recentChanges": {
