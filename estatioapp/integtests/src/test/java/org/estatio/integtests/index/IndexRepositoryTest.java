@@ -30,9 +30,9 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndicesTest extends EstatioIntegrationTest {
+public class IndexRepositoryTest extends EstatioIntegrationTest {
 
-    public static class FindIndex extends IndicesTest {
+    public static class FindIndex extends IndexRepositoryTest {
 
         @Before
         public void setupData() {

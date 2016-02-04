@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.index;
+package org.estatio.dom.lease.indexation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.index.Index;
 
 @DomainService(menuOrder = "60")
 public class IndexationService extends UdoDomainService<IndexationService> {

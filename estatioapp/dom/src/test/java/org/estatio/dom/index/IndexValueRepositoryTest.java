@@ -18,11 +18,6 @@
  */
 package org.estatio.dom.index;
 
-import static org.apache.isis.core.commons.matchers.IsisMatchers.classEqualTo;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -46,7 +41,12 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-public class IndexValuesTest {
+import static org.apache.isis.core.commons.matchers.IsisMatchers.classEqualTo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class IndexValueRepositoryTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -92,7 +92,7 @@ public class IndexValuesTest {
         indexValueRepository.queryResultsCache = mockQueryResultsCache;
     }
 
-    public static class FindIndexValueByIndexAndStartDate extends IndexValuesTest {
+    public static class FindIndexValueByIndexAndStartDate extends IndexValueRepositoryTest {
 
         @Test
         public void happyCase() {

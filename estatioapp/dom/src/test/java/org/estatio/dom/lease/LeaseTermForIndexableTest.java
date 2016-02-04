@@ -37,8 +37,8 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValueRepository;
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.index.IndexationService;
+import org.estatio.dom.lease.indexation.IndexationService;
+import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.services.clock.ClockService;
 
 import static org.hamcrest.CoreMatchers.is;

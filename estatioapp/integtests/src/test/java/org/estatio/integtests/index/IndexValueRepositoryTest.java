@@ -36,7 +36,7 @@ import org.estatio.integtests.VT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndexValuesTest extends EstatioIntegrationTest {
+public class IndexValueRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
     IndexRepository indexRepository;
@@ -44,7 +44,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
     IndexValueRepository indexValueRepository;
 
 
-    public static class FindIndexValueByIndexAndStartDate extends IndexValuesTest {
+    public static class FindIndexValueByIndexAndStartDate extends IndexValueRepositoryTest {
 
         @Before
         public void setupData() {
@@ -62,7 +62,7 @@ public class IndexValuesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindLastByIndex extends IndexValuesTest {
+    public static class FindLastByIndex extends IndexValueRepositoryTest {
 
         @Before
         public void setupData() {

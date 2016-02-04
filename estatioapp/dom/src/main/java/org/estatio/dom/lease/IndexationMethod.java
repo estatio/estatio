@@ -1,6 +1,6 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.index.Indexable;
+import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.dom.utils.MathUtils;
 
 public enum IndexationMethod {

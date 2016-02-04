@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.index;
+package org.estatio.dom.lease.indexation;
 
 import java.math.BigDecimal;
 import org.jmock.Expectations;
@@ -27,6 +27,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.index.Index;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 
 import static org.hamcrest.CoreMatchers.is;

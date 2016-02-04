@@ -33,9 +33,9 @@ import org.estatio.integtests.VT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndexBasesTest extends EstatioIntegrationTest {
+public class IndexBaseRepositoryTest extends EstatioIntegrationTest {
 
-    public static class FindByIndexAndDate extends IndexBasesTest {
+    public static class FindByIndexAndDate extends IndexBaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -52,7 +52,7 @@ public class IndexBasesTest extends EstatioIntegrationTest {
             // given
             Index index = indexRepository.findByReference(IndexRefData.IT_REF);
             // when
-            final IndexBase indexBase = indexBaseRepository.findByIndexAndDate(index, VT.ld(2013, 1, 1));
+            final IndexBase indexBase = indexBaseRepository.findByIndexAndActiveOnDate(index, VT.ld(2013, 1, 1));
             // then
             assertThat(indexBase.getStartDate(), is(VT.ld(2011, 1, 1)));
         }
