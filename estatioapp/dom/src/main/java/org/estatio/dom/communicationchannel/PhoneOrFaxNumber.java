@@ -58,7 +58,7 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
 
     @ActionLayout(named = "Change Number")
     public PhoneOrFaxNumber changePhoneOrFaxNumber(
-            final @ParameterLayout(named = "Phone Number") @Parameter(regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber) {
+            final @ParameterLayout(named = "Phone Number") @Parameter(regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber) {
         setPhoneNumber(phoneNumber);
 
         return this;

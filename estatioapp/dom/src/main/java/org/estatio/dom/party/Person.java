@@ -148,7 +148,7 @@ public class Person
 
     public Person change(
             final @ParameterLayout(named = "Gender") PersonGenderType gender,
-            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS) String initials,
+            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
             final @ParameterLayout(named = "First name") String firstName,
             final @ParameterLayout(named = "Last name") String lastName) {
         setGender(gender);

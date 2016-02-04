@@ -90,7 +90,7 @@ public class BankAccounts extends UdoDomainRepositoryAndFactory<BankAccount> {
     @Programmatic
     public BankAccount newBankAccount(
             final @ParameterLayout(named = "Owner") Party owner,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Name") String name) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
         bankAccount.setReference(reference);

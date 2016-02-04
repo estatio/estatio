@@ -18,25 +18,38 @@
  */
 package org.estatio.dom.guarantee;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.isis.applib.annotation.*;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.financial.*;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountTransactions;
+import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
-import org.joda.time.LocalDate;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 @DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.DOMAIN)
 public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
@@ -52,7 +65,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     public Guarantee newGuarantee(
             final Lease lease,
-            final String reference,
+            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final String name,
             final GuaranteeType guaranteeType,
             final LocalDate startDate,

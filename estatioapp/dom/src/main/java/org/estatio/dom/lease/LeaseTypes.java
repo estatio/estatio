@@ -49,7 +49,7 @@ public class LeaseTypes extends UdoDomainRepositoryAndFactory<LeaseType> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public LeaseType newLeaseType(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Name") @Parameter(optionality = Optionality.OPTIONAL) String name) {
         final LeaseType leaseType = newTransientInstance();
         leaseType.setReference(reference);

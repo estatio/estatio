@@ -63,7 +63,7 @@ public class UnitMenu extends UdoDomainService<UnitMenu> {
     @MemberOrder(sequence = "1")
     public Unit newUnit(
             final Property property,
-            final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE) String reference,
+            final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE, regexPatternReplacement = RegexValidation.Unit.REFERENCE_DESCRIPTION) String reference,
             final String name,
             final UnitType type) {
         return unitRepository.newUnit(property, reference, name, type);

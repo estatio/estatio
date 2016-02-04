@@ -105,8 +105,8 @@ public class Organisation
     @Property(optionality = Optionality.OPTIONAL)
     public Organisation change(
             final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Vat Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE) String vatCode,
-            final @ParameterLayout(named = "Fiscal Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE) String fiscalCode) {
+            final @ParameterLayout(named = "Vat Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
+            final @ParameterLayout(named = "Fiscal Code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
         setName(name);
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);

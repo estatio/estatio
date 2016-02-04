@@ -53,7 +53,7 @@ public class Countries extends UdoDomainRepositoryAndFactory<Country> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public List<Country> newCountry(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Alpha-2 Code") String alpha2Code,
             final @ParameterLayout(named = "Name") String name) {
         createCountry(reference, alpha2Code, name);

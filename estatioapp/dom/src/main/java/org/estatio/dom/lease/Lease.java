@@ -636,7 +636,7 @@ public class Lease
 
     public Lease newMandate(
             final BankAccount bankAccount,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Start Date") LocalDate startDate,
             final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
 
@@ -810,7 +810,7 @@ public class Lease
     // //////////////////////////////////////
 
     public Lease assign(
-            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE) final String reference,
+            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) final String reference,
             @ParameterLayout(named = "Name") final String name,
             @ParameterLayout(named = "Tenant") final Party tenant,
             @ParameterLayout(named = "Tenancy start date") final LocalDate tenancyStartDate,
@@ -914,7 +914,7 @@ public class Lease
     // //////////////////////////////////////
 
     public Lease renew(
-            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE) final String reference,
+            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) final String reference,
             @ParameterLayout(named = "Name") final String name,
             @ParameterLayout(named = "Start date") final LocalDate startDate,
             @ParameterLayout(named = "End date") final LocalDate endDate,
