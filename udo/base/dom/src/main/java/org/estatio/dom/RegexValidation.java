@@ -21,7 +21,7 @@ package org.estatio.dom;
 public final class RegexValidation {
 
     public static final String REFERENCE = "[-/_A-Z0-9]+";
-    public static final String REFERENCE_DESCRIPTION = "Only capital letters, numbers and these 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
+    public static final String REFERENCE_DESCRIPTION = "Only capital letters, numbers and 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
 
     public static final class Currency {
         private Currency() {
@@ -36,7 +36,7 @@ public final class RegexValidation {
         }
 
         public static final String REFERENCE = "[A-Z,0-9,_,-,/]+";
-        public static final String REFERENCE_DESCRIPTION = "Only letters, numbers and these 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
+        public static final String REFERENCE_DESCRIPTION = "Only letters, numbers and 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
         public static final String INITIALS = "[A-Z]+";
         public static final String INITIALS_DESCRIPTION = "Only letters are allowed";
     }
@@ -63,9 +63,9 @@ public final class RegexValidation {
         }
 
         public static final String PHONENUMBER = "[+]?[0-9 -]*";
-        public static final String PHONENUMBER_DESCRIPTION = "Only numbers and these two symbols being \"-\" and \"+\" are allowed ";
+        public static final String PHONENUMBER_DESCRIPTION = "Only numbers and two symbols being \"-\" and \"+\" are allowed ";
         public static final String EMAIL = "[^@ ]*@{1}[^@ ]*[.]+[^@ ]*";
-        public static final String EMAIL_DESCRIPTION = "Only one \"@\" symbol is allowed, followed by a domainname e.g. test@example.com";
+        public static final String EMAIL_DESCRIPTION = "Only one \"@\" symbol is allowed, followed by a domain e.g. test@example.com";
     }
 
     public static final class Lease {
@@ -75,9 +75,7 @@ public final class RegexValidation {
         //(?=(?:.{11,15}|.{17}))([X,Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\&+=_/-]{1,7})
         //public static final String REFERENCE = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\\&+=_/-]{1,7})";
         public static final String REFERENCE = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{3})-([A-Z,0-9]{3,8})-([A-Z,0-9,\\&+=_/-]{1,7})$";
-        public static final String REFERENCE_DESCRIPTION = "only letters and numbers devided by at least 3 and at most 4 dashes:\"-\" with a total between 11 and 17 characters. "
-                + "e.g.: 1 letter \"-\" 3 letters \"-\" 3-8 letters or numbers \"-\" 1-7 letters, numbers or one of the following symbols: \"&\", \"+\", \"=\", \"_\", \"/\", \"-\" OR\n"
-                + "3 letters \"-\" 3-8 letters or numbers \"-\" 1-7 letters, numbers or one of the following symbols: & + = _ / -";
+        public static final String REFERENCE_DESCRIPTION = "only letters and numbers devided by at least 2 and at most 4 dashes:\"-\" totalling between 11 and 15 characters. ";
     }
 
     public static final class Unit {
@@ -85,9 +83,6 @@ public final class RegexValidation {
         }
 
         public static final String REFERENCE = "(?=.{5,17})([A-Z]{1}-)?([A-Z]{3}-[A-Z,0-9,/,+,-]{1,11})";
-        public static final String REFERENCE_DESCRIPTION = "only letters and numbers devided by at least 2 and at most 3 dashes:\"-\" with a total between 15 and 17 characters. "
-                + "e.g.: 1 letter \"-\" 3 letters \"-\" 3-8 letters or numbers \"-\" 1-11 letters, numbers or one of the following symbols: \"/\", \"+\", \"-\" OR\n"
-                + "3 letters \"-\" 3-8 letters or numbers \"-\" 1-11 letters, numbers or one of the following symbols: \"/\", \"+\", \"-\"";
-
+        public static final String REFERENCE_DESCRIPTION = "only letters and numbers devided by at least 1 and at most 3 dashes:\"-\" totalling between 5 and 15 characters. ";
     }
 }
