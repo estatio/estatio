@@ -22,13 +22,21 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.base.Function;
-import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
-import org.apache.isis.applib.annotation.Disabled;
+
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+
+import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
+
 import org.estatio.dom.JdoColumnLength;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
@@ -124,50 +132,27 @@ public abstract class EventSourceLink extends PolymorphicAssociationLink<Event, 
     //endregion
 
     //region > event (property)
-    private Event event;
     @Column(
             allowsNull = "false",
             name = "eventId"
     )
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(final Event event) {
-        this.event = event;
-    }
+    @Getter @Setter
+    private Event event;
     //endregion
 
     //region > sourceObjectType (property)
-    private String sourceObjectType;
-
     @Column(allowsNull = "false", length = 255)
-    public String getSourceObjectType() {
-        return sourceObjectType;
-    }
-
-    public void setSourceObjectType(final String sourceObjectType) {
-        this.sourceObjectType = sourceObjectType;
-    }
+    @Getter @Setter
+    private String sourceObjectType;
     //endregion
 
     //region > sourceIdentifier (property)
-    private String sourceIdentifier;
-
     @Column(allowsNull = "false", length = 255)
-    public String getSourceIdentifier() {
-        return sourceIdentifier;
-    }
-
-    public void setSourceIdentifier(final String sourceIdentifier) {
-        this.sourceIdentifier = sourceIdentifier;
-    }
+    @Getter @Setter
+    private String sourceIdentifier;
     //endregion
 
     //region > calendarName (property)
-
-    private String calendarName;
-
     /**
      * Copy of the {@link #getEvent() event}'s {@link org.estatio.dom.event.Event#getCalendarName() calendar name}.
      *
@@ -177,15 +162,10 @@ public abstract class EventSourceLink extends PolymorphicAssociationLink<Event, 
      * </p>
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length= JdoColumnLength.Event.CALENDAR_NAME)
-    @Disabled
+    @Property(editing = Editing.DISABLED)
     @Title(prepend=": ", sequence="2")
-    public String getCalendarName() {
-        return calendarName;
-    }
-
-    public void setCalendarName(final String calendarName) {
-        this.calendarName = calendarName;
-    }
+    @Getter @Setter
+    private String calendarName;
     //endregion
 
     // //////////////////////////////////////

@@ -39,6 +39,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -86,8 +89,6 @@ public class Country
 
     // //////////////////////////////////////
 
-    private String reference;
-
     /**
      * As per ISO standards for <a href=
      * "http://www.commondatahub.com/live/geography/country/iso_3166_country_codes"
@@ -97,43 +98,24 @@ public class Country
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
     // not possible to make this unique because Country is rolled-up to
     // Geography.
-    @javax.jdo.annotations.Index(unique = "false")
-    private String alpha2Code;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Country.ALPHA2CODE)
     @Title
-    public String getAlpha2Code() {
-        return alpha2Code;
-    }
-
-    public void setAlpha2Code(final String alpha2Code) {
-        this.alpha2Code = alpha2Code;
-    }
+    @javax.jdo.annotations.Index(unique = "false")
+    @Getter @Setter
+    private String alpha2Code;
 
 }

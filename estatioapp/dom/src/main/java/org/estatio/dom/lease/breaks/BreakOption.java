@@ -54,6 +54,9 @@ import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents a condition upon which the {@link Lease} can be terminated.
  */
@@ -105,37 +108,21 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Lease getLease() {
-        return lease;
-    }
-
-    public void setLease(final Lease lease) {
-        this.lease = lease;
-    }
+    @Getter @Setter
+    private Lease lease;
 
     // //////////////////////////////////////
-
-    private BreakType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Title(sequence = "2")
-    public BreakType getType() {
-        return type;
-    }
-
-    public void setType(final BreakType breakType) {
-        this.type = breakType;
-    }
+    @Getter @Setter
+    private BreakType type;
 
     // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent
-    private LocalDate exerciseDate;
 
     /**
      * The date on which this break option can be exercised, meaning that the
@@ -162,39 +149,21 @@ public abstract class BreakOption
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(prepend = " ", sequence = "3")
-    public LocalDate getExerciseDate() {
-        return exerciseDate;
-    }
-
-    public void setExerciseDate(final LocalDate exerciseDate) {
-        this.exerciseDate = exerciseDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate exerciseDate;
 
     // //////////////////////////////////////
-
-    private BreakExerciseType exerciseType;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.BreakOption.EXERCISE_TYPE_ENUM)
-    public BreakExerciseType getExerciseType() {
-        return exerciseType;
-    }
-
-    public void setExerciseType(final BreakExerciseType breakExerciseType) {
-        this.exerciseType = breakExerciseType;
-    }
+    @Getter @Setter
+    private BreakExerciseType exerciseType;
 
     // //////////////////////////////////////
 
-    private String notificationPeriod;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DURATION)
-    public String getNotificationPeriod() {
-        return notificationPeriod;
-    }
-
-    public void setNotificationPeriod(final String notificationPeriod) {
-        this.notificationPeriod = notificationPeriod;
-    }
+    @Getter @Setter
+    private String notificationPeriod;
 
     /**
      * Convenience for subclasses.
@@ -205,36 +174,22 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate breakDate;
-
     /**
      * The date when the {@link #getLease() lease} can be terminated (assuming
      * that the notice was given on or before the {@link #getNotificationDate()
      * notification date}).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    public LocalDate getBreakDate() {
-        return breakDate;
-    }
-
-    public void setBreakDate(final LocalDate breakDate) {
-        this.breakDate = breakDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate breakDate;
 
     // //////////////////////////////////////
 
-    private String description;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
 

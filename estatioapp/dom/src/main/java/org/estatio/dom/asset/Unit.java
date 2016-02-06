@@ -47,6 +47,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
@@ -102,127 +105,62 @@ public class Unit
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @Getter @Setter
     private UnitType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    public UnitType getType() {
-        return type;
-    }
-
-    public void setType(final UnitType type) {
-        this.type = type;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal area;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getArea() {
-        return area;
-    }
-
-    public void setArea(final BigDecimal area) {
-        this.area = area;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal storageArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getStorageArea() {
-        return storageArea;
-    }
-
-    public void setStorageArea(final BigDecimal storageArea) {
-        this.storageArea = storageArea;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal salesArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getSalesArea() {
-        return salesArea;
-    }
-
-    public void setSalesArea(final BigDecimal salesArea) {
-        this.salesArea = salesArea;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal mezzanineArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getMezzanineArea() {
-        return mezzanineArea;
-    }
-
-    public void setMezzanineArea(final BigDecimal mezzanineArea) {
-        this.mezzanineArea = mezzanineArea;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal dehorsArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getDehorsArea() {
-        return dehorsArea;
-    }
-
-    public void setDehorsArea(final BigDecimal dehorsArea) {
-        this.dehorsArea = dehorsArea;
-    }
-
     // //////////////////////////////////////
-
-    private Property property;
 
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "false")
     @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES, editing = Editing.DISABLED)
-    public org.estatio.dom.asset.Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
+    @Getter @Setter
+    private Property property;
 
     // //////////////////////////////////////
 
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Override
     @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 

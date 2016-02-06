@@ -31,6 +31,9 @@ import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable()
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
@@ -56,27 +59,17 @@ public class CommunicationChannelOwnerLinkForParty extends CommunicationChannelO
         setParty((Party) polymorphicReference);
     }
 
-    //region > party (property)
-    private Party party;
+    // //////////////////////////////////////
 
     @Column(
             allowsNull = "false",
             name = "partyId"
     )
     @MemberOrder(sequence = "1")
-    public Party getParty() {
-        return party;
-    }
+    @Getter @Setter
+    private Party party;
 
-    public void setParty(final Party party) {
-        this.party = party;
-    }
-    //endregion
-
-
-    //region > injected services
     @javax.inject.Inject
     private BookmarkService bookmarkService;
-    //endregion
 
 }

@@ -40,6 +40,9 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.financial.FinancialAccount;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -92,37 +95,25 @@ public class FixedAssetFinancialAccount
 
     // //////////////////////////////////////
 
-    private FixedAsset fixedAsset;
-
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @Title(sequence = "1")
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Property")
-    public FixedAsset getFixedAsset() {
-        return fixedAsset;
-    }
-
-    public void setFixedAsset(final FixedAsset fixedAsset) {
-        this.fixedAsset = fixedAsset;
-    }
+    @Getter @Setter
+    private FixedAsset fixedAsset;
 
     // //////////////////////////////////////
 
-    private FinancialAccount financialAccount;
+
 
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @Title(sequence = "2")
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Bank account")
-    public FinancialAccount getFinancialAccount() {
-        return financialAccount;
-    }
-
-    public void setFinancialAccount(final FinancialAccount financialAccount) {
-        this.financialAccount = financialAccount;
-    }
+    @Getter @Setter
+    private FinancialAccount financialAccount;
 
     // //////////////////////////////////////
 

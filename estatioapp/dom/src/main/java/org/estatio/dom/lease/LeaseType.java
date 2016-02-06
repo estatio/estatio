@@ -24,12 +24,12 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -39,6 +39,9 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -68,55 +71,34 @@ public class LeaseType
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @MemberOrder(sequence = "1")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @Column(allowsNull = "false", length = JdoColumnLength.TITLE)
     @Title()
     @MemberOrder(sequence = "2")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
-
-    private String description;
 
     @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
     @MemberOrder(sequence = "3")
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     @MemberOrder(sequence = "3", name = "description")
     public LeaseType change(

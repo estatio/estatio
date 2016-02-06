@@ -39,6 +39,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents the {@link Currency} of some amount of money.
  * 
@@ -92,31 +95,16 @@ public class Currency
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.Currency.REFERENCE)
     @Title(sequence = "1")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
 }

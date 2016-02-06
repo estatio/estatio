@@ -54,6 +54,9 @@ import com.google.common.base.Function;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Identifies the {@link #getParty() party} that plays a particular
  * {@link #getType() type} of role with respect to a {@link #getProgram() program
@@ -125,74 +128,37 @@ public class ProjectRole
 
     // //////////////////////////////////////
 
-    private Project project;
-
     @javax.jdo.annotations.Column(allowsNull = "false", name="projectId")
     @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(final Project project) {
-        this.project = project;
-    }
+    @Getter @Setter
+    private Project project;
 
     // //////////////////////////////////////
-
-    private Party party;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
+    @Getter @Setter
+    private Party party;
 
     // //////////////////////////////////////
-
-    private ProjectRoleType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing=Editing.DISABLED)
     @Title(sequence = "1")
-    public ProjectRoleType getType() {
-        return type;
-    }
-
-    public void setType(final ProjectRoleType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private ProjectRoleType type;
 
     // //////////////////////////////////////
 
+    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
     @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 

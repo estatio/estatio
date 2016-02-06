@@ -56,6 +56,9 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -102,19 +105,12 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Title(sequence = "1", prepend = "[", append = "] ")
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this asset")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
@@ -136,32 +132,19 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     // */
     // public abstract String getName();
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title(sequence = "2")
     @PropertyLayout(describedAs = "Unique name for this property")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
-    private String externalReference;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
     @Property(optionality = Optionality.OPTIONAL)
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     @MemberOrder(name = "externalReference", sequence = "1")
     public FixedAsset changeExternalReference(final String externalReference) {
@@ -175,17 +158,10 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "asset")
-    private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<FixedAssetRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(final SortedSet<FixedAssetRole> roles) {
-        this.roles = roles;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "asset")
+    @Getter @Setter
+    private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
 
     public FixedAsset newRole(
             final @ParameterLayout(named = "Type") FixedAssetRoleType type,

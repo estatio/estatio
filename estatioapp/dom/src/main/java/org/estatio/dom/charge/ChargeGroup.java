@@ -43,6 +43,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -83,45 +86,24 @@ public class ChargeGroup
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title(sequence = "2", prepend = "-")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "group")
-    private SortedSet<Charge> charges = new TreeSet<Charge>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<Charge> getCharges() {
-        return charges;
-    }
-
-    public void setCharges(final SortedSet<Charge> charges) {
-        this.charges = charges;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "group")
+    @Getter @Setter
+    private SortedSet<Charge> charges = new TreeSet<Charge>();
 
 }

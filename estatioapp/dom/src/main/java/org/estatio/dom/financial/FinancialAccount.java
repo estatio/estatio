@@ -48,6 +48,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.party.Party;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -102,58 +105,30 @@ public class FinancialAccount
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FinancialAccount.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
-
-    private FinancialAccountType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(hidden = Where.EVERYWHERE)
-    public FinancialAccountType getType() {
-        return type;
-    }
-
-    public void setType(final FinancialAccountType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private FinancialAccountType type;
 
     // //////////////////////////////////////
 
-    private Party owner;
-
     @javax.jdo.annotations.Column(name = "ownerPartyId", allowsNull = "false")
-    public Party getOwner() {
-        return owner;
-    }
-
-    public void setOwner(final Party owner) {
-        this.owner = owner;
-    }
+    @Getter @Setter
+    private Party owner;
 
     public FinancialAccount changeOwner(final Party newOwner){
         this.owner = newOwner;
@@ -162,17 +137,10 @@ public class FinancialAccount
 
     // //////////////////////////////////////
 
-    private String externalReference;
-
     @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     // //////////////////////////////////////
 

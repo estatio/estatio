@@ -18,7 +18,24 @@
  */
 package org.estatio.dom.bankmandate;
 
-import org.apache.isis.applib.annotation.*;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.InheritanceStrategy;
+
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -26,11 +43,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.inject.Inject;
-import javax.jdo.annotations.InheritanceStrategy;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -84,16 +99,9 @@ public class BankMandate
 
     // //////////////////////////////////////
 
-    private FinancialAccount bankAccount;
-
     @javax.jdo.annotations.Column(name = "bankAccountId", allowsNull = "false")
-    public FinancialAccount getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(final FinancialAccount bankAccount) {
-        this.bankAccount = bankAccount;
-    }
+    @Getter @Setter
+    private FinancialAccount bankAccount;
 
     public BankMandate changeBankAccount(
             final BankAccount bankAccount
@@ -108,20 +116,12 @@ public class BankMandate
 
     // //////////////////////////////////////
 
-    private String sepaMandateIdentifier;
-
     @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(length = JdoColumnLength.BankMandate.SEPA_MANDATE_IDENTIFIER)
-    public String getSepaMandateIdentifier() {
-        return sepaMandateIdentifier;
-    }
-
-    public void setSepaMandateIdentifier(final String sepaMandateIdentifier) {
-        this.sepaMandateIdentifier = sepaMandateIdentifier;
-    }
+    @Getter @Setter
+    private String sepaMandateIdentifier;
 
     // //////////////////////////////////////
-
 
     public BankMandate change(
             final @ParameterLayout(named = "Name") @Parameter(optionality = Optionality.OPTIONAL) String name,

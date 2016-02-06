@@ -38,15 +38,9 @@ public class EventContributions extends UdoDomainService<EventContributions> {
     }
 
     //region > events (contributed association)
-    @Action(
-            semantics = SemanticsOf.SAFE
-    )
-    @ActionLayout(
-            contributed = Contributed.AS_ASSOCIATION
-    )
-    @CollectionLayout(
-            render = RenderType.EAGERLY
-    )
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public List<Event> events(final EventSource eventSource) {
         return events.findBySource(eventSource);
     }

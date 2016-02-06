@@ -5,6 +5,9 @@ import javax.jdo.annotations.Column;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.document.Document;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = javax.jdo.annotations.InheritanceStrategy.SUPERCLASS_TABLE)
@@ -23,15 +26,8 @@ import org.estatio.dom.document.Document;
 })
 public class DocumentForFixedAsset extends Document {
 
-    private FixedAsset fixedAsset;
-
     @Column(allowsNull = "false", name = "fixedAssetId")
-    public FixedAsset getFixedAsset() {
-        return fixedAsset;
-    }
-
-    public void setFixedAsset(FixedAsset fixedAsset) {
-        this.fixedAsset = fixedAsset;
-    }
+    @Getter @Setter
+    private FixedAsset fixedAsset;
 
 }

@@ -31,7 +31,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -39,6 +38,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -50,6 +50,9 @@ import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -81,21 +84,15 @@ public class Tax
 
     // //////////////////////////////////////
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
 
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -107,61 +104,33 @@ public class Tax
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @Title(sequence = "2", prepend = "-")
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
-
-    private String externalReference;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     @Property(optionality = Optionality.OPTIONAL)
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     // //////////////////////////////////////
-
-    private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     public Tax changeDescription(final String description) {
         setDescription(description);
@@ -171,16 +140,9 @@ public class Tax
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
-    private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<TaxRate> getRates() {
-        return rates;
-    }
-
-    public void setRates(final SortedSet<TaxRate> rates) {
-        this.rates = rates;
-    }
+    @Getter @Setter
+    private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
     // //////////////////////////////////////
 

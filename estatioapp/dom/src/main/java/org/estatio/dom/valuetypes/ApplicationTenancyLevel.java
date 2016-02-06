@@ -63,6 +63,8 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
         this.name = name;
     }
 
+    // //////////////////////////////////////
+
     private final String path;
 
     public String getPath() {

@@ -37,7 +37,6 @@ public class OrganisationChangedPayload extends EventPayloadForObjectChanged<Org
         super(target);
     }
 
-
     @Override
     @Render(Type.EAGERLY)
     public Organisation getChanged() {

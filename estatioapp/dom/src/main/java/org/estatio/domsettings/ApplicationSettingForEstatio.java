@@ -20,10 +20,16 @@
 package org.estatio.domsettings;
 
 import javax.jdo.annotations.IdentityType;
+
+import org.apache.isis.applib.annotation.Named;
+
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.SettingType;
-import org.apache.isis.applib.annotation.Named;
+
 import org.estatio.dom.JdoColumnLength;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.APPLICATION,
@@ -43,17 +49,10 @@ import org.estatio.dom.JdoColumnLength;
 @Named("Application Setting")
 public class ApplicationSettingForEstatio extends SettingAbstractForEstatio implements ApplicationSetting {
 
-    private String key;
-
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Setting.KEY)
     @javax.jdo.annotations.PrimaryKey
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(final String key) {
-        this.key = key;
-    }
+    @Getter @Setter
+    private String key;
 
     // //////////////////////////////////////
 

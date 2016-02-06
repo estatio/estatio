@@ -20,7 +20,9 @@ package org.estatio.dom.asset;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.eventbus.Subscribe;
+
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
@@ -28,8 +30,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable()
 @javax.jdo.annotations.Inheritance(
@@ -58,20 +64,13 @@ public class CommunicationChannelOwnerLinkForFixedAsset extends CommunicationCha
     }
 
     //region > fixedAsset (property)
-    private FixedAsset fixedAsset;
-
     @Column(
             allowsNull = "false",
             name = "fixedAssetId"
     )
     @MemberOrder(sequence = "1")
-    public FixedAsset getFixedAsset() {
-        return fixedAsset;
-    }
-
-    public void setFixedAsset(final FixedAsset fixedAsset) {
-        this.fixedAsset = fixedAsset;
-    }
+    @Getter @Setter
+    private FixedAsset fixedAsset;
     //endregion
 
 

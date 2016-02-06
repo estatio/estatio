@@ -52,6 +52,9 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -113,18 +116,10 @@ public class AgreementRoleCommunicationChannel
     }
 
     // //////////////////////////////////////
-
-    private AgreementRole role;
-
     @javax.jdo.annotations.Column(name = "agreementRoleId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public AgreementRole getRole() {
-        return role;
-    }
-
-    public void setRole(final AgreementRole agreementRole) {
-        this.role = agreementRole;
-    }
+    @Getter @Setter
+    private AgreementRole role;
 
     public void modifyRole(final AgreementRole role) {
         AgreementRole currentRole = getRole();
@@ -144,63 +139,30 @@ public class AgreementRoleCommunicationChannel
 
     // //////////////////////////////////////
 
-    private AgreementRoleCommunicationChannelType type;
-
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1")
-    public AgreementRoleCommunicationChannelType getType() {
-        return type;
-    }
-
-    public void setType(final AgreementRoleCommunicationChannelType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private AgreementRoleCommunicationChannelType type;
 
     // //////////////////////////////////////
-
-    private CommunicationChannel communicationChannel;
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
-    public CommunicationChannel getCommunicationChannel() {
-        return communicationChannel;
-    }
-
-    public void setCommunicationChannel(
-            final CommunicationChannel communicationChannel) {
-        this.communicationChannel = communicationChannel;
-    }
+    @Getter @Setter
+    private CommunicationChannel communicationChannel;
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Property(optionality = Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
-    private LocalDate endDate;
-
     @Property(optionality = Optionality.OPTIONAL)
-    @Override
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    @Override
-    public void setEndDate(final LocalDate localDate) {
-        this.endDate = localDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
     // //////////////////////////////////////
 

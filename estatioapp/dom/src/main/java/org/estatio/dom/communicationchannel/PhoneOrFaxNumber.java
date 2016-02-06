@@ -19,8 +19,11 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.Objects;
+
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.base.Predicate;
+
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -29,8 +32,12 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -43,18 +50,11 @@ import org.estatio.dom.RegexValidation;
 @DomainObject(editing = Editing.DISABLED)
 public class PhoneOrFaxNumber extends CommunicationChannel {
 
-    private String phoneNumber;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PHONE_NUMBER)
     @Title()
     @Property(optionality = Optionality.MANDATORY)
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(final String number) {
-        this.phoneNumber = number;
-    }
+    @Getter @Setter
+    private String phoneNumber;
 
     @ActionLayout(named = "Change Number")
     public PhoneOrFaxNumber changePhoneOrFaxNumber(

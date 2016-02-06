@@ -18,8 +18,30 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.List;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
+
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.isis.applib.annotation.*;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -27,15 +49,19 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.lease.tags.*;
+import org.estatio.dom.lease.tags.Activities;
+import org.estatio.dom.lease.tags.Activity;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.BrandCoverage;
+import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.Sector;
+import org.estatio.dom.lease.tags.Sectors;
+import org.estatio.dom.lease.tags.UnitSize;
+import org.estatio.dom.lease.tags.UnitSizes;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.VersionStrategy;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -104,61 +130,31 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    private Lease lease;
-
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    public Lease getLease() {
-        return lease;
-    }
-
-    public void setLease(final Lease lease) {
-        this.lease = lease;
-    }
+    @Getter @Setter
+    private Lease lease;
 
     // //////////////////////////////////////
-
-    private Unit unit;
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
     @Title(sequence = "2", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(final Unit unit) {
-        this.unit = unit;
-    }
+    @Getter @Setter
+    private Unit unit;
 
     // //////////////////////////////////////
 
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate startDate;
 
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
@@ -256,59 +252,31 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    private UnitSize unitSize;
-
     @javax.jdo.annotations.Column(name = "unitSizeId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
-    public UnitSize getUnitSize() {
-        return unitSize;
-    }
-
-    public void setUnitSize(final UnitSize unitSize) {
-        this.unitSize = unitSize;
-    }
+    @Getter @Setter
+    private UnitSize unitSize;
 
     // //////////////////////////////////////
-
-    private Sector sector;
 
     @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
-    public Sector getSector() {
-        return sector;
-    }
-
-    public void setSector(final Sector sector) {
-        this.sector = sector;
-    }
+    @Getter @Setter
+    private Sector sector;
 
     // //////////////////////////////////////
-
-    private Activity activity;
 
     @javax.jdo.annotations.Column(name = "activityId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(final Activity activity) {
-        this.activity = activity;
-    }
+    @Getter @Setter
+    private Activity activity;
 
     // //////////////////////////////////////
 
-    private Brand brand;
-
     @javax.jdo.annotations.Column(name = "brandId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
-    public Brand getBrand() {
-        return brand;
-    }
-
-    public void setBrand(final Brand brand) {
-        this.brand = brand;
-    }
+    @Getter @Setter
+    private Brand brand;
 
     // //////////////////////////////////////
 

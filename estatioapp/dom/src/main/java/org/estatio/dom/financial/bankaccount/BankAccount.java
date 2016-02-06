@@ -44,6 +44,9 @@ import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
@@ -52,56 +55,28 @@ import org.estatio.dom.party.Party;
 public class BankAccount
         extends FinancialAccount {
 
+    @javax.jdo.annotations.Column(name = "bankPartyId", allowsNull = "true")
+    @Getter @Setter
     private Party bank;
 
-    @javax.jdo.annotations.Column(name = "bankPartyId", allowsNull = "true")
-    public Party getBank() {
-        return bank;
-    }
-
-    public void setBank(final Party bank) {
-        this.bank = bank;
-    }
-
     // //////////////////////////////////////
-
-    private BankAccountType bankAccountType;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing = Editing.DISABLED)
-    public BankAccountType getBankAccountType() {
-        return bankAccountType;
-    }
-
-    public void setBankAccountType(final BankAccountType bankAccountType) {
-        this.bankAccountType = bankAccountType;
-    }
+    @Getter @Setter
+    private BankAccountType bankAccountType;
 
     // //////////////////////////////////////
-
-    private Country country;
 
     @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(final Country country) {
-        this.country = country;
-    }
+    @Getter @Setter
+    private Country country;
 
     // //////////////////////////////////////
 
-    private String iban;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
-    public String getIban() {
-        return iban;
-    }
-
-    public void setIban(final String iban) {
-        this.iban = iban;
-    }
+    @Getter @Setter
+    private String iban;
 
     // //////////////////////////////////////
 
@@ -123,55 +98,27 @@ public class BankAccount
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
+    @Getter @Setter
     private String nationalCheckCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
-    public String getNationalCheckCode() {
-        return nationalCheckCode;
-    }
-
-    public void setNationalCheckCode(final String nationalCheckCode) {
-        this.nationalCheckCode = nationalCheckCode;
-    }
-
     // //////////////////////////////////////
-
-    private String nationalBankCode;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
-    public String getNationalBankCode() {
-        return nationalBankCode;
-    }
-
-    public void setNationalBankCode(final String nationalBankCode) {
-        this.nationalBankCode = nationalBankCode;
-    }
+    @Getter @Setter
+    private String nationalBankCode;
 
     // //////////////////////////////////////
-
-    private String branchCode;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
-    public String getBranchCode() {
-        return branchCode;
-    }
-
-    public void setBranchCode(final String branchCode) {
-        this.branchCode = branchCode;
-    }
+    @Getter @Setter
+    private String branchCode;
 
     // //////////////////////////////////////
 
-    private String accountNumber;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(final String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+    @Getter @Setter
+    private String accountNumber;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
     public BankAccount change(

@@ -39,6 +39,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.invoice.Invoice;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * View model that surfaces information about each runId along with summary
  * details of its invoices in their various states.
@@ -115,66 +118,31 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
         return applicationTenancyRepository.findByPath(getAtPath());
     }
 
-    private String runId;
-
     @PropertyLayout(typicalLength = 100)
     @javax.jdo.annotations.Column(allowsNull = "false")
-    public String getRunId() {
-        return runId;
-    }
-
-    public void setRunId(final String runId) {
-        this.runId = runId;
-    }
+    @Getter @Setter
+    private String runId;
 
     // //////////////////////////////////////
 
+    @Getter @Setter
     private int total;
 
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(final int total) {
-        this.total = total;
-    }
-
     // //////////////////////////////////////
-
-    private BigDecimal vatAmount;
 
     @Property(hidden = Where.EVERYWHERE)
-    public BigDecimal getVatAmount() {
-        return vatAmount;
-    }
-
-    public void setVatAmount(final BigDecimal vatAmount) {
-        this.vatAmount = vatAmount;
-    }
+    @Getter @Setter
+    private BigDecimal vatAmount;
 
     // //////////////////////////////////////
 
+    @Getter @Setter
     private BigDecimal netAmount;
 
-    public BigDecimal getNetAmount() {
-        return netAmount;
-    }
-
-    public void setNetAmount(final BigDecimal netAmount) {
-        this.netAmount = netAmount;
-    }
-
     // //////////////////////////////////////
 
+    @Getter @Setter
     private BigDecimal grossAmount;
-
-    public BigDecimal getGrossAmount() {
-        return grossAmount;
-    }
-
-    public void setGrossAmount(final BigDecimal grossAmount) {
-        this.grossAmount = grossAmount;
-    }
 
     // //////////////////////////////////////
 

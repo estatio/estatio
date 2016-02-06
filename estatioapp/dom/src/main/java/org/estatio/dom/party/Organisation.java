@@ -22,13 +22,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -36,6 +36,9 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
@@ -45,21 +48,14 @@ public class Organisation
         extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -69,36 +65,21 @@ public class Organisation
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-
     // //////////////////////////////////////
-
-    private String fiscalCode;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.FISCAL_CODE)
     @Property(optionality = Optionality.OPTIONAL)
     @MemberOrder(sequence = "1")
-    public String getFiscalCode() {
-        return fiscalCode;
-    }
-
-    public void setFiscalCode(final String fiscalCode) {
-        this.fiscalCode = fiscalCode;
-    }
+    @Getter @Setter
+    private String fiscalCode;
 
     // //////////////////////////////////////
-
-    private String vatCode;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.VAT_CODE)
     @Property(optionality = Optionality.OPTIONAL)
     @MemberOrder(sequence = "1")
-    public String getVatCode() {
-        return vatCode;
-    }
-
-    public void setVatCode(final String vatCode) {
-        this.vatCode = vatCode;
-    }
+    @Getter @Setter
+    private String vatCode;
 
     // //////////////////////////////////////
 
