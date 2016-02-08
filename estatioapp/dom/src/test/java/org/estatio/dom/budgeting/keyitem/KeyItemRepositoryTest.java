@@ -62,7 +62,7 @@ public class KeyItemRepositoryTest {
         //given
         KeyTable keyTable = new KeyTableForTesting();
         Unit unit = new UnitForTesting();
-        BigDecimal sourcevalue = new BigDecimal(-0.001);
+        BigDecimal sourcevalue = BigDecimal.valueOf(-0.001);
         BigDecimal keyValue = new BigDecimal(10);
 
         //when
@@ -83,7 +83,7 @@ public class KeyItemRepositoryTest {
         KeyTable keyTable = new KeyTableForTesting();
         Unit unit = new UnitForTesting();
         BigDecimal sourcevalue = new BigDecimal(1);
-        BigDecimal keyValue = new BigDecimal(-0.001);
+        BigDecimal keyValue = BigDecimal.valueOf(-0.001);
 
         //when
         String validateNewBudgetKeyItem = keyItemRepository.validateNewItem(

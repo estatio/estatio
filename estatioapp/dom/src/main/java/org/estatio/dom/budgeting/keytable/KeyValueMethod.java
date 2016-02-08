@@ -28,7 +28,7 @@ public enum KeyValueMethod {
     PROMILLE {
         @Override
         public boolean isValid(KeyTable keyTable) {
-                if (!this.keySum(keyTable).equals(new BigDecimal(1000.000).setScale(keyTable.getPrecision(),BigDecimal.ROUND_HALF_UP))) {
+                if (!this.keySum(keyTable).equals(BigDecimal.valueOf(1000.000).setScale(keyTable.getPrecision(),BigDecimal.ROUND_HALF_UP))) {
                     return false;
                 }
             return true;
@@ -49,7 +49,7 @@ public enum KeyValueMethod {
     PERCENT {
         @Override
         public boolean isValid(KeyTable keyTable) {
-            if (!this.keySum(keyTable).equals(new BigDecimal(100.000).setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP))) {
+            if (!this.keySum(keyTable).equals(BigDecimal.valueOf(100.000).setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP))) {
                 return false;
             }
             return true;

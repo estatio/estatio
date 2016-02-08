@@ -61,11 +61,11 @@ public class KeyItemTest {
         assertTrue(item.getValue().equals(new BigDecimal(2)));
 
         //when
-        item.changeValue(new BigDecimal(2.3335));
+        item.changeValue(BigDecimal.valueOf(2.3335));
 
         //then
-        assertEquals(item.getValue(),new BigDecimal(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getValue().equals(new BigDecimal(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getValue(),BigDecimal.valueOf(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertFalse(item.getValue().equals(BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
 
     }
 
@@ -81,7 +81,7 @@ public class KeyItemTest {
         assertTrue(item.getValue().equals(new BigDecimal(2)));
 
         //when, then
-        assertEquals(item.validateChangeValue(new BigDecimal(-0.001)),"Value cannot be less than zero");
+        assertEquals(item.validateChangeValue(BigDecimal.valueOf(-0.001)),"Value cannot be less than zero");
     }
 
     @Test
@@ -96,11 +96,11 @@ public class KeyItemTest {
         assertTrue(item.getAuditedValue().equals(new BigDecimal(2)));
 
         //when
-        item.changeAuditedValue(new BigDecimal(2.3335));
+        item.changeAuditedValue(BigDecimal.valueOf(2.3335));
 
         //then
-        assertEquals(item.getAuditedValue(),new BigDecimal(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getAuditedValue().equals(new BigDecimal(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getAuditedValue(),BigDecimal.valueOf(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertFalse(item.getAuditedValue().equals(BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
 
     }
 
@@ -116,7 +116,7 @@ public class KeyItemTest {
         assertTrue(item.getAuditedValue().equals(new BigDecimal(2)));
 
         //when, then
-        assertEquals(item.validateChangeAuditedValue(new BigDecimal(-0.001)),"Value cannot be less than zero");
+        assertEquals(item.validateChangeAuditedValue(BigDecimal.valueOf(-0.001)),"Value cannot be less than zero");
     }
 
     @Test
@@ -131,11 +131,11 @@ public class KeyItemTest {
         assertTrue(item.getSourceValue().equals(new BigDecimal(2)));
 
         //when
-        item.changeSourceValue(new BigDecimal(2.335));
+        item.changeSourceValue(BigDecimal.valueOf(2.335));
 
         //then
-        assertEquals(item.getSourceValue(),new BigDecimal(2.33).setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getSourceValue().equals(new BigDecimal(2.34).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getSourceValue(),BigDecimal.valueOf(2.33).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertFalse(item.getSourceValue().equals(BigDecimal.valueOf(2.34).setScale(2, BigDecimal.ROUND_HALF_UP)));
 
     }
 
@@ -151,7 +151,7 @@ public class KeyItemTest {
         assertTrue(item.getSourceValue().equals(new BigDecimal(2)));
 
         //when, then
-        assertEquals(item.validateChangeSourceValue(new BigDecimal(-0.001)),"Source Value must be positive");
+        assertEquals(item.validateChangeSourceValue(BigDecimal.valueOf(-0.001)),"Source Value must be positive");
         assertEquals(item.validateChangeSourceValue(BigDecimal.ZERO),null);
     }
 

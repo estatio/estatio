@@ -47,7 +47,7 @@ public class LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb extends LeaseIt
                 LEASE_REF,
                 AT_PATH,
                 lease.getStartDate().withDayOfYear(1).plusYears(1), null,
-                new BigDecimal(1.50),
+                BigDecimal.valueOf(1.50),
                 executionContext);
     }
 }

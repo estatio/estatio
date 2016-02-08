@@ -68,7 +68,7 @@ public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
             indexTerm2 = (LeaseTermForIndexable) indexTerm1.getNext();
 
             torTerm = (LeaseTermForTurnoverRent) topmodelLease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT).getTerms().first();
-            torTerm.setAuditedTurnover(new BigDecimal(1111111.00));
+            torTerm.setAuditedTurnover(BigDecimal.valueOf(1111111.00));
             topmodelLease.verifyUntil(new LocalDate(2012, 01, 01));
 
             // when

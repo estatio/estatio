@@ -58,9 +58,9 @@ public class BudgetItemTest {
         @Test
         public void testValidateChange() {
             final BudgetItem budgetItem = new BudgetItemForTesting();
-            assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(-0.01))).isEqualTo("Value should be a positive non zero value");
+            assertThat(budgetItem.validateChangeBudgetedValue(BigDecimal.valueOf(-0.01))).isEqualTo("Value should be a positive non zero value");
             assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(0))).isEqualTo("Value should be a positive non zero value");
-            assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(0.01))).isEqualTo(null);
+            assertThat(budgetItem.validateChangeBudgetedValue(BigDecimal.valueOf(0.01))).isEqualTo(null);
         }
 
     }
@@ -73,9 +73,9 @@ public class BudgetItemTest {
             final BudgetItem budgetItem = new BudgetItemForTesting();
             final BigDecimal anyValueWillDo = new BigDecimal(10);
             //when
-            budgetItem.setBudgetedValue(new BigDecimal(1000.00));
+            budgetItem.setBudgetedValue(BigDecimal.valueOf(1000.00));
             //then
-            assertThat(budgetItem.default0ChangeBudgetedValue(anyValueWillDo)).isEqualTo(new BigDecimal(1000.00));
+            assertThat(budgetItem.default0ChangeBudgetedValue(anyValueWillDo)).isEqualTo(BigDecimal.valueOf(1000.00));
         }
 
     }
@@ -85,9 +85,9 @@ public class BudgetItemTest {
         @Test
         public void testValidateChange() {
             final BudgetItem budgetItem = new BudgetItemForTesting();
-            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(-0.01))).isEqualTo("Value can't be negative");
+            assertThat(budgetItem.validateChangeAuditedValue(BigDecimal.valueOf(-0.01))).isEqualTo("Value can't be negative");
             assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(0))).isEqualTo(null);
-            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(0.01))).isEqualTo(null);
+            assertThat(budgetItem.validateChangeAuditedValue(BigDecimal.valueOf(0.01))).isEqualTo(null);
         }
 
     }

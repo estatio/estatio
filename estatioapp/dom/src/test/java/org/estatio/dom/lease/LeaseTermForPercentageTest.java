@@ -156,8 +156,8 @@ public class LeaseTermForPercentageTest {
 
         @Test
         public void testValidate(){
-            assertThat(term.validateChangeParameters(new BigDecimal(-0.00001)), is("Percentage should be between 0 and 100"));
-            assertThat(term.validateChangeParameters(new BigDecimal(100.00001)), is("Percentage should be between 0 and 100"));
+            assertThat(term.validateChangeParameters(BigDecimal.valueOf(-0.00001)), is("Percentage should be between 0 and 100"));
+            assertThat(term.validateChangeParameters(BigDecimal.valueOf(100.00001)), is("Percentage should be between 0 and 100"));
             assertNull(term.validateChangeParameters(new BigDecimal(0)));
             assertNull(term.validateChangeParameters(new BigDecimal(100)));
         }
