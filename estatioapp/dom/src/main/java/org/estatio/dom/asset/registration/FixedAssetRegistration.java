@@ -200,17 +200,12 @@ public abstract class FixedAssetRegistration
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public FixedAsset remove(final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public FixedAsset remove() {
         FixedAsset fixedAsset = getSubject();
-        doRemove();
-        return fixedAsset;
-    }
-
-    @Programmatic
-    public void doRemove() {
         getContainer().remove(this);
         getContainer().flush();
+        return fixedAsset;
     }
 
 }

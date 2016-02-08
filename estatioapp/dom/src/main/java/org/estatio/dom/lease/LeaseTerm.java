@@ -335,10 +335,10 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Object remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object remove() {
         LeaseItem item = getLeaseItem();
-        if (confirm && doRemove()) {
+        if (doRemove()) {
             return item;
         }
         return this;

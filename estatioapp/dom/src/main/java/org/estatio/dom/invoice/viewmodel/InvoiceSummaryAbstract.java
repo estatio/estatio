@@ -46,9 +46,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    public Object collectAll(
-            final @Named("Are you sure?") Boolean confirm
-            ) {
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public Object collectAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.doCollect();
         }
@@ -69,7 +68,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return getClockService().now();
     }
 
-    public Object removeAll(final @Named("Confirm") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object removeAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.remove();
         }
@@ -79,7 +79,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     @Prototype
     public Object zapAll(final @Named("Confirm") Boolean confirm) {
         for (Invoice invoice : getInvoices()) {
-            invoice.doRemove();
+            invoice.remove();
         }
         return this;
     }

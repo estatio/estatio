@@ -226,9 +226,10 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    public Object remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object remove() {
         Lease tmpLease = getLease();
-        if (confirm && doRemove()) {
+        if (doRemove()) {
             return tmpLease;
         }
         return this;

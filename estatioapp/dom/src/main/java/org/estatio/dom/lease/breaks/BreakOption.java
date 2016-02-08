@@ -30,6 +30,8 @@ import com.google.common.collect.Maps;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -40,6 +42,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -250,18 +253,14 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease remove(final @ParameterLayout(named = "Reason") String reason) {
         Lease lease = getLease();
-        doRemove();
-        return lease;
-    }
-
-    @Programmatic
-    public void doRemove() {
         for (Event event : findEvents()) {
             getContainer().remove(event);
         }
         getContainer().remove(this);
+        return lease;
     }
 
     // //////////////////////////////////////

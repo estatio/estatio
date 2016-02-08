@@ -24,12 +24,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -105,8 +105,6 @@ public class FixedAssetFinancialAccount
 
     // //////////////////////////////////////
 
-
-
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @Title(sequence = "2")
@@ -147,14 +145,8 @@ public class FixedAssetFinancialAccount
         }
     }
 
-    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-    }
-
-    @Programmatic
-    public void doRemove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         getContainer().remove(this);
         getContainer().flush();
     }

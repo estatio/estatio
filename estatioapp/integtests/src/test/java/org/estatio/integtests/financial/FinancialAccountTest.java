@@ -141,9 +141,9 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
             Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(PropertyForKalNl.REF));
 
             // When
-            wrap(fixedAssetFinancialAccount).remove(true);
+            wrap(fixedAssetFinancialAccount).remove();
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            wrap(bankAccount).remove(true);
+            wrap(bankAccount).remove();
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));

@@ -636,24 +636,19 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove() {
         // Can be called as bulk so have a safeguard
         if (disableRemove() == null) {
-            doRemove();
+            for (InvoiceItem item : getItems()) {
+                item.remove();
+            }
+            getContainer().remove(this);
         }
     }
 
     public String disableRemove() {
         return getStatus().invoiceIsChangable() ? null : "Only invoices with status New can be removed.";
-    }
-
-    @Programmatic
-    public void doRemove() {
-        for (InvoiceItem item : getItems()) {
-            item.remove();
-        }
-        getContainer().remove(this);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)

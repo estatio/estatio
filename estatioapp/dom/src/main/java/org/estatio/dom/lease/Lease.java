@@ -907,18 +907,8 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-    }
-
-    public boolean hideRemove() {
-        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
-    }
-
-    @Programmatic
-    public boolean doRemove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         boolean success = true;
 
         for (LeaseItem item : getItems()) {
@@ -927,7 +917,10 @@ public class Lease
         if (success) {
             getContainer().remove(this);
         }
-        return success;
+    }
+
+    public boolean hideRemove() {
+        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
     }
 
     @Programmatic

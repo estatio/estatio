@@ -32,8 +32,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
@@ -165,19 +165,11 @@ public class BankAccount
         return this;
     }
 
-    @Action(domainEvent = BankAccount.RemoveEvent.class)
-    public Object remove(
-            @ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-        return null;
-    }
-
-    @Programmatic
-    public void doRemove() {
+    @Action(domainEvent = BankAccount.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         getContainer().remove(this);
         getContainer().flush();
+        return;
     }
 
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {

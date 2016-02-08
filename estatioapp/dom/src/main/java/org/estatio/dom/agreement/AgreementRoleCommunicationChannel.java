@@ -166,18 +166,12 @@ public class AgreementRoleCommunicationChannel
 
     // //////////////////////////////////////
 
-    public AgreementRole remove(
-            @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         AgreementRole agreementRole = this.getRole();
-        if (confirm) {
-            doRemove();
-        }
-        return agreementRole;
-    }
-
-    @Programmatic
-    public void doRemove() {
         getContainer().remove(this);
+
+        return;
     }
 
     // //////////////////////////////////////

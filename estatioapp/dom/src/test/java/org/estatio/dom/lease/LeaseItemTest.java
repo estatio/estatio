@@ -127,16 +127,10 @@ public class LeaseItemTest {
         }
 
         @Test
-        public void whenNotConfirmed() throws Exception {
-            Object returned = leaseItem.remove(false);
-            assertThat(returned, is((Object) leaseItem));
-        }
-
-        @Test
         public void whenConfirmedAndNoChildTerms() throws Exception {
             expectingRemoveAndFlush(leaseItem);
 
-            Object returned = leaseItem.remove(true);
+            Object returned = leaseItem.remove();
             assertThat(returned, is((Object) lease));
         }
 
@@ -146,7 +140,7 @@ public class LeaseItemTest {
             leaseItem.getTerms().add(leaseTerm);
             leaseTermSuccessfullyRemoved = false;
 
-            Object returned = leaseItem.remove(true);
+            Object returned = leaseItem.remove();
             assertThat(returned, is((Object) leaseItem));
         }
 
@@ -157,7 +151,7 @@ public class LeaseItemTest {
             leaseTermSuccessfullyRemoved = true;
             expectingRemoveAndFlush(leaseItem);
 
-            Object returned = leaseItem.remove(true);
+            Object returned = leaseItem.remove();
             assertThat(returned, is((Object) lease));
         }
 
