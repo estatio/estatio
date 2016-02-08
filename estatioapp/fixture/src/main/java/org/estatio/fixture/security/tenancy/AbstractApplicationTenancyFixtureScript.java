@@ -26,7 +26,7 @@ import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScript {
 
-    static public String ONLY = "_";
+    public static final String ONLY = "_";
 
     protected ApplicationTenancy create(
             final String name,
