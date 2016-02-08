@@ -54,7 +54,7 @@ public class PartyRelationshipViewService extends UdoDomainService<PartyRelation
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
     public List<PartyRelationshipView> relationships(Party party) {
-        List<PartyRelationshipView> partyRelationshipViews = new ArrayList<PartyRelationshipView>();
+        List<PartyRelationshipView> partyRelationshipViews = new ArrayList<>();
         final List<PartyRelationship> relationships = partyRelationships.findByParty(party);
         for (PartyRelationship partyRelationship : relationships) {
             PartyRelationshipView viewModel = new PartyRelationshipView(partyRelationship, party);

@@ -87,7 +87,7 @@ public class WithApplicationTenancyDefinedLevelsContractTest {
     }
 
     private <T extends WithApplicationTenancy> String test(Class<T> cls) {
-        return new WithApplicationTenancyDefinedLevelsContractTester<T>(cls).test();
+        return new WithApplicationTenancyDefinedLevelsContractTester<>(cls).test();
     }
 
 }

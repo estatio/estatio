@@ -206,7 +206,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<LeaseTerm> changeDates = new WithIntervalMutable.Helper<LeaseTerm>(this);
+    private WithIntervalMutable.Helper<LeaseTerm> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
         return changeDates;
@@ -331,7 +331,7 @@ public abstract class LeaseTerm
     @Persistent(mappedBy = "leaseTerm")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<InvoiceItemForLease>();
+    private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<>();
 
     // //////////////////////////////////////
 

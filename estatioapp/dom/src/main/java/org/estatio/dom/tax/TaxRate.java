@@ -107,7 +107,7 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<TaxRate>(this);
+    private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<TaxRate> getChangeDates() {
         return changeDates;

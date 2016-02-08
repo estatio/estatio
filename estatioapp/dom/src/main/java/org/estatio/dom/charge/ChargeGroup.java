@@ -104,6 +104,6 @@ public class ChargeGroup
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "group")
     @Getter @Setter
-    private SortedSet<Charge> charges = new TreeSet<Charge>();
+    private SortedSet<Charge> charges = new TreeSet<>();
 
 }

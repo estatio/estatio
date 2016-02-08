@@ -348,7 +348,7 @@ public class Invoice
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")
     @Getter @Setter
-    private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
+    private SortedSet<InvoiceItem> items = new TreeSet<>();
 
     // //////////////////////////////////////
 

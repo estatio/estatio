@@ -175,7 +175,7 @@ public class DistributionService {
 
         }
 
-        ArrayList<Distributable> output = new ArrayList<Distributable>();
+        ArrayList<Distributable> output = new ArrayList<>();
 
         for (OutputHelper helper : outputHelperList) {
             output.add(helper.distributable);

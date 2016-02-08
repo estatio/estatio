@@ -89,7 +89,7 @@ public class Sector
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "sector")
-    private SortedSet<Activity> activities = new TreeSet<Activity>();
+    private SortedSet<Activity> activities = new TreeSet<>();
 
     public SortedSet<Activity> getActivities() {
         return activities;

@@ -122,7 +122,7 @@ public abstract class FixedAssetRegistration
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<FixedAssetRegistration> changeDates = new WithIntervalMutable.Helper<FixedAssetRegistration>(this);
+    private WithIntervalMutable.Helper<FixedAssetRegistration> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<FixedAssetRegistration> getChangeDates() {
         return changeDates;

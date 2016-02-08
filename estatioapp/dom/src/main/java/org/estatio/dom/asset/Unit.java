@@ -186,7 +186,7 @@ public class Unit
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Unit> changeDates = new WithIntervalMutable.Helper<Unit>(this);
+    private WithIntervalMutable.Helper<Unit> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Unit> getChangeDates() {
         return changeDates;

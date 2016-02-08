@@ -109,7 +109,7 @@ public class LinkRepository extends UdoDomainRepositoryAndFactory<Link> {
     }
 
     public List<Link> findByClassName(final String className) {
-        return allMatches(new QueryDefault<Link>(Link.class,
+        return allMatches(new QueryDefault<>(Link.class,
                 "findByClassName",
                 "className", className));
     }

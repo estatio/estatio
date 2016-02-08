@@ -302,7 +302,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<LeaseItem>(this);
+    private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
         return changeDates;
@@ -537,7 +537,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent(mappedBy = "leaseItem")
     @CollectionLayout(render = RenderType.EAGERLY, paged = PAGE_SIZE)
     @Getter @Setter
-    private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
+    private SortedSet<LeaseTerm> terms = new TreeSet<>();
 
     @Programmatic
     public LeaseTerm findTerm(final LocalDate startDate) {
@@ -632,7 +632,7 @@ public class LeaseItem
             final LocalDateInterval interval,
             final LocalDate dueDate
             ) {
-        List<CalculationResult> results = new ArrayList<CalculationResult>();
+        List<CalculationResult> results = new ArrayList<>();
         for (LeaseTerm term : getTerms()) {
             results.addAll(term.calculationResults(interval, dueDate));
         }

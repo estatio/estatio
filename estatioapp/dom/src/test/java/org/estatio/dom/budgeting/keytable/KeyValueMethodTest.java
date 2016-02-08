@@ -35,7 +35,7 @@ public class KeyValueMethodTest {
         //given
         KeyValueMethod method = KeyValueMethod.PROMILLE;
         KeyTable keyTable = new KeyTable();
-        SortedSet<KeyItem> budgetKeyItems = new TreeSet<KeyItem>();
+        SortedSet<KeyItem> budgetKeyItems = new TreeSet<>();
 
         //when
 
@@ -60,7 +60,7 @@ public class KeyValueMethodTest {
         //given
         KeyValueMethod method = KeyValueMethod.PROMILLE;
         KeyTable keyTable = new KeyTable();
-        SortedSet<KeyItem> budgetKeyItems = new TreeSet<KeyItem>();
+        SortedSet<KeyItem> budgetKeyItems = new TreeSet<>();
 
         //when
 
@@ -84,7 +84,7 @@ public class KeyValueMethodTest {
         //given
         KeyValueMethod method = KeyValueMethod.PROMILLE;
         KeyTable keyTable = new KeyTable();
-        SortedSet<KeyItem> budgetKeyItems = new TreeSet<KeyItem>();
+        SortedSet<KeyItem> budgetKeyItems = new TreeSet<>();
 
         //when
 

@@ -168,7 +168,7 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
     @MemberOrder(name = "Leases", sequence = "30")
     public List<LeaseTerm> findTermsWithInvalidInterval() {
         List<LeaseTerm> lts = allLeaseTerms();
-        List<LeaseTerm> returnList = new ArrayList<LeaseTerm>();
+        List<LeaseTerm> returnList = new ArrayList<>();
         LocalDateInterval ldi;
         for (LeaseTerm lt : lts) {
             try {

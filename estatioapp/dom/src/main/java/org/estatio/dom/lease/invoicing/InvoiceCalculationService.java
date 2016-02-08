@@ -149,14 +149,14 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                     SortedSet<LeaseItem> leaseItems =
                             parameters.leaseItem() == null ?
                                     lease.getItems() :
-                                    new TreeSet<LeaseItem>(Arrays.asList(parameters.leaseItem()));
+                                    new TreeSet<>(Arrays.asList(parameters.leaseItem()));
                     for (LeaseItem leaseItem : leaseItems) {
                         if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED)) {
                             if (parameters.leaseItemTypes() == null || parameters.leaseItemTypes().contains(leaseItem.getType())) {
                                 SortedSet<LeaseTerm> leaseTerms =
                                         parameters.leaseTerm() == null ?
                                                 leaseItem.getTerms() :
-                                                new TreeSet<LeaseTerm>(Arrays.asList(parameters.leaseTerm()));
+                                                new TreeSet<>(Arrays.asList(parameters.leaseTerm()));
                                 for (LeaseTerm leaseTerm : leaseTerms) {
                                     final List<CalculationResult> results;
                                     results = calculateDueDateRange(leaseTerm, parameters);

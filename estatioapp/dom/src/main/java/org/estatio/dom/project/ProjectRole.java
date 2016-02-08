@@ -118,7 +118,7 @@ public class ProjectRole
 {
 
     private WithIntervalContiguous.Helper<ProjectRole> helper =
-            new WithIntervalContiguous.Helper<ProjectRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 

@@ -370,7 +370,7 @@ public class Lease
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     @Getter @Setter
-    private SortedSet<Occupancy> occupancies = new TreeSet<Occupancy>();
+    private SortedSet<Occupancy> occupancies = new TreeSet<>();
 
     /**
      * The action to relate a lease to a unit. A lease can occupy unlimited
@@ -410,7 +410,7 @@ public class Lease
     @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
+    private SortedSet<LeaseItem> items = new TreeSet<>();
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
@@ -506,7 +506,7 @@ public class Lease
 
     @Programmatic
     public List<LeaseItem> findItemsOfType(final LeaseItemType type) {
-        List<LeaseItem> items = new ArrayList<LeaseItem>();
+        List<LeaseItem> items = new ArrayList<>();
         for (LeaseItem item : getItems()) {
             if (item.getType().equals(type)) {
                 items.add(item);
@@ -531,7 +531,7 @@ public class Lease
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     @Getter @Setter
-    private SortedSet<BreakOption> breakOptions = new TreeSet<BreakOption>();
+    private SortedSet<BreakOption> breakOptions = new TreeSet<>();
 
     // //////////////////////////////////////
 

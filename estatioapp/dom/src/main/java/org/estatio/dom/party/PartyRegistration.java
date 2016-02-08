@@ -118,7 +118,7 @@ public class PartyRegistration
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<PartyRegistration> changeDates =
-            new WithIntervalMutable.Helper<PartyRegistration>(this);
+            new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
         return changeDates;

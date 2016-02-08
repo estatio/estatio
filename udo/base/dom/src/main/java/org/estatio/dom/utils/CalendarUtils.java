@@ -137,7 +137,7 @@ public final class CalendarUtils {
             final LocalDate startDate,
             final LocalDate endDate,
             final String rrule) {
-        List<LocalDateInterval> localDateIntervals = new ArrayList<LocalDateInterval>();
+        List<LocalDateInterval> localDateIntervals = new ArrayList<>();
         for (Interval interval : intervalsInRange(startDate, endDate, rrule)) {
             localDateIntervals.add(new LocalDateInterval(interval));
         }

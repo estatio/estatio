@@ -97,7 +97,7 @@ public class AgreementRoleCommunicationChannel
         implements WithIntervalContiguous<AgreementRoleCommunicationChannel>, WithApplicationTenancyProperty {
 
     private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =
-            new WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 

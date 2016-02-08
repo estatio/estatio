@@ -149,7 +149,7 @@ public class IndexBase
     @Persistent(mappedBy = "indexBase")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
+    private SortedSet<IndexValue> values = new TreeSet<>();
 
     @Programmatic
     public BigDecimal factorForDate(final LocalDate date) {

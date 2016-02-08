@@ -145,7 +145,7 @@ public enum InvoicingFrequency {
     }
 
     public List<InvoicingInterval> intervalsInRange(final LocalDate periodStartDate, final LocalDate nextPeriodStartDate) {
-        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<>();
         for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, nextPeriodStartDate, this.rrule)) {
             invoicingIntervals.add(new InvoicingInterval(interval, dueDateOfInterval(interval)));
         }
@@ -155,7 +155,7 @@ public enum InvoicingFrequency {
     public List<InvoicingInterval> intervalsInDueDateRange(
             final LocalDate periodStartDate,
             final LocalDate periodEndDate) {
-        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<>();
         if (periodEndDate.compareTo(periodStartDate) > 0) {
             for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule)) {
                 LocalDate dueDate = dueDateOfInterval(interval);
@@ -170,7 +170,7 @@ public enum InvoicingFrequency {
     public List<InvoicingInterval> intervalsInDueDateRange(
             final LocalDateInterval rangeInterval,
             final LocalDateInterval sourceInterval) {
-        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<>();
         if (rrule == null) {
             LocalDate dueDateOfSourceInterval = dueDateOfInterval(sourceInterval);
             if (rangeInterval.contains(dueDateOfSourceInterval)) {

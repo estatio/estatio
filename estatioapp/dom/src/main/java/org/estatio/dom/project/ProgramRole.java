@@ -118,7 +118,7 @@ public class ProgramRole
         implements WithIntervalContiguous<ProgramRole>, WithApplicationTenancyGlobalAndCountry {
 
     private WithIntervalContiguous.Helper<ProgramRole> helper =
-            new WithIntervalContiguous.Helper<ProgramRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 

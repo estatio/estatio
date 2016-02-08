@@ -146,7 +146,7 @@ public class Index
     @Persistent(mappedBy = "index")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
+    private SortedSet<IndexBase> indexBases = new TreeSet<>();
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")

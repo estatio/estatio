@@ -99,7 +99,7 @@ public class LeaseTermForPercentage extends LeaseTerm {
             // Collect all results
             BigDecimal newOriginalValue = BigDecimal.ZERO;
             List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
-            List<InvoiceCalculationService.CalculationResult> calculationResults = new ArrayList<InvoiceCalculationService.CalculationResult>();
+            List<InvoiceCalculationService.CalculationResult> calculationResults = new ArrayList<>();
             for (LeaseItem rentItem : rentItems) {
                 calculationResults.addAll(
                         rentItem.calculationResults(getInterval(), this.getEndDate().plusYears(1)));

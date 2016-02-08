@@ -151,7 +151,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
             // Collect all results
             BigDecimal newContractualRent = BigDecimal.ZERO;
             List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
-            List<CalculationResult> calculationResults = new ArrayList<CalculationResult>();
+            List<CalculationResult> calculationResults = new ArrayList<>();
             for (LeaseItem rentItem : rentItems) {
                 calculationResults.addAll(
                         rentItem.calculationResults(getInterval(), this.getEndDate().plusYears(1)));
