@@ -18,48 +18,40 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.InheritanceStrategy;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.InheritanceStrategy;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForPercentage extends LeaseTerm {
 
-    //region > percentage (property)
+    @Column(allowsNull = "false", scale = 2)
+    @Getter @Setter
     private BigDecimal percentage;
 
-    @Column(allowsNull = "false", scale = 2)
-    public BigDecimal getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(final BigDecimal percentage) {
-        this.percentage = percentage;
-    }
-    //endregion
-
-    //region > originalValue (property)
-    private BigDecimal originalValue;
+    // //////////////////////////////////////
 
     @Column(allowsNull = "true", scale = 2)
-    public BigDecimal getOriginalValue() {
-        return originalValue;
-    }
+    @Getter @Setter
+    private BigDecimal originalValue;
 
-    public void setOriginalValue(final BigDecimal originalValue) {
-        this.originalValue = originalValue;
-    }
-    //endregion
+    // //////////////////////////////////////
 
     public LeaseTermForPercentage changeParameters(
             final BigDecimal newPercentage) {
@@ -81,6 +73,7 @@ public class LeaseTermForPercentage extends LeaseTerm {
         return null;
     }
 
+    // //////////////////////////////////////
 
     @Override
     public BigDecimal valueForDate(LocalDate dueDate) {

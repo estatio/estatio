@@ -39,6 +39,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents a geographic {@link State} {@link #getCountry() within} a
  * {@link Country}.
@@ -86,8 +89,6 @@ public class State
 
     // //////////////////////////////////////
 
-    private String reference;
-
     /**
      * As per ISO standards for <a href=
      * "http://www.commondatahub.com/live/geography/country/iso_3166_country_codes"
@@ -97,39 +98,20 @@ public class State
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.State.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
-    private Country country;
-
     @javax.jdo.annotations.Column(name = "countryId", allowsNull = "false")
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(final Country country) {
-        this.country = country;
-    }
+    @Getter @Setter
+    private Country country;
 
 }

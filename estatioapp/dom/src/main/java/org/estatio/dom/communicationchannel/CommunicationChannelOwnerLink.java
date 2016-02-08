@@ -22,14 +22,21 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.base.Function;
-import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
+
 import org.estatio.dom.JdoColumnLength;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
@@ -117,52 +124,29 @@ public abstract class CommunicationChannelOwnerLink extends PolymorphicAssociati
     public void setPolymorphicIdentifier(final String polymorphicIdentifier) {
         setOwnerIdentifier(polymorphicIdentifier);
     }
-    //endregion
 
-    //region > communicationChannel (property)
-    private CommunicationChannel communicationChannel;
+    // //////////////////////////////////////
+
     @Column(
             allowsNull = "false",
             name = "communicationChannelId"
     )
-    public CommunicationChannel getCommunicationChannel() {
-        return communicationChannel;
-    }
+    @Getter @Setter
+    private CommunicationChannel communicationChannel;
 
-    public void setCommunicationChannel(final CommunicationChannel communicationChannel) {
-        this.communicationChannel = communicationChannel;
-    }
-    //endregion
+    // //////////////////////////////////////
 
-    //region > ownerObjectType (property)
+    @Column(allowsNull = "false", length = 255)
+    @Getter @Setter
     private String ownerObjectType;
 
+    // //////////////////////////////////////
+
     @Column(allowsNull = "false", length = 255)
-    public String getOwnerObjectType() {
-        return ownerObjectType;
-    }
-
-    public void setOwnerObjectType(final String ownerObjectType) {
-        this.ownerObjectType = ownerObjectType;
-    }
-    //endregion
-
-    //region > ownerIdentifier (property)
+    @Getter @Setter
     private String ownerIdentifier;
 
-    @Column(allowsNull = "false", length = 255)
-    public String getOwnerIdentifier() {
-        return ownerIdentifier;
-    }
-
-    public void setOwnerIdentifier(final String ownerIdentifier) {
-        this.ownerIdentifier = ownerIdentifier;
-    }
-    //endregion
-
-    //region > communicationChannelType (property)
-
-    private CommunicationChannelType communicationChannelType;
+    // //////////////////////////////////////
 
     /**
      * copy of the {@link #getCommunicationChannel()}'s {@link CommunicationChannel#getType() type}.
@@ -175,14 +159,8 @@ public abstract class CommunicationChannelOwnerLink extends PolymorphicAssociati
     @MemberOrder(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(hidden = Where.EVERYWHERE)
-    public CommunicationChannelType getCommunicationChannelType() {
-        return communicationChannelType;
-    }
-
-    public void setCommunicationChannelType(final CommunicationChannelType communicationChannelType) {
-        this.communicationChannelType = communicationChannelType;
-    }
-    //endregion
+    @Getter @Setter
+    private CommunicationChannelType communicationChannelType;
 
     // //////////////////////////////////////
 

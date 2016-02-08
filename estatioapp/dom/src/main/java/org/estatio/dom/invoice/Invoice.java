@@ -68,6 +68,9 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -185,20 +188,12 @@ public class Invoice
         super("invoiceNumber, collectionNumber, buyer, dueDate, lease, uuid");
     }
 
-    private String uuid;
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(final String uuid) {
-        this.uuid = uuid;
-    }
+    @Getter @Setter
+    private String uuid;
 
     // //////////////////////////////////////
-
-    private String applicationTenancyPath;
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
@@ -206,13 +201,8 @@ public class Invoice
             name = "atPath"
     )
     @Property(hidden = Where.EVERYWHERE)
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -221,7 +211,6 @@ public class Invoice
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
-
 
     // //////////////////////////////////////
 
@@ -247,114 +236,57 @@ public class Invoice
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
+    @Getter @Setter
     private Party buyer;
 
-    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
-    public Party getBuyer() {
-        return buyer;
-
-    }
-
-    public void setBuyer(final Party buyer) {
-        this.buyer = buyer;
-    }
-
     // //////////////////////////////////////
-
-    private Party seller;
 
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
     @Property(hidden = Where.ALL_TABLES)
-    public Party getSeller() {
-        return seller;
-    }
-
-    public void setSeller(final Party seller) {
-        this.seller = seller;
-    }
+    @Getter @Setter
+    private Party seller;
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
+    @Property(hidden = Where.ALL_TABLES)
+    @Getter @Setter
     private String collectionNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
-    @Property(hidden = Where.ALL_TABLES)
-    public String getCollectionNumber() {
-        return collectionNumber;
-    }
-
-    public void setCollectionNumber(final String collectionNumber) {
-        this.collectionNumber = collectionNumber;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
+    @Property(hidden = Where.ALL_TABLES)
+    @Getter @Setter
     private String invoiceNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
-    @Property(hidden = Where.ALL_TABLES)
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    public void setInvoiceNumber(final String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
     // //////////////////////////////////////
-
-    private String runId;
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
-    public String getRunId() {
-        return runId;
-    }
-
-    public void setRunId(final String runId) {
-        this.runId = runId;
-    }
+    @Getter @Setter
+    private String runId;
 
     // //////////////////////////////////////
-
-    private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "true")
     @Property(optionality = Optionality.OPTIONAL)
-    public Lease getLease() {
-        return lease;
-    }
-
-    public void setLease(final Lease lease) {
-        this.lease = lease;
-    }
+    @Getter @Setter
+    private Lease lease;
 
     // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent
-    private LocalDate invoiceDate;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    public LocalDate getInvoiceDate() {
-        return invoiceDate;
-    }
-
-    public void setInvoiceDate(final LocalDate invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate invoiceDate;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate dueDate;
-
     @javax.jdo.annotations.Column(allowsNull = "false")
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(final LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate dueDate;
 
     public void changeDueDate(
             final @ParameterLayout(named = "Due date") LocalDate dueDate) {
@@ -376,44 +308,23 @@ public class Invoice
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
+    @Getter @Setter
     private InvoiceStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
-    public InvoiceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(final InvoiceStatus status) {
-        this.status = status;
-    }
-
     // //////////////////////////////////////
-
-    private Currency currency;
 
     // REVIEW: invoice generation is not populating this field.
     @javax.jdo.annotations.Column(name = "currencyId", allowsNull = "true")
     @Property(hidden = Where.ALL_TABLES)
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(final Currency currency) {
-        this.currency = currency;
-    }
+    @Getter @Setter
+    private Currency currency;
 
     // //////////////////////////////////////
 
-    private PaymentMethod paymentMethod;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(final PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
+    @Getter @Setter
+    private PaymentMethod paymentMethod;
 
     public Invoice changePaymentMethod(
             final PaymentMethod paymentMethod,
@@ -434,32 +345,18 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "invoice")
-    private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<InvoiceItem> getItems() {
-        return items;
-    }
-
-    public void setItems(final SortedSet<InvoiceItem> items) {
-        this.items = items;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "invoice")
+    @Getter @Setter
+    private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
 
     // //////////////////////////////////////
 
-    @Persistent
-    private BigInteger lastItemSequence;
-
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Property(hidden = Where.EVERYWHERE)
-    public BigInteger getLastItemSequence() {
-        return lastItemSequence;
-    }
-
-    public void setLastItemSequence(final BigInteger lastItemSequence) {
-        this.lastItemSequence = lastItemSequence;
-    }
+    @Persistent
+    @Getter @Setter
+    private BigInteger lastItemSequence;
 
     @Programmatic
     public BigInteger nextItemSequence() {
@@ -701,13 +598,11 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    private FixedAsset fixedAsset;
-
     /**
      * Derived from the {@link #getLease() lease}, but safe to persist since
      * business rule states that we never generate invoices for invoice items
      * that relate to different properties.
-     * 
+     *
      * <p>
      * Another reason for persisting this is that it allows eager validation
      * when attaching additional {@link InvoiceItem}s to an invoice, to check
@@ -717,25 +612,17 @@ public class Invoice
     // for the moment, might be generalized (to the user) in the future
     @Property(hidden = Where.PARENTED_TABLES)
     @PropertyLayout(named = "Property")
-    public FixedAsset getFixedAsset() {
-        return fixedAsset;
-    }
-
-    public void setFixedAsset(final FixedAsset fixedAsset) {
-        this.fixedAsset = fixedAsset;
-    }
+    @Getter @Setter
+    private FixedAsset fixedAsset;
 
     // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
-    private BankMandate paidBy;
 
     /**
      * Derived from the {@link #getLease() lease}, but safe to persist since
      * business rule states that all invoice items that are paid by
      * {@link BankMandate} (as opposed to simply by bank transfer) will be for
      * the same bank mandate.
-     * 
+     *
      * <p>
      * Another reason for persisting this is that it allows eager validation
      * when attaching additional {@link InvoiceItem}s to an invoice, to check
@@ -743,34 +630,25 @@ public class Invoice
      * mandate).
      */
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
-    public BankMandate getPaidBy() {
-        return paidBy;
-    }
-
-    public void setPaidBy(final BankMandate paidBy) {
-        this.paidBy = paidBy;
-    }
+    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
+    @Getter @Setter
+    private BankMandate paidBy;
 
     // //////////////////////////////////////
 
-    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove() {
         // Can be called as bulk so have a safeguard
         if (disableRemove() == null) {
-            doRemove();
+            for (InvoiceItem item : getItems()) {
+                item.remove();
+            }
+            getContainer().remove(this);
         }
     }
 
     public String disableRemove() {
         return getStatus().invoiceIsChangable() ? null : "Only invoices with status New can be removed.";
-    }
-
-    @Programmatic
-    public void doRemove() {
-        for (InvoiceItem item : getItems()) {
-            item.remove();
-        }
-        getContainer().remove(this);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)

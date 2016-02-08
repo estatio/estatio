@@ -66,6 +66,9 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -141,61 +144,36 @@ public class AgreementRole
 
     // //////////////////////////////////////
 
-    private Agreement agreement;
+
 
     @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Agreement getAgreement() {
-        return agreement;
-    }
-
-    public void setAgreement(final Agreement agreement) {
-        this.agreement = agreement;
-    }
+    @Getter @Setter
+    private Agreement agreement;
 
     // //////////////////////////////////////
-
-    private Party party;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
+    @Getter @Setter
+    private Party party;
 
     // //////////////////////////////////////
 
-    private AgreementRoleType type;
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1")
-    public AgreementRoleType getType() {
-        return type;
-    }
-
-    public void setType(final AgreementRoleType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private AgreementRoleType type;
 
     // //////////////////////////////////////
 
-    private String externalReference;
-
     @javax.jdo.annotations.Column(length = JdoColumnLength.NAME, allowsNull = "true")
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     public AgreementRole changeExternalReference(@ParameterLayout(named = "External reference") String externalReference) {
         setExternalReference(externalReference);
@@ -208,31 +186,16 @@ public class AgreementRole
 
     // //////////////////////////////////////
 
+
     @javax.jdo.annotations.Persistent
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
-    private LocalDate endDate;
-
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
@@ -390,18 +353,10 @@ public class AgreementRole
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "role")
-    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels =
-            new TreeSet<AgreementRoleCommunicationChannel>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
     @Collection(editing = Editing.DISABLED)
-    public SortedSet<AgreementRoleCommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final SortedSet<AgreementRoleCommunicationChannel> communinationChannels) {
-        this.communicationChannels = communinationChannels;
-    }
+    @Getter @Setter
+    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
 
     // //////////////////////////////////////
 

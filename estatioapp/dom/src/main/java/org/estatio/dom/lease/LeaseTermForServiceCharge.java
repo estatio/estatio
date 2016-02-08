@@ -25,48 +25,38 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.dom.utils.MathUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Immutable
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-    private BigDecimal budgetedValue;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    public BigDecimal getBudgetedValue() {
-        return budgetedValue;
-    }
-
-    public void setBudgetedValue(final BigDecimal budgetedValue) {
-        this.budgetedValue = budgetedValue;
-    }
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal budgetedValue;
 
     // //////////////////////////////////////
 
-    private BigDecimal auditedValue;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    public BigDecimal getAuditedValue() {
-        return auditedValue;
-    }
-
-    public void setAuditedValue(final BigDecimal auditedValue) {
-        this.auditedValue = auditedValue;
-    }
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal auditedValue;
 
     // //////////////////////////////////////
 
     public LeaseTermForServiceCharge changeValues(
-            final @Named("Budgeted value") @Optional BigDecimal budgetedValue,
-            final @Named("Audited value") @Optional BigDecimal auditedValue) {
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal budgetedValue,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal auditedValue) {
         setBudgetedValue(budgetedValue);
         setAuditedValue(auditedValue);
         return this;

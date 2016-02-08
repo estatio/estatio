@@ -40,6 +40,9 @@ import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.ClassUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
@@ -76,32 +79,16 @@ public class FixedAssetRegistrationType
 
     // //////////////////////////////////////
 
-    private String title;
-
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
     @Title
-    public String getTitle() {
-        return title;
-    }
+    @Getter @Setter
+    private String title;
 
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-    
-    
     // //////////////////////////////////////
 
-
-    private String fullyQualifiedClassName;
-
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.FQCN)
-    public String getFullyQualifiedClassName() {
-        return fullyQualifiedClassName;
-    }
-
-    public void setFullyQualifiedClassName(final String fullyQualifiedClassName) {
-        this.fullyQualifiedClassName = fullyQualifiedClassName;
-    }
+    @Getter @Setter
+    private String fullyQualifiedClassName;
 
     // //////////////////////////////////////
 

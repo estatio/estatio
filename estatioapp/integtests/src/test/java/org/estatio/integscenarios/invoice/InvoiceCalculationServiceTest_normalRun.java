@@ -224,7 +224,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         final String reason = "size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
         assertThat(reason, netAmount, is(VT.bd2hup(expected)));
 
-        Boolean adjustment = invoiceItem == null ? false : invoiceItem.isAdjustment();
+        Boolean adjustment = invoiceItem == null ? false : invoiceItem.getAdjustment();
         assertThat(adjustment, is(expectedAdjustment));
     }
 

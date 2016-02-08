@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.TypicalLength;
 import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.JdoColumnLength;
@@ -27,7 +28,7 @@ public class PartyRelationShipViewCommunicationChannelContributions {
 
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
-    @Hidden(where = Where.OBJECT_FORMS)
+    @Property(hidden = Where.OBJECT_FORMS)
     @TypicalLength(JdoColumnLength.PHONE_NUMBER)
     public String phoneNumbers(final PartyRelationshipView prv) {
         return StringUtils.join(channelTitles(prv, CommunicationChannelType.PHONE_NUMBER), ", ");
@@ -35,7 +36,7 @@ public class PartyRelationShipViewCommunicationChannelContributions {
 
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
-    @Hidden(where = Where.OBJECT_FORMS)
+    @Property(hidden = Where.OBJECT_FORMS)
     @TypicalLength(JdoColumnLength.EMAIL_ADDRESS)
     public String emailAddresses(final PartyRelationshipView prv) {
         return StringUtils.join(channelTitles(prv, CommunicationChannelType.EMAIL_ADDRESS), ", ");

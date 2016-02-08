@@ -47,6 +47,9 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -91,31 +94,17 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(editing = Editing.DISABLED, regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Party.NAME)
     @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     /**
      * Provided so that subclasses can override and disable.
@@ -126,31 +115,17 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
-
     @Property(hidden = Where.EVERYWHERE)
-    public SortedSet<AgreementRole> getAgreements() {
-        return agreements;
-    }
-
-    public void setAgreements(final SortedSet<AgreementRole> agreements) {
-        this.agreements = agreements;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
+    @Getter @Setter
+    private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
-
     @Property(hidden = Where.EVERYWHERE)
-    public SortedSet<PartyRegistration> getRegistrations() {
-        return registrations;
-    }
-
-    public void setRegistrations(final SortedSet<PartyRegistration> registrations) {
-        this.registrations = registrations;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
+    @Getter @Setter
+    private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
     // //////////////////////////////////////
 

@@ -37,6 +37,9 @@ import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -77,32 +80,16 @@ public class AgreementRoleType
 
     // //////////////////////////////////////
 
-    private String title;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
     @Title
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
+    @Getter @Setter
+    private String title;
 
     // //////////////////////////////////////
-
-    private AgreementType appliesTo;
 
     @javax.jdo.annotations.Column(name = "appliesToAgreementTypeId", allowsNull = "false")
-    public AgreementType getAppliesTo() {
-        return appliesTo;
-    }
-
-    public void setAppliesTo(final AgreementType agreementType) {
-        this.appliesTo = agreementType;
-    }
-
-    // //////////////////////////////////////
+    @Getter @Setter
+    private AgreementType appliesTo;
 
     // //////////////////////////////////////
 

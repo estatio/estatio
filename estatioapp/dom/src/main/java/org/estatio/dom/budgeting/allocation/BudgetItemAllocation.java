@@ -18,19 +18,35 @@
  */
 package org.estatio.dom.budgeting.allocation;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.jdo.annotations.*;
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -107,6 +123,8 @@ public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocati
         return null;
     }
 
+    // ////////////////////////////////////////
+
     @Column(allowsNull = "false", name = "budgetItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
@@ -134,7 +152,7 @@ public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocati
         return null;
     }
 
-    //endregion
+    // ////////////////////////////////////////
 
     @Action(restrictTo = RestrictTo.PROTOTYPING)
     public Budget deleteBudgetItemAllocation(final boolean confirmDelete) {

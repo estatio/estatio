@@ -69,6 +69,9 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResu
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -159,47 +162,24 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    private LeaseItem leaseItem;
-
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    public LeaseItem getLeaseItem() {
-        return leaseItem;
-    }
-
-    public void setLeaseItem(final LeaseItem leaseItem) {
-        this.leaseItem = leaseItem;
-    }
+    @Getter @Setter
+    private LeaseItem leaseItem;
 
     // //////////////////////////////////////
-
-    private BigInteger sequence;
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
-    public BigInteger getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(final BigInteger sequence) {
-        this.sequence = sequence;
-    }
+    @Getter @Setter
+    private BigInteger sequence;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate startDate;
-
     @Property(editing = Editing.DISABLED)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate startDate;
 
     public void modifyStartDate(final LocalDate newStartDate) {
         if (ObjectUtils.notEqual(getStartDate(), newStartDate)) {
@@ -212,17 +192,11 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate endDate;
 
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate endDate;
 
     public void modifyEndDate(final LocalDate newEndDate) {
         if (ObjectUtils.notEqual(getEndDate(), newEndDate)) {
@@ -316,31 +290,17 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    private LeaseTermStatus status;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @Property(editing = Editing.DISABLED)
-    public LeaseTermStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(final LeaseTermStatus status) {
-        this.status = status;
-    }
+    @Getter @Setter
+    private LeaseTermStatus status;
 
     // //////////////////////////////////////
 
-    private LeaseTermFrequency frequency;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
     @Property(editing = Editing.DISABLED)
-    public LeaseTermFrequency getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(final LeaseTermFrequency frequency) {
-        this.frequency = frequency;
-    }
+    @Getter @Setter
+    private LeaseTermFrequency frequency;
 
     // //////////////////////////////////////
 
@@ -350,57 +310,35 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "previousLeaseTermId")
-    @javax.jdo.annotations.Persistent(mappedBy = "next")
-    private LeaseTerm previous;
 
     @Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
     @PropertyLayout(named = "Previous Term")
-    @Override
-    public LeaseTerm getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(final LeaseTerm previous) {
-        this.previous = previous;
-    }
+    @javax.jdo.annotations.Column(name = "previousLeaseTermId")
+    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    @Getter @Setter
+    private LeaseTerm previous;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "nextLeaseTermId")
-    private LeaseTerm next;
-
     @Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
     @PropertyLayout(named = "Next Term")
-    @Override
-    public LeaseTerm getNext() {
-        return next;
-    }
-
-    public void setNext(final LeaseTerm next) {
-        this.next = next;
-    }
+    @javax.jdo.annotations.Column(name = "nextLeaseTermId")
+    @Getter @Setter
+    private LeaseTerm next;
 
     // //////////////////////////////////////
 
     @Persistent(mappedBy = "leaseTerm")
-    private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<InvoiceItemForLease>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<InvoiceItemForLease> getInvoiceItems() {
-        return invoiceItems;
-    }
-
-    public void setInvoiceItems(final SortedSet<InvoiceItemForLease> invoiceItems) {
-        this.invoiceItems = invoiceItems;
-    }
+    @Getter @Setter
+    private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<InvoiceItemForLease>();
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Object remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object remove() {
         LeaseItem item = getLeaseItem();
-        if (confirm && doRemove()) {
+        if (doRemove()) {
             return item;
         }
         return this;

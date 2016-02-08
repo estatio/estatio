@@ -55,6 +55,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Identifies the {@link #getParty() party} that plays a particular
  * {@link #getType() type} of role with respect to a {@link #getProgram() program
@@ -125,75 +128,38 @@ public class ProgramRole
 
     // //////////////////////////////////////
 
-    private Program program;
-
     @javax.jdo.annotations.Column(allowsNull = "false", name="programId")
     @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Program getProgram() {
-        return program;
-    }
-
-    public void setProgram(final Program program) {
-        this.program = program;
-    }
+    @Getter @Setter
+    private Program program;
 
     // //////////////////////////////////////
-
-    private Party party;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
+    @Getter @Setter
+    private Party party;
 
     // //////////////////////////////////////
-
-    private ProgramRoleType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing=Editing.DISABLED)
     @Title(sequence = "1")
-    public ProgramRoleType getType() {
-        return type;
-    }
-
-    public void setType(final ProgramRoleType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private ProgramRoleType type;
 
     // //////////////////////////////////////
 
+    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
+
     @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-//    @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 

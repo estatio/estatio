@@ -59,6 +59,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.currency.Currency;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -88,134 +91,67 @@ public class Project extends UdoDomainObject<Project> implements
 	//endregion
 	// //////////////////////////////////////
 
-	// //////////////////////////////////////
-
-	private String reference;
-
 	@Column(allowsNull = "false")
 	@Property(regexPattern = RegexValidation.REFERENCE)
 	@PropertyLayout(describedAs = "Unique reference code for this project")
 	@MemberOrder(sequence="1")
-	public String getReference() {
-		return reference;
-	}
-
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
+	@Getter @Setter
+	private String reference;
 
 	// //////////////////////////////////////
-
-	private String name;
 
 	@Column(allowsNull = "false")
 	@MemberOrder(sequence="2")
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Getter @Setter
+    private String name;
 
 	// //////////////////////////////////////
-
-	private LocalDate startDate;
 
 	@Column(allowsNull = "true")
 	@MemberOrder(sequence="3")
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
+    @Getter @Setter
+    private LocalDate startDate;
 
 	// //////////////////////////////////////
-
-	private LocalDate endDate;
 
 	@Column(allowsNull = "true")
 	@Persistent
 	@MemberOrder(sequence="4")
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
+    @Getter @Setter
+    private LocalDate endDate;
 
 	// //////////////////////////////////////
-
-	private Program program;
 
 	@Column(name = "programId", allowsNull = "false")
 	@Property(hidden = Where.REFERENCES_PARENT)
-	public Program getProgram() {
-		return program;
-	}
-
-	public void setProgram(Program program) {
-		this.program = program;
-	}
+    @Getter @Setter
+    private Program program;
 
 	// //////////////////////////////////////
-
-	//region > relatedObject (property)
-	private String relatedObject;
 
 	@MemberOrder(sequence = "5")
 	@Column(allowsNull = "true")
-	public String getRelatedObject() {
-		return relatedObject;
-	}
-
-	public void setRelatedObject(final String relatedObject) {
-		this.relatedObject = relatedObject;
-	}
-	//endregion
-
-	private Currency currency;
+    @Getter @Setter
+    private String relatedObject;
 
 	@Column(allowsNull = "true", name="currencyId")
 	@MemberOrder(sequence="6")
-	public Currency getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(final Currency currency) {
-		this.currency = currency;
-	}
+    @Getter @Setter
+	private Currency currency;
 
 	// //////////////////////////////////////
-
-	private BigDecimal estimatedCost;
 
 	@Column(allowsNull = "true", scale = JdoColumnScale.MONEY)
 	@MemberOrder(sequence="7")
-	public BigDecimal getEstimatedCost() {
-		return estimatedCost;
-	}
-
-	public void setEstimatedCost(BigDecimal estimatedCost) {
-		this.estimatedCost = estimatedCost;
-	}
+    @Getter @Setter
+    private BigDecimal estimatedCost;
 
 	// //////////////////////////////////////
 
-	private ProjectPhase projectPhase;
-
 	@Column(allowsNull = "true")
 	@MemberOrder(sequence="4.5")
-	public ProjectPhase getProjectPhase() {
-		return projectPhase;
-	}
-
-	public void setProjectPhase(ProjectPhase projectPhase) {
-		this.projectPhase = projectPhase;
-	}
+    @Getter @Setter
+    private ProjectPhase projectPhase;
 
 //	public Project postponeOneWeek(
 //			@ParameterLayout(named = "Reason") String reason) {

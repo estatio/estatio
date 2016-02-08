@@ -53,6 +53,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
+import lombok.Getter;
+import lombok.Setter;
+
 //import org.apache.isis.applib.annotation.Property;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -92,64 +95,36 @@ public class Program
     //endregion
     // //////////////////////////////////////
 
-    private String reference;
-
     @Column(allowsNull = "false")
     @org.apache.isis.applib.annotation.Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this program")
     @MemberOrder(sequence="1")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @Column(allowsNull = "false")
     @MemberOrder(sequence="2")
-    public String getName() {
-        return name;
-    }
+    @Getter @Setter
+    private String name;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
     // //////////////////////////////////////
-
-    private String programGoal;
 
     @Column(allowsNull = "false")
     @PropertyLayout(multiLine = 5)
     @MemberOrder(sequence="3")
-    public String getProgramGoal() {
-        return programGoal;
-    }
-
-    public void setProgramGoal(String programGoal) {
-        this.programGoal = programGoal;
-    }
+    @Getter @Setter
+    private String programGoal;
 
     // //////////////////////////////////////
-
-    private String relatedObject;
 
     @Column(allowsNull = "true")
     @Persistent
     @MemberOrder(sequence="4")
-    public String getRelatedObject() {
-        return relatedObject;
-    }
+    @Getter @Setter
+    private String relatedObject;
 
-    public void setRelatedObject(String relatedObject) {
-        this.relatedObject = relatedObject;
-    }
-    
     // //////////////////////////////////////
         
     //TODO: decouple sorted set [momentarily needed by code in  ProgramRole getPredecessor() etc.
@@ -191,21 +166,14 @@ public class Program
     
     // //////////////////////////////////////
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
     @PropertyLayout(hidden = Where.EVERYWHERE)
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -220,7 +188,6 @@ public class Program
 
     @Inject
     public ProgramRoles programRoles;
-
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

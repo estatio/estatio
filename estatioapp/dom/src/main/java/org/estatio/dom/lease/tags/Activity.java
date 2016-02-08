@@ -36,6 +36,9 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -74,31 +77,17 @@ public class Activity
 
     // //////////////////////////////////////
 
-    private Sector sector;
-
     @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "false")
     @Title(sequence = "1")
-    public Sector getSector() {
-        return sector;
-    }
-
-    public void setSector(final Sector sector) {
-        this.sector = sector;
-    }
+    @Getter @Setter
+    private Sector sector;
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
     @Title(prepend = ":", sequence = "2")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     public Activity change(
             final @Named("Name") String name,

@@ -18,7 +18,30 @@
  */
 package org.estatio.dom.guarantee;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -26,14 +49,9 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE)
@@ -85,44 +103,23 @@ public class Guarantee
 
     // //////////////////////////////////////
 
-    private Lease lease;
-
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Lease getLease() {
-        return lease;
-    }
-
-    public void setLease(Lease lease) {
-        this.lease = lease;
-    }
+    @Getter @Setter
+    private Lease lease;
 
     // //////////////////////////////////////
-
-    private FinancialAccount financialAccount;
 
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "true")
     @Property(hidden = Where.EVERYWHERE)
-    public FinancialAccount getFinancialAccount() {
-        return financialAccount;
-    }
-
-    public void setFinancialAccount(FinancialAccount financialAccount) {
-        this.financialAccount = financialAccount;
-    }
+    @Getter @Setter
+    private FinancialAccount financialAccount;
 
     // //////////////////////////////////////
 
-    private GuaranteeType guaranteeType;
-
     @javax.jdo.annotations.Column(allowsNull = "false")
-    public GuaranteeType getGuaranteeType() {
-        return guaranteeType;
-    }
-
-    public void setGuaranteeType(GuaranteeType guaranteeType) {
-        this.guaranteeType = guaranteeType;
-    }
+    @Getter @Setter
+    private GuaranteeType guaranteeType;
 
     public void changeGuaranteeType(GuaranteeType guaranteeType) {
         FinancialAccountType financialAccountType = guaranteeType.getFinancialAccountType();
@@ -149,44 +146,23 @@ public class Guarantee
 
     // //////////////////////////////////////
 
-    private String description;
-
     @javax.jdo.annotations.Column(allowsNull = "true")
     @PropertyLayout(multiLine = 3)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
-
-    private LocalDate terminationDate;
 
     @Property(optionality = Optionality.OPTIONAL)
-    public LocalDate getTerminationDate() {
-        return terminationDate;
-    }
-
-    public void setTerminationDate(LocalDate terminationDate) {
-        this.terminationDate = terminationDate;
-    }
+    @Getter @Setter
+    private LocalDate terminationDate;
 
     // //////////////////////////////////////
-
-    private String comments;
 
     @Column(allowsNull = "true")
     @PropertyLayout(multiLine = 5)
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
+    @Getter @Setter
+    private String comments;
 
     // //////////////////////////////////////
 
@@ -203,16 +179,9 @@ public class Guarantee
 
     // //////////////////////////////////////
 
-    private BigDecimal contractualAmount;
-
     @javax.jdo.annotations.Column(allowsNull = "true", scale = JdoColumnScale.MONEY)
-    public BigDecimal getContractualAmount() {
-        return contractualAmount;
-    }
-
-    public void setContractualAmount(BigDecimal contractualAmount) {
-        this.contractualAmount = contractualAmount;
-    }
+    @Getter @Setter
+    private BigDecimal contractualAmount;
 
     public Guarantee changeContractualAmount(
             final @ParameterLayout(named = "New contractual amount") BigDecimal newContractualAmount) {

@@ -44,7 +44,6 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -91,6 +90,9 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -163,21 +165,14 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             hidden = Where.ALL_TABLES,
@@ -189,17 +184,10 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private LeaseStatus status;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
-    public LeaseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(final LeaseStatus status) {
-        this.status = status;
-    }
+    @Getter @Setter
+    private LeaseStatus status;
 
     @Programmatic
     public void resolveStatus(final String reason) {
@@ -273,16 +261,9 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private LeaseType leaseType;
-
     @javax.jdo.annotations.Column(name = "leaseTypeId", allowsNull = "true")
-    public LeaseType getLeaseType() {
-        return leaseType;
-    }
-
-    public void setLeaseType(final LeaseType leaseType) {
-        this.leaseType = leaseType;
-    }
+    @Getter @Setter
+    private LeaseType leaseType;
 
     public Lease change(
             final @ParameterLayout(named = "Name") String name,
@@ -385,17 +366,11 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "lease")
-    private SortedSet<Occupancy> occupancies = new TreeSet<Occupancy>();
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<Occupancy> getOccupancies() {
-        return occupancies;
-    }
-
-    public void setOccupancies(final SortedSet<Occupancy> occupancies) {
-        this.occupancies = occupancies;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
+    @Getter @Setter
+    private SortedSet<Occupancy> occupancies = new TreeSet<Occupancy>();
 
     /**
      * The action to relate a lease to a unit. A lease can occupy unlimited
@@ -428,21 +403,14 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
-
     /**
      * Added to the default fetch group in an attempt to resolve pre-prod error,
      * EST-233.
      */
     @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<LeaseItem> getItems() {
-        return items;
-    }
-
-    public void setItems(final SortedSet<LeaseItem> items) {
-        this.items = items;
-    }
+    @Getter @Setter
+    private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
@@ -559,31 +527,19 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "lease")
-    private SortedSet<BreakOption> breakOptions = new TreeSet<BreakOption>();
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<BreakOption> getBreakOptions() {
-        return breakOptions;
-    }
-
-    public void setBreakOptions(final SortedSet<BreakOption> breakOptions) {
-        this.breakOptions = breakOptions;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
+    @Getter @Setter
+    private SortedSet<BreakOption> breakOptions = new TreeSet<BreakOption>();
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
-    private BankMandate paidBy;
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    public BankMandate getPaidBy() {
-        return paidBy;
-    }
-
-    public void setPaidBy(final BankMandate paidBy) {
-        this.paidBy = paidBy;
-    }
+    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
+    @Getter @Setter
+    private BankMandate paidBy;
 
     // //////////////////////////////////////
 
@@ -951,18 +907,8 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-    }
-
-    public boolean hideRemove() {
-        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
-    }
-
-    @Programmatic
-    public boolean doRemove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         boolean success = true;
 
         for (LeaseItem item : getItems()) {
@@ -971,7 +917,10 @@ public class Lease
         if (success) {
             getContainer().remove(this);
         }
-        return success;
+    }
+
+    public boolean hideRemove() {
+        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
     }
 
     @Programmatic

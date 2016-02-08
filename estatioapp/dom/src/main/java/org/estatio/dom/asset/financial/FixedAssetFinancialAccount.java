@@ -24,12 +24,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -39,6 +39,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.financial.FinancialAccount;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.DatastoreIdentity(
@@ -92,37 +95,23 @@ public class FixedAssetFinancialAccount
 
     // //////////////////////////////////////
 
-    private FixedAsset fixedAsset;
-
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @Title(sequence = "1")
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Property")
-    public FixedAsset getFixedAsset() {
-        return fixedAsset;
-    }
-
-    public void setFixedAsset(final FixedAsset fixedAsset) {
-        this.fixedAsset = fixedAsset;
-    }
+    @Getter @Setter
+    private FixedAsset fixedAsset;
 
     // //////////////////////////////////////
-
-    private FinancialAccount financialAccount;
 
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
     @Title(sequence = "2")
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Bank account")
-    public FinancialAccount getFinancialAccount() {
-        return financialAccount;
-    }
-
-    public void setFinancialAccount(final FinancialAccount financialAccount) {
-        this.financialAccount = financialAccount;
-    }
+    @Getter @Setter
+    private FinancialAccount financialAccount;
 
     // //////////////////////////////////////
 
@@ -156,14 +145,8 @@ public class FixedAssetFinancialAccount
         }
     }
 
-    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-    }
-
-    @Programmatic
-    public void doRemove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         getContainer().remove(this);
         getContainer().flush();
     }

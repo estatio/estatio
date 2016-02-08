@@ -18,54 +18,43 @@
  */
 package org.estatio.dom.lease;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.JdoColumnScale;
-import org.joda.time.LocalDate;
+import java.math.BigDecimal;
+import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
-import java.math.BigDecimal;
-import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.JdoColumnScale;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForDeposit extends LeaseTerm {
 
-    //region > excludedAmount (property)
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
     private BigDecimal excludedAmount;
 
-    @Column(allowsNull = "true", scale = 2)
-    public BigDecimal getExcludedAmount() {
-        return excludedAmount;
-    }
-
-    public void setExcludedAmount(final BigDecimal excludedAmount) {
-        this.excludedAmount = excludedAmount;
-    }
-    //endregion
-
-    //region > percentage (property)
-    private DepositType depositType;
+    // //////////////////////////////////////
 
     @Column(allowsNull = "false")
-    public DepositType getDepositType() {
-        return depositType;
-    }
+    @Getter @Setter
+    private DepositType depositType;
 
-    public void setDepositType(final DepositType depositType) {
-        this.depositType = depositType;
-    }
-    //endregion
-
+    // //////////////////////////////////////
 
     @Getter @Setter
     @Column(allowsNull = "true", scale = JdoColumnScale.MONEY)
     private BigDecimal depositValue;
 
-
     // //////////////////////////////////////
+
     public LeaseTermForDeposit changeParameters(
             final DepositType depositType,
             final BigDecimal excludedAmount) {

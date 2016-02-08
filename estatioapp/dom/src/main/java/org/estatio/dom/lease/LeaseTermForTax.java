@@ -21,6 +21,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @DomainObject
@@ -30,55 +33,27 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal taxableValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getTaxableValue() {
-        return taxableValue;
-    }
-
-    public void setTaxableValue(final BigDecimal taxableValue) {
-        this.taxableValue = taxableValue;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal taxValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getTaxValue() {
-        return taxValue;
-    }
-
-    public void setTaxValue(final BigDecimal taxValue) {
-        this.taxValue = taxValue;
-    }
-
     // //////////////////////////////////////
-
-    private BigDecimal taxPercentage;
 
     @javax.jdo.annotations.Column(scale = 1)
-    public BigDecimal getTaxPercentage() {
-        return taxPercentage;
-    }
-
-    public void setTaxPercentage(final BigDecimal taxPercentage) {
-        this.taxPercentage = taxPercentage;
-    }
+    @Getter @Setter
+    private BigDecimal taxPercentage;
 
     // //////////////////////////////////////
 
-    private BigDecimal payableValue;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getPayableValue() {
-        return payableValue;
-    }
-
-    public void setPayableValue(BigDecimal payableValue) {
-        this.payableValue = payableValue;
-    }
+    @Getter @Setter
+    private BigDecimal payableValue;
 
     // //////////////////////////////////////
 
@@ -219,70 +194,35 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private String officeName;
 
-    @Column(allowsNull = "true")
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(final String officeName) {
-        this.officeName = officeName;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private String officeCode;
 
-    @Column(allowsNull = "true")
-    public String getOfficeCode() {
-        return officeCode;
-    }
-
-    public void setOfficeCode(final String officeCode) {
-        this.officeCode = officeCode;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
     @Persistent
+    @Getter @Setter
     private LocalDate registrationDate;
 
-    @Column(allowsNull = "true")
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(final LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private String registrationNumber;
 
-    @Column(allowsNull = "true")
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(final String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
     // //////////////////////////////////////
-
-    private String description;
 
     @Column(allowsNull = "true")
     @PropertyLayout(multiLine = 3)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
 

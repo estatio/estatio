@@ -37,6 +37,9 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE, 
@@ -78,18 +81,11 @@ public class UnitSize
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
     @Title
-    public String getName() {
-        return name;
-    }
+    @Getter @Setter
+    private String name;
 
-    public void setName(final String name) {
-        this.name = name;
-    }
-    
     public UnitSize change(
             final @Named("Name") String name) {
         setName(name);

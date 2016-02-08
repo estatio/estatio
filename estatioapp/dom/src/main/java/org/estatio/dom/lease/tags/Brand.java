@@ -46,6 +46,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.geography.Country;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -86,8 +89,6 @@ public class Brand
 
     // //////////////////////////////////////
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
@@ -95,13 +96,8 @@ public class Brand
     )
 
     @Property(hidden = Where.EVERYWHERE)
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -113,56 +109,28 @@ public class Brand
 
     // //////////////////////////////////////
 
-    private String name;
-
     @Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private BrandCoverage coverage;
 
-    @Column(allowsNull = "true")
-    public BrandCoverage getCoverage() {
-        return coverage;
-    }
-
-    public void setCoverage(BrandCoverage coverage) {
-        this.coverage = coverage;
-    }
-
     // //////////////////////////////////////
-
-    private Country countryOfOrigin;
 
     @Column(name = "countryOfOriginId", allowsNull = "true")
-    public Country getCountryOfOrigin() {
-        return countryOfOrigin;
-    }
-
-    public void setCountryOfOrigin(Country countryOfOrigin) {
-        this.countryOfOrigin = countryOfOrigin;
-    }
+    @Getter @Setter
+    private Country countryOfOrigin;
 
     // //////////////////////////////////////
 
-    private String group;
-
     @Column(allowsNull = "true")
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
+    @Getter @Setter
+    private String group;
 
     // //////////////////////////////////////
 

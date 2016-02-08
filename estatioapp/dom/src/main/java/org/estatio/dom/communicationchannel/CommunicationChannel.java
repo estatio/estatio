@@ -51,6 +51,9 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents a mechanism for communicating with its
  * {@link CommunicationChannelOwner owner}.
@@ -130,7 +133,6 @@ public abstract class CommunicationChannel
         final CommunicationChannelOwnerLink link = communicationChannelOwnerLinks.createLink(this, owner);
     }
 
-
     private void removeOwnerLink() {
         final CommunicationChannelOwnerLink ownerLink = getOwnerLink();
         if(ownerLink != null) {
@@ -144,76 +146,41 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    private CommunicationChannelType type;
-
     @MemberOrder(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(hidden = Where.EVERYWHERE)
-    public CommunicationChannelType getType() {
-        return type;
-    }
-
-    public void setType(final CommunicationChannelType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private CommunicationChannelType type;
 
     // //////////////////////////////////////
-
-    private String reference;
 
     /**
      * For import purposes only
      */
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
     @Property(hidden = Where.EVERYWHERE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String description;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.DESCRIPTION)
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(multiLine = 3)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
-
-    private boolean legal;
 
     @MemberOrder(sequence = "3")
-    public boolean isLegal() {
-        return legal;
-    }
-
-    public void setLegal(final boolean Legal) {
-        this.legal = Legal;
-    }
+    @Getter @Setter
+    private boolean legal;
 
     // //////////////////////////////////////
 
-    private CommunicationChannelPurposeType purpose;
-
     @Column(allowsNull = "true", length = JdoColumnLength.TYPE_ENUM)
-    public CommunicationChannelPurposeType getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(CommunicationChannelPurposeType purpose) {
-        this.purpose = purpose;
-    }
+    @Getter @Setter
+    private CommunicationChannelPurposeType purpose;
 
     // //////////////////////////////////////
 

@@ -18,19 +18,35 @@
  */
 package org.estatio.dom.budgeting.keyitem;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.jdo.annotations.*;
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -63,12 +79,10 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
     //endregion
 
-
     @Column(name="keyTableId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES )
     @Getter @Setter
     private KeyTable keyTable;
-
 
     // //////////////////////////////////////
 
