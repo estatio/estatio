@@ -1,21 +1,11 @@
 package org.estatio.dom.invoice;
 
-import java.util.List;
-
-import com.google.inject.Inject;
-
+import org.apache.isis.applib.annotation.*;
+import org.estatio.dom.asset.FixedAsset;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
-import org.estatio.dom.asset.FixedAsset;
+import javax.inject.Inject;
+import java.util.List;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(named = "Invoices")
