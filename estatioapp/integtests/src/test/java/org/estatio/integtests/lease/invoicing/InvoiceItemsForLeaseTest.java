@@ -18,28 +18,25 @@
  */
 package org.estatio.integtests.lease.invoicing;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import java.util.List;
-import javax.inject.Inject;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
 
@@ -72,6 +69,21 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
     PropertyMenu propertyMenu;
 
     Lease lease;
+
+    public static class FindByLeaseTerm extends InvoiceItemsForLeaseTest {
+
+        @Test
+        public void findByLeaseTerm() throws Exception {
+            // given
+            LeaseTerm term = leaseTerms.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
+
+            // when
+            List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTerm(term);
+
+            // then
+            assertThat(invoiceItems.size(), is(1));
+        }
+    }
 
     public static class FindByLeaseTermAndInterval extends InvoiceItemsForLeaseTest {
 

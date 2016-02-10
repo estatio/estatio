@@ -144,7 +144,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 leaseRef, leaseItemAtPath,
                 ChargeRefData.IT_DEPOSIT,
                 LeaseItemType.DEPOSIT,
-                InvoicingFrequency.FIXED_IN_ADVANCE,
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
         final LeaseTermForDeposit leaseTerm = (LeaseTermForDeposit) leaseItem.newTerm(startDate, endDate);
 

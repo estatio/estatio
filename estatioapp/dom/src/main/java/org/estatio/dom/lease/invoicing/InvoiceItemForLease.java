@@ -18,22 +18,10 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import javax.jdo.annotations.Index;
-import javax.jdo.annotations.Indices;
-import javax.jdo.annotations.InheritanceStrategy;
-
 import com.google.common.collect.Ordering;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
@@ -44,8 +32,9 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.InheritanceStrategy;
 
 /**
  * A lease-specific subclass of {@link InvoiceItem}, referring
@@ -57,6 +46,11 @@ import lombok.Setter;
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseTerm", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm == :leaseTerm "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInterval", language = "JDOQL",
                 value = "SELECT " +

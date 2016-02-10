@@ -1,18 +1,11 @@
 package org.estatio.dom.lease;
 
-import java.util.List;
-
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.junit.Test;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -107,59 +100,6 @@ public class InvoicingFrequencyTest {
             final String expectedStr) {
         assertThat(frequency.intervalContaining(new LocalDate(dateStr)).asLocalDateInterval(),
                 is(LocalDateInterval.parseString(expectedStr)));
-    }
-
-
-    public static class FixedGivesAlwaysSameInvoicingInterval extends InvoicingFrequencyTest {
-
-
-        @Rule
-        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-        @Mock
-        LocalDateInterval anyRangeInterval;
-
-        @Mock
-        LocalDateInterval anySourceInterval;
-
-        @Ignore
-        @Test
-        public void alwaysTheSameInvoicingInterval() {
-
-            context.checking(new Expectations() {
-                {
-                    allowing(anySourceInterval).startDate();
-                    allowing(anySourceInterval).endDate();
-                    allowing(anySourceInterval).endDateExcluding();
-                }
-            });
-
-            // given
-            InvoicingFrequency fixedFrequencyInAdvance = InvoicingFrequency.FIXED_IN_ADVANCE;
-
-            // when
-            List<InvoicingInterval> intervalsInDueDateRange = fixedFrequencyInAdvance.intervalsInDueDateRange(
-                    anyRangeInterval,
-                    anySourceInterval);
-
-            //then
-            assertThat(intervalsInDueDateRange.size(), is(1));
-
-            // and
-
-            // given
-            InvoicingFrequency fixedFrequencyInArrears = InvoicingFrequency.FIXED_IN_ARREARS;
-
-            // when
-            List<InvoicingInterval> intervalsInDueDateRange2 = fixedFrequencyInArrears.intervalsInDueDateRange(
-                    anyRangeInterval,
-                    anySourceInterval);
-
-            //then
-            assertThat(intervalsInDueDateRange2.size(), is(1));
-
-        }
-
     }
 
 }

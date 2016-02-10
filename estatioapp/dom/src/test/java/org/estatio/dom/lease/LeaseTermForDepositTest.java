@@ -18,31 +18,26 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class LeaseTermForDepositTest {
@@ -202,12 +197,11 @@ public class LeaseTermForDepositTest {
             depositItem = new LeaseItem();
             depositItem.setType(LeaseItemType.DEPOSIT);
             depositItem.setLease(mockLease);
-            depositItem.setInvoicingFrequency(InvoicingFrequency.FIXED_IN_ADVANCE);
+            depositItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
             term = new LeaseTermForDeposit();
             term.setLeaseItem(depositItem);
             term.setStartDate(startDate);
             term.setDepositType(DepositType.HALF_YEAR);
-            term.setDepositValue(new BigDecimal("1000.00"));
             term.setExcludedAmount(new BigDecimal("500.00"));
             invoiceCalculationService = new InvoiceCalculationService();
 
@@ -232,39 +226,35 @@ public class LeaseTermForDepositTest {
         @Test
         public void testAtStartTermRetro() {
 
-            testOneResultExpected(InvoiceRunType.RETRO_RUN, startDate, "2013-01-01/----------:2013-01-01", "2013-01-01/2014-01-02", "4500.00");
+            testOneResultExpected(InvoiceRunType.RETRO_RUN, startDate, "2013-01-01/2013-04-01:2013-01-01", "2013-01-01/2013-04-01", "4500.00");
 
         }
 
         @Test
         public void testAfterStartTermRetro() {
 
-            testOneResultExpected(InvoiceRunType.RETRO_RUN, startDate.plusDays(1), "2013-01-01/----------:2013-01-01", "2013-01-01/2014-01-02", "4500.00");
+            testOneResultExpected(InvoiceRunType.RETRO_RUN, startDate.plusDays(1), "2013-01-01/2013-04-01:2013-01-01", "2013-01-01/2013-04-01", "4500.00");
+
+        }
+
+        @Test
+        public void testBeforeStartTermRetro() {
+
+            testNoResultsExpected(InvoiceRunType.RETRO_RUN, startDate.minusDays(1));
 
         }
 
         @Test
         public void testAtStartTermNormal() {
 
-            testOneResultExpected(InvoiceRunType.NORMAL_RUN, startDate, "2013-01-01/----------:2013-01-01", "2013-01-01/2014-01-02", "4500.00");
+            testOneResultExpected(InvoiceRunType.NORMAL_RUN, startDate, "2013-01-01/2013-04-01:2013-01-01", "2013-01-01/2013-04-01", "4500.00");
 
         }
 
-        @Ignore
         @Test
         public void testAfterStartTermNormal() {
 
-            testOneResultExpected(InvoiceRunType.NORMAL_RUN, startDate.plusDays(1), "2013-01-01/----------:2013-01-01", "2013-01-01/2014-01-02", "4500.00");
-
-        }
-
-        @Ignore
-        @Test
-        public void testEndDateWillBeSetToNull() {
-
-            term.setEndDate(new LocalDate(startDate.plusDays(2)));
-            testOneResultExpected(InvoiceRunType.NORMAL_RUN, startDate.plusDays(8), "2013-01-01/----------:2013-01-01", "2013-01-01/2014-01-02", "4500.00");
-            assertNull(term.getEndDate());
+            testNoResultsExpected(InvoiceRunType.NORMAL_RUN, startDate.plusDays(1));
 
         }
 
@@ -282,6 +272,18 @@ public class LeaseTermForDepositTest {
             assertThat(results.get(0).invoicingInterval().toString(), is(invoicingIntervalExpected));
             assertThat(results.get(0).effectiveInterval().toString(), is(effectiveIntervalExpected));
             assertThat(results.get(0).value(), is(new BigDecimal(valueExpected)));
+        }
+
+        private void testNoResultsExpected(InvoiceRunType invoiceRunType, LocalDate start) {
+            // given
+            InvoiceCalculationParameters parameters = new InvoiceCalculationParameters(invoiceRunType, start, start, start.plusDays(1));
+            term.verifyUntil(start.plusDays(2));
+
+            // when
+            results = invoiceCalculationService.calculateDueDateRange(term, parameters);
+
+            // then
+            assertThat(results.size(), is(0));
         }
 
     }

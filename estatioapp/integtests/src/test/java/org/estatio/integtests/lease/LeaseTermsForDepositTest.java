@@ -18,25 +18,10 @@
  */
 package org.estatio.integtests.lease;
 
-import java.math.BigDecimal;
-
-import javax.inject.Inject;
-
-import org.assertj.core.api.Assertions;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
+import org.assertj.core.api.Assertions;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.DepositType;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermForDeposit;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
@@ -44,6 +29,12 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.inject.Inject;
+import java.math.BigDecimal;
 
 public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
 
@@ -76,12 +67,11 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             });
         }
 
-        @Ignore
         @Test
         public void invoiceTest() throws Exception {
 
             // given
-            startDate = new LocalDate(2010,9,1);
+            startDate = new LocalDate(2010,10,1);
             topmodelLease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when

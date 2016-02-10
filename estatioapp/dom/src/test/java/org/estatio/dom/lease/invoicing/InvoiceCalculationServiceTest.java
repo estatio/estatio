@@ -25,7 +25,6 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
@@ -105,12 +104,6 @@ public class InvoiceCalculationServiceTest {
 
         @Mock
         TaxRates mockTaxRates;
-
-        @Mock
-        Invoices mockInvoices;
-
-        @Mock
-        InvoiceItemsForLease mockInvoiceItemsForLease;
 
         @Mock
         AgreementRoleRepository mockAgreementRoles;
@@ -369,6 +362,44 @@ public class InvoiceCalculationServiceTest {
                 // TODO: Since 2012 is a leap year, the keySum of the invoices is greater
                 // than the value of the term.....
             }
+
+        }
+
+        public static class WithValueTypeFixed extends CalculateDueDateRange {
+
+            LeaseTerm leaseTermWithFixedValueType;
+
+            @Before
+            public void setup() {
+                super.setup();
+
+                leaseTerm.setLeaseTermValueType(LeaseTermValueType.FIXED);
+
+                context.checking(new Expectations() {
+                    {
+                        allowing(mockSettings).fetchEpochDate();
+                        will(returnValue(new LocalDate(1980, 1, 1)));
+                    }
+                });
+
+            }
+
+            @Test
+            public void testCalculateFullQuarter() {
+                leaseTerm.setStartDate(LEASE_START_DATE);
+                leaseTerm.setValue(BigDecimal.valueOf(20000));
+                calculateDueDateRange(leaseTerm, new LocalDate(2012, 1, 1), null, 20000.00);
+            }
+
+            @Test
+            public void testFullCalculationResults() {
+                leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
+                leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
+                leaseTerm.setValue(BigDecimal.valueOf(20000));
+                calculateDueDateRange(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
+                        20000.00, 20000.00, 20000.00, 20000.00);
+            }
+
 
         }
 

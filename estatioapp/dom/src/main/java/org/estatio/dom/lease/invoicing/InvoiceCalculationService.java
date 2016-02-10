@@ -243,11 +243,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                 results2.add(new CalculationResult(invoicingInterval));
             } else {
                 final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
-                final BigDecimal frequencyDays = leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ? null : new BigDecimal(invoicingInterval.days());
-                final BigDecimal rangeFactor =
-                        leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ?
-                                BigDecimal.ONE :
-                                overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
+                final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
+                final BigDecimal rangeFactor = overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
                 final BigDecimal annualFactor = leaseTerm.getLeaseItem().getInvoicingFrequency().annualMultiplier();
                 final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
                 BigDecimal mockValue = BigDecimal.ZERO;
@@ -257,8 +254,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                 final CalculationResult calculationResult = new CalculationResult(
                         invoicingInterval,
                         effectiveInterval,
-                        calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation)),
-                        calculateValue(rangeFactor, annualFactor, mockValue));
+                        calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation), leaseTerm.valueType()),
+                        calculateValue(rangeFactor, annualFactor, mockValue, leaseTerm.valueType()));
                 results2.add(calculationResult);
             }
         }
@@ -271,7 +268,13 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     private BigDecimal calculateValue(
             final BigDecimal rangeFactor,
             final BigDecimal annualFactor,
-            final BigDecimal value) {
+            final BigDecimal value,
+            final LeaseTermValueType valueType) {
+        if(valueType == LeaseTermValueType.FIXED){
+            // If it's fixed we don't care about the factors, always return the full value
+            // TODO: offload this responsibility to the lease term
+            return value.setScale(2, RoundingMode.HALF_UP);
+        }
         if (value != null && annualFactor != null && rangeFactor != null) {
             return value.multiply(annualFactor)
                     .multiply(rangeFactor)
