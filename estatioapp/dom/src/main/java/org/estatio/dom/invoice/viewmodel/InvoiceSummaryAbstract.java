@@ -77,7 +77,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     }
 
     @Prototype
-    public Object zapAll(final @Named("Confirm") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object zapAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.remove();
         }
