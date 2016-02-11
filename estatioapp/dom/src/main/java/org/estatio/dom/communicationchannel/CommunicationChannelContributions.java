@@ -170,7 +170,7 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
 
     @Action(semantics = SemanticsOf.SAFE)
     @CollectionLayout(render = RenderType.EAGERLY)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
         return communicationChannels.findByOwner(owner);
     }
