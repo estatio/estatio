@@ -71,9 +71,10 @@ public class EstatioAuditingContributions extends UdoDomainService<EstatioAuditi
             semantics = SemanticsOf.SAFE
     )
     @ActionLayout(
-            contributed = Contributed.AS_ACTION
+            contributed = Contributed.AS_ACTION,
+            position = ActionLayout.Position.PANEL_DROPDOWN
     )
-    @MemberOrder(sequence="30")
+    @MemberOrder(name="Metadata", sequence="30")
     public List<? extends DomainChangeJdoAbstract> recentChanges (
             final Object targetDomainObject,
             @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "From")

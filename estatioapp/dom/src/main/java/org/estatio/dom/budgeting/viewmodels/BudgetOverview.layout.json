@@ -15,6 +15,9 @@
             "totalAuditedValue": {
             }
           }
+        },
+        "Metadata" : {
+          "members": {}
         }
       }
     },

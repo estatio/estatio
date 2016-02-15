@@ -5,24 +5,10 @@
       "memberGroups": {
         "General": {
           "members": {
-            "id": {
-              "disabled": {},
-              "hidden": {},
-              "typicalLength": {
-                "value": 25
-              }
-            },
             "type": {
               "disabled": {},
               "hidden": {
                 "where": "EVERYWHERE"
-              }
-            },
-            "versionSequence": {
-              "disabled": {},
-              "hidden": {},
-              "typicalLength": {
-                "value": 18
               }
             },
             "reference": {
@@ -117,6 +103,24 @@
               "disabled": {},
               "hidden": {
                 "where": "ALL_TABLES"
+              }
+            }
+          }
+        },
+        "Metadata" : {
+          "members": {
+            "id": {
+              "disabled": {},
+              "hidden": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "versionSequence": {
+              "disabled": {},
+              "hidden": {},
+              "typicalLength": {
+                "value": 18
               }
             }
           }

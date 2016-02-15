@@ -112,6 +112,9 @@
                         "validForKeyValues": {},
                         "validForUnits" : {}
                     }
+                },
+                "Metadata" : {
+                    "members": {}
                 }
             }
         },

@@ -18,6 +18,9 @@
               "disabled": {}
             }
           }
+        },
+        "Metadata" : {
+          "members": {}
         }
       }
     },

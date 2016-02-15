@@ -5,13 +5,6 @@
       "memberGroups": {
         "General": {
           "members": {
-            "id": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 25
-              }
-            },
             "name": {
               "disabled": {},
               "typicalLength": {
@@ -19,13 +12,6 @@
               },
               "actions": {
                 "change": {}
-              }
-            },
-            "versionSequence": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 18
               }
             }
           }
@@ -35,6 +21,24 @@
             "applicationTenancy": {
               "hidden": {"where": "ALL_TABLES"},
               "disabled": {}
+            }
+          }
+        },
+        "Metadata" : {
+          "members": {
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
             }
           }
         }

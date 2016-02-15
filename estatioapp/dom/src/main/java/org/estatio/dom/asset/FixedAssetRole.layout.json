@@ -39,6 +39,9 @@
               "disabled": {}
             }
           }
+        },
+        "Metadata" : {
+          "members": {}
         }
       }
     },

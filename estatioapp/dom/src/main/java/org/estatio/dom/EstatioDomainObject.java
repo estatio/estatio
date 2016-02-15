@@ -21,8 +21,16 @@ package org.estatio.dom;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.InheritanceStrategy;
 
+<<<<<<< HEAD
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+=======
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+>>>>>>> updating .layout.json in preparation for ISIS-993
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -63,30 +71,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
     }
 
 
-    @Property(hidden = Where.EVERYWHERE)
-    public String getId() {
-        Object objectId = JDOHelper.getObjectId(this);
-        if (objectId == null) {
-            return "";
-        }
-        String objectIdStr = objectId.toString();
-        final String id = objectIdStr.split("\\[OID\\]")[0];
-        return id;
-    }
-
-    // //////////////////////////////////////
-
-
-    @Property(hidden = Where.EVERYWHERE)
-    public Long getVersionSequence() {
-        final Long version = (Long) JDOHelper.getVersion(this);
-        return version;
-    }
-
-    // //////////////////////////////////////
-
     @javax.inject.Inject
     protected ApplicationTenancyRepository securityApplicationTenancyRepository;
-
 
 }

@@ -5,13 +5,6 @@
       "memberGroups": {
         "Project": {
           "members": {
-            "id": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 25
-              }
-            },
             "reference": {
               "typicalLength": {
                 "value": 25
@@ -28,14 +21,7 @@
             	}
             },
             "businessCase": {},
-            "program": {},
-            "versionSequence": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 18
-              }
-            }
+            "program": {}
           }
         },
         "Dates": {
@@ -85,6 +71,24 @@
                 "describedAs": "Determines those users for whom this object is available to view and/or modify.",
                 "hidden": "PARENTED_TABLES",
                 "named": "Application Level"
+              }
+            }
+          }
+        },
+        "Metadata" : {
+          "members": {
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
               }
             }
           }

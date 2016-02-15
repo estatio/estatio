@@ -101,13 +101,6 @@
                 "changeRegistration": {}
               }
             },
-            "id": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 25
-              }
-            },
             "next": {
               "hidden": {},
               "disabled": {}
@@ -115,6 +108,17 @@
             "previous": {
               "hidden": {},
               "disabled": {}
+            }
+          }
+        },
+        "Metadata": {
+          "members": {
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
             },
             "versionSequence": {
               "hidden": {},

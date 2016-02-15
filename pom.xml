@@ -85,7 +85,6 @@ mvn clean install -DskipTests -o
 
         <isis-module-audit.version>1.11.0</isis-module-audit.version>
         <isis-module-command.version>1.11.0</isis-module-command.version>
-        <isis-module-devutils.version>1.11.0</isis-module-devutils.version>
         <isis-module-excel.version>1.11.0</isis-module-excel.version>
         <isis-module-fakedata-dom.version>1.11.0</isis-module-fakedata-dom.version>
         <isis-module-poly.version>1.11.0</isis-module-poly.version>

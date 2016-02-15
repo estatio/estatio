@@ -106,13 +106,6 @@
               "actions": {
                 "changePrevious": {}
               }
-            },
-            "versionSequence": {
-              "hidden": {},
-              "disabled": {},
-              "typicalLength": {
-                "value": 18
-              }
             }
           }
         },
@@ -121,6 +114,17 @@
             "applicationTenancy": {
               "hidden": {"where": "ALL_TABLES"},
               "disabled": {}
+            }
+          }
+        },
+        "Metadata" : {
+          "members": {
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
             }
           }
         }

@@ -17,13 +17,6 @@
                 "named": "Allocation"
               }
             },
-            "id": {
-              "propertyLayout": {
-                "hidden": "ANYWHERE",
-                "named": "Id",
-                "typicalLength": 25
-              }
-            },
             "keyItem": {
               "propertyLayout": {
                 "hidden": "REFERENCES_PARENT",
@@ -36,13 +29,6 @@
                 "named": "Source Value",
                 "typicalLength": 10
               }
-            },
-            "versionSequence": {
-              "propertyLayout": {
-                "hidden": "ANYWHERE",
-                "named": "Version Sequence",
-                "typicalLength": 18
-              }
             }
           }
         },
@@ -54,6 +40,24 @@
         "Type" : {
           "members": {
             "calculationType": {}
+          }
+        },
+        "Metadata" : {
+          "members": {
+            "id": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "named": "Id",
+                "typicalLength": 25
+              }
+            },
+            "versionSequence": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "named": "Version Sequence",
+                "typicalLength": 18
+              }
+            }
           }
         }
       }

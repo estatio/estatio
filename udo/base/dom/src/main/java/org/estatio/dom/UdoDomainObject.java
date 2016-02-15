@@ -19,11 +19,16 @@
 package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.util.ObjectContracts;
+
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
 import org.estatio.services.clock.ClockService;
 
 
@@ -77,7 +82,8 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(editing = Editing.DISABLED)
+    @MemberOrder(name = "Metadata", sequence = "1")
     public String getId() {
         Object objectId = JDOHelper.getObjectId(this);
         if(objectId == null) {
@@ -92,7 +98,8 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
     // //////////////////////////////////////
 
 
-    @Hidden
+    @Property(editing = Editing.DISABLED)
+    @MemberOrder(name = "Metadata", sequence = "2")
     public Long getVersionSequence() {
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;

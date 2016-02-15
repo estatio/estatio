@@ -219,8 +219,10 @@ public class EstatioAppManifest implements AppManifest {
                         "change.*:btn-default",
                         "maintain.*:btn-default",
                         "delete.*:btn-warning",
-                        "remove.*:btn-warning",
-                        ".*:btn-primary"));
+                        "remove.*:btn-warning"
+                        /*,
+                        ".*:btn-primary" // this messes up the drop-downs
+                        */));
 
         props.put("isis.reflector.facets.include",
                 Joiner.on(',').join(

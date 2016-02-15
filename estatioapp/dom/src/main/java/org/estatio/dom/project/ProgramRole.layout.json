@@ -25,12 +25,6 @@
                 "typicalLength": 12
               }
             },
-            "id": {
-              "propertyLayout": {
-                "hidden": "ANYWHERE",
-                "typicalLength": 25
-              }
-            },
             "predecessor": {
               "propertyLayout": {
                 "hidden": "ALL_TABLES"
@@ -51,6 +45,16 @@
                 "describedAs": "Determines those users for whom this object is available to view and/or modify.",
                 "hidden": "PARENTED_TABLES",
                 "named": "Application Level"
+              }
+            }
+          }
+        },
+        "Metadata" : {
+          "members": {
+            "id": {
+              "propertyLayout": {
+                "hidden": "ANYWHERE",
+                "typicalLength": 25
               }
             },
             "versionSequence": {
