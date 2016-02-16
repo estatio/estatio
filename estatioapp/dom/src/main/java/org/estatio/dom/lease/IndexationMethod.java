@@ -33,6 +33,36 @@ public enum IndexationMethod {
                             previous == null ? null : previous.getEffectiveIndexedValue()));
         }
     },
+    BASE_INDEX_ALLOW_DECREASE {
+        @Override
+        public void doInitialze(Indexable term, Indexable previous) {
+            if (previous != null) {
+                // Base value is copied on initialisation, never updated
+                term.setBaseValue(previous.getBaseValue());
+                LeaseTermFrequency frequency = term.getFrequency();
+                term.setBaseIndexStartDate(previous.getBaseIndexStartDate());
+                if (term.getFrequency() != null) {
+                    term.setNextIndexStartDate(frequency.nextDate(previous.getNextIndexStartDate()));
+                    term.setEffectiveDate(frequency.nextDate(previous.getEffectiveDate()));
+                }
+            }
+        }
+
+        @Override
+        public void doAlignBeforeIndexation(final Indexable term, final Indexable previous) {
+            // Nothing to do before with base indexe methond
+        }
+
+        @Override
+        public void doAlignAfterIndexation(final Indexable term, final Indexable previous) {
+            term.setEffectiveIndexedValue(
+                    MathUtils.firstNonZero(
+                            term.getIndexedValue(),
+                            previous == null ? null : previous.getEffectiveIndexedValue(),
+                            term.getBaseValue()));
+        }
+    },
+
     LAST_KNOWN_INDEX {
         @Override
         public void doInitialze(Indexable term, Indexable previous) {
