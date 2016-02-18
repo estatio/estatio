@@ -161,7 +161,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "asset")
     @Getter @Setter
-    private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
+    private SortedSet<FixedAssetRole> roles = new TreeSet<>();
 
     public FixedAsset newRole(
             final @ParameterLayout(named = "Type") FixedAssetRoleType type,

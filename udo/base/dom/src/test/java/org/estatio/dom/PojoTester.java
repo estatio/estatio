@@ -76,7 +76,7 @@ public final class PojoTester {
        return new PojoTester(Mode.RELAXED);
    }
 
-	private final Map<Class<?>, FixtureDatumFactory<?>> fixtureDataByType = new HashMap<Class<?>, FixtureDatumFactory<?>>();
+	private final Map<Class<?>, FixtureDatumFactory<?>> fixtureDataByType = new HashMap<>();
 	private final AtomicInteger counter = new AtomicInteger();
 
 	private enum Mode {
@@ -204,7 +204,7 @@ public final class PojoTester {
 
 		FixtureDatumFactory<List<?>> listDatumFactory = new FixtureDatumFactory<List<?>>() {
 			public List<?> getNext() {
-				final List<String> list = new ArrayList<String>();
+				final List<String> list = new ArrayList<>();
 				list.add("element" + counter.getAndIncrement());
 				list.add("element" + counter.getAndIncrement());
 				list.add("element" + counter.getAndIncrement());
@@ -217,7 +217,7 @@ public final class PojoTester {
 
 		fixtureDataByType.put(Set.class, new FixtureDatumFactory<Set<?>>() {
 			public Set<?> getNext() {
-				final Set<String> list = new HashSet<String>();
+				final Set<String> list = new HashSet<>();
 				list.add("element" + counter.getAndIncrement());
 				list.add("element" + counter.getAndIncrement());
 				list.add("element" + counter.getAndIncrement());
@@ -226,7 +226,7 @@ public final class PojoTester {
 		});
 		fixtureDataByType.put(SortedSet.class, new FixtureDatumFactory<SortedSet<?>>() {
 		    public SortedSet<?> getNext() {
-		        final SortedSet<String> list = new TreeSet<String>();
+		        final SortedSet<String> list = new TreeSet<>();
 		        list.add("element" + counter.getAndIncrement());
 		        list.add("element" + counter.getAndIncrement());
 		        list.add("element" + counter.getAndIncrement());
@@ -246,7 +246,7 @@ public final class PojoTester {
 		if (fixtureData == null || fixtureData.length == 0) {
 			throw new IllegalArgumentException("Test data is mandatory");
 		}
-		return withFixture(new FixtureDatumFactory<T>(c, fixtureData));
+		return withFixture(new FixtureDatumFactory<>(c, fixtureData));
 	}
 
 	public <T> PojoTester withFixture(FixtureDatumFactory<T> factory) {
@@ -261,8 +261,8 @@ public final class PojoTester {
 	public void exercise(Object bean, FilterSet filterSet) {
 		// an array that fills as each property is tested, allowing
 		// subsequent properties to be tested against them
-		final List<Method> gettersDone = new ArrayList<Method>();
-		final List<TestException> problems = new ArrayList<TestException>();
+		final List<Method> gettersDone = new ArrayList<>();
+		final List<TestException> problems = new ArrayList<>();
 
 		final Map<String, Method> methods = getMethodsAsMap(bean);
 		for (Entry<String, Method> e : methods.entrySet()) {
@@ -307,7 +307,7 @@ public final class PojoTester {
 	}
 
 	private static Map<String, Method> getMethodsAsMap(Object bean) {
-		final Map<String, Method> methodMap = new HashMap<String, Method>();
+		final Map<String, Method> methodMap = new HashMap<>();
 		for (Method m : bean.getClass().getMethods()) {
 			methodMap.put(m.getName(), m);
 		}

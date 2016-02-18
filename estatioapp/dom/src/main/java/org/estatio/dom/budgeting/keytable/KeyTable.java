@@ -179,7 +179,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     @CollectionLayout(render = RenderType.EAGERLY)
     @Persistent(mappedBy = "keyTable", dependentElement = "true")
     @Getter @Setter
-    private SortedSet<KeyItem> items = new TreeSet<KeyItem>();
+    private SortedSet<KeyItem> items = new TreeSet<>();
 
     public KeyTable generateItems(
             @Parameter(optionality = Optionality.OPTIONAL)

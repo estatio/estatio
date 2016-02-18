@@ -142,7 +142,7 @@ public class Tax
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
+    private SortedSet<TaxRate> rates = new TreeSet<>();
 
     // //////////////////////////////////////
 

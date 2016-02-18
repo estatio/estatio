@@ -56,8 +56,8 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     @Override
     public ApplicationSetting find(final String key) {
         return firstMatch(
-                new QueryDefault<ApplicationSettingForEstatio>(ApplicationSettingForEstatio.class, 
-                        "findByKey", 
+                new QueryDefault<>(ApplicationSettingForEstatio.class,
+                        "findByKey",
                         "key", key));
     }
 
@@ -68,7 +68,7 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public List<ApplicationSetting> listAll() {
         return (List)allMatches(
-                new QueryDefault<ApplicationSettingForEstatio>(ApplicationSettingForEstatio.class, 
+                new QueryDefault<>(ApplicationSettingForEstatio.class,
                         "findAll"));
     }
 

@@ -158,7 +158,7 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<Occupancy>(this);
+    private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Occupancy> getChangeDates() {
         return changeDates;

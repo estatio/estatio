@@ -118,14 +118,14 @@ public abstract class Party
     @Property(hidden = Where.EVERYWHERE)
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     @Getter @Setter
-    private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
+    private SortedSet<AgreementRole> agreements = new TreeSet<>();
 
     // //////////////////////////////////////
 
     @Property(hidden = Where.EVERYWHERE)
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     @Getter @Setter
-    private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
+    private SortedSet<PartyRegistration> registrations = new TreeSet<>();
 
     // //////////////////////////////////////
 

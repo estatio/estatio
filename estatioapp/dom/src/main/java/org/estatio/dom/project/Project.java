@@ -164,7 +164,7 @@ public class Project extends UdoDomainObject<Project> implements
     //TODO: decouple sorted set [momentarily needed by code in  ProjectRole getPredecessor() etc.
 
 	@javax.jdo.annotations.Persistent(mappedBy = "project")
-	private SortedSet<ProjectRole> roles = new TreeSet<ProjectRole>();
+	private SortedSet<ProjectRole> roles = new TreeSet<>();
 
 	@CollectionLayout(render = RenderType.EAGERLY, hidden = Where.EVERYWHERE)
 	public SortedSet<ProjectRole> getRoles() {

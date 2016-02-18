@@ -124,7 +124,7 @@ public class AgreementRole
         implements WithIntervalContiguous<AgreementRole>, WithApplicationTenancyProperty {
 
     private final WithIntervalContiguous.Helper<AgreementRole> helper =
-            new WithIntervalContiguous.Helper<AgreementRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 
@@ -356,7 +356,7 @@ public class AgreementRole
     @CollectionLayout(render = RenderType.EAGERLY)
     @Collection(editing = Editing.DISABLED)
     @Getter @Setter
-    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
+    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<>();
 
     // //////////////////////////////////////
 

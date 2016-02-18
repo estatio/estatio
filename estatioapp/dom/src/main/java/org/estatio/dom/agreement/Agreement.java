@@ -256,7 +256,7 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Agreement> changeDates = new WithIntervalMutable.Helper<Agreement>(this);
+    private WithIntervalMutable.Helper<Agreement> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Agreement> getChangeDates() {
         return changeDates;
@@ -325,7 +325,7 @@ public abstract class Agreement
     @Collection(editing = Editing.DISABLED)
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
+    private SortedSet<AgreementRole> roles = new TreeSet<>();
 
     @MemberOrder(name = "roles", sequence = "1")
     public Agreement newRole(

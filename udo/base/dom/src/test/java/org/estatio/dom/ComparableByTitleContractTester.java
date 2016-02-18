@@ -39,7 +39,7 @@ public class ComparableByTitleContractTester<T extends WithTitleComparable<T>> {
 
     public void test() {
         System.out.println("ComparableByTitleContractTester: " + cls.getName());
-        new ComparableContractTester<T>(orderedTuples()).test();
+        new ComparableContractTester<>(orderedTuples()).test();
 
         testToString();
         

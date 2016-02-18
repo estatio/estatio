@@ -116,7 +116,7 @@ public class UdoDomainRepositoryAndFactoryTest {
         public void allMatches() {
 
             final String queryName = "foo";
-            final QueryDefault<SomeDomainObject> query = new QueryDefault<SomeDomainObject>(SomeDomainObject.class, queryName, "bar", 1);
+            final QueryDefault<SomeDomainObject> query = new QueryDefault<>(SomeDomainObject.class, queryName, "bar", 1);
 
             someDomainService.queryToReturn = query;
 
@@ -132,7 +132,7 @@ public class UdoDomainRepositoryAndFactoryTest {
         public void firstMatch() {
 
             final String queryName = "foo";
-            final QueryDefault<SomeDomainObject> query = new QueryDefault<SomeDomainObject>(SomeDomainObject.class, queryName, "bar", 1);
+            final QueryDefault<SomeDomainObject> query = new QueryDefault<>(SomeDomainObject.class, queryName, "bar", 1);
 
             someDomainService.queryToReturn = query;
 

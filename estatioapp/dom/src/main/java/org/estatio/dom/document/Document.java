@@ -128,7 +128,7 @@ public class Document implements Comparable<Document>, WithIntervalMutable<Docum
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Document> intervalHelper = new WithIntervalMutable.Helper<Document>(this);
+    private WithIntervalMutable.Helper<Document> intervalHelper = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Document> getHelper() {
         return intervalHelper;

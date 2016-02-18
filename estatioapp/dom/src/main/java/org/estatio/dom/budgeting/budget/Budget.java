@@ -146,7 +146,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
     }
 
-    private WithIntervalMutable.Helper<Budget> changeDates = new WithIntervalMutable.Helper<Budget>(this);
+    private WithIntervalMutable.Helper<Budget> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Budget> getChangeDates() {
         return changeDates;
@@ -181,7 +181,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     @CollectionLayout(render= RenderType.EAGERLY)
     @Persistent(mappedBy = "budget", dependentElement = "true")
     @Getter @Setter
-    private SortedSet<BudgetItem> items = new TreeSet<BudgetItem>();
+    private SortedSet<BudgetItem> items = new TreeSet<>();
 
 
     @PropertyLayout(hidden = Where.EVERYWHERE)

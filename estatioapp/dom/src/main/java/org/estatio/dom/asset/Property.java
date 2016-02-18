@@ -173,7 +173,7 @@ public class Property
     @CollectionLayout(render = RenderType.EAGERLY)
     @Deprecated
     @Getter @Setter
-    private SortedSet<Unit> units = new TreeSet<Unit>();
+    private SortedSet<Unit> units = new TreeSet<>();
 
     // //////////////////////////////////////
 

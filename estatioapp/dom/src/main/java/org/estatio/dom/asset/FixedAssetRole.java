@@ -94,7 +94,7 @@ public class FixedAssetRole
         implements WithIntervalContiguous<FixedAssetRole>, WithApplicationTenancyProperty {
 
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =
-            new WithIntervalContiguous.Helper<FixedAssetRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 

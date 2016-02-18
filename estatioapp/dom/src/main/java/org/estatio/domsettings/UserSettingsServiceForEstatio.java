@@ -40,9 +40,9 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
             final String user, 
             final String key) {
         return firstMatch(
-                new QueryDefault<UserSettingForEstatio>(UserSettingForEstatio.class, 
-                        "findByUserAndKey", 
-                        "user",user,
+                new QueryDefault<>(UserSettingForEstatio.class,
+                        "findByUserAndKey",
+                        "user", user,
                         "key", key));
     }
 
@@ -54,8 +54,8 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
     @Override
     public List<UserSetting> listAllFor(final String user) {
         return (List)allMatches(
-                new QueryDefault<UserSettingForEstatio>(UserSettingForEstatio.class, 
-                        "findByUser", 
+                new QueryDefault<>(UserSettingForEstatio.class,
+                        "findByUser",
                         "user", user));
     }
 
@@ -66,7 +66,7 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
     @Override
     public List<UserSetting> listAll() {
         return (List)allMatches(
-                new QueryDefault<UserSettingForEstatio>(UserSettingForEstatio.class, 
+                new QueryDefault<>(UserSettingForEstatio.class,
                         "findAll"));
     }
 

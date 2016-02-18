@@ -130,7 +130,7 @@ public class Program
     //TODO: decouple sorted set [momentarily needed by code in  ProgramRole getPredecessor() etc.
 
     @javax.jdo.annotations.Persistent(mappedBy = "program")
-    private SortedSet<ProgramRole> roles = new TreeSet<ProgramRole>();
+    private SortedSet<ProgramRole> roles = new TreeSet<>();
 
     @CollectionLayout(render=RenderType.EAGERLY, hidden=Where.EVERYWHERE)
     public SortedSet<ProgramRole> getRoles() {

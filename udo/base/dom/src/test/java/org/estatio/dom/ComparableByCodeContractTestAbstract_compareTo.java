@@ -69,7 +69,7 @@ public abstract class ComparableByCodeContractTestAbstract_compareTo {
     }
 
     private <T extends WithCodeComparable<T>> void test(Class<T> cls) {
-        new ComparableByCodeContractTester<T>(cls).test();
+        new ComparableByCodeContractTester<>(cls).test();
     }
 
 }
