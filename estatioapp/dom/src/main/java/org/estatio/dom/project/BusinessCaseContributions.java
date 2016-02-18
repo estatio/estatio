@@ -30,7 +30,6 @@ public class BusinessCaseContributions  {
 			final LocalDate reviewDate
 			){
 		
-		new LocalDate();
 		final LocalDate now = LocalDate.now();
 		return businesscases.newBusinessCase(project, businessCaseDescription, reviewDate, now, null, 1);
 	}
@@ -50,7 +49,6 @@ public class BusinessCaseContributions  {
 			return "This project has a business case already; use update business case instead";
 		}
 		
-		new LocalDate();
 		LocalDate now = LocalDate.now();
 		if (reviewDate.isBefore(now)) {
 			return "A review date should not be in the past";
