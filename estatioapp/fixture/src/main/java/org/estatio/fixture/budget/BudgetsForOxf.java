@@ -42,10 +42,10 @@ public class BudgetsForOxf extends BudgetAbstact {
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        final BigDecimal VALUE1 = new BigDecimal(30000.55);
-        final BigDecimal VALUE2 = new BigDecimal(40000.35);
-        final BigDecimal VALUE3 = new BigDecimal(30500.99);
-        final BigDecimal VALUE4 = new BigDecimal(40600.01);
+        final BigDecimal VALUE1 = BigDecimal.valueOf(30000.55);
+        final BigDecimal VALUE2 = BigDecimal.valueOf(40000.35);
+        final BigDecimal VALUE3 = BigDecimal.valueOf(30500.99);
+        final BigDecimal VALUE4 = BigDecimal.valueOf(40600.01);
         final Charge charge1 = chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
         final Charge charge2 = chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET2);
 

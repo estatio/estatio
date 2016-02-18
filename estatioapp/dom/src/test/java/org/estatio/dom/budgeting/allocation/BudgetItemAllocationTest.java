@@ -65,8 +65,8 @@ public class BudgetItemAllocationTest {
             budgetItemAllocation.setPercentage(new BigDecimal(100));
 
             //when then
-            assertThat(budgetItemAllocation.validateUpdatePercentage(new BigDecimal(100.01)), is("percentage should be in range 0 - 100"));
-            assertThat(budgetItemAllocation.validateUpdatePercentage(new BigDecimal(-0.01)), is("percentage should be in range 0 - 100"));
+            assertThat(budgetItemAllocation.validateUpdatePercentage(BigDecimal.valueOf(100.01)), is("percentage should be in range 0 - 100"));
+            assertThat(budgetItemAllocation.validateUpdatePercentage(BigDecimal.valueOf(-0.01)), is("percentage should be in range 0 - 100"));
             assertThat(budgetItemAllocation.validateUpdatePercentage(new BigDecimal(100)), is(nullValue()));
             assertThat(budgetItemAllocation.validateUpdatePercentage(new BigDecimal(0)), is(nullValue()));
         }

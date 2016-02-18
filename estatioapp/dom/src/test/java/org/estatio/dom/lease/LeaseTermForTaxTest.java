@@ -75,8 +75,8 @@ public class LeaseTermForTaxTest {
         @Test
         public void normal() throws Exception {
             // given
-            term1.setTaxPercentage(new BigDecimal(1.00));
-            term1.setRecoverablePercentage(new BigDecimal(50.00));
+            term1.setTaxPercentage(BigDecimal.valueOf(1.00));
+            term1.setRecoverablePercentage(BigDecimal.valueOf(50.00));
             // when
             term1.doAlign();
             // then
@@ -88,8 +88,8 @@ public class LeaseTermForTaxTest {
         @Test
         public void overrides() throws Exception {
             // given
-            term1.setTaxPercentage(new BigDecimal(1.00));
-            term1.setRecoverablePercentage(new BigDecimal(50.00));
+            term1.setTaxPercentage(BigDecimal.valueOf(1.00));
+            term1.setRecoverablePercentage(BigDecimal.valueOf(50.00));
             term1.setPayableValue(new BigDecimal("222.00"));
             term1.setOverridePayableValue(true);
             term1.setTaxValue(new BigDecimal("111.00"));
@@ -106,8 +106,8 @@ public class LeaseTermForTaxTest {
         @Test
         public void noRent() throws Exception {
             // given
-            term2.setTaxPercentage(new BigDecimal(1.00));
-            term2.setRecoverablePercentage(new BigDecimal(50.00));
+            term2.setTaxPercentage(BigDecimal.valueOf(1.00));
+            term2.setRecoverablePercentage(BigDecimal.valueOf(50.00));
             term2.setPayableValue(new BigDecimal("222.00"));
             term2.setOverridePayableValue(true);
             term2.setTaxValue(new BigDecimal("111.00"));
@@ -131,7 +131,7 @@ public class LeaseTermForTaxTest {
             term = new LeaseTermForTax() {
                 @Override
                 public BigDecimal rentValueForDate() {
-                    return new BigDecimal(20000.00);
+                    return BigDecimal.valueOf(20000.00);
                 };
             };
         }
@@ -166,7 +166,7 @@ public class LeaseTermForTaxTest {
             term = new LeaseTermForTax() {
                 @Override
                 public BigDecimal rentValueForDate() {
-                    return new BigDecimal(20000.00);
+                    return BigDecimal.valueOf(20000.00);
                 };
             };
         }

@@ -141,9 +141,9 @@ public class BudgetItemsTest {
             Charge charge = new ChargeForTesting();
 
             //when
-            BigDecimal negativeValue = new BigDecimal(-0.01);
+            BigDecimal negativeValue = BigDecimal.valueOf(-0.01);
             BigDecimal zeroValue = BigDecimal.ZERO;
-            BigDecimal positiveValue = new BigDecimal(0.01);
+            BigDecimal positiveValue = BigDecimal.valueOf(0.01);
             //then
             assertThat(budgetItemRepository.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be negative"));
             assertThat(budgetItemRepository.validateNewBudgetItem(budget,zeroValue,charge), is(nullValue()));

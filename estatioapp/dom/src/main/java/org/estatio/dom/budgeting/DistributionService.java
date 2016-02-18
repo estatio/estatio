@@ -189,7 +189,7 @@ public class DistributionService {
     }
 
     private BigDecimal increment(final int scale) {
-        return new BigDecimal(0.1).pow(scale, MathContext.DECIMAL64);
+        return BigDecimal.valueOf(0.1).pow(scale, MathContext.DECIMAL64);
     }
 
     private class OutputHelper {
