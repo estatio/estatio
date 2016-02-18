@@ -176,10 +176,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
         BigDecimal invoicedValue = new BigDecimal(0);
         List<InvoiceItemForLease> items = leaseTerm.valueType() == LeaseTermValueType.FIXED ? findByLeaseTerm(leaseTerm) : findByLeaseTermAndInterval(leaseTerm, interval);
         for (InvoiceItemForLease invoiceItem : items) {
-            Invoice invoice = invoiceItem.getInvoice();
-            if (invoice.getStatus() != InvoiceStatus.NEW) {
-                invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
-            }
+            invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
         }
         return invoicedValue;
     }

@@ -159,20 +159,6 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
                     leasePoison.getStartDate());
         }
 
-        @Test
-        public void invalidDepositItem() throws Exception {
-
-            // given
-            final Charge charge = charges.findByReference(ChargeRefData.GB_DEPOSIT);
-
-            expectedExceptions.expect(InvalidException.class);
-            expectedExceptions.expectMessage(containsString("A leaseItem of type DEPOSIT should always have a fixed invoicing frequency"));
-
-            // when
-            wrap(leaseItems).newLeaseItem(
-                    leasePoison, LeaseItemType.DEPOSIT, charge, InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
-                    leasePoison.getStartDate());
-        }
     }
 
 

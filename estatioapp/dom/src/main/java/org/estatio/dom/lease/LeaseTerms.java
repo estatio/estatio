@@ -82,10 +82,6 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
         if (!interval.isValid()) {
             return String.format("From %s to %s is not a valid interval", startDate.toString(), endDate.toString());
         }
-        // a term of type deposit should have no end date
-        if (leaseItem.getType() == LeaseItemType.DEPOSIT && endDate != null) {
-            return "A deposit term should have no end date";
-        }
         // a term of type service_charge_budget should have an end date
         if (leaseItem.getType() == LeaseItemType.SERVICE_CHARGE_BUDGETED && endDate == null) {
             return "A budgeted service charge term should have an end date";

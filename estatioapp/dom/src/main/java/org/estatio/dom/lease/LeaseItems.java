@@ -86,15 +86,6 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
                     charge.getApplicationTenancyPath());
         }
 
-        //temporarily added to secure valid deposit item
-        if (type==LeaseItemType.DEPOSIT &&
-                (   invoicingFrequency!=InvoicingFrequency.FIXED_IN_ADVANCE
-                    || invoicingFrequency!=InvoicingFrequency.FIXED_IN_ARREARS
-                )
-                ){
-            return "A leaseItem of type DEPOSIT should always have a fixed invoicing frequency";
-        }
-
         return null;
     }
 

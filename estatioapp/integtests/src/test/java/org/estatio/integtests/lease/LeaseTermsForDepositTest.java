@@ -68,7 +68,7 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
         }
 
         @Test
-        public void invoiceTest() throws Exception {
+        public void invoiceScenarioTest() throws Exception {
 
             // given
             startDate = new LocalDate(2010,10,1);
@@ -95,9 +95,10 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
 
             // then
             Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(2);
-            Assertions.assertThat(invoices.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("5652.51"));
+            Assertions.assertThat(invoices.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("5000.00"));
+            Assertions.assertThat(invoices.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
 
-            // and after approval of first invoice the only delta is invoiced
+            // and after approval of first invoice only the delta is invoiced
             invoices.findByLease(topmodelLease).get(0).approve();
             invoiceService.calculate(
                     topmodelLease,
@@ -110,6 +111,20 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(2);
             Assertions.assertThat(invoices.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
 
+            // and after terminating the invoiced deposit is credited
+            depositTerm = (LeaseTermForDeposit) topmodelLease.findFirstItemOfType(LeaseItemType.DEPOSIT).getTerms().first();
+            depositTerm.terminate(startDate.plusYears(5).minusDays(1));
+            invoices.findByLease(topmodelLease).get(1).approve();
+            invoiceService.calculate(
+                    topmodelLease,
+                    InvoiceRunType.RETRO_RUN,
+                    InvoiceCalculationSelection.DEPOSIT,
+                    startDate.plusYears(5), startDate.plusYears(5), startDate.plusYears(5).plusDays(1));
+
+            //then
+            Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(3);
+            Assertions.assertThat(invoices.findByLease(topmodelLease).get(2).getNetAmount()).isEqualTo(new BigDecimal("-5652.51"));
+
         }
 
         @Test
@@ -119,6 +134,8 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             topmodelLease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             indexTermFirst = (LeaseTermForIndexable) topmodelLease.findFirstItemOfType(LeaseItemType.RENT).getTerms().first();
             depositTerm = (LeaseTermForDeposit) topmodelLease.findFirstItemOfType(LeaseItemType.DEPOSIT).getTerms().first();
+            depositTerm.approve();
+            Assertions.assertThat(depositTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
 
             //when
             depositTerm.changeParameters(DepositType.QUARTER, new BigDecimal("12345.67"));
@@ -126,7 +143,25 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             //then
             Assertions.assertThat(depositTerm.getDepositType()).isEqualTo(DepositType.QUARTER);
             Assertions.assertThat(depositTerm.getExcludedAmount()).isEqualTo(new BigDecimal("12345.67"));
+            Assertions.assertThat(depositTerm.getStatus()).isEqualTo(LeaseTermStatus.NEW);
+        }
 
+        @Test
+        public void changeManualDepositValueTest() throws Exception {
+
+            //given
+            topmodelLease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            indexTermFirst = (LeaseTermForIndexable) topmodelLease.findFirstItemOfType(LeaseItemType.RENT).getTerms().first();
+            depositTerm = (LeaseTermForDeposit) topmodelLease.findFirstItemOfType(LeaseItemType.DEPOSIT).getTerms().first();
+            depositTerm.approve();
+            Assertions.assertThat(depositTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
+
+            //when
+            depositTerm.changeManualDepositValue(new BigDecimal("76543.21"));
+
+            //then
+            Assertions.assertThat(depositTerm.getManualDepositValue()).isEqualTo(new BigDecimal("76543.21"));
+            Assertions.assertThat(depositTerm.getStatus()).isEqualTo(LeaseTermStatus.NEW);
         }
 
     }

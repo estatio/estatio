@@ -17,23 +17,17 @@
 
 package org.estatio.dom.budgeting.keyitem;
 
-import java.math.BigDecimal;
-
-import org.junit.Test;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.UnitForTesting;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
+import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.math.BigDecimal;
 
-/**
- * Created by jodo on 22/04/15.
- */
+import static org.junit.Assert.*;
+
 public class KeyItemTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
@@ -64,8 +58,7 @@ public class KeyItemTest {
         item.changeValue(BigDecimal.valueOf(2.3335));
 
         //then
-        assertEquals(item.getValue(),BigDecimal.valueOf(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getValue().equals(BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getValue(),BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -99,8 +92,7 @@ public class KeyItemTest {
         item.changeAuditedValue(BigDecimal.valueOf(2.3335));
 
         //then
-        assertEquals(item.getAuditedValue(),BigDecimal.valueOf(2.333).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getAuditedValue().equals(BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getAuditedValue(),BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP));
 
     }
 
@@ -134,8 +126,7 @@ public class KeyItemTest {
         item.changeSourceValue(BigDecimal.valueOf(2.335));
 
         //then
-        assertEquals(item.getSourceValue(),BigDecimal.valueOf(2.33).setScale(2, BigDecimal.ROUND_HALF_UP));
-        assertFalse(item.getSourceValue().equals(BigDecimal.valueOf(2.34).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertEquals(item.getSourceValue(),BigDecimal.valueOf(2.34).setScale(2, BigDecimal.ROUND_HALF_UP));
 
     }
 

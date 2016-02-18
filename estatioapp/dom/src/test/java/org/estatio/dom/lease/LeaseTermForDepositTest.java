@@ -93,45 +93,94 @@ public class LeaseTermForDepositTest {
 
         @Test
         public void testHalfYear() {
-            verifyUntil(new LocalDate(2013,01,01), DepositType.HALF_YEAR, "0.00", "50000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.HALF_YEAR, "0.00", null, "50000.00");
         }
 
         @Test
         public void testHalfYearWithExcludingAmount() {
-            verifyUntil(new LocalDate(2013,01,01), DepositType.HALF_YEAR, "10000.00", "40000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.HALF_YEAR, "10000.00", null,  "40000.00");
         }
 
         @Test
         public void testQuarter() {
-            verifyUntil(new LocalDate(2013,01,01), DepositType.QUARTER, "0.00", "25000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.QUARTER, "0.00", null, "25000.00");
         }
 
         @Test
         public void testMonth() {
-            verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", "8333.33");
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", null, "8333.33");
         }
 
-        private void verifyUntil(
-                final LocalDate date,
-                final DepositType depositType,
-                final String excludedAmountStr,
-                final String expectedValueStr
-        ) {
-            term.setDepositType(depositType);
-            term.setExcludedAmount(parseBigDecimal(excludedAmountStr));
-
-            term.verifyUntil(date);
-
-            assertThat(term.getEffectiveValue(), is(parseBigDecimal(expectedValueStr)));
+        @Test
+        public void testTypeManual() {
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MANUAL, "0.00", null , "0.00");
         }
 
-        private BigDecimal parseBigDecimal(final String input) {
-            if (input == null) {
-                return null;
-            }
-            return new BigDecimal(input);
+        @Test
+        public void testManualDepositValueForTypeManual() {
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MANUAL, "0.00", "123.00", "123.00");
         }
 
+        @Test
+        public void testManualDepositValueForTypeMonth() {
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", "123.00", "123.00");
+        }
+
+        @Test
+        public void testManualDepositValueZero() {
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", "0.00", "0.00");
+        }
+
+        @Test
+        public void testMonthWhenTerminated() {
+            term.terminate(new LocalDate(2013,01,01));
+            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", null, "0.00");
+        }
+
+    }
+
+    public static class VerifyWhenTerminated extends LeaseTermForDepositTest {
+
+        @Before
+        public void setup() {
+            super.setup();
+
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockLease).getEffectiveInterval();
+                    will(returnValue(new LocalDateInterval(new LocalDate(2013,01,01), new LocalDate(2014,01,01))));
+                }
+            });
+        }
+
+        @Test
+        public void testMonthWhenTerminatedBefore() {
+            term.terminate(new LocalDate(2013,01,01));
+            super.verifyUntil(new LocalDate(2013,01,02), DepositType.MONTH, "0.00", null, "0.00");
+        }
+
+    }
+
+    private void verifyUntil(
+            final LocalDate date,
+            final DepositType depositType,
+            final String excludedAmountStr,
+            final String manualDepositValueStr,
+            final String expectedValueStr
+    ) {
+        term.setDepositType(depositType);
+        term.setExcludedAmount(parseBigDecimal(excludedAmountStr));
+        term.setManualDepositValue(parseBigDecimal(manualDepositValueStr));
+        term.verifyUntil(date);
+
+        assertThat(term.getEffectiveValue(), is(parseBigDecimal(expectedValueStr)));
+    }
+
+    private BigDecimal parseBigDecimal(final String input) {
+        if (input == null) {
+            return null;
+        }
+        return new BigDecimal(input);
     }
 
     public static class Initialize extends LeaseTermForDepositTest {
@@ -142,7 +191,7 @@ public class LeaseTermForDepositTest {
             term.doInitialize();
 
             //then
-            assertThat(term.getDepositValue(), is(BigDecimal.ZERO));
+            assertThat(term.getCalculatedDepositValue(), is(BigDecimal.ZERO));
             assertThat(term.getExcludedAmount(), is(BigDecimal.ZERO));
         }
 
@@ -211,13 +260,13 @@ public class LeaseTermForDepositTest {
                     will(returnValue(new LocalDateInterval(new LocalDate(2013,01,01), new LocalDate(2014,01,01))));
                     allowing(mockLease).getStartDate();
                     will(returnValue(new LocalDate(2013,01,01)));
-                    oneOf(mockLease).findItemsOfType(LeaseItemType.RENT);
+                    allowing(mockLease).findItemsOfType(LeaseItemType.RENT);
                     will(returnValue(new ArrayList<LeaseItem>() {
                         {
                             add(rentItem);
                         }
                     }));
-                    oneOf(rentItem).valueForDate(with(any(LocalDate.class)));
+                    allowing(rentItem).valueForDate(with(any(LocalDate.class)));
                     will(returnValue(new BigDecimal("10000.00")));
                 }
             });
@@ -258,6 +307,21 @@ public class LeaseTermForDepositTest {
 
         }
 
+        @Test
+        public void testTerminatedBeforeDueDate() {
+
+            term.terminate(startDate.plusMonths(3).minusDays(1));
+
+            testTwoResultsExpected(
+                    InvoiceRunType.RETRO_RUN, startDate.plusMonths(3),
+                    "2013-01-01/2013-04-01:2013-01-01",
+                    "2013-01-01/2013-04-01",
+                    "0.00",
+                    "2013-04-01/2013-07-01:2013-04-01",
+                    "2013-04-01/2013-07-01",
+                    "0.00");
+
+        }
 
         private void testOneResultExpected(InvoiceRunType invoiceRunType, LocalDate start, String invoicingIntervalExpected, String effectiveIntervalExpected, String valueExpected) {
             // given
@@ -273,6 +337,33 @@ public class LeaseTermForDepositTest {
             assertThat(results.get(0).effectiveInterval().toString(), is(effectiveIntervalExpected));
             assertThat(results.get(0).value(), is(new BigDecimal(valueExpected)));
         }
+
+        private void testTwoResultsExpected(
+                InvoiceRunType invoiceRunType,
+                LocalDate start,
+                String invoicingIntervalExpected0,
+                String effectiveIntervalExpected0,
+                String valueExpected0,
+                String invoicingIntervalExpected1,
+                String effectiveIntervalExpected1,
+                String valueExpected1) {
+            // given
+            InvoiceCalculationParameters parameters = new InvoiceCalculationParameters(invoiceRunType, start, start, start.plusDays(1));
+            term.verifyUntil(start.plusDays(2));
+
+            // when
+            results = invoiceCalculationService.calculateDueDateRange(term, parameters);
+
+            // then
+            assertThat(results.size(), is(2));
+            assertThat(results.get(0).invoicingInterval().toString(), is(invoicingIntervalExpected0));
+            assertThat(results.get(0).effectiveInterval().toString(), is(effectiveIntervalExpected0));
+            assertThat(results.get(0).value(), is(new BigDecimal(valueExpected0)));
+            assertThat(results.get(1).invoicingInterval().toString(), is(invoicingIntervalExpected1));
+            assertThat(results.get(1).effectiveInterval().toString(), is(effectiveIntervalExpected1));
+            assertThat(results.get(1).value(), is(new BigDecimal(valueExpected1)));
+        }
+
 
         private void testNoResultsExpected(InvoiceRunType invoiceRunType, LocalDate start) {
             // given

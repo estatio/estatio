@@ -21,6 +21,12 @@ public enum DepositType {
         BigDecimal calculation(BigDecimal actualMGR) {
             return actualMGR.divide(new BigDecimal("2"), MathContext.DECIMAL64).setScale(2, BigDecimal.ROUND_HALF_UP);
         }
+    },
+    MANUAL{
+        @Override
+        BigDecimal calculation(BigDecimal actualMGR) {
+            return BigDecimal.ZERO.setScale(2);
+        }
     };
 
     abstract BigDecimal calculation(final BigDecimal actualMGR);
