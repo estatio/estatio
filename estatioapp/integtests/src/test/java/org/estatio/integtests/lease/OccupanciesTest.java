@@ -166,7 +166,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         public void invalidBecauseNoReplacement() throws Exception {
             // when
             Brand.RemoveEvent event = new RemoveEvent(oldBrand, null, (Object[]) null);
-            event.setPhase(Phase.VALIDATE);
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             occupancies.on(event);
 
             // then
@@ -177,9 +177,9 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         public void executingReplacesBrand() throws Exception {
             // when
             Brand.RemoveEvent event = new RemoveEvent(oldBrand, null, newBrand);
-            event.setPhase(Phase.VALIDATE);
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             occupancies.on(event);
-            event.setPhase(Phase.EXECUTING);
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTING);
             occupancies.on(event);
 
             /*

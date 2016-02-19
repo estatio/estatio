@@ -79,7 +79,7 @@ public class LeaseStatusService {
     @Subscribe
     @Programmatic
     public void on(Lease.ResumeAllEvent ev) {
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case EXECUTED:
             refreshStatus(ev.getSource());
         default:
@@ -90,7 +90,7 @@ public class LeaseStatusService {
     @Subscribe
     @Programmatic
     public void on(Lease.SuspendAllEvent ev) {
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case EXECUTED:
             refreshStatus(ev.getSource());
         default:
@@ -101,7 +101,7 @@ public class LeaseStatusService {
     @Subscribe
     @Programmatic
     public void on(Lease.TerminateEvent ev) {
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case EXECUTED:
             refreshStatus(ev.getSource());
         default:
@@ -112,7 +112,7 @@ public class LeaseStatusService {
     @Subscribe
     @Programmatic
     public void on(Lease.ChangeDatesEvent ev) {
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case EXECUTED:
             refreshStatus(ev.getSource());
         default:
@@ -125,7 +125,7 @@ public class LeaseStatusService {
     @Subscribe
     @Programmatic
     public void on(LeaseItem.ResumeEvent ev) {
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case EXECUTED:
             refreshStatus(ev.getSource().getLease());
         default:
@@ -136,7 +136,7 @@ public class LeaseStatusService {
     @Subscribe
     @Programmatic
     public void on(LeaseItem.SuspendEvent ev) {
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case EXECUTED:
             refreshStatus(ev.getSource().getLease());
         default:

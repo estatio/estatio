@@ -43,7 +43,7 @@ public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFac
         Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             // We don't care if being deleted
             break;

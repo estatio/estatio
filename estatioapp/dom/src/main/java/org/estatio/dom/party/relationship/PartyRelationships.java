@@ -140,7 +140,7 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
         Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             break;
         case EXECUTING:

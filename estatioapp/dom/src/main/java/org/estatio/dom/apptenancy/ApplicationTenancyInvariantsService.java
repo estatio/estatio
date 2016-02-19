@@ -84,7 +84,7 @@ public class ApplicationTenancyInvariantsService extends UdoDomainService<Applic
         for (final ApplicationTenancySubscriberAlgorithm algorithm : algorithms) {
             getContainer().injectServicesInto(algorithm);
 
-            switch (ev.getPhase()) {
+            switch (ev.getEventPhase()) {
                 case HIDE:
                     algorithm.hide(ev, source);
                     break;
