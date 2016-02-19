@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
@@ -17,10 +17,9 @@ import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.services.clock.ClockService;
 
-@DomainService
+@DomainService(nature = NatureOfService.DOMAIN)
 public class LeaseStatusService {
 
-    @NotInServiceMenu
     public LeaseStatus refreshStatus(Lease lease) {
         LeaseStatus newStatus = statusOf(lease);
         if (!lease.getStatus().equals(newStatus)) {
@@ -55,7 +54,6 @@ public class LeaseStatusService {
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
     public LeaseItemStatus refreshStatus(LeaseItem leaseItem) {
         LeaseItemStatus newStatus = statusOf(leaseItem);
         if (!leaseItem.getStatus().equals(newStatus)) {
