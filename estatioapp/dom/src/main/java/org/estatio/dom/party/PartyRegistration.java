@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -70,7 +70,7 @@ import lombok.Setter;
                         + "   && type == :type "
                         + "   && endDate == :endDate")
 })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
         extends EstatioDomainObject<PartyRegistration>
         implements WithIntervalMutable<PartyRegistration>, WithApplicationTenancyCountry {
