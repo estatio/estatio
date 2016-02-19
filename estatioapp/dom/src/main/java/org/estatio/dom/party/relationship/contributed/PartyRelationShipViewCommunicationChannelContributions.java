@@ -17,7 +17,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.TypicalLength;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
@@ -33,7 +33,7 @@ public class PartyRelationShipViewCommunicationChannelContributions {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Property(hidden = Where.OBJECT_FORMS)
-    @TypicalLength(JdoColumnLength.PHONE_NUMBER)
+    @PropertyLayout(typicalLength = JdoColumnLength.PHONE_NUMBER)
     public String phoneNumbers(final PartyRelationshipView prv) {
         return StringUtils.join(channelTitles(prv, CommunicationChannelType.PHONE_NUMBER), ", ");
     }
@@ -41,7 +41,7 @@ public class PartyRelationShipViewCommunicationChannelContributions {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Property(hidden = Where.OBJECT_FORMS)
-    @TypicalLength(JdoColumnLength.EMAIL_ADDRESS)
+    @PropertyLayout(typicalLength = JdoColumnLength.EMAIL_ADDRESS)
     public String emailAddresses(final PartyRelationshipView prv) {
         return StringUtils.join(channelTitles(prv, CommunicationChannelType.EMAIL_ADDRESS), ", ");
     }
