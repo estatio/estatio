@@ -19,11 +19,17 @@
 package org.estatio.integtests.party.relationship;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
@@ -141,10 +147,12 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             final Party parent = parties.findPartyByReference(OrganisationForTopModelGb.REF);
             final Party currentChild = parties.findPartyByReference(PersonForGinoVannelliGb.REF);
             final Party replacementChild = persons.newPerson("TEST", "JR", "JR", "Ewing", PersonGenderType.MALE, currentChild.getApplicationTenancy());
-            Party.RemoveEvent event = new RemoveEvent(currentChild, null, replacementChild);
-            event.setPhase(Phase.VALIDATE);
+            Party.RemoveEvent event = new RemoveEvent();
+            event.setSource(currentChild);
+            event.setArguments(Lists.newArrayList(replacementChild));
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             relationships.on(event);
-            event.setPhase(Phase.EXECUTING);
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
             relationships.on(event);
 
             // then

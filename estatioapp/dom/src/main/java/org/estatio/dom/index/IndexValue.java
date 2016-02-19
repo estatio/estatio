@@ -26,7 +26,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -114,13 +113,6 @@ public class IndexValue
 
     public static class UpdateEvent extends ActionDomainEvent<IndexValue> {
         private static final long serialVersionUID = 1L;
-
-        public UpdateEvent(
-                final IndexValue source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
-   }
+    }
 
 }

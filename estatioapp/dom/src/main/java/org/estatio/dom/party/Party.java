@@ -20,11 +20,12 @@ package org.estatio.dom.party;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-import org.apache.isis.applib.Identifier;
+
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -37,6 +38,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -131,13 +133,6 @@ public abstract class Party
 
     public static class RemoveEvent extends ActionDomainEvent<Party> {
         private static final long serialVersionUID = 1L;
-
-        public RemoveEvent(
-                final Party source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
 
         public Party getReplacement() {
             return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));

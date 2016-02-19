@@ -23,7 +23,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -34,7 +33,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -164,15 +163,8 @@ public class Brand
 
     // //////////////////////////////////////
 
-    public static class RemoveEvent extends ActionInteractionEvent<Brand> {
+    public static class RemoveEvent extends ActionDomainEvent<Brand> {
         private static final long serialVersionUID = 1L;
-
-        public RemoveEvent(
-                final Brand source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
 
         public Brand getReplacement() {
             return (Brand) (this.getArguments().isEmpty() ? null : getArguments().get(0));

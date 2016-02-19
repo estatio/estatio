@@ -18,15 +18,13 @@
  */
 package org.estatio.dom.apptenancy;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 
 public class ApplicationTenancyEventChanged extends ActionDomainEvent<EstatioDomainObject> {
-    public ApplicationTenancyEventChanged(final EstatioDomainObject source, final Identifier identifier, final Object... arguments) {
-        super(source, identifier, arguments);
-    }
 
     /**
      * The proposed new {@link org.isisaddons.module.security.dom.tenancy.ApplicationTenancy} for the object.

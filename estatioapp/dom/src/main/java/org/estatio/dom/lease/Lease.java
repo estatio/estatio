@@ -37,7 +37,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -937,13 +936,6 @@ public class Lease
     public static class TerminateEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
-        public TerminateEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
-
         public LocalDate getTerminationDate() {
             return (LocalDate) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
@@ -952,34 +944,15 @@ public class Lease
     public static class SuspendAllEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
-        public SuspendAllEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     public static class ResumeAllEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
-        public ResumeAllEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     public static class ChangeDatesEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
-
-        public ChangeDatesEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
 
         public LocalDate getNewTenancyStartDate() {
             return (LocalDate) (this.getArguments().isEmpty() ? null : getArguments().get(0));
