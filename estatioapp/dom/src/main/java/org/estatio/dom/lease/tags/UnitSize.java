@@ -22,7 +22,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
@@ -87,7 +86,7 @@ public class UnitSize
     private String name;
 
     public UnitSize change(
-            final @Named("Name") String name) {
+            final String name) {
         setName(name);
         return this;
     }

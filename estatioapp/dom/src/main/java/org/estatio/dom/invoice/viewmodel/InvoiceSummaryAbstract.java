@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -55,8 +54,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     }
 
     public Object invoiceAll(
-            final @Named("Invoice Date") LocalDate invoiceDate,
             final @Named("Are you sure?") Boolean confirm
+            final LocalDate invoiceDate,
             ) {
         for (Invoice invoice : getInvoices()) {
             invoice.doInvoice(invoiceDate);

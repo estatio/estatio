@@ -27,7 +27,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -208,8 +207,8 @@ public class Numerator
     // //////////////////////////////////////
 
     public Numerator changeParameters(
-            final @Named("Format") String format,
-            final @Named("Last increment") BigInteger lastIncrement
+            final String format,
+            final BigInteger lastIncrement
             ) {
         setFormat(format);
         setLastIncrement(lastIncrement);

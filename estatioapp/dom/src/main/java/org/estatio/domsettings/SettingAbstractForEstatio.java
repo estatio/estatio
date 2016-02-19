@@ -22,8 +22,8 @@ package org.estatio.domsettings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
 import org.isisaddons.module.settings.dom.SettingType;
@@ -45,7 +45,7 @@ public abstract class SettingAbstractForEstatio
     private String description;
 
     @MemberOrder(name="Description", sequence="1")
-    @Named("Update")
+    @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateDescription(
             final @Named("Description") @Optional String description) {
         setDescription(description);
@@ -68,9 +68,9 @@ public abstract class SettingAbstractForEstatio
     // //////////////////////////////////////
     
     @MemberOrder(name="ValueAsString", sequence="1")
-    @Named("Update")
+    @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateAsString(
-            final @Named("Value") String value) {
+            final String value) {
         setValueRaw(value);
         return this;
     }
@@ -82,9 +82,9 @@ public abstract class SettingAbstractForEstatio
     }
     
     @MemberOrder(name="ValueAsInt", sequence="1")
-    @Named("Update")
+    @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateAsInt(
-            final @Named("Value") Integer value) {
+            final Integer value) {
         setValueRaw(value.toString());
         return this;
     }
@@ -96,9 +96,9 @@ public abstract class SettingAbstractForEstatio
     }
     
     @MemberOrder(name="ValueAsLong", sequence="1")
-    @Named("Update")
+    @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateAsLong(
-            final @Named("Value") Long value) {
+            final Long value) {
         setValueRaw(value.toString());
         return this;
     }
@@ -110,9 +110,9 @@ public abstract class SettingAbstractForEstatio
     }
     
     @MemberOrder(name="ValueAsLocalDate", sequence="1")
-    @Named("Update")
+    @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateAsLocalDate(
-            final @Named("Value") LocalDate value) {
+            final LocalDate value) {
         setValueRaw(value.toString(DATE_FORMATTER));
         return this;
     }
@@ -124,9 +124,9 @@ public abstract class SettingAbstractForEstatio
     }
 
     @MemberOrder(name="ValueAsBoolean", sequence="1")
-    @Named("Update")
+    @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateAsBoolean(
-            final @Named("Value") Boolean value) {
+            final Boolean value) {
         setValueRaw(value.toString());
         return this;
     }
@@ -141,7 +141,7 @@ public abstract class SettingAbstractForEstatio
     
     
     public SettingAbstractForEstatio delete(
-            final @Named("Are you sure?") @Optional Boolean confirm) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Are you sure?") Boolean confirm) {
         if(confirm == null || !confirm) {
             container.informUser("Setting NOT deleted");
             return this;

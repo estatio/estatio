@@ -22,7 +22,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
@@ -91,8 +90,8 @@ public class Activity
     private String name;
 
     public Activity change(
-            final @Named("Name") String name,
-            final @Named("Sector") Sector sector) {
+            final String name,
+            final Sector sector) {
         setName(name);
         setSector(sector);
         return this;
