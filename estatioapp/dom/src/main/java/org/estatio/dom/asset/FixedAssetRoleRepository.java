@@ -22,21 +22,13 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
-@DomainService(
-        nature = NatureOfService.DOMAIN,
-        repositoryFor = FixedAssetRole.class
-)
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = FixedAssetRole.class)
 public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<FixedAssetRole> {
 
     public FixedAssetRoleRepository() {
@@ -77,16 +69,12 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
                 "type", type);
     }
 
-    @NotContributed
-    @Action(semantics = SemanticsOf.SAFE)
     public List<FixedAssetRole> findAllForProperty(
             final Property property) {
         return allMatches("findAllForProperty",
                 "asset", property);
     }
 
-    @NotContributed
-    @Action(semantics = SemanticsOf.SAFE)
     public List<FixedAssetRole> findAllForPropertyAndPartyAndType(
             final FixedAsset asset,
             final Party party,

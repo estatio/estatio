@@ -26,7 +26,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -80,7 +79,7 @@ public class BankMandate
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public String getApplicationTenancyPath() {
         return applicationTenancyPath;
     }

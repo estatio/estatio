@@ -22,12 +22,12 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.isis.applib.RecoverableException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -48,7 +48,7 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public List<Numerator> allNumerators() {
         return allInstances();

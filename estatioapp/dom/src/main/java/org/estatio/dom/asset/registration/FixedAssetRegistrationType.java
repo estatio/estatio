@@ -23,11 +23,12 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.NonRecoverableException;
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -58,8 +59,7 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistrationType "
                         + "WHERE title == :title")
 })
-@Immutable
-@Bounded
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class FixedAssetRegistrationType 
         extends EstatioDomainObject<FixedAssetRegistrationType>
         implements WithTitleComparable<FixedAssetRegistrationType>, 
@@ -72,7 +72,7 @@ public class FixedAssetRegistrationType
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }

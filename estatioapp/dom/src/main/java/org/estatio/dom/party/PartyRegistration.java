@@ -24,17 +24,16 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -71,7 +70,7 @@ import lombok.Setter;
                         + "   && type == :type "
                         + "   && endDate == :endDate")
 })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
         extends EstatioDomainObject<PartyRegistration>
         implements WithIntervalMutable<PartyRegistration>, WithApplicationTenancyCountry {
@@ -124,11 +123,11 @@ public class PartyRegistration
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public PartyRegistration changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 

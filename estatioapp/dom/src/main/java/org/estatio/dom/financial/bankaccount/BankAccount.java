@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -174,13 +173,6 @@ public class BankAccount
 
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
-
-        public RemoveEvent(
-                final BankAccount source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     @Inject

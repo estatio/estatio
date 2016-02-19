@@ -22,11 +22,11 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -58,8 +58,8 @@ import lombok.Setter;
                         + "WHERE sector == :sector "
                         + "   && name == :name")
 })
-@Bounded
-@Immutable
+
+@DomainObject(bounded = true, editing = Editing.DISABLED)
 public class Activity
         extends EstatioDomainObject<Activity>
         implements WithNameGetter, WithApplicationTenancyGlobal {
@@ -70,7 +70,7 @@ public class Activity
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
@@ -90,8 +90,8 @@ public class Activity
     private String name;
 
     public Activity change(
-            final @Named("Name") String name,
-            final @Named("Sector") Sector sector) {
+            final String name,
+            final Sector sector) {
         setName(name);
         setSector(sector);
         return this;

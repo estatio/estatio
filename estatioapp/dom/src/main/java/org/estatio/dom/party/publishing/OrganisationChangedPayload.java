@@ -19,10 +19,13 @@
 package org.estatio.dom.party.publishing;
 
 import java.util.Set;
+
 import javax.inject.Inject;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.services.publish.EventPayloadForObjectChanged;
+
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Organisation;
@@ -38,12 +41,12 @@ public class OrganisationChangedPayload extends EventPayloadForObjectChanged<Org
     }
 
     @Override
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public Organisation getChanged() {
         return super.getChanged();
     }
-    
-    @Render(Type.EAGERLY)
+
+    @CollectionLayout(render = RenderType.EAGERLY)
     public Set<CommunicationChannel> getCommunicationChannels() {
         return channelContributions.communicationChannels(getChanged());
     }

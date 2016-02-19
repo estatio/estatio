@@ -18,8 +18,16 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService
@@ -28,7 +36,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.1"
 )
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class InvoiceSummariesForInvoiceRun extends UdoDomainRepositoryAndFactory<InvoiceSummaryForInvoiceRun> {
 
     public InvoiceSummariesForInvoiceRun() {

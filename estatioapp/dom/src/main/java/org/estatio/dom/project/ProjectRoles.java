@@ -150,7 +150,7 @@ public class ProjectRoles extends UdoDomainRepositoryAndFactory<ProjectRole> {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             List<ProjectRole> projectRoles = findByParty(sourceParty);
 

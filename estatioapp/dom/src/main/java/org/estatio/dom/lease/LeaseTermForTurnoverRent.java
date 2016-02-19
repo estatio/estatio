@@ -30,9 +30,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
@@ -71,9 +71,9 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal auditedTurnover;
 
     public LeaseTermForTurnoverRent changeParameters(
-            final @Named("Turnover rent rule") @Optional String newTurnoverRentRule,
-            final @Named("Total budgeted rent") @Optional BigDecimal newTotalBudgetedRent,
-            final @Named("Audited Turnover") @Optional BigDecimal newAuditedTurnover) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Turnover rent rule") String newTurnoverRentRule,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Total budgeted rent") BigDecimal newTotalBudgetedRent,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Audited Turnover") BigDecimal newAuditedTurnover) {
         setTurnoverRentRule(newTurnoverRentRule);
         setTotalBudgetedRent(newTotalBudgetedRent);
         setAuditedTurnover(newAuditedTurnover);

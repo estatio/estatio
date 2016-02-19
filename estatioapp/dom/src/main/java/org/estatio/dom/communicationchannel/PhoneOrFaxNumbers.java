@@ -19,16 +19,19 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
+
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "70", repositoryFor = PhoneOrFaxNumber.class)
-@Hidden
+@DomainService(menuOrder = "70", repositoryFor = PhoneOrFaxNumber.class, nature = NatureOfService.DOMAIN)
 public class PhoneOrFaxNumbers extends UdoDomainRepositoryAndFactory<PhoneOrFaxNumber> {
 
     public PhoneOrFaxNumbers() {

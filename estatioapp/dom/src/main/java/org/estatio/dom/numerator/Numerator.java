@@ -25,10 +25,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -85,7 +83,7 @@ import lombok.Setter;
                         + "WHERE name == :name"
                         + "&& applicationTenancyPath == :applicationTenancyPath ")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class Numerator
         extends EstatioDomainObject<Numerator>
         implements Comparable<Numerator>, BookmarkHolder, WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
@@ -122,7 +120,7 @@ public class Numerator
     // //////////////////////////////////////
 
     @javax.jdo.annotations.NotPersistent
-    @NotPersisted
+    @Property(notPersisted = true)
     public boolean isScoped() {
         return getObjectType() != null;
     }
@@ -208,8 +206,8 @@ public class Numerator
     // //////////////////////////////////////
 
     public Numerator changeParameters(
-            final @Named("Format") String format,
-            final @Named("Last increment") BigInteger lastIncrement
+            final String format,
+            final BigInteger lastIncrement
             ) {
         setFormat(format);
         setLastIncrement(lastIncrement);

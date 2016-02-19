@@ -22,8 +22,8 @@ package org.estatio.domsettings;
 
 import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.settings.dom.SettingType;
@@ -59,7 +59,7 @@ import lombok.Setter;
 })
 // can't see how to specify this order in the primary key; however HSQLDB objects :-(
 //@javax.jdo.annotations.Unique(name="USER_KEY_IDX", members={"user","key"}) 
-@Named("User Setting")
+@DomainObjectLayout(named = "User Setting")
 public class UserSettingForEstatio extends SettingAbstractForEstatio implements UserSetting {
 
     @javax.jdo.annotations.Column(length=JdoColumnLength.NAME)

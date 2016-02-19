@@ -21,7 +21,7 @@ package org.estatio.domsettings;
 
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.SettingType;
@@ -46,7 +46,7 @@ import lombok.Setter;
                     + "FROM org.estatio.domsettings.ApplicationSettingForEstatio "
                     + "ORDER BY key")
 })
-@Named("Application Setting")
+@DomainServiceLayout(named = "Application Setting")
 public class ApplicationSettingForEstatio extends SettingAbstractForEstatio implements ApplicationSetting {
 
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Setting.KEY)

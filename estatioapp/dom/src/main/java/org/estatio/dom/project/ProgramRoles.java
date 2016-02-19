@@ -144,7 +144,7 @@ public class ProgramRoles extends UdoDomainRepositoryAndFactory<ProgramRole> {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             List<ProgramRole> programRoles = findByParty(sourceParty);
 

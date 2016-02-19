@@ -21,7 +21,8 @@ package org.estatio.dom;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -62,7 +63,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
     }
 
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public String getId() {
         Object objectId = JDOHelper.getObjectId(this);
         if (objectId == null) {
@@ -76,7 +77,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
     // //////////////////////////////////////
 
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public Long getVersionSequence() {
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;

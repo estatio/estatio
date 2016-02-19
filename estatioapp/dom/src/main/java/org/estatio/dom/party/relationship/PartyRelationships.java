@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -33,7 +33,7 @@ import org.estatio.dom.party.Persons;
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.4")
-@DomainService(repositoryFor = PartyRelationship.class)
+@DomainService(repositoryFor = PartyRelationship.class, nature = NatureOfService.DOMAIN)
 public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelationship> {
 
     public PartyRelationships() {
@@ -45,7 +45,6 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
         return allMatches("findByParty", "party", party);
     }
 
-    @NotInServiceMenu
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public PartyRelationship newRelationship(
@@ -83,7 +82,6 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
@@ -140,7 +138,7 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
         Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             break;
         case EXECUTING:

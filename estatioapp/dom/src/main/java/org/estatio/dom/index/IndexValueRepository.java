@@ -59,7 +59,9 @@ public class IndexValueRepository
             indexValue = create(indexBase, startDate, value);
         }
         indexValue.setValue(value);
-        eventBusService.post(new IndexValue.UpdateEvent(indexValue, null, (Object[]) null));
+        final IndexValue.UpdateEvent event = new IndexValue.UpdateEvent();
+        event.setSource(indexValue);
+        eventBusService.post(event);
         return indexValue;
     }
 

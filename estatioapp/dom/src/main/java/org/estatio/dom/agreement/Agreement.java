@@ -44,7 +44,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -157,12 +156,12 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    @NotPersisted
+    @Property(notPersisted = true)
     public Party getPrimaryParty() {
         return findCurrentOrMostRecentParty(primaryRoleTypeTitle);
     }
 
-    @NotPersisted
+    @Property(notPersisted = true)
     public Party getSecondaryParty() {
         return findCurrentOrMostRecentParty(secondaryRoleTypeTitle);
     }

@@ -18,21 +18,33 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Iterables;
-import org.apache.isis.applib.annotation.*;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
-import java.math.BigInteger;
-import java.util.List;
-
-@DomainService(menuOrder = "40", repositoryFor = LeaseItem.class)
-@Hidden
+@DomainService(menuOrder = "40", repositoryFor = LeaseItem.class, nature = NatureOfService.DOMAIN)
 public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
 
     public LeaseItems() {
@@ -42,7 +54,7 @@ public class LeaseItems extends UdoDomainRepositoryAndFactory<LeaseItem> {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     public LeaseItem newLeaseItem(
             final Lease lease,
             final LeaseItemType type,

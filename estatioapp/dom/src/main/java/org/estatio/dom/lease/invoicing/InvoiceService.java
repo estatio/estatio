@@ -3,11 +3,9 @@ package org.estatio.dom.lease.invoicing;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -40,7 +38,7 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
      * other
      * parameters.
      */
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "1")
     public Object calculateInvoicesForProperty(
             final @ParameterLayout(named = "Property") Property property,
@@ -132,7 +130,7 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public Object calculate(
             final Lease lease,
             final InvoiceRunType runType,

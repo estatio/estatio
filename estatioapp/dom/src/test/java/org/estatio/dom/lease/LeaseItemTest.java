@@ -31,7 +31,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -82,7 +83,7 @@ public class LeaseItemTest {
 
             leaseItem = new LeaseItem() {
                 @Override
-                @Hidden
+                @Property(hidden = Where.EVERYWHERE)
                 public LeaseTerm currentTerm(LocalDate date) {
                     GetCurrentValue.this.getCurrentValueDateArgument = date;
                     return leaseTerm;

@@ -37,7 +37,6 @@ import com.google.common.collect.Sets;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -668,26 +667,12 @@ public class LeaseItem
 
     public static class SuspendEvent extends ActionDomainEvent<LeaseItem> {
         private static final long serialVersionUID = 1L;
-
-        public SuspendEvent(
-                final LeaseItem source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     // //////////////////////////////////////
 
     public static class ResumeEvent extends ActionDomainEvent<LeaseItem> {
         private static final long serialVersionUID = 1L;
-
-        public ResumeEvent(
-                final LeaseItem source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     // //////////////////////////////////////
