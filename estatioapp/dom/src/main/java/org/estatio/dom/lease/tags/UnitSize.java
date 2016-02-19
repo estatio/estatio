@@ -22,9 +22,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
@@ -63,8 +63,7 @@ import lombok.Setter;
                 value = "SELECT name "
                         + "FROM org.estatio.dom.lease.tags.UnitSize")
 })
-@Bounded
-@Immutable
+@DomainObject(bounded = true, editing = Editing.DISABLED)
 public class UnitSize
         extends EstatioDomainObject<UnitSize>
         implements WithNameUnique, WithNameComparable<UnitSize>, WithApplicationTenancyGlobal {

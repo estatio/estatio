@@ -18,8 +18,9 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.invoice.InvoiceStatus;
 
@@ -29,7 +30,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.3"
 )
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class InvoiceSummariesForPropertyDueDateStatus
         extends UdoDomainRepositoryAndFactory<InvoiceSummaryForPropertyDueDateStatus> {
 

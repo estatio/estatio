@@ -28,7 +28,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
@@ -92,7 +93,7 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @ViewModel
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstract {
 
     public String iconName() {

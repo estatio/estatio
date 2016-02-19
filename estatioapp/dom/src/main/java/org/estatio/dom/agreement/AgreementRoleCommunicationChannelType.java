@@ -26,11 +26,12 @@ import javax.jdo.annotations.IdentityType;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -63,8 +64,8 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannelType "
                         + "WHERE appliesTo == :agreementType && title == :title")
 })
-@Immutable
-@Bounded
+
+@DomainObject(bounded = true, editing = Editing.DISABLED)
 public class AgreementRoleCommunicationChannelType 
         extends EstatioDomainObject<AgreementRoleCommunicationChannelType>
         implements WithApplicationTenancyGlobal {

@@ -22,7 +22,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -66,7 +66,7 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.charge.Charge "
                         + "WHERE reference == :reference")
 })
-@Bounded
+@DomainObject(bounded = true)
 public class Charge
         extends EstatioDomainObject<Charge>
         implements WithReferenceUnique, WithNameUnique, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
