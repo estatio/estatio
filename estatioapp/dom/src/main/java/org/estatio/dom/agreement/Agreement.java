@@ -53,7 +53,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
@@ -66,6 +65,7 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -133,10 +133,15 @@ public abstract class Agreement
         this.secondaryRoleTypeTitle = secondaryRoleTypeTitle;
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
+    }
+
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this agreement")
     @Getter @Setter

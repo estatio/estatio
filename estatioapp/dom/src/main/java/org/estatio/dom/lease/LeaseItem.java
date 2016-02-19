@@ -71,6 +71,7 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -250,9 +251,18 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+    public String title(){
+        return TitleBuilder.start()
+                .withParent(getLease())
+                .withName(getType())
+                .withName(getCharge())
+                .toString();
+    }
+
+
+
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
-    @Title(sequence = "1")
     @Getter @Setter
     private Lease lease;
 
@@ -285,7 +295,6 @@ public class LeaseItem
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Title(sequence = "2", prepend = ":")
     @Getter @Setter
     private LeaseItemType type;
 
