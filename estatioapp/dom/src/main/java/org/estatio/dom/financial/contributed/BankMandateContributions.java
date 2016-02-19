@@ -52,8 +52,7 @@ import org.estatio.dom.bankmandate.BankMandateConstants;
  * {@link BankMandate} to {@link AgreementRole} to
  * {@link org.estatio.dom.party.Party}.
  */
-@DomainService(menuOrder = "30")
-@Hidden
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY, menuOrder = "30")
 public class BankMandateContributions extends UdoDomainService<BankMandateContributions> {
 
     public BankMandateContributions() {
