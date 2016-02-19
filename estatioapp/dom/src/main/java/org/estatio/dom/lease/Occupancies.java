@@ -29,10 +29,11 @@ import com.google.common.eventbus.Subscribe;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -54,7 +55,7 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(name = "Occupancies", sequence = "10")
     public Occupancy newOccupancy(
             final Lease lease,
@@ -103,7 +104,7 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
                 "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date));
     }
 
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.SAFE)
     public List<Occupancy> findByBrand(
             final Brand brand,

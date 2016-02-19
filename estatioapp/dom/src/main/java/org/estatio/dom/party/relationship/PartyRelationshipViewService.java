@@ -24,12 +24,12 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.party.Party;
@@ -50,8 +50,8 @@ public class PartyRelationshipViewService extends UdoDomainService<PartyRelation
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @NotContributed(As.ACTION)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<PartyRelationshipView> relationships(Party party) {
         List<PartyRelationshipView> partyRelationshipViews = new ArrayList<>();
         final List<PartyRelationship> relationships = partyRelationships.findByParty(party);

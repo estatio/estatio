@@ -24,8 +24,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Editing;
@@ -34,6 +33,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -123,7 +123,7 @@ public class PartyRegistration
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public PartyRegistration changeDates(
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,

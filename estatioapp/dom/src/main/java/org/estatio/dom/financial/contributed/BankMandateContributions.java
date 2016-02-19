@@ -67,11 +67,9 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
      * All {@link BankMandate} are {@link #allBankMandate(AgreementRoleHolder)
      * contributed} as an action.
      */
-    @ActionSemantics(Of.SAFE)
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    // ie contributed collection
-    @Render(Type.LAZILY)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(render = RenderType.LAZILY)
     @MemberOrder(sequence = "80")
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
@@ -100,11 +98,8 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
      * {@link #currentBankMandates(AgreementRoleHolder) contributed} as a
      * collection.
      */
-    @ActionSemantics(Of.SAFE)
-    @NotInServiceMenu
-    @Named("List All")
-    @NotContributed(As.ASSOCIATION)
-    // ie contributed action
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     public Collection<BankMandate> allBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
         return Lists.newArrayList(

@@ -63,10 +63,9 @@ public class LeaseContributions extends UdoDomainService<LeaseContributions> {
      * <p>
      * All {@link Lease} are {@link #allLeases(AgreementRoleHolder) contributed} as an action. 
      */
-    @ActionSemantics(Of.SAFE)
-    @NotInServiceMenu
-    @NotContributed(As.ACTION) // ie contributed collection
-    @Render(Type.EAGERLY)
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(sequence="80")
     public Collection<Lease> currentLeases(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
@@ -93,10 +92,8 @@ public class LeaseContributions extends UdoDomainService<LeaseContributions> {
      * <p>
      * The current {@link Lease}s are {@link #currentLeases(AgreementRoleHolder) contributed} as a collection. 
      */
-    @ActionSemantics(Of.SAFE)
-    @NotInServiceMenu
-    @Named("List All")
-    @NotContributed(As.ASSOCIATION) // ie contributed action
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     public Collection<Lease> allLeases(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
         return Lists.newArrayList(

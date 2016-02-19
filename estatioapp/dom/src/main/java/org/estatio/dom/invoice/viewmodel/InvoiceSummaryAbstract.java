@@ -24,10 +24,9 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -76,8 +75,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    @Prototype
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object zapAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.remove();
@@ -93,7 +91,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    @Render(Type.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public abstract List<Invoice> getInvoices();
 
     @Inject

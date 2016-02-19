@@ -23,10 +23,11 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -161,7 +162,7 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     // //////////////////////////////////////
 
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Invoice newInvoiceForLease(

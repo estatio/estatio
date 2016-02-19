@@ -18,9 +18,18 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
@@ -31,10 +40,6 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @DomainService(menuOrder = "50", repositoryFor = InvoiceItemForLease.class)
 public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {
@@ -45,8 +50,8 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @Programmatic
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,

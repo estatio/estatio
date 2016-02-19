@@ -45,7 +45,7 @@ public class UnitSizes extends UdoDomainRepositoryAndFactory<UnitSize> {
         super(UnitSizes.class, UnitSize.class);
     }
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public UnitSize newUnitSize(final @ParameterLayout(named = "Unit size name") String name) {
         UnitSize unitSize = newTransientInstance(UnitSize.class);
@@ -56,7 +56,7 @@ public class UnitSizes extends UdoDomainRepositoryAndFactory<UnitSize> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<UnitSize> allUnitSizes() {
         return allInstances();
