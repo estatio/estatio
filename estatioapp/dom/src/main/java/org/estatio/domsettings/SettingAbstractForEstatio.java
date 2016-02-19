@@ -24,7 +24,9 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 
 import org.isisaddons.module.settings.dom.SettingType;
 
@@ -47,7 +49,7 @@ public abstract class SettingAbstractForEstatio
     @MemberOrder(name="Description", sequence="1")
     @ActionLayout(named = "Update")
     public SettingAbstractForEstatio updateDescription(
-            final @Named("Description") @Optional String description) {
+            final @Parameter(optionality = Optionality.OPTIONAL) String description) {
         setDescription(description);
         return this;
     }

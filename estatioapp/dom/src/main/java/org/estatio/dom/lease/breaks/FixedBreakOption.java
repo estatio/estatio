@@ -26,10 +26,11 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
@@ -109,8 +110,7 @@ public class FixedBreakOption
      */
     @ActionLayout(named = "Update")
     public FixedBreakOption updateReminderDate(
-            final @Optional @Named(CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER) 
-            @DescribedAs("Reminder to exercise (or leave blank to clear)") LocalDate reminderDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER, describedAs = "Reminder to exercise (or leave blank to clear)") LocalDate reminderDate) {
         setReminderDate(reminderDate);
         final Event reminderEvent =
                 events.findBySourceAndCalendarName(this, CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);

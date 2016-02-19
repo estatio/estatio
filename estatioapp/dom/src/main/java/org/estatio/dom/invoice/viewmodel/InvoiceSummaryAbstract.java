@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -54,8 +55,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     }
 
     public Object invoiceAll(
-            final @Named("Are you sure?") Boolean confirm
             final LocalDate invoiceDate,
+            final @ParameterLayout(named = "Are you sure?") Boolean confirm
             ) {
         for (Invoice invoice : getInvoices()) {
             invoice.doInvoice(invoiceDate);

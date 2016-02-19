@@ -21,6 +21,8 @@ import java.util.List;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.invoice.InvoiceStatus;
 
@@ -63,7 +65,7 @@ public class InvoiceSummariesForPropertyDueDateStatus
 
     @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatus(
-            final @Optional InvoiceStatus status) {
+            final @Parameter(optionality = Optionality.OPTIONAL) InvoiceStatus status) {
         return allMatches("findByStatus",
                 "status", status);
     }
