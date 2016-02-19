@@ -27,15 +27,14 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.party.Party;
 
-@DomainService()
-@Hidden
+@DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRelationshipViewService extends UdoDomainService<PartyRelationshipViewService> {
 
     public PartyRelationshipViewService() {

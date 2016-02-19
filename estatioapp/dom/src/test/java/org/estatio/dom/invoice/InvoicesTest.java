@@ -29,9 +29,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
@@ -132,8 +132,7 @@ public class InvoicesTest {
 
             invoices = new Invoices() {
                 @Override
-                @ActionSemantics(Of.SAFE)
-                @Hidden
+                @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
                 public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                     return Arrays.asList(invoice1, invoice2, invoice3);
                 }
@@ -147,8 +146,7 @@ public class InvoicesTest {
 
             invoices = new Invoices() {
                 @Override
-                @ActionSemantics(Of.SAFE)
-                @Hidden
+                @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
                 public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                     return Arrays.<Invoice>asList();
                 }
@@ -225,7 +223,7 @@ public class InvoicesTest {
             estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement, applicationTenancy);
         }
 
-        @Hidden
+        @Action(hidden = Where.EVERYWHERE)
         public void findInvoiceNumberNumerator() {
             context.checking(new Expectations() {
                 {
@@ -235,7 +233,7 @@ public class InvoicesTest {
             estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, applicationTenancy);
         }
 
-        @Hidden
+        @Action(hidden = Where.EVERYWHERE)
         public void createInvoiceNumberNumerator(
                 final Property property,
                 final String format,

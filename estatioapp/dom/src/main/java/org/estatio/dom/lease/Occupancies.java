@@ -30,8 +30,8 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -44,8 +44,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@DomainService(menuOrder = "40", repositoryFor = Occupancy.class)
-@Hidden
+@DomainService(menuOrder = "40", repositoryFor = Occupancy.class, nature = NatureOfService.DOMAIN)
 public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
 
     public Occupancies() {

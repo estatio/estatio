@@ -23,10 +23,11 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -74,7 +75,7 @@ public class UnitSize
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }

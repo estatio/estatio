@@ -10,9 +10,9 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
@@ -21,8 +21,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.relationship.contributed.DomainObjectContainerFunctions;
 
-@DomainService
-@Hidden
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class PartyCommunicationChannelContributions {
 
     @ActionSemantics(Of.SAFE)

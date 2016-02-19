@@ -75,7 +75,7 @@ public class AgreementRoleCommunicationChannelType
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }

@@ -22,14 +22,14 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -65,14 +65,13 @@ public class UnitSizes extends UdoDomainRepositoryAndFactory<UnitSize> {
     // //////////////////////////////////////
 
     @SuppressWarnings({ "unchecked" })
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<String> findUniqueNames() {
         final Query query = newQuery("SELECT name FROM org.estatio.dom.lease.tags.UnitSize");
         return (List<String>) query.execute();
     }
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public UnitSize findByName(final String name) {
         return uniqueMatch("findByName", "name", name);
     }

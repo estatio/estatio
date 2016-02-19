@@ -18,23 +18,6 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.domsettings.EstatioSettingsService;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -43,9 +26,35 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseStatus;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.domsettings.EstatioSettingsService;
+
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
-@DomainService(menuOrder = "50")
-@Hidden
+@DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)
 public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculationService> {
 
     public InvoiceCalculationService() {

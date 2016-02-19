@@ -50,8 +50,7 @@ import org.estatio.dom.lease.LeaseConstants;
  * (avoid an N+1 search as is the current design).  However, that query would be quite complex, having to traverse
  * from {@link Lease} to {@link AgreementRole} to {@link org.estatio.dom.party.Party}. 
  */
-@DomainService(menuOrder = "40")
-@Hidden
+@DomainService(menuOrder = "40", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class LeaseContributions extends UdoDomainService<LeaseContributions> {
 
     public LeaseContributions() {

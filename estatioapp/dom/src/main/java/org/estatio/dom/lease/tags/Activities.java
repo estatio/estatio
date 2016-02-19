@@ -20,17 +20,21 @@ package org.estatio.dom.lease.tags;
 
 import java.util.Collections;
 import java.util.List;
+
 import javax.jdo.Query;
+
 import com.google.common.collect.ImmutableMap;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "99", repositoryFor = Activity.class)
-@Hidden
+@DomainService(menuOrder = "99", repositoryFor = Activity.class, nature = NatureOfService.DOMAIN)
 public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
 
     public Activities() {
@@ -40,8 +44,7 @@ public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
     // //////////////////////////////////////
     
     @SuppressWarnings({ "unchecked" })
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<String> findUniqueNames(final Sector sector) {
         if(sector == null) {
             return Collections.emptyList();
@@ -51,8 +54,7 @@ public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
     }
 
     @SuppressWarnings("unchecked")
-    @ActionSemantics(Of.SAFE)
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<Activity> findBySector(final Sector sector) {
         if(sector == null) {
             return Collections.emptyList();
@@ -61,7 +63,7 @@ public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
         return (List<Activity>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
-    @Hidden
+    @Action(hidden = Where.EVERYWHERE)
     public Activity findBySectorAndName(final Sector sector, final String name) {
         return firstMatch("findBySectorAndName", "sector", sector, "name", name);
     }

@@ -19,7 +19,6 @@ package org.estatio.dom.party.relationship;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
@@ -96,7 +95,7 @@ public class PartyRelationshipView extends EstatioViewModel {
     }
 
     @PropertyLayout(named = "Title")
-    @Hidden(where = Where.ALL_TABLES)
+    @Property(hidden = Where.EVERYWHERE)
     public String getRelationshipFromTitle() {
         return getRelationshipType().toTitle();
     }
