@@ -27,7 +27,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -121,7 +120,7 @@ public class Numerator
     // //////////////////////////////////////
 
     @javax.jdo.annotations.NotPersistent
-    @NotPersisted
+    @Property(notPersisted = true)
     public boolean isScoped() {
         return getObjectType() != null;
     }

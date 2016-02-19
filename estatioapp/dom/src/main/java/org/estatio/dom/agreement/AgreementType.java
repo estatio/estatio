@@ -23,9 +23,9 @@ import java.util.List;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
@@ -83,7 +83,7 @@ public class AgreementType
 
     // //////////////////////////////////////
 
-    @NotPersisted
+    @Collection(notPersisted = true)
     // else Isis tries to persist graph when setting up fixture data.
     public List<AgreementRoleType> getRoles() {
         return AgreementRoleType.applicableTo(this);
@@ -92,13 +92,13 @@ public class AgreementType
     // //////////////////////////////////////
 
     @Programmatic
-    @NotPersisted
+    @Collection(notPersisted = true)
     public List<AgreementRoleType> getRoleTypesApplicableTo() {
         return agreementRoleTypeRepository.findApplicableTo(this);
     }
 
     @Programmatic
-    @NotPersisted
+    @Collection(notPersisted = true)
     public List<AgreementRoleCommunicationChannelType> getRoleChannelTypesApplicableTo() {
         return agreementRoleCommunicationChannelTypeRepository.findApplicableTo(this);
     }
