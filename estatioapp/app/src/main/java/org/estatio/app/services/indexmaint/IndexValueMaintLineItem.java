@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
@@ -46,6 +45,7 @@ import org.estatio.dom.index.IndexBaseRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValueRepository;
+import org.estatio.dom.utils.TitleBuilder;
 
 @DomainObjectLayout(paged = Integer.MAX_VALUE)
 @MemberGroupLayout(
@@ -54,6 +54,14 @@ import org.estatio.dom.index.IndexValueRepository;
         middle = { "Index Base" },
         right = { "Index Value" })
 public class IndexValueMaintLineItem {
+
+    public String title(){
+        return TitleBuilder.start()
+                .withParent(getIndex())
+                .withName(getValueStartDate())
+                .toString();
+    }
+
 
     private Index index;
 
@@ -70,7 +78,6 @@ public class IndexValueMaintLineItem {
 
     private String atPath;
 
-    @Title(prepend = "(", sequence = "2", append = ")")
     @javax.jdo.annotations.Column(allowsNull = "false", length = ApplicationTenancy.MAX_LENGTH_PATH)
     @MemberOrder(name = "Index", sequence = "1")
     public String getAtPath() {
@@ -86,7 +93,6 @@ public class IndexValueMaintLineItem {
     private String reference;
 
     // @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
-    @Title(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @MemberOrder(name = "Index", sequence = "1.5")
     public String getReference() {
@@ -116,7 +122,6 @@ public class IndexValueMaintLineItem {
 
     @javax.jdo.annotations.Column(allowsNull = "false")
     @MemberOrder(name = "Index Base", sequence = "2")
-    @Title(sequence = "2", prepend = ", ")
     public LocalDate getBaseStartDate() {
         return baseStartDate;
     }
@@ -158,7 +163,6 @@ public class IndexValueMaintLineItem {
     private LocalDate valueStartDate;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Title(sequence = "3", prepend = ": ")
     @MemberOrder(name = "Index Value", sequence = "1")
     public LocalDate getValueStartDate() {
         return valueStartDate;

@@ -24,12 +24,12 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.settings.dom.SettingType;
 import org.isisaddons.module.settings.dom.UserSetting;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -62,9 +62,16 @@ import lombok.Setter;
 @DomainObjectLayout(named = "User Setting")
 public class UserSettingForEstatio extends SettingAbstractForEstatio implements UserSetting {
 
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getUser())
+                .withName(getKey())
+                .withName(getValueRaw())
+                .toString();
+    }
+
     @javax.jdo.annotations.Column(length=JdoColumnLength.NAME)
     @javax.jdo.annotations.PrimaryKey
-    @Title(sequence="10", append=": ")
     @MemberOrder(sequence = "5")
     @Getter @Setter
     private String user;
@@ -73,7 +80,6 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
 
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Setting.KEY)
     @javax.jdo.annotations.PrimaryKey
-    @Title(sequence="20")
     @Getter @Setter
     private String key;
 
@@ -94,11 +100,11 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
 
     @javax.jdo.annotations.Column(allowsNull="false")
     @javax.jdo.annotations.Persistent
-    @Title(sequence="30", prepend=" = ")
     @Override
     public String getValueRaw() {
         return super.getValueRaw();
     }
+
     @Override
     public void setValueRaw(final String valueAsRaw) {
         super.setValueRaw(valueAsRaw);
@@ -112,6 +118,7 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
     public SettingType getType() {
         return super.getType();
     }
+
     @Override
     public void setType(final SettingType type) {
         super.setType(type);

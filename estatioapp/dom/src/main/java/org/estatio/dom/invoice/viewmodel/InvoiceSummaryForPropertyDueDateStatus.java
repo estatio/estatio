@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
@@ -43,6 +42,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -100,11 +100,16 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
         return "InvoiceSummary";
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getAtPath())
+                .withName(getSellerReference())
+                .withName(getDueDate())
+                .toString();
+    }
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
-    @Title(sequence = "1")
     private String atPath;
 
     public ApplicationTenancy getApplicationTenancy(){
@@ -113,7 +118,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     @Getter @Setter
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
-    @Title(sequence = "2", prepend = " - ")
     private String sellerReference;
 
     /**
@@ -134,7 +138,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     private InvoiceStatus status;
 
     @Getter @Setter
-    @Title(sequence = "3", prepend = " - ")
     private LocalDate dueDate;
 
     @Getter @Setter

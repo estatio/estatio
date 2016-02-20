@@ -43,7 +43,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -53,6 +52,7 @@ import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -126,10 +126,15 @@ public class ProgramRole
         super("program, startDate desc nullsLast, type, party");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withTupleElement(getProgram())
+                .withTupleElement(getParty())
+                .withName(getType())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", name="programId")
-    @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
     @Getter @Setter
     private Program program;
@@ -137,7 +142,6 @@ public class ProgramRole
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
     @Getter @Setter
     private Party party;
@@ -146,7 +150,6 @@ public class ProgramRole
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing=Editing.DISABLED)
-    @Title(sequence = "1")
     @Getter @Setter
     private ProgramRoleType type;
 

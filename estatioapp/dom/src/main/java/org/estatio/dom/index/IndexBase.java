@@ -46,7 +46,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -56,6 +55,7 @@ import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.index.api.IndexValueCreator;
 import org.estatio.dom.utils.MathUtils;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -101,6 +101,13 @@ public class IndexBase
         super("index, startDate desc");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getIndex())
+                .withName(getStartDate())
+                .toString();
+    }
+
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
@@ -110,14 +117,12 @@ public class IndexBase
     }
 
     @Column(name = "indexId", allowsNull = "false")
-    @Title(sequence = "1", append = ", ")
     @Getter @Setter
     private Index index;
 
 
     @Persistent
     @Column(allowsNull = "false")
-    @Title(sequence = "2")
     @Getter @Setter
     private LocalDate startDate;
 

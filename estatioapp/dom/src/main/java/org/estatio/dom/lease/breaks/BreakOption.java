@@ -19,10 +19,12 @@
 package org.estatio.dom.lease.breaks;
 
 import java.util.List;
+
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
@@ -32,19 +34,17 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
@@ -56,6 +56,7 @@ import org.estatio.dom.event.EventSource;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -99,7 +100,13 @@ public abstract class BreakOption
         super("lease, type, exerciseType, breakDate, exerciseDate");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getLease())
+                .withName(getExerciseType())
+                .withName(getBreakDate())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -113,7 +120,6 @@ public abstract class BreakOption
 
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
-    @Title(sequence = "1", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Lease lease;
@@ -121,7 +127,6 @@ public abstract class BreakOption
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Title(sequence = "2")
     @Getter @Setter
     private BreakType type;
 
@@ -151,7 +156,6 @@ public abstract class BreakOption
      * (using Isis' <tt>@Named</tt> annotation).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Title(prepend = " ", sequence = "3")
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate exerciseDate;
@@ -179,8 +183,8 @@ public abstract class BreakOption
 
     /**
      * The date when the {@link #getLease() lease} can be terminated (assuming
-     * that the notice was given on or before the {@link #getNotificationDate()
-     * notification date}).
+     * that the notice was given on or before the {@link #getExerciseDate()}
+     * exercise date}).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
     @javax.jdo.annotations.Persistent
@@ -271,7 +275,7 @@ public abstract class BreakOption
      * <p>
      * In the case of an {@link FixedBreakOption}, this is a fixed date. In the
      * case of a {@link RollingBreakOption}, this date will be fixed until the
-     * {@link RollingBreakOption#getEarliestNotificationDate() notification
+     * {@link RollingBreakOption#getExerciseDate()}  notification
      * date} has been reached; thereafter it will change on a daily basis (being
      * the current date plus the {@link #getNotificationPeriod() notification
      * period}.

@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -39,6 +38,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -83,6 +83,13 @@ public class FixedAssetFinancialAccount
         setFixedAsset(fixedAsset);
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withTupleElement(getFixedAsset())
+                .withTupleElement(getFinancialAccount())
+                .toString();
+    }
+
     // //////////////////////////////////////
 
     @PropertyLayout(
@@ -97,7 +104,6 @@ public class FixedAssetFinancialAccount
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     @MemberOrder(sequence = "1")
-    @Title(sequence = "1")
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Property")
     @Getter @Setter
@@ -107,7 +113,6 @@ public class FixedAssetFinancialAccount
 
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
-    @Title(sequence = "2")
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Bank account")
     @Getter @Setter

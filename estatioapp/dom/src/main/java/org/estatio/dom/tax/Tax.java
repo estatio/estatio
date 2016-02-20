@@ -37,7 +37,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -50,6 +49,7 @@ import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -82,7 +82,12 @@ public class Tax
         super("reference");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withReference(getReference())
+                .withName(getName())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
@@ -105,14 +110,12 @@ public class Tax
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title(sequence = "1")
     @Property(regexPattern = RegexValidation.REFERENCE)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @Title(sequence = "2", prepend = "-")
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     @Getter @Setter
     private String name;

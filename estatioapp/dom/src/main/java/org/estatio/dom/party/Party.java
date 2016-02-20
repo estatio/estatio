@@ -36,7 +36,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.app.security.EstatioRole;
@@ -48,6 +47,7 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -94,6 +94,13 @@ public abstract class Party
         super("name");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
@@ -104,7 +111,6 @@ public abstract class Party
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Party.NAME)
-    @Title
     @Getter @Setter
     private String name;
 

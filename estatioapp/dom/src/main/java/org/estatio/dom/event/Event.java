@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -44,6 +43,7 @@ import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -78,7 +78,12 @@ public class Event
         super("date, source, calendarName");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getSource())
+                .withName(getCalendarName())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -105,7 +110,6 @@ public class Event
             hidden = Where.PARENTED_TABLES,
             notPersisted = true
     )
-    @Title(sequence = "1")
     public EventSource getSource() {
         final EventSourceLink link = getSourceLink();
         return link != null? link.getPolymorphicReference(): null;
@@ -152,7 +156,6 @@ public class Event
      * reminder</i>.
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Event.CALENDAR_NAME)
-    @Title(prepend = ": ", sequence = "2")
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String calendarName;

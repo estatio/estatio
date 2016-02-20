@@ -19,10 +19,13 @@
 package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -33,14 +36,16 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -71,7 +76,12 @@ public class TaxRate
         super("tax, startDate desc nullsLast");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getTax())
+                .withName(getPercentage())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -84,7 +94,6 @@ public class TaxRate
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "false")
-    @Title
     @Getter @Setter
     private Tax tax;
 
@@ -170,7 +179,6 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    @Title
     @javax.jdo.annotations.Column(scale = 2)
     @Getter @Setter
     private BigDecimal percentage;

@@ -25,7 +25,6 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -38,6 +37,7 @@ import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -80,7 +80,12 @@ public class Country
         setAlpha2Code(alpha2Code);
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
+    }
 
     @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
@@ -104,7 +109,6 @@ public class Country
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title
     @Getter @Setter
     private String name;
 
@@ -113,7 +117,6 @@ public class Country
     // not possible to make this unique because Country is rolled-up to
     // Geography.
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Country.ALPHA2CODE)
-    @Title
     @javax.jdo.annotations.Index(unique = "false")
     @Getter @Setter
     private String alpha2Code;

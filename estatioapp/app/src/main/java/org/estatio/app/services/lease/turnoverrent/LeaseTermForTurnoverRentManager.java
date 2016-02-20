@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.value.Blob;
 
@@ -43,6 +42,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.utils.TitleBuilder;
 
 @Immutable
 @Bookmarkable
@@ -57,11 +57,15 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
         this.startDate = startDate;
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getProperty())
+                .withName(getStartDate())
+                .toString();
+    }
 
     private Property property;
 
-    @Title(sequence = "1")
     @MemberOrder(sequence = "1")
     public Property getProperty() {
         return property;
@@ -89,7 +93,6 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
 
     private LocalDate startDate;
 
-    @Title(sequence = "2", prepend = "@")
     @Optional
     @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {

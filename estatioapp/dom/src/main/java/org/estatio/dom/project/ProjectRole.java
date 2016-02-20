@@ -47,6 +47,7 @@ import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
@@ -126,10 +127,15 @@ public class ProjectRole
         super("project, startDate desc nullsLast, type, party");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withTupleElement(getProject())
+                .withTupleElement(getParty())
+                .withName(getType())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", name="projectId")
-    @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
     @Getter @Setter
     private Project project;
@@ -137,7 +143,6 @@ public class ProjectRole
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
     @Getter @Setter
     private Party party;
@@ -146,7 +151,6 @@ public class ProjectRole
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing=Editing.DISABLED)
-    @Title(sequence = "1")
     @Getter @Setter
     private ProjectRoleType type;
 

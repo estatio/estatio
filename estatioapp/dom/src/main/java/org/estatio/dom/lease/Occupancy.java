@@ -37,7 +37,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -58,6 +57,7 @@ import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.Sectors;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.lease.tags.UnitSizes;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -116,7 +116,13 @@ public class Occupancy
         super("lease, startDate desc nullsLast, unit");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getStartDate())
+                .withTupleElement(getLease())
+                .withTupleElement(getUnit())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -131,7 +137,6 @@ public class Occupancy
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
-    @Title(sequence = "1", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Lease lease;
@@ -139,7 +144,6 @@ public class Occupancy
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
-    @Title(sequence = "2", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Unit unit;

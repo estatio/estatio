@@ -52,7 +52,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -64,6 +63,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -142,34 +142,28 @@ public class AgreementRole
         super("agreement, startDate desc nullsLast, type, party");
     }
 
-    // //////////////////////////////////////
-
-
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getType())
+                .withTupleElement(getParty())
+                .withTupleElement(getAgreement())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
-    @Title(sequence = "3", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Agreement agreement;
 
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Party party;
 
-    // //////////////////////////////////////
-
-
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-    @Title(sequence = "1")
     @Getter @Setter
     private AgreementRoleType type;
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.NAME, allowsNull = "true")
     @Getter @Setter
@@ -185,7 +179,6 @@ public class AgreementRole
     }
 
     // //////////////////////////////////////
-
 
     @javax.jdo.annotations.Persistent
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)

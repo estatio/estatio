@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -60,6 +59,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -94,6 +94,13 @@ public abstract class InvoiceItem
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getInvoice())
+                .withName(getCharge())
+                .toString();
+    }
+
 
     // TODO: added a uuid since there can be similar invoice items having a
     // different source (leaseTerm)
@@ -123,14 +130,12 @@ public abstract class InvoiceItem
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
-    @Title(sequence = "1", append = ":")
     @Getter @Setter
     private Invoice invoice;
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "true")
-    @Title(sequence = "2")
     @Getter @Setter
     private Charge charge;
 

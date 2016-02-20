@@ -51,7 +51,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
@@ -432,7 +431,6 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "false")
-    @Title(sequence = "3", prepend = ":")
     @Getter @Setter
     private Charge charge;
 

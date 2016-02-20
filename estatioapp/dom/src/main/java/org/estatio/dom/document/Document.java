@@ -30,12 +30,12 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -70,7 +70,12 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 public class Document implements Comparable<Document>, WithIntervalMutable<Document> {
 
-    @Title()
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .toString();
+    }
+
     @Column(allowsNull = "false")
     @Getter @Setter
     private String name;

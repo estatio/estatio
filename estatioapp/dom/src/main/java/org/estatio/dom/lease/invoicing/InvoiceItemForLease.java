@@ -18,10 +18,21 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.collect.Ordering;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
@@ -30,11 +41,11 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import javax.jdo.annotations.Index;
-import javax.jdo.annotations.Indices;
-import javax.jdo.annotations.InheritanceStrategy;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A lease-specific subclass of {@link InvoiceItem}, referring
@@ -95,6 +106,14 @@ import javax.jdo.annotations.InheritanceStrategy;
 @DomainObject(editing = Editing.DISABLED)
 public class InvoiceItemForLease extends InvoiceItem {
 
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getInvoice())
+                .withName(getLease())
+                .withName(getCharge())
+                .toString();
+    }
+
     @Override
     public InvoiceSource getSource() {
         return getLeaseTerm();
@@ -104,7 +123,6 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
-    @Title(sequence = "1", append = ":")
     @Getter @Setter
     private Lease lease;
 

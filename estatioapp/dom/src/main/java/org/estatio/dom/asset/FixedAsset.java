@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -54,6 +53,7 @@ import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -100,13 +100,20 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
         super("name");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withReference(getReference())
+                .withName(getName())
+                .toString();
+    }
+
+
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title(sequence = "1", prepend = "[", append = "] ")
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this asset")
     @Getter @Setter
@@ -133,7 +140,6 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     // public abstract String getName();
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title(sequence = "2")
     @PropertyLayout(describedAs = "Unique name for this property")
     @Getter @Setter
     private String name;

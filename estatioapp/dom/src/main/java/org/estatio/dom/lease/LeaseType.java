@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -39,6 +38,7 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +69,11 @@ public class LeaseType
         super("reference");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .toString();
+    }
 
     @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
@@ -86,7 +90,6 @@ public class LeaseType
     // //////////////////////////////////////
 
     @Column(allowsNull = "false", length = JdoColumnLength.TITLE)
-    @Title()
     @MemberOrder(sequence = "2")
     @Getter @Setter
     private String name;

@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -40,6 +39,7 @@ import org.estatio.dom.WithTitleUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.ClassUtils;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -79,8 +79,11 @@ public class FixedAssetRegistrationType
 
     // //////////////////////////////////////
 
+    public String title() {
+        return TitleBuilder.start().withName(getTitle()).toString();
+    }
+
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
-    @Title
     @Getter @Setter
     private String title;
 

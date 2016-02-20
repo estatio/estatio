@@ -41,7 +41,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -51,6 +50,7 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -96,13 +96,17 @@ public class FixedAssetRole
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =
             new WithIntervalContiguous.Helper<>(this);
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getType())
+                .withTupleElement(getAsset())
+                .withTupleElement(getParty())
+                .toString();
+    }
 
     public FixedAssetRole() {
         super("asset, startDate desc nullsLast, type, party");
     }
-
-    // //////////////////////////////////////
 
     @PropertyLayout(
             named = "Application Level",
@@ -116,7 +120,6 @@ public class FixedAssetRole
 
 
     @javax.jdo.annotations.Column(name = "assetId", allowsNull = "false")
-    @Title(sequence = "3", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private FixedAsset asset;
@@ -125,7 +128,6 @@ public class FixedAssetRole
 
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Party party;
@@ -135,7 +137,6 @@ public class FixedAssetRole
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing = Editing.DISABLED)
-    @Title(sequence = "1")
     @Getter @Setter
     private FixedAssetRoleType type;
 

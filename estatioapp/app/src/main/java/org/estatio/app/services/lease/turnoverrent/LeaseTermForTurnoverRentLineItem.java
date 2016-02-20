@@ -23,12 +23,12 @@ import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.dom.utils.TitleBuilder;
 
 @Paged(Integer.MAX_VALUE)
 @MemberGroupLayout(columnSpans = { 4, 4, 4, 0 }, left = { "Selected" }, right = { "Next" })
@@ -43,9 +43,14 @@ public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
     public LeaseTermForTurnoverRentLineItem() {
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getLeaseTerm())
+                .toString();
+    }
+
     private LeaseTermForTurnoverRent leaseTerm;
 
-    @Title(sequence = "1")
     @MemberOrder(name = "Selected", sequence = "1")
     public LeaseTermForTurnoverRent getLeaseTerm() {
         return leaseTerm;

@@ -29,7 +29,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
@@ -38,6 +37,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -81,6 +81,13 @@ public class IndexValue
         super("indexBase, startDate desc");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getStartDate())
+                .withParent(getIndexBase())
+                .toString();
+    }
+
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
@@ -91,14 +98,12 @@ public class IndexValue
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Getter @Setter
     private LocalDate startDate;
 
 
     @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
-    @Title(sequence = "1")
     @Getter @Setter
     private IndexBase indexBase;
 

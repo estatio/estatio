@@ -92,4 +92,7 @@ public class TitleBuilder {
         return this;
     }
 
+    public TitleBuilder withTupleElement(Object object) {
+        return this;
+    }
 }

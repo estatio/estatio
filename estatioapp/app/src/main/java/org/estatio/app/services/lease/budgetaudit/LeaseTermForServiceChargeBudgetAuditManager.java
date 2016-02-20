@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.value.Blob;
 
@@ -41,6 +40,7 @@ import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.utils.TitleBuilder;
 
 @Immutable
 @Bookmarkable
@@ -50,6 +50,13 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
     public LeaseTermForServiceChargeBudgetAuditManager() {
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getProperty())
+                .withName(getStartDate())
+                .toString();
+    }
+
     public LeaseTermForServiceChargeBudgetAuditManager(Property property, LocalDate startDate) {
         this.property = property;
         this.startDate = startDate;
@@ -57,7 +64,6 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
 
     private Property property;
 
-    @Title(sequence = "1")
     @MemberOrder(sequence = "1")
     public Property getProperty() {
         return property;
@@ -85,7 +91,6 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
 
     private LocalDate startDate;
 
-    @Title(sequence = "2", prepend = "@")
     @Optional
     @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
