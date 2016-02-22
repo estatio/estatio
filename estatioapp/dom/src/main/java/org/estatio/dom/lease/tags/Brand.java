@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
@@ -176,24 +177,21 @@ public class Brand
 
     @Action(domainEvent = Brand.RemoveEvent.class)
     public void remove() {
-        removeAndReplace(null, true);
+        removeAndReplace(null);
     }
 
-    @Action(domainEvent = Brand.RemoveEvent.class)
+    @Action(domainEvent = Brand.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object removeAndReplace(
-            final @ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement,
-            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
+            final @ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement) {
         getContainer().remove(this);
         getContainer().flush();
 
         return replacement;
     }
 
-    public String validateRemoveAndReplace(final Brand brand, final boolean confirm) {
+    public String validateRemoveAndReplace(final Brand brand) {
         if (brand == this) {
             return "Cannot replace a brand with itself";
-        } else if (confirm == false) {
-            return "Please confirm this replacement";
         } else {
             return null;
         }

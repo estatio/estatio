@@ -22,11 +22,12 @@ package org.estatio.domsettings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.settings.dom.SettingType;
 
@@ -141,13 +142,8 @@ public abstract class SettingAbstractForEstatio
     
     // //////////////////////////////////////
     
-    
-    public SettingAbstractForEstatio delete(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if(confirm == null || !confirm) {
-            container.informUser("Setting NOT deleted");
-            return this;
-        }
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public SettingAbstractForEstatio delete() {
         container.remove(this);
         container.informUser("Setting deleted");
         return null;

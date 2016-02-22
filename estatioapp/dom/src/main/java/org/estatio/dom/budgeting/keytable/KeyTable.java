@@ -18,9 +18,40 @@
  */
 package org.estatio.dom.budgeting.keytable;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
@@ -29,12 +60,9 @@ import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.DistributionService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.inject.Inject;
-import javax.jdo.annotations.*;
-import java.math.BigDecimal;
-import java.util.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -98,7 +126,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
         if (name.equals(null)) {
             return "Name can't be empty";
         }
-        if (keyTableRepository.findByBudgetAndName(getBudget(), name)!=null) {
+        if (keyTableRepository.findByBudgetAndName(getBudget(), name) != null) {
             return "There is already a keytable with this name for this budget";
         }
         return null;
@@ -130,7 +158,6 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
         return null;
     }
 
-
     @Column(name = "keyValueMethodId", allowsNull = "false")
     @Getter @Setter
     private KeyValueMethod keyValueMethod;
@@ -152,7 +179,6 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
         }
         return null;
     }
-
 
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -181,9 +207,8 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     @Getter @Setter
     private SortedSet<KeyItem> items = new TreeSet<>();
 
-    public KeyTable generateItems(
-            @Parameter(optionality = Optionality.OPTIONAL)
-            boolean confirmGenerate) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public KeyTable generateItems() {
 
         //delete old items
         for (Iterator<KeyItem> it = this.getItems().iterator(); it.hasNext(); ) {
@@ -224,11 +249,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
         return this;
     }
 
-    public String validateGenerateItems(boolean confirmGenerate) {
-        return confirmGenerate ? null : "Please confirm";
-    }
-
-    public boolean hideGenerateItems(boolean confirmGenerate) {
+    public boolean hideGenerateItems() {
         if (getFoundationValueType() == FoundationValueType.MANUAL) {
             return true;
         }
@@ -238,18 +259,13 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     // //////////////////////////////////////
 
     @MemberOrder(name = "items", sequence = "4")
-    public KeyTable distributeSourceValues(
-            @Parameter(optionality = Optionality.OPTIONAL)
-            boolean confirmDistribute) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public KeyTable distributeSourceValues() {
 
         DistributionService distributionService = new DistributionService();
         distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().targetTotal(), getPrecision());
 
         return this;
-    }
-
-    public String validateDistributeSourceValues(boolean confirmDistribute) {
-        return confirmDistribute ? null : "Please confirm";
     }
 
     // //////////////////////////////////////
@@ -290,18 +306,13 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
 
     // //////////////////////////////////////
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
-    public KeyTable deleteItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
-
+    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public KeyTable deleteItems() {
         for (KeyItem keyItem : getItems()) {
             removeIfNotAlready(keyItem);
         }
 
         return this;
-    }
-
-    public String validateDeleteItems(final boolean confirmDelete) {
-        return confirmDelete ? null : "Please confirm";
     }
 
     // //////////////////////////////////////

@@ -215,18 +215,14 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    public Object remove(
-            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
-        if (confirm) {
-            Lease lease = getLease();
-            getContainer().remove(this);
-            return lease;
-        } else {
-            return this;
-        }
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object remove() {
+        Lease lease = getLease();
+        getContainer().remove(this);
+        return lease;
     }
 
-    public String disableRemove(boolean confirm) {
+    public String disableRemove() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to remove an occupancy" : null;
     }
 

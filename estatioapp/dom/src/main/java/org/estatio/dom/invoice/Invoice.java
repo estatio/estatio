@@ -423,10 +423,8 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
-    public Invoice collect(
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm
-            ) {
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Invoice collect() {
         return doCollect();
     }
 
@@ -435,7 +433,7 @@ public class Invoice
         return !getPaymentMethod().isDirectDebit();
     }
 
-    public String disableCollect(Boolean confirm) {
+    public String disableCollect() {
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
@@ -468,7 +466,7 @@ public class Invoice
         if (hideCollect()) {
             return this;
         }
-        if (disableCollect(true) != null) {
+        if (disableCollect() != null) {
             return this;
         }
         final Numerator numerator = collectionNumerator();
@@ -487,9 +485,9 @@ public class Invoice
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice invoice(
-            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate,
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
         return doInvoice(invoiceDate);
     }
 
@@ -497,7 +495,7 @@ public class Invoice
     public Invoice doInvoice(
             final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
         // bulk action, so need these guards
-        if (disableInvoice(invoiceDate, true) != null) {
+        if (disableInvoice(invoiceDate) != null) {
             return this;
         }
         if (!validInvoiceDate(invoiceDate)) {
@@ -515,7 +513,7 @@ public class Invoice
         return this;
     }
 
-    public String disableInvoice(final LocalDate invoiceDate, Boolean confirm) {
+    public String disableInvoice(final LocalDate invoiceDate) {
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }

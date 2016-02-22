@@ -437,8 +437,8 @@ public class LeaseTest extends EstatioIntegrationTest {
                 }
             });
             leaseTopModel1 = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            leaseTopModel2a = leaseTopModel1.renew("OXF-TOPMODEL-002A", "Lease2", ld(2022, 7, 15), ld(2032, 7, 14), true);
-            leaseTopModel3 = leaseTopModel2a.renew("OXF-TOPMODEL-003", "lease3", ld(2032,7,15), ld(2042,7,14), true);
+            leaseTopModel2a = leaseTopModel1.renew("OXF-TOPMODEL-002A", "Lease2", ld(2022, 7, 15), ld(2032, 7, 14));
+            leaseTopModel3 = leaseTopModel2a.renew("OXF-TOPMODEL-003", "lease3", ld(2032,7,15), ld(2042,7,14));
             leaseTopModel2b = leases.newLease(
                     leaseTopModel2a.getApplicationTenancy(),
                     "OXF-TOPMODEL-002B",
@@ -502,9 +502,9 @@ public class LeaseTest extends EstatioIntegrationTest {
                 }
             });
             leaseTopModel1 = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            leaseTopModel2 = leaseTopModel1.renew("OXF-TOPMODEL-002", "Lease2", ld(2022, 7, 15), ld(2032, 7, 14), true);
+            leaseTopModel2 = leaseTopModel1.renew("OXF-TOPMODEL-002", "Lease2", ld(2022, 7, 15), ld(2032, 7, 14));
             // work-a-round: make an extra one in order to get leaseTopModel2.getPrevious() set
-            leaseTopModel3 = leaseTopModel2.renew("OXF-TOPMODEL-003", "lease3", ld(2032,7,15), ld(2042,7,14), true);
+            leaseTopModel3 = leaseTopModel2.renew("OXF-TOPMODEL-003", "lease3", ld(2032,7,15), ld(2042,7,14));
         }
 
         @Test

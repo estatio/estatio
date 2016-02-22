@@ -98,9 +98,9 @@ public class LeaseTermForTax extends LeaseTerm {
         this.paymentDate = paymentDate;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public LeaseTermForTax changePaymentDate(
-            final @ParameterLayout(named = "Payment date") LocalDate paymentDate,
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+            final @ParameterLayout(named = "Payment date") LocalDate paymentDate) {
         setPaymentDate(paymentDate);
         return this;
     }
