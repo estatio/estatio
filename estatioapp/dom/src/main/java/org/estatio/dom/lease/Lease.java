@@ -703,10 +703,9 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Action(domainEvent = Lease.TerminateEvent.class)
+    @Action(domainEvent = Lease.TerminateEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease terminate(
-            final @ParameterLayout(named = "Termination Date") LocalDate terminationDate,
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+            final LocalDate terminationDate) {
         // TODO: remove occupancies after the termination date
         // TODO: break options
         setTenancyEndDate(terminationDate);
@@ -722,12 +721,11 @@ public class Lease
     }
 
     public String validateTerminate(
-            final LocalDate terminationDate,
-            final Boolean confirm) {
+            final LocalDate terminationDate) {
         if (terminationDate.isBefore(getStartDate())) {
             return "Termination date can't be before start date";
         }
-        return confirm ? null : "Make sure you confirm this action";
+        return null;
     }
 
     public boolean hideTerminate() {
@@ -764,15 +762,15 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease assign(
-            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) final String reference,
-            @ParameterLayout(named = "Name") final String name,
-            @ParameterLayout(named = "Tenant") final Party tenant,
-            @ParameterLayout(named = "Tenancy start date") final LocalDate tenancyStartDate,
-            @ParameterLayout(named = "Are you sure?") final Boolean confirm
+            @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) final String reference,
+            final String name,
+            final Party tenant,
+            final LocalDate tenancyStartDate
     ) {
         Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, getEndDate());
-        this.terminate(new LocalDateInterval(tenancyStartDate, null).endDateFromStartDate(), true);
+        this.terminate(new LocalDateInterval(tenancyStartDate, null).endDateFromStartDate());
         return newLease;
     }
 
@@ -784,8 +782,7 @@ public class Lease
             final String reference,
             final String name,
             final Party tenant,
-            final LocalDate startDate,
-            final Boolean confirm
+            final LocalDate startDate
     ) {
         return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
     }
@@ -868,12 +865,12 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease renew(
-            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) final String reference,
-            @ParameterLayout(named = "Name") final String name,
-            @ParameterLayout(named = "Start date") final LocalDate startDate,
-            @ParameterLayout(named = "End date") final LocalDate endDate,
-            @ParameterLayout(named = "Are you sure?") final Boolean confirm
+            @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate
     ) {
         return copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate);
 
@@ -895,8 +892,7 @@ public class Lease
             final String reference,
             final String name,
             final LocalDate startDate,
-            final LocalDate endDate,
-            final Boolean confirm
+            final LocalDate endDate
     ) {
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";

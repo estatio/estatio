@@ -201,16 +201,15 @@ public class Property
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Property dispose(
-            final @ParameterLayout(named = "Disposal date") LocalDate disposalDate,
-            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
-        if (confirm) {
-            setDisposalDate(disposalDate);
-        }
+            final @ParameterLayout(named = "Disposal date") LocalDate disposalDate
+    ) {
+        setDisposalDate(disposalDate);
         return this;
     }
 
-    public String disableDispose(LocalDate disposalDate, boolean confirm) {
+    public String disableDispose(LocalDate disposalDate) {
         return getDisposalDate() == null ? null : "Property already disposed";
     }
 

@@ -41,7 +41,6 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -189,21 +188,15 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return getProperty().getApplicationTenancy();
     }
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout()
-    public Budget removeAllBudgetItems(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
+    public Budget removeAllBudgetItems() {
         for (BudgetItem budgetItem : this.getItems()) {
-
             getContainer().remove(budgetItem);
             getContainer().flush();
-
         }
 
         return this;
-    }
-
-    public String validateRemoveAllBudgetItems(boolean confirmDelete){
-        return confirmDelete? null:"Please confirm";
     }
 
     @Programmatic

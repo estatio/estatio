@@ -25,7 +25,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -53,10 +52,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    public Object invoiceAll(
-            final LocalDate invoiceDate,
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm
-            ) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
             invoice.doInvoice(invoiceDate);
         }

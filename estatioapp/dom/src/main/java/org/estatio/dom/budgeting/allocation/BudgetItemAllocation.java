@@ -34,6 +34,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -154,16 +155,11 @@ public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocati
 
     // ////////////////////////////////////////
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
-    public Budget deleteBudgetItemAllocation(final boolean confirmDelete) {
+    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Budget deleteBudgetItemAllocation() {
         removeIfNotAlready(this);
         return this.getBudgetItem().getBudget();
     }
-
-    public String validateDeleteBudgetItemAllocation(boolean confirmDelete){
-        return confirmDelete? null:"Please confirm";
-    }
-
 
     @Override
     @MemberOrder(sequence = "7")

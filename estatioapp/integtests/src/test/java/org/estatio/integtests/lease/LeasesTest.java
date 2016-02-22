@@ -290,7 +290,7 @@ public class LeasesTest extends EstatioIntegrationTest {
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
 
             // When
-            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate, true);
+            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
 
             // Then
             assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
@@ -319,7 +319,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
             // When
             lease.getOccupancies().first().setEndDate(lease.getTenancyEndDate());
-            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate, true);
+            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
 
             // Then
             assertThat(newLease.getOccupancies().size(), is(1));
