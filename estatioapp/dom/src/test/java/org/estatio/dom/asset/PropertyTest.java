@@ -18,16 +18,19 @@
  */
 package org.estatio.dom.asset;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.wicket.gmap3.cpt.applib.Location;
-import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
+import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.geography.Country;
 
@@ -126,11 +129,11 @@ public class PropertyTest {
             // given
             property = new Property();
             // then
-            assertNull(property.disableDispose(null, false));
+            assertNull(property.disableDispose(null));
             // when
-            property.dispose(new LocalDate(2000, 1, 1), true);
+            property.dispose(new LocalDate(2000, 1, 1));
             // then
-            assertNotNull(property.disableDispose(null, false));
+            assertNotNull(property.disableDispose(null));
         }
     }
 

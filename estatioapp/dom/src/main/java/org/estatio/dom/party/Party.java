@@ -141,7 +141,7 @@ public abstract class Party
         private static final long serialVersionUID = 1L;
 
         public Party getReplacement() {
-            return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));
+              return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
     }
 

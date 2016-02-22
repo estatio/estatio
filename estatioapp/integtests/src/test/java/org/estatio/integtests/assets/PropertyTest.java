@@ -21,7 +21,6 @@ package org.estatio.integtests.assets;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.ws.rs.HEAD;
 
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
@@ -115,33 +114,12 @@ public class PropertyTest extends EstatioIntegrationTest {
             // when
             //
             final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
-            wrap(property).dispose(disposalDate, true);
+            wrap(property).dispose(disposalDate);
 
             //
             // then
             //
             Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
-        }
-
-        @Test
-        public void whenDontConfirm() throws Exception {
-
-            //
-            // given
-            //
-            final Property property = fs.getProperty();
-            Assertions.assertThat(property.getDisposalDate()).isNull();
-
-            //
-            // when
-            //
-            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
-            wrap(property).dispose(disposalDate, false);
-
-            //
-            // then
-            //
-            Assertions.assertThat(property.getDisposalDate()).isNull();
         }
 
         @Test
@@ -156,7 +134,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             // and given
             //
             final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
-            wrap(property).dispose(disposalDate, true);
+            wrap(property).dispose(disposalDate);
 
             Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
 
@@ -170,7 +148,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             // when
             //
             final LocalDate disposalDate2 = clockService.now().plusDays(fs.faker().values().anInt(30, 40));
-            wrap(property).dispose(disposalDate, true);
+            wrap(property).dispose(disposalDate);
 
             //
             // then

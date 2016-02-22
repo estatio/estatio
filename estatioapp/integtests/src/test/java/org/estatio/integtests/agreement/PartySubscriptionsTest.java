@@ -102,6 +102,7 @@ public class PartySubscriptionsTest extends EstatioIntegrationTest {
             // when
             Party.RemoveEvent event = new Party.RemoveEvent();
             event.setSource(oldParty);
+            event.setArguments(Lists.newArrayList());
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             partySubscriptions.on(event);
 

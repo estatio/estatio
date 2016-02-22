@@ -18,20 +18,11 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.TaxRates;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.domsettings.EstatioSettingsService;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -39,10 +30,26 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.agreement.AgreementRoleRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForTesting;
+import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
+import org.estatio.dom.tax.TaxRates;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.domsettings.EstatioSettingsService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -229,7 +236,7 @@ public class InvoiceCalculationServiceTest {
 
             @Test
             public void testDateAfterTerminationDate() {
-                lease.terminate(new LocalDate(2013, 12, 31), true);
+                lease.terminate(new LocalDate(2013, 12, 31));
                 LeaseTermForTesting t2 = new LeaseTermForTesting(leaseItem, new LocalDate(2014, 1, 1), null, new BigDecimal("20000.00"));
                 calculateDueDateRange(t2, new LocalDate(2014, 1, 1), null, 0.00);
             }
