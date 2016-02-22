@@ -95,7 +95,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
             if (newEpochDate != null) {
                 setting.updateAsLocalDate(newEpochDate);
             } else {
-                setting.delete(true);
+                setting.delete();
             }
         } else {
             if (newEpochDate != null) {

@@ -164,7 +164,7 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnInvoice("XXX-00010", new LocalDate(2012, 1, 1));
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null, true), is(nullValue()));
+            assertThat(invoice.disableInvoice(null), is(nullValue()));
             invoice.doInvoice(mockClockService.now());
 
             assertThat(invoice.getInvoiceNumber(), is("XXX-00011"));
@@ -177,7 +177,7 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
-            assertThat(invoice.disableInvoice(null, true), is("Invoice number already assigned"));
+            assertThat(invoice.disableInvoice(null), is("Invoice number already assigned"));
             invoice.doInvoice(mockClockService.now());
 
             assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
@@ -189,7 +189,7 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
+            assertThat(invoice.disableInvoice(null), is("No 'invoice number' numerator found for invoice's property"));
 
             invoice.doInvoice(mockClockService.now());
             assertThat(invoice.getInvoiceNumber(), is(nullValue()));
@@ -201,7 +201,7 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
+            assertThat(invoice.disableInvoice(null), is("No 'invoice number' numerator found for invoice's property"));
 
             invoice.doInvoice(mockClockService.now());
             assertThat(invoice.getInvoiceNumber(), is(nullValue()));
@@ -256,7 +256,7 @@ public class InvoiceTest {
             invoice.setLease(lease);
 
             assertThat(invoice.hideCollect(), is(false));
-            assertNull(invoice.disableCollect(true));
+            assertNull(invoice.disableCollect());
             invoice.doCollect();
 
             assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
@@ -270,7 +270,7 @@ public class InvoiceTest {
             invoice.setLease(new Lease());
 
             assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
+            assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
             invoice.doCollect();
             assertNull(invoice.getCollectionNumber());
         }
@@ -284,7 +284,7 @@ public class InvoiceTest {
             invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
 
             assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(true), is("Collection number already assigned"));
+            assertThat(invoice.disableCollect(), is("Collection number already assigned"));
             invoice.doCollect();
 
             assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
@@ -297,7 +297,7 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
             assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(true), is("No 'collection number' numerator found for invoice's property"));
+            assertThat(invoice.disableCollect(), is("No 'collection number' numerator found for invoice's property"));
 
             invoice.doCollect();
             assertThat(invoice.getCollectionNumber(), is(nullValue()));
@@ -311,7 +311,7 @@ public class InvoiceTest {
             invoice.setLease(new Lease());
 
             assertThat(invoice.hideCollect(), is(true));
-            assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
+            assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
 
             invoice.doCollect();
 
@@ -328,7 +328,7 @@ public class InvoiceTest {
 
             // then
             assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(true), is("Must be in status of 'approved'"));
+            assertThat(invoice.disableCollect(), is("Must be in status of 'approved'"));
 
             // and
             invoice.doCollect();

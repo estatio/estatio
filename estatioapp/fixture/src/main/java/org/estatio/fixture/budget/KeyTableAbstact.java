@@ -17,6 +17,8 @@
 
 package org.estatio.fixture.budget;
 
+import javax.inject.Inject;
+
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
@@ -25,8 +27,6 @@ import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.fixture.EstatioFixtureScript;
-
-import javax.inject.Inject;
 
 /**
  * Created by jodo on 22/04/15.
@@ -41,7 +41,7 @@ public abstract class KeyTableAbstact extends EstatioFixtureScript {
             final Integer numberOfDigits,
             final ExecutionContext fixtureResults){
         KeyTable keyTable = keyTableRepository.newKeyTable(budget, name, foundationValueType, keyValueMethod, numberOfDigits);
-        keyTable.generateItems(true);
+        keyTable.generateItems();
         return fixtureResults.addResult(this, keyTable);
     }
 

@@ -169,6 +169,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
             // when
             Brand.RemoveEvent event = new RemoveEvent();
             event.setSource(oldBrand);
+            event.setArguments(Lists.newArrayList());
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             occupancies.on(event);
 
@@ -275,7 +276,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
             // When lease is terminated
             LocalDate terminationDate = new LocalDate(2015, 12, 31);
-            wrap(leaseTopModel).terminate(terminationDate, true);
+            wrap(leaseTopModel).terminate(terminationDate);
 
             // Then assert that occupancy end date is set too
             assertThat(occupancy.getEndDate(), is(terminationDate));

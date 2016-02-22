@@ -18,35 +18,51 @@
  */
 package org.estatio.integtests.lease;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.charge.ChargeRefData;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.OrganisationForMediaXGb;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.util.SortedSet;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.InvalidException;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.party.OrganisationForMediaXGb;
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 
 import static org.estatio.integtests.VT.ld;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class LeaseTest extends EstatioIntegrationTest {
 
@@ -82,8 +98,7 @@ public class LeaseTest extends EstatioIntegrationTest {
                     newReference,
                     newReference,
                     newParty,
-                    newStartDate,
-                    true);
+                    newStartDate);
 
             // then
             assertThat(newLease.getReference(), is(newReference));

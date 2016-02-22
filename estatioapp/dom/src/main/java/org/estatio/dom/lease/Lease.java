@@ -716,10 +716,6 @@ public class Lease
         return getClockService().now();
     }
 
-    public Boolean default1Terminate() {
-        return false;
-    }
-
     public String validateTerminate(
             final LocalDate terminationDate) {
         if (terminationDate.isBefore(getStartDate())) {

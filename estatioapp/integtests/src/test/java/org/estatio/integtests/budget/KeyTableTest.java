@@ -16,8 +16,22 @@
  */
 package org.estatio.integtests.budget;
 
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.asset.*;
+
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitMenu;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
@@ -29,13 +43,6 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.KeyTablesForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -125,7 +132,7 @@ public class KeyTableTest extends EstatioIntegrationTest {
             keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME);
 
             //when
-            keyTable.generateItems(true);
+            keyTable.generateItems();
 
             //then
             assertThat(items.findByKeyTableAndUnit(keyTable, unitRepository.findUnitByReference("OXF-001")).getValue().equals(new BigDecimal(3)));
@@ -144,7 +151,7 @@ public class KeyTableTest extends EstatioIntegrationTest {
             unitWithAreaNull.setArea(null);
 
             //when
-            keyTable.generateItems(true);
+            keyTable.generateItems();
 
             //then
             assertThat(items.findByKeyTableAndUnit(keyTable, unitWithAreaNull).getValue().equals(BigDecimal.ZERO));
@@ -190,7 +197,7 @@ public class KeyTableTest extends EstatioIntegrationTest {
             unitIncludedWithoutStartAndEndDate.setStartDate(null);
             unitIncludedWithoutStartAndEndDate.setEndDate(null);
 
-            keyTable.generateItems(true);
+            keyTable.generateItems();
 
             //then
             Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncludedWithEndDateOnly));

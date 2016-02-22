@@ -152,11 +152,10 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             event.setArguments(Lists.newArrayList(replacementChild));
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             relationships.on(event);
-            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTING);
             relationships.on(event);
 
             // then
-            assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
             assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
         }
 

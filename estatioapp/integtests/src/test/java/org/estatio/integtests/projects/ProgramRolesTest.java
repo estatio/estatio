@@ -195,6 +195,7 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
             // when
             Party.RemoveEvent event = new RemoveEvent();
             event.setSource(oldParty);
+            event.setArguments(Lists.newArrayList());
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             programRoles.on(event);
 
