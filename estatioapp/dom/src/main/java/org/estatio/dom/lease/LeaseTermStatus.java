@@ -22,8 +22,14 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseTermStatus {
 
-    APPROVED,
-    NEW;
+    APPROVED(false),
+    NEW(true);
+
+    private boolean updatable;
+
+    LeaseTermStatus(final boolean updatable) {
+        this.updatable = updatable;
+    }
 
     public String title() {
         return StringUtils.enumTitle(this.name());
@@ -42,8 +48,7 @@ public enum LeaseTermStatus {
     }
 
     public boolean isUpdatable() {
-        // For future feature
-        return true;
+        return updatable;
     }
 
 }

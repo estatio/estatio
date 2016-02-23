@@ -528,13 +528,14 @@ public abstract class LeaseTerm
         return getStatus().equals(LeaseTermStatus.APPROVED) ? "Already approved" : null;
     }
 
+    @MemberOrder(name = "status", sequence = "1")
     public LeaseTerm changeStatus(final LeaseTermStatus newStatus) {
         setStatus(newStatus);
         return this;
     }
 
     public boolean hideChangeStatus(final LeaseTermStatus newStatus) {
-        return !getUser().hasRole(EstatioRole.ADMINISTRATOR.roleName());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
     // //////////////////////////////////////
