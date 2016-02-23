@@ -42,6 +42,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -225,6 +226,9 @@ public abstract class LeaseTerm
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
+        if (getStatus().isApproved()){
+            return "Already approved";
+        }
         if (valueType() == LeaseTermValueType.FIXED) {
             if (!getInvoiceItems().isEmpty()) {
                 return "Cannot change dates because this lease term has invoices and is fixed";

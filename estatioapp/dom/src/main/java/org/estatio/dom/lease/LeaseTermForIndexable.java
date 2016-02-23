@@ -161,6 +161,10 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return getEffectiveDate();
     }
 
+    public String disableChangeParameters() {
+        return getStatus().isApproved() ? "Already approved" : null;
+    }
+
     // ///////////////////////////////////////////
 
     @Column(allowsNull = "true")
@@ -240,7 +244,6 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     @Override
     @Programmatic
     public void doInitialize() {
-
         final LeaseTermForIndexable previous = (LeaseTermForIndexable) getPrevious();
         if (previous != null) {
             setIndexationMethod(previous.getIndexationMethod());
@@ -248,18 +251,19 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
             setLevellingPercentage(previous.getLevellingPercentage());
             getIndexationMethod().doInitialze(this, (Indexable) getPrevious());
         }
-
     }
 
     // //////////////////////////////////////
 
     @Override
     protected void doAlign() {
-        getIndexationMethod().doAlignBeforeIndexation(this, (Indexable) getPrevious());
-        if(getStatus() == LeaseTermStatus.NEW) {
-            indexationService.indexate(this);
+        if (getStatus().isUpdatable()) {
+            getIndexationMethod().doAlignBeforeIndexation(this, (Indexable) getPrevious());
+            if (getStatus() == LeaseTermStatus.NEW) {
+                indexationService.indexate(this);
+            }
+            getIndexationMethod().doAlignAfterIndexation(this, (Indexable) getPrevious());
         }
-        getIndexationMethod().doAlignAfterIndexation(this, (Indexable) getPrevious());
     }
 
     // //////////////////////////////////////
