@@ -18,19 +18,13 @@
  */
 package org.estatio.fixture.financial;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateMenu;
-import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.dom.bankmandate.*;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
@@ -38,6 +32,9 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -47,7 +44,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
         super(friendlyName, localName);
     }
 
-    protected void createBankMandate(String bankAccountRef, Integer sequence, ExecutionContext executionContext) {
+    protected void createBankMandate(String bankAccountRef, Integer sequence, SequenceType sequenceType, Scheme scheme, ExecutionContext executionContext) {
 
         final BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(bankAccountRef);
 
@@ -66,7 +63,10 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
                 lease.getEndDate(),
                 lease.getSecondaryParty(),
                 lease.getPrimaryParty(),
-                bankAccount);
+                bankAccount,
+                sequenceType,
+                scheme,
+                lease.getStartDate());
         executionContext.addResult(this, bankMandate.getReference(), bankMandate);
     }
 

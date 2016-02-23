@@ -18,33 +18,21 @@
  */
 package org.estatio.dom.bankmandate;
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.jdo.annotations.InheritanceStrategy;
-
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.JdoColumnLength;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.joda.time.LocalDate;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.inject.Inject;
+import javax.jdo.annotations.InheritanceStrategy;
+import java.util.List;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -116,17 +104,51 @@ public class BankMandate
     // //////////////////////////////////////
 
     @Property(optionality = Optionality.OPTIONAL)
-    @javax.jdo.annotations.Column(length = JdoColumnLength.BankMandate.SEPA_MANDATE_IDENTIFIER)
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Getter @Setter
     private String sepaMandateIdentifier;
 
     // //////////////////////////////////////
 
+    @Property(optionality = Optionality.OPTIONAL)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private SequenceType sequenceType;
+
+    // //////////////////////////////////////
+
+    @Property(optionality = Optionality.OPTIONAL)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private Scheme scheme;
+
+    // //////////////////////////////////////
+
+    @Property(optionality = Optionality.OPTIONAL)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate signatureDate;
+
+    // //////////////////////////////////////
+
+    public BankMandate changeSignatureDate(final @Parameter(optionality = Optionality.OPTIONAL) LocalDate signatureDate) {
+        setSignatureDate(signatureDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeSignatureDate() {
+        return getSignatureDate();
+    }
+
     public BankMandate change(
             final @ParameterLayout(named = "Name") @Parameter(optionality = Optionality.OPTIONAL) String name,
-            final @ParameterLayout(named = "Sepa Mandate Identifier") @Parameter(optionality = Optionality.OPTIONAL) String SepaMendateIdentifier) {
+            final @ParameterLayout(named = "Sepa Mandate Identifier") @Parameter(optionality = Optionality.OPTIONAL) String SepaMendateIdentifier,
+            final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
+            final @Parameter(optionality = Optionality.OPTIONAL) Scheme scheme) {
         setName(name);
         setSepaMandateIdentifier(SepaMendateIdentifier);
+        setSequenceType(sequenceType);
+        setScheme(scheme);
         return this;
     }
 
@@ -136,6 +158,14 @@ public class BankMandate
 
     public String default1Change() {
         return getSepaMandateIdentifier();
+    }
+
+    public SequenceType default2Change() {
+        return getSequenceType();
+    }
+
+    public Scheme default3Change() {
+        return getScheme();
     }
 
     // //////////////////////////////////////

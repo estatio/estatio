@@ -18,17 +18,8 @@
  */
 package org.estatio.dom.bankmandate;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -36,6 +27,12 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 @DomainService(
     nature = NatureOfService.DOMAIN,
@@ -56,7 +53,10 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
             final LocalDate endDate,
             final Party debtor,
             final Party creditor,
-            final BankAccount bankAccount
+            final BankAccount bankAccount,
+            final SequenceType sequenceType,
+            final Scheme scheme,
+            final LocalDate signatureDate
     ) {
         BankMandate mandate = newTransientInstance();
         mandate.setType(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE));
@@ -65,6 +65,9 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         mandate.setStartDate(startDate);
         mandate.setEndDate(endDate);
         mandate.setBankAccount(bankAccount);
+        mandate.setSequenceType(sequenceType);
+        mandate.setScheme(scheme);
+        mandate.setSignatureDate(signatureDate);
 
         // app tenancy derived from the debtor
         mandate.setApplicationTenancyPath(debtor.getApplicationTenancy().getPath());
