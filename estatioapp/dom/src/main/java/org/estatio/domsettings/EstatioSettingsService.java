@@ -44,7 +44,7 @@ import org.estatio.dom.currency.Currency;
  * {@link ApplicationSettingKey defaults for keys} have been installed if
  * required.
  */
-@DomainService(nature = NatureOfService.DOMAIN)
+@DomainService(nature = NatureOfService.VIEW)
 public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
 
     public EstatioSettingsService() {

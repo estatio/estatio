@@ -22,12 +22,9 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -38,17 +35,12 @@ public class Sectors extends UdoDomainRepositoryAndFactory<Sector> {
         super(Sectors.class, Sector.class);
     }
 
-    // //////////////////////////////////////
-
-    @SuppressWarnings({ "unchecked" })
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<String> findUniqueNames() {
 
         final Query query = newQuery("SELECT name FROM " + getEntityType().getName());
         return (List<String>) query.execute();
     }
 
-    @Action(hidden = Where.EVERYWHERE)
     public Sector findByName(final String name) {
         return uniqueMatch("findByName", "name", name);
     }

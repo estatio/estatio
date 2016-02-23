@@ -34,21 +34,17 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.party.Party;
 
-@DomainService(nature = NatureOfService.DOMAIN)
-public class PartyRelationshipViewService extends UdoDomainService<PartyRelationshipViewService> {
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+public class PartyRelationshipContributions extends UdoDomainService<PartyRelationshipContributions> {
 
-    public PartyRelationshipViewService() {
-        super(PartyRelationshipViewService.class);
+    public PartyRelationshipContributions() {
+        super(PartyRelationshipContributions.class);
     }
-
-    // //////////////////////////////////////
 
     @PostConstruct
     public void init(final Map<String, String> properties) {
         super.init(properties);
     }
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)

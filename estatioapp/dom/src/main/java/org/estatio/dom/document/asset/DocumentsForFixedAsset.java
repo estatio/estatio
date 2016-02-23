@@ -17,6 +17,7 @@
 package org.estatio.dom.document.asset;
 
 import java.util.List;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -25,13 +26,13 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.value.Blob;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.document.Document;
 import org.estatio.dom.document.DocumentType;
 
-@DomainService(nature = NatureOfService.DOMAIN)
+@DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "80.10")
 public class DocumentsForFixedAsset extends UdoDomainRepositoryAndFactory<DocumentForFixedAsset> {
 

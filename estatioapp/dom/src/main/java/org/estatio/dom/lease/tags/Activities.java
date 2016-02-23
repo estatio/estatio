@@ -25,12 +25,9 @@ import javax.jdo.Query;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -43,8 +40,6 @@ public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
 
     // //////////////////////////////////////
     
-    @SuppressWarnings({ "unchecked" })
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<String> findUniqueNames(final Sector sector) {
         if(sector == null) {
             return Collections.emptyList();
@@ -53,8 +48,6 @@ public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
         return (List<String>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
-    @SuppressWarnings("unchecked")
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<Activity> findBySector(final Sector sector) {
         if(sector == null) {
             return Collections.emptyList();
@@ -63,7 +56,6 @@ public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
         return (List<Activity>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
-    @Action(hidden = Where.EVERYWHERE)
     public Activity findBySectorAndName(final Sector sector, final String name) {
         return firstMatch("findBySectorAndName", "sector", sector, "name", name);
     }

@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class, nature = NatureOfService.DOMAIN)
+@DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class FinancialAccountTransactions extends UdoDomainRepositoryAndFactory<FinancialAccountTransaction> {
 
     public FinancialAccountTransactions() {

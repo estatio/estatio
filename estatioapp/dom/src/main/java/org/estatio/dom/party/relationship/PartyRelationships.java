@@ -33,7 +33,7 @@ import org.estatio.dom.party.Persons;
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.4")
-@DomainService(repositoryFor = PartyRelationship.class, nature = NatureOfService.DOMAIN)
+@DomainService(repositoryFor = PartyRelationship.class, nature = NatureOfService.VIEW)
 public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelationship> {
 
     public PartyRelationships() {
