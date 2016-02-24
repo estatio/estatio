@@ -136,6 +136,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
+            final Fraction fraction,
             final DepositType depositType,
             final BigDecimal excludedAmount,
             final ExecutionContext executionContext) {
@@ -148,6 +149,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 executionContext);
         final LeaseTermForDeposit leaseTerm = (LeaseTermForDeposit) leaseItem.newTerm(startDate, endDate);
 
+        leaseTerm.setFraction(fraction);
         leaseTerm.setDepositType(depositType);
         leaseTerm.setExcludedAmount(excludedAmount);
 

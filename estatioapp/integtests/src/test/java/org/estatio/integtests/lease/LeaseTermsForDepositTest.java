@@ -138,10 +138,11 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             Assertions.assertThat(depositTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
 
             //when
-            depositTerm.changeParameters(DepositType.QUARTER, new BigDecimal("12345.67"));
+            depositTerm.changeParameters(Fraction.M3, DepositType.BASE_MGR_INCLUDING_VAT, new BigDecimal("12345.67"));
 
             //then
-            Assertions.assertThat(depositTerm.getDepositType()).isEqualTo(DepositType.QUARTER);
+            Assertions.assertThat(depositTerm.getFraction()).isEqualTo(Fraction.M3);
+            Assertions.assertThat(depositTerm.getDepositType()).isEqualTo(DepositType.BASE_MGR_INCLUDING_VAT);
             Assertions.assertThat(depositTerm.getExcludedAmount()).isEqualTo(new BigDecimal("12345.67"));
             Assertions.assertThat(depositTerm.getStatus()).isEqualTo(LeaseTermStatus.NEW);
         }

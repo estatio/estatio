@@ -37,7 +37,8 @@
       "memberGroups": {
         "Deposit": {
           "members": {
-            "depositType": {},
+            "fraction": {},
+            "depositType" : {},
             "excludedAmount": {
               "actions": {
                 "terminate" : {},

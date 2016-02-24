@@ -30,7 +30,6 @@ import org.joda.time.LocalDate;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 import java.math.BigDecimal;
-import java.util.List;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -43,8 +42,11 @@ public class LeaseTermForDeposit extends LeaseTerm {
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private DepositType depositType;
+    private Fraction fraction;
 
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private DepositType depositType;
 
     @Getter @Setter
     @Column(allowsNull = "true", scale = JdoColumnScale.MONEY)
@@ -66,24 +68,31 @@ public class LeaseTermForDeposit extends LeaseTerm {
     }
 
     public LeaseTermForDeposit changeParameters(
+            final Fraction fraction,
             final DepositType depositType,
             @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal excludedAmount) {
+        setFraction(fraction);
         setDepositType(depositType);
         setExcludedAmount(excludedAmount);
         setStatus(LeaseTermStatus.NEW);
         return this;
     }
 
-    public DepositType default0ChangeParameters() {
-        return getDepositType();
+    public Fraction default0ChangeParameters() {
+        return this.getFraction();
     }
 
-    public BigDecimal default1ChangeParameters() {
+    public DepositType default1ChangeParameters() {
+        return this.getDepositType();
+    }
+
+    public BigDecimal default2ChangeParameters() {
         return getExcludedAmount();
     }
 
     public String validateChangeParameters(
+            final Fraction fraction,
             final DepositType depositType,
             final BigDecimal excludedAmount
     ){
@@ -124,22 +133,12 @@ public class LeaseTermForDeposit extends LeaseTerm {
 
         if (getEffectiveInterval().contains(date)) {
 
-            BigDecimal currentValue = BigDecimal.ZERO;
-            List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
-
-            for (LeaseItem rentItem : rentItems) {
-
-                BigDecimal rentItemValueUntilVerificationDate = rentItem.valueForDate(date.minusDays(1));
-
-                if (rentItemValueUntilVerificationDate != null) {
-                    currentValue = currentValue.add(rentItemValueUntilVerificationDate);
-                }
-            }
+            BigDecimal undividedAmount = getDepositType().calculateDepositValue(this, date);
 
             if (getExcludedAmount()!= null) {
-                setCalculatedDepositValue(getDepositType().calculation(currentValue).subtract(getExcludedAmount()));
+                setCalculatedDepositValue(this.getFraction().calculation(undividedAmount).subtract(getExcludedAmount()));
             } else {
-                setCalculatedDepositValue(getDepositType().calculation(currentValue));
+                setCalculatedDepositValue(this.getFraction().calculation(undividedAmount));
             }
 
         }
@@ -173,7 +172,7 @@ public class LeaseTermForDeposit extends LeaseTerm {
         LeaseTermForDeposit t = (LeaseTermForDeposit) target;
         super.copyValuesTo(t);
         t.setExcludedAmount(getExcludedAmount());
-        t.setDepositType(getDepositType());
+        t.setFraction(this.getFraction());
     }
 
 }

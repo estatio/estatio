@@ -24,6 +24,7 @@ import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
@@ -69,72 +70,105 @@ public class LeaseTermForDepositTest {
 
     public static class VerifyUntilTest extends LeaseTermForDepositTest {
 
-        @Mock
         private LeaseItem rentItem;
+        private LeaseTermForIndexable leaseTermForIndexable;
+        private Tax vat;
 
         @Before
         public void setup() {
             super.setup();
+
+            leaseTermForIndexable = new LeaseTermForIndexable();
+            leaseTermForIndexable.setBaseValue(new BigDecimal("99500.00"));
+            vat = new Tax(){
+                @Override
+                public BigDecimal percentageFor(final LocalDate date){
+                    return new BigDecimal("21.00");
+                }
+            };
+            rentItem = new LeaseItem() {
+                @Override
+                public LeaseTerm currentTerm(LocalDate date) {
+                    return leaseTermForIndexable;
+                }
+
+                @Override
+                public BigDecimal valueForDate(LocalDate date) {
+                    return new BigDecimal("100000.00");
+                }
+
+            };
+            rentItem.setTax(vat);
+
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLease).getEffectiveInterval();
+                    allowing(mockLease).getEffectiveInterval();
                     will(returnValue(new LocalDateInterval(new LocalDate(2013,01,01), new LocalDate(2014,01,01))));
-                    oneOf(mockLease).findItemsOfType(LeaseItemType.RENT);
+                    allowing(mockLease).findItemsOfType(LeaseItemType.RENT);
                     will(returnValue(new ArrayList<LeaseItem>() {
                         {
                             add(rentItem);
                         }
                     }));
-                    oneOf(rentItem).valueForDate(with(any(LocalDate.class)));
-                    will(returnValue(new BigDecimal("100000.00")));
                 }
             });
         }
 
         @Test
         public void testHalfYear() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.HALF_YEAR, "0.00", null, "50000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "50000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "60500.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE__MGR_EXCLUDING_VAT, "0.00", null, "49750.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE_MGR_INCLUDING_VAT, "0.00", null, "60197.50");
         }
 
         @Test
         public void testHalfYearWithExcludingAmount() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.HALF_YEAR, "10000.00", null,  "40000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR__EXCLUDING_VAT, "10000.00", null,  "40000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR_INCLUDING_VAT, "10000.00", null,  "50500.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE__MGR_EXCLUDING_VAT, "10000.00", null,  "39750.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE_MGR_INCLUDING_VAT, "10000.00", null,  "50197.50");
         }
 
         @Test
         public void testQuarter() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.QUARTER, "0.00", null, "25000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "25000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "30250.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.BASE__MGR_EXCLUDING_VAT, "0.00", null, "24875.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.BASE_MGR_INCLUDING_VAT, "0.00", null, "30098.75");
         }
 
         @Test
         public void testMonth() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", null, "8333.33");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "8333.33");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "10083.33");
         }
 
         @Test
         public void testTypeManual() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MANUAL, "0.00", null , "0.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.MANUAL, DepositType.MANUAL, "0.00", null , "0.00");
         }
 
         @Test
-        public void testManualDepositValueForTypeManual() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MANUAL, "0.00", "123.00", "123.00");
+        public void testManualDepositValueForFractionManual() {
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.MANUAL, DepositType.MANUAL, "0.00", "123.00", "123.00");
         }
 
         @Test
-        public void testManualDepositValueForTypeMonth() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", "123.00", "123.00");
+        public void testManualDepositValueForFractionM1() {
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.MANUAL, "0.00", "123.00", "123.00");
         }
 
         @Test
         public void testManualDepositValueZero() {
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", "0.00", "0.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.MANUAL, "0.00", "0.00", "0.00");
         }
 
         @Test
         public void testMonthWhenTerminated() {
             term.terminate(new LocalDate(2013,01,01));
-            super.verifyUntil(new LocalDate(2013,01,01), DepositType.MONTH, "0.00", null, "0.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "0.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "0.00");
         }
 
     }
@@ -147,7 +181,7 @@ public class LeaseTermForDepositTest {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLease).getEffectiveInterval();
+                    allowing(mockLease).getEffectiveInterval();
                     will(returnValue(new LocalDateInterval(new LocalDate(2013,01,01), new LocalDate(2014,01,01))));
                 }
             });
@@ -156,18 +190,21 @@ public class LeaseTermForDepositTest {
         @Test
         public void testMonthWhenTerminatedBefore() {
             term.terminate(new LocalDate(2013,01,01));
-            super.verifyUntil(new LocalDate(2013,01,02), DepositType.MONTH, "0.00", null, "0.00");
+            super.verifyUntil(new LocalDate(2013,01,02), Fraction.M1, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "0.00");
+            super.verifyUntil(new LocalDate(2013,01,02), Fraction.M1, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "0.00");
         }
 
     }
 
     private void verifyUntil(
             final LocalDate date,
+            final Fraction fraction,
             final DepositType depositType,
             final String excludedAmountStr,
             final String manualDepositValueStr,
             final String expectedValueStr
     ) {
+        term.setFraction(fraction);
         term.setDepositType(depositType);
         term.setExcludedAmount(parseBigDecimal(excludedAmountStr));
         term.setManualDepositValue(parseBigDecimal(manualDepositValueStr));
@@ -221,13 +258,14 @@ public class LeaseTermForDepositTest {
 
 
         LeaseTermForDeposit leaseTermForDeposit = new LeaseTermForDeposit();
+        Fraction fraction;
         DepositType depositType;
         BigDecimal excludedAmount = new BigDecimal("-0.01");
 
 
         @Test
         public void test(){
-            assertThat(leaseTermForDeposit.validateChangeParameters(depositType, excludedAmount), is("Excluded amount should not be negative"));
+            assertThat(leaseTermForDeposit.validateChangeParameters(fraction, depositType, excludedAmount), is("Excluded amount should not be negative"));
         }
 
     }
@@ -237,8 +275,8 @@ public class LeaseTermForDepositTest {
         private List<InvoiceCalculationService.CalculationResult> results;
         private InvoiceCalculationService invoiceCalculationService;
 
-        @Mock
         private LeaseItem rentItem;
+        private LeaseTermForIndexable leaseTermForIndexable;
 
         @Before
         public void setup() {
@@ -250,9 +288,25 @@ public class LeaseTermForDepositTest {
             term = new LeaseTermForDeposit();
             term.setLeaseItem(depositItem);
             term.setStartDate(startDate);
-            term.setDepositType(DepositType.HALF_YEAR);
+            term.setFraction(Fraction.M6);
+            term.setDepositType(DepositType.INDEXED_MGR__EXCLUDING_VAT);
             term.setExcludedAmount(new BigDecimal("500.00"));
             invoiceCalculationService = new InvoiceCalculationService();
+
+            leaseTermForIndexable = new LeaseTermForIndexable();
+            leaseTermForIndexable.setIndexedValue(new BigDecimal("10000.00"));
+            rentItem = new LeaseItem() {
+                @Override
+                public LeaseTerm currentTerm(LocalDate date) {
+                    return leaseTermForIndexable;
+                }
+
+                @Override
+                public BigDecimal valueForDate(LocalDate date) {
+                    return new BigDecimal("10000.00");
+                }
+
+            };
 
             context.checking(new Expectations() {
                 {
@@ -266,8 +320,6 @@ public class LeaseTermForDepositTest {
                             add(rentItem);
                         }
                     }));
-                    allowing(rentItem).valueForDate(with(any(LocalDate.class)));
-                    will(returnValue(new BigDecimal("10000.00")));
                 }
             });
         }
