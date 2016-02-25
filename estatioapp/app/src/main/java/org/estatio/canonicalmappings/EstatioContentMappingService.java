@@ -32,7 +32,7 @@ import org.apache.isis.schema.common.v1.OidDto;
 import org.apache.isis.viewer.restfulobjects.applib.RepresentationType;
 import org.apache.isis.viewer.restfulobjects.rendering.service.conmap.ContentMappingService;
 
-import org.estatio.canonical.financial.bankaccount.BankAccountDto;
+import org.estatio.canonical.financial.bankaccount.v1_0.BankAccountDto;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 import ma.glasnost.orika.MapperFactory;
@@ -68,6 +68,7 @@ public class EstatioContentMappingService implements ContentMappingService {
             final RepresentationType representationType) {
 
         if(object instanceof BankAccount) {
+
             final Bookmark bookmark = bookmarkService.bookmarkFor(object);
 
             final BankAccountDto dto = mapperFactory.getMapperFacade().map(object, BankAccountDto.class);

@@ -85,15 +85,14 @@ mvn clean install -DskipTests -o
 
         <isis-module-audit.version>1.11.0</isis-module-audit.version>
         <isis-module-command.version>1.11.0</isis-module-command.version>
+        <isis-module-devutils.version>1.11.0</isis-module-devutils.version>
+        <isis-module-excel.version>1.11.0</isis-module-excel.version>
+        <isis-module-fakedata-dom.version>1.11.0</isis-module-fakedata-dom.version>
+        <isis-module-poly.version>1.11.0</isis-module-poly.version>
         <isis-module-security.version>1.12.0-SNAPSHOT</isis-module-security.version>
         <isis-module-sessionlogger.version>1.11.0</isis-module-sessionlogger.version>
         <isis-module-settings.version>1.11.0</isis-module-settings.version>
-
-        <isis-module-devutils.version>1.11.0</isis-module-devutils.version>
-        <isis-module-excel.version>1.11.0</isis-module-excel.version>
         <isis-module-stringinterpolator.version>1.11.0</isis-module-stringinterpolator.version>
-
-        <isis-module-poly.version>1.11.0</isis-module-poly.version>
 
         <isis-metamodel-paraname8.version>1.11.0</isis-metamodel-paraname8.version>
 
@@ -530,6 +529,11 @@ mvn clean install -DskipTests -o
                 <groupId>org.isisaddons.module.excel</groupId>
                 <artifactId>isis-module-excel-dom</artifactId>
                 <version>${isis-module-excel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.fakedata</groupId>
+                <artifactId>isis-module-fakedata-dom</artifactId>
+                <version>${isis-module-fakedata-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.security</groupId>
