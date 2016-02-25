@@ -32,8 +32,8 @@ import org.apache.isis.schema.common.v1.OidDto;
 import org.apache.isis.viewer.restfulobjects.applib.RepresentationType;
 import org.apache.isis.viewer.restfulobjects.rendering.service.conmap.ContentMappingService;
 
+import org.estatio.canonical.financial.bankaccount.BankAccountDto;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountDto;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

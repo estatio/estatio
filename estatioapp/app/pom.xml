@@ -66,10 +66,6 @@ language governing permissions and limitations under the License.
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-canonicalmappings</artifactId>
-        </dependency>
 
         <!-- isis modules -->
         <dependency>
@@ -206,6 +202,33 @@ language governing permissions and limitations under the License.
     </reporting>
 
     <profiles>
+
+        <profile>
+            <id>canonical-mappings</id>
+            <activation>
+                <property>
+                    <name>!skip.canonical-mappings</name>
+                </property>
+            </activation>
+
+            <properties>
+                <orika-core.version>1.4.5</orika-core.version>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.isis.core</groupId>
+                    <artifactId>isis-core-viewer-restfulobjects-rendering</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>ma.glasnost.orika</groupId>
+                    <artifactId>orika-core</artifactId>
+                    <version>${orika-core.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
         <profile>
             <id>analysis</id>
             <build>
