@@ -15,7 +15,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.SecurityModule;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.estatio.canonicalmappings.EstatioCanonicalMappingsModule;
+import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
@@ -38,10 +38,14 @@ public class EstatioAppManifest implements AppManifest {
         modules.addAll(
                 Arrays.asList(
                         // TODO: sort out packages for the 'dom' module
-                        EstatioDomainModule.class, EstatioDomainLinkModule.class, EstatioDomainSettingsModule.class,
+                        EstatioCanonicalModule.class,
+                        EstatioDomainModule.class,
+                        EstatioDomainLinkModule.class,
+                        EstatioDomainSettingsModule.class,
                         // TODO: sort out packages for the 'fixture' module
-                        EstatioFixtureModule.class, EstatioFixtureScriptsModule.class,
-                        EstatioCanonicalMappingsModule.class,
+                        EstatioFixtureModule.class,
+                        EstatioFixtureScriptsModule.class,
+
                         SecurityModule.class,
                         EstatioAppModule.class
                 )

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.canonicalmappings;
+package org.estatio.app.services.contentmapping;
 
 import java.util.List;
 
