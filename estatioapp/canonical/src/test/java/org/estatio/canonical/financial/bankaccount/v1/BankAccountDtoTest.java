@@ -11,6 +11,8 @@ import org.apache.isis.schema.common.v1.OidDto;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
+import org.estatio.canonical.financial.v1.BankAccountDto;
+
 public class BankAccountDtoTest {
 
     private FakeDataService fake;

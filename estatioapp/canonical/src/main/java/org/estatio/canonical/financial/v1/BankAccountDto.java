@@ -1,4 +1,4 @@
-package org.estatio.canonical.financial.bankaccount.v1;
+package org.estatio.canonical.financial.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.schema.common.v1.OidDto;
+
+import org.estatio.canonical.VersionedDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +32,7 @@ import lombok.Setter;
     "nationalCheckCode"
 })
 @XmlRootElement(name = "bankAccountDto")
-public class BankAccountDto {
+public class BankAccountDto implements VersionedDto {
 
     public BankAccountDto() {}
 
