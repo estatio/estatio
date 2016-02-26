@@ -16,6 +16,8 @@ import lombok.Setter;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "majorVersion",
+    "minorVersion",
     "owner",
     "reference",
     "externalReference",
