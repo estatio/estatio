@@ -1,4 +1,4 @@
-package org.estatio.canonical.financial.bankaccount.v1_0;
+package org.estatio.canonical.party.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,14 +8,11 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.schema.common.v1.OidDto;
 
-import org.estatio.dom.DtoMappingHelper;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Designed to be usable both as a view model and in an ESB (Camel).
+ * Designed to be usable both as a view model (exposed from RO) and within the Camel ESB.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -31,22 +28,19 @@ import lombok.Setter;
     "nationalCheckCode"
 })
 @XmlRootElement(name = "bankAccountDto")
-public class BankAccountDto {
+public class PartyDto {
 
-    public BankAccountDto() {}
-    public BankAccountDto(final BankAccount bankAccount, final DtoMappingHelper mappingHelper) {
-        setAccountNumber(bankAccount.getAccountNumber());
-        setBank(mappingHelper.oidDtoFor(bankAccount.getBank()));
-        setBranchCode(bankAccount.getBranchCode());
-        setExternalReference(bankAccount.getExternalReference());
-        setIban(bankAccount.getIban());
-        setName(bankAccount.getName());
-        setNationalBankCode(bankAccount.getNationalBankCode());
-        setNationalCheckCode(bankAccount.getNationalCheckCode());
-        setOwner(mappingHelper.oidDtoFor(bankAccount.getOwner()));
-        setReference(bankAccount.getReference());
+    public PartyDto() {}
+
+    @XmlElement(required = true, defaultValue = "1")
+    public final String getMajorVersion() {
+        return "1";
     }
 
+    @XmlElement(required = true, defaultValue = "0")
+    public String getMinorVersion() {
+        return "0";
+    }
 
     /**
      * Of type Party
@@ -75,6 +69,9 @@ public class BankAccountDto {
     @Getter @Setter
     protected String branchCode;
 
+    /**
+     * Of type Bank
+     */
     @Getter @Setter
     protected OidDto bank;
 
@@ -83,6 +80,5 @@ public class BankAccountDto {
 
     @Getter @Setter
     protected String nationalCheckCode;
-
 
 }

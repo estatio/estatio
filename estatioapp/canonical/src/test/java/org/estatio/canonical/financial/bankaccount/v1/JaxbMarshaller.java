@@ -1,4 +1,4 @@
-package org.estatio.canonical.financial.bankaccount.v1_0;
+package org.estatio.canonical.financial.bankaccount.v1;
 
 import java.io.StringReader;
 import java.io.StringWriter;

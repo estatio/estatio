@@ -763,6 +763,12 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-canonical</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-app</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
             </dependency>
@@ -1036,11 +1042,11 @@ mvn clean install -DskipTests -o
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
+                <module>estatioapp/canonical</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/webapp</module>
-                <module>estatioapp/xsd</module>
             </modules>
         </profile>
         <profile>
@@ -1060,11 +1066,9 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
-                <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
-                <module>estatioapp/xsd</module>
             </modules>
         </profile>
         <profile>
@@ -1084,13 +1088,11 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
-                <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
                 <module>estatioapp/webapp</module>
-                <module>estatioapp/xsd</module>
             </modules>
         </profile>
         <profile>

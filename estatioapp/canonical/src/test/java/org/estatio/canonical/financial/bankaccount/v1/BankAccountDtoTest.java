@@ -1,7 +1,8 @@
-package org.estatio.canonical.financial.bankaccount.v1_0;
+package org.estatio.canonical.financial.bankaccount.v1;
 
 import javax.xml.bind.JAXBContext;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,8 +10,6 @@ import org.apache.isis.schema.common.v1.BookmarkObjectState;
 import org.apache.isis.schema.common.v1.OidDto;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class BankAccountDtoTest {
 
@@ -65,7 +64,7 @@ public class BankAccountDtoTest {
         final String xmlAfter = jaxbMarshaller.toXml(dtoAfter);
 
         // then
-        assertThat(xmlAfter).isEqualTo(xml);
+        Assertions.assertThat(xmlAfter).isEqualTo(xml);
 
     }
 

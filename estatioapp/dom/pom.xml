@@ -74,8 +74,8 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-schema</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-canonical</artifactId>
         </dependency>
 
         <dependency>
@@ -99,6 +99,7 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.fakedata</groupId>
             <artifactId>isis-module-fakedata-dom</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.poly</groupId>

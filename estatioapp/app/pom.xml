@@ -211,20 +211,10 @@ language governing permissions and limitations under the License.
                 </property>
             </activation>
 
-            <properties>
-                <orika-core.version>1.4.5</orika-core.version>
-            </properties>
-
             <dependencies>
                 <dependency>
                     <groupId>org.apache.isis.core</groupId>
                     <artifactId>isis-core-viewer-restfulobjects-rendering</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>ma.glasnost.orika</groupId>
-                    <artifactId>orika-core</artifactId>
-                    <version>${orika-core.version}</version>
                 </dependency>
             </dependencies>
         </profile>
