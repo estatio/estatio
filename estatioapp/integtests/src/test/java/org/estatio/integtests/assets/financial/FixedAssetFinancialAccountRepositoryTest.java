@@ -131,7 +131,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
         @Before
         public void setUp() throws Exception {
             oldBankAccount = bankAccounts.findBankAccountByReference(BankAccountForOxford.BANK_ACCOUNT_REF);
-            newBankAccount = bankAccounts.newBankAccount(parties.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", "New Bank Account");
+            newBankAccount = bankAccounts.newBankAccount(parties.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
         }
 
         @Test

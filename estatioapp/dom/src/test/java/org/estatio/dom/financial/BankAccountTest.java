@@ -18,13 +18,15 @@
  */
 package org.estatio.dom.financial;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
@@ -32,6 +34,7 @@ import org.estatio.dom.party.PartyForTesting;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class BankAccountTest {
 
@@ -76,6 +79,24 @@ public class BankAccountTest {
             assertThat(account.getIban(), is("NL31ABNA0580744434"));
         }
 
+    }
+
+    public static class Change extends BankAccountTest {
+
+        @Test
+        public void happyCase() throws Exception {
+            // Given
+            BankAccount bankAccount = new BankAccount();
+            final String iban = "NL91RABO0145814734";
+            assertTrue(IBANValidator.valid(iban));
+            assertNull(bankAccount.validateChange(iban, null, null));
+            // When
+            bankAccount.change(iban, "BIC", "EXT");
+            // Then
+            assertThat(bankAccount.getIban(), is(iban));
+            assertThat(bankAccount.getBic(), is("BIC"));
+            assertThat(bankAccount.getExternalReference(), is("EXT"));
+        }
     }
 
     public static class VerifyIban extends BankAccountTest {

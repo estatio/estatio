@@ -19,8 +19,11 @@
 package org.estatio.dom.financial.bankaccount;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
@@ -48,8 +51,8 @@ import org.estatio.dom.party.Party;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
@@ -57,36 +60,26 @@ import lombok.Setter;
 public class BankAccount
         extends FinancialAccount {
 
-    @javax.jdo.annotations.Column(name = "bankPartyId", allowsNull = "true")
+    @Column(name = "bankPartyId", allowsNull = "true")
     @Getter @Setter
     private Party bank;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private BankAccountType bankAccountType;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
+    @Column(name = "countryId", allowsNull = "true")
     @Getter @Setter
     private Country country;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
     @Getter @Setter
     private String iban;
-
-    // //////////////////////////////////////
 
     public boolean isValidIban() {
         return IBANValidator.valid(getIban());
     }
-
-    // //////////////////////////////////////
 
     @Action(hidden = Where.EVERYWHERE)
     public BankAccount verifyIban() {
@@ -94,45 +87,41 @@ public class BankAccount
         return this;
     }
 
-    public String disableVerifyIban() {
-        return null;
-    }
-
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
     @Getter @Setter
     private String nationalCheckCode;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
     @Getter @Setter
     private String nationalBankCode;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
     @Getter @Setter
     private String branchCode;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
     @Getter @Setter
     private String accountNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @Getter @Setter
+    private String bic;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BankAccount change(
-            final @ParameterLayout(named = "Iban", typicalLength = JdoColumnLength.BankAccount.IBAN) String iban,
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            @ParameterLayout(typicalLength = JdoColumnLength.BankAccount.IBAN)
+            final String iban,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String bic,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String externalReference) {
         setIban(iban);
-        setName(name);
+        setName(iban);
+        setBic(bic);
         setExternalReference(externalReference);
         // TODO: Changing references is not really a good thing. in this case
         // there's no harm but we should come up with a pattern where we
-        // archvice
+        // archive the old reference
         setReference(iban);
 
         return this;
@@ -140,7 +129,7 @@ public class BankAccount
 
     public String validateChange(
             final String iban,
-            final String name,
+            final String bic,
             final String externalReference) {
         if (!IBANValidator.valid(iban)) {
             return "Not a valid IBAN number";
@@ -153,14 +142,12 @@ public class BankAccount
     }
 
     public String default1Change() {
-        return getName();
+        return getBic();
     }
 
     public String default2Change() {
         return getExternalReference();
     }
-
-    // //////////////////////////////////////
 
     public BankAccount refresh() {
         IBANHelper.verifyAndUpdate(this);

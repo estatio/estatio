@@ -46,6 +46,7 @@
                 "verifyIban": {}
               }
             },
+            "BIC": {},
             "nationalCheckCode": {},
             "nationalBankCode": {},
             "branchCode": {},
