@@ -1,11 +1,12 @@
 package org.estatio.dom.lease;
 
 
-import org.estatio.dom.tax.Tax;
-import org.joda.time.LocalDate;
-
 import java.math.BigDecimal;
 import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.estatio.dom.tax.Tax;
 
 public enum DepositType {
 
@@ -52,7 +53,7 @@ public enum DepositType {
             return currentValue;
         }
     },
-    INDEXED_MGR__EXCLUDING_VAT {
+    INDEXED_MGR_EXCLUDING_VAT {
         @Override
         BigDecimal calculateDepositValue(final LeaseTermForDeposit term, final LocalDate date) {
 
@@ -69,7 +70,7 @@ public enum DepositType {
             return currentValue;
         }
     },
-    BASE__MGR_EXCLUDING_VAT {
+    BASE_MGR_EXCLUDING_VAT {
         @Override
         BigDecimal calculateDepositValue(final LeaseTermForDeposit term, final LocalDate date) {
 

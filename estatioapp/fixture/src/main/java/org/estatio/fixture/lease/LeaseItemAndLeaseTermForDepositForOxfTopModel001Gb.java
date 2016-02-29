@@ -50,7 +50,7 @@ public class LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb extends LeaseIte
                 AT_PATH,
                 lease.getStartDate(), null,
                 Fraction.M6,
-                DepositType.INDEXED_MGR__EXCLUDING_VAT,
+                DepositType.INDEXED_MGR_EXCLUDING_VAT,
                 new BigDecimal("5000.00"),
                 executionContext);
     }

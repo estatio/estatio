@@ -18,15 +18,10 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -34,9 +29,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -116,31 +119,31 @@ public class LeaseTermForDepositTest {
 
         @Test
         public void testHalfYear() {
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "50000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR_EXCLUDING_VAT, "0.00", null, "50000.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "60500.00");
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE__MGR_EXCLUDING_VAT, "0.00", null, "49750.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE_MGR_EXCLUDING_VAT, "0.00", null, "49750.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE_MGR_INCLUDING_VAT, "0.00", null, "60197.50");
         }
 
         @Test
         public void testHalfYearWithExcludingAmount() {
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR__EXCLUDING_VAT, "10000.00", null,  "40000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR_EXCLUDING_VAT, "10000.00", null,  "40000.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.INDEXED_MGR_INCLUDING_VAT, "10000.00", null,  "50500.00");
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE__MGR_EXCLUDING_VAT, "10000.00", null,  "39750.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE_MGR_EXCLUDING_VAT, "10000.00", null,  "39750.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M6, DepositType.BASE_MGR_INCLUDING_VAT, "10000.00", null,  "50197.50");
         }
 
         @Test
         public void testQuarter() {
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "25000.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.INDEXED_MGR_EXCLUDING_VAT, "0.00", null, "25000.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "30250.00");
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.BASE__MGR_EXCLUDING_VAT, "0.00", null, "24875.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.BASE_MGR_EXCLUDING_VAT, "0.00", null, "24875.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M3, DepositType.BASE_MGR_INCLUDING_VAT, "0.00", null, "30098.75");
         }
 
         @Test
         public void testMonth() {
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "8333.33");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR_EXCLUDING_VAT, "0.00", null, "8333.33");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "10083.33");
         }
 
@@ -167,7 +170,7 @@ public class LeaseTermForDepositTest {
         @Test
         public void testMonthWhenTerminated() {
             term.terminate(new LocalDate(2013,01,01));
-            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "0.00");
+            super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR_EXCLUDING_VAT, "0.00", null, "0.00");
             super.verifyUntil(new LocalDate(2013,01,01), Fraction.M1, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "0.00");
         }
 
@@ -190,7 +193,7 @@ public class LeaseTermForDepositTest {
         @Test
         public void testMonthWhenTerminatedBefore() {
             term.terminate(new LocalDate(2013,01,01));
-            super.verifyUntil(new LocalDate(2013,01,02), Fraction.M1, DepositType.INDEXED_MGR__EXCLUDING_VAT, "0.00", null, "0.00");
+            super.verifyUntil(new LocalDate(2013,01,02), Fraction.M1, DepositType.INDEXED_MGR_EXCLUDING_VAT, "0.00", null, "0.00");
             super.verifyUntil(new LocalDate(2013,01,02), Fraction.M1, DepositType.INDEXED_MGR_INCLUDING_VAT, "0.00", null, "0.00");
         }
 
@@ -289,7 +292,7 @@ public class LeaseTermForDepositTest {
             term.setLeaseItem(depositItem);
             term.setStartDate(startDate);
             term.setFraction(Fraction.M6);
-            term.setDepositType(DepositType.INDEXED_MGR__EXCLUDING_VAT);
+            term.setDepositType(DepositType.INDEXED_MGR_EXCLUDING_VAT);
             term.setExcludedAmount(new BigDecimal("500.00"));
             invoiceCalculationService = new InvoiceCalculationService();
 
