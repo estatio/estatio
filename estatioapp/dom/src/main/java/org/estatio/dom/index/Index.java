@@ -194,6 +194,12 @@ public class Index
         return null;
     }
 
+    @MemberOrder(name = "indexbases", sequence = "1")
+    public Index newIndexBase(final LocalDate indexBaseStartDate, final BigDecimal indexBaseFactor){
+        findOrCreateBase(indexBaseStartDate, indexBaseFactor);
+        return this;
+    }
+
     @Programmatic
     @Override
     public IndexBase findOrCreateBase(final LocalDate indexBaseStartDate, final BigDecimal indexBaseFactor) {
