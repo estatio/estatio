@@ -156,7 +156,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat("Before calculation", rItem.getTerms().size(), is(2));
             invoiceService.calculate(
                     lease, InvoiceRunType.NORMAL_RUN,
-                    InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE,
+                    InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE,
                     START_DATE,
                     VT.ld(2013, 10, 1),
                     VT.ld(2015, 4, 1));
@@ -191,13 +191,13 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         public void step5_normalInvoice() throws Exception {
-            invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
+            invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             approveInvoicesFor(lease);
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
         }
 
         public void step6_retroInvoice() throws Exception {
-            invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
+            invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             // (156750 - 150000) / = 1687.5 added
             approveInvoicesFor(lease);
             assertThat(invoices.findByLease(lease).size(), is(2));

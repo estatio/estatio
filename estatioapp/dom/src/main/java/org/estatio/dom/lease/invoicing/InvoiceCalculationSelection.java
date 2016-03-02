@@ -7,34 +7,25 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.utils.StringUtils;
 
 public enum InvoiceCalculationSelection {
-    RENT_AND_SERVICE_CHARGE(
+    ALL_RENT_AND_SERVICE_CHARGE(
             LeaseItemType.RENT,
-            LeaseItemType.DISCOUNT_INDEXABLE,
+            LeaseItemType.RENT_DISCOUNT,
+            LeaseItemType.RENT_FIXED,
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE),
-    RENT(
+    ALL_RENT(
             LeaseItemType.RENT,
-            LeaseItemType.DISCOUNT_INDEXABLE),
-    RENT_FIXED(
-            LeaseItemType.RENT_FIXED
-    ),
-    SERVICE_CHARGE(
+            LeaseItemType.RENT_FIXED,
+            LeaseItemType.RENT_DISCOUNT),
+    ALL_SERVICE_CHARGE(
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE),
-    TURNOVER_RENT(
-            LeaseItemType.TURNOVER_RENT),
-    RENTAL_FEE(
-            LeaseItemType.RENTAL_FEE),
-    TAX(
-            LeaseItemType.TAX),
-    DISCOUNT(
-            LeaseItemType.DISCOUNT),
-    ENTRY_FEE(
-            LeaseItemType.ENTRY_FEE),
-    DEPOSIT(
-            LeaseItemType.DEPOSIT),
-    ALL(
+    ALL_DISCOUNT(
+            LeaseItemType.DISCOUNT,
+            LeaseItemType.RENT_DISCOUNT),
+    ALL_ITEMS(
             LeaseItemType.RENT,
+            LeaseItemType.RENT_DISCOUNT,
             LeaseItemType.RENT_FIXED,
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE,
@@ -43,8 +34,30 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.TAX,
             LeaseItemType.DISCOUNT,
             LeaseItemType.ENTRY_FEE,
-            LeaseItemType.DEPOSIT,
-            LeaseItemType.DISCOUNT_INDEXABLE);
+            LeaseItemType.DEPOSIT),
+    ONLY_RENT(
+            LeaseItemType.RENT),
+    ONLY_RENT_DISCOUNT(
+            LeaseItemType.RENT_DISCOUNT),
+    ONLY_RENT_FIXED(
+            LeaseItemType.RENT_FIXED),
+    ONLY_TURNOVER_RENT(
+            LeaseItemType.TURNOVER_RENT),
+    ONLY_SERVICE_CHARGE(
+            LeaseItemType.SERVICE_CHARGE),
+    ONLY_SERVICE_CHARGE_INDEXABLE(
+            LeaseItemType.SERVICE_CHARGE),
+    ONLY_DISCOUNT(
+            LeaseItemType.DISCOUNT),
+    ONLY_ENTRY_FEE(
+            LeaseItemType.ENTRY_FEE),
+    ONLY_DEPOSIT(
+            LeaseItemType.DEPOSIT),
+    ONLY_RENTAL_FEE(
+            LeaseItemType.RENTAL_FEE),
+    ONLY_TAX(
+            LeaseItemType.TAX)
+    ;
 
     private LeaseItemType[] selectedTypes;
 

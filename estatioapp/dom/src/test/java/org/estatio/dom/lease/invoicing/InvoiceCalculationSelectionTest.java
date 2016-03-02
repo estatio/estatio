@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
 
 public class InvoiceCalculationSelectionTest {
 
-    final InvoiceCalculationSelection invoiceCalculationSelection = InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE;
+    final InvoiceCalculationSelection invoiceCalculationSelection = InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE;
 
     public static class SelectedTypes extends InvoiceCalculationSelectionTest {
 
@@ -21,7 +21,7 @@ public class InvoiceCalculationSelectionTest {
     public static class Title extends InvoiceCalculationSelectionTest {
         @Test
         public void testTitle() {
-            assertThat(invoiceCalculationSelection.title(), is("Rent And Service Charge"));
+            assertThat(invoiceCalculationSelection.title(), is("All Rent And Service Charge"));
         }
 
     }

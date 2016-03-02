@@ -25,13 +25,13 @@ public class InvoiceCalculationParametersTest {
             InvoiceCalculationParameters parameters =
                     new InvoiceCalculationParameters(
                             property,
-                            InvoiceCalculationSelection.RENT.selectedTypes(),
+                            InvoiceCalculationSelection.ALL_RENT.selectedTypes(),
                             InvoiceRunType.NORMAL_RUN,
                             new LocalDate(2012, 1, 1),
                             new LocalDate(2012, 1, 1),
                             new LocalDate(2012, 1, 1));
 
-            assertThat(parameters.toString(), is("HELLO - [RENT] - 2012-01-01 - 2012-01-01/2012-01-01"));
+            assertThat(parameters.toString(), is("HELLO - [RENT, RENT_FIXED, RENT_DISCOUNT] - 2012-01-01 - 2012-01-01/2012-01-01"));
 
         }
     }
