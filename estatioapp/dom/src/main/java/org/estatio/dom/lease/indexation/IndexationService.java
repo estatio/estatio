@@ -18,10 +18,6 @@
  */
 package org.estatio.dom.lease.indexation;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -31,7 +27,6 @@ import org.estatio.dom.index.Index;
 @DomainService(menuOrder = "60")
 public class IndexationService extends UdoDomainService<IndexationService> {
 
-    public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     public IndexationService() {
         super(IndexationService.class);
@@ -52,67 +47,8 @@ public class IndexationService extends UdoDomainService<IndexationService> {
             return IndexationResult.NULL;
         }
         final Index index = input.getIndex();
-        BigDecimal indexedValue = null;
-        BigDecimal indexationPercentage = null;
         index.initialize(input);
-        final BigDecimal baseIndexValue = input.getBaseIndexValue();
-        final BigDecimal nextIndexValue = input.getNextIndexValue();
-        final BigDecimal rebaseFactor = input.getRebaseFactor();
-        final BigDecimal baseValue = input.getBaseValue();
-        final BigDecimal levellingPercentage =
-                input.getLevellingPercentage() == null ? ONE_HUNDRED : input.getLevellingPercentage();
-        if (baseIndexValue != null && nextIndexValue != null) {
-            final BigDecimal indexationFactor = nextIndexValue
-                    .divide(baseIndexValue, MathContext.DECIMAL64)
-                    .multiply(rebaseFactor, MathContext.DECIMAL64).setScale(3, RoundingMode.HALF_EVEN);
-            indexationPercentage = (indexationFactor
-                    .subtract(BigDecimal.ONE))
-                    .multiply(ONE_HUNDRED).setScale(1, RoundingMode.HALF_EVEN);
-            final BigDecimal levellingFactor = indexationPercentage
-                    .multiply(levellingPercentage.divide(ONE_HUNDRED))
-                    .divide(ONE_HUNDRED)
-                    .add(BigDecimal.ONE);
-            if (baseValue != null) {
-                indexedValue = baseValue
-                        .multiply(levellingFactor)
-                        .setScale(2, RoundingMode.HALF_EVEN);
-            }
-        }
-        return new IndexationResult(indexedValue, indexationPercentage, baseIndexValue, nextIndexValue);
-    }
-
-    static class IndexationResult {
-
-        public static final IndexationResult NULL = new IndexationResult(null, null, null, null);
-
-        private BigDecimal indexedValue = null;
-        private BigDecimal indexationPercentage = null;
-        private BigDecimal baseIndexValue = null;
-        private BigDecimal nextIndexValue = null;
-
-        public IndexationResult(
-                final BigDecimal indexedValue,
-                final BigDecimal indexationPercentage,
-                final BigDecimal baseIndexValue,
-                final BigDecimal nextIndexValue) {
-            this.indexedValue = indexedValue;
-            this.indexationPercentage = indexationPercentage;
-            this.baseIndexValue = baseIndexValue;
-            this.nextIndexValue = nextIndexValue;
-        }
-
-        public void apply(final Indexable indexable) {
-            indexable.setBaseIndexValue(baseIndexValue);
-            indexable.setIndexationPercentage(indexationPercentage);
-            indexable.setNextIndexValue(nextIndexValue);
-            indexable.setIndexedValue(indexedValue);
-            indexable.setIndexedValue(
-                    // Don't apply when negative indexation.
-                    // Probably configurable in the future
-                    indexationPercentage != null && indexationPercentage.compareTo(BigDecimal.ZERO) < 0 ?
-                            indexable.getBaseValue() :
-                            indexedValue);
-        }
+        return IndexationCalculationMethod.calculate(input);
     }
 
 }

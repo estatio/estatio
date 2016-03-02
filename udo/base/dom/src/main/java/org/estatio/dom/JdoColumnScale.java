@@ -12,7 +12,7 @@ public final class JdoColumnScale {
         private IndexValue() {
         }
 
-        public static final int INDEX_VALUE = 1;
+        public static final int INDEX_VALUE = 4;
         public static final int REBASE_FACTOR = 3;
         public static final int INDEXATION_PERCENTAGE = 3;
     }

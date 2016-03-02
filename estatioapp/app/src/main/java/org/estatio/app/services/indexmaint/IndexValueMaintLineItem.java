@@ -39,6 +39,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexBaseRepository;
@@ -176,7 +177,7 @@ public class IndexValueMaintLineItem {
 
     private BigDecimal value;
 
-    @javax.jdo.annotations.Column(scale = IndexValue.VALUE_SCALE, allowsNull = "false")
+    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "false")
     @MemberOrder(name = "Index Value", sequence = "2")
     public BigDecimal getValue() {
         return value;

@@ -37,6 +37,7 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValueRepository;
+import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
 import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.services.clock.ClockService;

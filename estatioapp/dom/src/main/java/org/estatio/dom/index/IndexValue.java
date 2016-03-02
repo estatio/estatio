@@ -35,6 +35,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.TitleBuilder;
@@ -75,8 +76,6 @@ public class IndexValue
         extends EstatioDomainObject<IndexValue>
         implements WithStartDate, WithApplicationTenancyCountry {
 
-    public static final int VALUE_SCALE = 4;
-
     public IndexValue() {
         super("indexBase, startDate desc");
     }
@@ -107,7 +106,7 @@ public class IndexValue
     @Getter @Setter
     private IndexBase indexBase;
 
-    @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull = "false")
+    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "false")
     @Getter @Setter
     private BigDecimal value;
 
