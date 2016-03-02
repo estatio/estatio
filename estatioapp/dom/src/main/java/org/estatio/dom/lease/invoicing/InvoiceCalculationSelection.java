@@ -1,18 +1,20 @@
 package org.estatio.dom.lease.invoicing;
 
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.utils.StringUtils;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.utils.StringUtils;
 
 public enum InvoiceCalculationSelection {
     RENT_AND_SERVICE_CHARGE(
             LeaseItemType.RENT,
+            LeaseItemType.DISCOUNT_INDEXABLE,
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE),
     RENT(
-            LeaseItemType.RENT),
+            LeaseItemType.RENT,
+            LeaseItemType.DISCOUNT_INDEXABLE),
     RENT_FIXED(
             LeaseItemType.RENT_FIXED
     ),
@@ -41,7 +43,8 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.TAX,
             LeaseItemType.DISCOUNT,
             LeaseItemType.ENTRY_FEE,
-            LeaseItemType.DEPOSIT);
+            LeaseItemType.DEPOSIT,
+            LeaseItemType.DISCOUNT_INDEXABLE);
 
     private LeaseItemType[] selectedTypes;
 
