@@ -16,6 +16,7 @@ public enum IndexationMethod {
             final IndexationCalculationMethod indexationCalculationMethod){
         this.allowDecrease = allowDecrease;
         this.fixedBase = fixedBase;
+        this.indexationCalculationMethod = indexationCalculationMethod;
     }
 
     private boolean allowDecrease;

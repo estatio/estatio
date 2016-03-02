@@ -30,11 +30,5 @@ class IndexationResult {
         indexable.setIndexationPercentage(indexationPercentage);
         indexable.setNextIndexValue(nextIndexValue);
         indexable.setIndexedValue(indexedValue);
-        indexable.setIndexedValue(
-                // Don't apply when negative indexation.
-                // Probably configurable in the future
-                indexationPercentage != null && indexationPercentage.compareTo(BigDecimal.ZERO) < 0 ?
-                        indexable.getBaseValue() :
-                        indexedValue);
     }
 }
