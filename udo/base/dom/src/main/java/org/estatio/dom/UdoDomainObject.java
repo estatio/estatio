@@ -21,9 +21,7 @@ package org.estatio.dom;
 import javax.jdo.JDOHelper;
 
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.util.ObjectContracts;
 
@@ -82,8 +80,7 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
 
     // //////////////////////////////////////
 
-    @Property(editing = Editing.DISABLED)
-    @MemberOrder(name = "Metadata", sequence = "1")
+    @Programmatic
     public String getId() {
         Object objectId = JDOHelper.getObjectId(this);
         if(objectId == null) {
@@ -94,16 +91,6 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
         return id;
     }
 
-
-    // //////////////////////////////////////
-
-
-    @Property(editing = Editing.DISABLED)
-    @MemberOrder(name = "Metadata", sequence = "2")
-    public Long getVersionSequence() {
-        final Long version = (Long) JDOHelper.getVersion(this);
-        return version;
-    }
 
 
     // //////////////////////////////////////
