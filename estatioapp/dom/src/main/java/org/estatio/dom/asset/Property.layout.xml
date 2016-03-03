@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="calculateInvoicesForProperty"/>
+            <ns2:action id="newDocument"/>
+            <ns2:action id="createRetroInvoicesForProperty"/>
+            <ns2:action id="findLeasesActiveOnDate"/>
+            <ns2:action id="findServiceChargeByPropertyAndStartDate"/>
+            <ns2:action id="maintainServiceCharges"/>
+            <ns2:action id="links"/>
+            <ns2:action id="findServiceChargeDatesByProperty"/>
+            <ns2:action id="maintainTurnoverRent"/>
+            <ns2:action id="findByPropertyAndTypeAndStartDate"/>
+            <ns2:action id="findStartDatesByPropertyAndType"/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <ns2:fieldSet name="Asset" id="asset" unreferencedProperties="true">
+                <ns2:property id="reference"/>
+                <ns2:property id="name"/>
+                <ns2:property id="fullName"/>
+                <ns2:property id="externalReference"/>
+                <ns2:property id="applicationTenancyPath"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Location" id="location">
+                <ns2:property id="city"/>
+                <ns2:property id="country"/>
+                <ns2:property id="location">
+                    <ns2:action id="lookupLocation" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Property" id="property">
+                <ns2:property id="type"/>
+                <ns2:property id="area"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="acquireDate"/>
+                <ns2:property id="openingDate"/>
+                <ns2:property id="disposalDate">
+                    <ns2:action id="dispose" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Invoicing" id="invoicing"/>
+            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="8" unreferencedCollections="true">
+            <ns2:collection id="accounts"/>
+            <ns2:collection id="registrations"/>
+            <ns2:collection id="communicationChannels"/>
+            <ns2:collection id="roles">
+                <ns2:action id="newRole"/>
+            </ns2:collection>
+            <ns2:collection id="units">
+                <ns2:action id="newUnit"/>
+            </ns2:collection>
+            <ns2:collection id="budgets"/>
+            <ns2:collection id="findServiceChargeDatesByProperty"/>
+        </col>
+    </row>
+</grid>

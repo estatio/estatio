@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="invoiceAll"/>
+            <ns2:action id="zapAll"/>
+            <ns2:action id="approveAll"/>
+            <ns2:action id="collectAll"/>
+            <ns2:action id="removeAll"/>
+            <ns2:action id="saveAllAsHistoric"/>
+            <ns2:action id="links"/>
+        </col>
+    </row>
+    <row>
+        <col span="6">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="applicationTenancy"/>
+                <ns2:property id="seller"/>
+                <ns2:property id="dueDate"/>
+                <ns2:property id="status"/>
+                <ns2:property id="sellerReference"/>
+                <ns2:property id="vatAmount"/>
+                <ns2:property id="atPath"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Stats" id="stats">
+                <ns2:property id="total"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Totals" id="totals">
+                <ns2:property id="netAmount"/>
+                <ns2:property id="grossAmount"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="12" unreferencedCollections="true">
+            <ns2:collection id="invoices"/>
+        </col>
+    </row>
+</grid>
