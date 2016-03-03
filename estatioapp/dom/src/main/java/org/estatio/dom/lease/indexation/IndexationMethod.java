@@ -67,7 +67,7 @@ public enum IndexationMethod {
                 term.setEffectiveIndexedValue(
                         MathUtils.firstNonZero(
                                 term.getIndexedValue(),
-                                previous == null ? null : previous.getEffectiveIndexedValue(),
+                                previous == null ? null : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue()),
                                 term.getBaseValue()));
 
             } else {
@@ -75,7 +75,7 @@ public enum IndexationMethod {
                         MathUtils.max(
                                 term.getBaseValue(),
                                 term.getIndexedValue(),
-                                previous == null ? null : previous.getEffectiveIndexedValue()));
+                                previous == null ? null : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue())));
             }
         } else {
             term.setEffectiveIndexedValue(
