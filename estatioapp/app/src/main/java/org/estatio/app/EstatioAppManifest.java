@@ -59,7 +59,6 @@ public class EstatioAppManifest implements AppManifest {
                         org.isisaddons.module.audit.AuditModule.class,
                         org.isisaddons.module.command.CommandModule.class,
                         org.isisaddons.module.excel.ExcelModule.class,
-                        org.isisaddons.module.devutils.DevUtilsModule.class,
                         org.isisaddons.module.poly.PolyModule.class,
                         org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
                         // don't include the settings module, instead we use EstatioDomainSettingsModule

@@ -81,7 +81,7 @@ mvn clean install -DskipTests -o
     </developers>
 
     <properties>
-        <isis.version>1.11.0-SNAPSHOT</isis.version>
+        <isis.version>1.12.0-SNAPSHOT</isis.version>
 
         <isis-module-audit.version>1.11.0</isis-module-audit.version>
         <isis-module-command.version>1.11.0</isis-module-command.version>
@@ -95,9 +95,9 @@ mvn clean install -DskipTests -o
 
         <isis-metamodel-paraname8.version>1.11.0</isis-metamodel-paraname8.version>
 
-        <isis-wicket-excel.version>1.11.0-SNAPSHOT</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.11.0-SNAPSHOT</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.11.0-SNAPSHOT</isis-wicket-gmap3.version>
+        <isis-wicket-excel.version>1.11.0</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.11.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.11.0</isis-wicket-gmap3.version>
 
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
@@ -518,11 +518,6 @@ mvn clean install -DskipTests -o
                 <groupId>org.isisaddons.module.command</groupId>
                 <artifactId>isis-module-command-dom</artifactId>
                 <version>${isis-module-command.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.devutils</groupId>
-                <artifactId>isis-module-devutils-dom</artifactId>
-                <version>${isis-module-devutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.excel</groupId>

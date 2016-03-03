@@ -21,16 +21,12 @@ package org.estatio.dom;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.InheritanceStrategy;
 
-<<<<<<< HEAD
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Where;
-=======
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
->>>>>>> updating .layout.json in preparation for ISIS-993
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
