@@ -59,17 +59,45 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="accounts"/>
-            <ns2:collection id="registrations"/>
-            <ns2:collection id="communicationChannels"/>
-            <ns2:collection id="roles">
-                <ns2:action id="newRole"/>
-            </ns2:collection>
-            <ns2:collection id="units">
-                <ns2:action id="newUnit"/>
-            </ns2:collection>
-            <ns2:collection id="budgets"/>
-            <ns2:collection id="findServiceChargeDatesByProperty"/>
+            <row>
+                <col span="12">
+                    <ns2:collection id="units" defaultView="table" paged="6">
+                        <ns2:action id="newUnit"/>
+                    </ns2:collection>
+                </col>
+            </row>
+            <row>
+                <col span="12">
+                    <tabGroup>
+                        <tab name="Financials">
+                            <row>
+                                <col span="12">
+                                    <ns2:collection id="accounts" defaultView="table"/>
+                                    <ns2:collection id="budgets" defaultView="table"/>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Comms">
+                            <row>
+                                <col span="12">
+                                    <ns2:collection id="communicationChannels" defaultView="table"/>
+                                    <ns2:collection id="roles" defaultView="table">
+                                        <ns2:action id="newRole"/>
+                                    </ns2:collection>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Other">
+                            <row>
+                                <col span="12">
+                                    <ns2:collection id="registrations" defaultView="table"/>
+                                    <ns2:collection id="findServiceChargeDatesByProperty" defaultView="table"/>
+                                </col>
+                            </row>
+                        </tab>
+                    </tabGroup>
+                </col>
+            </row>
         </col>
     </row>
 </grid>
