@@ -20,6 +20,7 @@ package org.estatio.dom.lease.breaks;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -258,13 +259,15 @@ public abstract class BreakOption
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Lease remove(final @ParameterLayout(named = "Reason") String reason) {
-        Lease lease = getLease();
+    public void remove(final @ParameterLayout(named = "Reason") String reason) {
         for (Event event : findEvents()) {
-            getContainer().remove(event);
+            events.remove(event);
         }
+
         getContainer().remove(this);
-        return lease;
+        getContainer().flush();
+
+        return;
     }
 
     // //////////////////////////////////////
@@ -354,10 +357,6 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
+    @Inject
     protected Events events;
-
-    public final void injectEvents(final Events events) {
-        this.events = events;
-    }
-
 }

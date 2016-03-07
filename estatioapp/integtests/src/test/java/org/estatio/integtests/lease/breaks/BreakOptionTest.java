@@ -135,4 +135,41 @@ public class BreakOptionTest extends EstatioIntegrationTest {
         }
     }
 
+    public static class Remove extends BreakOptionTest {
+
+        Lease lease;
+        BreakOption breakOption;
+
+        @Before
+        public void setup() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                }
+            });
+
+            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+
+            assertThat(breakOptions.allBreakOptions().size(), is(2));
+            assertThat(breakOptions.findByLease(lease).size(), is(2));
+
+        }
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            breakOption = breakOptions.findByLease(lease).get(0);
+
+            // when
+            breakOption.remove("For some reason");
+
+            // then
+            assertThat(breakOptions.findByLease(lease).size(), is(1));
+
+        }
+    }
+
 }
