@@ -11,8 +11,8 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="value"/>
                 <ns2:property id="key"/>
+                <ns2:property id="value"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>
