@@ -251,7 +251,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
             setIndexationMethod(previous.getIndexationMethod());
             setIndex(previous.getIndex());
             setLevellingPercentage(previous.getLevellingPercentage());
-            getIndexationMethod().doInitialze(this, (Indexable) getPrevious());
+            getIndexationMethod().doInitialize(this, (Indexable) getPrevious());
         }
     }
 

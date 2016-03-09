@@ -27,7 +27,7 @@ public enum IndexationMethod {
         return indexationCalculationMethod;
     }
 
-    public void doInitialze(Indexable term, Indexable previous) {
+    public void doInitialize(Indexable term, Indexable previous) {
         if (previous != null) {
             LeaseTermFrequency frequency = term.getFrequency();
             if (fixedBase) {
