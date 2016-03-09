@@ -13,7 +13,7 @@ public enum IndexationMethod {
     private IndexationMethod(
             final boolean allowDecrease,
             final boolean fixedBase,
-            final IndexationCalculationMethod indexationCalculationMethod){
+            final IndexationCalculationMethod indexationCalculationMethod) {
         this.allowDecrease = allowDecrease;
         this.fixedBase = fixedBase;
         this.indexationCalculationMethod = indexationCalculationMethod;
@@ -54,7 +54,7 @@ public enum IndexationMethod {
             term.setBaseValue(
                     MathUtils.firstNonZero(
                             previous.getSettledValue(),
-                            MathUtils.max(
+                            MathUtils.maxUsingFirstSignum(
                                     previous.getBaseValue(),
                                     previous.getIndexedValue(),
                                     previous.getEffectiveIndexedValue())));
@@ -72,7 +72,7 @@ public enum IndexationMethod {
 
             } else {
                 term.setEffectiveIndexedValue(
-                        MathUtils.max(
+                        MathUtils.maxUsingFirstSignum(
                                 term.getBaseValue(),
                                 term.getIndexedValue(),
                                 previous == null ? null : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue())));
@@ -81,11 +81,11 @@ public enum IndexationMethod {
             term.setEffectiveIndexedValue(
                     MathUtils.firstNonZero(
                             previous == null ? null : previous.getSettledValue(),
-                            MathUtils.max(
+                            MathUtils.maxUsingFirstSignum(
                                     term.getBaseValue(),
                                     term.getIndexedValue(),
                                     previous == null ? null : previous.getEffectiveIndexedValue())));
-
         }
     }
+
 }

@@ -90,7 +90,10 @@ public class IndexationMethodTest {
         public void withLastKnownIndex() throws Exception {
             // indexation method, base value, settled value, expected base value
             tester(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("12.34"), new BigDecimal("23.34"), new BigDecimal("23.34"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("-12.34"), new BigDecimal("-23.34"), new BigDecimal("-23.34"));
             tester(IndexationMethod.LAST_KNOWN_INDEX, null, new BigDecimal("23.34"), new BigDecimal("23.34"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, new BigDecimal("-23.34"), new BigDecimal("-23.34"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, BigDecimal.ZERO);
         }
 
         private void tester(IndexationMethod indexationMethod, BigDecimal baseValue, BigDecimal settledValue, BigDecimal expectedBaseValue){
@@ -102,5 +105,7 @@ public class IndexationMethodTest {
             term2.doAlign();
             assertThat(term2.getBaseValue()).isEqualTo(expectedBaseValue);
         }
+
+
     }
 }
