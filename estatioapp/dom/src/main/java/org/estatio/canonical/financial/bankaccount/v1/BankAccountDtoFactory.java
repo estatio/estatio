@@ -23,6 +23,7 @@ public class BankAccountDtoFactory {
         dto.setBranchCode(bankAccount.getBranchCode());
         dto.setExternalReference(bankAccount.getExternalReference());
         dto.setIban(bankAccount.getIban());
+        dto.setBic(bankAccount.getBic());
         dto.setName(bankAccount.getName());
         dto.setNationalBankCode(bankAccount.getNationalBankCode());
         dto.setNationalCheckCode(bankAccount.getNationalCheckCode());

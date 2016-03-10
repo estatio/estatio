@@ -16,10 +16,9 @@ import org.estatio.canonical.VersionedDto;
     "majorVersion",
     "minorVersion"
 })
-@XmlRootElement(name = "bankAccountDto")
+@XmlRootElement(name = "partyDto")
 public class PartyDto implements VersionedDto {
 
-    public PartyDto() {}
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -29,6 +28,30 @@ public class PartyDto implements VersionedDto {
     @XmlElement(required = true, defaultValue = "0")
     public String getMinorVersion() {
         return "0";
+    }
+
+
+    @XmlElement(required = true)
+    //@Getter @Setter // lombok being flaky in IntelliJ :-(
+    protected String reference;
+
+    public String getReference() {
+        return reference;
+    }
+    public void setReference(final String reference) {
+        this.reference = reference;
+    }
+
+    @XmlElement(required = true)
+    //@Getter @Setter // lombok being flaky in IntelliJ :-(
+    protected String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
 

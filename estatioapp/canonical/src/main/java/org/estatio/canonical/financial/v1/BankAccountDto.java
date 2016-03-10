@@ -68,6 +68,9 @@ public class BankAccountDto implements VersionedDto {
     protected String iban;
 
     @Getter @Setter
+    protected String bic;
+
+    @Getter @Setter
     protected String accountNumber;
 
     @Getter @Setter
