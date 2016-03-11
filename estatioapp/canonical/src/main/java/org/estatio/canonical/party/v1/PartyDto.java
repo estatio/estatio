@@ -14,7 +14,9 @@ import org.estatio.canonical.VersionedDto;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "majorVersion",
-    "minorVersion"
+    "minorVersion",
+    "reference",
+    "name"
 })
 @XmlRootElement(name = "partyDto")
 public class PartyDto implements VersionedDto {

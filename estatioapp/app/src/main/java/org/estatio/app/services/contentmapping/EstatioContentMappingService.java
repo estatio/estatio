@@ -29,7 +29,9 @@ import org.apache.isis.viewer.restfulobjects.applib.RepresentationType;
 import org.apache.isis.viewer.restfulobjects.rendering.service.conmap.ContentMappingService;
 
 import org.estatio.canonical.financial.bankaccount.v1.BankAccountDtoFactory;
+import org.estatio.canonical.party.PartyDtoFactory;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -46,11 +48,17 @@ public class EstatioContentMappingService implements ContentMappingService {
         if(object instanceof BankAccount) {
             return bankAccountDtoFactory.newDto((BankAccount)object);
         }
+        if(object instanceof Party) {
+            return partyDtoFactory.newDto((Party)object);
+        }
 
         return null;
     }
 
     @javax.inject.Inject
     BankAccountDtoFactory bankAccountDtoFactory;
+
+    @javax.inject.Inject
+    PartyDtoFactory partyDtoFactory;
 
 }
