@@ -1,10 +1,11 @@
-package org.estatio.canonical.financial.v1;
+package org.estatio.canonical.bankmandate.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.isis.schema.common.v1.OidDto;
 
@@ -18,24 +19,19 @@ import lombok.Setter;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "majorVersion",
-    "minorVersion",
-    "ownerParty",
-    "reference",
-    "externalReference",
-    "name",
-    "iban",
-    "bic",
-    "accountNumber",
-    "branchCode",
-    "bankParty",
-    "nationalBankCode",
-    "nationalCheckCode"
+        "majorVersion",
+        "minorVersion",
+        "reference",
+        "sequenceType",
+        "scheme",
+        "status",
+        "signatureDate",
+        "bankAccount"
 })
-@XmlRootElement(name = "bankAccountDto")
-public class BankAccountDto implements VersionedDto {
+@XmlRootElement(name = "bankMandateDto")
+public class BankMandateDto implements VersionedDto {
 
-    public BankAccountDto() {}
+    public BankMandateDto() {}
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -49,38 +45,26 @@ public class BankAccountDto implements VersionedDto {
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected OidDto ownerParty;
+    private String reference;
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected String reference;
-
-    @Getter @Setter
-    protected String externalReference;
+    private SequenceType sequenceType;
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected String name;
+    private Scheme scheme;
 
+    @XmlElement(required = true)
     @Getter @Setter
-    protected String iban;
+    private Status status;
 
+    @XmlElement(required = true)
     @Getter @Setter
-    protected String bic;
+    private XMLGregorianCalendar signatureDate;
 
+    @XmlElement(required = true)
     @Getter @Setter
-    protected String accountNumber;
-
-    @Getter @Setter
-    protected String branchCode;
-
-    @Getter @Setter
-    protected OidDto bankParty;
-
-    @Getter @Setter
-    protected String nationalBankCode;
-
-    @Getter @Setter
-    protected String nationalCheckCode;
+    private OidDto bankAccount;
 
 }

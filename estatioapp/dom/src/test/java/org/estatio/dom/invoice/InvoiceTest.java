@@ -165,7 +165,7 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             assertThat(invoice.disableInvoice(null), is(nullValue()));
-            invoice.doInvoice(mockClockService.now());
+            invoice.invoice(mockClockService.now());
 
             assertThat(invoice.getInvoiceNumber(), is("XXX-00011"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
@@ -178,7 +178,7 @@ public class InvoiceTest {
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
             assertThat(invoice.disableInvoice(null), is("Invoice number already assigned"));
-            invoice.doInvoice(mockClockService.now());
+            invoice.invoice(mockClockService.now());
 
             assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
         }
@@ -191,7 +191,7 @@ public class InvoiceTest {
 
             assertThat(invoice.disableInvoice(null), is("No 'invoice number' numerator found for invoice's property"));
 
-            invoice.doInvoice(mockClockService.now());
+            invoice.invoice(mockClockService.now());
             assertThat(invoice.getInvoiceNumber(), is(nullValue()));
         }
 
@@ -203,7 +203,7 @@ public class InvoiceTest {
 
             assertThat(invoice.disableInvoice(null), is("No 'invoice number' numerator found for invoice's property"));
 
-            invoice.doInvoice(mockClockService.now());
+            invoice.invoice(mockClockService.now());
             assertThat(invoice.getInvoiceNumber(), is(nullValue()));
         }
 

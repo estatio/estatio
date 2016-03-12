@@ -28,9 +28,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.viewer.restfulobjects.applib.RepresentationType;
 import org.apache.isis.viewer.restfulobjects.rendering.service.conmap.ContentMappingService;
 
-import org.estatio.canonical.financial.bankaccount.v1.BankAccountDtoFactory;
+import org.estatio.canonical.bankmandate.v1.BankMandateDtoFactory;
+import org.estatio.canonical.financial.v1.BankAccountDtoFactory;
+import org.estatio.canonical.invoice.InvoiceDtoFactory;
 import org.estatio.canonical.party.PartyDtoFactory;
+import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
 
 @DomainService(
@@ -45,11 +49,17 @@ public class EstatioContentMappingService implements ContentMappingService {
             final List<MediaType> acceptableMediaTypes,
             final RepresentationType representationType) {
 
+        if(object instanceof Party) {
+            return partyDtoFactory.newDto((Party)object);
+        }
         if(object instanceof BankAccount) {
             return bankAccountDtoFactory.newDto((BankAccount)object);
         }
-        if(object instanceof Party) {
-            return partyDtoFactory.newDto((Party)object);
+        if(object instanceof BankMandate) {
+            return bankMandateDtoFactory.newDto((BankMandate)object);
+        }
+        if(object instanceof Invoice) {
+            return invoiceDtoFactory.newDto((Invoice)object);
         }
 
         return null;
@@ -59,6 +69,12 @@ public class EstatioContentMappingService implements ContentMappingService {
     BankAccountDtoFactory bankAccountDtoFactory;
 
     @javax.inject.Inject
+    BankMandateDtoFactory bankMandateDtoFactory;
+
+    @javax.inject.Inject
     PartyDtoFactory partyDtoFactory;
+
+    @javax.inject.Inject
+    InvoiceDtoFactory invoiceDtoFactory;
 
 }

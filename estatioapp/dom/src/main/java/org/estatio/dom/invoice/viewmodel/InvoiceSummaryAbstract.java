@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -55,7 +56,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
-            invoice.doInvoice(invoiceDate);
+            wrapperFactory.wrap(invoice).invoice(invoiceDate);
         }
         return this;
     }
@@ -96,5 +97,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;
+
+    @Inject
+    protected WrapperFactory wrapperFactory;
 
 }

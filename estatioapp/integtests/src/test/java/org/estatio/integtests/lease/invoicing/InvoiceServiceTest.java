@@ -171,7 +171,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
             invoice.approve();
-            invoice.doInvoice(VT.ld(2013, 11, 7));
+            invoice.invoice(VT.ld(2013, 11, 7));
             assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }

@@ -488,23 +488,7 @@ public class Invoice
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice invoice(
             final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
-        return doInvoice(invoiceDate);
-    }
 
-    @Programmatic
-    public Invoice doInvoice(
-            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
-        // bulk action, so need these guards
-        if (disableInvoice(invoiceDate) != null) {
-            return this;
-        }
-        if (!validInvoiceDate(invoiceDate)) {
-            warnUser(String.format(
-                    "Invoice date %d is invalid for %s becuase it's before the invoice date of the last invoice",
-                    invoiceDate.toString(),
-                    getContainer().titleOf(this)));
-            return this;
-        }
         final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         setInvoiceNumber(numerator.nextIncrementStr());
         setInvoiceDate(invoiceDate);
@@ -525,6 +509,13 @@ public class Invoice
             return "Must be in status of 'Invoiced'";
         }
         return null;
+    }
+
+    public String validateInvoice(final LocalDate invoiceDate) {
+        return !validInvoiceDate(invoiceDate)
+                ? String.format("Invoice date %s is invalid for %s because it's before the invoice date of the last invoice", invoiceDate.toString(), getContainer().titleOf(this))
+                : null;
+
     }
 
     // //////////////////////////////////////

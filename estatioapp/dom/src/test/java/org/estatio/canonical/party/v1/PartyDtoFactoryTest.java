@@ -13,8 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartyDtoFactoryTest {
 
-    private PartyDtoFactory partyDtoFactory;
     private JaxbService.Simple jaxbService = new JaxbService.Simple();
+
+    private PartyDtoFactory partyDtoFactory;
 
     @Before
     public void setUp() throws Exception {

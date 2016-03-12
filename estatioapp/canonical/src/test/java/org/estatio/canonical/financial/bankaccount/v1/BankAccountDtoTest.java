@@ -43,14 +43,14 @@ public class BankAccountDtoTest {
 
         final BankAccountDto dto = new BankAccountDto();
         dto.setAccountNumber(accountNumber);
-        dto.setBank(newOidDto("Bank", bankId));
+        dto.setBankParty(newOidDto("Bank", bankId));
         dto.setBranchCode(branchCode);
         dto.setExternalReference(externalReference);
         dto.setIban(iban);
         dto.setName(name);
         dto.setNationalBankCode(nationalBankCode);
         dto.setNationalCheckCode(nationalCheckCode);
-        dto.setOwner(newOidDto("Party", ownerId));
+        dto.setOwnerParty(newOidDto("Party", ownerId));
         dto.setReference(reference);
 
         // when

@@ -1,10 +1,15 @@
-package org.estatio.canonical.financial.v1;
+package org.estatio.canonical.invoice.v1;
+
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.schema.common.v1.OidDto;
 
@@ -20,22 +25,14 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
     "majorVersion",
     "minorVersion",
-    "ownerParty",
-    "reference",
-    "externalReference",
-    "name",
-    "iban",
-    "bic",
-    "accountNumber",
-    "branchCode",
-    "bankParty",
-    "nationalBankCode",
-    "nationalCheckCode"
+    "buyerParty",
+    "sellerParty",
+    "paidByMandate",
+    "paidByMandateBankAccount",
+    "items"
 })
-@XmlRootElement(name = "bankAccountDto")
-public class BankAccountDto implements VersionedDto {
-
-    public BankAccountDto() {}
+@XmlRootElement(name = "invoiceDto")
+public class InvoiceDto implements VersionedDto {
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -49,38 +46,28 @@ public class BankAccountDto implements VersionedDto {
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected OidDto ownerParty;
+    protected OidDto buyerParty;
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected String reference;
-
-    @Getter @Setter
-    protected String externalReference;
+    protected OidDto sellerParty;
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected String name;
+    protected OidDto paidByMandate;
 
-    @Getter @Setter
-    protected String iban;
 
+    /**
+     * Of type FinancialAccount
+     */
+    @XmlElement(required = true)
     @Getter @Setter
-    protected String bic;
+    protected OidDto paidByMandateBankAccount;
 
-    @Getter @Setter
-    protected String accountNumber;
 
+    @XmlElementWrapper
+    @XmlElement(name = "item")
     @Getter @Setter
-    protected String branchCode;
-
-    @Getter @Setter
-    protected OidDto bankParty;
-
-    @Getter @Setter
-    protected String nationalBankCode;
-
-    @Getter @Setter
-    protected String nationalCheckCode;
+    protected List<InvoiceItemDto> items = Lists.newArrayList();
 
 }
