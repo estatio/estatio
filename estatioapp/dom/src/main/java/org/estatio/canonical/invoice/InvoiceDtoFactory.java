@@ -1,22 +1,26 @@
 package org.estatio.canonical.invoice;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.canonical.DtoFactoryAbstract;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
-import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.DtoMappingHelper;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.lease.Lease;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class InvoiceDtoFactory {
+public class InvoiceDtoFactory extends DtoFactoryAbstract {
 
     @Programmatic
     public InvoiceDto newDto(final Invoice invoice) {
@@ -25,17 +29,27 @@ public class InvoiceDtoFactory {
         dto.setBuyerParty(mappingHelper.oidDtoFor(invoice.getBuyer()));
         dto.setSellerParty(mappingHelper.oidDtoFor(invoice.getSeller()));
 
-        final BankMandate paidBy = invoice.getLease().getPaidBy();
-        dto.setPaidByMandate(mappingHelper.oidDtoFor(paidBy));
+        dto.setDueDate(convert(invoice.getDueDate()));
+        dto.setInvoiceDate(convert(invoice.getInvoiceDate()));
+        dto.setInvoiceNumber(invoice.getInvoiceNumber());
+        dto.setCollectionNumber(invoice.getCollectionNumber());
 
-        dto.setPaidByMandateBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
+        final Lease lease = invoice.getLease();
+        if (lease != null){
+            dto.setAgreementReference(lease.getReference());
+            final BankMandate paidBy = lease.getPaidBy();
+            dto.setPaidByMandate(mappingHelper.oidDtoFor(paidBy));
+            dto.setPaidByMandateBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
+        }
+
+        final Optional<FixedAsset> fixedAsset = Optional.of(invoice.getFixedAsset());
+        if (fixedAsset.isPresent()) {
+            dto.setFixedAssetReference(fixedAsset.get().getReference());
+            dto.setFixedAssetExternalReference(fixedAsset.get().getExternalReference());
+        }
 
         for (InvoiceItem invoiceItem : invoice.getItems()) {
-            final InvoiceItemDto itemDto = new InvoiceItemDto();
-
-            itemDto.setAmount(invoiceItem.getNetAmount());
-
-            dto.getItems().add(itemDto);
+            dto.getItems().add(new InvoiceItemDtoFactory().newDto(invoiceItem));
         }
 
         return dto;

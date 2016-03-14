@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.google.common.collect.Lists;
 
@@ -23,13 +24,20 @@ import lombok.Setter;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "majorVersion",
-    "minorVersion",
-    "buyerParty",
-    "sellerParty",
-    "paidByMandate",
-    "paidByMandateBankAccount",
-    "items"
+        "majorVersion",
+        "minorVersion",
+        "buyerParty",
+        "sellerParty",
+        "invoiceDate",
+        "dueDate",
+        "invoiceNumber",
+        "collectionNumber",
+        "paidByMandate",
+        "paidByMandateBankAccount",
+        "agreementReference",
+        "fixedAssetReference",
+        "fixedAssetExternalReference",
+        "items"
 })
 @XmlRootElement(name = "invoiceDto")
 public class InvoiceDto implements VersionedDto {
@@ -52,18 +60,36 @@ public class InvoiceDto implements VersionedDto {
     @Getter @Setter
     protected OidDto sellerParty;
 
+    @Getter @Setter
+    private XMLGregorianCalendar invoiceDate;
+
     @XmlElement(required = true)
     @Getter @Setter
-    protected OidDto paidByMandate;
+    private XMLGregorianCalendar dueDate;
 
+    @Getter @Setter
+    private String invoiceNumber;
+
+    @Getter @Setter
+    private String collectionNumber;
+
+    @Getter @Setter
+    protected OidDto paidByMandate;
 
     /**
      * Of type FinancialAccount
      */
-    @XmlElement(required = true)
     @Getter @Setter
     protected OidDto paidByMandateBankAccount;
 
+    @Getter @Setter
+    private String agreementReference;
+
+    @Getter @Setter
+    private String fixedAssetReference;
+
+    @Getter @Setter
+    private String fixedAssetExternalReference;
 
     @XmlElementWrapper
     @XmlElement(name = "item")
