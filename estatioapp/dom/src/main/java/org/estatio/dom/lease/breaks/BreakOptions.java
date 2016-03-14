@@ -53,8 +53,8 @@ public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Lease newBreakOption(
             final Lease lease,
-            final @ParameterLayout(named = "Break date") LocalDate breakDate,
-            final @ParameterLayout(named = "Notification period", describedAs = "Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
+            final LocalDate breakDate,
+            final @ParameterLayout(describedAs = "Notification period in a text format. Example 6y5m2d") String notificationPeriod,
             final BreakType breakType,
             final BreakExerciseType breakExerciseType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description
@@ -64,8 +64,8 @@ public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
         breakOption.setLease(lease);
         breakOption.setExerciseType(breakExerciseType);
         breakOption.setBreakDate(breakDate);
-        breakOption.setNotificationPeriod(notificationPeriodStr);
-        breakOption.setExerciseDate(breakDate.minus(JodaPeriodUtils.asPeriod(notificationPeriodStr)));
+        breakOption.setNotificationPeriod(notificationPeriod);
+        breakOption.setExerciseDate(breakDate.minus(JodaPeriodUtils.asPeriod(notificationPeriod)));
         breakOption.setDescription(description);
         persist(breakOption);
         return lease;

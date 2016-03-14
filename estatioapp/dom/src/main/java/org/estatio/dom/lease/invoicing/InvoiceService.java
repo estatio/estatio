@@ -7,7 +7,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -41,17 +40,17 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "1")
     public Object calculateInvoicesForProperty(
-            final @ParameterLayout(named = "Property") Property property,
-            final @ParameterLayout(named = "Run Type") InvoiceRunType invoiceRunType,
-            final @ParameterLayout(named = "Selection") InvoiceCalculationSelection calculationSelection,
-            final @ParameterLayout(named = "Invoice due date") LocalDate invoiceDueDate,
-            final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
-            final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
+            final Property property,
+            final InvoiceRunType runType,
+            final InvoiceCalculationSelection selection,
+            final LocalDate invoiceDueDate,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate) {
         final String runId = invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
                         property,
-                        calculationSelection.selectedTypes(),
-                        invoiceRunType,
+                        selection.selectedTypes(),
+                        runType,
                         invoiceDueDate,
                         startDueDate,
                         nextDueDate));

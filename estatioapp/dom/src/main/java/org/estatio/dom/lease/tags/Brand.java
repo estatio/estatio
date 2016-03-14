@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -138,13 +137,13 @@ public class Brand
     // //////////////////////////////////////
 
     public Brand change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Group") @Parameter(optionality = Optionality.OPTIONAL) String group,
-            final @ParameterLayout(named = "Coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage brandCoverage,
-            final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) String group,
+            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
+            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
         setName(name);
         setGroup(group);
-        setCoverage(brandCoverage);
+        setCoverage(coverage);
         setCountryOfOrigin(countryOfOrigin);
         return this;
     }
@@ -182,11 +181,11 @@ public class Brand
 
     @Action(domainEvent = Brand.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object removeAndReplace(
-            final @ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement) {
+            final @Parameter(optionality = Optionality.OPTIONAL) Brand replaceWith) {
         getContainer().remove(this);
         getContainer().flush();
 
-        return replacement;
+        return replaceWith;
     }
 
     public String validateRemoveAndReplace(final Brand brand) {

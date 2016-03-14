@@ -189,9 +189,9 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
-        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
+            final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final boolean includeTerminated) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
     }
 

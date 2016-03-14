@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -71,13 +70,13 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
             final CommunicationChannelType type,
             final Country country,
             final @Parameter(optionality = Optionality.OPTIONAL) State state,
-            final @ParameterLayout(named = "Address line 1") String address1,
-            final @ParameterLayout(named = "Address line 2") @Parameter(optionality = Optionality.OPTIONAL) String address2,
-            final @ParameterLayout(named = "Address line 3") @Parameter(optionality = Optionality.OPTIONAL) String address3,
+            final String addressLine1,
+            final @Parameter(optionality = Optionality.OPTIONAL) String addressLine2,
+            final @Parameter(optionality = Optionality.OPTIONAL) String addressLine3,
             final String postalCode,
             final String city
             ) {
-        communicationChannels.newPostal(owner, type, address1, address2, null, postalCode, city, state, country);
+        communicationChannels.newPostal(owner, type, addressLine1, addressLine2, null, postalCode, city, state, country);
         return owner;
     }
 

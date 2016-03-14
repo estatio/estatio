@@ -138,10 +138,10 @@ public class LeaseTermForTax extends LeaseTerm {
 
     public LeaseTermForTax changeInvoicing(
             final BigDecimal recoverablePercentage,
-            final @ParameterLayout(named = "Override recoverable amount") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideTaxValue) {
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideRecoverableAmount) {
         setRecoverablePercentage(recoverablePercentage);
-        setTaxValue(overrideTaxValue);
-        setOverrideTaxValue(overrideTaxValue != null);
+        setTaxValue(overrideRecoverableAmount);
+        setOverrideTaxValue(overrideRecoverableAmount != null);
         return this;
     }
 

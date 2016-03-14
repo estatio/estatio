@@ -32,7 +32,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
@@ -71,12 +70,12 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal auditedTurnover;
 
     public LeaseTermForTurnoverRent changeParameters(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Turnover rent rule") String newTurnoverRentRule,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Total budgeted rent") BigDecimal newTotalBudgetedRent,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Audited Turnover") BigDecimal newAuditedTurnover) {
-        setTurnoverRentRule(newTurnoverRentRule);
-        setTotalBudgetedRent(newTotalBudgetedRent);
-        setAuditedTurnover(newAuditedTurnover);
+            final @Parameter(optionality = Optionality.OPTIONAL) String turnoverRentRule,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal totalBudgetedRent,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal auditedTurnover) {
+        setTurnoverRentRule(turnoverRentRule);
+        setTotalBudgetedRent(totalBudgetedRent);
+        setAuditedTurnover(auditedTurnover);
         setStatus(LeaseTermStatus.NEW);
         doAlign();
         return this;

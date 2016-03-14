@@ -39,7 +39,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -202,11 +201,11 @@ public abstract class BreakOption
     // //////////////////////////////////////
 
     public BreakOption change(
-            final @ParameterLayout(named = "Type") BreakType breakType,
-            final @ParameterLayout(named = "Exercise Type") BreakExerciseType breakExerciseType,
-            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description) {
-        setType(breakType);
-        setExerciseType(breakExerciseType);
+            final BreakType type,
+            final BreakExerciseType exerciseType,
+            final @Parameter(optionality = Optionality.OPTIONAL) String description) {
+        setType(type);
+        setExerciseType(exerciseType);
         setDescription(description);
 
         // re-create events
@@ -236,10 +235,10 @@ public abstract class BreakOption
     }
 
     public BreakOption changeDates(
-            final @ParameterLayout(named = "Break date") LocalDate newBreakDate,
-            final @ParameterLayout(named = "Excercise date") LocalDate newExcerciseDate) {
-        setBreakDate(newBreakDate);
-        setExerciseDate(newExcerciseDate);
+            final LocalDate breakDate,
+            final LocalDate excerciseDate) {
+        setBreakDate(breakDate);
+        setExerciseDate(excerciseDate);
 
         // re-create events
         removeExistingEvents();
