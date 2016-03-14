@@ -259,7 +259,7 @@ public abstract class BreakOption
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void remove(final @ParameterLayout(named = "Reason") String reason) {
+    public void remove(final String reason) {
         for (Event event : findEvents()) {
             events.remove(event);
         }

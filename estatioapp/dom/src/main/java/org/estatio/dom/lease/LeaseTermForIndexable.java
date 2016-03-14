@@ -33,16 +33,15 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
+import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
 import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
-import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.dom.utils.MathUtils;
 
 import lombok.Getter;
@@ -118,10 +117,10 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     public LeaseTermForIndexable changeParameters(
             final IndexationMethod indexationMethod,
             final Index index,
-            final @ParameterLayout(named = "Base index date") LocalDate baseIndexDate,
-            final @ParameterLayout(named = "Next index date") LocalDate nextIndexDate,
-            final @ParameterLayout(named = "Levelling percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal levellingPercentage,
-            final @ParameterLayout(named = "Effective date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate effectiveDate
+            final LocalDate baseIndexDate,
+            final LocalDate nextIndexDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal levellingPercentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate effectiveDate
     ) {
         setIndexationMethod(indexationMethod);
         setIndex(index);
@@ -213,8 +212,8 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     // //////////////////////////////////////
 
     public LeaseTermForIndexable changeValues(
-            final @ParameterLayout(named = "Base value") BigDecimal baseValue,
-            final @ParameterLayout(named = "Settled value") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal settledValue) {
+            final BigDecimal baseValue,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal settledValue) {
         setBaseValue(baseValue);
         setSettledValue(settledValue);
         setIndexedValue(null);

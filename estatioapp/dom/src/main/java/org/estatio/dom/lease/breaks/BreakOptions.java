@@ -57,7 +57,7 @@ public class BreakOptions extends UdoDomainRepositoryAndFactory<BreakOption> {
             final @ParameterLayout(named = "Notification period", describedAs = "Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
             final BreakType breakType,
             final BreakExerciseType breakExerciseType,
-            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description
+            final @Parameter(optionality = Optionality.OPTIONAL) String description
     ) {
         final BreakOption breakOption = newTransientInstance(breakType.getFactoryClass());
         breakOption.setType(breakType);

@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -120,7 +119,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     private BigDecimal value;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyItem changeValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
+    public KeyItem changeValue(final BigDecimal keyValue) {
         setValue(keyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
     }

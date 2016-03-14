@@ -20,7 +20,6 @@ package org.estatio.dom.party.relationship;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.ViewModel;
@@ -108,8 +107,8 @@ public class PartyRelationshipView extends EstatioViewModel {
     private LocalDate startDate;
 
     public PartyRelationshipView changeDates(
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final LocalDate startDate,
+            final LocalDate endDate) {
         return new PartyRelationshipView(partyRelationship.changeDates(startDate, endDate), getFrom());
     }
 
@@ -139,7 +138,7 @@ public class PartyRelationshipView extends EstatioViewModel {
     private String description;
 
     public PartyRelationshipView changeDescription(
-            final @ParameterLayout(named = "Description") String description) {
+            final String description) {
         return new PartyRelationshipView(partyRelationship.changeDescription(description), getFrom());
     }
 

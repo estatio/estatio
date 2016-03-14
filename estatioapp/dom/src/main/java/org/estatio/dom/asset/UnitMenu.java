@@ -80,8 +80,8 @@ public class UnitMenu extends UdoDomainService<UnitMenu> {
     )
     @MemberOrder(sequence = "2")
     public List<Unit> findUnits(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
+            final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final boolean includeTerminated) {
         return unitRepository.findUnits(referenceOrName, includeTerminated);
     }
 

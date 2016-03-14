@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -108,7 +107,7 @@ public class Occupancies extends UdoDomainRepositoryAndFactory<Occupancy> {
     @Action(semantics = SemanticsOf.SAFE)
     public List<Occupancy> findByBrand(
             final Brand brand,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
+            final boolean includeTerminated) {
         return allMatches(
                 "findByBrand",
                 "brand", brand,

@@ -18,7 +18,6 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
@@ -108,8 +107,8 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
     }
 
     public PartyRelationship changeDates(
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final LocalDate startDate,
+            final LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
         return this;
@@ -137,7 +136,7 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
     private String description;
 
     public PartyRelationship changeDescription(
-            final @ParameterLayout(named = "Description") String description) {
+            final String description) {
         setDescription(description);
         return this;
     }

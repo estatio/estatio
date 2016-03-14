@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -146,12 +145,12 @@ public class Charge
     // //////////////////////////////////////
 
     public Charge change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Tax") @Parameter(optionality = Optionality.OPTIONAL) Tax tax,
-            final @ParameterLayout(named = "Description") String description,
-            final @ParameterLayout(named = "Group") ChargeGroup group,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference,
-            final @ParameterLayout(named = "Sort Order") @Parameter(optionality = Optionality.OPTIONAL) String sortOrder) {
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) Tax tax,
+            final String description,
+            final ChargeGroup group,
+            final @Parameter(optionality = Optionality.OPTIONAL) String externalReference,
+            final @Parameter(optionality = Optionality.OPTIONAL) String sortOrder) {
 
         setName(name);
         setTax(tax);

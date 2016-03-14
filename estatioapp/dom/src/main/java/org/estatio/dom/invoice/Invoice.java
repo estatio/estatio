@@ -43,7 +43,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -289,7 +288,7 @@ public class Invoice
     private LocalDate dueDate;
 
     public void changeDueDate(
-            final @ParameterLayout(named = "Due date") LocalDate dueDate) {
+            final LocalDate dueDate) {
         setDueDate(dueDate);
     }
 
@@ -328,7 +327,7 @@ public class Invoice
 
     public Invoice changePaymentMethod(
             final PaymentMethod paymentMethod,
-            final @ParameterLayout(named = "Reason") String reason) {
+            final String reason) {
         setPaymentMethod(paymentMethod);
         return this;
     }
@@ -487,7 +486,7 @@ public class Invoice
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice invoice(
-            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
+            final LocalDate invoiceDate) {
 
         final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         setInvoiceNumber(numerator.nextIncrementStr());
@@ -543,10 +542,10 @@ public class Invoice
 
     public InvoiceItem newItem(
             final Charge charge,
-            final @ParameterLayout(named = "Quantity") BigDecimal quantity,
-            final @ParameterLayout(named = "Net amount") BigDecimal netAmount,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final BigDecimal quantity,
+            final BigDecimal netAmount,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
         invoiceItem.setQuantity(quantity);
         invoiceItem.setCharge(charge);

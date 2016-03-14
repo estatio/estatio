@@ -25,7 +25,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -117,10 +116,10 @@ public class Person
     }
 
     public Person change(
-            final @ParameterLayout(named = "Gender") PersonGenderType gender,
-            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
-            final @ParameterLayout(named = "First name") String firstName,
-            final @ParameterLayout(named = "Last name") String lastName) {
+            final PersonGenderType gender,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
+            final String firstName,
+            final String lastName) {
         setGender(gender);
         setInitials(initials);
         setFirstName(firstName);

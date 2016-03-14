@@ -195,7 +195,7 @@ public class Event
         };
     }
 
-    public Event changeNotes(final @ParameterLayout(named = "Notes", multiLine = NUMBER_OF_LINES) String notes) {
+    public Event changeNotes(final @ParameterLayout(multiLine = NUMBER_OF_LINES) String notes) {
         setNotes(notes);
 
         return this;

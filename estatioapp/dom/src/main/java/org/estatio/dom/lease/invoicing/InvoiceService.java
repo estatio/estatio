@@ -135,9 +135,9 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
             final Lease lease,
             final InvoiceRunType runType,
             final InvoiceCalculationSelection calculationSelection,
-            final @ParameterLayout(named = "Invoice due date") LocalDate invoiceDueDate,
-            final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
-            final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
+            final LocalDate invoiceDueDate,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate) {
         String runId = invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
                         lease,
