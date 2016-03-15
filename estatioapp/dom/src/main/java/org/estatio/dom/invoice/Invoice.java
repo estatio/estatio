@@ -487,9 +487,11 @@ public class Invoice
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice invoice(
-            final @ParameterLayout(named = "Invoice date") LocalDate invoiceDate) {
-
-        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
+            final LocalDate invoiceDate) {
+        if (disableInvoice(invoiceDate) != null) {
+            return this; // Safeguard to do nothing when called without a wrapper.
+        }
+       final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         setInvoiceNumber(numerator.nextIncrementStr());
         setInvoiceDate(invoiceDate);
         this.setStatus(InvoiceStatus.INVOICED);
