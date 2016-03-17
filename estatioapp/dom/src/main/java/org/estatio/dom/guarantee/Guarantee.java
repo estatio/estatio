@@ -166,8 +166,8 @@ public class Guarantee
     // //////////////////////////////////////
 
     public Guarantee terminate(
-            final @ParameterLayout(named = "Termination date") LocalDate terminationDate,
-            final @ParameterLayout(named = "Description") String description) {
+            final LocalDate terminationDate,
+            final String description) {
         setTerminationDate(terminationDate);
         BigDecimal balance = financialAccount.getBalance();
         if (balance.compareTo(BigDecimal.ZERO) != 0) {
@@ -183,7 +183,7 @@ public class Guarantee
     private BigDecimal contractualAmount;
 
     public Guarantee changeContractualAmount(
-            final @ParameterLayout(named = "New contractual amount") BigDecimal newContractualAmount) {
+            final BigDecimal newContractualAmount) {
         setContractualAmount(newContractualAmount);
         return this;
     }
@@ -193,9 +193,9 @@ public class Guarantee
     }
 
     public Guarantee change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Description", multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @ParameterLayout(named = "Comments", multiLine = 3) String comments) {
+            final String name,
+            final @ParameterLayout(multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description,
+            final @ParameterLayout(multiLine = 3) String comments) {
         setName(name);
         setDescription(description);
         setComments(comments);

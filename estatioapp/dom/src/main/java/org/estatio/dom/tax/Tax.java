@@ -32,7 +32,6 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -150,8 +149,8 @@ public class Tax
     // //////////////////////////////////////
 
     public TaxRate newRate(
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "Percentage") BigDecimal percentage) {
+            final LocalDate startDate,
+            final BigDecimal percentage) {
         return taxRates.newRate(this, startDate, percentage);
     }
 

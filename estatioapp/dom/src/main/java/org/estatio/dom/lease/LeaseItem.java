@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -199,7 +198,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @Action(domainEvent = LeaseItem.SuspendEvent.class)
-    public LeaseItem suspend(final @ParameterLayout(named = "Reason") String reason) {
+    public LeaseItem suspend(final String reason) {
         setStatus(LeaseItemStatus.SUSPENDED);
         return this;
     }
@@ -209,7 +208,7 @@ public class LeaseItem
     }
 
     @Action(domainEvent = LeaseItem.ResumeEvent.class)
-    public LeaseItem resume(final @ParameterLayout(named = "Reason") String reason) {
+    public LeaseItem resume(final String reason) {
         doResume();
         return this;
     }
@@ -318,8 +317,8 @@ public class LeaseItem
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public LeaseItem changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -349,7 +348,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseItem copy(
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
+            final LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final Charge charge
@@ -381,7 +380,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseItem terminate(
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final LocalDate endDate) {
         this.changeDates(getStartDate(), endDate);
         return this;
     }
@@ -458,7 +457,7 @@ public class LeaseItem
 
     public LeaseItem changePaymentMethod(
             final PaymentMethod paymentMethod,
-            final @ParameterLayout(named = "Reason") String reason) {
+            final String reason) {
         setPaymentMethod(paymentMethod);
         return this;
     }
@@ -474,14 +473,14 @@ public class LeaseItem
 
     public LeaseItem overrideTax(
             final Tax tax,
-            final @ParameterLayout(named = "Reason") String reason) {
+            final String reason) {
         setTax(tax);
         return this;
     }
 
     public Tax default0OverrideTax(
             final Tax tax,
-            final @ParameterLayout(named = "Reason") String reason) {
+            final String reason) {
         return getTax();
     }
 
@@ -492,7 +491,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseItem cancelOverrideTax(
-            final @ParameterLayout(named = "Reason") String reason) {
+            final String reason) {
         setTax(null);
         return this;
     }
@@ -558,8 +557,8 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseTerm newTerm(
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return leaseTerms.newLeaseTerm(this, lastInChain(), startDate, endDate);
     }
 

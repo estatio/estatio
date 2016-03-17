@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -108,7 +107,7 @@ public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocati
     private KeyTable keyTable;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public BudgetItemAllocation changeKeyTable(final @ParameterLayout(named = "KeyTable") KeyTable keyTable) {
+    public BudgetItemAllocation changeKeyTable(final KeyTable keyTable) {
         setKeyTable(keyTable);
         return this;
     }

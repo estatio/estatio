@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -47,9 +46,9 @@ public class UnitSizes extends UdoDomainRepositoryAndFactory<UnitSize> {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public UnitSize newUnitSize(final @ParameterLayout(named = "Unit size name") String name) {
+    public UnitSize newUnitSize(final String unitSizeName) {
         UnitSize unitSize = newTransientInstance(UnitSize.class);
-        unitSize.setName(name);
+        unitSize.setName(unitSizeName);
         persist(unitSize);
         return unitSize;
     }

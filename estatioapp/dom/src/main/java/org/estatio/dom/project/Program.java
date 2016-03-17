@@ -144,12 +144,10 @@ public class Program
     // //////////////////////////////////////
     
     public Program changeProgram(
-    		@ParameterLayout(named = "Program name")
-    		final String name,
-    		@ParameterLayout(multiLine = 5, named = "Program goal")
-    		final String programGoal){
-    
-    	this.setName(name);
+    		final String programName,
+    		final @ParameterLayout(multiLine = 5) String programGoal)
+    {
+    	this.setName(programName);
     	this.setProgramGoal(programGoal);
     	
     	return this;
@@ -162,7 +160,6 @@ public class Program
     public String default1ChangeProgram() {
     	return this.getProgramGoal();
     }
-    
     
     // //////////////////////////////////////
 

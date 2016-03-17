@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -67,17 +66,17 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
     // CHECKSTYLE.OFF: ParameterNumber - Wicket viewer does not support
     // aggregate value types
     public CommunicationChannelOwner newPostal(
-            final @ParameterLayout(named = "Owner") CommunicationChannelOwner owner,
-            final @ParameterLayout(named = "Type") CommunicationChannelType type,
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type,
             final Country country,
             final @Parameter(optionality = Optionality.OPTIONAL) State state,
-            final @ParameterLayout(named = "Address line 1") String address1,
-            final @ParameterLayout(named = "Address line 2") @Parameter(optionality = Optionality.OPTIONAL) String address2,
-            final @ParameterLayout(named = "Address line 3") @Parameter(optionality = Optionality.OPTIONAL) String address3,
-            final @ParameterLayout(named = "Postal Code") String postalCode,
-            final @ParameterLayout(named = "City") String city
+            final String addressLine1,
+            final @Parameter(optionality = Optionality.OPTIONAL) String addressLine2,
+            final @Parameter(optionality = Optionality.OPTIONAL) String addressLine3,
+            final String postalCode,
+            final String city
             ) {
-        communicationChannels.newPostal(owner, type, address1, address2, null, postalCode, city, state, country);
+        communicationChannels.newPostal(owner, type, addressLine1, addressLine2, null, postalCode, city, state, country);
         return owner;
     }
 
@@ -114,9 +113,9 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newEmail(
-            final @ParameterLayout(named = "Owner") CommunicationChannelOwner owner,
-            final @ParameterLayout(named = "Type") CommunicationChannelType type,
-            final @ParameterLayout(named = "Address") String address) {
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type,
+            final String address) {
         communicationChannels.newEmail(owner, type, address);
         return owner;
     }
@@ -143,9 +142,9 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(named = "New Phone/Fax", contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newPhoneOrFax(
-            final @ParameterLayout(named = "Owner") CommunicationChannelOwner owner,
-            final @ParameterLayout(named = "Type") CommunicationChannelType type,
-            final @ParameterLayout(named = "Number") String number) {
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type,
+            final String number) {
         communicationChannels.newPhoneOrFax(owner, type, number);
         return owner;
     }

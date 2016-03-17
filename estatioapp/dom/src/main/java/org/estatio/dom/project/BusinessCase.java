@@ -116,17 +116,12 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 	
 	@Action(semantics=SemanticsOf.NON_IDEMPOTENT)
 	public BusinessCase updateBusinessCase(
-			@ParameterLayout(
-					named = "Description",
-					multiLine = 5
-					)
-			final String businessCaseDescription,
-			@ParameterLayout(named = "Next review date")
-			final LocalDate reviewDate){
+			final @ParameterLayout(multiLine = 5) String description,
+			final LocalDate nextReviewDate){
 		
 		final LocalDate now = LocalDate.now();
 		
-		BusinessCase nextBusinesscase = businesscases.newBusinessCase(this.getProject(), businessCaseDescription, reviewDate, this.date, now, this.getBusinessCaseVersion() + 1);
+		BusinessCase nextBusinesscase = businesscases.newBusinessCase(this.getProject(), description, nextReviewDate, this.date, now, this.getBusinessCaseVersion() + 1);
 		this.setNext(nextBusinesscase);
 		
 		return nextBusinesscase;
@@ -140,7 +135,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 		return this.getNextReviewDate();
 	}
 	
-	public boolean hideUpdateBusinessCase(final String businessCaseDescription, final LocalDate reviewDate) {
+	public boolean hideUpdateBusinessCase(final String description, final LocalDate reviewDate) {
 		
 		if (this.getNext()==null) {
 			return false;
@@ -149,7 +144,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 		return true;
 	}
 	
-	public String validateUpdateBusinessCase(final String businessCaseDescription, final LocalDate reviewDate) {
+	public String validateUpdateBusinessCase(final String description, final LocalDate reviewDate) {
 		
 		if (this.getNext()!=null) {
 			return "This is no active version of the business case and cannot be updated";

@@ -159,7 +159,7 @@ public class Property
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Lookup")
     public FixedAsset lookupLocation(
-            final @ParameterLayout(named = "Address", describedAs = "Example: Herengracht 469, Amsterdam, NL") String address) {
+            final @ParameterLayout(describedAs = "Example: Herengracht 469, Amsterdam, NL") String address) {
         if (locationLookupService != null) {
             // TODO: service does not seem to be loaded in tests
             setLocation(locationLookupService.lookup(address));
@@ -182,10 +182,10 @@ public class Property
      */
     @Programmatic
     public FixedAssetRole addRoleIfDoesNotExist(
-            final @ParameterLayout(named = "party") Party party,
-            final @ParameterLayout(named = "type") FixedAssetRoleType type,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final Party party,
+            final FixedAssetRoleType type,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
 
         FixedAssetRole role = fixedAssetRoleRepository.findRole(this, party, type, startDate, endDate);
         if (role == null) {
@@ -203,7 +203,7 @@ public class Property
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Property dispose(
-            final @ParameterLayout(named = "Disposal date") LocalDate disposalDate
+            final LocalDate disposalDate
     ) {
         setDisposalDate(disposalDate);
         return this;

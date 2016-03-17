@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -196,8 +195,8 @@ public class Unit
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Unit changeDates(
 
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -227,9 +226,9 @@ public class Unit
     // //////////////////////////////////////
 
     public Unit changeAsset(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Type") UnitType type,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            final String name,
+            final UnitType type,
+            final @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
         setName(name);
         setExternalReference(externalReference);
         return this;
@@ -250,11 +249,11 @@ public class Unit
     // ///////////////////////////////////////
 
     public Unit changeAreas(
-            final @ParameterLayout(named = "Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal area,
-            final @ParameterLayout(named = "Storage Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal storageArea,
-            final @ParameterLayout(named = "Sales Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal salesArea,
-            final @ParameterLayout(named = "Mezzanine Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal mezzanineArea,
-            final @ParameterLayout(named = "Dehors Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal dehorsArea) {
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal area,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal storageArea,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal salesArea,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal mezzanineArea,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal dehorsArea) {
         setArea(area);
         setStorageArea(storageArea);
         setSalesArea(salesArea);

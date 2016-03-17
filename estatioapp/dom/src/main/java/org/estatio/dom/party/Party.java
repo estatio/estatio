@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
@@ -151,7 +150,7 @@ public abstract class Party
     }
 
     @Action(domainEvent = Party.RemoveEvent.class)
-    public void removeAndReplace(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Party replacement) {
+    public void removeAndReplace(@Parameter(optionality = Optionality.OPTIONAL) Party replaceWith) {
         getContainer().remove(this);
         getContainer().flush();
     }

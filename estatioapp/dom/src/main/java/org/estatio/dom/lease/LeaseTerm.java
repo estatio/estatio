@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -216,10 +215,10 @@ public abstract class LeaseTerm
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTerm changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate newStartDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate newEndDate) {
-        modifyStartDate(newStartDate);
-        modifyEndDate(newEndDate);
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+        modifyStartDate(startDate);
+        modifyEndDate(endDate);
         return this;
     }
 
@@ -418,13 +417,13 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     public LeaseTerm createNext(
-            final @ParameterLayout(named = "Start date") LocalDate nextStartDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate nextEndDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         LeaseTerm nextTerm = getNext();
         if (nextTerm != null) {
             return nextTerm;
         }
-        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
+        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, startDate, endDate);
         return nextTerm;
     }
 

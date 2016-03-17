@@ -26,12 +26,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = State.class)
 @DomainServiceLayout(
@@ -50,8 +49,8 @@ public class States
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public State newState(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Name") String name,
+            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final String name,
             final Country country) {
         final State state = newTransientInstance();
         return createState(reference, name, country, state);
@@ -77,7 +76,7 @@ public class States
     }
 
     @Programmatic
-    public State findState(final @ParameterLayout(named = "Reference") String reference) {
+    public State findState(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 

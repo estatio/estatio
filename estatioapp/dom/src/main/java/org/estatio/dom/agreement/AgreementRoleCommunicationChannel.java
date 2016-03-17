@@ -40,7 +40,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -190,8 +189,8 @@ public class AgreementRoleCommunicationChannel
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public AgreementRoleCommunicationChannel changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -287,8 +286,8 @@ public class AgreementRoleCommunicationChannel
 
     public AgreementRoleCommunicationChannel succeededBy(
             final CommunicationChannel communicationChannel,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this,
                 communicationChannel));
     }
@@ -333,8 +332,8 @@ public class AgreementRoleCommunicationChannel
 
     public AgreementRoleCommunicationChannel precededBy(
             final CommunicationChannel communicationChannel,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this,
                 communicationChannel));
@@ -398,8 +397,8 @@ public class AgreementRoleCommunicationChannel
 
     @ActionLayout(describedAs = "Change Communication Channel Type")
     public AgreementRoleCommunicationChannel changeType(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Type") AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType) {
-        setType(agreementRoleCommunicationChannelType);
+            final @Parameter(optionality = Optionality.OPTIONAL) AgreementRoleCommunicationChannelType type) {
+        setType(type);
         return this;
     }
 

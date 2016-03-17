@@ -84,14 +84,14 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "1")
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Type") LeaseType leaseType,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Duration", describedAs = "Duration in a text format. Example 6y5m2d") String duration,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date", describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Landlord") Party landlord,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Tenant") Party tenant,
+            final @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
+            final String name,
+            final LeaseType leaseType,
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Duration in a text format. Example 6y5m2d") String duration,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) Party landlord,
+            final @Parameter(optionality = Optionality.OPTIONAL) Party tenant,
             final ApplicationTenancy applicationTenancy
             // CHECKSTYLE:ON
     ) {
@@ -189,9 +189,9 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
-        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
+            final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final boolean includeTerminated) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
     }
 
@@ -200,7 +200,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "4")
     public List<Lease> findLeasesByBrand(
             final Brand brand,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
+            final boolean includeTerminated) {
         return findByBrand(brand, includeTerminated);
     }
 
@@ -208,7 +208,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "5")
     public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset,
-            final @ParameterLayout(named = "Active On Date") LocalDate activeOnDate) {
+            final LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
@@ -226,7 +226,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "4")
     public String verifyLeasesUntil(
             final LeaseItemType leaseItemType,
-            final @ParameterLayout(named = "Until date") LocalDate untilDate) {
+            final LocalDate untilDate) {
         DateTime start = DateTime.now();
         List<Lease> leases = allLeases();
         for (Lease lease : leases) {

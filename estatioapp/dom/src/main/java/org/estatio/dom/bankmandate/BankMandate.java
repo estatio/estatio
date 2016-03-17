@@ -18,21 +18,33 @@
  */
 package org.estatio.dom.bankmandate;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.InheritanceStrategy;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
-import javax.jdo.annotations.InheritanceStrategy;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -141,8 +153,8 @@ public class BankMandate
     }
 
     public BankMandate change(
-            final @ParameterLayout(named = "Name") @Parameter(optionality = Optionality.OPTIONAL) String name,
-            final @ParameterLayout(named = "Sepa Mandate Identifier") @Parameter(optionality = Optionality.OPTIONAL) String SepaMendateIdentifier,
+            final @Parameter(optionality = Optionality.OPTIONAL) String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) String SepaMendateIdentifier,
             final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
             final @Parameter(optionality = Optionality.OPTIONAL) Scheme scheme) {
         setName(name);

@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.dom.JdoColumnLength;
@@ -58,8 +57,8 @@ public class EmailAddress extends CommunicationChannel {
     private String emailAddress;
 
     public EmailAddress changeEmailAddress(
-            final @ParameterLayout(named = "Email Address") @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String address) {
-        setEmailAddress(address);
+            final @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress) {
+        setEmailAddress(emailAddress);
 
         return this;
     }

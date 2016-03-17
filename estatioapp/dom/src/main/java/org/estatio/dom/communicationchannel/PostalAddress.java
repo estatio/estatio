@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.util.TitleBuffer;
@@ -161,14 +160,14 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     public PostalAddress changePostalAddress(
-            final @ParameterLayout(named = "Address Line 1") String address1,
-            final @ParameterLayout(named = "Address Line 2") @Parameter(optionality = Optionality.OPTIONAL) String address2,
-            final @ParameterLayout(named = "Address Line 3") @Parameter(optionality = Optionality.OPTIONAL) String address3,
-            final @ParameterLayout(named = "City") String city,
-            final @ParameterLayout(named = "Postal Code") String postalCode) {
-        setAddress1(address1);
-        setAddress2(address2);
-        setAddress3(address3);
+            final String addressLine1,
+            final @Parameter(optionality = Optionality.OPTIONAL) String addressLine2,
+            final @Parameter(optionality = Optionality.OPTIONAL) String addressLine3,
+            final String city,
+            final String postalCode) {
+        setAddress1(addressLine1);
+        setAddress2(addressLine2);
+        setAddress3(addressLine3);
         setCity(city);
         setPostalCode(postalCode);
 

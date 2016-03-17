@@ -68,8 +68,8 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     public LeaseTermForTax changeTax(
-            final @ParameterLayout(named = "Tax percentage") BigDecimal taxPercentage,
-            final @ParameterLayout(named = "Override payable value") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overridePayableValue) {
+            final BigDecimal taxPercentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overridePayableValue) {
         setTaxPercentage(taxPercentage);
         setPayableValue(overridePayableValue);
         setOverridePayableValue(overridePayableValue != null);
@@ -100,7 +100,7 @@ public class LeaseTermForTax extends LeaseTerm {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public LeaseTermForTax changePaymentDate(
-            final @ParameterLayout(named = "Payment date") LocalDate paymentDate) {
+            final LocalDate paymentDate) {
         setPaymentDate(paymentDate);
         return this;
     }
@@ -137,11 +137,11 @@ public class LeaseTermForTax extends LeaseTerm {
     // //////////////////////////////////////
 
     public LeaseTermForTax changeInvoicing(
-            final @ParameterLayout(named = "Recoverable percentage") BigDecimal recoverablePercentage,
-            final @ParameterLayout(named = "Override recoverable amount") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideTaxValue) {
+            final BigDecimal recoverablePercentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideRecoverableAmount) {
         setRecoverablePercentage(recoverablePercentage);
-        setTaxValue(overrideTaxValue);
-        setOverrideTaxValue(overrideTaxValue != null);
+        setTaxValue(overrideRecoverableAmount);
+        setOverrideTaxValue(overrideRecoverableAmount != null);
         return this;
     }
 
@@ -227,11 +227,11 @@ public class LeaseTermForTax extends LeaseTerm {
     // //////////////////////////////////////
 
     public LeaseTermForTax changeRegistration(
-            final @ParameterLayout(named = "Registration date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate registrationDate,
-            final @ParameterLayout(named = "Registration number") @Parameter(optionality = Optionality.OPTIONAL) String registrationNumber,
-            final @ParameterLayout(named = "Office code") @Parameter(optionality = Optionality.OPTIONAL) String officeCode,
-            final @ParameterLayout(named = "Office name") @Parameter(optionality = Optionality.OPTIONAL) String officeName,
-            final @ParameterLayout(named = "Description", multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate registrationDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) String registrationNumber,
+            final @Parameter(optionality = Optionality.OPTIONAL) String officeCode,
+            final @Parameter(optionality = Optionality.OPTIONAL) String officeName,
+            final @ParameterLayout(multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description
             ) {
         setRegistrationDate(registrationDate);
         setRegistrationNumber(registrationNumber);

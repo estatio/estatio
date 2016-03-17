@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -125,8 +124,8 @@ public class TaxRate
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public TaxRate changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -222,8 +221,8 @@ public class TaxRate
     // //////////////////////////////////////
 
     public TaxRate newRate(
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "Percentage") BigDecimal percentage) {
+            final LocalDate startDate,
+            final BigDecimal percentage) {
         TaxRate rate = this.getTax().newRate(startDate, percentage);
         setNext(rate);
         rate.setPrevious(this);
@@ -231,9 +230,9 @@ public class TaxRate
     }
 
     public TaxRate change(
-            final @ParameterLayout(named = "Tax") Tax tax,
-            final @ParameterLayout(named = "Percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal percentage,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            final Tax tax,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal percentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
 
         setTax(tax);
         setPercentage(percentage);

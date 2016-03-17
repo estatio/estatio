@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -54,10 +53,10 @@ public class ProgramRolesContributions  {
     @ActionLayout(contributed=Contributed.AS_ACTION)
     public Program newProgramRole(
     		final Program program,
-            final @ParameterLayout(named = "Type") ProgramRoleType type,
+            final ProgramRoleType type,
             final Party party,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
     	programRoles.createRole(program, type, party, startDate, endDate);
         return program;
     }

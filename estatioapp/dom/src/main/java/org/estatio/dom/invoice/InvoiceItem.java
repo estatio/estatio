@@ -202,7 +202,7 @@ public abstract class InvoiceItem
     private String description;
 
     public InvoiceItem changeDescription(
-            final @ParameterLayout(named = "Description", multiLine = 3) String description) {
+            final @ParameterLayout(multiLine = 3) String description) {
         setDescription(description);
         return this;
     }
@@ -255,8 +255,8 @@ public abstract class InvoiceItem
     private LocalDate effectiveEndDate;
 
     public InvoiceItem changeEffectiveDates(
-            final @ParameterLayout(named = "Effective start date") LocalDate effectiveStartDate,
-            final @ParameterLayout(named = "Effective end date") LocalDate effectiveEndDate) {
+            final LocalDate effectiveStartDate,
+            final LocalDate effectiveEndDate) {
         setEffectiveStartDate(effectiveStartDate);
         setEffectiveEndDate(effectiveEndDate);
         return this;

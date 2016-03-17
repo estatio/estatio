@@ -61,10 +61,10 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
 
     @MemberOrder(sequence = "1")
     public Brand newBrand(
-            final @ParameterLayout(named = "Brand name") String name,
-            final @ParameterLayout(named = "Brand coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
-            final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
-            final @ParameterLayout(named = "Group") @Parameter(optionality = Optionality.OPTIONAL) String group,
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
+            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
+            final @Parameter(optionality = Optionality.OPTIONAL) String group,
             final @ParameterLayout(named = "Global or Country") ApplicationTenancy applicationTenancy) {
         Brand brand;
         brand = newTransientInstance(Brand.class);

@@ -32,7 +32,6 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -171,8 +170,8 @@ public class Occupancy
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Occupancy changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -203,7 +202,7 @@ public class Occupancy
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Occupancy terminate(
-            final @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final LocalDate endDate) {
         setEndDate(endDate);
         return this;
     }
@@ -282,10 +281,10 @@ public class Occupancy
 
     @ActionLayout(describedAs = "Change unit size, sector, activity and/or brand")
     public Occupancy changeClassification(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Unit size") UnitSize unitSize,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Sector") Sector sector,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Activity") Activity activity,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Brand") Brand brand) {
+            final @Parameter(optionality = Optionality.OPTIONAL) UnitSize unitSize,
+            final @Parameter(optionality = Optionality.OPTIONAL) Sector sector,
+            final @Parameter(optionality = Optionality.OPTIONAL) Activity activity,
+            final @Parameter(optionality = Optionality.OPTIONAL) Brand brand) {
         setUnitSize(unitSize);
         setSector(sector);
         setActivity(activity);
@@ -389,9 +388,9 @@ public class Occupancy
     // //////////////////////////////////////
 
     public Occupancy changeReportingOptions(
-            final @ParameterLayout(named = "Report Turnover") OccupancyReportingType reportTurnover,
-            final @ParameterLayout(named = "Report Rent") OccupancyReportingType reportRent,
-            final @ParameterLayout(named = "Report OCR") OccupancyReportingType reportOCR) {
+            final OccupancyReportingType reportTurnover,
+            final OccupancyReportingType reportRent,
+            final OccupancyReportingType reportOCR) {
         setReportTurnover(reportTurnover);
         setReportRent(reportRent);
         setReportOCR(reportOCR);
