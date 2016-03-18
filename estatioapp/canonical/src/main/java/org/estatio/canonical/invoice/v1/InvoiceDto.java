@@ -1,5 +1,6 @@
 package org.estatio.canonical.invoice.v1;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -54,6 +55,10 @@ public class InvoiceDto implements VersionedDto {
 
     @XmlElement(required = true)
     @Getter @Setter
+    protected String atPath;
+
+    @XmlElement(required = true)
+    @Getter @Setter
     protected OidDto buyerParty;
 
     @XmlElement(required = true)
@@ -95,5 +100,18 @@ public class InvoiceDto implements VersionedDto {
     @XmlElement(name = "item")
     @Getter @Setter
     protected List<InvoiceItemDto> items = Lists.newArrayList();
+
+
+    @Getter @Setter
+    @XmlElement(required = true, defaultValue = "0.00")
+    protected BigDecimal netAmount;
+
+    @Getter @Setter
+    @XmlElement(required = true, defaultValue = "0.00")
+    protected BigDecimal grossAmount;
+
+    @Getter @Setter
+    @XmlElement(required = true, defaultValue = "0.00")
+    protected BigDecimal vatAmount;
 
 }

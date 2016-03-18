@@ -1,5 +1,6 @@
 package org.estatio.canonical.invoice;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -10,11 +11,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.DtoFactoryAbstract;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
+import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(
@@ -22,10 +23,13 @@ import org.estatio.dom.lease.Lease;
 )
 public class InvoiceDtoFactory extends DtoFactoryAbstract {
 
+    private final InvoiceItemDtoFactory invoiceItemDtoFactory = new InvoiceItemDtoFactory();
+
     @Programmatic
     public InvoiceDto newDto(final Invoice invoice) {
         InvoiceDto dto = new InvoiceDto();
 
+        dto.setAtPath(invoice.getApplicationTenancyPath());
         dto.setBuyerParty(mappingHelper.oidDtoFor(invoice.getBuyer()));
         dto.setSellerParty(mappingHelper.oidDtoFor(invoice.getSeller()));
 
@@ -42,15 +46,24 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
             dto.setPaidByMandateBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
         }
 
-        final Optional<FixedAsset> fixedAsset = Optional.of(invoice.getFixedAsset());
+        final Optional<FixedAsset> fixedAsset = Optional.ofNullable(invoice.getFixedAsset());
         if (fixedAsset.isPresent()) {
             dto.setFixedAssetReference(fixedAsset.get().getReference());
             dto.setFixedAssetExternalReference(fixedAsset.get().getExternalReference());
         }
 
-        for (InvoiceItem invoiceItem : invoice.getItems()) {
-            dto.getItems().add(new InvoiceItemDtoFactory().newDto(invoiceItem));
-        }
+        invoice.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemDtoFactory.newDto(item)));
+
+        dto.setNetAmount(dto.getItems().stream()
+                            .map(InvoiceItemDto::getNetAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add));
+        dto.setGrossAmount(dto.getItems().stream()
+                            .map(InvoiceItemDto::getGrossAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add));
+        dto.setVatAmount(dto.getItems().stream()
+                            .map(InvoiceItemDto::getVatAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add));
+                
 
         return dto;
     }
