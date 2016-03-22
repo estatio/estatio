@@ -175,7 +175,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // ///////////////////////////////////////////
 
-    @Column(scale = 1, allowsNull = "true")
+    @Column(scale = 3, allowsNull = "true")
     @Getter @Setter
     private BigDecimal indexationPercentage;
 
