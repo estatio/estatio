@@ -79,12 +79,10 @@ public enum IndexationMethod {
             }
         } else {
             term.setEffectiveIndexedValue(
-                    MathUtils.firstNonZero(
-                            previous == null ? null : previous.getSettledValue(),
                             MathUtils.maxUsingFirstSignum(
                                     term.getBaseValue(),
                                     term.getIndexedValue(),
-                                    previous == null ? null : previous.getEffectiveIndexedValue())));
+                                    previous == null ? null : previous.getEffectiveIndexedValue()));
         }
     }
 

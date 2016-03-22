@@ -87,81 +87,96 @@ public class IndexationMethodTest {
         }
 
         @Test
-        public void withLastKnownIndex() throws Exception {
-            // indexation method, base value, settled value, expected base value
-            tester(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("12.34"), new BigDecimal("23.34"), new BigDecimal("23.34"));
-            tester(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("-12.34"), new BigDecimal("-23.34"), new BigDecimal("-23.34"));
-            tester(IndexationMethod.LAST_KNOWN_INDEX, null, new BigDecimal("23.34"), new BigDecimal("23.34"));
-            tester(IndexationMethod.LAST_KNOWN_INDEX, null, new BigDecimal("-23.34"), new BigDecimal("-23.34"));
-            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, BigDecimal.ZERO);
-        }
-
-        private void tester(IndexationMethod indexationMethod, BigDecimal baseValue, BigDecimal settledValue, BigDecimal expectedBaseValue){
-            term1.setIndexationMethod(indexationMethod);
-            term1.setBaseValue(baseValue);
-            term1.setSettledValue(settledValue);
-            //when
-            term2.initialize();
-            term2.doAlign();
-            assertThat(term2.getBaseValue()).isEqualTo(expectedBaseValue);
-        }
-
-        @Test
         public void testBaseAndEffectiveIndexedValue() throws Exception {
-            // indexation method, base value, indexed value, effective indexed value, expected base value, expected effective indexed value
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.34"), new BigDecimal("12.34"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), new BigDecimal("12.00"), null, new BigDecimal("12.34"), new BigDecimal("12.34"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), null, new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.34"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), new BigDecimal("13.00"), null, new BigDecimal("12.34"), new BigDecimal("13.00"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), null, new BigDecimal("13.00"), new BigDecimal("12.34"), new BigDecimal("13.00"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("13.00"), new BigDecimal("12.34"), new BigDecimal("13.00"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("12.34"), new BigDecimal("13.00"), new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.34"));
+            // indexation method, base value, indexed value, effective indexed value, settled value, expected base value, expected effective indexed value
+            // with settled value
+            tester(IndexationMethod.BASE_INDEX, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, "3.00", "2.00", "4.00", "1.00", "1.00", "4.00");
 
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), new BigDecimal("-12.00"), new BigDecimal("-12.34"), new BigDecimal("-12.34"), new BigDecimal("-12.34"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), new BigDecimal("-12.00"), null, new BigDecimal("-12.34"), new BigDecimal("-12.34"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), null, new BigDecimal("-12.00"), new BigDecimal("-12.34"), new BigDecimal("-12.34"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), new BigDecimal("-13.00"), null, new BigDecimal("-12.34"), new BigDecimal("-13.00"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), null, new BigDecimal("-13.00"), new BigDecimal("-12.34"), new BigDecimal("-13.00"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), new BigDecimal("-12.00"), new BigDecimal("-13.00"), new BigDecimal("-12.34"), new BigDecimal("-13.00"));
-            tester2(IndexationMethod.BASE_INDEX, new BigDecimal("-12.34"), new BigDecimal("-13.00"), new BigDecimal("-12.00"), new BigDecimal("-12.34"), new BigDecimal("-12.34"));
+            tester(IndexationMethod.BASE_INDEX, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, "-3.00", "-2.00", "-4.00", "-1.00", "-1.00", "-4.00");
 
-            tester2(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.34"), new BigDecimal("12.34"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, null, "1.00", "1.00", "1.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, null, "-1.00", "-1.00", "-1.00");
 
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.00"));
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("12.34"), new BigDecimal("12.00"), null, new BigDecimal("12.34"), new BigDecimal("12.00"));
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("12.34"), null, new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.00"));
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("11.00"), new BigDecimal("12.34"), new BigDecimal("11.00"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, "2.00", "1.00", "1.00", "2.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, "-2.00", "-1.00", "-1.00", "-2.00");
 
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("-12.34"), new BigDecimal("-12.00"), new BigDecimal("-12.00"), new BigDecimal("-12.34"), new BigDecimal("-12.00"));
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("-12.34"), new BigDecimal("-12.00"), null, new BigDecimal("-12.34"), new BigDecimal("-12.00"));
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("-12.34"), null, new BigDecimal("-12.00"), new BigDecimal("-12.34"), new BigDecimal("-12.00"));
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, new BigDecimal("-12.34"), new BigDecimal("-12.00"), new BigDecimal("-11.00"), new BigDecimal("-12.34"), new BigDecimal("-11.00"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, "1.00", "2.00", "2.00", "2.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, "-1.00", "-2.00", "-2.00", "-2.00");
 
-            tester2(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.00"));
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, "2.00", null, "2.00", "2.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, "-2.00", null, "-2.00", "-2.00");
 
-            tester2(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("12.00"), new BigDecimal("12.34"), new BigDecimal("12.34"));
-            tester2(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("12.34"), new BigDecimal("13.00"), new BigDecimal("12.00"), new BigDecimal("13.00"), new BigDecimal("13.00"));
-            tester2(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("12.34"), new BigDecimal("12.00"), new BigDecimal("13.00"), new BigDecimal("13.00"), new BigDecimal("13.00"));
+            // no settled value
+            tester(IndexationMethod.LAST_KNOWN_INDEX, null, null, null, null, "0", "0");
 
-            tester2(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("-12.34"), new BigDecimal("-12.00"), new BigDecimal("-12.00"), new BigDecimal("-12.34"), new BigDecimal("-12.34"));
-            tester2(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("-12.34"), new BigDecimal("-13.00"), new BigDecimal("-12.00"), new BigDecimal("-13.00"), new BigDecimal("-13.00"));
-            tester2(IndexationMethod.LAST_KNOWN_INDEX, new BigDecimal("-12.34"), new BigDecimal("-12.00"), new BigDecimal("-13.00"), new BigDecimal("-13.00"), new BigDecimal("-13.00"));
+            tester(IndexationMethod.BASE_INDEX, "3.00", "4.00", "5.00", null, "3.00", "5.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, "3.00", "4.00", "5.00", null, "5.00", "5.00");
+
+            tester(IndexationMethod.BASE_INDEX, "-3.00", "4.00", "-5.00", null, "-3.00", "-5.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
+            tester(IndexationMethod.LAST_KNOWN_INDEX, "-3.00", "-4.00", "-5.00", null, "-5.00", "-5.00");
+
+            // effective indexed value = effective indexed value previous overrides indexed value previous
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "2.00", "1.00", null, "3.00", "1.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "2.00", "1.00", null, "3.00", "1.00");
+
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-2.00", "-1.00", null, "-3.00", "-1.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-2.00", "-1.00", null, "-3.00", "-1.00");
+
+            // effective indexed value = max baseValue, (indexedValue not calc here), first non-zero (effective indexed value previous, indexed value previous)
+            tester(IndexationMethod.BASE_INDEX, "3.00", "5.00", "4.00", null, "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX, "3.00", "2.00", "1.00", null, "3.00", "3.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "3.00", "2.00", "1.00", null, "3.00", "3.00");
+
+            tester(IndexationMethod.BASE_INDEX, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX, "-3.00", "-2.00", "-1.00", null, "-3.00", "-3.00");
+            tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "-3.00", "-2.00", "-1.00", null, "-3.00", "-3.00");
+
         }
 
-        private void tester2(IndexationMethod indexationMethod, BigDecimal baseValue, BigDecimal indexedValue, BigDecimal effectiveIndexedValue, BigDecimal expectedBaseValue, BigDecimal expectedEffectiveIndexedValue){
+        private void tester(IndexationMethod indexationMethod, String baseValue, String indexedValue, String effectiveIndexedValue, String settledValue, String expectedBaseValue, String expectedEffectiveIndexedValue){
             //given
             term1.setIndexationMethod(indexationMethod);
-            term1.setBaseValue(baseValue);
-            term1.setIndexedValue(indexedValue);
-            term1.setEffectiveIndexedValue(effectiveIndexedValue);
+            term1.setBaseValue(Util.bdFromStr(baseValue));
+            term1.setIndexedValue(Util.bdFromStr(indexedValue));
+            term1.setEffectiveIndexedValue(Util.bdFromStr(effectiveIndexedValue));
+            term1.setSettledValue(Util.bdFromStr(settledValue));
             //when
             term2.initialize();
             term2.doAlign();
             //then
-            assertThat(term2.getBaseValue()).isEqualTo(expectedBaseValue);
-            assertThat(term2.getEffectiveIndexedValue()).isEqualTo(expectedEffectiveIndexedValue);
+            assertThat(term2.getBaseValue()).isEqualTo(Util.bdFromStr(expectedBaseValue));
+            assertThat(term2.getEffectiveIndexedValue()).isEqualTo(Util.bdFromStr(expectedEffectiveIndexedValue));
+
         }
 
-
     }
+
+    static class Util {
+        static BigDecimal bdFromStr(String input){
+            return input == null ? null : new BigDecimal(input);
+        }
+    }
+
+
 }
