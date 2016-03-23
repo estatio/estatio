@@ -23,6 +23,7 @@ import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
@@ -64,9 +65,31 @@ public class UnitMenuTest {
         });
 
         final Unit newUnit = unitMenu.newUnit(null, "REF-1", "Name-1", UnitType.EXTERNAL);
+
         assertThat(newUnit.getReference(), is("REF-1"));
         assertThat(newUnit.getName(), is("Name-1"));
         assertThat(newUnit.getType(), is(UnitType.EXTERNAL));
     }
+
+    @Test
+    public void changeUnit() {
+        final Unit unit = new Unit();
+        context.checking(new Expectations() {
+            {
+                oneOf(mockContainer).newTransientInstance(Unit.class);
+                will(returnValue(unit));
+
+                oneOf(mockContainer).persist(unit);
+            }
+        });
+
+        Unit changeUnit = unitMenu.newUnit(null, "REF-1", "Name-1", UnitType.EXTERNAL);
+        changeUnit.changeAsset("Name-2", UnitType.BOUTIQUE, "ExternalRef");
+
+        assertThat(changeUnit.getName(), is("Name-2"));
+        assertThat(changeUnit.getType(), is(UnitType.BOUTIQUE));
+        assertThat(changeUnit.getExternalReference(), is("ExternalRef"));
+    }
+
 
 }
