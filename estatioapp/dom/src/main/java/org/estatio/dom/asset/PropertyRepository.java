@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.asset;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -85,7 +86,9 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     // //////////////////////////////////////
 
     public List<Property> allProperties() {
-        return allInstances();
+        List<Property> properties = allInstances();
+        Collections.sort(properties);
+        return properties;
     }
 
     // //////////////////////////////////////

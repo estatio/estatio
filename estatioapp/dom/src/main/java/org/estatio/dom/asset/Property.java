@@ -23,6 +23,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
@@ -177,6 +178,13 @@ public class Property
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private Integer displayOrder;
+
+    // //////////////////////////////////////
+
     /**
      * For use by Api and by fixtures.
      */
@@ -215,6 +223,28 @@ public class Property
 
     // //////////////////////////////////////
 
+    @Override
+    public int compareTo(final Property other) {
+
+        /* Ordering first by display order */
+        if(getDisplayOrder() != null) {
+            if(other.getDisplayOrder() != null) {
+                return getDisplayOrder().compareTo(other.getDisplayOrder());
+            }
+            else {
+                return -1;
+            }
+        }
+        else if(other.displayOrder != null) {
+            return 1;
+        }
+        /* Ordering second by name */
+        else
+            return this.getName().compareTo(other.getName());
+    }
+
+    // //////////////////////////////////////
+
     @Inject
     UnitMenu unitMenuRepo;
 
@@ -222,3 +252,4 @@ public class Property
     LocationLookupService locationLookupService;
 
 }
+
