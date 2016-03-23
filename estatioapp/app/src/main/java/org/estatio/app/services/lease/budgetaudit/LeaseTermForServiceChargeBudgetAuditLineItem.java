@@ -34,6 +34,11 @@ import org.estatio.dom.utils.TitleBuilder;
 @ViewModel
 public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewModel {
 
+    /**
+     * A viewmodel needs a public noarg constructor
+     */
+    public LeaseTermForServiceChargeBudgetAuditLineItem() {}
+
     public String title() {
         return TitleBuilder.start()
                 .withName(getLeaseTerm())
