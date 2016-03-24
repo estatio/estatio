@@ -230,6 +230,7 @@ public class Unit
             final UnitType type,
             final @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
         setName(name);
+        setType(type);
         setExternalReference(externalReference);
         return this;
     }

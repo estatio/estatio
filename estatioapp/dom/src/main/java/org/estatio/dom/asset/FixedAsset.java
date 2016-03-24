@@ -37,7 +37,6 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -145,21 +144,10 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;
-
-    @MemberOrder(name = "externalReference", sequence = "1")
-    public FixedAsset changeExternalReference(final String externalReference) {
-        setExternalReference(externalReference);
-        return this;
-    }
-
-    public String default0ChangeExternalReference(final String externalReference) {
-        return getExternalReference();
-    }
 
     // //////////////////////////////////////
 
