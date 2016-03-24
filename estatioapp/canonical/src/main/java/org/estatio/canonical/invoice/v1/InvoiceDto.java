@@ -27,6 +27,7 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
         "majorVersion",
         "minorVersion",
+        "atPath",
         "buyerParty",
         "sellerParty",
         "invoiceDate",
@@ -38,7 +39,10 @@ import lombok.Setter;
         "agreementReference",
         "fixedAssetReference",
         "fixedAssetExternalReference",
-        "items"
+        "items",
+        "netAmount",
+        "vatAmount",
+        "grossAmount"
 })
 @XmlRootElement(name = "invoiceDto")
 public class InvoiceDto implements VersionedDto {

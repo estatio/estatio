@@ -47,4 +47,91 @@
 
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>schemagen</id>
+            <activation>
+                <property>
+                    <name>!skip.schemagen</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxb2-maven-plugin</artifactId>
+                        <version>2.2</version>
+                        <executions>
+                            <execution>
+                                <id>schemagen</id>
+                                <goals>
+                                    <goal>schemagen</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                        </executions>
+
+                        <configuration>
+                            <transformSchemas>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/bankmandate/v1/bankmandate.xsd</uri>
+                                    <toPrefix>bankmandate</toPrefix>
+                                    <toFile>bankmandate.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/financial/v1/bankaccount.xsd</uri>
+                                    <toPrefix>bankaccount</toPrefix>
+                                    <toFile>bankaccount.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/invoice/v1/invoice.xsd</uri>
+                                    <toPrefix>invoice</toPrefix>
+                                    <toFile>invoice.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/party/v1/party.xsd</uri>
+                                    <toPrefix>party</toPrefix>
+                                    <toFile>party.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://isis.apache.org/schema/common</uri>
+                                    <toPrefix>isis-common</toPrefix>
+                                    <toFile>isis-common.xsd</toFile>
+                                </transformSchema>
+                            </transformSchemas>
+                        <!--
+                            <includes>
+                                <include>com/estatio/canonical/bankmandate/v1/*</include>
+                            </includes>
+                        -->
+                            <verbose>true</verbose>
+                        </configuration>
+                    </plugin>
+
+                    <!-- TODO: just trying to get these generated XSDs part of the source path so that IntelliJ will pick up without any configuration -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.10</version>
+                        <executions>
+                            <execution>
+                                <id>add-resource</id>
+                                <goals>
+                                    <goal>add-resource</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <resources>
+                                        <resource>target/generated-resources/schemagen</resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
