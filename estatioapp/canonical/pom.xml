@@ -53,7 +53,7 @@
             <id>schemagen</id>
             <activation>
                 <property>
-                    <name>!skip.schemagen</name>
+                    <name>schemagen</name>
                 </property>
             </activation>
             <build>
