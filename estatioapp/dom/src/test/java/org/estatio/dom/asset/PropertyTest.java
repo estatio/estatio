@@ -162,32 +162,6 @@ public class PropertyTest {
             assertEquals(thatProperty.compareTo(thatProperty), 0);
         }
 
-        @Test
-        public void byName() {
-            // given
-            thisProperty.setName("A");
-            thatProperty.setName("B");
-
-            // then
-            assertEquals(thisProperty.compareTo(thatProperty), -1);
-            assertEquals(thatProperty.compareTo(thisProperty), 1);
-            assertEquals(thisProperty.compareTo(thisProperty), 0);
-            assertEquals(thatProperty.compareTo(thatProperty), 0);
-        }
-
-        @Test
-        public void byDisplayOrderAndName() {
-            // given
-            thisProperty.setName("B");
-            thatProperty.setName("A");
-            thisProperty.setDisplayOrder(1);
-
-            // then
-            assertEquals(thisProperty.compareTo(thatProperty), -1);
-            assertEquals(thatProperty.compareTo(thisProperty), 1);
-            assertEquals(thisProperty.compareTo(thisProperty), 0);
-            assertEquals(thatProperty.compareTo(thatProperty), 0);
-        }
     }
 
 }

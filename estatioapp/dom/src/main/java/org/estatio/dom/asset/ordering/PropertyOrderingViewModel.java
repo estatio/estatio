@@ -16,6 +16,7 @@
  */
 package org.estatio.dom.asset.ordering;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,7 +24,6 @@ import javax.inject.Inject;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.Nullable;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.ViewModel;
@@ -34,6 +34,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
@@ -123,11 +124,7 @@ public class PropertyOrderingViewModel implements ViewModel {
     )
     @MemberOrder(name = "displayOrder", sequence = "1")
     public PropertyOrderingViewModel moveUp() {
-        reorder(repository.allProperties());
-        spreadOut(repository.allProperties(), 10);
-        updateCurrent(-15, Integer.MAX_VALUE);
-        reorder(repository.allProperties());
-        return this;
+        return move(-15);
     }
 
 
@@ -137,10 +134,21 @@ public class PropertyOrderingViewModel implements ViewModel {
     )
     @MemberOrder(name = "displayOrder", sequence = "2")
     public PropertyOrderingViewModel moveDown() {
-        reorder(repository.allProperties());
-        spreadOut(repository.allProperties(), 10);
-        updateCurrent(+15, Integer.MIN_VALUE);
-        reorder(repository.allProperties());
+        return move(+15);
+    }
+
+    @Programmatic
+    private PropertyOrderingViewModel move(int diff) {
+        int fallback = Integer.MAX_VALUE;
+        if(diff < 0) fallback = Integer.MIN_VALUE;
+
+        List<Property> properties = repository.allProperties();
+        Collections.sort(properties);
+        reorder(properties);
+        spreadOut(properties, 10);
+        updateCurrent(diff, fallback);
+        Collections.sort(properties);
+        reorder(properties);
         return this;
     }
 
@@ -193,7 +201,8 @@ public class PropertyOrderingViewModel implements ViewModel {
             paged = 100
     )
     public List<PropertyOrderingViewModel> getProperties() {
-        final List<Property> properties = repository.allProperties();
+        List<Property> properties = repository.allProperties();
+        Collections.sort(properties);
         return Lists.newArrayList(
                     FluentIterable.from(properties)
                                   .transform(toViewModel())
@@ -202,7 +211,7 @@ public class PropertyOrderingViewModel implements ViewModel {
 
     private Function<Property, PropertyOrderingViewModel> toViewModel() {
         return new Function<Property, PropertyOrderingViewModel>() {
-            @Nullable @Override public PropertyOrderingViewModel apply(@Nullable final Property property) {
+            @Override public PropertyOrderingViewModel apply(final Property property) {
                 final PropertyOrderingViewModel vm = PropertyOrderingViewModel.this;
                 return property == vm.property
                         ? vm // can't have two view models both representing the same contact group at same time

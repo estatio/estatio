@@ -238,9 +238,9 @@ public class Property
         else if(other.displayOrder != null) {
             return 1;
         }
-        /* Ordering second by name */
+        /* Further ordering as specified in the superclass */
         else
-            return this.getName().compareTo(other.getName());
+            return super.compareTo(other);
     }
 
     // //////////////////////////////////////
