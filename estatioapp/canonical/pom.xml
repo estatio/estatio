@@ -123,7 +123,9 @@
                                 <phase>generate-resources</phase>
                                 <configuration>
                                     <resources>
-                                        <resource>target/generated-resources/schemagen</resource>
+                                        <resource>
+                                            <directory>target/generated-resources/schemagen</directory>
+                                        </resource>
                                     </resources>
                                 </configuration>
                             </execution>
