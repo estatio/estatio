@@ -1,13 +1,23 @@
 package org.estatio.canonical;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateXMLGregorianCalendarAdapter;
-
 public class DtoFactoryAbstract {
-    protected XMLGregorianCalendar convert(final LocalDate signatureDate) {
-        return JodaLocalDateXMLGregorianCalendarAdapter.print(signatureDate);
+    protected static XMLGregorianCalendar asXMLGregorianCalendar(final LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        try {
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(date.getYear(),date.getMonthOfYear(), date.getDayOfMonth(), 0,0,0,0,0);
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+        //return JodaLocalDateXMLGregorianCalendarAdapter.print(date);
     }
 }

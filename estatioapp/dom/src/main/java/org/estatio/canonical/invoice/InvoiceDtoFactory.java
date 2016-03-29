@@ -33,8 +33,8 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
         dto.setBuyerParty(mappingHelper.oidDtoFor(invoice.getBuyer()));
         dto.setSellerParty(mappingHelper.oidDtoFor(invoice.getSeller()));
 
-        dto.setDueDate(convert(invoice.getDueDate()));
-        dto.setInvoiceDate(convert(invoice.getInvoiceDate()));
+        dto.setDueDate(asXMLGregorianCalendar(invoice.getDueDate()));
+        dto.setInvoiceDate(asXMLGregorianCalendar(invoice.getInvoiceDate()));
         dto.setInvoiceNumber(invoice.getInvoiceNumber());
         dto.setCollectionNumber(invoice.getCollectionNumber());
 

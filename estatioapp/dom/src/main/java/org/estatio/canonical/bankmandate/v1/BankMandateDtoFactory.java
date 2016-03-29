@@ -21,7 +21,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         dto.setReference(bankMandate.getReference());
         dto.setScheme(bankMandate.getScheme().forDto());
         dto.setSequenceType(bankMandate.getSequenceType().forDto());
-        dto.setSignatureDate(convert(bankMandate.getSignatureDate()));
+        dto.setSignatureDate(asXMLGregorianCalendar(bankMandate.getSignatureDate()));
         dto.setBankAccount(mappingHelper.oidDtoFor(bankMandate.getBankAccount()));
 
         dto.setStatus(Status.OPEN); // not currently in the estatio dom, so hard-coded for now

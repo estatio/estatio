@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +46,8 @@ public class InvoiceDtoFactoryTest {
 
         // given
         invoice = new Invoice();
+        invoice.setInvoiceDate(new LocalDate(2016,1,1));
+
 
         invoice.getItems().add(newItem("1.01", "2.02", "3.03"));
         invoice.getItems().add(newItem("10.10", "20.20", "30.30"));
@@ -57,6 +60,7 @@ public class InvoiceDtoFactoryTest {
         assertThat(invoiceDto.getNetAmount()).isEqualTo(new BigDecimal("111.11"));
         assertThat(invoiceDto.getGrossAmount()).isEqualTo(new BigDecimal("222.22"));
         assertThat(invoiceDto.getVatAmount()).isEqualTo(new BigDecimal("333.33"));
+        assertThat(invoiceDto.getInvoiceDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
     }
 
     private static InvoiceItemForTesting newItem(final String netAmt, final String grossAmt, final String vatAmt) {

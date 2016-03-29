@@ -40,10 +40,10 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
 
         dto.setDescription(item.getDescription());
 
-        dto.setStartDate(convert(item.getStartDate()));
-        dto.setEndDate(convert(item.getEndDate()));
-        dto.setEffectiveStartDate(convert(item.getEffectiveStartDate()));
-        dto.setEffectiveEndDate(convert(item.getEffectiveEndDate()));
+        dto.setStartDate(asXMLGregorianCalendar(item.getStartDate()));
+        dto.setEndDate(asXMLGregorianCalendar(item.getEndDate()));
+        dto.setEffectiveStartDate(asXMLGregorianCalendar(item.getEffectiveStartDate()));
+        dto.setEffectiveEndDate(asXMLGregorianCalendar(item.getEffectiveEndDate()));
 
         return dto;
     }
