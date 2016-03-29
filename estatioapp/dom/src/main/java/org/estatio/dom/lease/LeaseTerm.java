@@ -427,6 +427,12 @@ public abstract class LeaseTerm
         return nextTerm;
     }
 
+    public boolean hideCreateNext(
+            final LocalDate nextStartDate,
+            final LocalDate nextEndDate) {
+        return !getLeaseItem().getType().autoCreateTerms();
+    }
+
     public String disableCreateNext(
             final LocalDate nextStartDate,
             final LocalDate nextEndDate) {

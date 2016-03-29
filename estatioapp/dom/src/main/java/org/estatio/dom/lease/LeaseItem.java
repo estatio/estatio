@@ -605,8 +605,11 @@ public class LeaseItem
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseItem verifyUntil(final LocalDate date) {
-        if (!getTerms().isEmpty()) {
-            getTerms().first().verifyUntil(date);
+        for(LeaseTerm term : getTerms()) {
+            // only verify the first terms of a chain or the standalones:
+            if (term.getPrevious() == null) {
+                term.verifyUntil(date);
+            }
         }
         return this;
     }
