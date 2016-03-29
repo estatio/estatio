@@ -93,12 +93,14 @@ public class IndexationMethodTest {
             tester(IndexationMethod.BASE_INDEX, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
             tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "3.00", "2.00", "4.00", "1.00", "3.00", "4.00");
             tester(IndexationMethod.LAST_KNOWN_INDEX, "3.00", "2.00", "4.00", "1.00", "1.00", "4.00");
 
             tester(IndexationMethod.BASE_INDEX, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
             tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "-3.00", "-2.00", "-4.00", "-1.00", "-3.00", "-4.00");
             tester(IndexationMethod.LAST_KNOWN_INDEX, "-3.00", "-2.00", "-4.00", "-1.00", "-1.00", "-4.00");
 
@@ -120,12 +122,14 @@ public class IndexationMethodTest {
             tester(IndexationMethod.BASE_INDEX, "3.00", "4.00", "5.00", null, "3.00", "5.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
             tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "3.00", "4.00", "5.00", null, "3.00", "5.00");
             tester(IndexationMethod.LAST_KNOWN_INDEX, "3.00", "4.00", "5.00", null, "5.00", "5.00");
 
             tester(IndexationMethod.BASE_INDEX, "-3.00", "4.00", "-5.00", null, "-3.00", "-5.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
             tester(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "-3.00", "-4.00", "-5.00", null, "-3.00", "-5.00");
             tester(IndexationMethod.LAST_KNOWN_INDEX, "-3.00", "-4.00", "-5.00", null, "-5.00", "-5.00");
 
@@ -134,12 +138,20 @@ public class IndexationMethodTest {
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "2.00", "1.00", null, "3.00", "1.00");
-            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "3.00", "2.00", "1.00", null, "3.00", "1.00");
 
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
             tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-2.00", "-1.00", null, "-3.00", "-1.00");
-            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "-3.00", "-2.00", "-1.00", null, "-3.00", "-1.00");
+
+            // effective indexed value = max [base value , first non zero (previous effective value, previous indexed value)]
+            // Nb. term.indexedValue is not calculated here; only previous indexed value
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "3.00", "2.00", "1.00", null, "3.00", "3.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "3.00", "4.00", null, null, "3.00", "4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "3.00", "5.00", "4.00", null, "3.00", "4.00");
+
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "-3.00", "-2.00", "-1.00", null, "-3.00", "-3.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "-3.00", "-4.00", null, null, "-3.00", "-4.00");
+            tester(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "-3.00", "-5.00", "-4.00", null, "-3.00", "-4.00");
 
             // effective indexed value = max baseValue, (indexedValue not calc here), first non-zero (effective indexed value previous, indexed value previous)
             tester(IndexationMethod.BASE_INDEX, "3.00", "5.00", "4.00", null, "3.00", "4.00");
