@@ -63,6 +63,9 @@ public class BankMandateDto implements VersionedDto {
     @Getter @Setter
     private XMLGregorianCalendar signatureDate;
 
+    /**
+     * Of type FinancialAccount
+     */
     @XmlElement(required = true)
     @Getter @Setter
     private OidDto bankAccount;

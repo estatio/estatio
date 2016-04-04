@@ -21,6 +21,7 @@ package org.estatio.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -58,9 +59,12 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
@@ -624,6 +628,24 @@ public class Invoice
     @Getter @Setter
     private BankMandate paidBy;
 
+
+    // //////////////////////////////////////
+
+    /**
+     * It's the responsibility of the invoice to be able to determine which seller's bank account is to be paid into by the buyer.
+     */
+    @Programmatic
+    public FinancialAccount getSellerBankAccount() {
+        if(getFixedAsset() == null) {
+            return null;
+        }
+        // TODO: EST-xxxx to enforce the constraint that there can only be one "at any given time".
+        final Optional<FixedAssetFinancialAccount> fafrIfAny =
+                fixedAssetFinancialAccountRepository.findByFixedAsset(getFixedAsset()).stream().findFirst();
+        return fafrIfAny.isPresent()? fafrIfAny.get().getFinancialAccount(): null;
+    }
+
+
     // //////////////////////////////////////
 
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -649,6 +671,9 @@ public class Invoice
 
     @javax.inject.Inject
     EstatioNumeratorRepository estatioNumeratorRepository;
+
+    @javax.inject.Inject
+    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @javax.inject.Inject
     Invoices invoices;

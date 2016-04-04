@@ -14,6 +14,7 @@ import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
@@ -43,13 +44,17 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
             dto.setAgreementReference(lease.getReference());
             final BankMandate paidBy = lease.getPaidBy();
             dto.setPaidByMandate(mappingHelper.oidDtoFor(paidBy));
-            dto.setPaidByMandateBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
+            dto.setBuyerBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
         }
 
-        final Optional<FixedAsset> fixedAsset = Optional.ofNullable(invoice.getFixedAsset());
-        if (fixedAsset.isPresent()) {
-            dto.setFixedAssetReference(fixedAsset.get().getReference());
-            dto.setFixedAssetExternalReference(fixedAsset.get().getExternalReference());
+        final Optional<FixedAsset> fixedAssetIfAny = Optional.ofNullable(invoice.getFixedAsset());
+        if (fixedAssetIfAny.isPresent()) {
+            final FixedAsset fixedAsset = fixedAssetIfAny.get();
+            dto.setFixedAssetReference(fixedAsset.getReference());
+            dto.setFixedAssetExternalReference(fixedAsset.getExternalReference());
+
+            // there should be only one
+            dto.setSellerBankAccount(mappingHelper.oidDtoFor(invoice.getSellerBankAccount()));
         }
 
         invoice.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemDtoFactory.newDto(item)));
@@ -70,4 +75,6 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
 
     @Inject
     DtoMappingHelper mappingHelper;
+    @Inject
+    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 }

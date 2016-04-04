@@ -35,7 +35,8 @@ import lombok.Setter;
         "invoiceNumber",
         "collectionNumber",
         "paidByMandate",
-        "paidByMandateBankAccount",
+        "buyerBankAccount",
+        "sellerBankAccount",
         "agreementReference",
         "fixedAssetReference",
         "fixedAssetExternalReference",
@@ -82,14 +83,28 @@ public class InvoiceDto implements VersionedDto {
     @Getter @Setter
     private String collectionNumber;
 
+    /**
+     * Of type BankMandate
+     */
     @Getter @Setter
     protected OidDto paidByMandate;
 
     /**
-     * Of type FinancialAccount
+     * Of type FinancialAccount.
+     *
+     * provided as a convenience; will be the same as the paidBy (BankMandateDto)'s bankAccount
      */
     @Getter @Setter
-    protected OidDto paidByMandateBankAccount;
+    protected OidDto buyerBankAccount;
+
+    /**
+     * Of type FinancialAccount.
+     *
+     * also required for buyers where we have no mandate; we quote this sellers bank account on their invoice ("please pay by cheque to this account" etc etc)
+     */
+    @Getter @Setter
+    protected OidDto sellerBankAccount;
+
 
     @Getter @Setter
     private String agreementReference;
