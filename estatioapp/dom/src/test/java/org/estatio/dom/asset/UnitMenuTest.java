@@ -69,4 +69,17 @@ public class UnitMenuTest {
         assertThat(newUnit.getType(), is(UnitType.EXTERNAL));
     }
 
+    @Test
+    public void changeUnit() {
+        final Unit changeUnit = new Unit();
+        changeUnit.setReference("REF-1");
+        changeUnit.setName("Name-1");
+        changeUnit.setType(UnitType.EXTERNAL);
+
+        changeUnit.changeAsset("Name-2", UnitType.BOUTIQUE);
+
+        assertThat(changeUnit.getName(), is("Name-2"));
+        assertThat(changeUnit.getType(), is(UnitType.BOUTIQUE));
+    }
+
 }

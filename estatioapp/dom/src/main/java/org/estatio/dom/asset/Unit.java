@@ -194,7 +194,6 @@ public class Unit
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Unit changeDates(
-
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
@@ -227,10 +226,9 @@ public class Unit
 
     public Unit changeAsset(
             final String name,
-            final UnitType type,
-            final @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            final UnitType type) {
         setName(name);
-        setExternalReference(externalReference);
+        setType(type);
         return this;
     }
 
@@ -240,10 +238,6 @@ public class Unit
 
     public UnitType default1ChangeAsset() {
         return getType();
-    }
-
-    public String default2ChangeAsset() {
-        return getExternalReference();
     }
 
     // ///////////////////////////////////////
