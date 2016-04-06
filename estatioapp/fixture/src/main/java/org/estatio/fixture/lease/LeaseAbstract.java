@@ -66,7 +66,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard");
+        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", null);
         Lease lease = leases.newLease(
                 reference,
                 name,
