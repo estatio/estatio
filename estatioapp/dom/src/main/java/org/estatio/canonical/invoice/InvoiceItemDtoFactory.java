@@ -55,7 +55,12 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
             final SortedSet<Occupancy> occupancies = leaseIfAny.getOccupancies();
             final Optional<Occupancy> occupancyIfAny =
                     occupancies.stream().filter(x -> x.getInterval().contains(item.getDueDate())).findFirst();
-            dto.setOccupancyBrand(occupancyIfAny.isPresent() ? occupancyIfAny.get().getBrand().getName() : null);
+
+            if(occupancyIfAny.isPresent()) {
+                final Occupancy occupancy = occupancyIfAny.get();
+                dto.setOccupancyBrand(occupancy.getBrand().getName());
+                dto.setFixedAssetReference(occupancy.getUnit().getReference());
+            }
         }
         return dto;
     }
