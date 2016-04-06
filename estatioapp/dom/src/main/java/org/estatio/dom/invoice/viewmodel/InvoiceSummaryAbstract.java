@@ -26,13 +26,13 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
 
@@ -73,20 +73,16 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Object zapAll() {
-        for (Invoice invoice : getInvoices()) {
-            invoice.remove();
-        }
-        return this;
-    }
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public InvoiceSummaryAbstract saveAllAsHistoric() {
         for (Invoice invoice : getInvoices()) {
             invoice.saveAsHistoric();
         }
         return this;
+    }
+
+    public boolean hideSaveAllAsHistoric(){
+        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
     }
 
     @CollectionLayout(render = RenderType.EAGERLY)
