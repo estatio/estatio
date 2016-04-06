@@ -37,6 +37,7 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
         dto.setDueDate(asXMLGregorianCalendar(invoice.getDueDate()));
         dto.setInvoiceDate(asXMLGregorianCalendar(invoice.getInvoiceDate()));
         dto.setInvoiceNumber(invoice.getInvoiceNumber());
+        dto.setPaymentMethod(invoice.getPaymentMethod().asDto());
         dto.setCollectionNumber(invoice.getCollectionNumber());
 
         final Lease lease = invoice.getLease();
@@ -68,7 +69,6 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
         dto.setVatAmount(dto.getItems().stream()
                             .map(InvoiceItemDto::getVatAmount)
                             .reduce(BigDecimal.ZERO, BigDecimal::add));
-                
 
         return dto;
     }

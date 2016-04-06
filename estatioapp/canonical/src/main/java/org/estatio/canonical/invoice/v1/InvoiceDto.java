@@ -33,6 +33,7 @@ import lombok.Setter;
         "invoiceDate",
         "dueDate",
         "invoiceNumber",
+        "paymentMethod",
         "collectionNumber",
         "paidByMandate",
         "buyerBankAccount",
@@ -79,6 +80,9 @@ public class InvoiceDto implements VersionedDto {
 
     @Getter @Setter
     private String invoiceNumber;
+
+    @Getter @Setter
+    private PaymentMethod paymentMethod;
 
     @Getter @Setter
     private String collectionNumber;
