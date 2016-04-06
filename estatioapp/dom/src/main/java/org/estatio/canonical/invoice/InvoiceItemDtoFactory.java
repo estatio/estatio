@@ -1,5 +1,8 @@
 package org.estatio.canonical.invoice;
 
+import java.util.Optional;
+import java.util.SortedSet;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -11,6 +14,7 @@ import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -44,6 +48,11 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
         dto.setEndDate(asXMLGregorianCalendar(item.getEndDate()));
         dto.setEffectiveStartDate(asXMLGregorianCalendar(item.getEffectiveStartDate()));
         dto.setEffectiveEndDate(asXMLGregorianCalendar(item.getEffectiveEndDate()));
+
+        final SortedSet<Occupancy> occupancies = item.getInvoice().getLease().getOccupancies();
+        final Optional<Occupancy> occupancyIfAny =
+                occupancies.stream().filter(x -> x.getInterval().contains(item.getDueDate())).findFirst();
+        dto.setOccupancyBrand(occupancyIfAny.isPresent()? occupancyIfAny.get().getBrand().getName(): null);
 
         return dto;
     }

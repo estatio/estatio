@@ -1,12 +1,10 @@
-package org.estatio.canonical.party.v1;
+package org.estatio.canonical.communicationchannel.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import org.apache.isis.schema.common.v1.OidDto;
 
 import org.estatio.canonical.VersionedDto;
 
@@ -20,13 +18,16 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
     "majorVersion",
     "minorVersion",
-    "reference",
-    "name",
-    "legalPostalAddress"
+    "address1",
+    "address2",
+    "address3",
+    "postalCode",
+    "city",
+    "state",
+    "country",
 })
-@XmlRootElement(name = "partyDto")
-public class PartyDto implements VersionedDto {
-
+@XmlRootElement(name = "postalAddressDto")
+public class PostalAddressDto implements VersionedDto {
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -38,21 +39,32 @@ public class PartyDto implements VersionedDto {
         return "0";
     }
 
-
     @XmlElement(required = true)
     @Getter @Setter
-    protected String reference;
-
-
-    @XmlElement(required = true)
-    @Getter @Setter
-    protected String name;
-
+    protected String address1;
 
     @XmlElement(required = false)
     @Getter @Setter
-    protected OidDto legalPostalAddress;
+    protected String address2;
 
+    @XmlElement(required = false)
+    @Getter @Setter
+    protected String address3;
 
+    @XmlElement(required = false)
+    @Getter @Setter
+    protected String postalCode;
+
+    @XmlElement(required = false)
+    @Getter @Setter
+    protected String city;
+
+    @XmlElement(required = false)
+    @Getter @Setter
+    protected String state;
+
+    @XmlElement(required = true)
+    @Getter @Setter
+    protected String country;
 
 }

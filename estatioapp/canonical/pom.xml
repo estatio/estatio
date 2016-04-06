@@ -95,6 +95,11 @@
                                     <toFile>party.xsd</toFile>
                                 </transformSchema>
                                 <transformSchema>
+                                    <uri>http://canonical.estatio.org/communicationchannel/v1/communicationchannel.xsd</uri>
+                                    <toPrefix>communicationchannel</toPrefix>
+                                    <toFile>communicationchannel.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
                                     <uri>http://isis.apache.org/schema/common</uri>
                                     <toPrefix>isis-common</toPrefix>
                                     <toFile>isis-common.xsd</toFile>
