@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.apache.isis.schema.common.v1.OidDto;
+
+import org.estatio.canonical.HasSelfDto;
 import org.estatio.canonical.VersionedDto;
 
 import lombok.Getter;
@@ -18,6 +21,7 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
     "majorVersion",
     "minorVersion",
+    "self",
     "address1",
     "address2",
     "address3",
@@ -27,7 +31,7 @@ import lombok.Setter;
     "country",
 })
 @XmlRootElement(name = "postalAddressDto")
-public class PostalAddressDto implements VersionedDto {
+public class PostalAddressDto implements VersionedDto, HasSelfDto {
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -38,6 +42,10 @@ public class PostalAddressDto implements VersionedDto {
     public String getMinorVersion() {
         return "0";
     }
+
+    @XmlElement(required = true)
+    @Getter @Setter
+    protected OidDto self;
 
     @XmlElement(required = true)
     @Getter @Setter
@@ -61,10 +69,25 @@ public class PostalAddressDto implements VersionedDto {
 
     @XmlElement(required = false)
     @Getter @Setter
-    protected String state;
+    protected String stateReference;
+
+    @XmlElement(required = false)
+    @Getter @Setter
+    protected String stateName;
+
+    /**
+     * 3 characters in length.
+     */
+    @XmlElement(required = true)
+    @Getter @Setter
+    protected String countryReference;
 
     @XmlElement(required = true)
     @Getter @Setter
-    protected String country;
+    protected String countryAlpha2Code;
+
+    @XmlElement(required = true)
+    @Getter @Setter
+    protected String countryName;
 
 }

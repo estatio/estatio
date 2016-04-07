@@ -123,6 +123,15 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
                 "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
     }
 
+    public List<AgreementRole> findByPartyAndType(
+            final Party party,
+            final AgreementRoleType type) {
+        return allMatches(
+                "findByPartyAndType",
+                "party", party,
+                "type", type);
+    }
+
 
 
 }

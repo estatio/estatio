@@ -30,6 +30,7 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
     public InvoiceDto newDto(final Invoice invoice) {
         InvoiceDto dto = new InvoiceDto();
 
+        dto.setSelf(mappingHelper.oidDtoFor(invoice));
         dto.setAtPath(invoice.getApplicationTenancyPath());
         dto.setBuyerParty(mappingHelper.oidDtoFor(invoice.getBuyer()));
         dto.setSellerParty(mappingHelper.oidDtoFor(invoice.getSeller()));

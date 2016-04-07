@@ -111,7 +111,13 @@ import lombok.Setter;
                         + "WHERE agreement == :agreement "
                         + "&& type == :type "
                         + "&& (startDate == null || startDate <= :startDate) "
-                        + "&& (endDate == null || endDate >= :endDate) ")
+                        + "&& (endDate == null || endDate >= :endDate) "),
+        @javax.jdo.annotations.Query(
+                name = "findByPartyAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE party == :party "
+                        + "&& type == :type ")
 })
 @Unique(
         name = "AgreementRole_agreement_party_type_startDate_UNQ",

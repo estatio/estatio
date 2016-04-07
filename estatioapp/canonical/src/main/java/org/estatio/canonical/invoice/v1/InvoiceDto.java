@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.schema.common.v1.OidDto;
 
+import org.estatio.canonical.HasSelfDto;
 import org.estatio.canonical.VersionedDto;
 
 import lombok.Getter;
@@ -27,6 +28,7 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
         "majorVersion",
         "minorVersion",
+        "self",
         "atPath",
         "buyerParty",
         "sellerParty",
@@ -47,7 +49,7 @@ import lombok.Setter;
         "grossAmount"
 })
 @XmlRootElement(name = "invoiceDto")
-public class InvoiceDto implements VersionedDto {
+public class InvoiceDto implements VersionedDto, HasSelfDto {
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -58,6 +60,10 @@ public class InvoiceDto implements VersionedDto {
     public String getMinorVersion() {
         return "0";
     }
+
+    @XmlElement(required = true)
+    @Getter @Setter
+    protected OidDto self;
 
     @XmlElement(required = true)
     @Getter @Setter
