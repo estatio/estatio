@@ -104,6 +104,11 @@ public class Property
     @Getter @Setter
     private String fullName;
 
+    public Property changeFullName(final String fullName) {
+        setFullName(fullName);
+        return this;
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
