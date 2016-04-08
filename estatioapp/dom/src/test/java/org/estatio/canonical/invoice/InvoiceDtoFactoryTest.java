@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.canonical.invoice.v1.InvoiceDto;
+import org.estatio.canonical.invoice.v1.PaymentMethod;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
@@ -47,11 +48,12 @@ public class InvoiceDtoFactoryTest {
         // given
         invoice = new Invoice();
         invoice.setInvoiceDate(new LocalDate(2016,1,1));
+        invoice.setPaymentMethod(org.estatio.dom.invoice.PaymentMethod.DIRECT_DEBIT);
 
 
-        invoice.getItems().add(newItem("1.01", "2.02", "3.03"));
-        invoice.getItems().add(newItem("10.10", "20.20", "30.30"));
-        invoice.getItems().add(newItem("100.00", "200.00", "300.00"));
+        invoice.getItems().add(newItem(invoice, "1.01", "2.02", "3.03"));
+        invoice.getItems().add(newItem(invoice, "10.10", "20.20", "30.30"));
+        invoice.getItems().add(newItem(invoice, "100.00", "200.00", "300.00"));
 
         // when
         final InvoiceDto invoiceDto = invoiceDtoFactory.newDto(invoice);
@@ -61,10 +63,12 @@ public class InvoiceDtoFactoryTest {
         assertThat(invoiceDto.getGrossAmount()).isEqualTo(new BigDecimal("222.22"));
         assertThat(invoiceDto.getVatAmount()).isEqualTo(new BigDecimal("333.33"));
         assertThat(invoiceDto.getInvoiceDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
+        assertThat(invoiceDto.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
     }
 
-    private static InvoiceItemForTesting newItem(final String netAmt, final String grossAmt, final String vatAmt) {
+    private static InvoiceItemForTesting newItem(final Invoice invoice, final String netAmt, final String grossAmt, final String vatAmt) {
         final InvoiceItemForTesting invoiceItem = new InvoiceItemForTesting();
+        invoiceItem.setInvoice(invoice);
         final Charge charge = new Charge();
         invoiceItem.setCharge(charge);
         final Tax tax = new Tax();

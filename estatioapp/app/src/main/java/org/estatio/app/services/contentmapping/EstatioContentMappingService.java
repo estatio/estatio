@@ -19,20 +19,27 @@
 package org.estatio.app.services.contentmapping;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
+
+import com.google.common.base.Joiner;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.viewer.restfulobjects.applib.RepresentationType;
-import org.apache.isis.viewer.restfulobjects.rendering.service.conmap.ContentMappingService;
+import org.apache.isis.applib.conmap.ContentMappingService;
 
+import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
 import org.estatio.canonical.bankmandate.v1.BankMandateDtoFactory;
+import org.estatio.canonical.bankmandate.v1.PartyBankAccountsAndMandatesDtoFactory;
+import org.estatio.canonical.communicationchannel.PostalAddressDtoFactory;
 import org.estatio.canonical.financial.v1.BankAccountDtoFactory;
 import org.estatio.canonical.invoice.InvoiceDtoFactory;
 import org.estatio.canonical.party.PartyDtoFactory;
+import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
@@ -46,12 +53,20 @@ public class EstatioContentMappingService implements ContentMappingService {
     @Override
     public Object map(
             final Object object,
-            final List<MediaType> acceptableMediaTypes,
-            final RepresentationType representationType) {
+            final List<MediaType> acceptableMediaTypes) {
+
+        final String domainType = determineDomainType(acceptableMediaTypes);
 
         if(object instanceof Party) {
-            return partyDtoFactory.newDto((Party)object);
+            final Party party = (Party) object;
+            if(domainType.equals(PartyDto.class.getName())) {
+                return partyDtoFactory.newDto(party);
+            }
+            if(domainType.equals(BankAccountsAndMandatesDto.class.getName())) {
+                return partyBankAccountsAndMandatesDtoFactory.newDto(party);
+            }
         }
+
         if(object instanceof BankAccount) {
             return bankAccountDtoFactory.newDto((BankAccount)object);
         }
@@ -61,8 +76,23 @@ public class EstatioContentMappingService implements ContentMappingService {
         if(object instanceof Invoice) {
             return invoiceDtoFactory.newDto((Invoice)object);
         }
+        if(object instanceof PostalAddress) {
+            return postalAddressDtoFactory.newDto((PostalAddress)object);
+        }
 
         return null;
+    }
+
+    static String determineDomainType(final List<MediaType> acceptableMediaTypes) {
+        for (MediaType acceptableMediaType : acceptableMediaTypes) {
+            final Map<String, String> parameters = acceptableMediaType.getParameters();
+            final String domainType = parameters.get("x-ro-domain-type");
+            if(domainType != null) {
+                return domainType;
+            }
+        }
+        throw new IllegalArgumentException(
+                "Could not locate x-ro-domain-type parameter in any of the provided media types; got: " + Joiner.on(", ").join(acceptableMediaTypes));
     }
 
     @javax.inject.Inject
@@ -72,9 +102,15 @@ public class EstatioContentMappingService implements ContentMappingService {
     BankMandateDtoFactory bankMandateDtoFactory;
 
     @javax.inject.Inject
+    PartyBankAccountsAndMandatesDtoFactory partyBankAccountsAndMandatesDtoFactory;
+
+    @javax.inject.Inject
     PartyDtoFactory partyDtoFactory;
 
     @javax.inject.Inject
     InvoiceDtoFactory invoiceDtoFactory;
+
+    @javax.inject.Inject
+    PostalAddressDtoFactory postalAddressDtoFactory;
 
 }

@@ -18,6 +18,8 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
     @Programmatic
     public BankMandateDto newDto(final BankMandate bankMandate) {
         final BankMandateDto dto = new BankMandateDto();
+
+        dto.setSelf(mappingHelper.oidDtoFor(bankMandate));
         dto.setReference(bankMandate.getReference());
         dto.setScheme(bankMandate.getScheme().forDto());
         dto.setSequenceType(bankMandate.getSequenceType().forDto());
@@ -25,7 +27,6 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         dto.setBankAccount(mappingHelper.oidDtoFor(bankMandate.getBankAccount()));
 
         dto.setStatus(Status.OPEN); // not currently in the estatio dom, so hard-coded for now
-
 
         return dto;
     }

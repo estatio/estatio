@@ -9,6 +9,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.isis.schema.common.v1.OidDto;
 
+import org.estatio.canonical.HasSelfDto;
 import org.estatio.canonical.VersionedDto;
 
 import lombok.Getter;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
         "majorVersion",
         "minorVersion",
+        "self",
         "reference",
         "sequenceType",
         "scheme",
@@ -29,7 +31,7 @@ import lombok.Setter;
         "bankAccount"
 })
 @XmlRootElement(name = "bankMandateDto")
-public class BankMandateDto implements VersionedDto {
+public class BankMandateDto implements VersionedDto, HasSelfDto {
 
     public BankMandateDto() {}
 
@@ -42,6 +44,10 @@ public class BankMandateDto implements VersionedDto {
     public String getMinorVersion() {
         return "0";
     }
+
+    @XmlElement(required = true)
+    @Getter @Setter
+    protected OidDto self;
 
     @XmlElement(required = true)
     @Getter @Setter

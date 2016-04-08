@@ -1,15 +1,16 @@
-package org.estatio.canonical.party.v1;
+package org.estatio.canonical.bankmandate.v1;
+
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import org.apache.isis.schema.common.v1.OidDto;
-
-import org.estatio.canonical.HasSelfDto;
 import org.estatio.canonical.VersionedDto;
+import org.estatio.canonical.financial.v1.BankAccountDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,14 +22,11 @@ import lombok.Setter;
 @XmlType(name = "", propOrder = {
     "majorVersion",
     "minorVersion",
-    "self",
-    "reference",
-    "name",
-    "legalPostalAddress"
+    "bankAccounts",
+    "bankMandates"
 })
-@XmlRootElement(name = "partyDto")
-public class PartyDto implements VersionedDto, HasSelfDto {
-
+@XmlRootElement(name = "bankAccountsAndMandatesDto")
+public class BankAccountsAndMandatesDto implements VersionedDto {
 
     @XmlElement(required = true, defaultValue = "1")
     public final String getMajorVersion() {
@@ -40,23 +38,14 @@ public class PartyDto implements VersionedDto, HasSelfDto {
         return "0";
     }
 
+    @XmlElementWrapper
     @XmlElement(required = true)
     @Getter @Setter
-    protected OidDto self;
+    protected List<BankAccountDto> bankAccounts;
 
+    @XmlElementWrapper
     @XmlElement(required = true)
     @Getter @Setter
-    protected String reference;
-
-    @XmlElement(required = true)
-    @Getter @Setter
-    protected String name;
-
-
-    @XmlElement(required = false)
-    @Getter @Setter
-    protected OidDto legalPostalAddress;
-
-
+    protected List<BankMandateDto> bankMandates;
 
 }

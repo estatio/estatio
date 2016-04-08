@@ -24,6 +24,7 @@ public class PartyDtoFactory {
     @Programmatic
     public PartyDto newDto(final Party party) {
         PartyDto dto = new PartyDto();
+        dto.setSelf(mappingHelper.oidDtoFor(party));
         dto.setName(party.getName());
         dto.setReference(party.getReference());
 

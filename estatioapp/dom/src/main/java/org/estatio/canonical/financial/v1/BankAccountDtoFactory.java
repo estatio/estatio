@@ -17,6 +17,8 @@ public class BankAccountDtoFactory {
     @Programmatic
     public BankAccountDto newDto(final BankAccount bankAccount) {
         final BankAccountDto dto = new BankAccountDto();
+
+        dto.setSelf(mappingHelper.oidDtoFor(bankAccount));
         dto.setAccountNumber(bankAccount.getAccountNumber());
         dto.setBankParty(mappingHelper.oidDtoFor(bankAccount.getBank()));
         dto.setBranchCode(bankAccount.getBranchCode());
