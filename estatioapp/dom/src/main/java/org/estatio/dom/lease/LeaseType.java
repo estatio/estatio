@@ -79,7 +79,7 @@ public class LeaseType
             allowsNull = "false",
             name = "atPath"
     )
-    @Property(hidden = Where.EVERYWHERE)
+    @Property(hidden = Where.ALL_EXCEPT_STANDALONE_TABLES)
     @Getter @Setter
     private String applicationTenancyPath;
 

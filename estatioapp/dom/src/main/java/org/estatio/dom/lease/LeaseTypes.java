@@ -24,7 +24,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -33,7 +32,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 
 @DomainService(repositoryFor = LeaseType.class)
 @DomainServiceLayout(
@@ -52,12 +50,12 @@ public class LeaseTypes extends UdoDomainRepositoryAndFactory<LeaseType> {
     @MemberOrder(sequence = "1")
     public LeaseType newLeaseType(
             final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
-            final @Parameter(optionality = Optionality.OPTIONAL) String name,
-            final @Parameter(optionality = Optionality.OPTIONAL) ApplicationTenancy applicationTenancy) {
+            final String name,
+            final ApplicationTenancy applicationTenancy) {
         final LeaseType leaseType = newTransientInstance();
         leaseType.setReference(reference);
         leaseType.setName(name);
-        leaseType.setApplicationTenancyPath(applicationTenancy != null ? applicationTenancy.getPath() : ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        leaseType.setApplicationTenancyPath(applicationTenancy.getPath());
         persistIfNotAlready(leaseType);
         return leaseType;
     }
