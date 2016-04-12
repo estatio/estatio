@@ -20,7 +20,8 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         final BankMandateDto dto = new BankMandateDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(bankMandate));
-        dto.setReference(bankMandate.getReference());
+
+        dto.setReference(fixup(bankMandate.getReference()));
         dto.setScheme(bankMandate.getScheme().forDto());
         dto.setSequenceType(bankMandate.getSequenceType().forDto());
         dto.setSignatureDate(asXMLGregorianCalendar(bankMandate.getSignatureDate()));
@@ -29,6 +30,14 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         dto.setStatus(Status.OPEN); // not currently in the estatio dom, so hard-coded for now
 
         return dto;
+    }
+
+    // TODO: We've added a suffix because agreement names must be unique, remove after closing https://incodehq.atlassian.net/browse/EST-684
+    String fixup(final String reference) {
+        if (reference.endsWith("-M")){
+            return reference.substring(0,reference.length()-2);
+        }
+        return reference;
     }
 
     @Inject
