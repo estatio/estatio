@@ -21,6 +21,7 @@ package org.estatio.dom.party;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -136,11 +137,18 @@ public abstract class Party
 
     // //////////////////////////////////////
 
+    @Column(length = JdoColumnLength.Party.FISCAL_CODE)
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private String fiscalCode;
+
+    // //////////////////////////////////////
+
     public static class RemoveEvent extends ActionDomainEvent<Party> {
         private static final long serialVersionUID = 1L;
 
         public Party getReplacement() {
-              return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));
+            return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
     }
 

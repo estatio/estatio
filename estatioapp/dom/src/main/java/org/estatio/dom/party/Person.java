@@ -65,7 +65,6 @@ public class Person
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.Person.INITIALS)

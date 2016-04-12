@@ -125,10 +125,6 @@ public final class JdoColumnLength {
         /**
          * TODO: review
          */
-        public static final int FISCAL_CODE = 30;
-        /**
-         * TODO: review
-         */
         public static final int VAT_CODE = 30;
     }
 
@@ -142,6 +138,11 @@ public final class JdoColumnLength {
     public static final class Party {
         private Party() {
         }
+
+        /**
+         * TODO: review
+         */
+        public static final int FISCAL_CODE = 30;
 
         public static final int NAME = 80;
     }
