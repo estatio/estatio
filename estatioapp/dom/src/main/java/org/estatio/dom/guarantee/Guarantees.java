@@ -51,7 +51,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.DOMAIN)
+@DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.VIEW)
 public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     @Override

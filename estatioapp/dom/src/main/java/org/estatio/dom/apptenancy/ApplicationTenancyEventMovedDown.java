@@ -18,11 +18,4 @@
  */
 package org.estatio.dom.apptenancy;
 
-import org.apache.isis.applib.Identifier;
-import org.estatio.dom.EstatioDomainObject;
-
-public class ApplicationTenancyEventMovedDown extends ApplicationTenancyEventChanged {
-    public ApplicationTenancyEventMovedDown(final EstatioDomainObject source, final Identifier identifier, final Object... arguments) {
-        super(source, identifier, arguments);
-    }
-}
+public class ApplicationTenancyEventMovedDown extends ApplicationTenancyEventChanged {}

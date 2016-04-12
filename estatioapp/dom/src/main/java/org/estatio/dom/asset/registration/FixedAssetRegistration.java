@@ -24,6 +24,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
@@ -32,18 +33,21 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.annotation.PropertyLayout;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -84,30 +88,16 @@ public abstract class FixedAssetRegistration
 
     // //////////////////////////////////////
 
-    private FixedAsset subject;
-
     @javax.jdo.annotations.Column(name = "subjectId", allowsNull = "false")
     @MemberOrder(sequence = "1")
-    public FixedAsset getSubject() {
-        return subject;
-    }
-
-    public void setSubject(final FixedAsset subject) {
-        this.subject = subject;
-    }
+    @Getter @Setter
+    private FixedAsset subject;
 
     // //////////////////////////////////////
 
-    private FixedAssetRegistrationType type;
-
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-    public FixedAssetRegistrationType getType() {
-        return type;
-    }
-
-    public void setType(final FixedAssetRegistrationType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private FixedAssetRegistrationType type;
 
     // //////////////////////////////////////
 
@@ -117,43 +107,29 @@ public abstract class FixedAssetRegistration
 
     // //////////////////////////////////////
 
-    private LocalDate startDate;
-
     @Column(allowsNull = "true")
     @MemberOrder(sequence = "3")
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
+    @Getter @Setter
+    private LocalDate startDate;
 
     // //////////////////////////////////////
-
-    private LocalDate endDate;
 
     @Column(allowsNull = "true")
     @MemberOrder(sequence = "4")
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<FixedAssetRegistration> changeDates = new WithIntervalMutable.Helper<FixedAssetRegistration>(this);
+    private WithIntervalMutable.Helper<FixedAssetRegistration> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<FixedAssetRegistration> getChangeDates() {
         return changeDates;
     }
 
     public FixedAssetRegistration changeDates(
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         if (getPrevious() != null) {
             getPrevious().getChangeDates().changeDates(getPrevious().getStartDate(), startDate.minusDays(1));
         }
@@ -223,17 +199,12 @@ public abstract class FixedAssetRegistration
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public FixedAsset remove(final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public FixedAsset remove() {
         FixedAsset fixedAsset = getSubject();
-        doRemove();
-        return fixedAsset;
-    }
-
-    @Programmatic
-    public void doRemove() {
         getContainer().remove(this);
         getContainer().flush();
+        return fixedAsset;
     }
 
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="newBusinessCase"/>
+            <ns2:action id="recentChanges"/>
+            <ns2:action id="links"/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <ns2:fieldSet name="Project" id="project" unreferencedProperties="true">
+                <ns2:property id="reference"/>
+                <ns2:property id="name"/>
+                <ns2:property id="projectPhase">
+                    <ns2:action id="changeProject" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="businessCase"/>
+                <ns2:property id="program"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="startDate"/>
+                <ns2:property id="endDate">
+                    <ns2:action id="updateDates" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Cost" id="cost">
+                <ns2:property id="currency"/>
+                <ns2:property id="estimatedCost">
+                    <ns2:action id="updateCost" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="General" id="general">
+                <ns2:property id="relatedObject"/>
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="8" unreferencedCollections="true">
+            <ns2:collection id="roles"/>
+            <ns2:collection id="roles">
+                <ns2:action id="newProjectRole"/>
+            </ns2:collection>
+        </col>
+    </row>
+</grid>

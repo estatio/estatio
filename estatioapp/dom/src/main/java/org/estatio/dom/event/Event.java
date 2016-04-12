@@ -22,11 +22,11 @@ import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -34,11 +34,19 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An event that has or is scheduled to occur at some point in time, pertaining
@@ -70,7 +78,12 @@ public class Event
         super("date, source, calendarName");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getSource())
+                .withName(getCalendarName())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -82,20 +95,12 @@ public class Event
 
     // //////////////////////////////////////
 
-    private LocalDate date;
-
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Property(optionality = Optionality.MANDATORY)
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(final LocalDate startDate) {
-        this.date = startDate;
-    }
+    @Getter @Setter
+    private LocalDate date;
 
     // //////////////////////////////////////
-
     
     /**
      * Polymorphic association to (any implementation of) {@link EventSource}.
@@ -105,7 +110,6 @@ public class Event
             hidden = Where.PARENTED_TABLES,
             notPersisted = true
     )
-    @Title(sequence = "1")
     public EventSource getSource() {
         final EventSourceLink link = getSourceLink();
         return link != null? link.getPolymorphicReference(): null;
@@ -131,21 +135,18 @@ public class Event
         return eventSourceLinks.findByEvent(this);
     }
 
-
     // //////////////////////////////////////
-
-    private String calendarName;
 
     /**
      * The name of the &quot;calendar&quot; to which this event belongs.
-     * 
+     *
      * <p>
      * The &quot;calendar&quot; is a string identifier that indicates the nature
      * of this event. These are expected to be uniquely identifiable for all and
      * any events that might be created. They therefore typically (always?)
      * include information relating to the type/class of the event's
      * {@link #getSource() subject}.
-     * 
+     *
      * <p>
      * For example, an event whose subject is a lease's
      * <tt>FixedBreakOption</tt> has three dates: the <i>break date</i>, the
@@ -155,29 +156,16 @@ public class Event
      * reminder</i>.
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Event.CALENDAR_NAME)
-    @Title(prepend = ": ", sequence = "2")
     @Property(editing = Editing.DISABLED)
-    public String getCalendarName() {
-        return calendarName;
-    }
-
-    public void setCalendarName(final String calendarName) {
-        this.calendarName = calendarName;
-    }
+    @Getter @Setter
+    private String calendarName;
 
     // //////////////////////////////////////
 
-    private String notes;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NOTES)
     @PropertyLayout(multiLine = NUMBER_OF_LINES)
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(final String description) {
-        this.notes = description;
-    }
+    @Getter @Setter
+    private String notes;
 
     // //////////////////////////////////////
 
@@ -207,7 +195,7 @@ public class Event
         };
     }
 
-    public Event changeNotes(final @ParameterLayout(named = "Notes", multiLine = NUMBER_OF_LINES) String notes) {
+    public Event changeNotes(final @ParameterLayout(multiLine = NUMBER_OF_LINES) String notes) {
         setNotes(notes);
 
         return this;
@@ -217,14 +205,11 @@ public class Event
         return getNotes();
     }
 
-
-
     @Override
     public String toString() {
         // TODO: have (temporarily?) removed source from this, cos hitting an infinite loop :-(
         return UDO_OBJECT_CONTRACTS.toStringOf(this, "date, calendarName");
     }
-
 
     @Inject
     private EventSourceLinks eventSourceLinks;

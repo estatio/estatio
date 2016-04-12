@@ -11,10 +11,9 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -33,7 +32,7 @@ import org.estatio.dom.party.Persons;
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.4")
-@DomainService(repositoryFor = PartyRelationship.class)
+@DomainService(repositoryFor = PartyRelationship.class, nature = NatureOfService.VIEW)
 public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelationship> {
 
     public PartyRelationships() {
@@ -45,17 +44,16 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
         return allMatches("findByParty", "party", party);
     }
 
-    @NotInServiceMenu
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public PartyRelationship newRelationship(
-            final @ParameterLayout(named = "From party") Party from,
-            final @ParameterLayout(named = "To party") Party to,
-            final @ParameterLayout(named = "Relationship type") String relationshipType,
-            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description) {
-        PartyRelationship relationship = getContainer().injectServicesInto(PartyRelationshipType.createWithToTitle(from, to, relationshipType));
-        relationship.setFrom(from);
-        relationship.setTo(to);
+            final Party fromParty,
+            final Party toParty,
+            final String relationshipType,
+            final @Parameter(optionality = Optionality.OPTIONAL) String description) {
+        PartyRelationship relationship = getContainer().injectServicesInto(PartyRelationshipType.createWithToTitle(fromParty, toParty, relationshipType));
+        relationship.setFrom(fromParty);
+        relationship.setTo(toParty);
         relationship.setDescription(description);
         persistIfNotAlready(relationship);
         return relationship;
@@ -83,19 +81,18 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @ParameterLayout(named = "Reference") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
-            final @ParameterLayout(named = "First name") @Parameter(optionality = Optionality.OPTIONAL) String firstName,
-            final @ParameterLayout(named = "Last name") String lastName,
-            final @ParameterLayout(named = "Gender") PersonGenderType gender,
-            final @ParameterLayout(named = "Relationship type") String relationshipType,
-            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @ParameterLayout(named = "Phone number") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber,
-            final @ParameterLayout(named = "Email address") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
+            final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
+            final String lastName,
+            final PersonGenderType gender,
+            final String relationshipType,
+            final @Parameter(optionality = Optionality.OPTIONAL) String description,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress
             ) {
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
@@ -140,7 +137,7 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
         Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        switch (ev.getPhase()) {
+        switch (ev.getEventPhase()) {
         case VALIDATE:
             break;
         case EXECUTING:

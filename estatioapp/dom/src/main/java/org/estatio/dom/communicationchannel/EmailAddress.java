@@ -19,17 +19,22 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.Objects;
+
 import javax.jdo.annotations.InheritanceStrategy;
+
 import com.google.common.base.Predicate;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -42,24 +47,18 @@ import org.estatio.dom.RegexValidation;
 @DomainObject(editing = Editing.DISABLED)
 public class EmailAddress extends CommunicationChannel {
 
-    // //////////////////////////////////////
-
-    private String emailAddress;
+    public String title() {
+        return getEmailAddress();
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.EMAIL_ADDRESS)
-    @Title
     @Property(optionality = Optionality.MANDATORY)
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(final String address) {
-        this.emailAddress = address;
-    }
+    @Getter @Setter
+    private String emailAddress;
 
     public EmailAddress changeEmailAddress(
-            final @ParameterLayout(named = "Email Address") @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String address) {
-        setEmailAddress(address);
+            final @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress) {
+        setEmailAddress(emailAddress);
 
         return this;
     }

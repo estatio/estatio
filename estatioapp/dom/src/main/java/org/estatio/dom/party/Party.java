@@ -26,7 +26,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -36,9 +35,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.app.security.EstatioRole;
@@ -50,6 +47,10 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -93,33 +94,25 @@ public abstract class Party
         super("name");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
+    }
 
-    private String reference;
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(editing = Editing.DISABLED, regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Party.NAME)
-    @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     /**
      * Provided so that subclasses can override and disable.
@@ -130,31 +123,17 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
-
     @Property(hidden = Where.EVERYWHERE)
-    public SortedSet<AgreementRole> getAgreements() {
-        return agreements;
-    }
-
-    public void setAgreements(final SortedSet<AgreementRole> agreements) {
-        this.agreements = agreements;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
+    @Getter @Setter
+    private SortedSet<AgreementRole> agreements = new TreeSet<>();
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
-
     @Property(hidden = Where.EVERYWHERE)
-    public SortedSet<PartyRegistration> getRegistrations() {
-        return registrations;
-    }
-
-    public void setRegistrations(final SortedSet<PartyRegistration> registrations) {
-        this.registrations = registrations;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
+    @Getter @Setter
+    private SortedSet<PartyRegistration> registrations = new TreeSet<>();
 
     // //////////////////////////////////////
 
@@ -176,13 +155,6 @@ public abstract class Party
     public static class RemoveEvent extends ActionDomainEvent<Party> {
         private static final long serialVersionUID = 1L;
 
-        public RemoveEvent(
-                final Party source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
-
         public Party getReplacement() {
             return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
@@ -194,7 +166,7 @@ public abstract class Party
     }
 
     @Action(domainEvent = Party.RemoveEvent.class)
-    public void removeAndReplace(@ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Party replacement) {
+    public void removeAndReplace(@Parameter(optionality = Optionality.OPTIONAL) Party replaceWith) {
         getContainer().remove(this);
         getContainer().flush();
     }

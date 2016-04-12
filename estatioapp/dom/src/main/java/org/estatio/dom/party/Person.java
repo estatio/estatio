@@ -22,12 +22,12 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -37,6 +37,9 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(editing = Editing.DISABLED)
@@ -44,21 +47,15 @@ public class Person
         extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
-    private String applicationTenancyPath;
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -70,17 +67,10 @@ public class Person
 
     // //////////////////////////////////////
 
-    private String initials;
-
     @javax.jdo.annotations.Column(length = JdoColumnLength.Person.INITIALS)
     @MemberOrder(sequence = "2")
-    public String getInitials() {
-        return initials;
-    }
-
-    public void setInitials(final String initials) {
-        this.initials = initials;
-    }
+    @Getter @Setter
+    private String initials;
 
     // //////////////////////////////////////
 
@@ -91,43 +81,22 @@ public class Person
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
+    @Getter @Setter
     private String firstName;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
     // //////////////////////////////////////
-
-    private String lastName;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PROPER_NAME)
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
+    @Getter @Setter
+    private String lastName;
 
     // //////////////////////////////////////
-
-    private PersonGenderType gender;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @MemberOrder(sequence = "1")
-    public PersonGenderType getGender() {
-        return gender;
-    }
-
-    public void setGender(final PersonGenderType gender) {
-        this.gender = gender;
-    }
+    @Getter @Setter
+    private PersonGenderType gender;
 
     public PersonGenderType defaultGender() {
         return PersonGenderType.UNKNOWN;
@@ -146,10 +115,10 @@ public class Person
     }
 
     public Person change(
-            final @ParameterLayout(named = "Gender") PersonGenderType gender,
-            final @ParameterLayout(named = "initials") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
-            final @ParameterLayout(named = "First name") String firstName,
-            final @ParameterLayout(named = "Last name") String lastName) {
+            final PersonGenderType gender,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
+            final String firstName,
+            final String lastName) {
         setGender(gender);
         setInitials(initials);
         setFirstName(firstName);

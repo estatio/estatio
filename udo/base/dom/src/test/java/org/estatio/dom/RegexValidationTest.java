@@ -57,7 +57,6 @@ public class RegexValidationTest {
         tester(RegexValidation.Unit.REFERENCE, "AAA-A0A0A0A0A0A", true);
         tester(RegexValidation.Unit.REFERENCE, "AAA-A0A0A0A0", true);
         tester(RegexValidation.Unit.REFERENCE, "AAA-A+23A2-1", true);
-        tester(RegexValidation.Unit.REFERENCE, "AA-A0A0A0A0", false);
 
         // Used to be false. According to new constraints this should pass the
         // test
@@ -71,11 +70,14 @@ public class RegexValidationTest {
         // test
         tester(RegexValidation.Unit.REFERENCE, "A-AAA-A0", true);
 
-        tester(RegexValidation.Unit.REFERENCE, "A-AA-A0A0A0A0", false);
+        tester(RegexValidation.Unit.REFERENCE, "A-AA-A0A0A0A0", true);
 
         tester(RegexValidation.Unit.REFERENCE, "POR-016", true);
         tester(RegexValidation.Unit.REFERENCE, "POR-16", true);
         tester(RegexValidation.Unit.REFERENCE, "POR-1", true);
+
+        tester(RegexValidation.Unit.REFERENCE, "TOU0-1", false);
+        tester(RegexValidation.Unit.REFERENCE, "TOU0-0001", false);
     }
 
     @Test
@@ -101,13 +103,14 @@ public class RegexValidationTest {
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A-=_-//", true);
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0-A1&+", true);
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0A-=_-", true);
-        tester(RegexValidation.Lease.REFERENCE, "AA-A0A0A0A-=_-", false);
+        tester(RegexValidation.Lease.REFERENCE, "AA-A0AA1&+=_-", true);
+        tester(RegexValidation.Lease.REFERENCE, "AA-A0A0A0A-=_-", true);
 
         // Used to be false. According to new constraints this should pass the
         // test
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0A0A-=-", true);
 
-        tester(RegexValidation.Lease.REFERENCE, "XZ--A0A0A0A-=-", false);
+        tester(RegexValidation.Lease.REFERENCE, "XZ--A0A0A0A-=-", true);
 
         tester(RegexValidation.Lease.REFERENCE, "X-AAA-A0A-A1&+=_-", true);
         tester(RegexValidation.Lease.REFERENCE, "Z-AAA-A0A0-/A1&/+", true);

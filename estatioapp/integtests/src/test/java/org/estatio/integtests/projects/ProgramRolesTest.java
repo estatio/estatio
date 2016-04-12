@@ -22,6 +22,8 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +32,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.party.Parties;
@@ -191,8 +193,10 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
         @Test
         public void invalidBecauseNoReplacement() throws Exception {
             // when
-            Party.RemoveEvent event = new RemoveEvent(oldParty, null, (Object[]) null);
-            event.setPhase(Phase.VALIDATE);
+            Party.RemoveEvent event = new RemoveEvent();
+            event.setSource(oldParty);
+            event.setArguments(Lists.newArrayList());
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             programRoles.on(event);
 
             // then
@@ -204,10 +208,12 @@ public class ProgramRolesTest extends EstatioIntegrationTest {
             // when
             assertThat(programRoles.findByParty(oldParty).size(), is(3));
             assertThat(programRoles.findByParty(newParty).size(), is(2));
-            Party.RemoveEvent event = new RemoveEvent(oldParty, null, newParty);
-            event.setPhase(Phase.VALIDATE);
+            Party.RemoveEvent event = new RemoveEvent();
+            event.setSource(oldParty);
+            event.setArguments(Lists.newArrayList(newParty));
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             programRoles.on(event);
-            event.setPhase(Phase.EXECUTING);
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTING);
             programRoles.on(event);
 
             // then

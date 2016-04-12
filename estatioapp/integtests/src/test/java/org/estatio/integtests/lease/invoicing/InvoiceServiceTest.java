@@ -18,32 +18,47 @@
  */
 package org.estatio.integtests.lease.invoicing;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.*;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.*;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -141,7 +156,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat("Before calculation", rItem.getTerms().size(), is(2));
             invoiceService.calculate(
                     lease, InvoiceRunType.NORMAL_RUN,
-                    InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE,
+                    InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE,
                     START_DATE,
                     VT.ld(2013, 10, 1),
                     VT.ld(2015, 4, 1));
@@ -156,7 +171,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
             invoice.approve();
-            invoice.doInvoice(VT.ld(2013, 11, 7));
+            invoice.invoice(VT.ld(2013, 11, 7));
             assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
@@ -176,13 +191,13 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         public void step5_normalInvoice() throws Exception {
-            invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
+            invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             approveInvoicesFor(lease);
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
         }
 
         public void step6_retroInvoice() throws Exception {
-            invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
+            invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             // (156750 - 150000) / = 1687.5 added
             approveInvoicesFor(lease);
             assertThat(invoices.findByLease(lease).size(), is(2));
@@ -190,7 +205,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         public void step7_terminate() throws Exception {
-            lease.terminate(VT.ld(2014, 6, 30), true);
+            lease.terminate(VT.ld(2014, 6, 30));
         }
 
         // //////////////////////////////////////

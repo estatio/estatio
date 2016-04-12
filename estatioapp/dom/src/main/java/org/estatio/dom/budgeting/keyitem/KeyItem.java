@@ -18,19 +18,34 @@
  */
 package org.estatio.dom.budgeting.keyitem;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.jdo.annotations.*;
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -63,12 +78,10 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
     //endregion
 
-
     @Column(name="keyTableId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES )
     @Getter @Setter
     private KeyTable keyTable;
-
 
     // //////////////////////////////////////
 
@@ -106,7 +119,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     private BigDecimal value;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyItem changeValue(final @ParameterLayout(named = "Key value") BigDecimal keyValue) {
+    public KeyItem changeValue(final BigDecimal keyValue) {
         setValue(keyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
@@ -150,19 +163,7 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
     }
     //endregion
 
-    //region > deleteBudgetKeyItem
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
-    public KeyTable deleteBudgetKeyItem(@ParameterLayout(named = "Are you sure?") final boolean confirmDelete) {
-        removeIfNotAlready(this);
-        return this.getKeyTable();
-    }
-
-    public String validateDeleteBudgetKeyItem(boolean confirmDelete){
-        return confirmDelete? null:"Please confirm";
-    }
-    //endregion
-
-    @Programmatic
+    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void deleteBudgetKeyItem() {
         removeIfNotAlready(this);
     }

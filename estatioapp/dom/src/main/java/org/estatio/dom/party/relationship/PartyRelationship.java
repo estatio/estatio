@@ -18,7 +18,6 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
@@ -26,6 +25,9 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -54,77 +56,40 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
 
     // //////////////////////////////////////
 
-    private Party from;
-
     @Column(name = "fromPartyId", allowsNull = "false")
     @MemberOrder(sequence = "1")
-    public Party getFrom() {
-        return from;
-    }
-
-    public void setFrom(Party from) {
-        this.from = from;
-    }
+    @Getter @Setter
+    private Party from;
 
     // //////////////////////////////////////
-
-    private Party to;
 
     @Column(name = "toPartyId", allowsNull = "false")
     @MemberOrder(sequence = "2")
-    public Party getTo() {
-        return to;
-    }
-
-    public void setTo(Party to) {
-        this.to = to;
-    }
+    @Getter @Setter
+    private Party to;
 
     // //////////////////////////////////////
-
-    private PartyRelationshipType relationshipType;
 
     @Column(allowsNull = "false")
     @MemberOrder(sequence = "3")
-    public PartyRelationshipType getRelationshipType() {
-        return relationshipType;
-    }
-
-    public void setRelationshipType(PartyRelationshipType relationshipType) {
-        this.relationshipType = relationshipType;
-    }
+    @Getter @Setter
+    private PartyRelationshipType relationshipType;
 
     // //////////////////////////////////////
 
-    private LocalDate startDate;
-
-    @Override
     @Persistent
     @MemberOrder(sequence = "4")
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
+    @Getter @Setter
+    private LocalDate startDate;
 
     // //////////////////////////////////////
 
-    private LocalDate endDate;
-
-    @Override
     @Persistent
     @MemberOrder(sequence = "5")
-    public LocalDate getEndDate() {
-        return endDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
-    @Override
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    // //////////////////////////////////////
 
     @Override
     public LocalDateInterval getInterval() {
@@ -142,8 +107,8 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
     }
 
     public PartyRelationship changeDates(
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final LocalDate startDate,
+            final LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
         return this;
@@ -166,19 +131,12 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @Getter @Setter
     private String description;
 
-    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
     public PartyRelationship changeDescription(
-            final @ParameterLayout(named = "Description") String description) {
+            final String description) {
         setDescription(description);
         return this;
     }

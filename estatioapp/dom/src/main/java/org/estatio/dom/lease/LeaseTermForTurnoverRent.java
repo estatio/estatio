@@ -18,38 +18,39 @@
  */
 package org.estatio.dom.lease;
 
-import com.google.common.base.Strings;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import javax.jdo.annotations.InheritanceStrategy;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jdo.annotations.InheritanceStrategy;
+
+import com.google.common.base.Strings;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
-    private String turnoverRentRule;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.LeaseTermForTurnoverRent.RENT_RULE)
-    @Optional
-    @Disabled
-    public String getTurnoverRentRule() {
-        return turnoverRentRule;
-    }
-
-    public void setTurnoverRentRule(final String turnoverRentRule) {
-        this.turnoverRentRule = turnoverRentRule;
-    }
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
+    private String turnoverRentRule;
 
     public String validateTurnoverRentRule(final String turnoverRentrule) {
         if (Strings.isNullOrEmpty(turnoverRentrule)) {
@@ -63,26 +64,18 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private BigDecimal auditedTurnover;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    @Disabled
-    public BigDecimal getAuditedTurnover() {
-        return auditedTurnover;
-    }
-
-    public void setAuditedTurnover(final BigDecimal auditedTurnover) {
-        this.auditedTurnover = auditedTurnover;
-    }
-
     public LeaseTermForTurnoverRent changeParameters(
-            final @Named("Turnover rent rule") @Optional String newTurnoverRentRule,
-            final @Named("Total budgeted rent") @Optional BigDecimal newTotalBudgetedRent,
-            final @Named("Audited Turnover") @Optional BigDecimal newAuditedTurnover) {
-        setTurnoverRentRule(newTurnoverRentRule);
-        setTotalBudgetedRent(newTotalBudgetedRent);
-        setAuditedTurnover(newAuditedTurnover);
+            final @Parameter(optionality = Optionality.OPTIONAL) String turnoverRentRule,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal totalBudgetedRent,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal auditedTurnover) {
+        setTurnoverRentRule(turnoverRentRule);
+        setTotalBudgetedRent(totalBudgetedRent);
+        setAuditedTurnover(auditedTurnover);
         setStatus(LeaseTermStatus.NEW);
         doAlign();
         return this;
@@ -102,62 +95,31 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private BigDecimal contractualRent;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    @Disabled
-    public BigDecimal getContractualRent() {
-        return contractualRent;
-    }
-
-    public void setContractualRent(final BigDecimal contractualRent) {
-        this.contractualRent = contractualRent;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private BigDecimal auditedTurnoverRent;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    @Disabled
-    public BigDecimal getAuditedTurnoverRent() {
-        return auditedTurnoverRent;
-    }
-
-    public void setAuditedTurnoverRent(final BigDecimal auditedTurnoverRent) {
-        this.auditedTurnoverRent = auditedTurnoverRent;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private BigDecimal budgetedTurnoverRent;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    @Disabled
-    public BigDecimal getBudgetedTurnoverRent() {
-        return budgetedTurnoverRent;
-    }
-
-    public void setBudgetedTurnoverRent(final BigDecimal budgetedTurnoverRent) {
-        this.budgetedTurnoverRent = budgetedTurnoverRent;
-    }
-
     // //////////////////////////////////////
 
-    private BigDecimal totalBudgetedRent;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    public BigDecimal getTotalBudgetedRent() {
-        return totalBudgetedRent;
-    }
-
-    public void setTotalBudgetedRent(final BigDecimal totalBudgetedRent) {
-        this.totalBudgetedRent = totalBudgetedRent;
-    }
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal totalBudgetedRent;
 
     // //////////////////////////////////////
 
@@ -188,7 +150,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
             // Collect all results
             BigDecimal newContractualRent = BigDecimal.ZERO;
             List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
-            List<CalculationResult> calculationResults = new ArrayList<CalculationResult>();
+            List<CalculationResult> calculationResults = new ArrayList<>();
             for (LeaseItem rentItem : rentItems) {
                 calculationResults.addAll(
                         rentItem.calculationResults(getInterval(), this.getEndDate().plusYears(1)));

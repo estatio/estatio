@@ -19,10 +19,13 @@
 package org.estatio.dom.lease.breaks;
 
 import java.util.List;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
@@ -30,18 +33,18 @@ import com.google.common.collect.Maps;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-import org.apache.isis.applib.annotation.CollectionLayout;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
@@ -53,6 +56,10 @@ import org.estatio.dom.event.EventSource;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents a condition upon which the {@link Lease} can be terminated.
@@ -93,7 +100,13 @@ public abstract class BreakOption
         super("lease, type, exerciseType, breakDate, exerciseDate");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getLease())
+                .withName(getExerciseType())
+                .withName(getBreakDate())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -105,37 +118,19 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    private Lease lease;
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
-    @Title(sequence = "1", append = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Lease getLease() {
-        return lease;
-    }
-
-    public void setLease(final Lease lease) {
-        this.lease = lease;
-    }
+    @Getter @Setter
+    private Lease lease;
 
     // //////////////////////////////////////
-
-    private BreakType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Title(sequence = "2")
-    public BreakType getType() {
-        return type;
-    }
-
-    public void setType(final BreakType breakType) {
-        this.type = breakType;
-    }
+    @Getter @Setter
+    private BreakType type;
 
     // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent
-    private LocalDate exerciseDate;
 
     /**
      * The date on which this break option can be exercised, meaning that the
@@ -161,40 +156,21 @@ public abstract class BreakOption
      * (using Isis' <tt>@Named</tt> annotation).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Title(prepend = " ", sequence = "3")
-    public LocalDate getExerciseDate() {
-        return exerciseDate;
-    }
-
-    public void setExerciseDate(final LocalDate exerciseDate) {
-        this.exerciseDate = exerciseDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate exerciseDate;
 
     // //////////////////////////////////////
-
-    private BreakExerciseType exerciseType;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.BreakOption.EXERCISE_TYPE_ENUM)
-    public BreakExerciseType getExerciseType() {
-        return exerciseType;
-    }
-
-    public void setExerciseType(final BreakExerciseType breakExerciseType) {
-        this.exerciseType = breakExerciseType;
-    }
+    @Getter @Setter
+    private BreakExerciseType exerciseType;
 
     // //////////////////////////////////////
 
-    private String notificationPeriod;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DURATION)
-    public String getNotificationPeriod() {
-        return notificationPeriod;
-    }
-
-    public void setNotificationPeriod(final String notificationPeriod) {
-        this.notificationPeriod = notificationPeriod;
-    }
+    @Getter @Setter
+    private String notificationPeriod;
 
     /**
      * Convenience for subclasses.
@@ -205,45 +181,31 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate breakDate;
-
     /**
      * The date when the {@link #getLease() lease} can be terminated (assuming
-     * that the notice was given on or before the {@link #getNotificationDate()
-     * notification date}).
+     * that the notice was given on or before the {@link #getExerciseDate()}
+     * exercise date}).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    public LocalDate getBreakDate() {
-        return breakDate;
-    }
-
-    public void setBreakDate(final LocalDate breakDate) {
-        this.breakDate = breakDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate breakDate;
 
     // //////////////////////////////////////
 
-    private String description;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
 
     public BreakOption change(
-            final @ParameterLayout(named = "Type") BreakType breakType,
-            final @ParameterLayout(named = "Exercise Type") BreakExerciseType breakExerciseType,
-            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description) {
-        setType(breakType);
-        setExerciseType(breakExerciseType);
+            final BreakType type,
+            final BreakExerciseType exerciseType,
+            final @Parameter(optionality = Optionality.OPTIONAL) String description) {
+        setType(type);
+        setExerciseType(exerciseType);
         setDescription(description);
 
         // re-create events
@@ -273,10 +235,10 @@ public abstract class BreakOption
     }
 
     public BreakOption changeDates(
-            final @ParameterLayout(named = "Break date") LocalDate newBreakDate,
-            final @ParameterLayout(named = "Excercise date") LocalDate newExcerciseDate) {
-        setBreakDate(newBreakDate);
-        setExerciseDate(newExcerciseDate);
+            final LocalDate breakDate,
+            final LocalDate excerciseDate) {
+        setBreakDate(breakDate);
+        setExerciseDate(excerciseDate);
 
         // re-create events
         removeExistingEvents();
@@ -295,18 +257,16 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    public Lease remove(final @ParameterLayout(named = "Reason") String reason) {
-        Lease lease = getLease();
-        doRemove();
-        return lease;
-    }
-
-    @Programmatic
-    public void doRemove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove(final String reason) {
         for (Event event : findEvents()) {
-            getContainer().remove(event);
+            events.remove(event);
         }
+
         getContainer().remove(this);
+        getContainer().flush();
+
+        return;
     }
 
     // //////////////////////////////////////
@@ -317,7 +277,7 @@ public abstract class BreakOption
      * <p>
      * In the case of an {@link FixedBreakOption}, this is a fixed date. In the
      * case of a {@link RollingBreakOption}, this date will be fixed until the
-     * {@link RollingBreakOption#getEarliestNotificationDate() notification
+     * {@link RollingBreakOption#getExerciseDate()}  notification
      * date} has been reached; thereafter it will change on a daily basis (being
      * the current date plus the {@link #getNotificationPeriod() notification
      * period}.
@@ -396,10 +356,6 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
+    @Inject
     protected Events events;
-
-    public final void injectEvents(final Events events) {
-        this.events = events;
-    }
-
 }

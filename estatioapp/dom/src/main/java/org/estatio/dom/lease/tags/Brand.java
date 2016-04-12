@@ -23,18 +23,16 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -45,6 +43,10 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -84,9 +86,11 @@ public class Brand
         super("name");
     }
 
-    // //////////////////////////////////////
-
-    private String applicationTenancyPath;
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
@@ -95,13 +99,8 @@ public class Brand
     )
 
     @Property(hidden = Where.EVERYWHERE)
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -113,67 +112,38 @@ public class Brand
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @Getter @Setter
     private String name;
 
-    @Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private BrandCoverage coverage;
 
-    @Column(allowsNull = "true")
-    public BrandCoverage getCoverage() {
-        return coverage;
-    }
-
-    public void setCoverage(BrandCoverage coverage) {
-        this.coverage = coverage;
-    }
-
     // //////////////////////////////////////
-
-    private Country countryOfOrigin;
 
     @Column(name = "countryOfOriginId", allowsNull = "true")
-    public Country getCountryOfOrigin() {
-        return countryOfOrigin;
-    }
-
-    public void setCountryOfOrigin(Country countryOfOrigin) {
-        this.countryOfOrigin = countryOfOrigin;
-    }
+    @Getter @Setter
+    private Country countryOfOrigin;
 
     // //////////////////////////////////////
 
-    private String group;
-
     @Column(allowsNull = "true")
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
+    @Getter @Setter
+    private String group;
 
     // //////////////////////////////////////
 
     public Brand change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Group") @Parameter(optionality = Optionality.OPTIONAL) String group,
-            final @ParameterLayout(named = "Coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage brandCoverage,
-            final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) String group,
+            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
+            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
         setName(name);
         setGroup(group);
-        setCoverage(brandCoverage);
+        setCoverage(coverage);
         setCountryOfOrigin(countryOfOrigin);
         return this;
     }
@@ -196,15 +166,8 @@ public class Brand
 
     // //////////////////////////////////////
 
-    public static class RemoveEvent extends ActionInteractionEvent<Brand> {
+    public static class RemoveEvent extends ActionDomainEvent<Brand> {
         private static final long serialVersionUID = 1L;
-
-        public RemoveEvent(
-                final Brand source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
 
         public Brand getReplacement() {
             return (Brand) (this.getArguments().isEmpty() ? null : getArguments().get(0));
@@ -213,24 +176,21 @@ public class Brand
 
     @Action(domainEvent = Brand.RemoveEvent.class)
     public void remove() {
-        removeAndReplace(null, true);
+        removeAndReplace(null);
     }
 
-    @Action(domainEvent = Brand.RemoveEvent.class)
+    @Action(domainEvent = Brand.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object removeAndReplace(
-            final @ParameterLayout(named = "Replace with") @Parameter(optionality = Optionality.OPTIONAL) Brand replacement,
-            final @ParameterLayout(named = "Are you sure?") boolean confirm) {
+            final @Parameter(optionality = Optionality.OPTIONAL) Brand replaceWith) {
         getContainer().remove(this);
         getContainer().flush();
 
-        return replacement;
+        return replaceWith;
     }
 
-    public String validateRemoveAndReplace(final Brand brand, final boolean confirm) {
+    public String validateRemoveAndReplace(final Brand brand) {
         if (brand == this) {
             return "Cannot replace a brand with itself";
-        } else if (confirm == false) {
-            return "Please confirm this replacement";
         } else {
             return null;
         }

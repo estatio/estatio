@@ -19,29 +19,36 @@
 package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -68,7 +75,12 @@ public class TaxRate
         super("tax, startDate desc nullsLast");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getTax())
+                .withName(getPercentage())
+                .toString();
+    }
 
     @PropertyLayout(
             named = "Application Level",
@@ -80,59 +92,30 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    private Tax tax;
-
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "false")
-    @Title
-    public Tax getTax() {
-        return tax;
-    }
-
-    public void setTax(final Tax tax) {
-        this.tax = tax;
-    }
+    @Getter @Setter
+    private Tax tax;
 
     // //////////////////////////////////////
 
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
+    @Getter @Setter
     private LocalDate endDate;
 
-    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
     // //////////////////////////////////////
-
-    private String externalReference;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     @Property(optionality = Optionality.OPTIONAL)
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<TaxRate>(this);
+    private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<TaxRate> getChangeDates() {
         return changeDates;
@@ -141,8 +124,8 @@ public class TaxRate
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public TaxRate changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -195,50 +178,26 @@ public class TaxRate
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2)
+    @Getter @Setter
     private BigDecimal percentage;
 
-    @Title
-    @javax.jdo.annotations.Column(scale = 2)
-    public BigDecimal getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(final BigDecimal percentage) {
-        this.percentage = percentage;
-    }
-
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "previousTaxRateId")
-    @javax.jdo.annotations.Persistent(mappedBy = "next")
-    private TaxRate previous;
-
-    @Override
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @PropertyLayout(named = "Previous Rate")
-    public TaxRate getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(final TaxRate previous) {
-        this.previous = previous;
-    }
+    @javax.jdo.annotations.Column(name = "previousTaxRateId")
+    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    @Getter @Setter
+    private TaxRate previous;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "nextTaxRateId")
-    private TaxRate next;
-
-    @Override
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @PropertyLayout(named = "Next Rate")
-    public TaxRate getNext() {
-        return next;
-    }
-
-    public void setNext(final TaxRate next) {
-        this.next = next;
-    }
+    @Getter @Setter
+    @javax.jdo.annotations.Column(name = "nextTaxRateId")
+    private TaxRate next;
 
     public void modifyNext(final TaxRate next) {
         TaxRate currentNextRate = getNext();
@@ -262,8 +221,8 @@ public class TaxRate
     // //////////////////////////////////////
 
     public TaxRate newRate(
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "Percentage") BigDecimal percentage) {
+            final LocalDate startDate,
+            final BigDecimal percentage) {
         TaxRate rate = this.getTax().newRate(startDate, percentage);
         setNext(rate);
         rate.setPrevious(this);
@@ -271,9 +230,9 @@ public class TaxRate
     }
 
     public TaxRate change(
-            final @ParameterLayout(named = "Tax") Tax tax,
-            final @ParameterLayout(named = "Percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal percentage,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            final Tax tax,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal percentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
 
         setTax(tax);
         setPercentage(percentage);

@@ -33,14 +33,15 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.lease.indexation.IndexationService;
 import org.estatio.dom.lease.indexation.Indexable;
+import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
+import org.estatio.dom.lease.indexation.IndexationMethod;
+import org.estatio.dom.lease.indexation.IndexationService;
 import org.estatio.dom.utils.MathUtils;
 
 import lombok.Getter;
@@ -71,17 +72,9 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // //////////////////////////////////////
 
-    private Index index;
-
     @Column(name = "indexId", allowsNull = "true")
-    @Override
-    public Index getIndex() {
-        return index;
-    }
-
-    public void setIndex(final Index index) {
-        this.index = index;
-    }
+    @Getter @Setter
+    private Index index;
 
     public List<Index> choicesIndex() {
         return indexRepository.all();
@@ -89,86 +82,45 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // ///////////////////////////////////////////
 
+    @Column(allowsNull = "true")
     @Persistent
+    @Getter @Setter
     private LocalDate baseIndexStartDate;
 
-    @Column(allowsNull = "true")
-    @Override
-    public LocalDate getBaseIndexStartDate() {
-        return baseIndexStartDate;
-    }
-
-    public void setBaseIndexStartDate(final LocalDate baseIndexStartDate) {
-        this.baseIndexStartDate = baseIndexStartDate;
-    }
-
     // ///////////////////////////////////////////
 
-    private BigDecimal baseIndexValue;
-
     @Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
-    @Override
-    public BigDecimal getBaseIndexValue() {
-        return baseIndexValue;
-    }
-
-    public void setBaseIndexValue(final BigDecimal baseIndexValue) {
-        this.baseIndexValue = baseIndexValue;
-    }
+    @Getter @Setter
+    private BigDecimal baseIndexValue;
 
     // ///////////////////////////////////////////
 
     @Persistent
-    private LocalDate nextIndexStartDate;
-
     @Column(allowsNull = "true")
-    @Override
-    public LocalDate getNextIndexStartDate() {
-        return nextIndexStartDate;
-    }
-
-    public void setNextIndexStartDate(final LocalDate nextIndexStartDate) {
-        this.nextIndexStartDate = nextIndexStartDate;
-    }
+    @Getter @Setter
+    private LocalDate nextIndexStartDate;
 
     // ///////////////////////////////////////////
 
-    private BigDecimal nextIndexValue;
-
     @Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
-    @Override
-    public BigDecimal getNextIndexValue() {
-        return nextIndexValue;
-    }
-
-    public void setNextIndexValue(final BigDecimal nextIndexValue) {
-        this.nextIndexValue = nextIndexValue;
-    }
+    @Getter @Setter
+    private BigDecimal nextIndexValue;
 
     // //////////////////////////////////////
 
-    private BigDecimal rebaseFactor;
-
     @Column(scale = JdoColumnScale.IndexValue.REBASE_FACTOR, allowsNull = "true")
-    @Override
-    public BigDecimal getRebaseFactor() {
-        return rebaseFactor;
-    }
-
-    public void setRebaseFactor(final BigDecimal rebaseFactor) {
-        this.rebaseFactor = rebaseFactor;
-
-    }
+    @Getter @Setter
+    private BigDecimal rebaseFactor;
 
     // //////////////////////////////////////
 
     public LeaseTermForIndexable changeParameters(
             final IndexationMethod indexationMethod,
             final Index index,
-            final @ParameterLayout(named = "Base index date") LocalDate baseIndexDate,
-            final @ParameterLayout(named = "Next index date") LocalDate nextIndexDate,
-            final @ParameterLayout(named = "Levelling percentage") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal levellingPercentage,
-            final @ParameterLayout(named = "Effective date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate effectiveDate
+            final LocalDate baseIndexDate,
+            final LocalDate nextIndexDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal levellingPercentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate effectiveDate
     ) {
         setIndexationMethod(indexationMethod);
         setIndex(index);
@@ -210,77 +162,42 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return getEffectiveDate();
     }
 
-    // ///////////////////////////////////////////
+    public String disableChangeParameters() {
+        return getStatus().isApproved() ? "Already approved" : null;
+    }
 
-    @Persistent
-    private LocalDate effectiveDate;
+    // ///////////////////////////////////////////
 
     @Column(allowsNull = "true")
-    public LocalDate getEffectiveDate() {
-        return effectiveDate;
-    }
-
-    public void setEffectiveDate(final LocalDate effectiveDate) {
-        this.effectiveDate = effectiveDate;
-    }
+    @Persistent
+    @Getter @Setter
+    private LocalDate effectiveDate;
 
     // ///////////////////////////////////////////
 
+    @Column(scale = 3, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal indexationPercentage;
 
-    @Column(scale = 1, allowsNull = "true")
-    @Override
-    public BigDecimal getIndexationPercentage() {
-        return indexationPercentage;
-    }
-
-    @Override
-    public void setIndexationPercentage(final BigDecimal indexationPercentage) {
-        this.indexationPercentage = indexationPercentage;
-    }
-
     // ///////////////////////////////////////////
 
+    @Column(scale = 1, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal levellingPercentage;
 
-    @Column(scale = 1, allowsNull = "true")
-    @Override
-    public BigDecimal getLevellingPercentage() {
-        return levellingPercentage;
-    }
-
-    public void setLevellingPercentage(final BigDecimal levellingPercentage) {
-        this.levellingPercentage = levellingPercentage;
-    }
-
     // ///////////////////////////////////////////
 
+    @Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal baseValue;
 
-    @Column(scale = 2, allowsNull = "true")
-    @Override
-    public BigDecimal getBaseValue() {
-        return baseValue;
-    }
-
-    public void setBaseValue(final BigDecimal baseValue) {
-        this.baseValue = baseValue;
-    }
-
     // ///////////////////////////////////////////
 
+    @Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal indexedValue;
 
-    @Column(scale = 2, allowsNull = "true")
-    @Override
-    public BigDecimal getIndexedValue() {
-        return indexedValue;
-    }
-
-    @Override
-    public void setIndexedValue(final BigDecimal indexedValue) {
-        this.indexedValue = indexedValue;
-    }
+    // ///////////////////////////////////////////
 
     @Column(scale = 2, allowsNull = "true")
     @Getter @Setter
@@ -288,22 +205,15 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // //////////////////////////////////////
 
-    private BigDecimal settledValue;
-
     @Column(scale = 2, allowsNull = "true")
-    public BigDecimal getSettledValue() {
-        return settledValue;
-    }
-
-    public void setSettledValue(final BigDecimal settledValue) {
-        this.settledValue = settledValue;
-    }
+    @Getter @Setter
+    private BigDecimal settledValue;
 
     // //////////////////////////////////////
 
     public LeaseTermForIndexable changeValues(
-            final @ParameterLayout(named = "Base value") BigDecimal baseValue,
-            final @ParameterLayout(named = "Settled value") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal settledValue) {
+            final BigDecimal baseValue,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal settledValue) {
         setBaseValue(baseValue);
         setSettledValue(settledValue);
         setIndexedValue(null);
@@ -335,26 +245,26 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     @Override
     @Programmatic
     public void doInitialize() {
-
         final LeaseTermForIndexable previous = (LeaseTermForIndexable) getPrevious();
         if (previous != null) {
             setIndexationMethod(previous.getIndexationMethod());
             setIndex(previous.getIndex());
             setLevellingPercentage(previous.getLevellingPercentage());
-            getIndexationMethod().doInitialze(this, (Indexable) getPrevious());
+            getIndexationMethod().doInitialize(this, (Indexable) getPrevious());
         }
-
     }
 
     // //////////////////////////////////////
 
     @Override
     protected void doAlign() {
-        getIndexationMethod().doAlignBeforeIndexation(this, (Indexable) getPrevious());
-        if(getStatus() == LeaseTermStatus.NEW) {
-            indexationService.indexate(this);
+        if (getStatus().isUpdatable()) {
+            getIndexationMethod().doAlignBeforeIndexation(this, (Indexable) getPrevious());
+            if (getStatus() == LeaseTermStatus.NEW) {
+                indexationService.indexate(this);
+            }
+            getIndexationMethod().doAlignAfterIndexation(this, (Indexable) getPrevious());
         }
-        getIndexationMethod().doAlignAfterIndexation(this, (Indexable) getPrevious());
     }
 
     // //////////////////////////////////////
@@ -403,4 +313,9 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         this.indexationService = indexationService;
     }
 
+    @Override
+    @Programmatic
+    public IndexationCalculationMethod getIndexationCalculation() {
+        return getIndexationMethod().indexationCalculation();
+    }
 }

@@ -94,14 +94,6 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
         return uniqueMatch("findByReference", "reference", reference);
     }
 
-    // //////////////////////////////////////
-
-    public Property findPropertyByReferenceElseNull(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
-    }
-
-    // //////////////////////////////////////
-
     /**
      * For {@link Property} as per {@link DomainObject#autoCompleteRepository()}.
      */

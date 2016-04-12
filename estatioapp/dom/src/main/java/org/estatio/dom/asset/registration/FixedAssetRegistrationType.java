@@ -23,11 +23,11 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.NonRecoverableException;
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -39,6 +39,10 @@ import org.estatio.dom.WithTitleUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.ClassUtils;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -55,8 +59,7 @@ import org.estatio.dom.utils.ClassUtils;
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistrationType "
                         + "WHERE title == :title")
 })
-@Immutable
-@Bounded
+@DomainObject(editing = Editing.DISABLED, bounded = true)
 public class FixedAssetRegistrationType 
         extends EstatioDomainObject<FixedAssetRegistrationType>
         implements WithTitleComparable<FixedAssetRegistrationType>, 
@@ -69,39 +72,26 @@ public class FixedAssetRegistrationType
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////
 
-    private String title;
+    public String title() {
+        return TitleBuilder.start().withName(getTitle()).toString();
+    }
 
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
-    @Title
-    public String getTitle() {
-        return title;
-    }
+    @Getter @Setter
+    private String title;
 
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-    
-    
     // //////////////////////////////////////
 
-
-    private String fullyQualifiedClassName;
-
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.FQCN)
-    public String getFullyQualifiedClassName() {
-        return fullyQualifiedClassName;
-    }
-
-    public void setFullyQualifiedClassName(final String fullyQualifiedClassName) {
-        this.fullyQualifiedClassName = fullyQualifiedClassName;
-    }
+    @Getter @Setter
+    private String fullyQualifiedClassName;
 
     // //////////////////////////////////////
 

@@ -23,11 +23,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -49,7 +50,7 @@ private Occupancies occupancies;
     // //////////////////////////////////////
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    @NotContributed // Disable the cotrubution of this collection because there is a occupancy collection on Lease
+    @ActionLayout(contributed = Contributed.AS_NEITHER) // Disable the cotrubution of this collection because there is a occupancy collection on Lease
     @Action(semantics = SemanticsOf.SAFE)
     public List<Occupancy> occupancies(final Lease lease) {
         return occupancies.findByLease(lease);

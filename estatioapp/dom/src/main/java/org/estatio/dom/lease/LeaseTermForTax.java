@@ -21,6 +21,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @DomainObject
@@ -30,55 +33,27 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal taxableValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getTaxableValue() {
-        return taxableValue;
-    }
-
-    public void setTaxableValue(final BigDecimal taxableValue) {
-        this.taxableValue = taxableValue;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal taxValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getTaxValue() {
-        return taxValue;
-    }
-
-    public void setTaxValue(final BigDecimal taxValue) {
-        this.taxValue = taxValue;
-    }
-
     // //////////////////////////////////////
-
-    private BigDecimal taxPercentage;
 
     @javax.jdo.annotations.Column(scale = 1)
-    public BigDecimal getTaxPercentage() {
-        return taxPercentage;
-    }
-
-    public void setTaxPercentage(final BigDecimal taxPercentage) {
-        this.taxPercentage = taxPercentage;
-    }
+    @Getter @Setter
+    private BigDecimal taxPercentage;
 
     // //////////////////////////////////////
 
-    private BigDecimal payableValue;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getPayableValue() {
-        return payableValue;
-    }
-
-    public void setPayableValue(BigDecimal payableValue) {
-        this.payableValue = payableValue;
-    }
+    @Getter @Setter
+    private BigDecimal payableValue;
 
     // //////////////////////////////////////
 
@@ -93,8 +68,8 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     public LeaseTermForTax changeTax(
-            final @ParameterLayout(named = "Tax percentage") BigDecimal taxPercentage,
-            final @ParameterLayout(named = "Override payable value") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overridePayableValue) {
+            final BigDecimal taxPercentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overridePayableValue) {
         setTaxPercentage(taxPercentage);
         setPayableValue(overridePayableValue);
         setOverridePayableValue(overridePayableValue != null);
@@ -123,9 +98,9 @@ public class LeaseTermForTax extends LeaseTerm {
         this.paymentDate = paymentDate;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public LeaseTermForTax changePaymentDate(
-            final @ParameterLayout(named = "Payment date") LocalDate paymentDate,
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+            final LocalDate paymentDate) {
         setPaymentDate(paymentDate);
         return this;
     }
@@ -162,11 +137,11 @@ public class LeaseTermForTax extends LeaseTerm {
     // //////////////////////////////////////
 
     public LeaseTermForTax changeInvoicing(
-            final @ParameterLayout(named = "Recoverable percentage") BigDecimal recoverablePercentage,
-            final @ParameterLayout(named = "Override recoverable amount") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideTaxValue) {
+            final BigDecimal recoverablePercentage,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal overrideRecoverableAmount) {
         setRecoverablePercentage(recoverablePercentage);
-        setTaxValue(overrideTaxValue);
-        setOverrideTaxValue(overrideTaxValue != null);
+        setTaxValue(overrideRecoverableAmount);
+        setOverrideTaxValue(overrideRecoverableAmount != null);
         return this;
     }
 
@@ -219,79 +194,44 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private String officeName;
 
-    @Column(allowsNull = "true")
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(final String officeName) {
-        this.officeName = officeName;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private String officeCode;
 
-    @Column(allowsNull = "true")
-    public String getOfficeCode() {
-        return officeCode;
-    }
-
-    public void setOfficeCode(final String officeCode) {
-        this.officeCode = officeCode;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
     @Persistent
+    @Getter @Setter
     private LocalDate registrationDate;
 
-    @Column(allowsNull = "true")
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(final LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
     // //////////////////////////////////////
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
     private String registrationNumber;
 
-    @Column(allowsNull = "true")
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(final String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
     // //////////////////////////////////////
-
-    private String description;
 
     @Column(allowsNull = "true")
     @PropertyLayout(multiLine = 3)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
 
     public LeaseTermForTax changeRegistration(
-            final @ParameterLayout(named = "Registration date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate registrationDate,
-            final @ParameterLayout(named = "Registration number") @Parameter(optionality = Optionality.OPTIONAL) String registrationNumber,
-            final @ParameterLayout(named = "Office code") @Parameter(optionality = Optionality.OPTIONAL) String officeCode,
-            final @ParameterLayout(named = "Office name") @Parameter(optionality = Optionality.OPTIONAL) String officeName,
-            final @ParameterLayout(named = "Description", multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate registrationDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) String registrationNumber,
+            final @Parameter(optionality = Optionality.OPTIONAL) String officeCode,
+            final @Parameter(optionality = Optionality.OPTIONAL) String officeName,
+            final @ParameterLayout(multiLine = 3) @Parameter(optionality = Optionality.OPTIONAL) String description
             ) {
         setRegistrationDate(registrationDate);
         setRegistrationNumber(registrationNumber);

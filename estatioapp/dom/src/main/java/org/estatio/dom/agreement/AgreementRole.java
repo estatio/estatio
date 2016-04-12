@@ -46,13 +46,11 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -64,7 +62,11 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -109,7 +111,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE agreement == :agreement "
                         + "&& type == :type "
                         + "&& (startDate == null || startDate <= :startDate) "
-                        + "&& (endDate == null || endDate >= :endDate) ")
+                        + "&& (endDate == null || endDate >= :endDate) "),
+        @javax.jdo.annotations.Query(
+                name = "findByPartyAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE party == :party "
+                        + "&& type == :type ")
 })
 @Unique(
         name = "AgreementRole_agreement_party_type_startDate_UNQ",
@@ -121,7 +129,7 @@ public class AgreementRole
         implements WithIntervalContiguous<AgreementRole>, WithApplicationTenancyProperty {
 
     private final WithIntervalContiguous.Helper<AgreementRole> helper =
-            new WithIntervalContiguous.Helper<AgreementRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 
@@ -139,65 +147,34 @@ public class AgreementRole
         super("agreement, startDate desc nullsLast, type, party");
     }
 
-    // //////////////////////////////////////
-
-    private Agreement agreement;
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getType())
+                .withTupleElement(getParty())
+                .withTupleElement(getAgreement())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
-    @Title(sequence = "3", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Agreement getAgreement() {
-        return agreement;
-    }
-
-    public void setAgreement(final Agreement agreement) {
-        this.agreement = agreement;
-    }
-
-    // //////////////////////////////////////
-
-    private Party party;
+    @Getter @Setter
+    private Agreement agreement;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
-
-    // //////////////////////////////////////
-
-    private AgreementRoleType type;
+    @Getter @Setter
+    private Party party;
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-    @Title(sequence = "1")
-    public AgreementRoleType getType() {
-        return type;
-    }
-
-    public void setType(final AgreementRoleType type) {
-        this.type = type;
-    }
-
-    // //////////////////////////////////////
-
-    private String externalReference;
+    @Getter @Setter
+    private AgreementRoleType type;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.NAME, allowsNull = "true")
-    public String getExternalReference() {
-        return externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
-
-    public AgreementRole changeExternalReference(@ParameterLayout(named = "External reference") String externalReference) {
+    public AgreementRole changeExternalReference(String externalReference) {
         setExternalReference(externalReference);
         return this;
     }
@@ -209,36 +186,20 @@ public class AgreementRole
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
-    private LocalDate endDate;
-
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public AgreementRole changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -328,8 +289,8 @@ public class AgreementRole
 
     public AgreementRole succeededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End date") LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
     }
 
@@ -358,8 +319,8 @@ public class AgreementRole
 
     public AgreementRole precededBy(
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }
@@ -390,26 +351,18 @@ public class AgreementRole
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "role")
-    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels =
-            new TreeSet<AgreementRoleCommunicationChannel>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
     @Collection(editing = Editing.DISABLED)
-    public SortedSet<AgreementRoleCommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final SortedSet<AgreementRoleCommunicationChannel> communinationChannels) {
-        this.communicationChannels = communinationChannels;
-    }
+    @Getter @Setter
+    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<>();
 
     // //////////////////////////////////////
 
     public AgreementRole addCommunicationChannel(
-            final @ParameterLayout(named = "Type") AgreementRoleCommunicationChannelType type,
+            final AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, endDate);
         return this;
     }

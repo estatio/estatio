@@ -23,6 +23,9 @@
                     "members": {
                         "communicationChannel": {}
                     }
+                },
+                "Metadata" : {
+                    "members": {}
                 }
             }
         },

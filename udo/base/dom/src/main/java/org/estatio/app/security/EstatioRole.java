@@ -14,10 +14,6 @@ public enum EstatioRole {
         this.roleName = name;
     }
 
-    public String roleName() {
-        return this.roleName;
-    }
-
     public boolean isApplicableFor(UserMemento userMemento) {
         for (RoleMemento roleMemento : userMemento.getRoles()) {
             if (roleMemento.getName().contains(roleName)) {

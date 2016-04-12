@@ -23,6 +23,9 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -69,73 +72,39 @@ public class FinancialAccountTransaction
 
     // //////////////////////////////////////
 
-    FinancialAccount financialAccount;
-
     @Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
-    public FinancialAccount getFinancialAccount() {
-        return financialAccount;
-    }
-
-    public void setFinancialAccount(FinancialAccount financialAccount) {
-        this.financialAccount = financialAccount;
-    }
+    @Getter @Setter
+    FinancialAccount financialAccount;
 
     // //////////////////////////////////////
-
-    LocalDate transactionDate;
 
     @Column(allowsNull = "false")
     @MemberOrder(sequence = "2")
-    public LocalDate getTransactionDate() {
-        return transactionDate;
-    }
-
-    public void setTransactionDate(final LocalDate transactionDate) {
-        this.transactionDate = transactionDate;
-    }
+    @Getter @Setter
+    LocalDate transactionDate;
 
     // //////////////////////////////////////
-
-    private BigInteger sequence;
 
     @Column(allowsNull = "false")
     @Property(hidden = Where.EVERYWHERE)
-    public BigInteger getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(final BigInteger sequence) {
-        this.sequence = sequence;
-    }
+    @Getter @Setter
+    private BigInteger sequence;
 
     // //////////////////////////////////////
 
-    String description;
 
     @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @MemberOrder(sequence = "4")
     @Property(hidden = Where.ALL_TABLES)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    String description;
 
     // //////////////////////////////////////
 
-    BigDecimal amount;
-
     @Column(allowsNull = "false", scale = JdoColumnScale.MONEY)
     @MemberOrder(sequence = "5")
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+    @Getter @Setter
+    BigDecimal amount;
 
 }

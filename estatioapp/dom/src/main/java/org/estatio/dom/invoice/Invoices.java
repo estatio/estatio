@@ -23,11 +23,11 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -161,12 +161,12 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     // //////////////////////////////////////
 
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Invoice newInvoiceForLease(
-            final @ParameterLayout(named = "Lease") Lease lease,
-            final @ParameterLayout(named = "Due date") LocalDate dueDate,
+            final Lease lease,
+            final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency,
             final ApplicationTenancy applicationTenancy) {
@@ -189,11 +189,11 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
     @Programmatic
     public Invoice newInvoice(
             final ApplicationTenancy applicationTenancy,
-            final @ParameterLayout(named = "Seller") Party seller,
-            final @ParameterLayout(named = "Buyer") Party buyer,
+            final Party seller,
+            final Party buyer,
             final PaymentMethod paymentMethod,
             final Currency currency,
-            final @ParameterLayout(named = "Due date") LocalDate dueDate,
+            final LocalDate dueDate,
             final Lease lease,
             final String interactionId
     ) {

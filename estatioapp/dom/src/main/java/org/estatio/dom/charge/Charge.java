@@ -22,14 +22,13 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -42,6 +41,9 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.tax.Tax;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -63,7 +65,7 @@ import org.estatio.dom.tax.Tax;
                         + "FROM org.estatio.dom.charge.Charge "
                         + "WHERE reference == :reference")
 })
-@Bounded
+@DomainObject(bounded = true)
 public class Charge
         extends EstatioDomainObject<Charge>
         implements WithReferenceUnique, WithNameUnique, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
@@ -76,21 +78,15 @@ public class Charge
         return String.format("%s [%s]", getName(), getReference());
     }
 
-    private String applicationTenancyPath;
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -102,106 +98,59 @@ public class Charge
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE, editing = Editing.DISABLED)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
-
-    private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
     @PropertyLayout(multiLine = IsisMultilineLines.NUMBER_OF_LINES)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     // //////////////////////////////////////
-
-    private String externalReference;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     @Property(optionality = Optionality.OPTIONAL)
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     // //////////////////////////////////////
-
-    private Tax tax;
 
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "false")
-    public Tax getTax() {
-        return tax;
-    }
-
-    public void setTax(final Tax tax) {
-        this.tax = tax;
-    }
+    @Getter @Setter
+    private Tax tax;
 
     // //////////////////////////////////////
-
-    private ChargeGroup group;
 
     @javax.jdo.annotations.Column(name = "groupId", allowsNull = "false")
-    public ChargeGroup getGroup() {
-        return group;
-    }
-
-    public void setGroup(final ChargeGroup group) {
-        this.group = group;
-    }
+    @Getter @Setter
+    private ChargeGroup group;
 
     // //////////////////////////////////////
-
-    private String sortOrder;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
     @Property(optionality = Optionality.OPTIONAL)
-    public String getSortOrder() {
-        return sortOrder;
-    }
+    @Getter @Setter
+    private String sortOrder;
 
-    public void setSortOrder(final String sortOrder) {
-        this.sortOrder = sortOrder;
-    }
+    // //////////////////////////////////////
 
     public Charge change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Tax") @Parameter(optionality = Optionality.OPTIONAL) Tax tax,
-            final @ParameterLayout(named = "Description") String description,
-            final @ParameterLayout(named = "Group") ChargeGroup group,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference,
-            final @ParameterLayout(named = "Sort Order") @Parameter(optionality = Optionality.OPTIONAL) String sortOrder) {
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) Tax tax,
+            final String description,
+            final ChargeGroup group,
+            final @Parameter(optionality = Optionality.OPTIONAL) String externalReference,
+            final @Parameter(optionality = Optionality.OPTIONAL) String sortOrder) {
 
         setName(name);
         setTax(tax);

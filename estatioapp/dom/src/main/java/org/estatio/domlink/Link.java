@@ -21,11 +21,11 @@ package org.estatio.domlink;
 
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -33,6 +33,10 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -54,23 +58,20 @@ public class Link
         super("name");
     }
 
-    // //////////////////////////////////////
-
-    private String applicationTenancyPath;
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -82,45 +83,23 @@ public class Link
 
     // //////////////////////////////////////
 
-    private String className;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FQCN)
     @MemberOrder(sequence = "1")
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(final String className) {
-        this.className = className;
-    }
+    @Getter @Setter
+    private String className;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @MemberOrder(sequence = "2")
-    @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
-    private String urlTemplate;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Link.URL_TEMPLATE)
     @MemberOrder(sequence = "3")
-    public String getUrlTemplate() {
-        return urlTemplate;
-    }
-
-    public void setUrlTemplate(final String urlTemplate) {
-        this.urlTemplate = urlTemplate;
-    }
+    @Getter @Setter
+    private String urlTemplate;
 
 }

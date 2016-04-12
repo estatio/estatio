@@ -25,10 +25,10 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -38,6 +38,10 @@ import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -59,8 +63,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
                 value = "SELECT name "
                         + "FROM org.estatio.dom.lease.tags.Sector")
 })
-@Bounded
-@Immutable
+@DomainObject(bounded = true, editing = Editing.DISABLED)
 public class Sector
         extends EstatioDomainObject<Sector>
         implements WithNameUnique, WithNameComparable<Sector>, WithApplicationTenancyGlobal {
@@ -69,31 +72,25 @@ public class Sector
         super("name");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start().withName(getName()).toString();
+    }
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
-    @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "sector")
-    private SortedSet<Activity> activities = new TreeSet<Activity>();
+    private SortedSet<Activity> activities = new TreeSet<>();
 
     public SortedSet<Activity> getActivities() {
         return activities;

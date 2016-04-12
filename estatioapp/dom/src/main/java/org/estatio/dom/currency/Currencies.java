@@ -21,6 +21,7 @@ package org.estatio.dom.currency;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -29,6 +30,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
@@ -82,7 +84,7 @@ public class Currencies extends UdoDomainRepositoryAndFactory<Currency> {
         return uniqueMatch("findByReference", "reference", reference);
     }
 
-    @Programmatic
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public List<Currency> autoComplete(final String searchArg) {
         return allMatches("matchByReferenceOrDescription", "searchArg", searchArg);
     }

@@ -31,7 +31,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -82,7 +83,7 @@ public class LeaseItemTest {
 
             leaseItem = new LeaseItem() {
                 @Override
-                @Hidden
+                @Property(hidden = Where.EVERYWHERE)
                 public LeaseTerm currentTerm(LocalDate date) {
                     GetCurrentValue.this.getCurrentValueDateArgument = date;
                     return leaseTerm;
@@ -127,16 +128,10 @@ public class LeaseItemTest {
         }
 
         @Test
-        public void whenNotConfirmed() throws Exception {
-            Object returned = leaseItem.remove(false);
-            assertThat(returned, is((Object) leaseItem));
-        }
-
-        @Test
         public void whenConfirmedAndNoChildTerms() throws Exception {
             expectingRemoveAndFlush(leaseItem);
 
-            Object returned = leaseItem.remove(true);
+            Object returned = leaseItem.remove();
             assertThat(returned, is((Object) lease));
         }
 
@@ -146,7 +141,7 @@ public class LeaseItemTest {
             leaseItem.getTerms().add(leaseTerm);
             leaseTermSuccessfullyRemoved = false;
 
-            Object returned = leaseItem.remove(true);
+            Object returned = leaseItem.remove();
             assertThat(returned, is((Object) leaseItem));
         }
 
@@ -157,7 +152,7 @@ public class LeaseItemTest {
             leaseTermSuccessfullyRemoved = true;
             expectingRemoveAndFlush(leaseItem);
 
-            Object returned = leaseItem.remove(true);
+            Object returned = leaseItem.remove();
             assertThat(returned, is((Object) lease));
         }
 

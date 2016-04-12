@@ -35,6 +35,7 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     SERVICE_CHARGE_BUDGETED(LeaseTermForServiceCharge.class, false),
     SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true),
     DISCOUNT(LeaseTermForFixed.class, false),
+    RENT_DISCOUNT(LeaseTermForIndexable.class, false),
     ENTRY_FEE(LeaseTermForFixed.class, false),
     TAX(LeaseTermForTax.class, true);
 

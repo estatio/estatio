@@ -27,7 +27,7 @@ public class FixtureDatumFactoriesForAnyPojo {
         try {
             final T obj1 = runtimeType.newInstance();
             final T obj2 = runtimeType.newInstance();
-            return new FixtureDatumFactory<T>(compileTimeType, obj1, obj2);
+            return new FixtureDatumFactory<>(compileTimeType, obj1, obj2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

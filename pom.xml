@@ -81,25 +81,23 @@ mvn clean install -DskipTests -o
     </developers>
 
     <properties>
-        <isis.version>1.11.0-SNAPSHOT</isis.version>
+        <isis.version>1.13.0-SNAPSHOT</isis.version>
 
-        <isis-module-audit.version>1.11.0-SNAPSHOT</isis-module-audit.version>
-        <isis-module-command.version>1.11.0-SNAPSHOT</isis-module-command.version>
+        <isis-module-audit.version>1.11.0</isis-module-audit.version>
+        <isis-module-command.version>1.11.0</isis-module-command.version>
+        <isis-module-excel.version>1.11.0</isis-module-excel.version>
+        <isis-module-fakedata-dom.version>1.11.0</isis-module-fakedata-dom.version>
+        <isis-module-poly.version>1.11.0</isis-module-poly.version>
         <isis-module-security.version>1.12.0-SNAPSHOT</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.11.0-SNAPSHOT</isis-module-sessionlogger.version>
-        <isis-module-settings.version>1.11.0-SNAPSHOT</isis-module-settings.version>
+        <isis-module-sessionlogger.version>1.11.0</isis-module-sessionlogger.version>
+        <isis-module-settings.version>1.11.0</isis-module-settings.version>
+        <isis-module-stringinterpolator.version>1.11.0</isis-module-stringinterpolator.version>
 
-        <isis-module-devutils.version>1.11.0-SNAPSHOT</isis-module-devutils.version>
-        <isis-module-excel.version>1.11.0-SNAPSHOT</isis-module-excel.version>
-        <isis-module-stringinterpolator.version>1.11.0-SNAPSHOT</isis-module-stringinterpolator.version>
+        <isis-metamodel-paraname8.version>1.11.0</isis-metamodel-paraname8.version>
 
-        <isis-module-poly.version>1.11.0-SNAPSHOT</isis-module-poly.version>
-
-        <isis-metamodel-paraname8.version>1.11.0-SNAPSHOT</isis-metamodel-paraname8.version>
-
-        <isis-wicket-excel.version>1.11.0-SNAPSHOT</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.11.0-SNAPSHOT</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.11.0-SNAPSHOT</isis-wicket-gmap3.version>
+        <isis-wicket-excel.version>1.11.0</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.11.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.11.0</isis-wicket-gmap3.version>
 
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
@@ -522,14 +520,14 @@ mvn clean install -DskipTests -o
                 <version>${isis-module-command.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.isisaddons.module.devutils</groupId>
-                <artifactId>isis-module-devutils-dom</artifactId>
-                <version>${isis-module-devutils.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.isisaddons.module.excel</groupId>
                 <artifactId>isis-module-excel-dom</artifactId>
                 <version>${isis-module-excel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.fakedata</groupId>
+                <artifactId>isis-module-fakedata-dom</artifactId>
+                <version>${isis-module-fakedata-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.security</groupId>
@@ -746,32 +744,6 @@ mvn clean install -DskipTests -o
             <!-- EstatioApp modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-canonical</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-canonical</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-canonicalmappings</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-canonicalmappings</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
             </dependency>
@@ -781,6 +753,12 @@ mvn clean install -DskipTests -o
                 <version>1.4.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-canonical</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -1059,7 +1037,6 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
-                <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
@@ -1083,7 +1060,6 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
-                <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
@@ -1106,7 +1082,6 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
-                <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
@@ -1133,8 +1108,6 @@ mvn clean install -DskipTests -o
                 <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
-                <module>estatioapp/canonical</module>
-                <module>estatioapp/canonicalmappings</module>
                 <module>estatioapp/dom</module>
             </modules>
         </profile>

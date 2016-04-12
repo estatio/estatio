@@ -3,13 +3,10 @@ package org.estatio.dom.lease.invoicing;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -40,20 +37,20 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
      * other
      * parameters.
      */
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "1")
     public Object calculateInvoicesForProperty(
-            final @ParameterLayout(named = "Property") Property property,
-            final @ParameterLayout(named = "Run Type") InvoiceRunType invoiceRunType,
-            final @ParameterLayout(named = "Selection") InvoiceCalculationSelection calculationSelection,
-            final @ParameterLayout(named = "Invoice due date") LocalDate invoiceDueDate,
-            final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
-            final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
+            final Property property,
+            final InvoiceRunType runType,
+            final InvoiceCalculationSelection selection,
+            final LocalDate invoiceDueDate,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate) {
         final String runId = invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
                         property,
-                        calculationSelection.selectedTypes(),
-                        invoiceRunType,
+                        selection.selectedTypes(),
+                        runType,
                         invoiceDueDate,
                         startDueDate,
                         nextDueDate));
@@ -132,14 +129,14 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
 
     // //////////////////////////////////////
 
-    @Bulk
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public Object calculate(
             final Lease lease,
             final InvoiceRunType runType,
             final InvoiceCalculationSelection calculationSelection,
-            final @ParameterLayout(named = "Invoice due date") LocalDate invoiceDueDate,
-            final @ParameterLayout(named = "Start due date") LocalDate startDueDate,
-            final @ParameterLayout(named = "Next due date") LocalDate nextDueDate) {
+            final LocalDate invoiceDueDate,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate) {
         String runId = invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
                         lease,
@@ -186,6 +183,18 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
             return "End date cannot be before start date";
         }
         return null;
+    }
+
+    public String disableCalculate(final Lease lease,
+            final InvoiceRunType runType,
+            final InvoiceCalculationSelection selection,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate){
+
+        if (lease == null) return null;
+        return lease.getProperty() == null ? "Please set occupancy first" : null;
+
     }
 
     // //////////////////////////////////////

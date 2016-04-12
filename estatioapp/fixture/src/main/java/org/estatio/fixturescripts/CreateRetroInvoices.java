@@ -128,7 +128,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             InvoiceCalculationParameters parameters =
                     new InvoiceCalculationParameters(
                             lease,
-                            InvoiceCalculationSelection.ALL.selectedTypes(),
+                            InvoiceCalculationSelection.ALL_ITEMS.selectedTypes(),
                             InvoiceRunType.NORMAL_RUN,
                             dueDate,
                             startDueDate,

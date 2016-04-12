@@ -102,7 +102,7 @@ public class BudgetCalculation extends EstatioDomainObject<BudgetCalculation> im
     @Getter @Setter
     @CollectionLayout(hidden = Where.EVERYWHERE)
     @Persistent(mappedBy = "budgetCalculation", dependentElement = "true")
-    private SortedSet<BudgetCalculationLink> budgetCalculationLinks = new TreeSet<BudgetCalculationLink>();
+    private SortedSet<BudgetCalculationLink> budgetCalculationLinks = new TreeSet<>();
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)

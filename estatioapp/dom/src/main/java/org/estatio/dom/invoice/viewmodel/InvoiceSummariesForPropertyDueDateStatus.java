@@ -18,8 +18,19 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.invoice.InvoiceStatus;
 
@@ -29,7 +40,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.3"
 )
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class InvoiceSummariesForPropertyDueDateStatus
         extends UdoDomainRepositoryAndFactory<InvoiceSummaryForPropertyDueDateStatus> {
 
@@ -39,20 +50,19 @@ public class InvoiceSummariesForPropertyDueDateStatus
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public List<InvoiceSummaryForPropertyDueDateStatus> allNewInvoices() {
         return findInvoicesByStatus(InvoiceStatus.NEW);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<InvoiceSummaryForPropertyDueDateStatus> allApprovedInvoices() {
         return findInvoicesByStatus(InvoiceStatus.APPROVED);
     }
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<InvoiceSummaryForPropertyDueDateStatus> allInvoicesByPropertyDueDateStatus() {
         return allInstances();
@@ -62,7 +72,7 @@ public class InvoiceSummariesForPropertyDueDateStatus
 
     @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatus(
-            final @Optional InvoiceStatus status) {
+            final @Parameter(optionality = Optionality.OPTIONAL) InvoiceStatus status) {
         return allMatches("findByStatus",
                 "status", status);
     }

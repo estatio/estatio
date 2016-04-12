@@ -26,8 +26,8 @@ import javax.jdo.annotations.Unique;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -36,6 +36,10 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -68,41 +72,28 @@ public class AgreementRoleType
         super("title");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getTitle())
+                .toString();
+    }
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
+    @Getter @Setter
     private String title;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
-    @Title
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
     // //////////////////////////////////////
-
-    private AgreementType appliesTo;
 
     @javax.jdo.annotations.Column(name = "appliesToAgreementTypeId", allowsNull = "false")
-    public AgreementType getAppliesTo() {
-        return appliesTo;
-    }
-
-    public void setAppliesTo(final AgreementType agreementType) {
-        this.appliesTo = agreementType;
-    }
-
-    // //////////////////////////////////////
+    @Getter @Setter
+    private AgreementType appliesTo;
 
     // //////////////////////////////////////
 

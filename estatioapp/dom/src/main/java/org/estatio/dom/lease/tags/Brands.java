@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -61,11 +60,11 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
 
     @MemberOrder(sequence = "1")
     public Brand newBrand(
-            final @ParameterLayout(named = "Brand name") String name,
-            final @ParameterLayout(named = "Brand coverage") @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
-            final @ParameterLayout(named = "Country of origin") @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
-            final @ParameterLayout(named = "Group") @Parameter(optionality = Optionality.OPTIONAL) String group,
-            final @ParameterLayout(named = "Global or Country") ApplicationTenancy applicationTenancy) {
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
+            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
+            final @Parameter(optionality = Optionality.OPTIONAL) String group,
+            final ApplicationTenancy applicationTenancy) {
         Brand brand;
         brand = newTransientInstance(Brand.class);
         brand.setName(name);

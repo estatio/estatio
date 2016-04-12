@@ -19,6 +19,7 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.dom.lease.DepositType;
+import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
@@ -48,7 +49,8 @@ public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemA
                 LEASE_REF,
                 AT_PATH,
                 lease.getStartDate(), null,
-                DepositType.HALF_YEAR,
+                Fraction.M6,
+                DepositType.INDEXED_MGR_EXCLUDING_VAT,
                 new BigDecimal("5000.00"),
                 executionContext);
     }

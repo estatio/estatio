@@ -136,6 +136,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final String leaseItemAtPath,
             final LocalDate startDate,
             final LocalDate endDate,
+            final Fraction fraction,
             final DepositType depositType,
             final BigDecimal excludedAmount,
             final ExecutionContext executionContext) {
@@ -144,10 +145,11 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 leaseRef, leaseItemAtPath,
                 ChargeRefData.IT_DEPOSIT,
                 LeaseItemType.DEPOSIT,
-                InvoicingFrequency.FIXED_IN_ADVANCE,
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
         final LeaseTermForDeposit leaseTerm = (LeaseTermForDeposit) leaseItem.newTerm(startDate, endDate);
 
+        leaseTerm.setFraction(fraction);
         leaseTerm.setDepositType(depositType);
         leaseTerm.setExcludedAmount(excludedAmount);
 

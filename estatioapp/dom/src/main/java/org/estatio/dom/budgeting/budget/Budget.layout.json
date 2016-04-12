@@ -46,7 +46,11 @@
                                 "hidden": "EVERYWHERE",
                                 "named": "Application Tenancy"
                             }
-                        },
+                        }
+                    }
+                },
+                "Metadata" : {
+                    "members": {
                         "id": {
                             "propertyLayout": {
                                 "hidden": "ANYWHERE",

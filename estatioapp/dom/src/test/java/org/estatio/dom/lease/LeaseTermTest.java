@@ -18,9 +18,29 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+
+import org.hamcrest.Description;
+import org.hamcrest.core.Is;
+import org.jmock.Expectations;
+import org.jmock.api.Action;
+import org.jmock.api.Invocation;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.WithIntervalMutable;
@@ -31,21 +51,11 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
-import org.hamcrest.Description;
-import org.hamcrest.core.Is;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.jmock.Expectations;
-import org.jmock.api.Action;
-import org.jmock.api.Invocation;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -133,6 +143,7 @@ public class LeaseTermTest {
     }
 
     public static class CreateNext extends LeaseTermTest {
+
         @Test
         public void createNext_ok() {
             final LeaseTermForTesting anotherTerm = new LeaseTermForTesting();
@@ -144,6 +155,21 @@ public class LeaseTermTest {
             Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
             Assert.assertNull(next.getEndDate());
         }
+
+        @Test
+        public void hide_when_no_autocreate() throws Exception {
+            //given
+            final LeaseTermForTesting term = new LeaseTermForTesting();
+            final LeaseItemType leaseItemType = LeaseItemType.RENT_DISCOUNT;
+            final LeaseItem item = new LeaseItem();
+            item.setType(leaseItemType);
+            term.setLeaseItem(item);
+             //when, then
+            then(leaseItemType.autoCreateTerms()).isFalse();
+            then(term.hideCreateNext(null, null)).isTrue();
+        }
+
+
     }
 
     public static class Update extends LeaseTermTest {

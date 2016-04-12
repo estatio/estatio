@@ -24,9 +24,10 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -35,6 +36,9 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.lease.Lease;
+
+import lombok.Getter;
+import lombok.Setter;
 
 //TODO: is this in scope?
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -56,21 +60,14 @@ public class LeaseAssignment
 
     // //////////////////////////////////////
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -82,57 +79,28 @@ public class LeaseAssignment
 
     // //////////////////////////////////////
 
+    @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(name="previousLeaseId")
+    @Getter @Setter
     private Lease previousLease;
 
-    @Optional
-    public Lease getPreviousLease() {
-        return previousLease;
-    }
-
-    public void setPreviousLease(final Lease previousLease) {
-        this.previousLease = previousLease;
-    }
-
     // //////////////////////////////////////
 
+    @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(name="nextLeaseId")
+    @Getter @Setter
     private Lease nextLease;
 
-    @Optional
-    public Lease getNextLease() {
-        return nextLease;
-    }
-
-    public void setNextLease(final Lease nextLease) {
-        this.nextLease = nextLease;
-    }
-
     // //////////////////////////////////////
-
-    private LocalDate assignmentDate;
 
     @javax.jdo.annotations.Column(allowsNull="false")
-    public LocalDate getAssignmentDate() {
-        return assignmentDate;
-    }
-
-    public void setAssignmentDate(final LocalDate assignmentDate) {
-        this.assignmentDate = assignmentDate;
-    }
+    @Getter @Setter
+    private LocalDate assignmentDate;
 
     // //////////////////////////////////////
 
-    private LeaseAssignmentType type;
-
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
-    public LeaseAssignmentType getType() {
-        return type;
-    }
-
-    public void setType(final LeaseAssignmentType assignmentType) {
-        this.type = assignmentType;
-    }
-
+    @Getter @Setter
+    private LeaseAssignmentType type;
 
 }

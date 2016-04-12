@@ -73,12 +73,8 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
 
     // //////////////////////////////////////
 
-    @Action(
-            semantics = SemanticsOf.SAFE
-    )
-    @ActionLayout(
-            contributed = Contributed.AS_ASSOCIATION
-    )
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(
             name = "Accounts",
             sequence = "13.5"
@@ -89,12 +85,8 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
 
     // //////////////////////////////////////
 
-    @Action(
-            semantics = SemanticsOf.SAFE
-    )
-    @ActionLayout(
-            contributed = Contributed.AS_ASSOCIATION
-    )
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(
             name = "FinancialAccounts",
             sequence = "13.5"

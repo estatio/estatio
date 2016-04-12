@@ -44,7 +44,7 @@ import org.estatio.dom.currency.Currency;
  * {@link ApplicationSettingKey defaults for keys} have been installed if
  * required.
  */
-@DomainService(nature = NatureOfService.DOMAIN)
+@DomainService(nature = NatureOfService.VIEW)
 public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
 
     public EstatioSettingsService() {
@@ -95,7 +95,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
             if (newEpochDate != null) {
                 setting.updateAsLocalDate(newEpochDate);
             } else {
-                setting.delete(true);
+                setting.delete();
             }
         } else {
             if (newEpochDate != null) {

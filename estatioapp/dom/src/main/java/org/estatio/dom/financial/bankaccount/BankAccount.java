@@ -19,10 +19,13 @@
 package org.estatio.dom.financial.bankaccount;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -32,9 +35,10 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
@@ -44,72 +48,38 @@ import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+import lombok.Getter;
+import lombok.Setter;
+
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class BankAccount
         extends FinancialAccount {
 
+    @Column(name = "bankPartyId", allowsNull = "true")
+    @Getter @Setter
     private Party bank;
 
-    @javax.jdo.annotations.Column(name = "bankPartyId", allowsNull = "true")
-    public Party getBank() {
-        return bank;
-    }
-
-    public void setBank(final Party bank) {
-        this.bank = bank;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @Property(editing = Editing.DISABLED)
+    @Getter @Setter
     private BankAccountType bankAccountType;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Property(editing = Editing.DISABLED)
-    public BankAccountType getBankAccountType() {
-        return bankAccountType;
-    }
-
-    public void setBankAccountType(final BankAccountType bankAccountType) {
-        this.bankAccountType = bankAccountType;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(name = "countryId", allowsNull = "true")
+    @Getter @Setter
     private Country country;
 
-    @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(final Country country) {
-        this.country = country;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
+    @Getter @Setter
     private String iban;
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
-    public String getIban() {
-        return iban;
-    }
-
-    public void setIban(final String iban) {
-        this.iban = iban;
-    }
-
-    // //////////////////////////////////////
 
     public boolean isValidIban() {
         return IBANValidator.valid(getIban());
     }
-
-    // //////////////////////////////////////
 
     @Action(hidden = Where.EVERYWHERE)
     public BankAccount verifyIban() {
@@ -117,73 +87,41 @@ public class BankAccount
         return this;
     }
 
-    public String disableVerifyIban() {
-        return null;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
+    @Getter @Setter
     private String nationalCheckCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
-    public String getNationalCheckCode() {
-        return nationalCheckCode;
-    }
-
-    public void setNationalCheckCode(final String nationalCheckCode) {
-        this.nationalCheckCode = nationalCheckCode;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
+    @Getter @Setter
     private String nationalBankCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
-    public String getNationalBankCode() {
-        return nationalBankCode;
-    }
-
-    public void setNationalBankCode(final String nationalBankCode) {
-        this.nationalBankCode = nationalBankCode;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
+    @Getter @Setter
     private String branchCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
-    public String getBranchCode() {
-        return branchCode;
-    }
-
-    public void setBranchCode(final String branchCode) {
-        this.branchCode = branchCode;
-    }
-
-    // //////////////////////////////////////
-
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @Getter @Setter
     private String accountNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
-    public String getAccountNumber() {
-        return accountNumber;
-    }
+    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @Getter @Setter
+    private String bic;
 
-    public void setAccountNumber(final String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BankAccount change(
-            final @ParameterLayout(named = "Iban", typicalLength = JdoColumnLength.BankAccount.IBAN) String iban,
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            @ParameterLayout(typicalLength = JdoColumnLength.BankAccount.IBAN)
+            final String iban,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String bic,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String externalReference) {
         setIban(iban);
-        setName(name);
+        setName(iban);
+        setBic(bic);
         setExternalReference(externalReference);
         // TODO: Changing references is not really a good thing. in this case
         // there's no harm but we should come up with a pattern where we
-        // archvice
+        // archive the old reference
         setReference(iban);
 
         return this;
@@ -191,7 +129,7 @@ public class BankAccount
 
     public String validateChange(
             final String iban,
-            final String name,
+            final String bic,
             final String externalReference) {
         if (!IBANValidator.valid(iban)) {
             return "Not a valid IBAN number";
@@ -204,44 +142,27 @@ public class BankAccount
     }
 
     public String default1Change() {
-        return getName();
+        return getBic();
     }
 
     public String default2Change() {
         return getExternalReference();
     }
 
-    // //////////////////////////////////////
-
     public BankAccount refresh() {
         IBANHelper.verifyAndUpdate(this);
         return this;
     }
 
-    @Action(domainEvent = BankAccount.RemoveEvent.class)
-    public Object remove(
-            @ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-        return null;
-    }
-
-    @Programmatic
-    public void doRemove() {
+    @Action(domainEvent = BankAccount.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         getContainer().remove(this);
         getContainer().flush();
+        return;
     }
 
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
-
-        public RemoveEvent(
-                final BankAccount source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     @Inject

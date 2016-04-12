@@ -13,7 +13,8 @@
               }
             },
             "sepaMandateIdentifier": {},
-            "type": {
+            "sequenceType" : {},
+            "scheme": {
               "actions": {
                 "change": {}
               }
@@ -33,11 +34,14 @@
               "disabled": {}
             }
           }
+        },
+        "Metadata" : {
+          "members": {}
         }
       }
     },
     {
-      "span": 2,
+      "span": 3,
       "memberGroups": {
         "Dates": {
           "members": {
@@ -45,6 +49,11 @@
             "endDate": {
               "actions": {
                 "changeDates": {}
+              }
+            },
+            "signatureDate": {
+              "actions": {
+                "changeSignatureDate": {}
               }
             },
             "terminationDate": {},
@@ -68,7 +77,7 @@
       "memberGroups": {}
     },
     {
-      "span": 6,
+      "span": 5,
       "collections": {
         "roles": {
           "actions": {

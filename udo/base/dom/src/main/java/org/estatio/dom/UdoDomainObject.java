@@ -19,11 +19,14 @@
 package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.util.ObjectContracts;
+
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
 import org.estatio.services.clock.ClockService;
 
 
@@ -77,7 +80,7 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public String getId() {
         Object objectId = JDOHelper.getObjectId(this);
         if(objectId == null) {
@@ -88,15 +91,6 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
         return id;
     }
 
-
-    // //////////////////////////////////////
-
-
-    @Hidden
-    public Long getVersionSequence() {
-        final Long version = (Long) JDOHelper.getVersion(this);
-        return version;
-    }
 
 
     // //////////////////////////////////////

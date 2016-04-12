@@ -21,22 +21,30 @@ package org.estatio.dom.party;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 // REVIEW: is this in scope?
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -62,7 +70,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "   && type == :type "
                         + "   && endDate == :endDate")
 })
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
         extends EstatioDomainObject<PartyRegistration>
         implements WithIntervalMutable<PartyRegistration>, WithApplicationTenancyCountry {
@@ -84,74 +92,42 @@ public class PartyRegistration
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
+    @Getter @Setter
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
-
     // //////////////////////////////////////
-
-    private PartyRegistrationType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
-    public PartyRegistrationType getType() {
-        return type;
-    }
-
-    public void setType(final PartyRegistrationType partyRegistrationType) {
-        this.type = partyRegistrationType;
-    }
+    @Getter @Setter
+    private PartyRegistrationType type;
 
     // //////////////////////////////////////
 
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Optional
-    @Disabled
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Optional
-    @Disabled
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<PartyRegistration> changeDates =
-            new WithIntervalMutable.Helper<PartyRegistration>(this);
+            new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
         return changeDates;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public PartyRegistration changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 

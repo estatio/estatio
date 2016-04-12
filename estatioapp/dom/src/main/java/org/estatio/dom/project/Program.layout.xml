@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="recentChanges"/>
+            <ns2:action id="links"/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="reference"/>
+                <ns2:property id="name"/>
+                <ns2:property id="programGoal">
+                    <ns2:action id="changeProgram" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="applicationTenancy"/>
+                <ns2:property id="applicationTenancyPath"/>
+                <ns2:property id="relatedObject"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="8" unreferencedCollections="true">
+            <ns2:collection id="roles"/>
+            <ns2:collection id="roles">
+                <ns2:action id="newProgramRole"/>
+            </ns2:collection>
+            <ns2:collection id="projects">
+                <ns2:action id="newProject"/>
+            </ns2:collection>
+        </col>
+    </row>
+</grid>

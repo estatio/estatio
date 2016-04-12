@@ -19,34 +19,28 @@
 package org.estatio.dom.lease.tags;
 
 import java.util.List;
+
 import javax.jdo.Query;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "99", repositoryFor = Sector.class)
-@Hidden
+@DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
 public class Sectors extends UdoDomainRepositoryAndFactory<Sector> {
 
     public Sectors() {
         super(Sectors.class, Sector.class);
     }
 
-    // //////////////////////////////////////
-
-    @SuppressWarnings({ "unchecked" })
-    @ActionSemantics(Of.SAFE)
-    @Hidden
     public List<String> findUniqueNames() {
 
         final Query query = newQuery("SELECT name FROM " + getEntityType().getName());
         return (List<String>) query.execute();
     }
 
-    @Hidden
     public Sector findByName(final String name) {
         return uniqueMatch("findByName", "name", name);
     }

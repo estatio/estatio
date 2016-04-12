@@ -20,15 +20,16 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
@@ -37,6 +38,7 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "50", repositoryFor = InvoiceItemForLease.class)
@@ -48,8 +50,8 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     @Programmatic
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
@@ -80,6 +82,12 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
     }
 
     // //////////////////////////////////////
+
+    @Programmatic
+    public List<InvoiceItemForLease> findByLeaseTerm(final LeaseTerm leaseTerm){
+        return allMatches("findByLeaseTerm", "leaseTerm", leaseTerm);
+    }
+
 
     @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
     public List<InvoiceItemForLease> findByLeaseTermAndInterval(
@@ -171,12 +179,9 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval) {
         BigDecimal invoicedValue = new BigDecimal(0);
-        List<InvoiceItemForLease> items = findByLeaseTermAndInterval(leaseTerm, interval);
+        List<InvoiceItemForLease> items = leaseTerm.valueType() == LeaseTermValueType.FIXED ? findByLeaseTerm(leaseTerm) : findByLeaseTermAndInterval(leaseTerm, interval);
         for (InvoiceItemForLease invoiceItem : items) {
-            Invoice invoice = invoiceItem.getInvoice();
-            if (invoice.getStatus() != InvoiceStatus.NEW) {
-                invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
-            }
+            invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
         }
         return invoicedValue;
     }

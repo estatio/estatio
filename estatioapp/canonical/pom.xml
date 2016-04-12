@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-Copyright 2015 Dan Haywood
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-  either express or implied. See the License for the specific
-  language governing permissions and limitations under the License.
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,72 +10,128 @@ Copyright 2015 Dan Haywood
     </parent>
 
     <artifactId>estatio-canonical</artifactId>
-
-    <name>Estatio (Open Source) Canonical DTOs</name>
-    <description>
-        Canonical DTOs for Estatio to publish to Camel and elsewhere.
-    </description>
-
-    <packaging>jar</packaging>
+    <name>Estatio (Open Source) Canonical</name>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-schema</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.fakedata</groupId>
+            <artifactId>isis-module-fakedata-dom</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <profiles>
         <profile>
-            <id>xsd-to-java</id>
+            <id>schemagen</id>
             <activation>
                 <property>
-                    <name>!skip.xsd-to-java</name>
+                    <name>schemagen</name>
                 </property>
             </activation>
-
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.jvnet.jaxb2.maven2</groupId>
-                        <artifactId>maven-jaxb2-plugin</artifactId>
-                        <version>0.12.3</version>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxb2-maven-plugin</artifactId>
+                        <version>2.2</version>
                         <executions>
                             <execution>
-                                <id>xjc-generate</id>
-                                <phase>generate-sources</phase>
+                                <id>schemagen</id>
                                 <goals>
-                                    <goal>generate</goal>
+                                    <goal>schemagen</goal>
                                 </goals>
+                                <phase>generate-resources</phase>
                             </execution>
                         </executions>
+
                         <configuration>
-                            <removeOldOutput>true</removeOldOutput>
-                            <schemaDirectory>src/main/resources/org/estatio/dom/financial/bankaccount</schemaDirectory>
-                            <schemaIncludes>
-                                <schemaInclude>BankAccount.xsd</schemaInclude>
-                            </schemaIncludes>
-                            <bindingDirectory>src/main/resources/org/estatio/dom/financial/bankaccount</bindingDirectory>
-                            <bindingIncludes>
-                                <bindingInclude>BankAccount-binding.xml</bindingInclude>
-                            </bindingIncludes>
+                            <transformSchemas>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/bankmandate/v1/bankmandate.xsd</uri>
+                                    <toPrefix>bankmandate</toPrefix>
+                                    <toFile>bankmandate.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/financial/v1/bankaccount.xsd</uri>
+                                    <toPrefix>bankaccount</toPrefix>
+                                    <toFile>bankaccount.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/invoice/v1/invoice.xsd</uri>
+                                    <toPrefix>invoice</toPrefix>
+                                    <toFile>invoice.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/party/v1/party.xsd</uri>
+                                    <toPrefix>party</toPrefix>
+                                    <toFile>party.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://canonical.estatio.org/communicationchannel/v1/communicationchannel.xsd</uri>
+                                    <toPrefix>communicationchannel</toPrefix>
+                                    <toFile>communicationchannel.xsd</toFile>
+                                </transformSchema>
+                                <transformSchema>
+                                    <uri>http://isis.apache.org/schema/common</uri>
+                                    <toPrefix>isis-common</toPrefix>
+                                    <toFile>isis-common.xsd</toFile>
+                                </transformSchema>
+                            </transformSchemas>
+                        <!--
+                            <includes>
+                                <include>com/estatio/canonical/bankmandate/v1/*</include>
+                            </includes>
+                        -->
+                            <verbose>true</verbose>
                         </configuration>
                     </plugin>
+
+                    <!-- TODO: just trying to get these generated XSDs part of the source path so that IntelliJ will pick up without any configuration -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.9.1</version>
+                        <version>1.10</version>
                         <executions>
                             <execution>
-                                <id>add-source</id>
-                                <phase>generate-sources</phase>
+                                <id>add-resource</id>
                                 <goals>
-                                    <goal>add-source</goal>
+                                    <goal>add-resource</goal>
                                 </goals>
+                                <phase>generate-resources</phase>
                                 <configuration>
-                                    <sources>
-                                        <source>target/generated-sources/xjc</source>
-                                    </sources>
+                                    <resources>
+                                        <resource>
+                                            <directory>target/generated-resources/schemagen</directory>
+                                        </resource>
+                                    </resources>
                                 </configuration>
                             </execution>
                         </executions>

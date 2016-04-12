@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="verify"/>
+            <ns2:action id="recentChanges"/>
+            <ns2:action id="downloadLayoutXml"/>
+            <ns2:action id="downloadJdoMetadata"/>
+            <ns2:action id="links"/>
+            <ns2:action id="remove"/>
+        </col>
+    </row>
+    <row>
+        <col span="6">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="invoice"/>
+                <ns2:property id="lease"/>
+                <ns2:property id="fixedAsset"/>
+                <ns2:property id="source"/>
+                <ns2:property id="leaseTerm"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="uuid"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="id"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+                <ns2:property id="sequence"/>
+                <ns2:property id="datanucleusId"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Details" id="details">
+                <ns2:property id="charge"/>
+                <ns2:property id="quantity"/>
+                <ns2:property id="description">
+                    <ns2:action id="changeDescription" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="dueDate"/>
+                <ns2:property id="startDate"/>
+                <ns2:property id="endDate"/>
+                <ns2:property id="effectiveStartDate"/>
+                <ns2:property id="effectiveEndDate">
+                    <ns2:action id="changeEffectiveDates" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="adjustment"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Amounts" id="amounts">
+                <ns2:property id="netAmount"/>
+                <ns2:property id="vatAmount"/>
+                <ns2:property id="tax"/>
+                <ns2:property id="grossAmount"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="12" unreferencedCollections="true"/>
+    </row>
+</grid>

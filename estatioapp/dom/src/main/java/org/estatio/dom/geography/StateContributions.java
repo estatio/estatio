@@ -19,9 +19,14 @@
 package org.estatio.dom.geography;
 
 import java.util.List;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainService;
 
 /**
@@ -30,8 +35,7 @@ import org.estatio.dom.UdoDomainService;
  * <p>
  * TODO: no good reason to do this; they are in the same cluster.  Map in the usual fashion. 
  */
-@DomainService(menuOrder = "80")
-@Hidden
+@DomainService(menuOrder = "80", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class StateContributions extends UdoDomainService<StateContributions> {
 
     public StateContributions() {
@@ -40,9 +44,8 @@ public class StateContributions extends UdoDomainService<StateContributions> {
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<State> states(final Country country) {
         return states.findStatesByCountry(country);
     }

@@ -16,12 +16,10 @@
  */
 package org.estatio.domsettings;
 
-
 import org.joda.time.LocalDate;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
-
 
 public interface ApplicationSettingCreator {
     void create(ApplicationSettingsServiceRW appSettings);
@@ -36,30 +34,42 @@ public interface ApplicationSettingCreator {
     final static class Helper {
         private Helper(){}
         public static ApplicationSetting find(
-                final ApplicationSettingCreator creator, final ApplicationSettingsServiceRW appSettings) {
+                final ApplicationSettingCreator creator,
+                final ApplicationSettingsServiceRW appSettings) {
             return appSettings.find(ApplicationSettingCreator.Helper.getKey(creator));
         }
-        public static void create(
-                final ApplicationSettingCreator creator, final ApplicationSettingsServiceRW appSettings) {
+        public static ApplicationSetting findOrCreate(
+                final ApplicationSettingCreator creator,
+                final ApplicationSettingsServiceRW appSettings) {
+            final ApplicationSetting applicationSetting = appSettings.find(Helper.getKey(creator));
+            if (applicationSetting == null){
+                return create(creator, appSettings);
+            }
+            return applicationSetting;
+        }
+        public static ApplicationSetting create(
+                final ApplicationSettingCreator creator,
+                final ApplicationSettingsServiceRW appSettings) {
             final Class<?> dataType = creator.getDataType();
             final String key = getKey(creator);
             final String description = creator.getDescription();
-            
+
             if(dataType == LocalDate.class) {
-                appSettings.newLocalDate(key, description, (LocalDate)creator.getDefaultValue());
+                return appSettings.newLocalDate(key, description, (LocalDate)creator.getDefaultValue());
             }
             if(dataType == Boolean.class) {
-                appSettings.newBoolean(key, description, (Boolean)creator.getDefaultValue());
+                return appSettings.newBoolean(key, description, (Boolean)creator.getDefaultValue());
             }
             if(dataType == Integer.class) {
-                appSettings.newInt(key, description, (Integer)creator.getDefaultValue());
+                return appSettings.newInt(key, description, (Integer)creator.getDefaultValue());
             }
             if(dataType == Long.class) {
-                appSettings.newLong(key, description, (Long)creator.getDefaultValue());
+                return appSettings.newLong(key, description, (Long)creator.getDefaultValue());
             }
             if(dataType == String.class) {
-                appSettings.newString(key, description, (String)creator.getDefaultValue());
+                return appSettings.newString(key, description, (String)creator.getDefaultValue());
             }
+            return null;
         }
 
         public static String getKey(final ApplicationSettingCreator creator) {

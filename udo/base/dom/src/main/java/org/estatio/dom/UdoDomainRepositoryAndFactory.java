@@ -48,7 +48,7 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
     }
     
     protected QueryDefault<T> newQueryDefault(final String queryName, final Object... paramArgs) {
-        return new QueryDefault<T>(getEntityType(), queryName, paramArgs);
+        return new QueryDefault<>(getEntityType(), queryName, paramArgs);
     }
     
     // //////////////////////////////////////

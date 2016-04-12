@@ -37,13 +37,11 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -53,7 +51,11 @@ import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Identifies the {@link #getParty() party} that plays a particular
@@ -115,7 +117,7 @@ public class ProgramRole
         implements WithIntervalContiguous<ProgramRole>, WithApplicationTenancyGlobalAndCountry {
 
     private WithIntervalContiguous.Helper<ProgramRole> helper =
-            new WithIntervalContiguous.Helper<ProgramRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 
@@ -123,85 +125,51 @@ public class ProgramRole
         super("program, startDate desc nullsLast, type, party");
     }
 
-    // //////////////////////////////////////
-
-    private Program program;
+    public String title() {
+        return TitleBuilder.start()
+                .withTupleElement(getProgram())
+                .withTupleElement(getParty())
+                .withName(getType())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", name="programId")
-    @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Program getProgram() {
-        return program;
-    }
-
-    public void setProgram(final Program program) {
-        this.program = program;
-    }
+    @Getter @Setter
+    private Program program;
 
     // //////////////////////////////////////
-
-    private Party party;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
+    @Getter @Setter
+    private Party party;
 
     // //////////////////////////////////////
-
-    private ProgramRoleType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing=Editing.DISABLED)
-    @Title(sequence = "1")
-    public ProgramRoleType getType() {
-        return type;
-    }
-
-    public void setType(final ProgramRoleType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private ProgramRoleType type;
 
     // //////////////////////////////////////
 
+    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
+
     @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-//    @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
     @Action(semantics=SemanticsOf.IDEMPOTENT)
     @Override
     public ProgramRole changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -325,8 +293,8 @@ public class ProgramRole
 
     public ProgramRole succeededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
     }
 
@@ -355,8 +323,8 @@ public class ProgramRole
 
     public ProgramRole precededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
+            final LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }

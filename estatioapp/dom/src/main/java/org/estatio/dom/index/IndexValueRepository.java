@@ -28,7 +28,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
@@ -59,7 +58,9 @@ public class IndexValueRepository
             indexValue = create(indexBase, startDate, value);
         }
         indexValue.setValue(value);
-        eventBusService.post(new IndexValue.UpdateEvent(indexValue, null, (Object[]) null));
+        final IndexValue.UpdateEvent event = new IndexValue.UpdateEvent();
+        event.setSource(indexValue);
+        eventBusService.post(event);
         return indexValue;
     }
 
@@ -78,7 +79,7 @@ public class IndexValueRepository
 
     public IndexValue findByIndexAndStartDate(
             final Index index,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate) {
+            final LocalDate startDate) {
         return queryResultsCache.execute(
                 new Callable<IndexValue>() {
                     @Override

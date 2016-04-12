@@ -19,32 +19,16 @@
 package org.estatio.dom.communicationchannelfixedasset;
 
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 
-@DomainService
-@Hidden
+@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class CommunicationChannelContributionsOnFixedAsset extends CommunicationChannelContributions {
 
     public CommunicationChannelContributionsOnFixedAsset() {
         super(CommunicationChannelContributionsOnFixedAsset.class);
     }
 
-
-    /**
-     * Hidden if the {@link org.estatio.dom.communicationchannel.CommunicationChannelOwner} is a {@link org.estatio.dom.asset.FixedAsset}.
-     *
-     * <p>
-     * Why? because we intend to remove the ability to associate {@link org.estatio.dom.communicationchannel.CommunicationChannel}s with
-     * {@link org.estatio.dom.asset.FixedAsset}s.  See <a href="https://stromboli.atlassian.net/browse/EST-421">EST-421</a> for
-     * further discussion.
-     * </p>
-     */
-    public boolean hideCommunicationChannels(final CommunicationChannelOwner owner) {
-        //return owner instanceof FixedAsset;
-        return false;
-    }
 
 }

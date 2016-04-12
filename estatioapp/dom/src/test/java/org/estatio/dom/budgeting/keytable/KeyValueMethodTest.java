@@ -35,20 +35,20 @@ public class KeyValueMethodTest {
         //given
         KeyValueMethod method = KeyValueMethod.PROMILLE;
         KeyTable keyTable = new KeyTable();
-        SortedSet<KeyItem> budgetKeyItems = new TreeSet<KeyItem>();
+        SortedSet<KeyItem> budgetKeyItems = new TreeSet<>();
 
         //when
 
         for(int i = 0; i < 1; i = i+1) {
             KeyItem budgetKeyItem = new KeyItem();
-            budgetKeyItem.setValue(new BigDecimal(999.999));
+            budgetKeyItem.setValue(BigDecimal.valueOf(999.999));
             budgetKeyItems.add(budgetKeyItem);
         }
         keyTable.setItems(budgetKeyItems);
         keyTable.setPrecision(3);
 
         // then
-        assertThat(method.keySum(keyTable)).isEqualTo(new BigDecimal(999.999).setScale(3, BigDecimal.ROUND_HALF_UP));
+        assertThat(method.keySum(keyTable)).isEqualTo(BigDecimal.valueOf(999.999).setScale(3, BigDecimal.ROUND_HALF_UP));
         assertThat(method.isValid(keyTable)).isEqualTo(false);
 
 
@@ -60,13 +60,13 @@ public class KeyValueMethodTest {
         //given
         KeyValueMethod method = KeyValueMethod.PROMILLE;
         KeyTable keyTable = new KeyTable();
-        SortedSet<KeyItem> budgetKeyItems = new TreeSet<KeyItem>();
+        SortedSet<KeyItem> budgetKeyItems = new TreeSet<>();
 
         //when
 
         for(int i = 0; i < 1; i = i+1) {
                         KeyItem budgetKeyItem = new KeyItem();
-                        budgetKeyItem.setValue(new BigDecimal(999.9999));
+                        budgetKeyItem.setValue(BigDecimal.valueOf(999.9999));
                         budgetKeyItems.add(budgetKeyItem);
                     }
         keyTable.setItems(budgetKeyItems);
@@ -84,13 +84,13 @@ public class KeyValueMethodTest {
         //given
         KeyValueMethod method = KeyValueMethod.PROMILLE;
         KeyTable keyTable = new KeyTable();
-        SortedSet<KeyItem> budgetKeyItems = new TreeSet<KeyItem>();
+        SortedSet<KeyItem> budgetKeyItems = new TreeSet<>();
 
         //when
 
         for(int i = 0; i < 1; i = i+1) {
             KeyItem budgetKeyItem = new KeyItem();
-            budgetKeyItem.setValue(new BigDecimal(1000.0001));
+            budgetKeyItem.setValue(BigDecimal.valueOf(1000.0001));
             budgetKeyItems.add(budgetKeyItem);
         }
         keyTable.setItems(budgetKeyItems);

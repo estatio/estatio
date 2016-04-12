@@ -23,6 +23,9 @@
               "disabled": {}
             }
           }
+        },
+        "Metadata" : {
+          "members": {}
         }
       }
     },
@@ -43,6 +46,7 @@
                 "verifyIban": {}
               }
             },
+            "BIC": {},
             "nationalCheckCode": {},
             "nationalBankCode": {},
             "branchCode": {},

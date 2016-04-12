@@ -24,16 +24,15 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
 
@@ -46,21 +45,18 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    public Object collectAll(
-            final @Named("Are you sure?") Boolean confirm
-            ) {
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public Object collectAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.doCollect();
         }
         return this;
     }
 
-    public Object invoiceAll(
-            final @Named("Invoice Date") LocalDate invoiceDate,
-            final @Named("Are you sure?") Boolean confirm
-            ) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
-            invoice.doInvoice(invoiceDate);
+            wrapperFactory.wrap(invoice).invoice(invoiceDate);
         }
         return this;
     }
@@ -69,22 +65,15 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return getClockService().now();
     }
 
-    public Object removeAll(final @Named("Confirm") Boolean confirm) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Object removeAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.remove();
         }
         return this;
     }
 
-    @Prototype
-    public Object zapAll(final @Named("Confirm") Boolean confirm) {
-        for (Invoice invoice : getInvoices()) {
-            invoice.doRemove();
-        }
-        return this;
-    }
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public InvoiceSummaryAbstract saveAllAsHistoric() {
         for (Invoice invoice : getInvoices()) {
             invoice.saveAsHistoric();
@@ -92,7 +81,11 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
         return this;
     }
 
-    @Render(Type.EAGERLY)
+    public boolean hideSaveAllAsHistoric(){
+        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
+    }
+
+    @CollectionLayout(render = RenderType.EAGERLY)
     public abstract List<Invoice> getInvoices();
 
     @Inject
@@ -100,5 +93,8 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;
+
+    @Inject
+    protected WrapperFactory wrapperFactory;
 
 }

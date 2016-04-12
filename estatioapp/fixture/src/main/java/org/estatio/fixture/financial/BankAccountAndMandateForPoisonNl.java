@@ -18,13 +18,16 @@
  */
 package org.estatio.fixture.financial;
 
+import org.estatio.dom.bankmandate.Scheme;
+import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
     public static final String BANK_ACCOUNT_REF = BankAccountForPoisonNl.REF;
     public static final int SEQUENCE = 2;
+    public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
+    public static final Scheme SCHEME = Scheme.CORE;
 
     public BankAccountAndMandateForPoisonNl() {
         this(null, null);
@@ -44,7 +47,7 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
         }
 
         // exec
-        createBankMandate(BANK_ACCOUNT_REF, SEQUENCE, executionContext);
+        createBankMandate(BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);
     }
 
 }

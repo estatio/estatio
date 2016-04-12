@@ -18,23 +18,6 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.domsettings.EstatioSettingsService;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -43,9 +26,35 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseStatus;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.domsettings.EstatioSettingsService;
+
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
-@DomainService(menuOrder = "50")
-@Hidden
+@DomainService(menuOrder = "50", nature = NatureOfService.VIEW)
 public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculationService> {
 
     public InvoiceCalculationService() {
@@ -149,14 +158,14 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                     SortedSet<LeaseItem> leaseItems =
                             parameters.leaseItem() == null ?
                                     lease.getItems() :
-                                    new TreeSet<LeaseItem>(Arrays.asList(parameters.leaseItem()));
+                                    new TreeSet<>(Arrays.asList(parameters.leaseItem()));
                     for (LeaseItem leaseItem : leaseItems) {
                         if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED)) {
                             if (parameters.leaseItemTypes() == null || parameters.leaseItemTypes().contains(leaseItem.getType())) {
                                 SortedSet<LeaseTerm> leaseTerms =
                                         parameters.leaseTerm() == null ?
                                                 leaseItem.getTerms() :
-                                                new TreeSet<LeaseTerm>(Arrays.asList(parameters.leaseTerm()));
+                                                new TreeSet<>(Arrays.asList(parameters.leaseTerm()));
                                 for (LeaseTerm leaseTerm : leaseTerms) {
                                     final List<CalculationResult> results;
                                     results = calculateDueDateRange(leaseTerm, parameters);
@@ -243,11 +252,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                 results2.add(new CalculationResult(invoicingInterval));
             } else {
                 final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
-                final BigDecimal frequencyDays = leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ? null : new BigDecimal(invoicingInterval.days());
-                final BigDecimal rangeFactor =
-                        leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ?
-                                BigDecimal.ONE :
-                                overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
+                final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
+                final BigDecimal rangeFactor = overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
                 final BigDecimal annualFactor = leaseTerm.getLeaseItem().getInvoicingFrequency().annualMultiplier();
                 final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
                 BigDecimal mockValue = BigDecimal.ZERO;
@@ -257,8 +263,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                 final CalculationResult calculationResult = new CalculationResult(
                         invoicingInterval,
                         effectiveInterval,
-                        calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation)),
-                        calculateValue(rangeFactor, annualFactor, mockValue));
+                        calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation), leaseTerm.valueType()),
+                        calculateValue(rangeFactor, annualFactor, mockValue, leaseTerm.valueType()));
                 results2.add(calculationResult);
             }
         }
@@ -271,7 +277,13 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     private BigDecimal calculateValue(
             final BigDecimal rangeFactor,
             final BigDecimal annualFactor,
-            final BigDecimal value) {
+            final BigDecimal value,
+            final LeaseTermValueType valueType) {
+        if(valueType == LeaseTermValueType.FIXED){
+            // If it's fixed we don't care about the factors, always return the full value
+            // TODO: offload this responsibility to the lease term
+            return value.setScale(2, RoundingMode.HALF_UP);
+        }
         if (value != null && annualFactor != null && rangeFactor != null) {
             return value.multiply(annualFactor)
                     .multiply(rangeFactor)

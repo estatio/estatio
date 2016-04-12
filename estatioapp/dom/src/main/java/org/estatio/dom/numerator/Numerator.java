@@ -25,10 +25,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -85,7 +83,7 @@ import lombok.Setter;
                         + "WHERE name == :name"
                         + "&& applicationTenancyPath == :applicationTenancyPath ")
 })
-@Immutable
+@DomainObject(editing = Editing.DISABLED)
 public class Numerator
         extends EstatioDomainObject<Numerator>
         implements Comparable<Numerator>, BookmarkHolder, WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
@@ -122,60 +120,46 @@ public class Numerator
     // //////////////////////////////////////
 
     @javax.jdo.annotations.NotPersistent
-    @NotPersisted
+    @Property(notPersisted = true)
     public boolean isScoped() {
         return getObjectType() != null;
     }
 
     // //////////////////////////////////////
 
-    private String name;
-
     /**
      * The name of this numerator, for example <tt>invoice number</tt>.
-     * 
+     *
      * <p>
      * The combination of ({@link #getObjectType() objectType},
      * {@link #getName() name}) is unique.
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Disabled
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String tagName) {
-        this.name = tagName;
-    }
+    @Property(editing = Editing.DISABLED)
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
-
-    private String objectType;
 
     /**
      * The {@link Bookmark#getObjectType() object type} (either the class name
      * or a unique alias of it) of the object to which this {@link Numerator}
      * belongs.
-     * 
+     *
      * <p>
      * If omitted, then the {@link Numerator} is taken to be global.
-     * 
+     *
      * <p>
      * If present, then the {@link #getObjectIdentifier() object identifier}
      * must also be present.
-     * 
+     *
      * <p>
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier()
      * identifier}) can be used to recreate a {@link Bookmark}, if required.
      */
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.FQCN)
-    public String getObjectType() {
-        return objectType;
-    }
-
-    public void setObjectType(final String objectType) {
-        this.objectType = objectType;
-    }
+    @Getter @Setter
+    private String objectType;
 
     public boolean hideObjectType() {
         return !isScoped();
@@ -183,31 +167,24 @@ public class Numerator
 
     // //////////////////////////////////////
 
-    private String objectIdentifier;
-
     /**
      * The {@link Bookmark#getIdentifier() identifier} of the object to which
      * this {@link Numerator} belongs.
-     * 
+     *
      * <p>
      * If omitted, then the {@link Numerator} is taken to be global.
-     * 
+     *
      * <p>
      * If present, then the {@link #getObjectType() object type} must also be
      * present.
-     * 
+     *
      * <p>
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier()
      * identifier}) can be used to recreate a {@link Bookmark}, if required.
      */
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.OBJECT_IDENTIFIER)
-    public String getObjectIdentifier() {
-        return objectIdentifier;
-    }
-
-    public void setObjectIdentifier(final String bookmark) {
-        this.objectIdentifier = bookmark;
-    }
+    @Getter @Setter
+    private String objectIdentifier;
 
     public boolean hideObjectIdentifier() {
         return !isScoped();
@@ -215,19 +192,12 @@ public class Numerator
 
     // //////////////////////////////////////
 
-    private String format;
-
     /**
      * The String format to use to generate the value.
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Numerator.FORMAT)
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(final String format) {
-        this.format = format;
-    }
+    @Getter @Setter
+    private String format;
 
     String format(final BigInteger n) {
         return String.format(getFormat(), n);
@@ -236,8 +206,8 @@ public class Numerator
     // //////////////////////////////////////
 
     public Numerator changeParameters(
-            final @Named("Format") String format,
-            final @Named("Last increment") BigInteger lastIncrement
+            final String format,
+            final BigInteger lastIncrement
             ) {
         setFormat(format);
         setLastIncrement(lastIncrement);

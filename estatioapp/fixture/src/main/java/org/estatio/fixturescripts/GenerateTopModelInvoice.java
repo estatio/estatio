@@ -47,7 +47,7 @@ public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
 
         InvoiceCalculationParameters calculationParameters = new InvoiceCalculationParameters(
                 lease,
-                InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.selectedTypes(),
+                InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE.selectedTypes(),
                 InvoiceRunType.NORMAL_RUN,
                 ld(2013, 4, 1),
                 ld(2013, 4, 1),

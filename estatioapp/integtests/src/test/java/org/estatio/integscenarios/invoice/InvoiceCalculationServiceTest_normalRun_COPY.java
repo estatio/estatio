@@ -18,26 +18,47 @@
  */
 package org.estatio.integscenarios.invoice;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.*;
-import org.estatio.domsettings.EstatioSettingsService;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+import java.math.BigDecimal;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.SortedSet;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.domsettings.EstatioSettingsService;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -182,7 +203,7 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         // call calculate on leaseTopModel
-        invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2010, 10, 1), VT.ld(2010, 10, 1), null);
+        invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2010, 10, 1), VT.ld(2010, 10, 1), null);
         assertThat(leaseTopModelServiceChargeTerm0.getInvoiceItems().size(), is(2));
     }
 
@@ -207,7 +228,7 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         assertThat(reason,
                 netAmount, is(VT.bd2hup(expected)));
 
-        Boolean adjustment = invoiceItem == null ? false : invoiceItem.isAdjustment();
+        Boolean adjustment = invoiceItem == null ? false : invoiceItem.getAdjustment();
         assertThat(adjustment, is(expectedAdjustment));
     }
 

@@ -21,18 +21,12 @@ public class BusinessCaseContributions  {
     @MemberOrder(sequence = "1")
 	public BusinessCase newBusinessCase(
 			final Project project,
-			@ParameterLayout(
-					named = "Description",
-					multiLine = 5
-					)
-			final String businessCaseDescription,
-			@ParameterLayout(named = "Next review date")
-			final LocalDate reviewDate
+			final @ParameterLayout(multiLine = 5) String description,
+			final LocalDate nextReviewDate
 			){
 		
-		new LocalDate();
 		final LocalDate now = LocalDate.now();
-		return businesscases.newBusinessCase(project, businessCaseDescription, reviewDate, now, null, 1);
+		return businesscases.newBusinessCase(project, description, nextReviewDate, now, null, 1);
 	}
 	
 	public boolean hideNewBusinessCase(final Project project, final String businessCaseDescription, final LocalDate reviewDate){
@@ -50,7 +44,6 @@ public class BusinessCaseContributions  {
 			return "This project has a business case already; use update business case instead";
 		}
 		
-		new LocalDate();
 		LocalDate now = LocalDate.now();
 		if (reviewDate.isBefore(now)) {
 			return "A review date should not be in the past";

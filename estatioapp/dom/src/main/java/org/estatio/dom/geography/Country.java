@@ -24,9 +24,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -38,6 +37,10 @@ import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -77,16 +80,19 @@ public class Country
         setAlpha2Code(alpha2Code);
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
+    }
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////
-
-    private String reference;
 
     /**
      * As per ISO standards for <a href=
@@ -97,43 +103,22 @@ public class Country
      */
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
     // not possible to make this unique because Country is rolled-up to
     // Geography.
-    @javax.jdo.annotations.Index(unique = "false")
-    private String alpha2Code;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Country.ALPHA2CODE)
-    @Title
-    public String getAlpha2Code() {
-        return alpha2Code;
-    }
-
-    public void setAlpha2Code(final String alpha2Code) {
-        this.alpha2Code = alpha2Code;
-    }
+    @javax.jdo.annotations.Index(unique = "false")
+    @Getter @Setter
+    private String alpha2Code;
 
 }

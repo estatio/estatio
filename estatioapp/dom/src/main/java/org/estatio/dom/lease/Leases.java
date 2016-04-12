@@ -18,13 +18,43 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
-import org.apache.isis.applib.annotation.*;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.*;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -34,15 +64,6 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
 
 @DomainService(repositoryFor = Lease.class)
 @DomainServiceLayout(
@@ -58,19 +79,19 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
 
     // //////////////////////////////////////
 
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Type") LeaseType leaseType,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Duration", describedAs = "Duration in a text format. Example 6y5m2d") String duration,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date", describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Landlord") Party landlord,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Tenant") Party tenant,
+            final @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
+            final String name,
+            final LeaseType leaseType,
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Duration in a text format. Example 6y5m2d") String duration,
+            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) Party landlord,
+            final @Parameter(optionality = Optionality.OPTIONAL) Party tenant,
             final ApplicationTenancy applicationTenancy
             // CHECKSTYLE:ON
     ) {
@@ -168,18 +189,18 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String refOrName,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
-        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
+            final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final boolean includeTerminated) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
     }
 
-    @NotContributed
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeasesByBrand(
             final Brand brand,
-            final @ParameterLayout(named = "Include terminated") boolean includeTerminated) {
+            final boolean includeTerminated) {
         return findByBrand(brand, includeTerminated);
     }
 
@@ -187,7 +208,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "5")
     public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset,
-            final @ParameterLayout(named = "Active On Date") LocalDate activeOnDate) {
+            final LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
@@ -205,7 +226,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "4")
     public String verifyLeasesUntil(
             final LeaseItemType leaseItemType,
-            final @ParameterLayout(named = "Until date") LocalDate untilDate) {
+            final LocalDate untilDate) {
         DateTime start = DateTime.now();
         List<Lease> leases = allLeases();
         for (Lease lease : leases) {

@@ -28,15 +28,17 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = javax.jdo.annotations.IdentityType.DATASTORE)
@@ -67,17 +69,15 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @DomainObject(editing = Editing.DISABLED)
 public class Document implements Comparable<Document>, WithIntervalMutable<Document> {
 
-    private String name;
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .toString();
+    }
 
-    @Title()
     @Column(allowsNull = "false")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
@@ -105,16 +105,9 @@ public class Document implements Comparable<Document>, WithIntervalMutable<Docum
 
     // //////////////////////////////////////
 
-    private DocumentType type;
-
     @Column(allowsNull = "false")
-    public DocumentType getType() {
-        return type;
-    }
-
-    public void setType(DocumentType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private DocumentType type;
 
     // //////////////////////////////////////
 
@@ -131,33 +124,15 @@ public class Document implements Comparable<Document>, WithIntervalMutable<Docum
 
     // //////////////////////////////////////
 
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Override
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    @Override
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Document> intervalHelper = new WithIntervalMutable.Helper<Document>(this);
+    private WithIntervalMutable.Helper<Document> intervalHelper = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Document> getHelper() {
         return intervalHelper;
@@ -180,8 +155,8 @@ public class Document implements Comparable<Document>, WithIntervalMutable<Docum
 
     @Override
     public Document changeDates(
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getHelper().changeDates(startDate, endDate);
     }
 

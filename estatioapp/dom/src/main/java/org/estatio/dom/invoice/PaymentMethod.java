@@ -22,10 +22,18 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum PaymentMethod {
 
-    DIRECT_DEBIT,
-    BILLING_ACCOUNT,
-    BANK_TRANSFER,
-    CASH;
+    DIRECT_DEBIT(org.estatio.canonical.invoice.v1.PaymentMethod.DIRECT_DEBIT),
+    BILLING_ACCOUNT(null),
+    BANK_TRANSFER(org.estatio.canonical.invoice.v1.PaymentMethod.BANK_TRANSFER),
+    CASH(org.estatio.canonical.invoice.v1.PaymentMethod.CASH),
+    CHEQUE(org.estatio.canonical.invoice.v1.PaymentMethod.CHEQUE);
+
+    private final org.estatio.canonical.invoice.v1.PaymentMethod canonicalPaymentMethod;
+
+    PaymentMethod(final org.estatio.canonical.invoice.v1.PaymentMethod canonicalPaymentMethod) {
+
+        this.canonicalPaymentMethod = canonicalPaymentMethod;
+    }
 
     public String title() {
         return StringUtils.enumTitle(this.name());
@@ -33,6 +41,13 @@ public enum PaymentMethod {
     
     public boolean isDirectDebit() {
         return this == DIRECT_DEBIT;
+    }
+
+    public org.estatio.canonical.invoice.v1.PaymentMethod asDto() {
+        if(canonicalPaymentMethod == null) {
+            throw new IllegalArgumentException(String.format("Payment method '%s' could not be mapped", name()));
+        }
+        return canonicalPaymentMethod;
     }
 
 }

@@ -59,4 +59,21 @@ public final class MathUtils {
         }
         return max;
     }
+
+    public static BigDecimal maxUsingFirstSignum(final BigDecimal... values) {
+        BigDecimal max = BigDecimal.ZERO;
+        boolean signumDetected = false;
+        BigDecimal signum = BigDecimal.ONE;
+        for (BigDecimal value : values){
+            if (value != null && value.compareTo(BigDecimal.ZERO) != 0){
+                if (!signumDetected) {
+                    signum = BigDecimal.valueOf(value.signum() == -1 ? -1 : 1);
+                    signumDetected = true;
+                }
+                max = max.max(value.multiply(signum));
+            }
+        }
+        return max.multiply(signum);
+
+    }
 }

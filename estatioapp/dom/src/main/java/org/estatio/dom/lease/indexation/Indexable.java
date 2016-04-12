@@ -11,41 +11,41 @@ public interface Indexable {
 
     LocalDate getBaseIndexStartDate();
 
+    void setBaseIndexStartDate(LocalDate baseIndexStartDate);
+
     BigDecimal getBaseIndexValue();
+
+    void setBaseIndexValue(BigDecimal baseIndexValue);
 
     BigDecimal getBaseValue();
 
+    void setBaseValue(BigDecimal baseValue);
+
     Index getIndex();
 
+    void setIndex(Index index);
+
     BigDecimal getIndexationPercentage();
+
+    void setIndexationPercentage(BigDecimal indexationPercentage);
 
     BigDecimal getLevellingPercentage();
 
     LocalDate getNextIndexStartDate();
 
-    BigDecimal getNextIndexValue();
-
-    BigDecimal getRebaseFactor();
-
-    void setBaseIndexStartDate(LocalDate baseIndexStartDate);
-
-    void setBaseIndexValue(BigDecimal baseIndexValue);
-
-    void setIndex(Index index);
-
-    void setIndexationPercentage(BigDecimal indexationPercentage);
-
-    void setIndexedValue(BigDecimal indexedValue);
-
     void setNextIndexStartDate(LocalDate nextIndexStartDate);
 
+    BigDecimal getNextIndexValue();
+
     void setNextIndexValue(BigDecimal nextIndexValue);
+
+    BigDecimal getRebaseFactor();
 
     void setRebaseFactor(BigDecimal rebaseFactor);
 
     BigDecimal getIndexedValue();
 
-    void setBaseValue(BigDecimal baseValue);
+    void setIndexedValue(BigDecimal indexedValue);
 
     LeaseTermFrequency getFrequency();
 
@@ -58,4 +58,6 @@ public interface Indexable {
     void setEffectiveIndexedValue(BigDecimal max);
 
     BigDecimal getSettledValue();
+
+    IndexationCalculationMethod getIndexationCalculation();
 }

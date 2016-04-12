@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -42,7 +41,11 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A lease-specific subclass of {@link InvoiceItem}, referring
@@ -54,6 +57,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseTerm", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm == :leaseTerm "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInterval", language = "JDOQL",
                 value = "SELECT " +
@@ -98,6 +106,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @DomainObject(editing = Editing.DISABLED)
 public class InvoiceItemForLease extends InvoiceItem {
 
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getInvoice())
+                .withName(getLease())
+                .withName(getCharge())
+                .toString();
+    }
+
     @Override
     public InvoiceSource getSource() {
         return getLeaseTerm();
@@ -105,61 +121,32 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     // //////////////////////////////////////
 
-    private Lease lease;
-
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
-    @Title(sequence = "1", append = ":")
-    public Lease getLease() {
-        return lease;
-    }
-
-    public void setLease(final Lease lease) {
-        this.lease = lease;
-    }
+    @Getter @Setter
+    private Lease lease;
 
     // //////////////////////////////////////
-
-    private LeaseTerm leaseTerm;
 
     @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
     @Property(hidden = Where.EVERYWHERE)
-    public LeaseTerm getLeaseTerm() {
-        return leaseTerm;
-    }
-
-    public void setLeaseTerm(final LeaseTerm leaseTerm) {
-        this.leaseTerm = leaseTerm;
-    }
+    @Getter @Setter
+    private LeaseTerm leaseTerm;
 
     // //////////////////////////////////////
-
-    private FixedAsset fixedAsset;
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
     @PropertyLayout(named = "Unit")
     // for the moment, might be generalized (to the user) in the future
-    public FixedAsset getFixedAsset() {
-        return fixedAsset;
-    }
-
-    public void setFixedAsset(final FixedAsset fixedAsset) {
-        this.fixedAsset = fixedAsset;
-    }
+    @Getter @Setter
+    private FixedAsset fixedAsset;
 
     // //////////////////////////////////////
 
-    private Boolean adjustment;
-
     @Property(optionality = Optionality.OPTIONAL)
-    public Boolean isAdjustment() {
-        return adjustment;
-    }
-
-    public void setAdjustment(final Boolean adjustment) {
-        this.adjustment = adjustment;
-    }
+    @Getter @Setter
+    private Boolean adjustment;
 
     // //////////////////////////////////////
 

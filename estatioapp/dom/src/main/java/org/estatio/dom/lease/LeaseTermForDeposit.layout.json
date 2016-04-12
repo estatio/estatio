@@ -29,6 +29,9 @@
               }
             }
           }
+        },
+        "Metadata" : {
+          "members": {}
         }
       }
     }, 
@@ -37,9 +40,11 @@
       "memberGroups": {
         "Deposit": {
           "members": {
-            "depositType": {},
+            "fraction": {},
+            "depositType" : {},
             "excludedAmount": {
               "actions": {
+                "terminate" : {},
                 "changeParameters": {}
               }
             }
@@ -52,16 +57,26 @@
       "memberGroups": {
         "Values": {
           "members": {
-            "depositValue": {},
-            "effectiveValue": {}
+            "calculatedDepositValue": {},
+            "manualDepositValue": {},
+            "effectiveValue": {
+              "actions": {
+                "changeManualDepositValue": {}
+              }
+            }
           }
         },
         "Related": {
           "members": {
-            "previous": {},
+            "previous": {
+              "hidden": {"where": "EVERYWHERE"}
+            },
             "next": {
+              "hidden": {"where": "EVERYWHERE"},
               "actions": {
-                "createNext": {}
+                "createNext": {
+                  "hidden": {"where": "EVERYWHERE"}
+                }
               }
             }
           }

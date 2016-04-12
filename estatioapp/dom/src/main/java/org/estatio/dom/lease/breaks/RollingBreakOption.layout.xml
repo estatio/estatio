@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="links"/>
+            <ns2:action id="remove"/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="lease"/>
+                <ns2:property id="type"/>
+                <ns2:property id="exerciseType"/>
+                <ns2:property id="description">
+                    <ns2:action id="change" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="currentBreakDate"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="notificationPeriod"/>
+                <ns2:property id="exerciseDate"/>
+                <ns2:property id="breakDate">
+                    <ns2:action id="changeDates" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="8" unreferencedCollections="true">
+            <ns2:collection id="events"/>
+        </col>
+    </row>
+</grid>

@@ -68,7 +68,7 @@ public abstract class ComparableByReferenceContractTestAbstract_compareTo {
     }
 
     private <T extends WithReferenceComparable<T>> void test(Class<T> cls) {
-        new ComparableByReferenceContractTester<T>(cls).test();
+        new ComparableByReferenceContractTester<>(cls).test();
     }
 
 }

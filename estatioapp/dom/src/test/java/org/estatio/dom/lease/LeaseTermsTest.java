@@ -143,12 +143,6 @@ public class LeaseTermsTest {
             // start date before start date of previous
             testValidate(leaseItem, previous, new LocalDate(2013, 12, 31), new LocalDate(2014, 12, 31), "Start date must be on or after 2014-01-01");
 
-            // a term of type deposit should have no end date
-            // when
-            leaseItem.setType(LeaseItemType.DEPOSIT);
-            // then
-            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), "A deposit term should have no end date");
-
         }
 
         private void testValidate(LeaseItem leaseItem, LeaseTerm previous, LocalDate startDate, LocalDate endDate, String value) {

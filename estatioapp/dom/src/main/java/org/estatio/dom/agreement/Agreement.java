@@ -44,16 +44,13 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
@@ -66,8 +63,12 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -130,45 +131,36 @@ public abstract class Agreement
         this.secondaryRoleTypeTitle = secondaryRoleTypeTitle;
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
+    }
 
-    private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this agreement")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
-
-    private String name;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.NAME)
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(describedAs = "Optional name for this agreement")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
-    @NotPersisted
+    @Property(notPersisted = true)
     public Party getPrimaryParty() {
         return findCurrentOrMostRecentParty(primaryRoleTypeTitle);
     }
 
-    @NotPersisted
+    @Property(notPersisted = true)
     public Party getSecondaryParty() {
         return findCurrentOrMostRecentParty(secondaryRoleTypeTitle);
     }
@@ -233,30 +225,14 @@ public abstract class Agreement
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
-    private LocalDate endDate;
-
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    @Getter @Setter
+    private LocalDate endDate;
 
     // //////////////////////////////////////
 
@@ -283,7 +259,7 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Agreement> changeDates = new WithIntervalMutable.Helper<Agreement>(this);
+    private WithIntervalMutable.Helper<Agreement> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Agreement> getChangeDates() {
         return changeDates;
@@ -292,8 +268,8 @@ public abstract class Agreement
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public Agreement changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -322,74 +298,44 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    private AgreementType type;
-
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Property(hidden = Where.EVERYWHERE, editing = Editing.DISABLED)
-    public AgreementType getType() {
-        return type;
-    }
-
-    public void setType(final AgreementType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private AgreementType type;
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "previousAgreementId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
-    private Agreement previous;
-
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @PropertyLayout(named = "Previous Agreement")
-    @Override
-    public Agreement getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(final Agreement previous) {
-        this.previous = previous;
-    }
+    @Getter @Setter
+    private Agreement previous;
 
     public abstract Agreement changePrevious(final Agreement previousAgreement);
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "nextAgreementId")
-    private Agreement next;
-
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED, hidden = Where.ALL_TABLES)
     @PropertyLayout(named = "Next Agreement")
-    @Override
-    public Agreement getNext() {
-        return next;
-    }
-
-    public void setNext(final Agreement next) {
-        this.next = next;
-    }
+    @Getter @Setter
+    private Agreement next;
 
     // //////////////////////////////////////
-
-    private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
     @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup = "true")
     @Collection(editing = Editing.DISABLED)
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<AgreementRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(final SortedSet<AgreementRole> actors) {
-        this.roles = actors;
-    }
+    @Getter @Setter
+    private SortedSet<AgreementRole> roles = new TreeSet<>();
 
     @MemberOrder(name = "roles", sequence = "1")
     public Agreement newRole(
-            final @ParameterLayout(named = "Type") AgreementRoleType type,
+            final AgreementRoleType type,
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
     }

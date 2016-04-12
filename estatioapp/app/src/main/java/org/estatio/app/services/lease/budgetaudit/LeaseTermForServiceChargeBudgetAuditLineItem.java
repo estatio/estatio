@@ -23,19 +23,27 @@ import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.utils.TitleBuilder;
 
 @Paged(Integer.MAX_VALUE)
 @MemberGroupLayout(columnSpans = { 4, 4, 4, 0 }, left = { "Selected" }, right = { "Next" })
 @ViewModel
 public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewModel {
 
-    public LeaseTermForServiceChargeBudgetAuditLineItem() {
-    };
+    /**
+     * A viewmodel needs a public noarg constructor
+     */
+    public LeaseTermForServiceChargeBudgetAuditLineItem() {}
+
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getLeaseTerm())
+                .toString();
+    }
 
     public LeaseTermForServiceChargeBudgetAuditLineItem(LeaseTermForServiceCharge leaseTerm) {
         this.leaseTerm = leaseTerm;
@@ -49,7 +57,6 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewMod
 
     private LeaseTermForServiceCharge leaseTerm;
 
-    @Title(sequence = "1")
     @MemberOrder(name = "Selected", sequence = "1")
     public LeaseTermForServiceCharge getLeaseTerm() {
         return leaseTerm;

@@ -18,69 +18,67 @@
  */
 package org.estatio.dom.lease;
 
+import com.google.common.collect.Ordering;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Ordering;
-
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
-
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 public enum InvoicingFrequency {
 
     WEEKLY_IN_ADVANCE(
-            "RRULE:FREQ=WEEKLY;INTERVAL=1",
+            Frequency.WEEKLY,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(7), BigDecimal.valueOf(365.25)),
     WEEKLY_IN_ARREARS(
-            "RRULE:FREQ=WEEKLY;INTERVAL=1",
+            Frequency.WEEKLY,
             PaidIn.ARREARS,
             BigDecimal.valueOf(7), BigDecimal.valueOf(365.25)),
     MONTHLY_IN_ADVANCE(
-            "RRULE:FREQ=MONTHLY;INTERVAL=1",
+            Frequency.MONTHLY,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(1), BigDecimal.valueOf(12)),
     MONTHLY_IN_ARREARS(
-            "RRULE:FREQ=MONTHLY;INTERVAL=1",
+            Frequency.MONTHLY,
             PaidIn.ARREARS,
             BigDecimal.valueOf(1), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ADVANCE(
-            "RRULE:FREQ=MONTHLY;INTERVAL=3",
+            Frequency.QUARTERLY,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ADVANCE_PLUS1M(
-            "RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTH=2,5,8,11",
+            Frequency.QUARTERLY_PLUS1M,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ADVANCE_PLUS2M(
-            "RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTH=3,6,9,12",
+            Frequency.QUARTERLY_PLUS2M,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ARREARS(
-            "RRULE:FREQ=MONTHLY;INTERVAL=3",
+            Frequency.QUARTERLY,
             PaidIn.ARREARS,
             BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     SEMI_YEARLY_IN_ADVANCE(
-            "RRULE:FREQ=MONTHLY;INTERVAL=6",
+            Frequency.SEMI_YEARLY,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(1), BigDecimal.valueOf(2)),
     SEMI_YEARLY_IN_ARREARS(
-            "RRULE:FREQ=MONTHLY;INTERVAL=6",
+            Frequency.SEMI_YEARLY,
             PaidIn.ARREARS,
             BigDecimal.valueOf(1), BigDecimal.valueOf(2)),
     YEARLY_IN_ADVANCE(
-            "RRULE:FREQ=YEARLY;INTERVAL=1",
+            Frequency.YEARLY,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     YEARLY_IN_ARREARS(
-            "RRULE:FREQ=YEARLY;INTERVAL=1",
+            Frequency.YEARLY,
             PaidIn.ARREARS,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     FIXED_IN_ADVANCE(
@@ -98,11 +96,12 @@ public enum InvoicingFrequency {
     }
 
     private InvoicingFrequency(
-            final String rrule,
+            final Frequency frequency,
             final PaidIn paidIn,
             final BigDecimal numerator,
             final BigDecimal denominator) {
-        this.rrule = rrule;
+
+        this.rrule = frequency == null ? null : frequency.getRrule();
         this.numerator = numerator;
         this.denominator = denominator;
         this.paidIn = paidIn;
@@ -145,7 +144,7 @@ public enum InvoicingFrequency {
     }
 
     public List<InvoicingInterval> intervalsInRange(final LocalDate periodStartDate, final LocalDate nextPeriodStartDate) {
-        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<>();
         for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, nextPeriodStartDate, this.rrule)) {
             invoicingIntervals.add(new InvoicingInterval(interval, dueDateOfInterval(interval)));
         }
@@ -155,7 +154,7 @@ public enum InvoicingFrequency {
     public List<InvoicingInterval> intervalsInDueDateRange(
             final LocalDate periodStartDate,
             final LocalDate periodEndDate) {
-        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<>();
         if (periodEndDate.compareTo(periodStartDate) > 0) {
             for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule)) {
                 LocalDate dueDate = dueDateOfInterval(interval);
@@ -170,7 +169,7 @@ public enum InvoicingFrequency {
     public List<InvoicingInterval> intervalsInDueDateRange(
             final LocalDateInterval rangeInterval,
             final LocalDateInterval sourceInterval) {
-        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<>();
         if (rrule == null) {
             LocalDate dueDateOfSourceInterval = dueDateOfInterval(sourceInterval);
             if (rangeInterval.contains(dueDateOfSourceInterval)) {

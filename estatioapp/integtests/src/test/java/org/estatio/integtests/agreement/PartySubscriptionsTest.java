@@ -20,6 +20,8 @@ package org.estatio.integtests.agreement;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -98,7 +100,9 @@ public class PartySubscriptionsTest extends EstatioIntegrationTest {
         @Test
         public void invalidBecauseNoReplacement() throws Exception {
             // when
-            Party.RemoveEvent event = new Party.RemoveEvent(oldParty, null, (Object[]) null);
+            Party.RemoveEvent event = new Party.RemoveEvent();
+            event.setSource(oldParty);
+            event.setArguments(Lists.newArrayList());
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             partySubscriptions.on(event);
 
@@ -109,7 +113,9 @@ public class PartySubscriptionsTest extends EstatioIntegrationTest {
         @Test
         public void executingReplacesParty() throws Exception {
             // when
-            Party.RemoveEvent event = new Party.RemoveEvent(oldParty, null, newParty);
+            Party.RemoveEvent event = new Party.RemoveEvent();
+            event.setSource(oldParty);
+            event.setArguments(Lists.newArrayList(newParty));
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             partySubscriptions.on(event);
             event.setEventPhase(AbstractDomainEvent.Phase.EXECUTING);

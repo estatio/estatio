@@ -70,12 +70,8 @@ public class FixedAssetRegistrationContributions extends UdoDomainService<FixedA
 
     // //////////////////////////////////////
 
-    @Action(
-            semantics = SemanticsOf.SAFE
-    )
-    @ActionLayout(
-            contributed = Contributed.AS_ASSOCIATION
-    )
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @MemberOrder(
             name = "Registrations",
             sequence = "13.5"

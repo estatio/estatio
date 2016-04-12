@@ -24,7 +24,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
@@ -46,8 +45,8 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final Agreement agreement,
             final Party party,
             final AgreementRoleType type,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final LocalDate startDate,
+            final LocalDate endDate) {
         AgreementRole agreementRole = newTransientInstance();
         persistIfNotAlready(agreementRole);
         agreementRole.setStartDate(startDate);
@@ -122,6 +121,15 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
                 "type", type,
                 "startDate", queryDate,
                 "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
+    }
+
+    public List<AgreementRole> findByPartyAndType(
+            final Party party,
+            final AgreementRoleType type) {
+        return allMatches(
+                "findByPartyAndType",
+                "party", party,
+                "type", type);
     }
 
 

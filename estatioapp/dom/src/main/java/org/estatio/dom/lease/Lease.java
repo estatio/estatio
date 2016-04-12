@@ -37,18 +37,15 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -78,6 +75,8 @@ import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.dom.bankmandate.Scheme;
+import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccount;
@@ -91,6 +90,9 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -163,21 +165,14 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private String applicationTenancyPath;
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
     )
-    @Hidden
-    public String getApplicationTenancyPath() {
-        return applicationTenancyPath;
-    }
-
-    public void setApplicationTenancyPath(final String applicationTenancyPath) {
-        this.applicationTenancyPath = applicationTenancyPath;
-    }
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
 
     @PropertyLayout(
             hidden = Where.ALL_TABLES,
@@ -189,17 +184,10 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private LeaseStatus status;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
-    public LeaseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(final LeaseStatus status) {
-        this.status = status;
-    }
+    @Getter @Setter
+    private LeaseStatus status;
 
     @Programmatic
     public void resolveStatus(final String reason) {
@@ -273,20 +261,13 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name = "leaseTypeId", allowsNull = "true")
+    @Getter @Setter
     private LeaseType leaseType;
 
-    @javax.jdo.annotations.Column(name = "leaseTypeId", allowsNull = "true")
-    public LeaseType getLeaseType() {
-        return leaseType;
-    }
-
-    public void setLeaseType(final LeaseType leaseType) {
-        this.leaseType = leaseType;
-    }
-
     public Lease change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Lease Type") @Parameter(optionality = Optionality.OPTIONAL) LeaseType leaseType) {
+            final String name,
+            final @Parameter(optionality = Optionality.OPTIONAL) LeaseType leaseType) {
         setName(name);
         setLeaseType(leaseType);
         return this;
@@ -350,8 +331,8 @@ public class Lease
 
     @Action(domainEvent = ChangeDatesEvent.class)
     public Lease changeTenancyDates(
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         setTenancyStartDate(startDate);
         setTenancyEndDate(endDate);
 
@@ -385,17 +366,11 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "lease")
-    private SortedSet<Occupancy> occupancies = new TreeSet<Occupancy>();
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<Occupancy> getOccupancies() {
-        return occupancies;
-    }
-
-    public void setOccupancies(final SortedSet<Occupancy> occupancies) {
-        this.occupancies = occupancies;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
+    @Getter @Setter
+    private SortedSet<Occupancy> occupancies = new TreeSet<>();
 
     /**
      * The action to relate a lease to a unit. A lease can occupy unlimited
@@ -406,8 +381,8 @@ public class Lease
      * @return
      */
     public Occupancy newOccupancy(
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "Unit") Unit unit) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final Unit unit) {
         Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
         return occupancy;
@@ -428,21 +403,14 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
-
     /**
      * Added to the default fetch group in an attempt to resolve pre-prod error,
      * EST-233.
      */
     @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<LeaseItem> getItems() {
-        return items;
-    }
-
-    public void setItems(final SortedSet<LeaseItem> items) {
-        this.items = items;
-    }
+    @Getter @Setter
+    private SortedSet<LeaseItem> items = new TreeSet<>();
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
@@ -469,6 +437,10 @@ public class Lease
                                   final PaymentMethod paymentMethod,
                                   final LocalDate startDate) {
         return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
+    }
+
+    public String disableNewItem() {
+        return getProperty() == null ? "Please set occupancy first" : null;
     }
 
     public Agreement changePrevious(
@@ -538,7 +510,7 @@ public class Lease
 
     @Programmatic
     public List<LeaseItem> findItemsOfType(final LeaseItemType type) {
-        List<LeaseItem> items = new ArrayList<LeaseItem>();
+        List<LeaseItem> items = new ArrayList<>();
         for (LeaseItem item : getItems()) {
             if (item.getType().equals(type)) {
                 items.add(item);
@@ -559,31 +531,19 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "lease")
-    private SortedSet<BreakOption> breakOptions = new TreeSet<BreakOption>();
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<BreakOption> getBreakOptions() {
-        return breakOptions;
-    }
-
-    public void setBreakOptions(final SortedSet<BreakOption> breakOptions) {
-        this.breakOptions = breakOptions;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
+    @Getter @Setter
+    private SortedSet<BreakOption> breakOptions = new TreeSet<>();
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
-    private BankMandate paidBy;
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    public BankMandate getPaidBy() {
-        return paidBy;
-    }
-
-    public void setPaidBy(final BankMandate paidBy) {
-        this.paidBy = paidBy;
-    }
+    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
+    @Getter @Setter
+    private BankMandate paidBy;
 
     // //////////////////////////////////////
 
@@ -636,9 +596,12 @@ public class Lease
 
     public Lease newMandate(
             final BankAccount bankAccount,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
+            final @Parameter(optionality = Optionality.OPTIONAL) Scheme scheme,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate signatureDate) {
 
         final Party creditor = getPrimaryParty();
         final Party debtor = getSecondaryParty();
@@ -647,7 +610,8 @@ public class Lease
                 bankMandateRepository.newBankMandate(
                         reference, reference,
                         startDate, endDate,
-                        debtor, creditor, bankAccount);
+                        debtor, creditor, bankAccount,
+                        sequenceType, scheme, signatureDate);
         paidBy(bankMandate);
         return this;
     }
@@ -656,7 +620,10 @@ public class Lease
             final BankAccount bankAccount,
             final String reference,
             final LocalDate startDate,
-            final LocalDate endDate) {
+            final LocalDate endDate,
+            final SequenceType sequenceType,
+            final Scheme scheme,
+            final LocalDate signatureDate) {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
         if (tenantRole == null || !tenantRole.isCurrent()) {
             return "Could not determine the tenant (secondary party) of this lease";
@@ -689,7 +656,10 @@ public class Lease
             final BankAccount bankAccount,
             final String reference,
             final LocalDate startDate,
-            final LocalDate endDate) {
+            final LocalDate endDate,
+            final SequenceType sequenceType,
+            final Scheme scheme,
+            final LocalDate signatureDate) {
         final List<? extends FinancialAccount> validBankAccounts = existingBankAccountsForTenant();
         if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
@@ -748,10 +718,9 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Action(domainEvent = Lease.TerminateEvent.class)
+    @Action(domainEvent = Lease.TerminateEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease terminate(
-            final @ParameterLayout(named = "Termination Date") LocalDate terminationDate,
-            final @ParameterLayout(named = "Are you sure?") Boolean confirm) {
+            final LocalDate terminationDate) {
         // TODO: remove occupancies after the termination date
         // TODO: break options
         setTenancyEndDate(terminationDate);
@@ -762,17 +731,12 @@ public class Lease
         return getClockService().now();
     }
 
-    public Boolean default1Terminate() {
-        return false;
-    }
-
     public String validateTerminate(
-            final LocalDate terminationDate,
-            final Boolean confirm) {
+            final LocalDate terminationDate) {
         if (terminationDate.isBefore(getStartDate())) {
             return "Termination date can't be before start date";
         }
-        return confirm ? null : "Make sure you confirm this action";
+        return null;
     }
 
     public boolean hideTerminate() {
@@ -782,7 +746,7 @@ public class Lease
     // //////////////////////////////////////
 
     @Action(domainEvent = Lease.SuspendAllEvent.class)
-    public Lease suspendAll(final @ParameterLayout(named = "Reason") String reason) {
+    public Lease suspendAll(final String reason) {
         for (LeaseItem item : getItems()) {
             item.suspend(reason);
         }
@@ -809,15 +773,15 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease assign(
-            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) final String reference,
-            @ParameterLayout(named = "Name") final String name,
-            @ParameterLayout(named = "Tenant") final Party tenant,
-            @ParameterLayout(named = "Tenancy start date") final LocalDate tenancyStartDate,
-            @ParameterLayout(named = "Are you sure?") final Boolean confirm
+            @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) final String reference,
+            final String name,
+            final Party tenant,
+            final LocalDate tenancyStartDate
     ) {
         Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, getEndDate());
-        this.terminate(new LocalDateInterval(tenancyStartDate, null).endDateFromStartDate(), true);
+        this.terminate(new LocalDateInterval(tenancyStartDate, null).endDateFromStartDate());
         return newLease;
     }
 
@@ -829,8 +793,7 @@ public class Lease
             final String reference,
             final String name,
             final Party tenant,
-            final LocalDate startDate,
-            final Boolean confirm
+            final LocalDate startDate
     ) {
         return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
     }
@@ -913,12 +876,12 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease renew(
-            @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) final String reference,
-            @ParameterLayout(named = "Name") final String name,
-            @ParameterLayout(named = "Start date") final LocalDate startDate,
-            @ParameterLayout(named = "End date") final LocalDate endDate,
-            @ParameterLayout(named = "Are you sure?") final Boolean confirm
+            @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate
     ) {
         return copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate);
 
@@ -940,8 +903,7 @@ public class Lease
             final String reference,
             final String name,
             final LocalDate startDate,
-            final LocalDate endDate,
-            final Boolean confirm
+            final LocalDate endDate
     ) {
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";
@@ -951,18 +913,8 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public void remove(@ParameterLayout(named = "Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
-        }
-    }
-
-    public boolean hideRemove() {
-        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
-    }
-
-    @Programmatic
-    public boolean doRemove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove() {
         boolean success = true;
 
         for (LeaseItem item : getItems()) {
@@ -971,7 +923,10 @@ public class Lease
         if (success) {
             getContainer().remove(this);
         }
-        return success;
+    }
+
+    public boolean hideRemove() {
+        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
     }
 
     @Programmatic
@@ -988,13 +943,6 @@ public class Lease
     public static class TerminateEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
-        public TerminateEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
-
         public LocalDate getTerminationDate() {
             return (LocalDate) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
@@ -1003,34 +951,15 @@ public class Lease
     public static class SuspendAllEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
-        public SuspendAllEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     public static class ResumeAllEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
-        public ResumeAllEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
     }
 
     public static class ChangeDatesEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
-
-        public ChangeDatesEvent(
-                final Lease source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
 
         public LocalDate getNewTenancyStartDate() {
             return (LocalDate) (this.getArguments().isEmpty() ? null : getArguments().get(0));

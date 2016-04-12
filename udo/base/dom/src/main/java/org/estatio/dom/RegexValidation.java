@@ -46,8 +46,8 @@ public final class RegexValidation {
         }
 
         /* Only 3 letters */
-        public static final String REFERENCE = "[A-Z]{3}";
-        public static final String REFERENCE_DESCRIPTION = "Only 3 letters, e.g. XXX";
+        public static final String REFERENCE = "[A-Z,0-9]{2,4}";
+        public static final String REFERENCE_DESCRIPTION = "2 to 4 numbers or letters, e.g. XXX9";
     }
 
     public static final class BankAccount {
@@ -74,7 +74,8 @@ public final class RegexValidation {
 
         //(?=(?:.{11,15}|.{17}))([X,Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\&+=_/-]{1,7})
         //public static final String REFERENCE = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\\&+=_/-]{1,7})";
-        public static final String REFERENCE = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{3})-([A-Z,0-9]{3,8})-([A-Z,0-9,\\&+=_/-]{1,7})$";
+        //public static final String REFERENCE = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{3})-([A-Z,0-9]{3,8})-([A-Z,0-9,\\&+=_/-]{1,7})$";
+        public static final String REFERENCE = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{2,4})-([A-Z,0-9,\\&+=_/-]{1,15})$";
         public static final String REFERENCE_DESCRIPTION = "Only letters and numbers devided by at least 2 and at most 4 dashes:\"-\" totalling between 11 and 15 characters. ";
     }
 
@@ -82,7 +83,7 @@ public final class RegexValidation {
         private Unit() {
         }
 
-        public static final String REFERENCE = "(?=.{5,17})([A-Z]{1}-)?([A-Z]{3}-[A-Z,0-9,/,+,-]{1,11})";
+        public static final String REFERENCE = "(?=.{5,17})([A-Z]{1}-)?([A-Z]{2,4}-[A-Z,0-9,/,+,-]{1,11})";
         public static final String REFERENCE_DESCRIPTION = "Only letters and numbers devided by at least 1 and at most 3 dashes:\"-\" totalling between 5 and 15 characters. ";
     }
 }

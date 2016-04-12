@@ -39,7 +39,7 @@ public class ComparableByReferenceContractTester<T extends WithReferenceComparab
 
     public void test() {
         System.out.println("ComparableByReferenceContractTester: " + cls.getName());
-        new ComparableContractTester<T>(orderedTuples()).test();
+        new ComparableContractTester<>(orderedTuples()).test();
 
         testToString();
         

@@ -18,11 +18,10 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
-
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import java.math.BigDecimal;
 
 public class LeaseTermForTesting extends LeaseTerm {
 
@@ -59,7 +58,18 @@ public class LeaseTermForTesting extends LeaseTerm {
         return value;
     }
 
+    @Override
+    public LeaseTermValueType valueType(){
+        return leaseTermValueType == null ? LeaseTermValueType.ANNUAL : leaseTermValueType;
+    }
+
+    public void setLeaseTermValueType(final LeaseTermValueType leaseTermValueType){
+        this.leaseTermValueType = leaseTermValueType;
+    }
+
     // //////////////////////////////////////
+
+    private LeaseTermValueType leaseTermValueType;
 
     private BigDecimal value;
 

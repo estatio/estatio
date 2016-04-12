@@ -131,7 +131,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
         @Before
         public void setUp() throws Exception {
             oldBankAccount = bankAccounts.findBankAccountByReference(BankAccountForOxford.BANK_ACCOUNT_REF);
-            newBankAccount = bankAccounts.newBankAccount(parties.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", "New Bank Account");
+            newBankAccount = bankAccounts.newBankAccount(parties.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
         }
 
         @Test
@@ -140,7 +140,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
             FixedAssetFinancialAccount fixedAssetFinancialAccount = fixedAssetFinancialAccountRepository.findByFinancialAccount(oldBankAccount).get(0);
 
             // When
-            wrap(fixedAssetFinancialAccount).remove(true);
+            wrap(fixedAssetFinancialAccount).remove();
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(oldBankAccount).size(), is(0));
@@ -152,7 +152,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
             expectedException.expect(InvalidException.class);
 
             // WHen
-            wrap(oldBankAccount).remove(true);
+            wrap(oldBankAccount).remove();
         }
     }
 }

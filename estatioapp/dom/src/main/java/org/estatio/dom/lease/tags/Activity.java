@@ -22,11 +22,10 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -35,6 +34,10 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -55,8 +58,8 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
                         + "WHERE sector == :sector "
                         + "   && name == :name")
 })
-@Bounded
-@Immutable
+
+@DomainObject(bounded = true, editing = Editing.DISABLED)
 public class Activity
         extends EstatioDomainObject<Activity>
         implements WithNameGetter, WithApplicationTenancyGlobal {
@@ -65,44 +68,33 @@ public class Activity
         super("sector,name");
     }
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getName())
+                .withParent(getSector())
+                .toString();
+    }
 
-    @Hidden
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
     }
 
     // //////////////////////////////////////
 
-    private Sector sector;
-
     @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "false")
-    @Title(sequence = "1")
-    public Sector getSector() {
-        return sector;
-    }
-
-    public void setSector(final Sector sector) {
-        this.sector = sector;
-    }
+    @Getter @Setter
+    private Sector sector;
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
+    @Getter @Setter
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
-    @Title(prepend = ":", sequence = "2")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
     public Activity change(
-            final @Named("Name") String name,
-            final @Named("Sector") Sector sector) {
+            final String name,
+            final Sector sector) {
         setName(name);
         setSector(sector);
         return this;

@@ -63,6 +63,8 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.dom.bankmandate.Scheme;
+import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -306,6 +308,23 @@ public class LeaseTest {
 
     }
 
+    public static class DisableNewItem extends LeaseTest {
+
+        @Test
+        public void test() {
+            // given
+            Lease lease = new Lease();
+
+            // when
+            Assertions.assertThat(lease.getProperty()).isEqualTo(null);
+
+            // then
+            Assertions.assertThat(lease.disableNewItem()).isEqualTo("Please set occupancy first");
+
+        }
+
+    }
+
     public static class NewMandate extends LeaseTest {
 
         @Mock
@@ -345,6 +364,10 @@ public class LeaseTest {
 
         private LocalDate startDate;
         private LocalDate endDate;
+
+        private SequenceType sequenceType;
+        private Scheme scheme;
+        private LocalDate signatureDate;
 
         @Before
         public void setUp() throws Exception {
@@ -437,6 +460,10 @@ public class LeaseTest {
             startDate = new LocalDate(2013, 4, 1);
             endDate = new LocalDate(2013, 5, 2);
 
+            sequenceType = SequenceType.FIRST;
+            scheme = Scheme.CORE;
+            signatureDate = new LocalDate(2013, 4, 1);
+
 
             // a mini integration test, since using the real BankMandateMenu and BankMandateRepository impl
 
@@ -467,7 +494,7 @@ public class LeaseTest {
             assertThat(lease.getRoles(), Matchers.empty());
 
             // when
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate);
+            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
 
             // then
             assertThat(disabledReason, is("Could not determine the tenant (secondary party) of this lease"));
@@ -483,7 +510,7 @@ public class LeaseTest {
             tenantAgreementRole.setEndDate(new LocalDate(2013, 4, 1));
 
             // when
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate);
+            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
 
             // then
             assertThat(disabledReason, is(not(nullValue())));
@@ -508,7 +535,7 @@ public class LeaseTest {
             });
 
             // when, then
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate);
+            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
             assertThat(disabledReason, is(not(nullValue())));
         }
 
@@ -528,7 +555,7 @@ public class LeaseTest {
             });
 
             // when/then
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate);
+            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
             assertThat(disabledReason, is(nullValue()));
 
             // and when/then
@@ -540,7 +567,7 @@ public class LeaseTest {
             assertThat(defaultBankAccount, is(bankAccount));
 
             // and when/then
-            final String validateReason = lease.validateNewMandate(defaultBankAccount, "MANDATEREF", startDate, endDate);
+            final String validateReason = lease.validateNewMandate(defaultBankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
             assertThat(validateReason, is(nullValue()));
 
             // and given
@@ -568,7 +595,7 @@ public class LeaseTest {
             });
 
             // when
-            final Lease returned = lease.newMandate(defaultBankAccount, "MANDATEREF", startDate, endDate);
+            final Lease returned = lease.newMandate(defaultBankAccount, "MANDATEREF", startDate, endDate, SequenceType.FIRST, Scheme.CORE, startDate);
 
             // then
             assertThat(returned, is(lease));
@@ -580,6 +607,9 @@ public class LeaseTest {
             assertThat(bankMandate.getStartDate(), is(startDate));
             assertThat(bankMandate.getEndDate(), is(endDate));
             assertThat(bankMandate.getReference(), is("MANDATEREF"));
+            assertThat(bankMandate.getSequenceType(), is(SequenceType.FIRST));
+            assertThat(bankMandate.getScheme(), is(Scheme.CORE));
+            assertThat(bankMandate.getSignatureDate(), is(startDate));
 
             assertThat(newBankMandateAgreementRoleForCreditor.getAgreement(), is((Agreement) bankMandate));
             assertThat(newBankMandateAgreementRoleForCreditor.getParty(), is(landlord));
@@ -602,7 +632,7 @@ public class LeaseTest {
             });
 
             // when/then
-            final String validateReason = lease.validateNewMandate(someOtherBankAccount, "MANDATEREF", startDate, endDate);
+            final String validateReason = lease.validateNewMandate(someOtherBankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
             assertThat(validateReason, is("Bank account is not owned by this lease's tenant"));
         }
 

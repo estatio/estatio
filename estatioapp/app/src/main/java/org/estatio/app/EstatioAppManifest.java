@@ -15,7 +15,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.SecurityModule;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.estatio.canonicalmappings.EstatioCanonicalMappingsModule;
+import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
@@ -38,10 +38,14 @@ public class EstatioAppManifest implements AppManifest {
         modules.addAll(
                 Arrays.asList(
                         // TODO: sort out packages for the 'dom' module
-                        EstatioDomainModule.class, EstatioDomainLinkModule.class, EstatioDomainSettingsModule.class,
+                        EstatioCanonicalModule.class,
+                        EstatioDomainModule.class,
+                        EstatioDomainLinkModule.class,
+                        EstatioDomainSettingsModule.class,
                         // TODO: sort out packages for the 'fixture' module
-                        EstatioFixtureModule.class, EstatioFixtureScriptsModule.class,
-                        EstatioCanonicalMappingsModule.class,
+                        EstatioFixtureModule.class,
+                        EstatioFixtureScriptsModule.class,
+
                         SecurityModule.class,
                         EstatioAppModule.class
                 )
@@ -55,7 +59,6 @@ public class EstatioAppManifest implements AppManifest {
                         org.isisaddons.module.audit.AuditModule.class,
                         org.isisaddons.module.command.CommandModule.class,
                         org.isisaddons.module.excel.ExcelModule.class,
-                        org.isisaddons.module.devutils.DevUtilsModule.class,
                         org.isisaddons.module.poly.PolyModule.class,
                         org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
                         // don't include the settings module, instead we use EstatioDomainSettingsModule
@@ -215,8 +218,10 @@ public class EstatioAppManifest implements AppManifest {
                         "change.*:btn-default",
                         "maintain.*:btn-default",
                         "delete.*:btn-warning",
-                        "remove.*:btn-warning",
-                        ".*:btn-primary"));
+                        "remove.*:btn-warning"
+                        /*,
+                        ".*:btn-primary" // this messes up the drop-downs
+                        */));
 
         props.put("isis.reflector.facets.include",
                 Joiner.on(',').join(

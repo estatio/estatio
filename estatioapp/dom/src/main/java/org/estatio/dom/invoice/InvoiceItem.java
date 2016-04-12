@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -60,7 +59,11 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents a line-item of an {@link #getInvoice() owning} {@link Invoice}.
@@ -91,18 +94,19 @@ public abstract class InvoiceItem
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getInvoice())
+                .withName(getCharge())
+                .toString();
+    }
+
+
     // TODO: added a uuid since there can be similar invoice items having a
     // different source (leaseTerm)
-    private String uuid;
-
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.EVERYWHERE)
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(final String uuid) {
-        this.uuid = uuid;
-    }
+    @Getter @Setter
+    private String uuid;
 
     // //////////////////////////////////////
 
@@ -116,47 +120,24 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    private BigInteger sequence;
-
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Property(hidden = Where.EVERYWHERE)
-    public BigInteger getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(final BigInteger sequence) {
-        this.sequence = sequence;
-    }
+    @Getter @Setter
+    private BigInteger sequence;
 
     // //////////////////////////////////////
-
-    private Invoice invoice;
 
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
-    @Title(sequence = "1", append = ":")
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(final Invoice invoice) {
-        this.invoice = invoice;
-    }
+    @Getter @Setter
+    private Invoice invoice;
 
     // //////////////////////////////////////
 
-    private Charge charge;
-
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "true")
-    @Title(sequence = "2")
-    public Charge getCharge() {
-        return charge;
-    }
-
-    public void setCharge(final Charge charge) {
-        this.charge = charge;
-    }
+    @Getter @Setter
+    private Charge charge;
 
     public List<Charge> choicesCharge() {
         return charges.allCharges();
@@ -164,29 +145,15 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    private BigDecimal quantity;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(final BigDecimal quantity) {
-        this.quantity = quantity;
-    }
+    @Getter @Setter
+    private BigDecimal quantity;
 
     // //////////////////////////////////////
 
-    private BigDecimal netAmount;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getNetAmount() {
-        return netAmount;
-    }
-
-    public void setNetAmount(final BigDecimal netAmount) {
-        this.netAmount = netAmount;
-    }
+    @Getter @Setter
+    private BigDecimal netAmount;
 
     public BigDecimal defaultNetAmount() {
         return BigDecimal.ZERO;
@@ -194,44 +161,23 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    private BigDecimal vatAmount;
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Property(hidden = Where.ALL_TABLES)
-    public BigDecimal getVatAmount() {
-        return vatAmount;
-    }
-
-    public void setVatAmount(final BigDecimal vatAmount) {
-        this.vatAmount = vatAmount;
-    }
+    @Getter @Setter
+    private BigDecimal vatAmount;
 
     // //////////////////////////////////////
-
-    private BigDecimal grossAmount;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getGrossAmount() {
-        return grossAmount;
-    }
-
-    public void setGrossAmount(final BigDecimal grossAmount) {
-        this.grossAmount = grossAmount;
-    }
+    @Getter @Setter
+    private BigDecimal grossAmount;
 
     // //////////////////////////////////////
-
-    private Tax tax;
 
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
     @Property(hidden = Where.PARENTED_TABLES)
-    public Tax getTax() {
-        return tax;
-    }
-
-    public void setTax(final Tax tax) {
-        this.tax = tax;
-    }
+    @Getter @Setter
+    private Tax tax;
 
     @MemberOrder(name = "tax", sequence = "1")
     public InvoiceItem changeTax(final Tax tax){
@@ -250,20 +196,13 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    private String description;
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @PropertyLayout(typicalLength = JdoColumnLength.NAME, multiLine = IsisMultilineLines.NUMBER_OF_LINES)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
+    @Getter @Setter
+    private String description;
 
     public InvoiceItem changeDescription(
-            final @ParameterLayout(named = "Description", multiLine = 3) String description) {
+            final @ParameterLayout(multiLine = 3) String description) {
         setDescription(description);
         return this;
     }
@@ -282,76 +221,42 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate dueDate;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Property(editing = Editing.DISABLED)
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(final LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate dueDate;
 
     // //////////////////////////////////////
 
+
+    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate startDate;
 
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
+    @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate effectiveStartDate;
 
+
     @Property(optionality = Optionality.OPTIONAL)
-    public LocalDate getEffectiveStartDate() {
-        return this.effectiveStartDate;
-    }
-
-    public void setEffectiveStartDate(final LocalDate effectiveStartDate) {
-        this.effectiveStartDate = effectiveStartDate;
-    }
-
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate effectiveEndDate;
 
-    @Property(optionality = Optionality.OPTIONAL)
-    public LocalDate getEffectiveEndDate() {
-        return effectiveEndDate;
-    }
-
-    public void setEffectiveEndDate(final LocalDate effectiveEndDate) {
-        this.effectiveEndDate = effectiveEndDate;
-    }
-
     public InvoiceItem changeEffectiveDates(
-            final @ParameterLayout(named = "Effective start date") LocalDate effectiveStartDate,
-            final @ParameterLayout(named = "Effective end date") LocalDate effectiveEndDate) {
+            final LocalDate effectiveStartDate,
+            final LocalDate effectiveEndDate) {
         setEffectiveStartDate(effectiveStartDate);
         setEffectiveEndDate(effectiveEndDate);
         return this;

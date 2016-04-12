@@ -48,7 +48,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -63,6 +62,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.index.api.IndexBaseCreator;
 import org.estatio.dom.index.api.IndexValueCreator;
 import org.estatio.dom.lease.indexation.Indexable;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -110,6 +110,13 @@ public class Index
         super("reference");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withReference(getReference())
+                .withName(getName())
+                .toString();
+    }
+
     public Index(
             final String reference,
             final String name,
@@ -139,14 +146,13 @@ public class Index
     private String reference;
 
     @Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title()
     @Getter @Setter
     private String name;
 
     @Persistent(mappedBy = "index")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
+    private SortedSet<IndexBase> indexBases = new TreeSet<>();
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -186,6 +192,12 @@ public class Index
             return rebaseFactor;
         }
         return null;
+    }
+
+    @MemberOrder(name = "indexbases", sequence = "1")
+    public Index newIndexBase(final LocalDate indexBaseStartDate, final BigDecimal indexBaseFactor){
+        findOrCreateBase(indexBaseStartDate, indexBaseFactor);
+        return this;
     }
 
     @Programmatic

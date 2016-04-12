@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +31,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.Unit;
@@ -165,8 +167,10 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         @Test
         public void invalidBecauseNoReplacement() throws Exception {
             // when
-            Brand.RemoveEvent event = new RemoveEvent(oldBrand, null, (Object[]) null);
-            event.setPhase(Phase.VALIDATE);
+            Brand.RemoveEvent event = new RemoveEvent();
+            event.setSource(oldBrand);
+            event.setArguments(Lists.newArrayList());
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             occupancies.on(event);
 
             // then
@@ -176,10 +180,12 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         @Test
         public void executingReplacesBrand() throws Exception {
             // when
-            Brand.RemoveEvent event = new RemoveEvent(oldBrand, null, newBrand);
-            event.setPhase(Phase.VALIDATE);
+            Brand.RemoveEvent event = new RemoveEvent();
+            event.setSource(oldBrand);
+            event.setArguments(Lists.newArrayList(newBrand));
+            event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
             occupancies.on(event);
-            event.setPhase(Phase.EXECUTING);
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTING);
             occupancies.on(event);
 
             /*
@@ -270,7 +276,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
             // When lease is terminated
             LocalDate terminationDate = new LocalDate(2015, 12, 31);
-            wrap(leaseTopModel).terminate(terminationDate, true);
+            wrap(leaseTopModel).terminate(terminationDate);
 
             // Then assert that occupancy end date is set too
             assertThat(occupancy.getEndDate(), is(terminationDate));

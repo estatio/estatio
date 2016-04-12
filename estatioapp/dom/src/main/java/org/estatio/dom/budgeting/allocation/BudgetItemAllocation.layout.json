@@ -10,13 +10,6 @@
                                 "hidden": "EVERYWHERE",
                                 "named": "Application Tenancy"
                             }
-                        },
-                        "versionSequence": {
-                            "propertyLayout": {
-                                "hidden": "ANYWHERE",
-                                "named": "Version Sequence",
-                                "typicalLength": 18
-                            }
                         }
                     }
                 },
@@ -75,6 +68,17 @@
                                         "named": "Update Percentage"
                                     }
                                 }
+                            }
+                        }
+                    }
+                },
+                "Metadata" : {
+                    "members": {
+                        "versionSequence": {
+                            "propertyLayout": {
+                                "hidden": "ANYWHERE",
+                                "named": "Version Sequence",
+                                "typicalLength": 18
                             }
                         }
                     }

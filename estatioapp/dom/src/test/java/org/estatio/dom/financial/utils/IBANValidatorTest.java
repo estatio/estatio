@@ -37,6 +37,7 @@ public class IBANValidatorTest {
             assertThat(IBANValidator.valid("NL26INGB0680433600"), is(true));
             assertThat(IBANValidator.valid("NL07INGB0697694704"), is(true));
             assertThat(IBANValidator.valid("IT69N0347501601000051986922"), is(true));
+            assertThat(IBANValidator.valid("NL68RABO0145568962"), is(true));
             assertThat(IBANValidator.valid("IT93Q0347501601000051768165"), is(true));
         }
 

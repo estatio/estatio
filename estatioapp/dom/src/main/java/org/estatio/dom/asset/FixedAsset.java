@@ -40,12 +40,10 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
@@ -54,7 +52,11 @@ import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -97,24 +99,24 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
         super("name");
     }
 
+    public String title() {
+        return TitleBuilder.start()
+                .withReference(getReference())
+                .withName(getName())
+                .toString();
+    }
+
+
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
     // //////////////////////////////////////
 
-    private String reference;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title(sequence = "1", prepend = "[", append = "] ")
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this asset")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
+    @Getter @Setter
+    private String reference;
 
     // //////////////////////////////////////
 
@@ -136,32 +138,18 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     // */
     // public abstract String getName();
 
-    private String name;
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
-    @Title(sequence = "2")
     @PropertyLayout(describedAs = "Unique name for this property")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String name;
 
     // //////////////////////////////////////
 
-    private String externalReference;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
     @Property(optionality = Optionality.OPTIONAL)
-    public String getExternalReference() {
-        return externalReference;
-    }
-
-    public void setExternalReference(final String externalReference) {
-        this.externalReference = externalReference;
-    }
+    @Getter @Setter
+    private String externalReference;
 
     @MemberOrder(name = "externalReference", sequence = "1")
     public FixedAsset changeExternalReference(final String externalReference) {
@@ -175,23 +163,16 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "asset")
-    private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
-
     @CollectionLayout(render = RenderType.EAGERLY)
-    public SortedSet<FixedAssetRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(final SortedSet<FixedAssetRole> roles) {
-        this.roles = roles;
-    }
+    @javax.jdo.annotations.Persistent(mappedBy = "asset")
+    @Getter @Setter
+    private SortedSet<FixedAssetRole> roles = new TreeSet<>();
 
     public FixedAsset newRole(
-            final @ParameterLayout(named = "Type") FixedAssetRoleType type,
+            final FixedAssetRoleType type,
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
     }

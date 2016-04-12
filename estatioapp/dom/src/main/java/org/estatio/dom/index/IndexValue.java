@@ -26,19 +26,19 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -76,10 +76,15 @@ public class IndexValue
         extends EstatioDomainObject<IndexValue>
         implements WithStartDate, WithApplicationTenancyCountry {
 
-    public static final int VALUE_SCALE = 4;
-
     public IndexValue() {
         super("indexBase, startDate desc");
+    }
+
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getStartDate())
+                .withParent(getIndexBase())
+                .toString();
     }
 
     @PropertyLayout(
@@ -92,18 +97,16 @@ public class IndexValue
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Getter @Setter
     private LocalDate startDate;
 
 
     @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
-    @Title(sequence = "1")
     @Getter @Setter
     private IndexBase indexBase;
 
-    @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull = "false")
+    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "false")
     @Getter @Setter
     private BigDecimal value;
 
@@ -114,13 +117,6 @@ public class IndexValue
 
     public static class UpdateEvent extends ActionDomainEvent<IndexValue> {
         private static final long serialVersionUID = 1L;
-
-        public UpdateEvent(
-                final IndexValue source,
-                final Identifier identifier,
-                final Object... arguments) {
-            super(source, identifier, arguments);
-        }
-   }
+    }
 
 }

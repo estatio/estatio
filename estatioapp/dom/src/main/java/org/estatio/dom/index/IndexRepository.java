@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -72,7 +71,7 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implem
 
     @Programmatic
     @Override
-    public Index findByReference(final @ParameterLayout(named = "Reference") String reference) {
+    public Index findByReference(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 

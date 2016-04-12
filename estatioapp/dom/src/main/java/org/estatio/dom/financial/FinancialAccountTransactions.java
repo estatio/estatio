@@ -28,16 +28,15 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class)
-@Hidden
+@DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class FinancialAccountTransactions extends UdoDomainRepositoryAndFactory<FinancialAccountTransaction> {
 
     public FinancialAccountTransactions() {

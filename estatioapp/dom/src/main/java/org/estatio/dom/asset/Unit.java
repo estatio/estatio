@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -46,6 +45,9 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -102,127 +104,62 @@ public class Unit
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @Getter @Setter
     private UnitType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    public UnitType getType() {
-        return type;
-    }
-
-    public void setType(final UnitType type) {
-        this.type = type;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
     private BigDecimal area;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    public BigDecimal getArea() {
-        return area;
-    }
-
-    public void setArea(final BigDecimal area) {
-        this.area = area;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal storageArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getStorageArea() {
-        return storageArea;
-    }
-
-    public void setStorageArea(final BigDecimal storageArea) {
-        this.storageArea = storageArea;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal salesArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getSalesArea() {
-        return salesArea;
-    }
-
-    public void setSalesArea(final BigDecimal salesArea) {
-        this.salesArea = salesArea;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal mezzanineArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getMezzanineArea() {
-        return mezzanineArea;
-    }
-
-    public void setMezzanineArea(final BigDecimal mezzanineArea) {
-        this.mezzanineArea = mezzanineArea;
-    }
-
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private BigDecimal dehorsArea;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
-    public BigDecimal getDehorsArea() {
-        return dehorsArea;
-    }
-
-    public void setDehorsArea(final BigDecimal dehorsArea) {
-        this.dehorsArea = dehorsArea;
-    }
-
     // //////////////////////////////////////
-
-    private Property property;
 
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "false")
     @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES, editing = Editing.DISABLED)
-    public org.estatio.dom.asset.Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
+    @Getter @Setter
+    private Property property;
 
     // //////////////////////////////////////
 
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate startDate;
 
-    @Override
     @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
-    public LocalDate getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
@@ -248,7 +185,7 @@ public class Unit
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Unit> changeDates = new WithIntervalMutable.Helper<Unit>(this);
+    private WithIntervalMutable.Helper<Unit> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Unit> getChangeDates() {
         return changeDates;
@@ -257,9 +194,8 @@ public class Unit
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Unit changeDates(
-
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -289,11 +225,10 @@ public class Unit
     // //////////////////////////////////////
 
     public Unit changeAsset(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Type") UnitType type,
-            final @ParameterLayout(named = "External Reference") @Parameter(optionality = Optionality.OPTIONAL) String externalReference) {
+            final String name,
+            final UnitType type) {
         setName(name);
-        setExternalReference(externalReference);
+        setType(type);
         return this;
     }
 
@@ -305,18 +240,14 @@ public class Unit
         return getType();
     }
 
-    public String default2ChangeAsset() {
-        return getExternalReference();
-    }
-
     // ///////////////////////////////////////
 
     public Unit changeAreas(
-            final @ParameterLayout(named = "Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal area,
-            final @ParameterLayout(named = "Storage Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal storageArea,
-            final @ParameterLayout(named = "Sales Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal salesArea,
-            final @ParameterLayout(named = "Mezzanine Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal mezzanineArea,
-            final @ParameterLayout(named = "Dehors Area") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal dehorsArea) {
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal area,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal storageArea,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal salesArea,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal mezzanineArea,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal dehorsArea) {
         setArea(area);
         setStorageArea(storageArea);
         setSalesArea(salesArea);

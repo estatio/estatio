@@ -21,12 +21,18 @@ package org.estatio.domsettings;
 
 
 import javax.jdo.annotations.IdentityType;
+
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+
 import org.isisaddons.module.settings.dom.SettingType;
 import org.isisaddons.module.settings.dom.UserSetting;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.APPLICATION, 
@@ -53,42 +59,32 @@ import org.estatio.dom.JdoColumnLength;
 })
 // can't see how to specify this order in the primary key; however HSQLDB objects :-(
 //@javax.jdo.annotations.Unique(name="USER_KEY_IDX", members={"user","key"}) 
-@Named("User Setting")
+@DomainObjectLayout(named = "User Setting")
 public class UserSettingForEstatio extends SettingAbstractForEstatio implements UserSetting {
 
-    
-    private String user;
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getUser())
+                .withName(getKey())
+                .withName(getValueRaw())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(length=JdoColumnLength.NAME)
     @javax.jdo.annotations.PrimaryKey
-    @Title(sequence="10", append=": ")
     @MemberOrder(sequence = "5")
-    public String getUser() {
-        return user;
-    }
-    public void setUser(final String user) {
-        this.user = user;
-    }
+    @Getter @Setter
+    private String user;
 
     // //////////////////////////////////////
-
-    private String key;
 
     @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Setting.KEY)
     @javax.jdo.annotations.PrimaryKey
-    @Title(sequence="20")
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(final String key) {
-        this.key = key;
-    }
-
+    @Getter @Setter
+    private String key;
 
     // //////////////////////////////////////
 
-    
     @javax.jdo.annotations.Column(length=JdoColumnLength.DESCRIPTION)
     @javax.jdo.annotations.Persistent
     @Override
@@ -104,11 +100,11 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
 
     @javax.jdo.annotations.Column(allowsNull="false")
     @javax.jdo.annotations.Persistent
-    @Title(sequence="30", prepend=" = ")
     @Override
     public String getValueRaw() {
         return super.getValueRaw();
     }
+
     @Override
     public void setValueRaw(final String valueAsRaw) {
         super.setValueRaw(valueAsRaw);
@@ -122,6 +118,7 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
     public SettingType getType() {
         return super.getType();
     }
+
     @Override
     public void setType(final SettingType type) {
         super.setType(type);

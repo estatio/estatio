@@ -24,33 +24,28 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.dom.utils.MathUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForFixed
         extends LeaseTerm {
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Getter @Setter
     private BigDecimal value;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    @Disabled
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(final BigDecimal value) {
-        this.value = value;
-    }
-
     public LeaseTerm changeValue(
-            final @Named("Value") BigDecimal value) {
+            final BigDecimal value) {
         setValue(value);
         return this;
     }

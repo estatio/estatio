@@ -47,12 +47,16 @@ import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import com.google.common.base.Function;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Identifies the {@link #getParty() party} that plays a particular
@@ -115,7 +119,7 @@ public class ProjectRole
 {
 
     private WithIntervalContiguous.Helper<ProjectRole> helper =
-            new WithIntervalContiguous.Helper<ProjectRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
     // //////////////////////////////////////
 
@@ -123,84 +127,50 @@ public class ProjectRole
         super("project, startDate desc nullsLast, type, party");
     }
 
-    // //////////////////////////////////////
-
-    private Project project;
+    public String title() {
+        return TitleBuilder.start()
+                .withTupleElement(getProject())
+                .withTupleElement(getParty())
+                .withName(getType())
+                .toString();
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", name="projectId")
-    @Title(sequence = "3", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(final Project project) {
-        this.project = project;
-    }
+    @Getter @Setter
+    private Project project;
 
     // //////////////////////////////////////
-
-    private Party party;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(editing=Editing.DISABLED, hidden=Where.REFERENCES_PARENT)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
+    @Getter @Setter
+    private Party party;
 
     // //////////////////////////////////////
-
-    private ProjectRoleType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing=Editing.DISABLED)
-    @Title(sequence = "1")
-    public ProjectRoleType getType() {
-        return type;
-    }
-
-    public void setType(final ProjectRoleType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private ProjectRoleType type;
 
     // //////////////////////////////////////
 
+    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
     @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
     @Action(semantics=SemanticsOf.IDEMPOTENT)
     @Override
     public ProjectRole changeDates(
-            final @ParameterLayout(named = "Start Date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -321,8 +291,8 @@ public class ProjectRole
 
     public ProjectRole succeededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End Date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
     }
 
@@ -351,8 +321,8 @@ public class ProjectRole
 
     public ProjectRole precededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality=Optionality.OPTIONAL) LocalDate startDate,
+            final LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }

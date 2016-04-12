@@ -19,12 +19,15 @@
 package org.estatio.dom.asset;
 
 import java.util.SortedSet;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -32,20 +35,25 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.estatio.dom.JdoColumnLength;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Identifies the {@link #getParty() party} that plays a particular
@@ -85,15 +93,19 @@ public class FixedAssetRole
         implements WithIntervalContiguous<FixedAssetRole>, WithApplicationTenancyProperty {
 
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =
-            new WithIntervalContiguous.Helper<FixedAssetRole>(this);
+            new WithIntervalContiguous.Helper<>(this);
 
-    // //////////////////////////////////////
+    public String title() {
+        return TitleBuilder.start()
+                .withName(getType())
+                .withTupleElement(getAsset())
+                .withTupleElement(getParty())
+                .toString();
+    }
 
     public FixedAssetRole() {
         super("asset, startDate desc nullsLast, type, party");
     }
-
-    // //////////////////////////////////////
 
     @PropertyLayout(
             named = "Application Level",
@@ -105,83 +117,48 @@ public class FixedAssetRole
 
     // //////////////////////////////////////
 
-    private FixedAsset asset;
 
     @javax.jdo.annotations.Column(name = "assetId", allowsNull = "false")
-    @Title(sequence = "3", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    public FixedAsset getAsset() {
-        return asset;
-    }
-
-    public void setAsset(final FixedAsset asset) {
-        this.asset = asset;
-    }
+    @Getter @Setter
+    private FixedAsset asset;
 
     // //////////////////////////////////////
 
-    private Party party;
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
-    @Title(sequence = "2", prepend = ":")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(final Party party) {
-        this.party = party;
-    }
+    @Getter @Setter
+    private Party party;
 
     // //////////////////////////////////////
 
-    private FixedAssetRoleType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Property(editing = Editing.DISABLED)
-    @Title(sequence = "1")
-    public FixedAssetRoleType getType() {
-        return type;
-    }
-
-    public void setType(final FixedAssetRoleType type) {
-        this.type = type;
-    }
+    @Getter @Setter
+    private FixedAssetRoleType type;
 
     // //////////////////////////////////////
 
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private LocalDate startDate;
 
+    // //////////////////////////////////////
+
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    @Override
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    @Override
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     @javax.jdo.annotations.Persistent
+    @Getter @Setter
     private LocalDate endDate;
-
-    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
 
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public FixedAssetRole changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Start Date") LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "End Date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
@@ -272,8 +249,8 @@ public class FixedAssetRole
 
     public FixedAssetRole succeededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") LocalDate startDate,
-            final @ParameterLayout(named = "End date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
     }
 
@@ -302,8 +279,8 @@ public class FixedAssetRole
 
     public FixedAssetRole precededBy(
             final Party party,
-            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @ParameterLayout(named = "End date") LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final LocalDate endDate) {
 
         return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }
