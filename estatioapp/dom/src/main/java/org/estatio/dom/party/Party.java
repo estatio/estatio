@@ -21,6 +21,7 @@ package org.estatio.dom.party;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -32,7 +33,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
@@ -137,18 +137,10 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    private String fiscalCode;
-
-    @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.FISCAL_CODE)
+    @Column(length = JdoColumnLength.Party.FISCAL_CODE)
     @Property(optionality = Optionality.OPTIONAL)
-    @MemberOrder(sequence = "1")
-    public String getFiscalCode() {
-        return fiscalCode;
-    }
-
-    public void setFiscalCode(String fiscalCode) {
-        this.fiscalCode = fiscalCode;
-    }
+    @Getter @Setter
+    private String fiscalCode;
 
     // //////////////////////////////////////
 
