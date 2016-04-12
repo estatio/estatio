@@ -18,32 +18,16 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.collect.Lists;
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.assertj.core.api.Assertions;
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester;
-import org.estatio.dom.agreement.*;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.bankmandate.*;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccounts;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
-import org.estatio.services.clock.ClockService;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.Is;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -52,13 +36,51 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementForTesting;
+import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementTest;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.dom.bankmandate.Scheme;
+import org.estatio.dom.bankmandate.SequenceType;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyForTesting;
+import org.estatio.services.clock.ClockService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LeaseTest {
 
@@ -282,6 +304,23 @@ public class LeaseTest {
             // this assertion not true for unit tests, because we rely on JDO
             // to manage the bidir relationship for us.
             // assertThat(lease.getItems(), Matchers.contains(newItem));
+        }
+
+    }
+
+    public static class DisableNewItem extends LeaseTest {
+
+        @Test
+        public void test() {
+            // given
+            Lease lease = new Lease();
+
+            // when
+            Assertions.assertThat(lease.getProperty()).isEqualTo(null);
+
+            // then
+            Assertions.assertThat(lease.disableNewItem()).isEqualTo("Please set occupancy first");
+
         }
 
     }

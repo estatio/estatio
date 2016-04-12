@@ -185,6 +185,18 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
         return null;
     }
 
+    public String disableCalculate(final Lease lease,
+            final InvoiceRunType runType,
+            final InvoiceCalculationSelection selection,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate){
+
+        if (lease == null) return null;
+        return lease.getProperty() == null ? "Please set occupancy first" : null;
+
+    }
+
     // //////////////////////////////////////
 
     @javax.inject.Inject
