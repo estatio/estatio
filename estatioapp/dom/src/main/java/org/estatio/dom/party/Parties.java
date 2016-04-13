@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -86,6 +87,13 @@ public class Parties extends UdoDomainRepositoryAndFactory<Party> {
     @MemberOrder(sequence = "99")
     public List<Party> allParties() {
         return allInstances();
+    }
+
+
+    @Programmatic
+    public String validateNewParty(final String reference) {
+        if (findPartyByReference(reference) != null) return "Reference should be unqiue; does similar party already exist?";
+        return null;
     }
 
 }

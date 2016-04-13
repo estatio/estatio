@@ -78,6 +78,17 @@ public class Persons extends UdoDomainRepositoryAndFactory<Person> {
         return Dflt.of(choices5NewPerson());
     }
 
+    public String validateNewPerson(
+            final String reference,
+            final String initials,
+            final String firstName,
+            final String lastName,
+            final PersonGenderType gender,
+            final ApplicationTenancy applicationTenancy
+    ) {
+        return partRepository.validateNewParty(reference);
+    }
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
@@ -90,5 +101,8 @@ public class Persons extends UdoDomainRepositoryAndFactory<Person> {
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
+    @Inject
+    private Parties partRepository;
 
 }

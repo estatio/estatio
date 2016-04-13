@@ -72,6 +72,14 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
         return Dflt.of(choices2NewOrganisation());
     }
 
+    public String validateNewOrganisation(
+            final String reference,
+            final String name,
+            final ApplicationTenancy applicationTenancy
+    ) {
+        return partyRepository.validateNewParty(reference);
+    }
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
@@ -84,6 +92,9 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
+    @Inject
+    private Parties partyRepository;
 
 
 }

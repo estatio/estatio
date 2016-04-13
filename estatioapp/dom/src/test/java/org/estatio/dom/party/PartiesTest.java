@@ -19,14 +19,20 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class PartiesTest {
@@ -98,6 +104,40 @@ public class PartiesTest {
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }
+    }
+
+    public static class ValidateNewParty extends OrganisationsTest {
+
+        Parties partyRepository;
+
+        @Before
+        public void setup() {
+            partyRepository = new Parties() {
+                @Override
+                public Party findPartyByReference(final String reference) {
+                    Party result = new Party() {
+                        @Override public ApplicationTenancy getApplicationTenancy() {
+                            return null;
+                        }
+                    };
+                    return result;
+                }
+            };
+        }
+
+        @Test
+        public void testValidateNewParty() {
+
+            // given
+            String reference = "some reference";
+            // when findPartyByReference( .. ) returns a result
+            assertNotNull(partyRepository.findPartyByReference(reference));
+            // then
+            assertThat(partyRepository.validateNewParty(reference), is("Reference should be unqiue; does similar party already exist?"));
+
+        }
+
+
     }
 
 }
