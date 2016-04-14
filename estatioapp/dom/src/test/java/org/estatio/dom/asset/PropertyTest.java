@@ -36,6 +36,7 @@ import org.estatio.dom.geography.Country;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -135,6 +136,32 @@ public class PropertyTest {
             // then
             assertNotNull(property.disableDispose(null));
         }
+    }
+
+    public static class Ordering extends PropertyTest {
+
+        private Property thisProperty;
+        private Property thatProperty;
+
+        @Before
+        public void setUp() throws Exception {
+            thisProperty = new Property();
+            thatProperty = new Property();
+        }
+
+        @Test
+        public void byDisplayOrder() {
+            // given
+            thisProperty.setDisplayOrder(1);
+            thatProperty.setDisplayOrder(2);
+
+            // then
+            assertEquals(thisProperty.compareTo(thatProperty), -1);
+            assertEquals(thatProperty.compareTo(thisProperty), 1);
+            assertEquals(thisProperty.compareTo(thisProperty), 0);
+            assertEquals(thatProperty.compareTo(thatProperty), 0);
+        }
+
     }
 
 }

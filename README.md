@@ -6,7 +6,7 @@ Estatio is modern and flexible property management software. It offers real esta
 ## Screenshots ##
 
 The following screenshots (taken 13 december 2014) correspond to the business logic in Estatio's [domain object model](
-https://github.com/estatio/estatio/tree/master/dom/src/main/java/org/estatio/dom).
+https://github.com/estatio/estatio/tree/master/estatioapp/dom/src/main/java/org/estatio/dom).
 
 <img src="https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties.png" width=600"/>
 
@@ -97,7 +97,7 @@ Then browse to:
 
 * Take a look around :-)
 
-If you encounter any bugs, do [let us know](https://github.com/estatio/estatio/blob/master/pom.xml#L52).
+If you encounter any bugs, do [let us know](https://github.com/estatio/estatio/blob/master/pom.xml#L70).
 
 ## Implementation
 

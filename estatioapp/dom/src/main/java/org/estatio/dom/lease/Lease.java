@@ -439,6 +439,10 @@ public class Lease
         return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
     }
 
+    public String disableNewItem() {
+        return getProperty() == null ? "Please set occupancy first" : null;
+    }
+
     public Agreement changePrevious(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Agreement previousAgreement) {

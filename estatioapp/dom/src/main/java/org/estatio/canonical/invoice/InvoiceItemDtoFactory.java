@@ -16,6 +16,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -58,7 +59,8 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
 
             if(occupancyIfAny.isPresent()) {
                 final Occupancy occupancy = occupancyIfAny.get();
-                dto.setOccupancyBrand(occupancy.getBrand().getName());
+                final Brand brand = occupancy.getBrand();
+                dto.setOccupancyBrand(brand == null ? null : brand.getName());
                 dto.setFixedAssetReference(occupancy.getUnit().getReference());
             }
         }

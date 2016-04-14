@@ -45,8 +45,10 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
         if (lease != null){
             dto.setAgreementReference(lease.getReference());
             final BankMandate paidBy = lease.getPaidBy();
-            dto.setPaidByMandate(mappingHelper.oidDtoFor(paidBy));
-            dto.setBuyerBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
+            if (paidBy != null) {
+                dto.setPaidByMandate(mappingHelper.oidDtoFor(paidBy));
+                dto.setBuyerBankAccount(mappingHelper.oidDtoFor(paidBy.getBankAccount()));
+            }
         }
 
         final Optional<FixedAsset> fixedAssetIfAny = Optional.ofNullable(invoice.getFixedAsset());

@@ -81,7 +81,7 @@ mvn clean install -DskipTests -o
     </developers>
 
     <properties>
-        <isis.version>1.12.0-SNAPSHOT</isis.version>
+        <isis.version>1.13.0-SNAPSHOT</isis.version>
 
         <isis-module-audit.version>1.11.0</isis-module-audit.version>
         <isis-module-command.version>1.11.0</isis-module-command.version>
@@ -625,38 +625,12 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-communicationchannel</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-communicationchannel</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-event</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-event</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -709,19 +683,6 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-party</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-tag</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-tag</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -1026,14 +987,11 @@ mvn clean install -DskipTests -o
                 <module>udo/agreement/dom</module>
                 <module>udo/base/dom</module>
                 <module>udo/charge/dom</module>
-                <module>udo/communicationchannel/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
                 <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
-                <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
@@ -1049,14 +1007,11 @@ mvn clean install -DskipTests -o
                 <module>udo/agreement/dom</module>
                 <module>udo/base/dom</module>
                 <module>udo/charge/dom</module>
-                <module>udo/communicationchannel/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
                 <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
-                <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
@@ -1071,14 +1026,11 @@ mvn clean install -DskipTests -o
                 <module>udo/agreement/dom</module>
                 <module>udo/base/dom</module>
                 <module>udo/charge/dom</module>
-                <module>udo/communicationchannel/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
                 <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
-                <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
@@ -1098,14 +1050,11 @@ mvn clean install -DskipTests -o
                 <module>udo/agreement/dom</module>
                 <module>udo/base/dom</module>
                 <module>udo/charge/dom</module>
-                <module>udo/communicationchannel/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/event/dom</module>
                 <module>udo/geography/dom</module>
                 <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
-                <module>udo/tag/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/dom</module>
