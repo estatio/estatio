@@ -60,6 +60,11 @@
             }
           }
         },
+        "Ordering": {
+          "members": {
+            "displayOrder": {}
+          }
+        },
         "Metadata" : {
           "members": {}
         }
