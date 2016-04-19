@@ -76,7 +76,7 @@ import lombok.Setter;
                         "WHERE charge == :charge && budgetItem == :budgetItem && keyTable == :keyTable ")
 })
 @Unique(name = "ScheduleItem_charge_budgetItem_keyTable_UNQ", members = {"charge", "budgetItem", "keyTable"})
-@DomainObject(autoCompleteRepository = BudgetItemAllocationRepository.class)
+@DomainObject()
 public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocation> implements WithApplicationTenancyProperty {
 
     public BudgetItemAllocation() {

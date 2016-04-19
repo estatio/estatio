@@ -78,7 +78,7 @@ import lombok.Setter;
                     + "&& charge == :charge "
                     + "&& budget.startDate == :startDate")
 })
-@DomainObject(autoCompleteRepository = BudgetItemRepository.class)
+@DomainObject()
 public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty {
 
     public BudgetItem() {

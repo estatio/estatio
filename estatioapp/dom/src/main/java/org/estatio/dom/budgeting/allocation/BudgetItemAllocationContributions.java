@@ -1,16 +1,25 @@
 package org.estatio.dom.budgeting.allocation;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class BudgetItemAllocationContributions {
@@ -55,7 +64,7 @@ public class BudgetItemAllocationContributions {
             final KeyTable keyTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage) {
-        return budgetItemRepo.findByBudget(budgetItem.getBudget());
+        return budgetItemRepo.findByBudget(keyTable.getBudget());
     }
 
     public BigDecimal default3CreateBudgetItemAllocation(

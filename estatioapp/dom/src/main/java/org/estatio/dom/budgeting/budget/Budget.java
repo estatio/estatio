@@ -94,7 +94,7 @@ import lombok.Setter;
                         "WHERE property == :property && startDate == :startDate")
 })
 @Unique(name = "Budget_property_startDate_UNQ", members = {"property", "startDate"})
-@DomainObject(autoCompleteRepository = BudgetRepository.class)
+@DomainObject()
 public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty {
 
     public Budget() {
