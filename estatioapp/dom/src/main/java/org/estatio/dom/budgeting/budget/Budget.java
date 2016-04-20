@@ -47,7 +47,6 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -66,6 +65,7 @@ import org.estatio.dom.budgeting.viewmodels.BudgetOverview;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -73,7 +73,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-//      ,schema = "budget"
+        //      ,schema = "budget"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -93,7 +93,7 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgeting.budget.Budget " +
                         "WHERE property == :property && startDate == :startDate")
 })
-@Unique(name = "Budget_property_startDate_UNQ", members = {"property", "startDate"})
+@Unique(name = "Budget_property_startDate_UNQ", members = { "property", "startDate" })
 @DomainObject()
 public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty {
 
@@ -107,11 +107,14 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         this.endDate = endDate;
     }
 
-    public TranslatableString title() {
-        return TranslatableString.tr("{name}", "name", "Budget for ".concat(getProperty().getName()));
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getProperty())
+                .withName(getInterval())
+                .toString();
     }
 
-    @Column(name="propertyId", allowsNull = "false")
+    @Column(name = "propertyId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private Property property;
@@ -119,7 +122,6 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     @Column(allowsNull = "true") // done because of inherited implementation WithStartDate
     @Getter @Setter
     private LocalDate startDate;
-
 
     @Column(allowsNull = "true")
     @Getter @Setter
@@ -155,7 +157,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     @Action(semantics = SemanticsOf.IDEMPOTENT, hidden = Where.EVERYWHERE)
     public Budget changeDates(
             final LocalDate startDate,
-            final @Parameter(optionality =  Optionality.OPTIONAL) LocalDate endDate) {
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
 
@@ -177,11 +179,10 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return "Dates should not be changed.";
     }
 
-    @CollectionLayout(render= RenderType.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     @Persistent(mappedBy = "budget", dependentElement = "true")
     @Getter @Setter
     private SortedSet<BudgetItem> items = new TreeSet<>();
-
 
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Override public ApplicationTenancy getApplicationTenancy() {
@@ -200,18 +201,18 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     }
 
     @Programmatic
-    public BigDecimal getTotalBudgetedValue(){
+    public BigDecimal getTotalBudgetedValue() {
         BigDecimal total = BigDecimal.ZERO;
-        for (BudgetItem item : getItems()){
+        for (BudgetItem item : getItems()) {
             total = total.add(item.getBudgetedValue());
         }
         return total;
     }
 
     @Programmatic
-    public BigDecimal getTotalAuditedValue(){
+    public BigDecimal getTotalAuditedValue() {
         BigDecimal total = BigDecimal.ZERO;
-        for (BudgetItem item : getItems()){
+        for (BudgetItem item : getItems()) {
             if (item.getAuditedValue() != null) {
                 total = total.add(item.getAuditedValue());
             }
@@ -219,14 +220,14 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return total;
     }
 
-    public BudgetOverview budgetOverview(){
+    public BudgetOverview budgetOverview() {
         return new BudgetOverview(this);
     }
 
     @Programmatic
-    public List<Charge> getTargetCharges(){
+    public List<Charge> getTargetCharges() {
         List<Charge> charges = new ArrayList<>();
-        for (BudgetItem budgetItem : getItems()){
+        for (BudgetItem budgetItem : getItems()) {
             for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
                 if (!charges.contains(allocation.getCharge())) {
                     charges.add(allocation.getCharge());
@@ -237,7 +238,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     }
 
     @Programmatic
-    public List<Occupancy> getOccupanciesInBudgetInterval(){
+    public List<Occupancy> getOccupanciesInBudgetInterval() {
         List<Occupancy> result = new ArrayList<>();
         for (Unit unit : unitRepository.findByProperty(getProperty())) {
             result.addAll(occupancies.occupanciesByUnitAndInterval(unit, getInterval()));
@@ -246,9 +247,9 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     }
 
     @Programmatic
-    public List<BudgetCalculationLink> getBudgetCalculationLinks(){
+    public List<BudgetCalculationLink> getBudgetCalculationLinks() {
         List<BudgetCalculationLink> result = new ArrayList<>();
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
             result.addAll(calculation.getBudgetCalculationLinks());
         }
         return result;
