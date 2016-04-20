@@ -36,7 +36,6 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -75,9 +74,18 @@ public class LeaseType
                 .toString();
     }
 
+    @Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Property(hidden = Where.ALL_EXCEPT_STANDALONE_TABLES)
+    @Getter @Setter
+    private String applicationTenancyPath;
+
     @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

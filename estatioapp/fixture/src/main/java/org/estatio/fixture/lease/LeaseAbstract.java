@@ -22,8 +22,11 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
@@ -66,17 +69,17 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard");
+        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH));
         Lease lease = leases.newLease(
-                reference,
+                unit.getApplicationTenancy(), reference,
                 name,
                 leaseType,
                 startDate,
                 null,
                 endDate,
                 landlord,
-                tenant,
-                unit.getApplicationTenancy());
+                tenant
+        );
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
@@ -126,4 +129,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
 
     @Inject
     Countries countries;
+
+    @Inject
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 }

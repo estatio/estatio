@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +64,7 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = Lease.class)
@@ -84,6 +86,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @MemberOrder(sequence = "1")
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber
+            final ApplicationTenancy applicationTenancy,
             final @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
             final String name,
             final LeaseType leaseType,
@@ -91,8 +94,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
             final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Duration in a text format. Example 6y5m2d") String duration,
             final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
             final @Parameter(optionality = Optionality.OPTIONAL) Party landlord,
-            final @Parameter(optionality = Optionality.OPTIONAL) Party tenant,
-            final ApplicationTenancy applicationTenancy
+            final @Parameter(optionality = Optionality.OPTIONAL) Party tenant
             // CHECKSTYLE:ON
     ) {
 
@@ -100,16 +102,35 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
         return newLease(applicationTenancy, reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
     }
 
-    public List<ApplicationTenancy> choices8NewLease() {
+    public List<ApplicationTenancy> choices0NewLease() {
         return estatioApplicationTenancyRepository.propertyTenanciesForCurrentUser();
     }
 
-    public ApplicationTenancy default8NewLease() {
-        return Dflt.of(choices8NewLease());
+    public ApplicationTenancy default0NewLease() {
+        return Dflt.of(choices0NewLease());
+    }
+
+    public List<LeaseType> choices3NewLease(final ApplicationTenancy applicationTenancy) {
+        if (applicationTenancy == null) return null;
+        List<LeaseType> result = new ArrayList<>();
+        for (LeaseType leaseType : leaseTypeRepository.allLeaseTypes()) {
+            if (
+                    ApplicationTenancyLevel.of(applicationTenancy)
+                            .equals(ApplicationTenancyLevel.of(leaseType.getApplicationTenancy())
+                            )
+                    ||
+                            ApplicationTenancyLevel.of(applicationTenancy)
+                                    .childOf(ApplicationTenancyLevel.of(leaseType.getApplicationTenancy()))
+                    ) {
+                result.add(leaseType);
+            }
+        }
+        return result;
     }
 
     public String validateNewLease(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
+            final ApplicationTenancy applicationTenancy,
             final String reference,
             final String name,
             final LeaseType leaseType,
@@ -117,10 +138,9 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
             final String duration,
             final LocalDate endDate,
             final Party landlord,
-            final Party tenant,
-            final ApplicationTenancy applicationTenancy
+            final Party tenant
             // CHECKSTYLE:ON
-            ) {
+    ) {
         if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
             return "Either end date or duration must be filled in.";
         }
@@ -133,6 +153,24 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
             if (!new LocalDateInterval(startDate, endDate).isValid()) {
                 return "End date can not be before start date";
             }
+        }
+        // check apptenancy landlord and tenant against param applicationTenancy
+        // because these can't be filtered in autoComplete
+        if (!(ApplicationTenancyLevel.of(applicationTenancy)
+                .equals(ApplicationTenancyLevel.of(landlord.getApplicationTenancy()))
+                ||
+                ApplicationTenancyLevel.of(landlord.getApplicationTenancy())
+                        .childOf(ApplicationTenancyLevel.of(applicationTenancy))
+        )){
+            return "Landlord not valid. (wrong application tenancy)";
+        }
+        if (!(ApplicationTenancyLevel.of(applicationTenancy)
+                .equals(ApplicationTenancyLevel.of(tenant.getApplicationTenancy()))
+                ||
+                ApplicationTenancyLevel.of(tenant.getApplicationTenancy())
+                        .childOf(ApplicationTenancyLevel.of(applicationTenancy))
+        )){
+            return "Tenant not valid. (wrong application tenancy)";
         }
         return null;
     }
@@ -338,5 +376,8 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
 	
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
+    @Inject
+    private LeaseTypes leaseTypeRepository;
 
 }

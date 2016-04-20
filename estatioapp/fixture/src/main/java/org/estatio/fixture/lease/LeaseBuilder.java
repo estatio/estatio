@@ -186,7 +186,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        Lease lease = leases.newLease(reference, name, null, startDate, null, endDate, landlord, tenant, unit.getApplicationTenancy());
+        Lease lease = leases.newLease(unit.getApplicationTenancy(), reference, name, null, startDate, null, endDate, landlord, tenant);
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
@@ -230,7 +230,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
         }
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(getAtPath());
 
-        this.lease = leases.newLease(getReference(), getName(), getLeaseType(), getStartDate(), getDuration(), getEndDate(), getLandlord(), getTenant(), applicationTenancy);
+        this.lease = leases.newLease(applicationTenancy, getReference(), getName(), getLeaseType(), getStartDate(), getDuration(), getEndDate(), getLandlord(), getTenant());
     }
 
     // //////////////////////////////////////
