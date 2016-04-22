@@ -17,17 +17,20 @@
 
 package org.estatio.dom.budgeting.budget;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class BudgetTest {
 
@@ -43,6 +46,32 @@ public class BudgetTest {
 
     }
 
+    public static class TitleTest extends BudgetTest {
+
+        @Test
+        public void title() {
+            // given
+            final Property property = new Property();
+            property.setName("Property");
+            property.setReference("PROP");
+
+            final Budget budget = new Budget();
+            budget.setProperty(property);
+            LocalDate startDate = new LocalDate(2015, 1, 1);
+            LocalDate endDate = new LocalDate(2016, 1, 1);
+            budget.setStartDate(startDate);
+            budget.setEndDate(endDate);
+
+            // when
+            String budgetTitle = budget.title();
+
+            // then
+            Assertions.assertThat(budgetTitle).isEqualTo(
+                    property.getClass().getSimpleName()
+                            + " [" + property.getReference() + "]"
+                            + " > " + new LocalDateInterval(startDate, endDate).toString());
+        }
+    }
 
     public static class GetTargetChargesTest extends BudgetTest {
 
@@ -53,7 +82,6 @@ public class BudgetTest {
 
             // given
             Budget budget = new Budget();
-
             // when
             charges = budget.getTargetCharges();
 
@@ -97,7 +125,7 @@ public class BudgetTest {
 
         }
 
-        private BudgetItem createItemFor(final Budget budget, final String uniqueString){
+        private BudgetItem createItemFor(final Budget budget, final String uniqueString) {
 
             BudgetItem newItem = new BudgetItem();
             Charge charge = new Charge();
@@ -115,8 +143,7 @@ public class BudgetTest {
             return newItem;
         }
 
-
-        private List<BudgetItem> createTwoItemsWithSameAllocationFor(final Budget budget, final String str1, final String str2){
+        private List<BudgetItem> createTwoItemsWithSameAllocationFor(final Budget budget, final String str1, final String str2) {
 
             BudgetItem newItem1 = new BudgetItem();
             Charge charge1 = new Charge();
@@ -141,5 +168,5 @@ public class BudgetTest {
         }
 
     }
-    
+
 }
