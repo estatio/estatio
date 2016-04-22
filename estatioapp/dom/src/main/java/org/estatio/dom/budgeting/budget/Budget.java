@@ -86,7 +86,8 @@ import lombok.Setter;
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budget.Budget " +
-                        "WHERE property == :property "),
+                        "WHERE property == :property " +
+                        "ORDER BY startDate DESC"),
         @Query(
                 name = "findByPropertyAndStartDate", language = "JDOQL",
                 value = "SELECT " +
@@ -98,7 +99,7 @@ import lombok.Setter;
 public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty {
 
     public Budget() {
-        super("property, startDate, endDate");
+        super("property, startDate");
     }
 
     public Budget(final LocalDate startDate, final LocalDate endDate) {
