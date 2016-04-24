@@ -17,6 +17,11 @@
 
 package org.estatio.fixture.budget;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -25,9 +30,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
-import org.joda.time.LocalDate;
-
-import java.math.BigDecimal;
 
 public class BudgetItemAllocationsForOxf extends BudgetItemAllocationAbstact {
 
@@ -51,8 +53,9 @@ public class BudgetItemAllocationsForOxf extends BudgetItemAllocationAbstact {
         BudgetItem budgetItem1 = budget.getItems().first();
         BudgetItem budgetItem2 = budget.getItems().last();
         Charge charge = chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-        KeyTable keyTable1 = keyTableRepository.findByBudget(budget).get(0);
-        KeyTable keyTable2 = keyTableRepository.findByBudget(budget).get(1);
+        final List<KeyTable> keyTables = keyTableRepository.findByBudget(budget);
+        KeyTable keyTable1 = keyTables.get(0);
+        KeyTable keyTable2 = keyTables.get(1);
 
         createBudgetItemAllocation(charge, keyTable1, budgetItem1, new BigDecimal(100), executionContext);
         createBudgetItemAllocation(charge, keyTable1, budgetItem2, new BigDecimal(80), executionContext);

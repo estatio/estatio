@@ -1,28 +1,31 @@
 package org.estatio.integtests.budget;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
+import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.inject.Inject;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,7 +65,7 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
 
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByProperty(property).get(0);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             BudgetItemAllocation budgetItemAllocation = budget.getItems().first().getBudgetItemAllocations().first();
 
             //when, then
@@ -84,7 +87,7 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 01));
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             BudgetItem budgetItem = budget.getItems().last();
             // when
             final List<BudgetItemAllocation> budgetItemAllocationList = budgetItemAllocationRepository.findByBudgetItem(budgetItem);
@@ -102,7 +105,7 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByProperty(property).get(0);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
             // when
             final List<BudgetItemAllocation> budgetItemAllocationList = budgetItemAllocationRepository.findByKeyTable(keyTable);
@@ -120,7 +123,7 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
-            Budget budget = budgetRepository.findByProperty(property).get(0);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             BudgetItem budgetItem = budget.getItems().first();
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);

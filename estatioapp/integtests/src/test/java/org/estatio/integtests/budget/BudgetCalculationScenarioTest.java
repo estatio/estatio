@@ -1,7 +1,15 @@
 package org.estatio.integtests.budget;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
@@ -16,13 +24,9 @@ import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
+import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
 
 public class BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
@@ -64,7 +68,7 @@ public class BudgetCalculationScenarioTest extends EstatioIntegrationTest {
         public void setup() {
             // given
             property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            budget = budgetRepository.findByProperty(property).get(0);
+            budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
         }
 
         @Test

@@ -17,6 +17,8 @@
 
 package org.estatio.fixture.budget;
 
+import org.joda.time.LocalDate;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
@@ -28,11 +30,13 @@ import org.estatio.fixture.asset.PropertyForOxfGb;
  */
 public class KeyTablesForOxf extends KeyTableAbstact {
 
-    public static final String NAME = "Service Charges By Area year 2015";
-    public static final String NAME2 = "Service Charges By Count year 2015";
+    public static final String NAME_BY_AREA = "Service Charges By Area year 2015";
+    public static final String NAME_BY_COUNT = "Service Charges By Count year 2015";
     public static final FoundationValueType BUDGET_FOUNDATION_VALUE_TYPE = FoundationValueType.AREA;
     public static final FoundationValueType BUDGET_FOUNDATION_VALUE_TYPE2 = FoundationValueType.COUNT;
     public static final KeyValueMethod BUDGET_KEY_VALUE_METHOD = KeyValueMethod.PROMILLE;
+    public static final LocalDate START_DATE = new LocalDate(2015, 1, 1);
+    public static final int NUMBER_OF_DIGITS = 3;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -45,9 +49,9 @@ public class KeyTablesForOxf extends KeyTableAbstact {
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        Budget budget = budgetRepository.findByProperty(property).get(0);
+        Budget budget = budgetRepository.findByPropertyAndStartDate(property, START_DATE);
 
-        createKeyTable(budget, NAME, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
-        createKeyTable(budget, NAME2, BUDGET_FOUNDATION_VALUE_TYPE2, BUDGET_KEY_VALUE_METHOD, 3, executionContext);
+        createKeyTable(budget, NAME_BY_AREA, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, NUMBER_OF_DIGITS, executionContext);
+        createKeyTable(budget, NAME_BY_COUNT, BUDGET_FOUNDATION_VALUE_TYPE2, BUDGET_KEY_VALUE_METHOD, NUMBER_OF_DIGITS, executionContext);
     }
 }
