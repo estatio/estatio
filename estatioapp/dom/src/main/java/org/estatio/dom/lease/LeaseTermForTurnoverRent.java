@@ -24,8 +24,6 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.google.common.base.Strings;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
@@ -53,11 +51,9 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private String turnoverRentRule;
 
     public String validateTurnoverRentRule(final String turnoverRentrule) {
-        if (Strings.isNullOrEmpty(turnoverRentrule)) {
-            TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(turnoverRentrule);
-            if (!helper.isValid()) {
-                return "'" + turnoverRentrule + "' is not a valid rule";
-            }
+        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(turnoverRentrule);
+        if (!helper.isValid()) {
+            return "'" + turnoverRentrule + "' is not a valid rule";
         }
         return null;
     }
@@ -91,6 +87,13 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     public BigDecimal default2ChangeParameters() {
         return getAuditedTurnover();
+    }
+
+    public String validateChangeParameters(
+            final @Parameter(optionality = Optionality.OPTIONAL) String turnoverRentRule,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal totalBudgetedRent,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal auditedTurnover) {
+        return validateTurnoverRentRule(turnoverRentRule);
     }
 
     // //////////////////////////////////////

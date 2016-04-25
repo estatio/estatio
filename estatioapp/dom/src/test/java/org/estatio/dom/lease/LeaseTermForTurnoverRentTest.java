@@ -18,13 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -33,8 +29,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -177,12 +180,36 @@ public class LeaseTermForTurnoverRentTest {
         @Before
         public void setup() {
             super.setup();
-            term.setTurnoverRentRule("7.00");
         }
 
         @Test
-        public void whenReturnsNull() {
+        public void correct_float() {
             Assert.assertNull(term.validateTurnoverRentRule("7.00"));
+        }
+
+        @Test
+        public void correct_int() {
+            Assert.assertNull(term.validateTurnoverRentRule("7"));
+        }
+
+        @Test
+        public void incorrect_empty()  {
+            Assert.assertNotNull(term.validateTurnoverRentRule(""));
+        }
+
+        @Test
+        public void incorrect_null()  {
+            Assert.assertNotNull(term.validateTurnoverRentRule(null));
+        }
+
+        @Test
+        public void incorrect_comma()  {
+            Assert.assertNotNull(term.validateTurnoverRentRule("7,0"));
+        }
+
+        @Test
+        public void incorrect_NaN()  {
+            Assert.assertNotNull(term.validateTurnoverRentRule("Se7en"));
         }
     }
 
