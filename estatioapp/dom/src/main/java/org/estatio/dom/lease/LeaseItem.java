@@ -421,6 +421,16 @@ public class LeaseItem
     @Getter @Setter
     private InvoicingFrequency invoicingFrequency;
 
+    @Action(domainEvent = ChangeInvoicingFrequencyEvent.class)
+    public LeaseItem changeInvoicingFrequency(final InvoicingFrequency invoicingFrequency) {
+        setInvoicingFrequency(invoicingFrequency);
+        return this;
+    }
+
+    public InvoicingFrequency default0ChangeInvoicingFrequency() {
+        return getInvoicingFrequency();
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
@@ -671,6 +681,12 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public static class ResumeEvent extends ActionDomainEvent<LeaseItem> {
+        private static final long serialVersionUID = 1L;
+    }
+
+    // //////////////////////////////////////
+
+    public static class ChangeInvoicingFrequencyEvent extends ActionDomainEvent<LeaseItem> {
         private static final long serialVersionUID = 1L;
     }
 
