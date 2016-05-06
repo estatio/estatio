@@ -29,6 +29,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Query;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -92,6 +93,11 @@ import lombok.Setter;
                 members = {"leaseItem", "startDate"})
 })
 @javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseItem", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem == :leaseItem"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndSequence", language = "JDOQL",
                 value = "SELECT "

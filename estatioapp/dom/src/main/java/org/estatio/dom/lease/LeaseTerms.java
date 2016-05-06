@@ -18,17 +18,25 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.security.UserMemento;
+
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
@@ -100,6 +108,12 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
         return getClockService().now();
     }
 
+    @Programmatic
+    public List<LeaseTerm> findByLeaseItem(final LeaseItem leaseItem) {
+        return allMatches("findByLeaseItem",
+                "leaseItem", leaseItem);
+    }
+
     /**
      * Returns terms by LeaseItem and sequence. Used by the API
      */
@@ -132,7 +146,7 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
                 "startDate", startDate);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
             final Property property,
@@ -143,7 +157,7 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
 
     // //////////////////////////////////////
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndType(
             final Property property,
