@@ -10,7 +10,6 @@
             <ns2:action id="remove"/>
             <ns2:action id="calculate"/>
             <ns2:action id="recentChanges"/>
-            <ns2:action id="findByLease"/>
             <ns2:action id="findByLeaseAndInvoiceStatus"/>
             <ns2:action id="links"/>
         </col>

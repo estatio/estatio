@@ -51,7 +51,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.VIEW)
+@DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.VIEW_MENU_ONLY)
 public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     @Override
@@ -127,20 +127,17 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
 
     // //////////////////////////////////////
 
-
     public Guarantee findByReference(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////
 
-
     public List<Guarantee> allGuarantees() {
         return allInstances();
     }
 
     // //////////////////////////////////////
-
 
     public List<Guarantee> findByLease(final Lease lease) {
         return allMatches("findByLease", "lease", lease);
@@ -159,7 +156,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     public List<Guarantee> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findGuarantees("*" + searchPhrase + "*")
-                : Lists.<Guarantee> newArrayList();
+                : Lists.<Guarantee>newArrayList();
     }
 
     // //////////////////////////////////////
