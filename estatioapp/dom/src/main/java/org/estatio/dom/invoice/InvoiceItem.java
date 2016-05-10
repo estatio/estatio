@@ -127,7 +127,7 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
+    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
