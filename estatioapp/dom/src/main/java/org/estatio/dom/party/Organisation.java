@@ -18,13 +18,22 @@
  */
 package org.estatio.dom.party;
 
-import javax.jdo.annotations.InheritanceStrategy;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import javax.inject.Inject;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -82,11 +91,25 @@ public class Organisation
 
     // //////////////////////////////////////
 
+    @Persistent(mappedBy = "organisation")
+    @CollectionLayout(defaultView = "table")
+    @Getter @Setter
+    private SortedSet<OrganisationPreviousName> previousNames = new TreeSet<>();
+
+    // //////////////////////////////////////
+
     @Property(optionality = Optionality.OPTIONAL)
     public Organisation change(
-            final String name,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
+            final @ParameterLayout(named = "Name") String name,
+            final @ParameterLayout(named = "Previous name end date") LocalDate previousNameEndDate,
+            final @ParameterLayout(named = "Vat code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
+            final @ParameterLayout(named = "Fiscal code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
+
+        if (!name.equals(getName())) {
+            OrganisationPreviousName organisationPreviousName = organisationPreviousNameRepository.newOrganisationPreviousName(getName(), previousNameEndDate);
+            getPreviousNames().add(organisationPreviousName);
+        }
+
         setName(name);
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);
@@ -98,12 +121,26 @@ public class Organisation
         return getName();
     }
 
-    public String default1Change() {
-        return getVatCode();
+    public LocalDate default1Change() {
+        return getClockService().now();
     }
 
     public String default2Change() {
+        return getVatCode();
+    }
+
+    public String default3Change() {
         return getFiscalCode();
     }
 
+    public String validateChange(
+            final String name,
+            final LocalDate previousNameEndDate,
+            final String vatCode,
+            final String fiscalCode) {
+        return previousNameEndDate.isAfter(getClockService().now()) ? "You can not select a future end date" : null;
+    }
+
+    @Inject
+    OrganisationPreviousNameRepository organisationPreviousNameRepository;
 }
