@@ -84,13 +84,13 @@ mvn clean install -DskipTests -o
         <isis.version>1.13.0-SNAPSHOT</isis.version>
 
         <isis-module-audit.version>1.12.0</isis-module-audit.version>
-        <isis-module-command.version>1.12.0</isis-module-command.version>
+        <isis-module-command.version>1.13.0-SNAPSHOT</isis-module-command.version>
         <isis-module-excel.version>1.12.0</isis-module-excel.version>
         <isis-module-fakedata-dom.version>1.12.0</isis-module-fakedata-dom.version>
         <isis-module-poly.version>1.12.0</isis-module-poly.version>
         <isis-module-security.version>1.12.0</isis-module-security.version>
         <isis-module-sessionlogger.version>1.12.0</isis-module-sessionlogger.version>
-        <isis-module-settings.version>1.11.0</isis-module-settings.version>
+        <isis-module-settings.version>1.12.1</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.12.0</isis-module-stringinterpolator.version>
 
         <isis-metamodel-paraname8.version>1.12.0</isis-metamodel-paraname8.version>
