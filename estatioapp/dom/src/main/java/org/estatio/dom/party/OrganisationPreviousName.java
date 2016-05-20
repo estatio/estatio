@@ -19,12 +19,20 @@
 
 package org.estatio.dom.party;
 
-import java.io.Serializable;
-
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.utils.TitleBuilder;
@@ -32,7 +40,15 @@ import org.estatio.dom.utils.TitleBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
-public class OrganisationPreviousName implements Comparable<OrganisationPreviousName>, Serializable {
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "verion"
+)
+public class OrganisationPreviousName implements Comparable<OrganisationPreviousName> {
 
     public String title() {
         return TitleBuilder.start()
@@ -40,6 +56,11 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
                 .withTupleElement(getEndDate())
                 .toString();
     }
+
+    @Column(allowsNull = "false")
+    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
+    @Getter @Setter
+    private Organisation organisation;
 
     // //////////////////////////////////////
 
@@ -49,11 +70,13 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
 
     // //////////////////////////////////////
 
+    @Column(allowsNull = "false")
     @Persistent
     @Getter @Setter
     private LocalDate endDate;
 
-    @Override public int compareTo(final OrganisationPreviousName o) {
+    @Override
+    public int compareTo(final OrganisationPreviousName o) {
         return getName().compareTo(o.getName());
     }
 }

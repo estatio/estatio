@@ -100,10 +100,10 @@ public class Organisation
 
     @Property(optionality = Optionality.OPTIONAL)
     public Organisation change(
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Previous name end date") LocalDate previousNameEndDate,
-            final @ParameterLayout(named = "Vat code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
-            final @ParameterLayout(named = "Fiscal code") @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
+            final String name,
+            final LocalDate previousNameEndDate,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
 
         if (!name.equals(getName())) {
             OrganisationPreviousName organisationPreviousName = organisationPreviousNameRepository.newOrganisationPreviousName(getName(), previousNameEndDate);
