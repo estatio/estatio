@@ -51,7 +51,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
 
     Organisation organisation;
 
-    public static class changeName extends OrganisationTest {
+    public static class ChangeName extends OrganisationTest {
 
         @Before
         public void setupData() {
@@ -72,7 +72,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
             assertThat(previousNames).isEmpty();
 
             // when
-            wrap(organisation).change("New name", new LocalDate(2012, 1, 1), null, null);
+            wrap(organisation).changeName("New name", new LocalDate(2012, 1, 1));
             previousNames = organisation.getPreviousNames();
 
             // then
@@ -86,7 +86,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
             exception.expectMessage("You can not select a future end date");
 
             // when
-            wrap(organisation).change("New name", new LocalDate(2050, 1, 1), null, null);
+            wrap(organisation).changeName("New name", new LocalDate(2050, 1, 1));
         }
     }
 }

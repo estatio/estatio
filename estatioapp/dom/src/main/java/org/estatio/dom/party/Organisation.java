@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -98,19 +97,9 @@ public class Organisation
 
     // //////////////////////////////////////
 
-    @Property(optionality = Optionality.OPTIONAL)
     public Organisation change(
-            final String name,
-            final LocalDate previousNameEndDate,
             final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
             final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
-
-        if (!name.equals(getName())) {
-            OrganisationPreviousName organisationPreviousName = organisationPreviousNameRepository.newOrganisationPreviousName(getName(), previousNameEndDate);
-            getPreviousNames().add(organisationPreviousName);
-        }
-
-        setName(name);
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);
 
@@ -118,26 +107,37 @@ public class Organisation
     }
 
     public String default0Change() {
-        return getName();
-    }
-
-    public LocalDate default1Change() {
-        return getClockService().now();
-    }
-
-    public String default2Change() {
         return getVatCode();
     }
 
-    public String default3Change() {
+    public String default1Change() {
         return getFiscalCode();
     }
 
-    public String validateChange(
+    public Organisation changeName(
             final String name,
-            final LocalDate previousNameEndDate,
-            final String vatCode,
-            final String fiscalCode) {
+            final LocalDate previousNameEndDate) {
+        if (!name.equals(getName())) {
+            OrganisationPreviousName organisationPreviousName = organisationPreviousNameRepository.newOrganisationPreviousName(getName(), previousNameEndDate);
+            getPreviousNames().add(organisationPreviousName);
+        }
+
+        setName(name);
+
+        return this;
+    }
+
+    public String default0ChangeName() {
+        return getName();
+    }
+
+    public LocalDate default1ChangeName() {
+        return getClockService().now();
+    }
+
+    public String validateChangeName(
+            final String name,
+            final LocalDate previousNameEndDate) {
         return previousNameEndDate.isAfter(getClockService().now()) ? "You can not select a future end date" : null;
     }
 

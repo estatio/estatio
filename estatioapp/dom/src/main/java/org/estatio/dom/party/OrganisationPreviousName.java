@@ -23,8 +23,11 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -41,12 +44,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
-        column = "verion"
+        column = "version"
+)
+@Unique(
+        name = "Organisation"
 )
 public class OrganisationPreviousName implements Comparable<OrganisationPreviousName> {
 
@@ -57,7 +64,7 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
                 .toString();
     }
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "organisationId")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Organisation organisation;

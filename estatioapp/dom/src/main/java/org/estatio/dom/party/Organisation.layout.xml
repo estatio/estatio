@@ -16,6 +16,7 @@
                 <ns2:property id="reference"/>
                 <ns2:property id="name"/>
                 <ns2:property id="applicationTenancyPath"/>
+                <ns2:action id="changeName" position="BELOW"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Registrations" id="registrations">
                 <ns2:property id="vatCode"/>
