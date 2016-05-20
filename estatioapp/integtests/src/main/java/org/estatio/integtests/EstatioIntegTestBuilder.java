@@ -44,7 +44,6 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         // anyway.
         withLoggingAt(Level.DEBUG);
         with(new IsisConfigurationForJdoIntegTests());
-        with(new DataNucleusPersistenceMechanismInstaller());
         with(new AuthenticationRequestNameOnly("estatio-admin"));
 
         with(new EstatioAppManifestForIntegTests());
