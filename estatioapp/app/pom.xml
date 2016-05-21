@@ -69,16 +69,8 @@ language governing permissions and limitations under the License.
 
         <!-- isis modules -->
         <dependency>
-            <groupId>org.isisaddons.module.audit</groupId>
-            <artifactId>isis-module-audit-dom</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.settings</groupId>
             <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.command</groupId>
-            <artifactId>isis-module-command-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.security</groupId>

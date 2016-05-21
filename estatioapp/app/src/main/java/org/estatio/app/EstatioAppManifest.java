@@ -56,8 +56,6 @@ public class EstatioAppManifest implements AppManifest {
     protected List<Class<?>> appendAddonModules(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
-                        org.isisaddons.module.audit.AuditModule.class,
-                        org.isisaddons.module.command.CommandModule.class,
                         org.isisaddons.module.excel.ExcelModule.class,
                         org.isisaddons.module.poly.PolyModule.class,
                         org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
