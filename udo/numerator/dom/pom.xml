@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-numerator</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO DOM - Numerator</name>
+    <name>Estatio (Open Source) UDO DOM - Numerator</name>
     <description>
         UDO Numerator DOM
     </description>

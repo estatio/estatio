@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-agreement</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO DOM - Agreement</name>
+    <name>Estatio (Open Source) UDO DOM - Agreement</name>
     <description>
         UDO Agreement DOM
     </description>
