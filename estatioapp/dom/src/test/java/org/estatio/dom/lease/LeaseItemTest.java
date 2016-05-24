@@ -21,8 +21,12 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -232,6 +236,62 @@ public class LeaseItemTest {
         }
 
     }
+
+    public static class ChoicesNewSourceItem extends LeaseItemTest{
+
+        @Mock
+        LeaseItemSourceRepository mockLeaseItemSourceRepository;
+
+        LeaseItem itemLinked;
+        LeaseItem itemNotLinked;
+        Lease lease;
+
+        @Before
+        public void setup() {
+
+            itemLinked = new LeaseItem();
+            itemLinked.setType(LeaseItemType.RENT);
+            itemNotLinked = new LeaseItem();
+            itemNotLinked.setType(LeaseItemType.RENT_DISCOUNT);
+
+            lease = new Lease(){
+                @Override public SortedSet<LeaseItem> getItems() {
+                    return new TreeSet<>(Arrays.asList(itemLinked, itemNotLinked, leaseItem));
+                }
+            };
+        }
+
+        @Test
+        public void testChoices() throws Exception {
+
+            // given
+            leaseItem = new LeaseItem();
+            leaseItem.setLease(lease);
+            leaseItem.leaseItemSourceRepository = mockLeaseItemSourceRepository;
+
+            LeaseItemSource leaseItemSource = new LeaseItemSource();
+            leaseItemSource.setItem(leaseItem);
+            leaseItemSource.setSourceItem(itemLinked);
+
+            context.checking(new Expectations() {
+                {
+                    allowing(mockLeaseItemSourceRepository).findByItem(leaseItem);
+                    will(returnValue(Arrays.asList(leaseItemSource)));
+                }
+            });
+
+            // when
+            List<LeaseItem> choices = leaseItem.choices0NewSourceItem(leaseItem);
+
+            // then
+            Assertions.assertThat(leaseItem.getLease().getItems().size()).isEqualTo(3);
+            Assertions.assertThat(choices.size()).isEqualTo(1);
+            Assertions.assertThat(choices.get(0)).isEqualTo(itemNotLinked);
+
+        }
+
+    }
+
 
     public static class CompareTo extends ComparableContractTest_compareTo<LeaseItem> {
 

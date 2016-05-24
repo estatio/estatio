@@ -35,6 +35,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class TaxTest {
@@ -134,5 +135,27 @@ public class TaxTest {
 
             assertEquals(BigDecimal.valueOf(19), tax.percentageFor(d1));
         }
+
+    }
+
+    public static class GrossFromNet {
+
+        @Test
+        public void gross_from_net_correctly_calculated() throws Exception {
+            //given
+
+            TaxRate rate = new TaxRate();
+            rate.setPercentage(new BigDecimal("21"));
+            Tax tax = new Tax() {
+                @Override public TaxRate taxRateFor(final LocalDate date) {
+                    return rate;
+                };
+            };
+            //when, then
+            assertThat(tax.grossFromNet(new BigDecimal("100.00"), new LocalDate(2013,1,1))).isEqualTo(new BigDecimal("121.00"));
+
+        }
+
+
     }
 }

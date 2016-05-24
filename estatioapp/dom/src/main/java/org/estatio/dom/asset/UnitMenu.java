@@ -27,16 +27,14 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 
 @DomainService(
-        nature = NatureOfService.VIEW
+        nature = NatureOfService.VIEW_MENU_ONLY
 )
 @DomainServiceLayout(
         named = "Fixed Assets",
@@ -55,26 +53,6 @@ public class UnitMenu extends UdoDomainService<UnitMenu> {
         super(UnitMenu.class);
     }
 
-    // //////////////////////////////////////
-
-    @Action(
-            semantics = SemanticsOf.NON_IDEMPOTENT
-    )
-    @MemberOrder(sequence = "1")
-    public Unit newUnit(
-            final Property property,
-            final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE, regexPatternReplacement = RegexValidation.Unit.REFERENCE_DESCRIPTION) String reference,
-            final String name,
-            final UnitType type) {
-        return unitRepository.newUnit(property, reference, name, type);
-    }
-
-    public UnitType default3NewUnit() {
-        return UnitType.BOUTIQUE;
-    }
-
-    // //////////////////////////////////////
-
     @Action(
             semantics = SemanticsOf.SAFE
     )
@@ -85,8 +63,6 @@ public class UnitMenu extends UdoDomainService<UnitMenu> {
         return unitRepository.findUnits(referenceOrName, includeTerminated);
     }
 
-
-    // //////////////////////////////////////
 
     @Action(
             semantics = SemanticsOf.SAFE

@@ -148,7 +148,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
             assertThat(last.getStartDate(), is(VT.ld(2015, 1, 1)));
             assertThat(invoices.findByLease(lease).size(), is(0));
-            assertThat(dItem.getTerms().last().getEffectiveValue(), is(VT.bd(70000).setScale(2)));
+            assertThat(dItem.getTerms().last().getEffectiveValue(), is(VT.bd(75000).setScale(2)));
             assertThat(rfItem.getTerms().last().getEffectiveValue(), is(VT.bd(2250).setScale(2)));
         }
 

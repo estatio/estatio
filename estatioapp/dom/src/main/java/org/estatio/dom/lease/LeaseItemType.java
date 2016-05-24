@@ -26,29 +26,33 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseItemType implements PowerType<LeaseTerm> {
 
-    RENT(LeaseTermForIndexable.class, true),
-    RENT_FIXED(LeaseTermForFixed.class, false),
-    TURNOVER_RENT(LeaseTermForTurnoverRent.class, true),
-    RENTAL_FEE(LeaseTermForPercentage.class, true),
-    DEPOSIT(LeaseTermForDeposit.class, false),
-    SERVICE_CHARGE(LeaseTermForServiceCharge.class, true),
-    SERVICE_CHARGE_BUDGETED(LeaseTermForServiceCharge.class, false),
-    SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true),
-    DISCOUNT(LeaseTermForFixed.class, false),
-    RENT_DISCOUNT(LeaseTermForIndexable.class, false),
-    ENTRY_FEE(LeaseTermForFixed.class, false),
-    TAX(LeaseTermForTax.class, true);
+    RENT(LeaseTermForIndexable.class, true, false),
+    RENT_FIXED(LeaseTermForFixed.class, false, false),
+    TURNOVER_RENT(LeaseTermForTurnoverRent.class, true, true),
+    RENTAL_FEE(LeaseTermForPercentage.class, true, true),
+    DEPOSIT(LeaseTermForDeposit.class, false, true),
+    SERVICE_CHARGE(LeaseTermForServiceCharge.class, true, false),
+    SERVICE_CHARGE_BUDGETED(LeaseTermForServiceCharge.class, false, false),
+    SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true, false),
+    DISCOUNT(LeaseTermForFixed.class, false, false),
+    RENT_DISCOUNT(LeaseTermForIndexable.class, false, false),
+    ENTRY_FEE(LeaseTermForFixed.class, false, false),
+    TAX(LeaseTermForTax.class, true, false);
 
     private final Class<? extends LeaseTerm> clss;
     private final boolean autoCreateTerms;
+    private final boolean useSource;
+
 
     // //////////////////////////////////////
 
     private LeaseItemType(
             final Class<? extends LeaseTerm> clss,
-            final boolean autoCreateTerms) {
+            final boolean autoCreateTerms,
+            final boolean useSource) {
         this.clss = clss;
         this.autoCreateTerms = autoCreateTerms;
+        this.useSource = useSource;
     }
 
     // //////////////////////////////////////
@@ -73,5 +77,8 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     public boolean autoCreateTerms() {
         return autoCreateTerms;
     }
+
+    public boolean useSource() {
+        return useSource; }
 
 }

@@ -181,4 +181,9 @@ public class Tax
         this.taxRates = taxRates;
     }
 
+    @Programmatic
+    public BigDecimal grossFromNet(final BigDecimal net, LocalDate date) {
+        return net.add(percentageFor(date.minusDays(1)).multiply(net).divide(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
 }

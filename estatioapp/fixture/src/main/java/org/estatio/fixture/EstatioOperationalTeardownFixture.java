@@ -18,23 +18,30 @@
  */
 package org.estatio.fixture;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+
 import org.estatio.dom.JdoColumnLength.Numerator;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.asset.*;
+import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationLink;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
 import org.estatio.dom.document.Document;
@@ -46,18 +53,29 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemSource;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.party.*;
+import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRegistration;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.relationship.PartyRelationship;
-import org.estatio.dom.project.*;
-
-import javax.inject.Inject;
+import org.estatio.dom.project.BusinessCase;
+import org.estatio.dom.project.Program;
+import org.estatio.dom.project.ProgramRole;
+import org.estatio.dom.project.Project;
+import org.estatio.dom.project.ProjectRole;
 
 public class EstatioOperationalTeardownFixture extends FixtureScript {
 
@@ -94,7 +112,9 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Event.class);
 
         deleteFrom(BreakOption.class);
+        deleteFrom(LeaseItemSource.class);
         deleteFrom(LeaseTerm.class);
+        deleteFrom(LeaseItemSource.class);
         deleteFrom(LeaseItem.class);
         deleteFrom(Occupancy.class);
 
