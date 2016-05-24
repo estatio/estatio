@@ -1,9 +1,23 @@
 package org.estatio.app.services.budget.viewmodels;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Nature;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
@@ -11,11 +25,6 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
-import javax.inject.Inject;
-import java.util.List;
 
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class ChargeImport implements Importable {
@@ -105,6 +114,10 @@ public class ChargeImport implements Importable {
         }
 
         return Lists.newArrayList();
+    }
+
+    @Override public List<Class> importAfter() {
+        return null;
     }
 
     @MemberOrder(sequence = "1")
