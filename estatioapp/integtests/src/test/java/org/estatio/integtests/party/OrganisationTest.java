@@ -88,5 +88,15 @@ public class OrganisationTest extends EstatioIntegrationTest {
             // when
             wrap(organisation).changeName("New name", new LocalDate(2050, 1, 1));
         }
+
+        @Test
+        public void newNameIsSameAsCurrentName() throws Exception {
+            // then
+            exception.expect(InvalidException.class);
+            exception.expectMessage("New name must be different from the current name");
+
+            // when
+            wrap(organisation).changeName(organisation.getName(), new LocalDate(2050, 1, 1));
+        }
     }
 }

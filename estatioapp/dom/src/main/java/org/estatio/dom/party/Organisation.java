@@ -138,7 +138,11 @@ public class Organisation
     public String validateChangeName(
             final String name,
             final LocalDate previousNameEndDate) {
-        return previousNameEndDate.isAfter(getClockService().now()) ? "You can not select a future end date" : null;
+        if (name.equals(this.getName())) {
+            return "New name must be different from the current name";
+        } else {
+            return previousNameEndDate.isAfter(getClockService().now()) ? "You can not select a future end date" : null;
+        }
     }
 
     @Inject

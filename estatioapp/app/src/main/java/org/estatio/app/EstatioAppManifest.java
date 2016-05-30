@@ -152,6 +152,8 @@ public class EstatioAppManifest implements AppManifest {
 
         props.put("isis.services.eventbus.allowLateRegistration", "true");
 
+        props.put("isis.services.injector.injectPrefix", "true");
+
 
         // uncomment to use log4jdbc instead
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",

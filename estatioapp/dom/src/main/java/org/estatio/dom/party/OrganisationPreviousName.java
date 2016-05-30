@@ -84,6 +84,13 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
 
     @Override
     public int compareTo(final OrganisationPreviousName o) {
-        return getName().compareTo(o.getName());
+        final int compare = this.getEndDate().compareTo(o.getEndDate());
+
+        if (compare == 0) {
+            final int nameCompare = this.getName().compareTo(o.getName());
+            return nameCompare;
+        } else {
+            return compare;
+        }
     }
 }

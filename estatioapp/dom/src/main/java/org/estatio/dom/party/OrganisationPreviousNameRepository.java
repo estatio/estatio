@@ -21,10 +21,8 @@ package org.estatio.dom.party;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -37,7 +35,6 @@ public class OrganisationPreviousNameRepository extends UdoDomainRepositoryAndFa
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public OrganisationPreviousName newOrganisationPreviousName(
             final String name,
             final LocalDate endDate) {
