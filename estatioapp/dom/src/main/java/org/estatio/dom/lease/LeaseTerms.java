@@ -206,7 +206,7 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
 
     public boolean hideFindTermsWithInvalidInterval() {
         final UserMemento user = getContainer().getUser();
-        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
+        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
     }
 
     @Programmatic

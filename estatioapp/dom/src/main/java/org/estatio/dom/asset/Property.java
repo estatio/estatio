@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -50,6 +51,7 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.geography.Country;
@@ -207,12 +209,22 @@ public class Property
         return role;
     }
 
-    @Programmatic
-    public Unit newUnit(final String reference, final String name, final UnitType type) {
-        return unitMenuRepo.newUnit(this, reference, name, type);
+
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT
+    )
+    @MemberOrder(sequence = "1", name = "units")
+    public Unit newUnit(
+            final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE, regexPatternReplacement = RegexValidation.Unit.REFERENCE_DESCRIPTION) String reference,
+            final String name,
+            final UnitType type) {
+        return unitRepository.newUnit(this, reference, name, type);
     }
 
-    // //////////////////////////////////////
+    public UnitType default2NewUnit() {
+        return UnitType.BOUTIQUE;
+    }
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Property dispose(
@@ -251,7 +263,7 @@ public class Property
     // //////////////////////////////////////
 
     @Inject
-    UnitMenu unitMenuRepo;
+    UnitRepository unitRepository;
 
     @Inject
     LocationLookupService locationLookupService;

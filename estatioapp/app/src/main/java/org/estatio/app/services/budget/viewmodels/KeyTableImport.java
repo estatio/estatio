@@ -1,8 +1,22 @@
 package org.estatio.app.services.budget.viewmodels;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apache.isis.applib.annotation.*;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Nature;
+
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -16,12 +30,6 @@ import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class KeyTableImport implements Importable {
@@ -176,6 +184,10 @@ public class KeyTableImport implements Importable {
         }
 
         return Lists.newArrayList();
+    }
+
+    @Override public List<Class> importAfter() {
+        return null;
     }
 
     @MemberOrder(sequence = "1")

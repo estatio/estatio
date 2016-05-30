@@ -23,4 +23,6 @@ import java.util.List;
 public interface Importable {
 
     public List<Object> importData();
+
+    public List<Class> importAfter();
 }

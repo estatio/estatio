@@ -926,7 +926,7 @@ public class Lease
     }
 
     public boolean hideRemove() {
-        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
+        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
     }
 
     @Programmatic

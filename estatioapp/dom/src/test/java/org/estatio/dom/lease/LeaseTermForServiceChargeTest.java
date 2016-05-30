@@ -19,15 +19,19 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+
 import org.hamcrest.core.Is;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
@@ -118,6 +122,7 @@ public class LeaseTermForServiceChargeTest {
             term.setEndDate(new LocalDate(2011, 12, 31));
 
             // when, then
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
             assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6600)));
 
         }

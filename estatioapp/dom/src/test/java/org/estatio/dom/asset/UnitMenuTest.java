@@ -18,11 +18,11 @@
  */
 package org.estatio.dom.asset;
 
-import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
@@ -49,24 +49,6 @@ public class UnitMenuTest {
         unitRepository.setContainer(mockContainer);
         unitMenu = new UnitMenu();
         unitMenu.unitRepository = unitRepository;
-    }
-
-    @Test
-    public void newUnit() {
-        final Unit unit = new Unit();
-        context.checking(new Expectations() {
-            {
-                oneOf(mockContainer).newTransientInstance(Unit.class);
-                will(returnValue(unit));
-
-                oneOf(mockContainer).persist(unit);
-            }
-        });
-
-        final Unit newUnit = unitMenu.newUnit(null, "REF-1", "Name-1", UnitType.EXTERNAL);
-        assertThat(newUnit.getReference(), is("REF-1"));
-        assertThat(newUnit.getName(), is("Name-1"));
-        assertThat(newUnit.getType(), is(UnitType.EXTERNAL));
     }
 
     @Test

@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-tax</artifactId>
     <packaging>jar</packaging>
     
-    <name>UDO DOM - Tax</name>
+    <name>Estatio (Open Source) UDO DOM - Tax</name>
     <description>
         UDO Tax DOM
     </description>

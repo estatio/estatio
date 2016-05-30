@@ -82,7 +82,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
     }
 
     public boolean hideSaveAllAsHistoric(){
-        return !EstatioUserRole.ADMIN_ROLE.isAppliccableTo(getUser());
+        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
     }
 
     @CollectionLayout(render = RenderType.EAGERLY)

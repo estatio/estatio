@@ -176,7 +176,7 @@ public class PropertyBuilder extends EstatioFixtureScript {
             final String unitRef = buildUnitReference(property.getReference(), i);
             final UnitType unitType = faker().collections().anEnum(UnitType.class);
             final String unitName = faker().name().firstName();
-            wrap(unitMenu).newUnit(property, unitRef, unitName, unitType);
+            wrap(property).newUnit(unitRef, unitName, unitType);
         }
 
     }

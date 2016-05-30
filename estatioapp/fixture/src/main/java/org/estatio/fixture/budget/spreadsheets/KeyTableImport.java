@@ -1,9 +1,22 @@
 package org.estatio.fixture.budget.spreadsheets;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
+
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -17,14 +30,6 @@ import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
-import org.isisaddons.module.excel.dom.ExcelFixture;
-import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @ViewModel
 public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
@@ -182,6 +187,10 @@ public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
         }
 
         return Lists.newArrayList();
+    }
+
+    @Override public List<Class> importAfter() {
+        return null;
     }
 
     public String getPropertyReference() {

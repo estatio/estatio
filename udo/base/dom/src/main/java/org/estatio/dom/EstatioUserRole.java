@@ -20,7 +20,7 @@ public enum EstatioUserRole {
         this.suffix = suffix;
     }
 
-    public boolean isAppliccableTo(UserMemento user) {
+    public boolean isApplicableTo(UserMemento user) {
         for (RoleMemento role : user.getRoles()) {
             if (role.getName().endsWith(suffix)) {
                 return true;

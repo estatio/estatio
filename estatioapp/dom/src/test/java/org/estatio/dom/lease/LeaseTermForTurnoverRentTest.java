@@ -19,7 +19,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -65,6 +65,9 @@ public class LeaseTermForTurnoverRentTest {
         @Mock
         private Lease mockLease;
 
+        @Mock
+        private LeaseItemSourceRepository leaseItemSourceRepository;
+
         private LeaseItem torItem;
 
         @Before
@@ -72,28 +75,20 @@ public class LeaseTermForTurnoverRentTest {
             super.setup();
 
             torItem = new LeaseItem();
+            torItem.leaseItemSourceRepository = leaseItemSourceRepository;
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLease).findItemsOfType(LeaseItemType.RENT);
-                    will(returnValue(new ArrayList<LeaseItem>() {
-//                        private static final long serialVersionUID = 8666017984548841746L;
-                        {
-                            add(rentItem);
-                        }
-                    }));
+                    oneOf(leaseItemSourceRepository).findByItem(with(any(LeaseItem.class)));
+                    will(returnValue(Arrays.asList(new LeaseItemSource(torItem, rentItem))));
+
                     oneOf(rentItem).calculationResults(with(any(LocalDateInterval.class)), with(any(LocalDate.class)));
-                    will(returnValue(new ArrayList<InvoiceCalculationService.CalculationResult>() {
-//                        private static final long serialVersionUID = -2212720554866561882L;
-                        {
-                            add(new InvoiceCalculationService.CalculationResult(
+                    will(returnValue(Arrays.asList(new InvoiceCalculationService.CalculationResult(
                                     new InvoicingInterval(LocalDateInterval.parseString("2013-01-01/2013-04-01"), new LocalDate(2013, 1, 1)),
                                     LocalDateInterval.parseString("2013-01-01/2013-04-01"),
                                     new BigDecimal("100000.00"),
                                     BigDecimal.ZERO
-                            ));
-                        }
-                    }));
+                            ))));
                 }
             });
         }

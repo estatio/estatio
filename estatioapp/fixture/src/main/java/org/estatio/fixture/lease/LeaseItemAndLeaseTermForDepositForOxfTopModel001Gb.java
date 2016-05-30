@@ -18,12 +18,9 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.DepositType;
 import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
-
-import java.math.BigDecimal;
 
 public class LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
@@ -50,8 +47,6 @@ public class LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb extends LeaseIte
                 AT_PATH,
                 lease.getStartDate(), null,
                 Fraction.M6,
-                DepositType.INDEXED_MGR_EXCLUDING_VAT,
-                new BigDecimal("5000.00"),
                 executionContext);
     }
 }

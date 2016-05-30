@@ -96,7 +96,7 @@ public class PropertyTest {
     public static class NewUnit extends PropertyTest {
 
         @Mock
-        private UnitMenu unitMenu;
+        private UnitRepository unitRepository;
 
         private Property property;
 
@@ -104,7 +104,7 @@ public class PropertyTest {
         public void setup() {
             property = new Property();
             property.setReference("ABC");
-            property.unitMenuRepo = unitMenu;
+            property.unitRepository = unitRepository;
         }
 
         @Test
@@ -114,7 +114,7 @@ public class PropertyTest {
             final UnitType unitType = UnitType.CINEMA;
             context.checking(new Expectations() {
                 {
-                    oneOf(unitMenu).newUnit(property, unitRef, unitName, unitType);
+                    oneOf(unitRepository).newUnit(property, unitRef, unitName, unitType);
                 }
             });
             property.newUnit(unitRef, unitName, unitType);

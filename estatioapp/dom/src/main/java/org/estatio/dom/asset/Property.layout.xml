@@ -25,10 +25,11 @@
                     <row>
                         <col span="6">
                             <ns2:fieldSet name="Property" id="asset">
+                                <ns2:action id="changeFullName" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="changeExternalReference" position="PANEL_DROPDOWN"/>
                                 <ns2:property id="reference"/>
                                 <ns2:property id="name"/>
                                 <ns2:property id="fullName">
-                                    <ns2:action id="changeFullName" position="BELOW"/>
                                 </ns2:property>
                                 <ns2:property id="externalReference"/>
                                 <ns2:property id="applicationTenancyPath"/>

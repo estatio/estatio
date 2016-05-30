@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -535,7 +536,7 @@ public class LeaseItem
     @Programmatic
     public BigDecimal valueForDate(final LocalDate date) {
         final LeaseTerm currentTerm = currentTerm(date);
-        return currentTerm != null ? currentTerm.valueForDate(date) : null;
+        return currentTerm != null ? currentTerm.valueForDate(date) : BigDecimal.ZERO;
     }
 
     @Programmatic
@@ -604,6 +605,46 @@ public class LeaseItem
             return null;
         }
         return getTerms().last().default1CreateNext(null, null);
+    }
+
+    @MemberOrder(sequence = "1")
+    public List<LeaseItemSource> getSourceItems() {
+        return leaseItemSourceRepository.findByItem(this);
+    }
+
+    public boolean hideSourceItems() {
+        return !getType().useSource();
+    }
+
+    @MemberOrder(sequence = "2", name = "sourceItems")
+    public LeaseItem newSourceItem(
+            final LeaseItem sourceItem
+    ){
+        leaseItemSourceRepository.newSource(this, sourceItem);
+        return this;
+    }
+
+    public boolean hideNewSourceItem() {
+        return !getType().useSource();
+    }
+
+    public List<LeaseItem> choices0NewSourceItem(final LeaseItem leaseItem){
+        List<LeaseItem> choices = new ArrayList<>();
+        for (LeaseItem item : getLease().getItems()){
+            if (item != this){
+                for (LeaseItemSource source : getSourceItems()) {
+                    if (source.getSourceItem() != item) {
+                        choices.add(item);
+                    }
+                }
+            }
+        }
+        return choices;
+    }
+
+    @Programmatic
+    public LeaseItem findOrCreateSourceItem(final LeaseItem sourceItem){
+        return leaseItemSourceRepository.findOrCreateSource(this, sourceItem).getSourceItem();
     }
 
     // //////////////////////////////////////
@@ -701,5 +742,6 @@ public class LeaseItem
     @Inject
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
+    @Inject LeaseItemSourceRepository leaseItemSourceRepository;
 
 }

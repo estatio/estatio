@@ -152,11 +152,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         if (getStatus() != LeaseTermStatus.APPROVED) {
             // Collect all results
             BigDecimal newContractualRent = BigDecimal.ZERO;
-            List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
+            List<LeaseItemSource> sourceItems = getLeaseItem().getSourceItems();
             List<CalculationResult> calculationResults = new ArrayList<>();
-            for (LeaseItem rentItem : rentItems) {
+            for (LeaseItemSource leaseItemSource : sourceItems) {
                 calculationResults.addAll(
-                        rentItem.calculationResults(getInterval(), this.getEndDate().plusYears(1)));
+                        leaseItemSource.getSourceItem().calculationResults(getInterval(), this.getEndDate().plusYears(1)));
             }
             // TODO: do prorata when intervals don't match
             for (CalculationResult result : calculationResults) {
