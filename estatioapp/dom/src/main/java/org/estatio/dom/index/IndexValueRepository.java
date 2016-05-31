@@ -20,7 +20,6 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
@@ -80,16 +79,21 @@ public class IndexValueRepository
     public IndexValue findByIndexAndStartDate(
             final Index index,
             final LocalDate startDate) {
-        return queryResultsCache.execute(
-                new Callable<IndexValue>() {
-                    @Override
-                    public IndexValue call() throws Exception {
-                        return firstMatch("findByIndexAndStartDate",
-                                "index", index,
-                                "startDate", startDate);
-                    }
-                },
-                IndexValueRepository.class, "findIndexValueByIndexAndStartDate", index, startDate);
+        return uniqueMatch("findByIndexAndStartDate",
+                "index", index,
+                "startDate", startDate);
+
+//TODO: This code is not playing nice with the integration tests.
+//    return queryResultsCache.execute(
+//                new Callable<IndexValue>() {
+//                    @Override
+//                    public IndexValue call() throws Exception {
+//                        return firstMatch("findByIndexAndStartDate",
+//                                "index", index,
+//                                "startDate", startDate);
+//                    }
+//                },
+//                IndexValueRepository.class, "findIndexValueByIndexAndStartDate", index, startDate);
     }
 
     public IndexValue findLastByIndex(
