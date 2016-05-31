@@ -37,6 +37,7 @@ import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 public class LeaseTermForServiceChargeTest {
@@ -143,6 +144,30 @@ public class LeaseTermForServiceChargeTest {
         @SuppressWarnings({ "rawtypes", "unchecked" })
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
             return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
+        }
+
+    }
+
+    public static class AllowsOpenEndate extends LeaseTermForServiceChargeTest {
+
+        LeaseTermForServiceCharge term;
+        LeaseItem item;
+
+        @Before
+        public void setUp(){
+            term = new LeaseTermForServiceCharge();
+            item = new LeaseItem();
+            term.setLeaseItem(item);
+        }
+
+        @Test
+        public void noOpenEndDateAllowed() {
+
+            // when
+            item.setType(LeaseItemType.SERVICE_CHARGE_BUDGETED);
+            // then
+            assertFalse(term.allowOpenEndDate());
+
         }
 
     }

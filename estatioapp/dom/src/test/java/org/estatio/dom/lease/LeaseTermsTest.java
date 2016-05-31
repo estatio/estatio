@@ -18,16 +18,18 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import java.math.BigInteger;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigInteger;
-import java.util.List;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -119,7 +121,7 @@ public class LeaseTermsTest {
         }
     }
 
-    public static class NewLeaseTerm extends LeaseTermsTest {
+    public static class ValidateNewLeaseTerm extends LeaseTermsTest {
 
         @Before
         public void setUp(){
@@ -149,8 +151,6 @@ public class LeaseTermsTest {
             assertThat(leaseTerms.validateNewLeaseTerm(leaseItem, previous, startDate, endDate), is(value));
         }
 
-
     }
-
 
 }

@@ -57,6 +57,11 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @Override
+    protected boolean allowOpenEndDate(){
+        return false;
+    }
+
     private boolean overridePayableValue;
 
     public boolean isOverridePayableValue() {

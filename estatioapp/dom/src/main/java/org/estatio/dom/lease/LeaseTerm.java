@@ -29,7 +29,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Query;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -210,6 +209,10 @@ public abstract class LeaseTerm
         }
     }
 
+    protected boolean allowOpenEndDate(){
+        return true;
+    }
+
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseTerm> changeDates = new WithIntervalMutable.Helper<>(this);
@@ -219,7 +222,7 @@ public abstract class LeaseTerm
     }
 
     @Override
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, hidden = Where.EVERYWHERE)
     public LeaseTerm changeDates(
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {

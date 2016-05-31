@@ -58,7 +58,13 @@ public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
             previous.setNext(leaseTerm);
         }
         leaseTerm.modifyStartDate(startDate);
-        leaseTerm.modifyEndDate(endDate);
+
+        if (endDate == null && !leaseTerm.allowOpenEndDate()){
+            LocalDate nextEndDate = leaseTerm.getFrequency().nextDate(startDate).minusDays(1);
+            leaseTerm.modifyEndDate(nextEndDate);
+        } else {
+            leaseTerm.modifyEndDate(endDate);
+        }
         // TOFIX: When changing the user in the integration test from 'tester' to 'estatio-admin' the getPrevious method returns null. Setting both sides of the bi-directional relationship makes them pass.
 
         leaseTerm.initialize();

@@ -192,4 +192,16 @@ public class LeaseTermForTaxTest {
         }
     }
 
+    public static class AllowsOpenEndate extends LeaseTermForTaxTest {
+
+        @Test
+        public void noOpenEndDateAllowed() {
+            //given, when
+            LeaseTermForTax leaseTermForTax = new LeaseTermForTax();
+            //then
+            assertFalse(leaseTermForTax.allowOpenEndDate());
+        }
+
+    }
+
 }

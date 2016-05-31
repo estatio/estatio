@@ -21,6 +21,8 @@ package org.estatio.integtests.lease;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.inject.Inject;
+
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,9 +32,11 @@ import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -115,5 +119,19 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
             assertThat(results.size(), is(1));
             assertThat(results.get(0), is(lease.getItems().first().getTerms().first().getStartDate()));
         }
+    }
+
+    public static class NewLeaseTermWithMandatoryEndDate extends LeaseTermsTest {
+
+        @Test
+        public void newLeaseTermWithMandatoryEndDateTest() {
+            // given
+            LeaseItem taxItem = lease.findFirstItemOfType(LeaseItemType.TAX);
+            // when
+            LeaseTermForTax taxTerm = (LeaseTermForTax) taxItem.newTerm(new LocalDate(2016,01,01), null);
+            // then
+            Assertions.assertThat(taxTerm.getEndDate()).isEqualTo(new LocalDate(2016,12,31));
+        }
+
     }
 }
