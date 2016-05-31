@@ -145,15 +145,10 @@ public class EstatioAppManifest implements AppManifest {
     protected Map<String, String> appendProps(final Map<String, String> props) {
         // Fundamental principle is that we don't allow editing data.
         props.put("isis.objects.editing","false");
-
         props.put("isis.services.eventbus.implementation", "guava");
-
         props.put("isis.services.audit.objects", "all");
-
         props.put("isis.services.eventbus.allowLateRegistration", "true");
-
         props.put("isis.services.injector.injectPrefix", "true");
-
 
         // uncomment to use log4jdbc instead
         // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",

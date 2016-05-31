@@ -6,8 +6,10 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -51,6 +53,11 @@ public class LeaseItemSource extends EstatioDomainObject<LeaseItemSource> implem
         super("item, sourceItem");
         this.item = item;
         this.sourceItem = sourceItem;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove(){
+        getContainer().remove(this);
     }
 
     @Override

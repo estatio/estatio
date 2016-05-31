@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
@@ -71,6 +72,9 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
 
     @Inject
     InvoiceService invoiceService;
+
+    @Inject
+    TransactionService transactionService;
 
     private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
 
@@ -180,8 +184,6 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             Index index = indexRepository.findByReference("ISTAT-FOI");
             index.newIndexValue(VT.ld(2013, 11, 1), VT.bd(110));
             index.newIndexValue(VT.ld(2014, 12, 1), VT.bd(115));
-
-            nextTransaction();
 
             lease.verifyUntil(VT.ld(2015, 3, 31));
             final LeaseTermForIndexable term = (LeaseTermForIndexable) rItem.findTerm(VT.ld(2015, 1, 1));
