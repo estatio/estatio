@@ -29,12 +29,14 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -165,6 +167,16 @@ public class FinancialAccount
     }
 
     // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public FinancialAccount changeName(final String name){
+        setName(name);
+        return this;
+    }
+
+    public String default0ChangeName(){
+        return getName();
+    }
 
     @Inject
     private FinancialAccountTransactions financialAccountTransactions;

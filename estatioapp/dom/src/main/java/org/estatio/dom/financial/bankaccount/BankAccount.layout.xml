@@ -3,29 +3,30 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="verifyIban"/>
-            <ns2:action id="newAccount"/>
-            <ns2:action id="findTransaction"/>
-            <ns2:action id="changeOwner"/>
-            <ns2:action id="balance"/>
-            <ns2:action id="refresh"/>
-            <ns2:action id="links"/>
-            <ns2:action id="remove"/>
         </col>
     </row>
     <row>
-        <col span="6">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+        <col span="4">
+            <ns2:fieldSet name="Bank Account" id="bankAccount">
+                <ns2:action id="newAccount"/>
+                <ns2:action id="remove"/>
+                <ns2:action id="refresh"/>
                 <ns2:property id="reference"/>
                 <ns2:property id="type"/>
-                <ns2:property id="name"/>
-                <ns2:property id="owner"/>
+                <ns2:property id="name">
+                    <ns2:action id="changeName" position="BELOW"/>
+                </ns2:property>
                 <ns2:property id="externalReference">
                     <ns2:action id="change" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="validIban"/>
                 <ns2:property id="balance"/>
                 <ns2:property id="iban"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="owner">
+                    <ns2:action id="changeOwner"/>
+                </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Application Level" id="applicationLevel">
                 <ns2:property id="applicationTenancy"/>
@@ -41,7 +42,7 @@
                 <ns2:property id="datanucleusVersionTimestamp"/>
             </ns2:fieldSet>
         </col>
-        <col span="6">
+        <col span="8">
             <ns2:fieldSet name="Account Details" id="accountDetails">
                 <ns2:property id="bank"/>
                 <ns2:property id="bankAccountType"/>
@@ -51,10 +52,13 @@
                 <ns2:property id="branchCode"/>
                 <ns2:property id="accountNumber"/>
             </ns2:fieldSet>
+            <ns2:collection id="fixedAssets"/>
+            <ns2:collection id="transactions">
+                <ns2:action id="findTransaction"/>
+            </ns2:collection>
         </col>
         <col span="12" unreferencedCollections="true">
-            <ns2:collection id="fixedAssets"/>
-            <ns2:collection id="transactions"/>
+
         </col>
     </row>
 </grid>

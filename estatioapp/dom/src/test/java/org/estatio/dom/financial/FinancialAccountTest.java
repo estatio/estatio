@@ -20,8 +20,15 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyForTesting;
 
 public class FinancialAccountTest {
 
@@ -53,6 +60,47 @@ public class FinancialAccountTest {
             fa.setType(type);
             fa.setReference(reference);
             return fa;
+        }
+
+    }
+
+    public static class ChangeName {
+
+        FinancialAccount financialAccount;
+        String name;
+
+        @Before
+        public void setup(){
+
+            financialAccount = new FinancialAccount();
+            name = "some name";
+            financialAccount.setName(name);
+
+        }
+
+        @Test
+        public void changeName(){
+
+            // given
+            Assertions.assertThat(financialAccount.getName()).isEqualTo(name);
+            // when
+            financialAccount.changeName("some other name");
+            // then
+            Assertions.assertThat(financialAccount.getName()).isEqualTo("some other name");
+
+
+        }
+
+    }
+
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            final FinancialAccount pojo = new FinancialAccount();
+            newPojoTester()
+                    .withFixture(pojos(Party.class, PartyForTesting.class))
+                    .exercise(pojo);
         }
 
     }

@@ -3,36 +3,45 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="newAccount"/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="findTransaction"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="downloadJdoMetadata"/>
-            <ns2:action id="changeOwner"/>
-            <ns2:action id="balance"/>
-            <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
+            <ns2:fieldSet name="Financial Account" id="financialAccount">
+                <ns2:action id="newAccount"/>
+                <ns2:property id="name">
+                    <ns2:action id="changeName"/>
+                </ns2:property>
+                <ns2:property id="reference"/>
+                <ns2:property id="owner">
+                    <ns2:action id="changeOwner"/>
+                </ns2:property>
+                <ns2:property id="type"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Balance" id="balance">
+                <ns2:property id="balance"/>
+            </ns2:fieldSet>
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="externalReference"/>
-                <ns2:property id="owner"/>
-                <ns2:property id="reference"/>
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="METADATA" id="metadata" unreferencedProperties="true">
                 <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="balance"/>
                 <ns2:property id="versionSequence"/>
-                <ns2:property id="name"/>
                 <ns2:property id="datanucleusId"/>
                 <ns2:property id="datanucleusVersionTimestamp"/>
                 <ns2:property id="id"/>
-                <ns2:property id="applicationTenancy"/>
-                <ns2:property id="type"/>
             </ns2:fieldSet>
         </col>
-        <col span="8" unreferencedCollections="true">
-            <ns2:collection id="fixedAssets"/>
-            <ns2:collection id="transactions"/>
+        <col span="8">
+            <ns2:collection id="fixedAssets" defaultView="table"/>
+            <ns2:collection id="transactions" defaultView="table">
+                <ns2:action id="findTransaction"/>
+            </ns2:collection>
+        </col>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true">
         </col>
     </row>
 </grid>
