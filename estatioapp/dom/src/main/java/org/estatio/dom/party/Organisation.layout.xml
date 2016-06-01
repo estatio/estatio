@@ -14,7 +14,11 @@
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="reference"/>
-                <ns2:property id="name"/>
+                <ns2:property id="name">
+                    <ns2:action id="changeName">
+                        <ns2:named>Change</ns2:named>
+                    </ns2:action>
+                </ns2:property>
                 <ns2:property id="applicationTenancyPath"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Registrations" id="registrations">
@@ -42,11 +46,32 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="communicationChannels"/>
-            <ns2:collection id="relationships">
-                <ns2:action id="newRelationship"/>
-                <ns2:action id="newRelatedPerson"/>
-            </ns2:collection>
+            <tabGroup>
+                <tab name="Communication Channels">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="communicationChannels"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Relationships">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="relationships">
+                                <ns2:action id="newRelationship"/>
+                                <ns2:action id="newRelatedPerson"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Previous Names">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="previousNames"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
             <ns2:collection id="currentLeases">
                 <ns2:action id="allLeases"/>
             </ns2:collection>

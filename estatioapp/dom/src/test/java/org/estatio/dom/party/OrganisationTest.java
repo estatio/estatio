@@ -18,10 +18,17 @@
  */
 package org.estatio.dom.party;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import java.util.TreeSet;
+
+import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrganisationTest {
 
@@ -32,6 +39,53 @@ public class OrganisationTest {
             newPojoTester()
                     .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Organisation());
+        }
+    }
+
+    public static class OrganisationPreviousNameCompareTo extends OrganisationTest {
+
+        private OrganisationPreviousName firstOrganisationPreviousName;
+
+        private OrganisationPreviousName secondOrganisationPreviousName;
+
+        @Before
+        public void setUp() throws Exception {
+            firstOrganisationPreviousName = new OrganisationPreviousName();
+            secondOrganisationPreviousName = new OrganisationPreviousName();
+
+            firstOrganisationPreviousName.setName("Alpha");
+            secondOrganisationPreviousName.setName("Beta");
+        }
+
+        @Test
+        public void endDateOfFirstLaterThanSecond() throws Exception {
+            firstOrganisationPreviousName.setEndDate(new LocalDate(2015, 1, 1));
+            secondOrganisationPreviousName.setEndDate(new LocalDate(2014, 1, 1));
+
+            assertThat(firstOrganisationPreviousName.compareTo(secondOrganisationPreviousName)).isEqualTo(1);
+        }
+
+        @Test
+        public void endDateOfFirstBeforeSecond() throws Exception {
+            firstOrganisationPreviousName.setEndDate(new LocalDate(2014, 1, 1));
+            secondOrganisationPreviousName.setEndDate(new LocalDate(2015, 1, 1));
+
+            assertThat(firstOrganisationPreviousName.compareTo(secondOrganisationPreviousName)).isEqualTo(-1);
+        }
+
+        @Test
+        public void equalEndDates() throws Exception {
+            firstOrganisationPreviousName.setEndDate(new LocalDate(2015, 1, 1));
+            secondOrganisationPreviousName.setEndDate(new LocalDate(2015, 1, 1));
+
+            // On equal end dates, sort alphabetically by name
+            assertThat(firstOrganisationPreviousName.compareTo(secondOrganisationPreviousName)).isEqualTo(-1);
+
+            TreeSet<OrganisationPreviousName> previousNames = new TreeSet<>();
+            previousNames.add(secondOrganisationPreviousName);
+            previousNames.add(firstOrganisationPreviousName);
+
+            assertThat(previousNames.first().getName()).isEqualToIgnoringCase("Alpha");
         }
     }
 }

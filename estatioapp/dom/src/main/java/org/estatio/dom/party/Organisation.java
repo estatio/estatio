@@ -18,8 +18,16 @@
  */
 package org.estatio.dom.party;
 
-import javax.jdo.annotations.InheritanceStrategy;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import javax.inject.Inject;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -82,12 +90,16 @@ public class Organisation
 
     // //////////////////////////////////////
 
-    @Property(optionality = Optionality.OPTIONAL)
+    @Persistent(mappedBy = "organisation")
+    @CollectionLayout(defaultView = "table")
+    @Getter @Setter
+    private SortedSet<OrganisationPreviousName> previousNames = new TreeSet<>();
+
+    // //////////////////////////////////////
+
     public Organisation change(
-            final String name,
             final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
             final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
-        setName(name);
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);
 
@@ -95,15 +107,42 @@ public class Organisation
     }
 
     public String default0Change() {
-        return getName();
-    }
-
-    public String default1Change() {
         return getVatCode();
     }
 
-    public String default2Change() {
+    public String default1Change() {
         return getFiscalCode();
     }
 
+    public Organisation changeName(
+            final String name,
+            final LocalDate previousNameEndDate) {
+        if (!name.equals(getName())) {
+            OrganisationPreviousName organisationPreviousName = organisationPreviousNameRepository.newOrganisationPreviousName(getName(), previousNameEndDate);
+            getPreviousNames().add(organisationPreviousName);
+        }
+
+        setName(name);
+
+        return this;
+    }
+
+    public String default0ChangeName() {
+        return getName();
+    }
+
+    public LocalDate default1ChangeName() {
+        return getClockService().now();
+    }
+
+    public String validate0ChangeName(final String name) {
+        return name.equals(this.getName()) ? "New name must be different from the current name" : null;
+    }
+
+    public String validate1ChangeName(final LocalDate previousNameEndDate) {
+        return previousNameEndDate.isAfter(getClockService().now()) ? "You can not select a future end date" : null;
+    }
+
+    @Inject
+    OrganisationPreviousNameRepository organisationPreviousNameRepository;
 }

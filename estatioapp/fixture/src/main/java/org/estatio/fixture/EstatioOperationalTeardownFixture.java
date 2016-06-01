@@ -67,6 +67,7 @@ import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
 import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.OrganisationPreviousName;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
@@ -149,6 +150,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(FixedAssetRegistration.class);
         deleteFrom(FixedAsset.class);
 
+        deleteFrom(OrganisationPreviousName.class);
         deleteFrom(PartyRegistration.class);
         deleteFrom(PartyRelationship.class);
         deleteFrom(Organisation.class);
