@@ -2,6 +2,7 @@ package org.estatio.dom.financial;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -12,16 +13,26 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,6 +69,14 @@ public class FinancialAccountTransaction
 
     public FinancialAccountTransaction() {
         super("financialAccount,transactionDate,description,amount");
+    }
+
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getFinancialAccount())
+                .withName(getAmount().toString())
+                .withName(getTransactionDate().toString())
+                .toString();
     }
 
     // //////////////////////////////////////
@@ -106,5 +125,38 @@ public class FinancialAccountTransaction
     @MemberOrder(sequence = "5")
     @Getter @Setter
     BigDecimal amount;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public FinancialAccountTransaction changeTransactionDetails(
+            final BigDecimal amount,
+            final LocalDate transactionDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String description
+            ){
+        setAmount(amount);
+        setDescription(description);
+        setTransactionDate(transactionDate);
+        return this;
+    }
+
+    public boolean hideChangeTransactionDetails(
+            final BigDecimal amount,
+            final LocalDate transactionDate,
+            final String description){
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+    }
+
+    public BigDecimal default0ChangeTransactionDetails(){
+        return getAmount().setScale(JdoColumnScale.MONEY);
+    }
+
+    public LocalDate default1ChangeTransactionDetails(){
+        return getTransactionDate();
+    }
+
+    public String default2ChangeTransactionDetails(){
+        return getDescription();
+    }
+
 
 }

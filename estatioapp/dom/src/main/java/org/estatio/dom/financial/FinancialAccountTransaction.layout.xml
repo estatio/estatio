@@ -3,28 +3,33 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="downloadJdoMetadata"/>
-            <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="sequence"/>
-                <ns2:property id="amount"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="versionSequence"/>
+            <ns2:fieldSet name="Financial Account" id="financialAccount" unreferencedProperties="true">
                 <ns2:property id="financialAccount"/>
-                <ns2:property id="description"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-                <ns2:property id="id"/>
                 <ns2:property id="applicationTenancy"/>
-                <ns2:property id="transactionDate"/>
+                <ns2:property id="sequence"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
             </ns2:fieldSet>
         </col>
-        <col span="8" unreferencedCollections="true"/>
+        <col span="4">
+            <ns2:fieldSet name="Transaction Details" id="details">
+                <ns2:property id="amount"/>
+                <ns2:property id="transactionDate"/>
+                <ns2:property id="description"/>
+                <ns2:action id="changeTransactionDetails"/>
+            </ns2:fieldSet>
+        </col>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true"/>
     </row>
 </grid>
