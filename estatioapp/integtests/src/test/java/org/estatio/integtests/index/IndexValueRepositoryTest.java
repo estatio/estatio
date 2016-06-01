@@ -18,8 +18,6 @@
  */
 package org.estatio.integtests.index;
 
-import java.math.BigDecimal;
-
 import javax.inject.Inject;
 
 import org.junit.Before;
@@ -45,26 +43,6 @@ public class IndexValueRepositoryTest extends EstatioIntegrationTest {
     @Inject
     IndexValueRepository indexValueRepository;
 
-
-    public static class Findxxx extends IndexValueRepositoryTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new EstatioBaseLineFixture());
-        }
-
-        @Test
-        public void happyCase() throws Exception {
-            // given
-            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
-            // when
-            index.newIndexValue(VT.ld(2016, 1, 1), new BigDecimal("100"));
-            index.newIndexValue(VT.ld(2016, 1, 1), new BigDecimal("100"));
-            // then
-            assertThat(indexValueRepository.findByIndexAndStartDate(index,VT.ld(2016, 1, 1)).getValue(), is( new BigDecimal("100")));
-        }
-
-    }
 
     public static class FindIndexValueByIndexAndStartDate extends IndexValueRepositoryTest {
 
