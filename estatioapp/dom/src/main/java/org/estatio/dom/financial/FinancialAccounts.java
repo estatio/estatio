@@ -60,6 +60,7 @@ public class FinancialAccounts extends UdoDomainRepositoryAndFactory<FinancialAc
         financialAccount.setReference(reference);
         financialAccount.setName(name);
         financialAccount.setOwner(owner);
+        persistIfNotAlready(financialAccount);
         return financialAccount;
     }
 
