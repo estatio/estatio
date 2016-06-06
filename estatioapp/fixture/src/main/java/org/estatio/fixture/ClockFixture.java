@@ -99,7 +99,9 @@ public class ClockFixture extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        Assert.assertTrue(Clock.getInstance() instanceof FixtureClock);
+        if(!(Clock.getInstance() instanceof FixtureClock)) {
+            throw new IllegalStateException("Clock has not been initialized as a FixtureClock");
+        }
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
 
         if(localDateTime != null) {
