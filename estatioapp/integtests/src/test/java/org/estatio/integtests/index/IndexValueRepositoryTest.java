@@ -28,7 +28,8 @@ import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValueRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioOperationalTeardownFixture;
+import org.estatio.fixture.EstatioRefDataSetupFixture;
+import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
@@ -69,8 +70,8 @@ public class IndexValueRepositoryTest extends EstatioIntegrationTest {
             runFixtureScript(
                     // tearing down because of a failure which suggests that one of the other tests is creating new index values...
                     // (not sure which one though :-( )
-                    new EstatioOperationalTeardownFixture(),
-                    new EstatioBaseLineFixture()
+                    new EstatioRefDataTeardownFixture(),
+                    new EstatioRefDataSetupFixture()
             );
         }
 
