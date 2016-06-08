@@ -17,23 +17,29 @@
 
 package org.estatio.dom.budgeting.allocation;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by jodo on 30/04/15.
- */
 public class BudgetItemAllocationRepositoryTest {
 
     FinderInteraction finderInteraction;
@@ -121,6 +127,59 @@ public class BudgetItemAllocationRepositoryTest {
             assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem"), is((Object) budgetItem));
             assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable"), is((Object) keyTable));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+        }
+
+    }
+
+    public static class FindOrCreateBudgetItemAllocationNewAllocation extends BudgetItemAllocationRepositoryTest {
+
+        @Rule
+        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+        @Mock
+        private DomainObjectContainer mockContainer;
+
+        BudgetItemAllocationRepository budgetItemAllocationRepository1;
+
+        @Before
+        public void setup() {
+            budgetItemAllocationRepository1 = new BudgetItemAllocationRepository(){
+                @Override
+                public BudgetItemAllocation findByChargeAndBudgetItemAndKeyTable(final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable){
+                    return  null;
+                }
+            };
+            budgetItemAllocationRepository1.setContainer(mockContainer);
+        }
+
+        @Test
+        public void findOrCreateXxxCreatingNewAllocation() throws Exception {
+
+            final KeyTable keyTable = new KeyTable();
+            final Charge charge = new Charge();
+            final BudgetItem budgetItem = new BudgetItem();
+            final BigDecimal percentage = new BigDecimal("100.000000");
+            final BudgetItemAllocation budgetItemAllocation = new BudgetItemAllocation();
+
+            // expect
+            context.checking(new Expectations(){
+                {
+                    oneOf(mockContainer).newTransientInstance(BudgetItemAllocation.class);
+                    will(returnValue(budgetItemAllocation));
+                    oneOf(mockContainer).persistIfNotAlready(budgetItemAllocation);
+                }
+
+            });
+
+            // when
+            BudgetItemAllocation newBudgetItemAllocation = budgetItemAllocationRepository1.findOrCreateBudgetItemAllocation(budgetItem, charge, keyTable, percentage);
+
+            // then
+            Assertions.assertThat(newBudgetItemAllocation.getCharge()).isEqualTo(charge);
+            Assertions.assertThat(newBudgetItemAllocation.getBudgetItem()).isEqualTo(budgetItem);
+            Assertions.assertThat(newBudgetItemAllocation.getKeyTable()).isEqualTo(keyTable);
+            Assertions.assertThat(newBudgetItemAllocation.getPercentage()).isEqualTo(percentage);
+
         }
 
     }

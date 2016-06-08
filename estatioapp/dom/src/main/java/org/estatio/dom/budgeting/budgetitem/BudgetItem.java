@@ -19,6 +19,7 @@
 package org.estatio.dom.budgeting.budgetitem;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -33,18 +34,25 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
+import org.estatio.dom.budgeting.api.BudgetItemAllocationCreator;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -79,16 +87,17 @@ import lombok.Setter;
                     + "&& budget.startDate == :startDate")
 })
 @DomainObject()
-public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty {
+public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty, BudgetItemAllocationCreator {
 
     public BudgetItem() {
         super("budget, charge, budgetedValue");
     }
 
-    public TranslatableString title() {
-        return TranslatableString.tr(
-                "{name}", "name",
-                "Budget item ");
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getBudget())
+                .withName(getCharge().getReference())
+                .toString();
     }
 
     @Column(name="budgetId", allowsNull = "false")
@@ -170,13 +179,68 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     @Getter @Setter
     private SortedSet<BudgetItemAllocation> budgetItemAllocations = new TreeSet<>();
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public BudgetItemAllocation createBudgetItemAllocation(
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage) {
+        return budgetItemAllocationRepository.newBudgetItemAllocation(charge, keyTable, this, percentage);
+    }
+
+    public List<Charge> choices0CreateBudgetItemAllocation(
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage
+    ){
+        return charges.allCharges();
+    }
+
+    public List<KeyTable> choices1CreateBudgetItemAllocation(
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage) {
+        return keyTableRepository.findByBudget(getBudget());
+    }
+
+    public BigDecimal default2CreateBudgetItemAllocation(
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage) {
+        return new BigDecimal(100);
+    }
+
+    public String validateCreateBudgetItemAllocation(
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage){
+        return budgetItemAllocationRepository.validateNewBudgetItemAllocation(charge,keyTable, this, percentage);
+    }
+
+
+
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getBudget().getApplicationTenancy();
     }
 
+    @Override
+    @Programmatic
+    public BudgetItemAllocation findOrCreateBudgetItemAllocation(final Charge allocationCharge, final KeyTable keyTable, final BigDecimal percentage) {
+        return budgetItemAllocationRepository.findOrCreateBudgetItemAllocation(this, allocationCharge, keyTable, percentage);
+    }
+
     @Inject
     private BudgetItemRepository budgetItemRepository;
+
+    @Inject
+    private BudgetItemAllocationRepository budgetItemAllocationRepository;
+
+    @Inject
+    private KeyTableRepository keyTableRepository;
+
+    @Inject
+    private Charges charges;
+
 
 }

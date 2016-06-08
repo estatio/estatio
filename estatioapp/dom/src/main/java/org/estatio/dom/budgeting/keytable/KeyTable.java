@@ -60,6 +60,7 @@ import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.DistributionService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -101,7 +102,11 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     }
 
     public String title() {
-        return this.getName();
+        return TitleBuilder
+                .start()
+                .withParent(getBudget())
+                .withName(getName())
+                .toString();
     }
 
     public String toString() {

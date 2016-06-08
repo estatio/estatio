@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -43,6 +42,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -72,11 +72,13 @@ public class KeyItem extends EstatioDomainObject<KeyItem>
         super("keyTable, unit, value, sourceValue");
     }
 
-    //region > identificatiom
-    public TranslatableString title() {
-        return TranslatableString.tr("{name}", "name", "Key item for ".concat(getUnit().getName()));
+    public String title() {
+        return TitleBuilder
+                .start()
+                .withParent(getKeyTable())
+                .withName(getUnit())
+                .toString();
     }
-    //endregion
 
     @Column(name="keyTableId", allowsNull = "false")
     @PropertyLayout(hidden = Where.PARENTED_TABLES )

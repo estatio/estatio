@@ -14,35 +14,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.app.services.budget;
+package org.estatio.dom.budgeting.viewmodels;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.ViewModel;
+
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.*;
+import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
-import javax.jdo.annotations.Column;
-import java.math.BigDecimal;
-
-enum Status {
-    NOT_FOUND,
-    UPDATED,
-    DELETED,
-    UNCHANGED,
-    ADDED;
-}
+import lombok.Getter;
+import lombok.Setter;
 
 @ViewModel
 @DomainObjectLayout(
@@ -78,7 +83,7 @@ public class KeyItemImportExportLineItem
     }
 
     public String title() {
-        return "";
+        return "key item import / export";
     }
 
     @MemberOrder(sequence = "1")
@@ -121,7 +126,8 @@ public class KeyItemImportExportLineItem
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
-            invokeOn = InvokeOn.OBJECT_AND_COLLECTION
+            invokeOn = InvokeOn.OBJECT_AND_COLLECTION,
+            publishing = Publishing.DISABLED
     )
     public KeyItem apply() {
 
@@ -233,16 +239,8 @@ public class KeyItemImportExportLineItem
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private KeyItemImportExportService keyItemImportExportService;
-
-    @javax.inject.Inject
     private KeyItemRepository keyItemRepository;
 
-    @javax.inject.Inject
-    private ActionInvocationContext actionInvocationContext;
-
-    @Inject
-    private UnitMenu unitMenu;
     @Inject
     private UnitRepository unitRepository;
 

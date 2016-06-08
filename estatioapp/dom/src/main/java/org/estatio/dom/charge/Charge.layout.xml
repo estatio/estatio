@@ -3,8 +3,6 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="createBudgetItemAllocation"/>
-            <ns2:action id="newBudgetItem"/>
             <ns2:action id="links"/>
         </col>
     </row>
@@ -36,7 +34,6 @@
                 <ns2:property id="datanucleusVersionTimestamp"/>
             </ns2:fieldSet>
         </col>
-        <col span="6"/>
         <col span="12" unreferencedCollections="true"/>
     </row>
 </grid>

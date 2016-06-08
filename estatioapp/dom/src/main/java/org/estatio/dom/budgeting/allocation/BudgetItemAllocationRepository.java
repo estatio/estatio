@@ -18,14 +18,22 @@
  */
 package org.estatio.dom.budgeting.allocation;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @DomainService(repositoryFor = BudgetItemAllocation.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -86,6 +94,15 @@ public class BudgetItemAllocationRepository extends UdoDomainRepositoryAndFactor
     @Programmatic
     public BudgetItemAllocation findByChargeAndBudgetItemAndKeyTable(final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable) {
         return uniqueMatch("findByChargeAndBudgetItemAndKeyTable", "charge", charge, "budgetItem", budgetItem, "keyTable", keyTable);
+    }
+
+    @Programmatic
+    public BudgetItemAllocation findOrCreateBudgetItemAllocation(final BudgetItem budgetItem, final Charge allocationCharge, final KeyTable keyTable, final BigDecimal percentage){
+        final BudgetItemAllocation budgetItemAllocation = findByChargeAndBudgetItemAndKeyTable(allocationCharge, budgetItem, keyTable);
+        if (budgetItemAllocation == null) {
+            return newBudgetItemAllocation(allocationCharge, keyTable, budgetItem, percentage);
+        }
+        return budgetItemAllocation;
     }
 
 }

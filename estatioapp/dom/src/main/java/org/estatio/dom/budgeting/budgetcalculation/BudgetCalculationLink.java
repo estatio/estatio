@@ -18,18 +18,28 @@
  */
 package org.estatio.dom.budgeting.budgetcalculation;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import javax.jdo.annotations.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -61,6 +71,10 @@ public class BudgetCalculationLink extends EstatioDomainObject<BudgetCalculation
         super("budgetCalculation, leaseTerm");
     }
 
+    public String title(){
+        return "";
+    }
+
     @Getter @Setter
     @Column(allowsNull = "false", name="budgetCalculationId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
@@ -82,8 +96,5 @@ public class BudgetCalculationLink extends EstatioDomainObject<BudgetCalculation
         getContainer().remove(this);
     }
 
-    public String title(){
-        return "Budget calculation link";
-    }
 }
 

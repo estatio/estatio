@@ -16,24 +16,36 @@
  */
 package org.estatio.app.services.budget;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.value.Blob;
-import org.estatio.app.EstatioViewModel;
-import org.estatio.app.services.budget.viewmodels.ChargeImport;
-import org.isisaddons.module.excel.dom.ExcelService;
+import java.util.List;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.ViewModelLayout;
+import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.module.excel.dom.ExcelService;
+
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.charge.viewmodels.ChargeImport;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL
 )
 @DomainObjectLayout(
-        named = "Import manager",
+        named = "Import manager for charges",
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-@MemberGroupLayout(left = {"File", "Criteria"})
+@ViewModelLayout(paged = -1)
 public class ChargeImportManager extends EstatioViewModel {
 
     public String title() {
@@ -57,26 +69,15 @@ public class ChargeImportManager extends EstatioViewModel {
     }
     //endregion
 
-
-
-    // //////////////////////////////////////
-    // import (action)
-    // //////////////////////////////////////
-
     @Action
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
+    @CollectionLayout(paged = -1)
     public List<ChargeImport> importBlob(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
         List<ChargeImport> lineItems =
                 excelService.fromExcel(spreadsheet, ChargeImport.class);
-        container.informUser(lineItems.size() + " items imported");
         return lineItems;
     }
-
-
-    // //////////////////////////////////////
-    // Injected Services
-    // //////////////////////////////////////
 
     @Inject
     private DomainObjectContainer container;

@@ -38,7 +38,9 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -57,10 +59,16 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.api.BudgetItemCreator;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationLink;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
+import org.estatio.dom.budgeting.keytable.FoundationValueType;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
+import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.budgeting.viewmodels.BudgetOverview;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancies;
@@ -96,7 +104,7 @@ import lombok.Setter;
 })
 @Unique(name = "Budget_property_startDate_UNQ", members = { "property", "startDate" })
 @DomainObject()
-public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty {
+public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty, BudgetItemCreator {
 
     public Budget() {
         super("property, startDate");
@@ -185,9 +193,29 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
     @Getter @Setter
     private SortedSet<BudgetItem> items = new TreeSet<>();
 
+    @CollectionLayout(render = RenderType.EAGERLY)
+    @Persistent(mappedBy = "budget", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<KeyTable> keyTables = new TreeSet<>();
+
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Override public ApplicationTenancy getApplicationTenancy() {
         return getProperty().getApplicationTenancy();
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @MemberOrder(name = "items", sequence = "1")
+    public BudgetItem newBudgetItem(
+            final BigDecimal budgetedValue,
+            final Charge charge) {
+        return budgetItemRepository.newBudgetItem(this, budgetedValue, charge);
+    }
+
+    public String validateNewBudgetItem(
+            final BigDecimal budgetedValue,
+            final Charge charge) {
+        return budgetItemRepository.validateNewBudgetItem(this,budgetedValue,charge);
     }
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -199,6 +227,23 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         }
 
         return this;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public KeyTable createKeyTable(
+            final String name,
+            final FoundationValueType foundationValueType,
+            final KeyValueMethod keyValueMethod,
+            final Integer numberOfDigits) {
+        return keyTableRepository.newKeyTable(this, name, foundationValueType, keyValueMethod, numberOfDigits);
+    }
+
+    public String validateCreateKeyTable(
+            final String name,
+            final FoundationValueType foundationValueType,
+            final KeyValueMethod keyValueMethod,
+            final Integer numberOfDigits) {
+        return keyTableRepository.validateNewKeyTable(this, name, foundationValueType, keyValueMethod, numberOfDigits);
     }
 
     @Programmatic
@@ -256,6 +301,26 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return result;
     }
 
+    @Override
+    @Programmatic
+    public BudgetItem findOrCreateBudgetItem(
+            final Charge budgetItemCharge,
+            final BigDecimal budgetedValue) {
+        return budgetItemRepository.findOrCreateBudgetItem(this, budgetItemCharge, budgetedValue);
+    }
+
+    @Override
+    @Programmatic
+    public BudgetItem updateOrCreateBudgetItem(
+            final Charge budgetItemCharge,
+            final BigDecimal budgetedValue,
+            final BigDecimal auditedValue) {
+        return budgetItemRepository.updateOrCreateBudgetItem(this, budgetItemCharge, budgetedValue, auditedValue);
+    }
+
+    @Inject
+    private BudgetItemRepository budgetItemRepository;
+
     @Inject
     private BudgetRepository budgetRepository;
 
@@ -267,5 +332,8 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
+
+    @Inject
+    private KeyTableRepository keyTableRepository;
 
 }

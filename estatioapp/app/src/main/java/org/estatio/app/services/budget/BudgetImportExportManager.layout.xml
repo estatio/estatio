@@ -3,19 +3,21 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="importBlob"/>
-            <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="File" id="file" unreferencedProperties="true">
+            <ns2:fieldSet name="Import Export" id="importExport" unreferencedProperties="true">
+                <ns2:action id="importBudget"/>
+                <ns2:action id="exportBudget"/>
                 <ns2:property id="name"/>
+                <ns2:property id="budget"/>
+                <ns2:property id="fileName"/>
             </ns2:fieldSet>
-            <ns2:fieldSet name="Criteria" id="criteria"/>
         </col>
-        <col span="8" unreferencedCollections="true"/>
+        <col span="8" unreferencedCollections="true">
+            <ns2:collection id="lines">
+            </ns2:collection>
+        </col>
     </row>
 </grid>

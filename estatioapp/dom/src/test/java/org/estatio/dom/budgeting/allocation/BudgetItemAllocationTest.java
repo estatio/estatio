@@ -17,6 +17,11 @@
 
 package org.estatio.dom.budgeting.allocation;
 
+import java.math.BigDecimal;
+
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.ChargeForTesting;
@@ -26,17 +31,11 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItemForTesting;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.charge.Charge;
-import org.junit.Test;
-
-import java.math.BigDecimal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by jodo on 22/04/15.
- */
 public class BudgetItemAllocationTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
@@ -69,6 +68,19 @@ public class BudgetItemAllocationTest {
             assertThat(budgetItemAllocation.validateUpdatePercentage(BigDecimal.valueOf(-0.01)), is("percentage should be in range 0 - 100"));
             assertThat(budgetItemAllocation.validateUpdatePercentage(new BigDecimal(100)), is(nullValue()));
             assertThat(budgetItemAllocation.validateUpdatePercentage(new BigDecimal(0)), is(nullValue()));
+        }
+
+        @Test
+        public void precisionTest() throws Exception {
+
+            //given
+            final BigDecimal percentage = new BigDecimal("100");
+            //when
+            budgetItemAllocation.updatePercentage(percentage);
+            //then
+            Assertions.assertThat(budgetItemAllocation.getPercentage()).isEqualTo(percentage.setScale(6));
+            Assertions.assertThat(budgetItemAllocation.getPercentage()).isEqualTo(new BigDecimal("100.000000"));
+
         }
 
     }

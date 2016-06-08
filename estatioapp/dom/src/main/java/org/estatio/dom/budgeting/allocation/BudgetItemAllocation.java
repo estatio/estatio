@@ -91,7 +91,7 @@ public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocati
                 .concat(" on "))
                 .concat(getCharge().getName()
                 .concat(" for ")
-                .concat(getPercentage().setScale(0).toString()
+                .concat(getPercentage().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
                 .concat("%")));
     }
     //endregion

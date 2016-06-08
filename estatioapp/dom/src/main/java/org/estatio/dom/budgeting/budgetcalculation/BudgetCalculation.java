@@ -18,25 +18,48 @@
  */
 package org.estatio.dom.budgeting.budgetcalculation;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.timestamp.Timestampable;
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.Distributable;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import javax.jdo.annotations.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.timestamp.Timestampable;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.budgeting.Distributable;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -74,6 +97,14 @@ public class BudgetCalculation extends EstatioDomainObject<BudgetCalculation> im
 
     public BudgetCalculation() {
         super("budgetItemAllocation, keyItem");
+    }
+
+    public String title(){
+        return TitleBuilder
+                .start()
+                .withName(getBudgetItemAllocation().title())
+                .withName(getValue())
+                .toString();
     }
 
     @Getter @Setter
@@ -134,10 +165,6 @@ public class BudgetCalculation extends EstatioDomainObject<BudgetCalculation> im
     @Programmatic
     public void remove(){
         getContainer().remove(this);
-    }
-
-    public String title(){
-        return "Budget calculation";
     }
 
 }

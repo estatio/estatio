@@ -16,26 +16,25 @@
  */
 package org.estatio.app.services.budget;
 
-
-//import org.apache.isis.applib.annotation.*;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.estatio.dom.budgeting.budget.Budget;
+
 @DomainService(
-        nature = NatureOfService.VIEW_MENU_ONLY
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
 )
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
-public class BudgetSpreadsheetImportMenu {
+public class BudgetImportExportContributions {
 
     @PostConstruct
     public void init() {
@@ -44,34 +43,16 @@ public class BudgetSpreadsheetImportMenu {
         }
     }
 
-    // //////////////////////////////////////
-
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT
+            semantics = SemanticsOf.IDEMPOTENT,
+            publishing = Publishing.DISABLED
     )
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public BudgetImportExportManager importExportBudget(Budget budget) {
 
-    @MemberOrder(sequence = "1")
-    public ChargeImportManager uploadCharges() {
-
-        return new ChargeImportManager();
+        return new BudgetImportExportManager(budget);
 
     }
-
-
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @MemberOrder(sequence = "2")
-    public BudgetImportExportManager uploadBudget() {
-
-        return new BudgetImportExportManager();
-
-    }
-
-
-    // //////////////////////////////////////
-    // Injected Services
-    // //////////////////////////////////////
 
     @javax.inject.Inject
     private ExcelService excelService;

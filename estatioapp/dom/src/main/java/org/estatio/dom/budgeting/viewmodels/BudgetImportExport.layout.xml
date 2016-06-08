@@ -3,21 +3,20 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="importData"/>
-            <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="applicationTenancyPath"/>
-                <ns2:property id="chargeTaxReference"/>
-                <ns2:property id="chargeReference"/>
-                <ns2:property id="chargeGroupName"/>
-                <ns2:property id="chargeName"/>
-                <ns2:property id="chargeDescription"/>
+                <ns2:property id="propertyReference"/>
+                <ns2:property id="budgetStartDate"/>
+                <ns2:property id="budgetEndDate"/>
+                <ns2:property id="budgetChargeReference"/>
+                <ns2:property id="budgetedValue"/>
+                <ns2:property id="auditedValue"/>
+                <ns2:property id="keyTableName"/>
+                <ns2:property id="allocationChargeReference"/>
+                <ns2:property id="percentage"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>

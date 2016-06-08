@@ -16,24 +16,42 @@
  */
 package org.estatio.app.services.budget;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.MemberGroupLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.isisaddons.module.excel.dom.ExcelService;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import org.estatio.dom.budgeting.viewmodels.KeyItemImportExportLineItem;
+import org.estatio.dom.budgeting.viewmodels.Status;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL
 )
 @DomainObjectLayout(
-        named = "Import/export manager",
+        named = "Import/export manager for key item",
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @MemberGroupLayout(left = {"File", "Criteria"})
@@ -47,7 +65,7 @@ public class KeyItemImportExportManager extends EstatioViewModel {
     // //////////////////////////////////////
 
     public String title() {
-        return "Import/export manager";
+        return "Import export key items";
     }
 
     public KeyItemImportExportManager() {
@@ -135,7 +153,7 @@ public class KeyItemImportExportManager extends EstatioViewModel {
     // import (action)
     // //////////////////////////////////////
 
-    @Action
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
     @MemberOrder(name = "keyItems", sequence = "2")
     public List<KeyItemImportExportLineItem> importBlob(

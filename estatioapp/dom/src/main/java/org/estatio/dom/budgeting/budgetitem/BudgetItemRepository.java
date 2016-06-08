@@ -18,17 +18,27 @@
  */
 package org.estatio.dom.budgeting.budgetitem;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.charge.Charge;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
 
 @DomainService(repositoryFor = BudgetItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -96,6 +106,26 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
         return uniqueMatch("findByPropertyAndChargeAndStartDate", "property", property, "charge", charge, "startDate", startDate);
     }
 
+    @Programmatic
+    public BudgetItem findOrCreateBudgetItem(final Budget budget, final Charge budgetItemCharge, final BigDecimal budgetedValue) {
+        BudgetItem budgetItem = findByBudgetAndCharge(budget, budgetItemCharge);
+        if (budgetItem == null){
+            return newBudgetItem(budget,budgetedValue,budgetItemCharge);
+        }
+        return budgetItem;
+    }
+
+    @Programmatic
+    public BudgetItem updateOrCreateBudgetItem(final Budget budget, final Charge budgetItemCharge, final BigDecimal budgetedValue, final BigDecimal auditedValue) {
+        BudgetItem budgetItem = findOrCreateBudgetItem(budget, budgetItemCharge, budgetedValue);
+        budgetItem.setBudgetedValue(budgetedValue);
+        if (auditedValue!=null) {
+            budgetItem.setAuditedValue(auditedValue);
+        }
+        return budgetItem;
+    }
+
     @Inject
     BudgetRepository budgetRepository;
+
 }

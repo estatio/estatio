@@ -3,18 +3,17 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="importBlob"/>
-            <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
             <ns2:fieldSet name="File" id="file" unreferencedProperties="true">
                 <ns2:property id="name"/>
+                <ns2:action id="importBlob"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Criteria" id="criteria"/>
+            <ns2:fieldSet name="METADATA" id="metadata">
+            </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>
     </row>

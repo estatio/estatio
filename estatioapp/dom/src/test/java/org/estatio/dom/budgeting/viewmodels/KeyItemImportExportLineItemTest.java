@@ -1,4 +1,4 @@
-package org.estatio.app.services.budget;
+package org.estatio.dom.budgeting.viewmodels;
 
 public class KeyItemImportExportLineItemTest {
 
