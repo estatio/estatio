@@ -49,18 +49,18 @@ public class EstatioRefDataTeardownFixture extends FixtureScript {
         deleteFrom(State.class);
         deleteFrom(Country.class);
 
-        deleteFrom(TaxRate.class);
-        deleteFrom(Tax.class);
-
         deleteFrom(Charge.class);
         deleteFrom(ChargeGroup.class);
+
+        deleteFrom(TaxRate.class);
+        deleteFrom(Tax.class);
 
         deleteFrom(IndexValue.class);
         deleteFrom(IndexBase.class);
         deleteFrom(Index.class);
 
         deleteFrom(Link.class);
-        
+
     }
 
     protected void deleteFrom(final Class cls) {
