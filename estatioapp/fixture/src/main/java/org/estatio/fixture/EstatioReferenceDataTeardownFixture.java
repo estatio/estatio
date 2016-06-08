@@ -35,7 +35,7 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.domlink.Link;
 
-public class EstatioRefDataTeardownFixture extends FixtureScript {
+public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
