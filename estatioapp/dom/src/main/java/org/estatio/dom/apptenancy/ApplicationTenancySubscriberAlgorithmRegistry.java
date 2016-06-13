@@ -38,10 +38,10 @@ import org.estatio.dom.EstatioDomainObject;
  * <pre>
  * add(new ApplicationTenancySubscriberAlgorithm.OnChanged&lt;Agreement&gt;(Agreement.class) {
  *       public void executed(final ApplicationTenancyEventChanged ev, final Agreement source) {
- *         sync(source, agreementRoles.findByAgreement(source));
+ *         sync(source, agreementRoleRepository.findByAgreement(source));
  *         sync(source, agreementRoleCommunicationChannels.findByAgreement(source));
  *       }
- *       private AgreementRoles agreementRoles;
+ *       private AgreementRoles agreementRoleRepository;
  *       private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
  *    });
  *

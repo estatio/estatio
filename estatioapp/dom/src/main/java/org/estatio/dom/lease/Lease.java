@@ -861,7 +861,7 @@ public class Lease
         if (getSecondaryParty() == newLease.getSecondaryParty()) {
             // renew
             for (AgreementRole role : getRoles()) {
-                AgreementRole newRole = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
+                AgreementRole newRole = agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
                 if (newRole != null) {
                     for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : role.getCommunicationChannels()) {
                         newRole.addCommunicationChannel(

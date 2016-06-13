@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -137,7 +138,6 @@ public abstract class Agreement
                 .withReference(getReference())
                 .toString();
     }
-
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Property(regexPattern = RegexValidation.REFERENCE)
@@ -403,35 +403,26 @@ public abstract class Agreement
 
     @Programmatic
     public AgreementRole findRole(final Party party, final AgreementRoleType type, final LocalDate date) {
-        return agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(this, party, type, date);
+        return agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(this, party, type, date);
     }
 
     @Programmatic
     public AgreementRole findRoleWithType(final AgreementRoleType agreementRoleType, final LocalDate date) {
-        return agreementRoles.findByAgreementAndTypeAndContainsDate(this, agreementRoleType, date);
+        return agreementRoleRepository.findByAgreementAndTypeAndContainsDate(this, agreementRoleType, date);
     }
 
     // //////////////////////////////////////
 
-    protected AgreementRepository agreementRepository;
+    @Inject
+    public AgreementRepository agreementRepository;
 
-    public final void injectAgreements(final AgreementRepository agreementRepository) {
-        this.agreementRepository = agreementRepository;
-    }
+    @Inject
+    public AgreementRoleRepository agreementRoleRepository;
 
-    protected AgreementRoleRepository agreementRoles;
+    @Inject
+    public AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    public final void injectAgreementRoles(final AgreementRoleRepository agreementRoles) {
-        this.agreementRoles = agreementRoles;
-    }
-
-    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    public final void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
-        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
-    }
-
-    protected AgreementTypeRepository agreementTypeRepository;
+    @Inject public AgreementTypeRepository agreementTypeRepository;
 
     public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
         this.agreementTypeRepository = agreementTypeRepository;

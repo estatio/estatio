@@ -113,7 +113,7 @@ public class InvoiceCalculationServiceTest {
         TaxRates mockTaxRates;
 
         @Mock
-        AgreementRoleRepository mockAgreementRoles;
+        AgreementRoleRepository mockAgreementRoleRepository;
 
         @Mock
         AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
@@ -144,7 +144,7 @@ public class InvoiceCalculationServiceTest {
             });
 
             lease = new Lease();
-            lease.injectAgreementRoles(mockAgreementRoles);
+            lease.agreementRoleRepository = mockAgreementRoleRepository;
             lease.setStartDate(LEASE_START_DATE);
             lease.setEndDate(LEASE_END_DATE);
 

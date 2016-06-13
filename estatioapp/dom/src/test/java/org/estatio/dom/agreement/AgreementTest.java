@@ -277,7 +277,7 @@ public class AgreementTest {
             });
 
             agreement = new AgreementForSubtypeTesting();
-            agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+            agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
         }
 
         @Test
@@ -297,7 +297,7 @@ public class AgreementTest {
     public static class FindRole extends AgreementTest {
 
         @Mock
-        private AgreementRoleRepository mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoleRepository;
 
         private AgreementRoleType art;
         private Party party;
@@ -314,7 +314,7 @@ public class AgreementTest {
             date = new LocalDate(2013, 4, 1);
 
             agreement = new AgreementForTesting();
-            agreement.injectAgreementRoles(mockAgreementRoles);
+            agreement.agreementRoleRepository = mockAgreementRoleRepository;
         }
 
         @Test
@@ -322,7 +322,7 @@ public class AgreementTest {
             final AgreementRole agreementRole = new AgreementRole();
             context.checking(new Expectations() {
                 {
-                    oneOf(mockAgreementRoles).findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, art, date);
+                    oneOf(mockAgreementRoleRepository).findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, art, date);
                     will(returnValue(agreementRole));
                 }
             });
@@ -340,7 +340,7 @@ public class AgreementTest {
         @Mock
         private AgreementTypeRepository mockAgreementTypeRepository;
         @Mock
-        private AgreementRoleRepository mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoleRepository;
 
         private Agreement agreement;
 
@@ -351,13 +351,13 @@ public class AgreementTest {
 
         @Test
         public void injected() {
-            agreement.injectAgreementTypes(mockAgreementTypeRepository);
-            agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            agreement.injectAgreements(mockAgreementRepository);
-            agreement.injectAgreementRoles(mockAgreementRoles);
+            agreement.agreementTypeRepository = mockAgreementTypeRepository;
+            agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            agreement.agreementRepository = mockAgreementRepository;
+            agreement.agreementRoleRepository = mockAgreementRoleRepository;
 
             assertThat(agreement.agreementRepository, is(mockAgreementRepository));
-            assertThat(agreement.agreementRoles, is(mockAgreementRoles));
+            assertThat(agreement.agreementRoleRepository, is(mockAgreementRoleRepository));
             assertThat(agreement.agreementRoleTypeRepository, is(mockAgreementRoleTypeRepository));
             assertThat(agreement.agreementTypeRepository, is(mockAgreementTypeRepository));
         }
@@ -524,7 +524,7 @@ public class AgreementTest {
 
                 agreement = new AgreementForTesting();
                 agreement.setType(art);
-                agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+                agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
             }
 
             @Test

@@ -330,7 +330,7 @@ public class LeaseTest {
         @Mock
         private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
-        private AgreementRoleRepository mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoleRepository;
         @Mock
         private AgreementTypeRepository mockAgreementTypeRepository;
         @Mock
@@ -477,14 +477,14 @@ public class LeaseTest {
             lease = new Lease();
             lease.setApplicationTenancyPath("/it");
 
-            lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            lease.injectAgreementRoles(mockAgreementRoles);
-            lease.injectAgreementTypes(mockAgreementTypeRepository);
+            lease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            lease.agreementRoleRepository = mockAgreementRoleRepository;
+            lease.agreementTypeRepository = mockAgreementTypeRepository;
             lease.financialAccounts = mockFinancialAccounts;
             lease.bankMandateRepository = mandateRepository;
             lease.setContainer(mockContainer);
             lease.injectClockService(mockClockService);
-            lease.injectAgreements(agreementRepository);
+            lease.agreementRepository = agreementRepository;
         }
 
         @Test
@@ -709,9 +709,9 @@ public class LeaseTest {
             someOtherBankMandate = new BankMandate();
 
             lease = new Lease();
-            lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            lease.injectAgreements(mockAgreementRepository);
-            lease.injectAgreementTypes(mockAgreementTypeRepository);
+            lease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            lease.agreementRepository = mockAgreementRepository;
+            lease.agreementTypeRepository = mockAgreementTypeRepository;
             lease.injectClockService(mockClockService);
         }
 
