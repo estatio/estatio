@@ -36,6 +36,6 @@ public class InvoiceContributions {
     }
 
     @Inject
-    Invoices invoiceRepository;
+    InvoiceRepository invoiceRepository;
 
 }

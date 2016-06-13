@@ -21,6 +21,8 @@ package org.estatio.dom.lease.invoicing;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
@@ -33,8 +35,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
@@ -58,7 +60,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
             final LocalDate dueDate,
             final String interactionId) {
         Lease lease = leaseTerm.getLeaseItem().getLease();
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(
+        Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
                 leaseTerm.getApplicationTenancy(),
                 leaseTerm.getLeaseItem().getPaymentMethod(),
                 lease,
@@ -202,10 +204,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
 
     // //////////////////////////////////////
 
-    private Invoices invoices;
-
-    public void injectInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
+    @Inject
+    private InvoiceRepository invoiceRepository;
 
 }

@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -149,7 +149,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     @Programmatic
     public String calculateAndInvoice(InvoiceCalculationParameters parameters) {
         String lastInteractionId = null;
-        invoices.removeRuns(parameters);
+        invoiceRepository.removeRuns(parameters);
         try {
             startInteraction(parameters.toString());
             for (Lease lease : parameters.leases() == null ? leases.findLeasesByProperty(parameters.property()) : parameters.leases()) {
@@ -346,7 +346,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     EstatioSettingsService estatioSettingsService;
 
     @Inject
-    private Invoices invoices;
+    private InvoiceRepository invoiceRepository;
 
     @Inject
     private InvoiceItemsForLease invoiceItemsForLease;

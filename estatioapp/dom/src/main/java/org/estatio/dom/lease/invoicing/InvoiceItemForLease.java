@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -167,32 +168,6 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     // //////////////////////////////////////
 
-    protected AgreementTypeRepository agreementTypeRepository;
-
-    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
-        this.agreementTypeRepository = agreementTypeRepository;
-    }
-
-    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    public final void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
-        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    public int compareTo(final InvoiceItem other) {
-        int compare = super.compareTo(other);
-        if (compare != 0) {
-            return compare;
-        }
-        if (other instanceof InvoiceItemForLease) {
-            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) other);
-        }
-        return getClass().getName().compareTo(other.getClass().getName());
-    }
-
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
         public int compare(final InvoiceItemForLease p, final InvoiceItemForLease q) {
             // unnecessary, but keeps findbugs happy...
@@ -208,5 +183,27 @@ public class InvoiceItemForLease extends InvoiceItem {
             return Ordering.natural().nullsFirst().compare(p.getLeaseTerm(), q.getLeaseTerm());
         }
     };
+
+    // //////////////////////////////////////
+
+    @Override
+    public int compareTo(final InvoiceItem other) {
+        int compare = super.compareTo(other);
+        if (compare != 0) {
+            return compare;
+        }
+        if (other instanceof InvoiceItemForLease) {
+            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) other);
+        }
+        return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
+    protected AgreementTypeRepository agreementTypeRepository;
+
+    @Inject
+    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
 }

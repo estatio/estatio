@@ -174,8 +174,8 @@ public class InvoiceCalculationServiceTest {
             invoiceItemForLease = new InvoiceItemForLease();
             invoiceItemForLease.setLeaseTerm(leaseTerm);
 
-            invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            invoiceItemForLease.injectAgreementTypes(mockAgreementTypeRepository);
+            invoiceItemForLease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            invoiceItemForLease.agreementTypeRepository = mockAgreementTypeRepository;
 
             ic = new InvoiceCalculationService();
             ic.estatioSettingsService = mockSettings;

@@ -34,8 +34,9 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceMenu;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -66,20 +67,26 @@ import static org.junit.Assert.assertThat;
 
 public class InvoiceServiceTest extends EstatioIntegrationTest {
 
+    private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
+
     @Inject
     Leases leases;
 
     @Inject
     InvoiceService invoiceService;
 
-    private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
+    @Inject
+    InvoiceRepository invoiceRepository;
 
     @Inject
-    Invoices invoices;
+    InvoiceMenu invoiceMenu;
+
     @Inject
     EstatioNumeratorRepository estatioNumeratorRepository;
+
     @Inject
     IndexRepository indexRepository;
+
     @Inject
     InvoiceItemsForLease invoiceItemsForLease;
 
@@ -89,7 +96,6 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     LeaseItem tItem;
     LeaseItem dItem;
     LeaseItem rfItem;
-
 
     public static class Lifecycle extends InvoiceServiceTest {
 
@@ -147,7 +153,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             assertThat(last.getBaseValue(), is(VT.bd(150000).setScale(2)));
             assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
             assertThat(last.getStartDate(), is(VT.ld(2015, 1, 1)));
-            assertThat(invoices.findByLease(lease).size(), is(0));
+            assertThat(invoiceRepository.findByLease(lease).size(), is(0));
             assertThat(dItem.getTerms().last().getEffectiveValue(), is(VT.bd(75000).setScale(2)));
             assertThat(rfItem.getTerms().last().getEffectiveValue(), is(VT.bd(2250).setScale(2)));
         }
@@ -163,11 +169,11 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             approveInvoicesFor(lease);
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
             assertThat(totalApprovedOrInvoicedForItem(sItem), is(VT.bd("18103.26")));
-            assertThat(invoices.findByLease(lease).size(), is(1));
+            assertThat(invoiceRepository.findByLease(lease).size(), is(1));
         }
 
         public void step3_approveInvoice() throws Exception {
-            final List<Invoice> allInvoices = invoices.allInvoices();
+            final List<Invoice> allInvoices = invoiceMenu.allInvoices();
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
             invoice.approve();
@@ -200,7 +206,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             // (156750 - 150000) / = 1687.5 added
             approveInvoicesFor(lease);
-            assertThat(invoices.findByLease(lease).size(), is(2));
+            assertThat(invoiceRepository.findByLease(lease).size(), is(2));
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48").add(VT.bd("1687.50"))));
         }
 
@@ -223,7 +229,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
         }
 
         private void approveInvoicesFor(final Lease lease) {
-            for (final Invoice invoice : invoices.findByLease(lease)) {
+            for (final Invoice invoice : invoiceRepository.findByLease(lease)) {
                 invoice.approve();
             }
         }

@@ -40,11 +40,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceMenu;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
@@ -76,24 +77,31 @@ import static org.junit.Assert.assertThat;
 public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
-    Invoices invoices;
+    InvoiceRepository invoiceRepository;
+
+    @Inject
+    InvoiceMenu invoiceMenu;
+
     @Inject
     EstatioNumeratorRepository estatioNumeratorRepository;
 
     @Inject
     Parties parties;
+
     @Inject
     Leases leases;
+
     @Inject
     PropertyRepository propertyRepository;
+
     @Inject
     PropertyMenu propertyMenu;
+
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
     BookmarkService bookmarkService;
-
 
     public static class CreateCollectionNumberNumerator extends InvoicesTest {
 
@@ -281,7 +289,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
             propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
 
-            Invoice invoice = invoices.findOrCreateMatchingInvoice(
+            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller,
                     buyer,
@@ -298,45 +306,45 @@ public class InvoicesTest extends EstatioIntegrationTest {
         public void byLease() {
             List<Lease> allLeases = leases.allLeases();
 
-            assertThat(invoices.allInvoices().size(), is(2));
+            assertThat(invoiceMenu.allInvoices().size(), is(2));
 
-            List<Invoice> invoiceList = invoices.findByLease(lease);
+            List<Invoice> invoiceList = invoiceRepository.findByLease(lease);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byParty() {
-            List<Invoice> invoiceList = invoices.findByBuyer(buyer);
+            List<Invoice> invoiceList = invoiceRepository.findByBuyer(buyer);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byPropertyAndStatus() {
-            List<Invoice> invoiceList = invoices.findByFixedAssetAndStatus(propertyKal, InvoiceStatus.NEW);
+            List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndStatus(propertyKal, InvoiceStatus.NEW);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byStatus() {
-            List<Invoice> invoiceList = invoices.findByStatus(InvoiceStatus.NEW);
+            List<Invoice> invoiceList = invoiceRepository.findByStatus(InvoiceStatus.NEW);
             assertThat(invoiceList.size(), is(2));
         }
 
         @Test
         public void byPropertyDueDate() {
-            List<Invoice> invoiceList = invoices.findByFixedAssetAndDueDate(propertyKal, VT.ld(2012, 1, 1));
+            List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDate(propertyKal, VT.ld(2012, 1, 1));
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void byPropertyDueDateStatus() {
-            List<Invoice> invoiceList = invoices.findByFixedAssetAndDueDateAndStatus(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
+            List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDateAndStatus(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
             assertThat(invoiceList.size(), is(1));
         }
 
         @Test
         public void bySellerBuyerPaymentMethodLeaseInvoiceStatusDueDate() {
-            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease));
+            Invoice invoice = invoiceRepository.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease));
             assertNotNull(invoice);
         }
     }
@@ -368,7 +376,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             final Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             final LocalDate startDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
 
-            Invoice invoice = invoices.findOrCreateMatchingInvoice(
+            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, startDate, null);
@@ -379,7 +387,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Test
         public void byRunId() {
             // when
-            List<Invoice> result = invoices.findInvoicesByRunId(runId);
+            List<Invoice> result = invoiceRepository.findInvoicesByRunId(runId);
 
             // then
             assertThat(result.size(), is(1));
@@ -420,26 +428,26 @@ public class InvoicesTest extends EstatioIntegrationTest {
         @Test
         public void whenDoesNotExist() {
             // given
-            Assert.assertThat(invoices.allInvoices().isEmpty(), is(true));
+            Assert.assertThat(invoiceMenu.allInvoices().isEmpty(), is(true));
             // when
-            Invoice invoice = invoices.findOrCreateMatchingInvoice(
+            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, invoiceStartDate, null);
             // then
             Assert.assertNotNull(invoice);
-            Assert.assertThat(invoices.allInvoices().isEmpty(), is(false));
+            Assert.assertThat(invoiceMenu.allInvoices().isEmpty(), is(false));
         }
 
         @Test
         public void whenExist() {
             // given
-            Invoice invoice = invoices.findOrCreateMatchingInvoice(
+            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, invoiceStartDate, null);
             // when
-            Invoice invoice2 = invoices.findOrCreateMatchingInvoice(
+            Invoice invoice2 = invoiceRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, invoiceStartDate, null);

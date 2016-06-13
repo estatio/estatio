@@ -40,7 +40,7 @@ import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
@@ -72,7 +72,7 @@ import static org.junit.Assert.assertThat;
 public class InvoiceTest extends EstatioIntegrationTest {
 
     @Inject
-    Invoices invoices;
+    InvoiceRepository invoiceRepository;
     @Inject
     Parties parties;
     @Inject
@@ -120,13 +120,13 @@ public class InvoiceTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Invoice invoice = invoices.newInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
+            Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
 
             // when
             invoice.newItem(charge, VT.bd(1), VT.bd("10000.123"), null, null);
 
             // then
-            Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
+            Invoice foundInvoice = invoiceRepository.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
             assertThat(foundInvoice.getNetAmount(), is(VT.bd("10000.123")));
 
             // and also
@@ -194,7 +194,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
         }
 
         private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
-            return invoices.findMatchingInvoices(
+            return invoiceRepository.findMatchingInvoices(
                     seller, buyer, PaymentMethod.DIRECT_DEBIT,
                     lease, InvoiceStatus.NEW,
                     invoiceStartDate);

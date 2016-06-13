@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -112,7 +112,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             }
 
             @Inject
-            private Invoices invoices;
+            private InvoiceRepository invoiceRepository;
 
             private Lease lease;
             private LeaseItem leaseTopModelRentItem;
@@ -166,7 +166,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
 
                 // and given
-                Assert.assertThat(invoices.findByLease(lease), not(empty()));
+                Assert.assertThat(invoiceRepository.findByLease(lease), not(empty()));
 
                 // then
                 expectedExceptions.expect(DisabledException.class);
@@ -206,7 +206,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
 
                 // and given
-                assertThat(invoices.findByLease(lease), empty());
+                assertThat(invoiceRepository.findByLease(lease), empty());
 
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);
@@ -245,7 +245,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.ANNUAL));
 
                 // and given
-                assertThat(invoices.findByLease(lease), not(empty()));
+                assertThat(invoiceRepository.findByLease(lease), not(empty()));
 
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);

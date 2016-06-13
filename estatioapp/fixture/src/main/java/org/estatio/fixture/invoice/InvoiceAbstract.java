@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -64,7 +64,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
 
         final String interactionId = null;
 
-        final Invoice invoice = invoices.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
+        final Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
 
         return executionContext.addResult(this, invoice);
@@ -97,7 +97,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
     private Currencies currencies;
 
     @Inject
-    private Invoices invoices;
+    private InvoiceRepository invoiceRepository;
 
     @Inject
     private InvoiceItemsForLease invoiceItemsForLease;
