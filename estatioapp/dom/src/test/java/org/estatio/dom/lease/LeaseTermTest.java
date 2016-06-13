@@ -69,7 +69,7 @@ public class LeaseTermTest {
     LeaseItem item;
 
     @Mock
-    LeaseTerms mockLeaseTerms;
+    LeaseTermRepository mockLeaseTermRepository;
 
     @Mock
     ClockService mockClockService;
@@ -82,7 +82,7 @@ public class LeaseTermTest {
             {
                 allowing(mockClockService).now();
                 will(returnValue(now));
-                allowing(mockLeaseTerms).newLeaseTerm(
+                allowing(mockLeaseTermRepository).newLeaseTerm(
                         with(any(LeaseItem.class)),
                         with(any(LeaseTerm.class)),
                         with(any(LocalDate.class)),
@@ -99,7 +99,7 @@ public class LeaseTermTest {
         lease.getItems().add(item);
         item.setLease(lease);
 
-        item.leaseTerms = mockLeaseTerms;
+        item.leaseTermRepository = mockLeaseTermRepository;
         item.injectClockService(mockClockService);
 
         term = new LeaseTermForTesting();
@@ -110,7 +110,7 @@ public class LeaseTermTest {
         term.setStartDate(new LocalDate(2012, 1, 1));
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.injectClockService(mockClockService);
-        term.injectLeaseTerms(mockLeaseTerms);
+        term.leaseTermRepository = mockLeaseTermRepository;
         term.initialize();
     }
 
@@ -257,7 +257,7 @@ public class LeaseTermTest {
             lease.getItems().add(item);
             item.setLease(lease);
 
-            item.leaseTerms = mockLeaseTerms;
+            item.leaseTermRepository = mockLeaseTermRepository;
             item.injectClockService(mockClockService);
 
             LeaseTerm term = new LeaseTermForTesting();
@@ -413,7 +413,7 @@ public class LeaseTermTest {
             term.setLeaseItem(leaseItem);
             term.setStartDate(new LocalDate(2014, 6, 1));
             term.setEndDate(new LocalDate(2014, 8, 31));
-            term.terms = new LeaseTerms();
+            term.leaseTermRepository = new LeaseTermRepository();
         }
 
         @Test

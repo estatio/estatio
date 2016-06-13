@@ -287,7 +287,7 @@ public class LeaseItem
 
     @Programmatic
     public LeaseTerm findTermWithSequence(final BigInteger sequence) {
-        return leaseTerms.findByLeaseItemAndSequence(this, sequence);
+        return leaseTermRepository.findByLeaseItemAndSequence(this, sequence);
     }
 
     // //////////////////////////////////////
@@ -571,7 +571,7 @@ public class LeaseItem
     public LeaseTerm newTerm(
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        return leaseTerms.newLeaseTerm(this, lastInChain(), startDate, endDate);
+        return leaseTermRepository.newLeaseTerm(this, lastInChain(), startDate, endDate);
     }
 
     private LeaseTerm lastInChain() {
@@ -585,7 +585,7 @@ public class LeaseItem
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        return leaseTerms.validateNewLeaseTerm(this, lastInChain(), startDate, endDate);
+        return leaseTermRepository.validateNewLeaseTerm(this, lastInChain(), startDate, endDate);
     }
 
     public LocalDate default0NewTerm(
@@ -737,7 +737,7 @@ public class LeaseItem
     private ChargeRepository chargeRepository;
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
 
     @Inject
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

@@ -49,7 +49,7 @@ public class LeaseTermForServiceChargeTest {
     Index index;
 
     @Mock
-    LeaseTerms mockLeaseTerms;
+    LeaseTermRepository mockLeaseTermRepository;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -60,7 +60,7 @@ public class LeaseTermForServiceChargeTest {
         lease.setStartDate(new LocalDate(2000,1,1));
 
         item = new LeaseItem();
-        item.leaseTerms = mockLeaseTerms;
+        item.leaseTermRepository = mockLeaseTermRepository;
 
         lease.getItems().add(item);
         item.setLease(lease);

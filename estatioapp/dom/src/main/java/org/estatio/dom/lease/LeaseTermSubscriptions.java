@@ -35,7 +35,7 @@ import org.estatio.dom.UdoDomainService;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscriptions> {
 
-    private final String DEFAULT_INVALIDATION_MESSAGE = "You cannot change the invoicing frequency of a lease item with invoice items on its terms. This lease item has invoice items on the following term(s): \n";
+    private final String DEFAULT_INVALIDATION_MESSAGE = "You cannot change the invoicing frequency of a lease item with invoice items on its leaseTermRepository. This lease item has invoice items on the following term(s): \n";
 
     public LeaseTermSubscriptions() {
         super(LeaseTermSubscriptions.class);
@@ -50,7 +50,7 @@ public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscripti
         case VALIDATE:
             final StringBuilder buf = new StringBuilder();
 
-            final List<LeaseTerm> terms = leaseTerms.findByLeaseItem(sourceLeaseItem);
+            final List<LeaseTerm> terms = leaseTermRepository.findByLeaseItem(sourceLeaseItem);
             terms.stream()
                     .map(LeaseTerm::getInvoiceItems)
                     .filter(invoiceTerms -> !invoiceTerms.isEmpty())
@@ -69,7 +69,7 @@ public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscripti
     }
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
     @Inject
     TitleService titleService;
 }

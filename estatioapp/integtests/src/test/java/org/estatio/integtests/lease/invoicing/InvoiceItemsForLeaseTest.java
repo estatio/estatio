@@ -63,7 +63,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
     InvoiceItemsForLease invoiceItemsForLease;
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
 
     @Inject
     PropertyMenu propertyMenu;
@@ -75,7 +75,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
         @Test
         public void findByLeaseTerm() throws Exception {
             // given
-            LeaseTerm term = leaseTerms.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
+            LeaseTerm term = leaseTermRepository.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
 
             // when
             List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTerm(term);
@@ -90,7 +90,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
         @Test
         public void findByLeaseTermAndInterval() throws Exception {
             // given
-            LeaseTerm term = leaseTerms.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
+            LeaseTerm term = leaseTermRepository.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
             LocalDateInterval interval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
 
             // when
@@ -107,7 +107,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
         @Test
         public void findByLeaseTermAndIntervalAndInvoiceStatus() throws Exception {
             // given
-            LeaseTerm term = leaseTerms.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
+            LeaseTerm term = leaseTermRepository.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
             LocalDateInterval interval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
 
             // when
@@ -150,7 +150,7 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
         @Test
         public void findByLeaseTermAndInvoiceStatus() throws Exception {
             // given
-            LeaseTerm term = leaseTerms.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
+            LeaseTerm term = leaseTermRepository.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
 
             // when
             List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(term, InvoiceStatus.NEW);

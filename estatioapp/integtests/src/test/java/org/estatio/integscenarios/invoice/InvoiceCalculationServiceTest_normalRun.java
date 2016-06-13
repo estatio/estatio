@@ -53,7 +53,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     private Leases leases;
 
     @Inject
-    private LeaseTerms leaseTerms;
+    private LeaseTermRepository leaseTermRepository;
 
     @Inject
     private InvoiceItemsForLease invoiceItemsForLease;

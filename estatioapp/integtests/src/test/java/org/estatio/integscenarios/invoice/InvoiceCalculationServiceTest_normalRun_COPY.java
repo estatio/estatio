@@ -37,7 +37,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -76,7 +76,7 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     @Inject
     private Leases leases;
     @Inject
-    private LeaseTerms leaseTerms;
+    private LeaseTermRepository leaseTermRepository;
     @Inject
     private InvoiceItemsForLease invoiceItemsForLease;
     @Inject

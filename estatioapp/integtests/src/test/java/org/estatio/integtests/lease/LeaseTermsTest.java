@@ -37,7 +37,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForTax;
-import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -67,7 +67,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
 
     Lease lease;
 
@@ -82,7 +82,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
         public void whenExists() throws Exception {
 
             // when
-            List<LeaseTerm> allLeaseTerms = leaseTerms.allLeaseTerms();
+            List<LeaseTerm> allLeaseTerms = leaseTermRepository.allLeaseTerms();
 
             // then
             Assert.assertThat(allLeaseTerms.isEmpty(), is(false));
@@ -104,7 +104,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
         @Test
         public void findByPropertyAndTypeAndStartDate() throws Exception {
             Property property = lease.getProperty();
-            List<LeaseTerm> results = leaseTerms.findByPropertyAndTypeAndStartDate(property, LeaseItemType.RENT, lease.getStartDate());
+            List<LeaseTerm> results = leaseTermRepository.findByPropertyAndTypeAndStartDate(property, LeaseItemType.RENT, lease.getStartDate());
             assertThat(results.size(), is(1));
             assertThat(results.get(0), is(lease.getItems().first().getTerms().first()));
         }
@@ -115,7 +115,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
         @Test
         public void findStartDatesByPropertyAndType() throws Exception {
             Property property = lease.getProperty();
-            List<LocalDate> results = leaseTerms.findStartDatesByPropertyAndType(property, LeaseItemType.RENT);
+            List<LocalDate> results = leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.RENT);
             assertThat(results.size(), is(1));
             assertThat(results.get(0), is(lease.getItems().first().getTerms().first().getStartDate()));
         }

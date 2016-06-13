@@ -60,7 +60,7 @@ public class LeaseTermForIndexableTest {
     ClockService mockClockService;
 
     @Mock
-    LeaseTerms mockLeaseTerms;
+    LeaseTermRepository mockLeaseTermRepository;
 
     @Mock
     IndexValueRepository mockIndexValueRepository;
@@ -82,7 +82,7 @@ public class LeaseTermForIndexableTest {
         item.setLease(lease);
 
         item.setType(LeaseItemType.RENT);
-        item.leaseTerms = mockLeaseTerms;
+        item.leaseTermRepository = mockLeaseTermRepository;
 
         term = new LeaseTermForIndexable();
         term.injectClockService(mockClockService);
