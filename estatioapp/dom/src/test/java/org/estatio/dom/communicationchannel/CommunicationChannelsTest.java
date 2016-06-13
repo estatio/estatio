@@ -33,7 +33,7 @@ public class CommunicationChannelsTest {
 
     FinderInteraction finderInteraction;
 
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 
     CommunicationChannelType type;
 
@@ -42,7 +42,7 @@ public class CommunicationChannelsTest {
         
         type = CommunicationChannelType.EMAIL_ADDRESS;
         
-        communicationChannels = new CommunicationChannels() {
+        communicationChannelRepository = new CommunicationChannelRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -67,7 +67,7 @@ public class CommunicationChannelsTest {
         @Test
         public void happyCase() {
 
-            communicationChannels.findByReferenceAndType("REF-1", type);
+            communicationChannelRepository.findByReferenceAndType("REF-1", type);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(CommunicationChannel.class));

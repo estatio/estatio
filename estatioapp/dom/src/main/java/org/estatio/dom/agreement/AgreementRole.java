@@ -60,7 +60,7 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -554,7 +554,7 @@ public class AgreementRole
     // //////////////////////////////////////
 
     @Inject
-    private CommunicationChannels communicationChannelRepository;
+    private CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
     private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;

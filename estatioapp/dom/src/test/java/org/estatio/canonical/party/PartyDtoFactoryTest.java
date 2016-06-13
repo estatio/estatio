@@ -15,7 +15,7 @@ import org.apache.isis.schema.common.v1.OidDto;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 
@@ -32,7 +32,7 @@ public class PartyDtoFactoryTest {
     @Mock
     private DtoMappingHelper mockDtoMappingHelper;
     @Mock
-    private CommunicationChannels mockCommunicationChannels;
+    private CommunicationChannelRepository mockCommunicationChannelRepository;
 
     private PartyDtoFactory partyDtoFactory;
 
@@ -40,7 +40,7 @@ public class PartyDtoFactoryTest {
     public void setUp() throws Exception {
         partyDtoFactory = new PartyDtoFactory();
         partyDtoFactory.mappingHelper = mockDtoMappingHelper;
-        partyDtoFactory.communicationChannels = mockCommunicationChannels;
+        partyDtoFactory.communicationChannelRepository = mockCommunicationChannelRepository;
     }
 
     @Test
@@ -58,7 +58,7 @@ public class PartyDtoFactoryTest {
             oneOf(mockDtoMappingHelper).oidDtoFor(p);
             will(returnValue(partyOidDto));
 
-            oneOf(mockCommunicationChannels).findByOwnerAndType(p, CommunicationChannelType.POSTAL_ADDRESS);
+            oneOf(mockCommunicationChannelRepository).findByOwnerAndType(p, CommunicationChannelType.POSTAL_ADDRESS);
             will(returnValue(Collections.emptySortedSet()));
         }});
 

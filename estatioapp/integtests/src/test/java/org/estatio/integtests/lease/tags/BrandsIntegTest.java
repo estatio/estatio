@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brands;
 import org.estatio.fixture.lease.tags.BrandsFixture;
@@ -43,7 +43,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
     Brands brands;
 
     @Inject
-    Countries countries;
+    CountryRepository countryRepository;
 
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;

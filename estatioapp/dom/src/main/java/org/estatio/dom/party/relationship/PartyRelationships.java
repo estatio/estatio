@@ -21,8 +21,8 @@ import org.apache.isis.core.runtime.authentication.standard.RandomCodeGenerator1
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
@@ -99,10 +99,10 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
         String newReference = reference == null ? generator.generateRandomCode().toUpperCase() : reference;
         Person person = persons.newPerson(newReference, initials, firstName, lastName, gender, party.getApplicationTenancy());
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            communicationChannels.newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
+            communicationChannelRepository.newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         }
         if (emailAddress != null && !emailAddress.isEmpty()) {
-            communicationChannels.newEmail(person, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
+            communicationChannelRepository.newEmail(person, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
         }
         return newRelationship(party, person, relationshipType, description);
     }
@@ -166,5 +166,5 @@ public class PartyRelationships extends UdoDomainRepositoryAndFactory<PartyRelat
     private Persons persons;
 
     @Inject
-    private CommunicationChannels communicationChannels;
+    private CommunicationChannelRepository communicationChannelRepository;
 }

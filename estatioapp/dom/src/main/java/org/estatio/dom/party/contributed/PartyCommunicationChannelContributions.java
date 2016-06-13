@@ -22,7 +22,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.relationship.contributed.DomainObjectContainerFunctions;
 
@@ -44,12 +44,12 @@ public class PartyCommunicationChannelContributions {
     }
 
     private List<String> channelTitle(Party party, final CommunicationChannelType type, final int index) {
-        final SortedSet<CommunicationChannel> results = communicationChannels.findByOwnerAndType(party, type);
+        final SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwnerAndType(party, type);
         return Lists.newArrayList(Iterables.transform(results, DomainObjectContainerFunctions.titleOfUsing(container)));
     }
 
     @Inject
-    private CommunicationChannels communicationChannels;
+    private CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
     private DomainObjectContainer container;

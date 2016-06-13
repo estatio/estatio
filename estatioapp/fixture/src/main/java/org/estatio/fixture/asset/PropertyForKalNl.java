@@ -52,7 +52,7 @@ public class PropertyForKalNl extends PropertyAbstract {
         final Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
         final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country netherlands = countries.findCountry(CountriesRefData.NLD);
+        final Country netherlands = countryRepository.findCountry(CountriesRefData.NLD);
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Kalvertoren", "Amsterdam", netherlands, PropertyType.SHOPPING_CENTER,

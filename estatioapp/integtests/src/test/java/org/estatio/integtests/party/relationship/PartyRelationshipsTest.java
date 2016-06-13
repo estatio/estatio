@@ -31,7 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Party.RemoveEvent;
@@ -75,7 +75,7 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
     Persons persons;
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 
     public static class AllRelationships extends PartyRelationshipsTest {
         @Test
@@ -133,9 +133,9 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             assertThat(wife.getFirstName(), is(JENNIFER));
             assertThat(wife.getInitials(), is(J));
             assertThat(wife.getLastName(), is(LOPEZ));
-            assertThat(communicationChannels.findByOwner(wife).size(), is(2));
-            assertThat(communicationChannels.findByOwnerAndType(wife, CommunicationChannelType.EMAIL_ADDRESS).first().getName(), is(JLOPEZ_EXAMPLE_COM));
-            assertThat(communicationChannels.findByOwnerAndType(wife, CommunicationChannelType.PHONE_NUMBER).first().getName(), is(_555_12345));
+            assertThat(communicationChannelRepository.findByOwner(wife).size(), is(2));
+            assertThat(communicationChannelRepository.findByOwnerAndType(wife, CommunicationChannelType.EMAIL_ADDRESS).first().getName(), is(JLOPEZ_EXAMPLE_COM));
+            assertThat(communicationChannelRepository.findByOwnerAndType(wife, CommunicationChannelType.PHONE_NUMBER).first().getName(), is(_555_12345));
         }
     }
 

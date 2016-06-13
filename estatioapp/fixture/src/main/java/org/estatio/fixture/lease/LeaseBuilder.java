@@ -30,7 +30,7 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -194,7 +194,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
-            Country countryOfOrigin = countries.findCountry(countryOfOriginRef);
+            Country countryOfOrigin = countryRepository.findCountry(countryOfOriginRef);
             Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
@@ -256,6 +256,6 @@ public class LeaseBuilder extends EstatioFixtureScript {
     protected ApplicationTenancies applicationTenancies;
 
     @Inject
-    Countries countries;
+    CountryRepository countryRepository;
 
 }

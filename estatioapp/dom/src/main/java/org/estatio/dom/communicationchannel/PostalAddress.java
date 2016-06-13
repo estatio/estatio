@@ -38,7 +38,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
+import org.estatio.dom.geography.StateRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -117,7 +117,7 @@ public class PostalAddress extends CommunicationChannel {
     private State state;
     
     public List<State> choicesState() {
-        return states.findStatesByCountry(getCountry());
+        return stateRepository.findStatesByCountry(getCountry());
     }
 
     // //////////////////////////////////////
@@ -148,15 +148,15 @@ public class PostalAddress extends CommunicationChannel {
 
     public List<State> choices1UpdateCountryAndState(
             final Country country) {
-        return states.findStatesByCountry(country);
+        return stateRepository.findStatesByCountry(country);
     }
 
     // //////////////////////////////////////
 
-    private States states;
+    private StateRepository stateRepository;
 
-    public final void injectStates(final States states) {
-        this.states = states;
+    public final void injectStates(final StateRepository stateRepository) {
+        this.stateRepository = stateRepository;
     }
 
     public PostalAddress changePostalAddress(

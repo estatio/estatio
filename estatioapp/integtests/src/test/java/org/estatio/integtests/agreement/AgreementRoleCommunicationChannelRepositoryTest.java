@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -52,7 +52,7 @@ public class AgreementRoleCommunicationChannelRepositoryTest extends EstatioInte
         }
 
         @Inject
-        CommunicationChannels communicationChannels;
+        CommunicationChannelRepository communicationChannelRepository;
 
         @Inject
         AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
@@ -67,7 +67,7 @@ public class AgreementRoleCommunicationChannelRepositoryTest extends EstatioInte
         @Before
         public void setUp() throws Exception {
             party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-            communicationChannel = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
+            communicationChannel = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
         }
 
 

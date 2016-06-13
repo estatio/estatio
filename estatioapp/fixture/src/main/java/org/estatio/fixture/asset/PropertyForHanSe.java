@@ -52,7 +52,7 @@ public class PropertyForHanSe extends PropertyAbstract {
         Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
         Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
 
-        Country sweden = countries.findCountry(CountriesRefData.SWE);
+        Country sweden = countryRepository.findCountry(CountriesRefData.SWE);
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Handla Center", "Malmo", sweden, PropertyType.SHOPPING_CENTER,

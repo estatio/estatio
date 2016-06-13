@@ -21,6 +21,8 @@ package org.estatio.dom.communicationchannel;
 import java.util.List;
 import java.util.SortedSet;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -32,10 +34,10 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
+import org.estatio.dom.geography.StateRepository;
 
 /**
  * Domain service that contributes actions to create a new
@@ -75,8 +77,8 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
             final @Parameter(optionality = Optionality.OPTIONAL) String addressLine3,
             final String postalCode,
             final String city
-            ) {
-        communicationChannels.newPostal(owner, type, addressLine1, addressLine2, null, postalCode, city, state, country);
+    ) {
+        communicationChannelRepository.newPostal(owner, type, addressLine1, addressLine2, null, postalCode, city, state, country);
         return owner;
     }
 
@@ -91,19 +93,19 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
     }
 
     public Country default2NewPostal() {
-        return countries.allCountries().get(0);
+        return countryRepository.allCountries().get(0);
     }
 
     public List<State> choices3NewPostal(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final Country country) {
-        return states.findStatesByCountry(country);
+        return stateRepository.findStatesByCountry(country);
     }
 
     public State default3NewPostal() {
         final Country country = default2NewPostal();
-        final List<State> statesInCountry = states.findStatesByCountry(country);
+        final List<State> statesInCountry = stateRepository.findStatesByCountry(country);
         return statesInCountry.size() > 0 ? statesInCountry.get(0) : null;
     }
 
@@ -116,7 +118,7 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String address) {
-        communicationChannels.newEmail(owner, type, address);
+        communicationChannelRepository.newEmail(owner, type, address);
         return owner;
     }
 
@@ -145,7 +147,7 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String number) {
-        communicationChannels.newPhoneOrFax(owner, type, number);
+        communicationChannelRepository.newPhoneOrFax(owner, type, number);
         return owner;
     }
 
@@ -171,27 +173,18 @@ public abstract class CommunicationChannelContributions extends UdoDomainService
     @CollectionLayout(render = RenderType.EAGERLY)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
-        return communicationChannels.findByOwner(owner);
+        return communicationChannelRepository.findByOwner(owner);
     }
 
     // //////////////////////////////////////
 
-    public CommunicationChannels communicationChannels;
+    @Inject
+    public CommunicationChannelRepository communicationChannelRepository;
 
-    public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
+    @Inject
+    private StateRepository stateRepository;
 
-    private States states;
-
-    public void injectStates(final States states) {
-        this.states = states;
-    }
-
-    private Countries countries;
-
-    public void injectCountries(final Countries countries) {
-        this.countries = countries;
-    }
+    @Inject
+    private CountryRepository countryRepository;
 
 }

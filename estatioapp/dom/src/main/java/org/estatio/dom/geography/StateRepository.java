@@ -37,11 +37,11 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.6")
-public class States
+public class StateRepository
         extends UdoDomainRepositoryAndFactory<State> {
 
-    public States() {
-        super(States.class, State.class);
+    public StateRepository() {
+        super(StateRepository.class, State.class);
     }
 
     // //////////////////////////////////

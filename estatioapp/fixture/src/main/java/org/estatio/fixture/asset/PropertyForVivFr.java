@@ -52,7 +52,7 @@ public class PropertyForVivFr extends PropertyAbstract {
         Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
         Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
 
-        Country france = countries.findCountry(CountriesRefData.FRA);
+        Country france = countryRepository.findCountry(CountriesRefData.FRA);
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Vive les shops", "Paris", france, PropertyType.SHOPPING_CENTER,
