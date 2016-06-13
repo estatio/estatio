@@ -51,7 +51,7 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
@@ -192,7 +192,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
             final KeyTable keyTable,
             final BigDecimal percentage
     ){
-        return charges.allCharges();
+        return chargeRepository.allCharges();
     }
 
     public List<KeyTable> choices1CreateBudgetItemAllocation(
@@ -240,7 +240,7 @@ public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithA
     private KeyTableRepository keyTableRepository;
 
     @Inject
-    private Charges charges;
+    private ChargeRepository chargeRepository;
 
 
 }

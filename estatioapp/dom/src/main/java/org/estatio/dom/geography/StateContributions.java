@@ -20,6 +20,8 @@ package org.estatio.dom.geography;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -31,9 +33,9 @@ import org.estatio.dom.UdoDomainService;
 
 /**
  * Decouples {@link Country} from {@link State}s.
- * 
- * <p>
- * TODO: no good reason to do this; they are in the same cluster.  Map in the usual fashion. 
+ * <p/>
+ * <p/>
+ * TODO: no good reason to do this; they are in the same cluster.  Map in the usual fashion.
  */
 @DomainService(menuOrder = "80", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class StateContributions extends UdoDomainService<StateContributions> {
@@ -49,15 +51,10 @@ public class StateContributions extends UdoDomainService<StateContributions> {
     public List<State> states(final Country country) {
         return stateRepository.findStatesByCountry(country);
     }
-    
 
     // //////////////////////////////////////
 
+    @Inject
     private StateRepository stateRepository;
-    public final void injectStates(final StateRepository stateRepository) {
-        this.stateRepository = stateRepository;
-    }
-
-
 
 }

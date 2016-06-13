@@ -56,8 +56,8 @@ public class BudgetsForOxf extends BudgetAbstact {
                 budgetStartDate.plusYears(1).minusDays(1),
                 executionContext);
 
-        createBudgetItem(newBudget1,value1, chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1));
-        createBudgetItem(newBudget1,value2, chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET2));
+        createBudgetItem(newBudget1,value1, chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1));
+        createBudgetItem(newBudget1,value2, chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET2));
     }
 
 }

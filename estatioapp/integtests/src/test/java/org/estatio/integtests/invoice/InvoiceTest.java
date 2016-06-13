@@ -35,7 +35,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
@@ -80,7 +80,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
     @Inject
     Currencies currencies;
     @Inject
-    Charges charges;
+    ChargeRepository chargeRepository;
     @Inject
     ApplicationTenancies applicationTenancies;
 
@@ -113,7 +113,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
             buyer = parties.findPartyByReference(OrganisationForPoisonGb.REF);
             lease = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
 
-            charge = charges.allCharges().get(0);
+            charge = chargeRepository.allCharges().get(0);
             currency = currencies.allCurrencies().get(0);
         }
 

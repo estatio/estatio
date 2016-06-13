@@ -23,7 +23,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.assertj.core.api.Assertions;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -111,7 +111,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
 
 
         @Inject
-        private Charges charges;
+        private ChargeRepository chargeRepository;
         @Inject
         private WrapperFactory wrapperFactory;
 
@@ -119,7 +119,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given
-            final Charge charge = charges.findByReference(ChargeRefData.GB_DISCOUNT);
+            final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_DISCOUNT);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
             final ApplicationTenancy firstChildAppTenancy = leaseAppTenancy.getChildren().first();
 
@@ -147,7 +147,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
         public void invalidCharge() throws Exception {
 
             // given
-            final Charge charge = charges.findByReference(ChargeRefData.IT_DISCOUNT);
+            final Charge charge = chargeRepository.findByReference(ChargeRefData.IT_DISCOUNT);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
 
             expectedExceptions.expect(InvalidException.class);

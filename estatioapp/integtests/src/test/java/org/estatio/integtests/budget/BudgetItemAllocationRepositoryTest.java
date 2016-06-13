@@ -19,7 +19,7 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
@@ -44,7 +44,7 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
     KeyTableRepository keytablesRepository;
 
     @Inject
-    Charges chargeRepository;
+    ChargeRepository chargeRepository;
 
 
     @Before

@@ -20,15 +20,22 @@ package org.estatio.dom.financial.contributed;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.WithInterval;
@@ -39,13 +46,12 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 
-
 /**
  * These contributions act upon {@link AgreementRoleHolder}, and from its
  * {@link AgreementRoleHolder#getAgreements()set of} {@link AgreementRole},
  * project to the corresponding {@link BankMandate}s.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * An alternative design would be to simply do a repository query against the
  * database; this would be more efficient (avoid an N+1 search as is the current
  * design). However, that query would be quite complex, having to traverse from
@@ -62,8 +68,8 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
     /**
      * A contributed collection of the current {@link BankMandate}s of the
      * {@link AgreementRoleHolder}.
-     * 
-     * <p>
+     * <p/>
+     * <p/>
      * All {@link BankMandate} are {@link #allBankMandate(AgreementRoleHolder)
      * contributed} as an action.
      */
@@ -78,13 +84,13 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
                         Iterables.filter(
                                 agreementRoleHolder.getAgreements(),
                                 whetherCurrentAndAgreementTypeIs(agreementType)),
-                        AgreementRole.Functions.<BankMandate> agreementOf()));
+                        AgreementRole.Functions.<BankMandate>agreementOf()));
     }
 
     private static Predicate<AgreementRole> whetherCurrentAndAgreementTypeIs(final AgreementType agreementType) {
         return Predicates.and(
                 AgreementRole.Predicates.whetherAgreementTypeIs(agreementType),
-                WithInterval.Predicates.<AgreementRole> whetherCurrentIs(true));
+                WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
     }
 
     // //////////////////////////////////////
@@ -92,8 +98,8 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
     /**
      * A contributed action of all {@link BankMandate}s of the
      * {@link AgreementRoleHolder}.
-     * 
-     * <p>
+     * <p/>
+     * <p/>
      * The current {@link BankMandate}s are
      * {@link #currentBankMandates(AgreementRoleHolder) contributed} as a
      * collection.
@@ -107,15 +113,12 @@ public class BankMandateContributions extends UdoDomainService<BankMandateContri
                         Iterables.filter(
                                 agreementRoleHolder.getAgreements(),
                                 AgreementRole.Predicates.whetherAgreementTypeIs(agreementType)),
-                        AgreementRole.Functions.<BankMandate> agreementOf()));
+                        AgreementRole.Functions.<BankMandate>agreementOf()));
     }
 
     // //////////////////////////////////////
 
+    @Inject
     private AgreementTypeRepository agreementTypeRepository;
-
-    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
-        this.agreementTypeRepository = agreementTypeRepository;
-    }
 
 }

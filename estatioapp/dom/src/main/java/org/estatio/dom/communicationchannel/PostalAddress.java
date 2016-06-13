@@ -21,6 +21,7 @@ package org.estatio.dom.communicationchannel;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.base.Predicate;
@@ -115,7 +116,7 @@ public class PostalAddress extends CommunicationChannel {
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Update using Action")
     @Getter @Setter
     private State state;
-    
+
     public List<State> choicesState() {
         return stateRepository.findStatesByCountry(getCountry());
     }
@@ -152,12 +153,6 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     // //////////////////////////////////////
-
-    private StateRepository stateRepository;
-
-    public final void injectStates(final StateRepository stateRepository) {
-        this.stateRepository = stateRepository;
-    }
 
     public PostalAddress changePostalAddress(
             final String addressLine1,
@@ -197,7 +192,9 @@ public class PostalAddress extends CommunicationChannel {
     // //////////////////////////////////////
 
     public static class Predicates {
-        private Predicates(){}
+
+        private Predicates() {
+        }
 
         public static Predicate<PostalAddress> equalTo(
                 final String address1,
@@ -214,6 +211,12 @@ public class PostalAddress extends CommunicationChannel {
                 }
             };
         }
+
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private StateRepository stateRepository;
 
 }
