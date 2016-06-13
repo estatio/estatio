@@ -43,7 +43,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.domsettings.EstatioSettingsService;
@@ -78,7 +78,7 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     @Inject
     private LeaseTermRepository leaseTermRepository;
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
     @Inject
     private EstatioSettingsService estatioSettingsService;
     @Inject
@@ -221,10 +221,10 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
                 VT.ld(startDueDate),
                 VT.ld(startDueDate),
                 VT.ld(nextDueDate)));
-        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
+        InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
 
         BigDecimal netAmount = invoiceItem == null ? VT.bd("0.00") : invoiceItem.getNetAmount();
-        final String reason = "size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
+        final String reason = "size " + invoiceItemForLeaseRepository.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
         assertThat(reason,
                 netAmount, is(VT.bd2hup(expected)));
 

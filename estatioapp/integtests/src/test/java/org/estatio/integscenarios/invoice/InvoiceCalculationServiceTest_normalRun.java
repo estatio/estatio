@@ -56,7 +56,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     private LeaseTermRepository leaseTermRepository;
 
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     @Inject
     private EstatioSettingsService estatioSettingsService;
@@ -204,7 +204,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
             final Double expected,
             final boolean expectedAdjustment) {
 
-        invoiceItemsForLease.removeUnapprovedInvoiceItems(leaseTerm, VT.ldi(interval));
+        invoiceItemForLeaseRepository.removeUnapprovedInvoiceItems(leaseTerm, VT.ldi(interval));
 
         nextTransaction();
         isisJdoSupport.refresh(leaseTerm);
@@ -217,11 +217,11 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
                 VT.ld(nextDueDate));
         invoiceCalculationService.calculateAndInvoice(parameters);
 
-        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
+        InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
         isisJdoSupport.refresh(leaseTerm);
 
         BigDecimal netAmount = invoiceItem == null ? VT.bd2(0) : invoiceItem.getNetAmount();
-        final String reason = "size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
+        final String reason = "size " + invoiceItemForLeaseRepository.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
         assertThat(reason, netAmount, is(VT.bd2hup(expected)));
 
         Boolean adjustment = invoiceItem == null ? false : invoiceItem.getAdjustment();

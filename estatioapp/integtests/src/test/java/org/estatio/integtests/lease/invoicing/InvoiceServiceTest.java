@@ -44,7 +44,7 @@ import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -88,7 +88,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     IndexRepository indexRepository;
 
     @Inject
-    InvoiceItemsForLease invoiceItemsForLease;
+    InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     Lease lease;
     LeaseItem rItem;
@@ -220,7 +220,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             BigDecimal total = BigDecimal.ZERO;
             final InvoiceStatus[] allowed = { InvoiceStatus.APPROVED, InvoiceStatus.INVOICED };
             for (final InvoiceStatus invoiceStatus : allowed) {
-                final List<InvoiceItemForLease> items = invoiceItemsForLease.findByLeaseItemAndInvoiceStatus(leaseItem, invoiceStatus);
+                final List<InvoiceItemForLease> items = invoiceItemForLeaseRepository.findByLeaseItemAndInvoiceStatus(leaseItem, invoiceStatus);
                 for (final InvoiceItemForLease item : items) {
                     total = total.add(item.getNetAmount());
                 }

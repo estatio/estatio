@@ -305,12 +305,12 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             // TODO: this is a hack to speed up processing by ignoring zero
             // values on a normal run
             if (result.value().compareTo(BigDecimal.ZERO) != 0 || parameters.invoiceRunType().equals(InvoiceRunType.RETRO_RUN)) {
-                BigDecimal invoicedValue = invoiceItemsForLease.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
+                BigDecimal invoicedValue = invoiceItemForLeaseRepository.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
                 BigDecimal newValue = result.value().subtract(invoicedValue).subtract(result.mockValue());
                 if (newValue.compareTo(BigDecimal.ZERO) != 0) {
                     boolean adjustment = invoicedValue.add(result.mockValue()).compareTo(BigDecimal.ZERO) != 0;
                     InvoiceItemForLease invoiceItem =
-                            invoiceItemsForLease.createUnapprovedInvoiceItem(
+                            invoiceItemForLeaseRepository.createUnapprovedInvoiceItem(
                                     leaseTerm,
                                     result.invoicingInterval().asLocalDateInterval(),
                                     parameters.invoiceDueDate(),
@@ -349,7 +349,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     private InvoiceRepository invoiceRepository;
 
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     @Inject
     private Leases leases;

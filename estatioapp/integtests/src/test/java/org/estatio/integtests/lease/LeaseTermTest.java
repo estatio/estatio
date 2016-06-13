@@ -45,6 +45,7 @@ import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
@@ -90,7 +91,7 @@ public class LeaseTermTest extends EstatioIntegrationTest {
      * <p>
      * As a slight modification to that rule, we do allow the start and end
      * dates to be changed if no
-     * {@link org.estatio.dom.lease.invoicing.InvoiceItemsForLease invoice item}
+     * {@link InvoiceItemForLeaseRepository invoice item}
      * s have yet been created for the lease term; this allows for corrections
      * to incorrectly entered data prior to the first invoice run.
      * </p>

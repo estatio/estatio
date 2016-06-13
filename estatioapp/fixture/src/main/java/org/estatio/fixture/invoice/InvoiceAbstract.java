@@ -34,7 +34,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -79,7 +79,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
         final LeaseItem firstLeaseItem = lease.findFirstItemOfType(leaseItemType);
         final SortedSet<LeaseTerm> terms = firstLeaseItem.getTerms();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, interval, startDate, null);
+            InvoiceItemForLease item = invoiceItemForLeaseRepository.newInvoiceItem(term, interval, startDate, null);
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
 
@@ -100,7 +100,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
     private InvoiceRepository invoiceRepository;
 
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     @Inject
     protected Leases leases;
