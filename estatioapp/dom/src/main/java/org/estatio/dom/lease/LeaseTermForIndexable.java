@@ -21,6 +21,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -301,21 +302,17 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // ///////////////////////////////////////////
 
-    private IndexRepository indexRepository;
-
-    public final void injectIndices(final IndexRepository indexes) {
-        this.indexRepository = indexes;
-    }
-
-    IndexationService indexationService;
-
-    public final void injectIndexationService(final IndexationService indexationService) {
-        this.indexationService = indexationService;
-    }
-
     @Override
     @Programmatic
     public IndexationCalculationMethod getIndexationCalculation() {
         return getIndexationMethod().indexationCalculation();
     }
+
+    // ///////////////////////////////////////////
+
+    @Inject
+    private IndexRepository indexRepository;
+
+    @Inject
+    IndexationService indexationService;
 }

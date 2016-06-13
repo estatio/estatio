@@ -77,7 +77,7 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.lease.tags.Brand WHERE this.group != null "
                         + "ORDER BY this.group ")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Brands.class, autoCompleteAction = "autoComplete")
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BrandMenu.class, autoCompleteAction = "autoComplete")
 public class Brand
         extends EstatioDomainObject<Brand>
         implements WithNameUnique, WithNameComparable<Brand>, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {

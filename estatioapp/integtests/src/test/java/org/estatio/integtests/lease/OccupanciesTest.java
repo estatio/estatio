@@ -42,7 +42,7 @@ import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brand.RemoveEvent;
-import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
@@ -82,7 +82,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
     Occupancies occupancies;
 
     @Inject
-    Brands brands;
+    BrandRepository brandRepository;
 
     Lease lease;
 
@@ -119,7 +119,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Brand brand = brands.findByName(LeaseForOxfTopModel001Gb.BRAND);
+            Brand brand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
             assertNotNull(brand);
 
             assertThat(occupancies.findByBrand(brand, false).size(), is(1));
@@ -160,8 +160,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            oldBrand = brands.findByName(LeaseForOxfTopModel001Gb.BRAND);
-            newBrand = brands.findByName(LeaseForOxfMediaX002Gb.BRAND);
+            oldBrand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
+            newBrand = brandRepository.findByName(LeaseForOxfMediaX002Gb.BRAND);
         }
 
         @Test

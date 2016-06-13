@@ -86,7 +86,7 @@ public class LeaseTermForIndexableTest {
 
         term = new LeaseTermForIndexable();
         term.injectClockService(mockClockService);
-        term.injectIndexationService(new IndexationService());
+        term.indexationService = new IndexationService();
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.setBaseIndexStartDate(new LocalDate(2010, 1, 1));
         term.setNextIndexStartDate(new LocalDate(2011, 1, 1));

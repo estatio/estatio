@@ -35,7 +35,7 @@ import org.estatio.dom.UdoDomainService;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscriptions> {
 
-    private final String DEFAULT_INVALIDATION_MESSAGE = "You cannot change the invoicing frequency of a lease item with invoice items on its leaseTermRepository. This lease item has invoice items on the following term(s): \n";
+    private final String DEFAULT_INVALIDATION_MESSAGE = "You cannot change the invoicing frequency of a lease item with invoice items on its terms. This lease item has invoice items on the following term(s): \n";
 
     public LeaseTermSubscriptions() {
         super(LeaseTermSubscriptions.class);

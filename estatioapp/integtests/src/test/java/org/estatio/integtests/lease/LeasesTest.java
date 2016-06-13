@@ -37,7 +37,7 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
@@ -219,14 +219,14 @@ public class LeasesTest extends EstatioIntegrationTest {
                 }
             });
         }
-
+        
         @Inject
-        private Brands brands;
+        private BrandRepository brandRepository;
 
         @Test
         public void whenValidProperty() {
             // given
-            final Brand brand = brands.findByName(LeaseForOxfTopModel001Gb.BRAND);
+            final Brand brand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
             final List<Lease> matchingLeases = leases.findByBrand(brand, false);
             assertThat(matchingLeases.size(), is(1));
 

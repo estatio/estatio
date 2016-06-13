@@ -32,10 +32,10 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Activity.class, nature = NatureOfService.DOMAIN)
-public class Activities extends UdoDomainRepositoryAndFactory<Activity> {
+public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> {
 
-    public Activities() {
-        super(Activities.class, Activity.class);
+    public ActivityRepository() {
+        super(ActivityRepository.class, Activity.class);
     }
 
     // //////////////////////////////////////

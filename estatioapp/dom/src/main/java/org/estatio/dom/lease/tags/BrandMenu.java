@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
@@ -42,7 +41,6 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -50,10 +48,10 @@ import org.estatio.dom.utils.StringUtils;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.9"
 )
-public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
+public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
 
-    public Brands() {
-        super(Brands.class, Brand.class);
+    public BrandMenu() {
+        super(BrandMenu.class, Brand.class);
     }
 
     // //////////////////////////////////////
@@ -77,7 +75,7 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
     public List<String> choices3NewBrand() {
-        return findUniqueGroups();
+        return brandRepository.findUniqueGroups();
     }
 
     public List<ApplicationTenancy> choices4NewBrand() {
@@ -88,9 +86,6 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
         return Dflt.of(choices4NewBrand());
     }
 
-    @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
-
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -99,55 +94,20 @@ public class Brands extends UdoDomainRepositoryAndFactory<Brand> {
         return allInstances();
     }
 
-    @SuppressWarnings({ "unchecked" })
-    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
-    public List<String> findUniqueNames() {
-        List names = allMatches("findUniqueNames");
-        return names;
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
-    public List<String> findUniqueGroups() {
-        List groups = allMatches("findUniqueGroups");
-        return groups;
-    }
-
-
-    @Action(hidden = Where.EVERYWHERE)
-    public Brand findByName(final String name) {
-        return firstMatch("findByName", "name", name);
-    }
-
-    @Action(hidden = Where.EVERYWHERE)
-    public List<Brand> matchByName(final String name) {
-        return allMatches("matchByName", "name", StringUtils.wildcardToCaseInsensitiveRegex(name));
-    }
-
-    @Programmatic
-    public Brand findOrCreate(
-            final ApplicationTenancy applicationTenancy,
-            final String name,
-            @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage brandCoverage,
-            @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin) {
-        if (name == null) {
-            return null;
-        }
-        Brand brand = findByName(name);
-        if (brand == null) {
-            brand = newBrand(name, brandCoverage, countryOfOrigin, null, applicationTenancy);
-        }
-        return brand;
-    }
-
     @Action(hidden = Where.EVERYWHERE)
     public List<Brand> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 0
-                ? matchByName("*" + searchPhrase + "*")
+                ? brandRepository.matchByName("*" + searchPhrase + "*")
                 : Lists.<Brand>newArrayList();
     }
 
     @Inject
     IsisJdoSupport isisJdoSupport;
+
+    @Inject
+    public BrandRepository brandRepository;
+
+    @Inject
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 }
