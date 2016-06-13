@@ -19,7 +19,7 @@
 package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -28,6 +28,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
@@ -38,7 +41,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.TaxRates;
+import org.estatio.dom.tax.TaxRateRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -69,7 +72,7 @@ public class InvoiceItemForLeaseTest {
         private InvoiceItemForLease item;
 
         @Mock
-        TaxRates mockTaxRates;
+        TaxRateRepository mockTaxRateRepository;
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -78,7 +81,7 @@ public class InvoiceItemForLeaseTest {
         public void setup() {
             charge = new Charge();
             tax = new Tax();
-            tax.injectTaxRates(mockTaxRates);
+            tax.taxRateRepository = mockTaxRateRepository;
 
             rate = new TaxRate();
             rate.setPercentage(BigDecimal.valueOf(21));
@@ -97,7 +100,7 @@ public class InvoiceItemForLeaseTest {
         public void happyCase() {
             context.checking(new Expectations() {
                 {
-                    allowing(mockTaxRates).findTaxRateByTaxAndDate(with(tax), with(new LocalDate(2012, 1, 1)));
+                    allowing(mockTaxRateRepository).findTaxRateByTaxAndDate(with(tax), with(new LocalDate(2012, 1, 1)));
                     will(returnValue(rate));
                 }
             });

@@ -331,39 +331,6 @@ public class AgreementTest {
 
     }
 
-    public static class Inject extends AgreementTest {
-
-        @Mock
-        private AgreementRepository mockAgreementRepository;
-        @Mock
-        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
-        @Mock
-        private AgreementTypeRepository mockAgreementTypeRepository;
-        @Mock
-        private AgreementRoleRepository mockAgreementRoleRepository;
-
-        private Agreement agreement;
-
-        @Before
-        public void setup() {
-            agreement = new AgreementForTesting();
-        }
-
-        @Test
-        public void injected() {
-            agreement.agreementTypeRepository = mockAgreementTypeRepository;
-            agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
-            agreement.agreementRepository = mockAgreementRepository;
-            agreement.agreementRoleRepository = mockAgreementRoleRepository;
-
-            assertThat(agreement.agreementRepository, is(mockAgreementRepository));
-            assertThat(agreement.agreementRoleRepository, is(mockAgreementRoleRepository));
-            assertThat(agreement.agreementRoleTypeRepository, is(mockAgreementRoleTypeRepository));
-            assertThat(agreement.agreementTypeRepository, is(mockAgreementTypeRepository));
-        }
-    }
-
-
     public static class IsCurrent extends AgreementTest {
 
         @Mock
