@@ -424,8 +424,4 @@ public abstract class Agreement
 
     @Inject public AgreementTypeRepository agreementTypeRepository;
 
-    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
-        this.agreementTypeRepository = agreementTypeRepository;
-    }
-
 }
