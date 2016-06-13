@@ -27,6 +27,7 @@ import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.guarantee.contributed.OnLease;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
@@ -64,6 +65,9 @@ public class GuaranteesTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
     Guarantees guarantees;
 
     @Inject
@@ -85,7 +89,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             assertThat(lease.getPrimaryParty(), is(not(nullValue())));
             assertThat(lease.getSecondaryParty(), is(not(nullValue())));
@@ -228,7 +232,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         @Test
         public void guarantees() throws Exception {
             // given
-            Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
             List<Guarantee> results = onLease.guarantees(lease);

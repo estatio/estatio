@@ -53,6 +53,9 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     private Leases leases;
 
     @Inject
+    private LeaseRepository leaseRepository;
+
+    @Inject
     private LeaseTermRepository leaseTermRepository;
 
     @Inject
@@ -94,7 +97,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
             }
         });
 
-        lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        lease = leaseRepository.findLeaseByReference("OXF-TOPMODEL-001");
         assertThat(lease.getItems().size(), is(9));
 
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));

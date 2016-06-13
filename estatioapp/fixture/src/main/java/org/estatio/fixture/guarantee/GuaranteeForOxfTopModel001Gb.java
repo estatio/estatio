@@ -28,6 +28,7 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeConstants;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
@@ -52,7 +53,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
     private void createGuaranteeForOxfTopModel001(final ExecutionContext executionContext) {
 
-        final Lease lease = leases.findLeaseByReference(LEASE_REFERENCE);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REFERENCE);
         final String reference = lease.getReference() + "-D";
 
         final Guarantee guarantee = newGuarantee(
@@ -71,4 +72,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
     @Inject
     Parties parties;
+
+    @Inject
+    LeaseRepository leaseRepository;
 }

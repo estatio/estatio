@@ -37,6 +37,9 @@ public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
     @Inject
     Leases leases;
 
+    @Inject
+    LeaseRepository leaseRepository;
+
     public static class LeaseTermForPercentageOver2011Test extends LeaseTermsForPercentageTest {
 
         LeaseTermForIndexable indexTerm1;
@@ -61,7 +64,7 @@ public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
         @Test
         public void test() throws Exception {
             // given
-            topmodelLease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             topmodelLease.verifyUntil(new LocalDate(2012, 01, 01));
 
             indexTerm1 = (LeaseTermForIndexable) topmodelLease.findFirstItemOfType(LeaseItemType.RENT).getTerms().first();
@@ -108,7 +111,7 @@ public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
         @Test
         public void test() throws Exception {
             // given
-            topmodelLease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             topmodelLease.verifyUntil(new LocalDate(2016, 01, 01));
 
             indexTermLast = (LeaseTermForIndexable) topmodelLease.findFirstItemOfType(LeaseItemType.RENT).getTerms().last();

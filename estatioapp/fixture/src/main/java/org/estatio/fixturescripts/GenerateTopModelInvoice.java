@@ -18,7 +18,10 @@
  */
 package org.estatio.fixturescripts;
 
+import javax.inject.Inject;
+
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -42,7 +45,7 @@ public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        final Lease lease = leases.findLeaseByReference(coalesce(fixtureResults.getParameters(), propertyRef));
+        final Lease lease = leaseRepository.findLeaseByReference(coalesce(fixtureResults.getParameters(), propertyRef));
         lease.verifyUntil(ld(2014, 1, 1));
 
         InvoiceCalculationParameters calculationParameters = new InvoiceCalculationParameters(
@@ -57,16 +60,17 @@ public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
 
     // //////////////////////////////////////
 
+    @Inject
     private Leases leases;
 
-    public void setLeases(final Leases leases) {
-        this.leases = leases;
-    }
+//    public void setLeases(final Leases leases) {
+//        this.leases = leases;
+//    }
 
+    @Inject
+    private LeaseRepository leaseRepository;
+
+    @Inject
     private InvoiceCalculationService calculationService;
-
-    public void injectCalculationService(final InvoiceCalculationService calculationService) {
-        this.calculationService = calculationService;
-    }
 
 }

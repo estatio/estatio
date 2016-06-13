@@ -21,6 +21,7 @@ package org.estatio.integtests.agreement;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.agreement.*;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.*;
@@ -54,7 +55,7 @@ public class AgreementRepositoryTest extends EstatioIntegrationTest {
             }
         });
 
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     @Inject
@@ -68,6 +69,9 @@ public class AgreementRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     Lease lease;
 

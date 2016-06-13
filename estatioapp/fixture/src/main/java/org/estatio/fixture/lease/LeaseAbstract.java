@@ -34,6 +34,7 @@ import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypes;
 import org.estatio.dom.lease.Leases;
@@ -95,7 +96,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             fixtureResults.addResult(this, occupancy);
         }
 
-        if (leases.findLeaseByReference(reference) == null) {
+        if (leaseRepository.findLeaseByReference(reference) == null) {
             throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
         return lease;
@@ -114,6 +115,9 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Leases leases;
+
+    @Inject
+    protected LeaseRepository leaseRepository;
 
     @Inject
     protected Occupancies occupancies;

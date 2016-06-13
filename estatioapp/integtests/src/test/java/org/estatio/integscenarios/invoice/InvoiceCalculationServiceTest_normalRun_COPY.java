@@ -34,6 +34,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
@@ -76,6 +77,8 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     @Inject
     private Leases leases;
     @Inject
+    private LeaseRepository leaseRepository;
+    @Inject
     private LeaseTermRepository leaseTermRepository;
     @Inject
     private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
@@ -108,7 +111,7 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
             }
         });
 
-        lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        lease = leaseRepository.findLeaseByReference("OXF-TOPMODEL-001");
         assertThat(lease.getItems().size(), is(9));
 
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));

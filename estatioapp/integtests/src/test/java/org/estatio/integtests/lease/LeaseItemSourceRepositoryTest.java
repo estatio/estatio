@@ -34,6 +34,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemSourceRepository;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -60,6 +61,9 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
     LeaseItemSourceRepository leaseItemSourceRepository;
 
     @Inject
@@ -75,7 +79,7 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
         depositItem = lease.findFirstItemOfType(LeaseItemType.DEPOSIT);
         rentItem = lease.findFirstItemOfType(LeaseItemType.RENT);
         serviceChargeItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);

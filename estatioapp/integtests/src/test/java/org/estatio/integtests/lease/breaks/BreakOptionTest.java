@@ -29,6 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
@@ -46,6 +47,9 @@ public class BreakOptionTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     Events events;
@@ -68,7 +72,7 @@ public class BreakOptionTest extends EstatioIntegrationTest {
                 }
             });
 
-            lease = leases.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
+            lease = leaseRepository.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
 
             assertThat(breakOptions.allBreakOptions().size(), is(2));
             final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);
@@ -108,7 +112,7 @@ public class BreakOptionTest extends EstatioIntegrationTest {
                 }
             });
 
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             assertThat(breakOptions.allBreakOptions().size(), is(2));
             final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);
@@ -150,7 +154,7 @@ public class BreakOptionTest extends EstatioIntegrationTest {
                 }
             });
 
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             assertThat(breakOptions.allBreakOptions().size(), is(2));
             assertThat(breakOptions.findByLease(lease).size(), is(2));

@@ -18,10 +18,6 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
@@ -36,18 +32,26 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseItems;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class LeaseTermForTaxTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     LeaseItems leaseItems;
@@ -71,7 +75,7 @@ public class LeaseTermForTaxTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             item = leaseItems.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0);
             taxItem = leaseItems.findLeaseItemsByType(lease, LeaseItemType.TAX).get(0);
             assertNotNull(item);

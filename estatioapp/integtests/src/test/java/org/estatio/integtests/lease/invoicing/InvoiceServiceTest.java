@@ -40,6 +40,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -71,6 +72,9 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     InvoiceService invoiceService;
@@ -118,7 +122,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
                 }
             });
 
-            lease = leases.findLeaseByReference("OXF-MIRACL-005");
+            lease = leaseRepository.findLeaseByReference("OXF-MIRACL-005");
             rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
             sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
             tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);

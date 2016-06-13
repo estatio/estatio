@@ -31,6 +31,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
@@ -104,6 +105,9 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Leases leases;
+
+    @Inject
+    protected LeaseRepository leaseRepository;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

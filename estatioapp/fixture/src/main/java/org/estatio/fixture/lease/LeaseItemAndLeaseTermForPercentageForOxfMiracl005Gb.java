@@ -41,7 +41,7 @@ public class LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb extends LeaseIt
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         createLeaseTermForPercentage(
                 LEASE_REF,

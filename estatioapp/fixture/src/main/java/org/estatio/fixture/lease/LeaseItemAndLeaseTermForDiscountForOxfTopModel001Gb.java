@@ -42,7 +42,7 @@ public class LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb extends LeaseIt
 
         // exec
 
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
         createLeaseTermForDiscount(
                 LEASE_REF,
                 AT_PATH,

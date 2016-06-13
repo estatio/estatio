@@ -39,6 +39,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.lease.LeaseTermForFixed;
@@ -78,7 +79,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     }
 
     private Lease findLease(final String leaseRef) {
-        return leases.findLeaseByReference(leaseRef);
+        return leaseRepository.findLeaseByReference(leaseRef);
     }
 
     protected LeaseItem findOrCreateLeaseItem(
@@ -431,6 +432,9 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Leases leases;
+
+    @Inject
+    protected LeaseRepository leaseRepository;
 
     @Inject
     protected LeaseTermRepository leaseTermRepository;

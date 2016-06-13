@@ -795,7 +795,7 @@ public class Lease
             final Party tenant,
             final LocalDate startDate
     ) {
-        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
+        return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
     }
 
     // //////////////////////////////////////
@@ -809,7 +809,7 @@ public class Lease
             final LocalDate endDate,
             final LocalDate tenancyStartDate,
             final LocalDate tenancyEndDate) {
-        Lease newLease = leases.newLease(
+        Lease newLease = leaseRepository.newLease(
                 this.getApplicationTenancy(),
                 reference,
                 name,
@@ -908,7 +908,7 @@ public class Lease
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";
         }
-        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
+        return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
     }
 
     // //////////////////////////////////////
@@ -986,6 +986,9 @@ public class Lease
 
     @Inject
     Leases leases;
+
+    @Inject
+    private LeaseRepository leaseRepository;
 
     @Inject
     UnitMenu unitMenu;

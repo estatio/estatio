@@ -47,6 +47,8 @@ public class LeasesTest {
 
     Leases leases;
 
+    LeaseRepository leaseRepository;
+
     FixedAsset asset;
 
     Property property;
@@ -80,6 +82,28 @@ public class LeasesTest {
                 return null;
             }
         };
+
+        leaseRepository = new LeaseRepository() {
+
+            @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
+                return (T) new Lease();
+            }
+
+            @Override
+            protected List<Lease> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
+                return null;
+            }
+
+            @Override
+            protected <T> List<T> allMatches(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
+                return null;
+            }
+        };
+
         leases.clockService = new ClockService();
     }
 
@@ -87,7 +111,7 @@ public class LeasesTest {
         @Test
         public void byReferenceWildcard() {
 
-            leases.findLeaseByReference("*REF?1*");
+            leaseRepository.findLeaseByReference("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
@@ -117,7 +141,7 @@ public class LeasesTest {
         @Test
         public void happyCase() {
 
-            leases.findLeasesByProperty(property);
+            leaseRepository.findLeasesByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
@@ -195,7 +219,7 @@ public class LeasesTest {
                     return applicationTenancyParty;
                 }
             };
-            error = leases.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010,01,01), null, new LocalDate(2020,01,01), landLordFra, tenantFra);
+            error = leases.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantFra);
 
             // then
             Assertions.assertThat(error).isEqualTo(null);
@@ -208,7 +232,7 @@ public class LeasesTest {
                     return applicationTenancyParty;
                 }
             };
-            error = leases.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010,01,01), null, new LocalDate(2020,01,01), landLordIta, tenantFra);
+            error = leases.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordIta, tenantFra);
 
             // then
             Assertions.assertThat(error).isEqualTo("Landlord not valid. (wrong application tenancy)");
@@ -221,7 +245,7 @@ public class LeasesTest {
                     return applicationTenancyParty;
                 }
             };
-            error = leases.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010,01,01), null, new LocalDate(2020,01,01), landLordFra, tenantIta);
+            error = leases.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantIta);
 
             // then
             Assertions.assertThat(error).isEqualTo("Tenant not valid. (wrong application tenancy)");

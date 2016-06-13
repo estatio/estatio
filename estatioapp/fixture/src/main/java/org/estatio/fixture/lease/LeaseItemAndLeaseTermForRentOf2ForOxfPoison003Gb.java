@@ -45,7 +45,7 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemA
 
         // exec
 
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         createLeaseTermForIndexableRent(
                 LEASE_REF,

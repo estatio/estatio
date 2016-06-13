@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptions;
@@ -53,6 +54,9 @@ public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Leases leases;
+
+    @Inject
+    protected LeaseRepository leaseRepository;
 
     @Inject
     protected BreakOptions breakOptions;

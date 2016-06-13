@@ -40,7 +40,7 @@ public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemA
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         createLeaseTermForDeposit(
                 LEASE_REF,

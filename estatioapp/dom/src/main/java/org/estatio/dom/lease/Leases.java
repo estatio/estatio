@@ -52,14 +52,12 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
@@ -99,7 +97,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     ) {
 
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
-        return newLease(applicationTenancy, reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+        return leaseRepository.newLease(applicationTenancy, reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
     }
 
     public List<ApplicationTenancy> choices0NewLease() {
@@ -111,14 +109,15 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     }
 
     public List<LeaseType> choices3NewLease(final ApplicationTenancy applicationTenancy) {
-        if (applicationTenancy == null) return null;
+        if (applicationTenancy == null)
+            return null;
         List<LeaseType> result = new ArrayList<>();
         for (LeaseType leaseType : leaseTypeRepository.allLeaseTypes()) {
             if (
                     ApplicationTenancyLevel.of(applicationTenancy)
                             .equals(ApplicationTenancyLevel.of(leaseType.getApplicationTenancy())
                             )
-                    ||
+                            ||
                             ApplicationTenancyLevel.of(applicationTenancy)
                                     .childOf(ApplicationTenancyLevel.of(leaseType.getApplicationTenancy()))
                     ) {
@@ -161,7 +160,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
                 ||
                 ApplicationTenancyLevel.of(landlord.getApplicationTenancy())
                         .childOf(ApplicationTenancyLevel.of(applicationTenancy))
-        )){
+        )) {
             return "Landlord not valid. (wrong application tenancy)";
         }
         if (!(ApplicationTenancyLevel.of(applicationTenancy)
@@ -169,46 +168,10 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
                 ||
                 ApplicationTenancyLevel.of(tenant.getApplicationTenancy())
                         .childOf(ApplicationTenancyLevel.of(applicationTenancy))
-        )){
+        )) {
             return "Tenant not valid. (wrong application tenancy)";
         }
         return null;
-    }
-
-    @Programmatic
-    public Lease newLease(
-            final ApplicationTenancy applicationTenancy,
-            final String reference,
-            final String name,
-            final LeaseType leaseType,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            final LocalDate tenancyStartDate,
-            final LocalDate tenancyEndDate,
-            final Party landlord,
-            final Party tenant) {
-        Lease lease = newTransientInstance();
-        final AgreementType at = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
-        lease.setType(at);
-        lease.setApplicationTenancyPath(applicationTenancy.getPath());
-        lease.setReference(reference);
-        lease.setName(name);
-        lease.setStartDate(startDate);
-        lease.setEndDate(endDate);
-        lease.setTenancyStartDate(tenancyStartDate);
-        lease.setTenancyEndDate(tenancyEndDate);
-        lease.setLeaseType(leaseType);
-        persistIfNotAlready(lease);
-
-        if (tenant != null) {
-            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
-            lease.newRole(artTenant, tenant, null, null);
-        }
-        if (landlord != null) {
-            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_LANDLORD);
-            lease.newRole(artLandlord, landlord, null, null);
-        }
-        return lease;
     }
 
     private static LocalDate calculateEndDate(
@@ -239,7 +202,7 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     public List<Lease> findLeasesByBrand(
             final Brand brand,
             final boolean includeTerminated) {
-        return findByBrand(brand, includeTerminated);
+        return leaseRepository.findByBrand(brand, includeTerminated);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -278,47 +241,11 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
-    public Lease findLeaseByReference(final String reference) {
-        return uniqueMatch("findByReference", "reference", reference);
-    }
-
-    @Programmatic
-    public Lease findLeaseByReferenceElseNull(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
-    }
-
-    @Programmatic
-    public List<Lease> findLeasesByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
-    }
-
-    @Programmatic
-    public List<Lease> findExpireInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
-        return allMatches(
-                "findExpireInDateRange",
-                "rangeStartDate", rangeStartDate,
-                "rangeEndDate", rangeEndDate);
-    }
-
-    @Programmatic
-    public List<Lease> findByBrand(final Brand brand, final boolean includeTerminated) {
-        return allMatches(
-                "findByBrand",
-                "brand", brand,
-                "includeTerminated", includeTerminated,
-                "date", clockService.now());
-    }
-
-    // //////////////////////////////////////
-
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<Lease> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findLeases("*" + searchPhrase + "*", true)
-                : Lists.<Lease> newArrayList();
+                : Lists.<Lease>newArrayList();
     }
 
     // //////////////////////////////////////
@@ -371,11 +298,14 @@ public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
     @Inject
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
-    @Inject 
+    @Inject
     ClockService clockService;
-	
+
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
+    @Inject
+    private LeaseRepository leaseRepository;
 
     @Inject
     private LeaseTypes leaseTypeRepository;

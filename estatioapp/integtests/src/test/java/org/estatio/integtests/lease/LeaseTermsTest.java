@@ -34,6 +34,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForTax;
@@ -67,13 +68,16 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
     LeaseTermRepository leaseTermRepository;
 
     Lease lease;
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class AllLeaseTerms extends LeaseTermsTest {

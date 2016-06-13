@@ -25,6 +25,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptions;
@@ -46,7 +47,7 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        final Lease lease = leases.findLeaseByReference(reference);
+        final Lease lease = leaseRepository.findLeaseByReference(reference);
         final LocalDate now = clockService.now();
         breakOptions.newBreakOption(lease, now.plusMonths(6), "3m", BreakType.FIXED, BreakExerciseType.LANDLORD, null);
         breakOptions.newBreakOption(lease, now.plusMonths(12), "3m", BreakType.FIXED, BreakExerciseType.MUTUAL, null);
@@ -57,11 +58,11 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
 
     // //////////////////////////////////////
 
+    @Inject
     private Leases leases;
 
-    public final void injectLeases(final Leases leases) {
-        this.leases = leases;
-    }
+    @Inject
+    private LeaseRepository leaseRepository;
 
     @Inject
     private BreakOptions breakOptions;

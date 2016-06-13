@@ -45,6 +45,7 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
@@ -63,12 +64,12 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     /**
      * class to store the result a calculation
-     * 
      */
     public static class CalculationResult {
         private static final BigDecimal ZERO = new BigDecimal("0.00");
         private BigDecimal value;
-        private BigDecimal mockValue;;
+        private BigDecimal mockValue;
+        ;
 
         private InvoicingInterval invoicingInterval;
         private LocalDateInterval effectiveInterval;
@@ -131,7 +132,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     }
 
     private LocalDate systemEpochDate() {
-        return estatioSettingsService == null ? new LocalDate(1980,1,1) : estatioSettingsService.fetchEpochDate();
+        return estatioSettingsService == null ? new LocalDate(1980, 1, 1) : estatioSettingsService.fetchEpochDate();
     }
 
     private String interactionId;
@@ -152,7 +153,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
         invoiceRepository.removeRuns(parameters);
         try {
             startInteraction(parameters.toString());
-            for (Lease lease : parameters.leases() == null ? leases.findLeasesByProperty(parameters.property()) : parameters.leases()) {
+            for (Lease lease : parameters.leases() == null ? leaseRepository.findLeasesByProperty(parameters.property()) : parameters.leases()) {
                 lease.verifyUntil(parameters.dueDateRange().endDateExcluding());
                 if (lease.getStatus() != LeaseStatus.SUSPENDED) {
                     SortedSet<LeaseItem> leaseItems =
@@ -215,6 +216,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     /**
      * Calculates a term for a given interval
+     *
      * @param term
      * @param interval
      * @param dueDate
@@ -224,17 +226,16 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     public List<CalculationResult> calculateDateRange(
             final LeaseTerm term,
             final LocalDateInterval interval,
-            final LocalDate dueDate)
-    {
-      if (!interval.isOpenEnded() && interval.isValid()) {
+            final LocalDate dueDate) {
+        if (!interval.isOpenEnded() && interval.isValid()) {
             return calculateTerm(term, term.getLeaseItem().getInvoicingFrequency().intervalsInRange(interval), dueDate);
-       }
+        }
         return Lists.newArrayList();
     }
 
-
     /**
      * Calculates a term for a given list of invoicing intervals
+     *
      * @param leaseTerm
      * @param intervals
      * @param dueDateForCalculation
@@ -279,7 +280,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             final BigDecimal annualFactor,
             final BigDecimal value,
             final LeaseTermValueType valueType) {
-        if(valueType == LeaseTermValueType.FIXED){
+        if (valueType == LeaseTermValueType.FIXED) {
             // If it's fixed we don't care about the factors, always return the full value
             // TODO: offload this responsibility to the lease term
             return value.setScale(2, RoundingMode.HALF_UP);
@@ -353,5 +354,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     @Inject
     private Leases leases;
+
+    @Inject
+    private LeaseRepository leaseRepository;
 
 }

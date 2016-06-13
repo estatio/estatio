@@ -37,6 +37,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
@@ -68,12 +69,15 @@ public class OccupanciesTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }
         });
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
         unit = unitRepository.findUnitByReference(PropertyForOxfGb.unitReference("001"));
     }
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     UnitRepository unitRepository;
@@ -227,7 +231,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            leaseTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             occupancy = leaseTopModel.getOccupancies().first();
         }
 
@@ -265,7 +269,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            leaseTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             occupancy = leaseTopModel.getOccupancies().first();
         }
 

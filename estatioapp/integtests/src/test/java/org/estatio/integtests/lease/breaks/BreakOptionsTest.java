@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
@@ -58,6 +59,9 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
     @Inject
     Leases leases;
 
+    @Inject
+    LeaseRepository leaseRepository;
+
     public static class FindByLease extends BreakOptionsTest {
 
         @Before
@@ -74,7 +78,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
         @Test
         public void findByLease() throws Exception {
             // given
-            Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
             List<BreakOption> result = breakOptions.findByLease(lease);

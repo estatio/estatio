@@ -44,6 +44,7 @@ import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
@@ -82,11 +83,14 @@ public class LeaseItemTest extends EstatioIntegrationTest {
     @Inject
     Leases leases;
 
+    @Inject
+    LeaseRepository leaseRepository;
+
     Lease lease;
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class FindTerm extends LeaseItemTest {
@@ -219,7 +223,7 @@ public class LeaseItemTest extends EstatioIntegrationTest {
         @Test
         public void whenStillHasInvoiceItems() throws Exception {
             // given
-            Lease leaseWithInvoiceItem = leases.findLeaseByReference(LeaseForKalPoison001Nl.REF);
+            Lease leaseWithInvoiceItem = leaseRepository.findLeaseByReference(LeaseForKalPoison001Nl.REF);
             LeaseItem leaseItem = leaseWithInvoiceItem.findFirstItemOfType(LeaseItemType.RENT);
             Assertions.assertThat(leaseItem).isNotNull();
             final LeaseTerm term = leaseItem.getTerms().first();

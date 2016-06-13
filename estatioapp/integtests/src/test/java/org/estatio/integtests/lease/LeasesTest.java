@@ -35,6 +35,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandRepository;
@@ -58,6 +59,9 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     public static class FindExpireInDateRange extends LeasesTest {
 
@@ -83,7 +87,7 @@ public class LeasesTest extends EstatioIntegrationTest {
             final LocalDate startDate = VT.ld(2020, 1, 1);
             final LocalDate endDate = VT.ld(2030, 1, 1);
             // when
-            final List<Lease> matchingLeases = leases.findExpireInDateRange(startDate, endDate);
+            final List<Lease> matchingLeases = leaseRepository.findExpireInDateRange(startDate, endDate);
             // then
             assertThat(matchingLeases.size(), is(4));
         }
@@ -106,7 +110,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
         @Test
         public void whenValidReference() {
-            final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             Assert.assertEquals(LeaseForOxfTopModel001Gb.REF, lease.getReference());
         }
 
@@ -128,7 +132,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
         @Test
         public void noResults() {
-            final Lease lease = leases.findLeaseByReferenceElseNull("FAKEREF");
+            final Lease lease = leaseRepository.findLeaseByReferenceElseNull("FAKEREF");
             assertNull(lease);
         }
     }
@@ -160,7 +164,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
             // When
             // terminate one lease...
-            Lease oxfTop = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease oxfTop = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             oxfTop.terminate(new LocalDate(2014, 1, 1));
 
             // Then
@@ -200,7 +204,7 @@ public class LeasesTest extends EstatioIntegrationTest {
             // given
             final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             // when
-            final List<Lease> matchingLeases = leases.findLeasesByProperty(property);
+            final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
             assertThat(matchingLeases.size(), is(4));
         }
@@ -219,7 +223,7 @@ public class LeasesTest extends EstatioIntegrationTest {
                 }
             });
         }
-        
+
         @Inject
         private BrandRepository brandRepository;
 
@@ -227,17 +231,17 @@ public class LeasesTest extends EstatioIntegrationTest {
         public void whenValidProperty() {
             // given
             final Brand brand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
-            final List<Lease> matchingLeases = leases.findByBrand(brand, false);
+            final List<Lease> matchingLeases = leaseRepository.findByBrand(brand, false);
             assertThat(matchingLeases.size(), is(1));
 
             // when
-            Lease oxfTop = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease oxfTop = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             oxfTop.terminate(new LocalDate(2014, 1, 1));
-            final List<Lease> matchingLeases2 = leases.findByBrand(brand, false);
+            final List<Lease> matchingLeases2 = leaseRepository.findByBrand(brand, false);
 
             // then
             assertTrue(matchingLeases2.isEmpty());
-            final List<Lease> matchingLeases3 = leases.findByBrand(brand, true);
+            final List<Lease> matchingLeases3 = leaseRepository.findByBrand(brand, true);
             assertThat(matchingLeases3.size(), is(1));
         }
     }

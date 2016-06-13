@@ -46,7 +46,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
 
         // exec
 
-        Lease lease = leases.findLeaseByReference(LEASE_REF);
+        Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         final String leaseRef = LEASE_REF;
         final String leaseItemAtPath = AT_PATH;

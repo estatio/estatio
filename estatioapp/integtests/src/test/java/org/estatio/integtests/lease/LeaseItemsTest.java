@@ -64,13 +64,16 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
     LeaseItems leaseItems;
 
     Lease lease;
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class FindLeaseItem extends LeaseItemsTest {
@@ -106,7 +109,7 @@ public class LeaseItemsTest extends EstatioIntegrationTest {
 
         @Before
         public void setup() {
-            leasePoison = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            leasePoison = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
         }
 
 

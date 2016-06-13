@@ -35,6 +35,7 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -75,6 +76,9 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
     Leases leases;
 
     @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
     InvoiceCalculationService invoiceCalculationService;
 
     @Inject
@@ -92,7 +96,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
         creator.propertyMenu = propertyMenu;
         creator.invoiceCalculationService = invoiceCalculationService;
 
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class FindDueDatesForLease extends CreateRetroInvoicesTest {

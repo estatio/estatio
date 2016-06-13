@@ -43,6 +43,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Parties;
@@ -78,6 +79,8 @@ public class InvoiceTest extends EstatioIntegrationTest {
     @Inject
     Leases leases;
     @Inject
+    LeaseRepository leaseRepository;
+    @Inject
     Currencies currencies;
     @Inject
     ChargeRepository chargeRepository;
@@ -111,7 +114,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
             applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
             seller = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
             buyer = parties.findPartyByReference(OrganisationForPoisonGb.REF);
-            lease = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
 
             charge = chargeRepository.allCharges().get(0);
             currency = currencies.allCurrencies().get(0);
@@ -176,7 +179,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
         public void setUp() throws Exception {
             seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
             buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
-            lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
+            lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }
 

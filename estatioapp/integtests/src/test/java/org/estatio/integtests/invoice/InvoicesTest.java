@@ -48,6 +48,7 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Parties;
@@ -90,6 +91,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
     Leases leases;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     PropertyRepository propertyRepository;
@@ -285,7 +289,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForNl.PATH);
             seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_SELLER);
             buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
-            lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
+            lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
             propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
 
@@ -373,7 +377,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
             final Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
             final Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
-            final Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
+            final Lease lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             final LocalDate startDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
 
             Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
@@ -421,7 +425,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
             seller = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
             buyer = parties.findPartyByReference(OrganisationForPoisonGb.REF);
-            lease = leases.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }
 

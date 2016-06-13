@@ -19,7 +19,9 @@
 package org.estatio.app.services.dashboard;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.ViewModel;
@@ -29,7 +31,7 @@ import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseRepository;
 
 @ViewModel
 @ViewModelLayout(named = "Dashboard")
@@ -45,7 +47,7 @@ public class EstatioAppHomePage extends EstatioViewModel {
 
     @CollectionLayout(render = RenderType.EAGERLY, named = "Leases about to expire")
     public List<Lease> getLeasesAboutToExpire() {
-        return leases.findExpireInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
+        return leaseRepository.findExpireInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
     }
 
     @CollectionLayout(render = RenderType.EAGERLY, named = "Upcoming events")
@@ -56,7 +58,7 @@ public class EstatioAppHomePage extends EstatioViewModel {
     // //////////////////////////////////////
 
     @Inject
-    private Leases leases;
+    private LeaseRepository leaseRepository;
 
     @Inject
     private Events events;
