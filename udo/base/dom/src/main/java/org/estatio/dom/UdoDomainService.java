@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.AbstractService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -38,7 +39,7 @@ public abstract class UdoDomainService<T> extends AbstractService {
     protected UdoDomainService(final Class<? extends UdoDomainService<T>> serviceType) {
         this.serviceType = serviceType;
     }
-    
+
     public String iconName() {
         // eg "AgreementRole";
         return serviceType.getSimpleName();
@@ -49,7 +50,6 @@ public abstract class UdoDomainService<T> extends AbstractService {
     protected Class<? extends UdoDomainService<T>> getServiceType() {
         return serviceType;
     }
-
 
     // //////////////////////////////////////
 
@@ -69,33 +69,33 @@ public abstract class UdoDomainService<T> extends AbstractService {
         getEventBusService().unregister(this);
     }
 
-
     // //////////////////////////////////////
 
     @javax.inject.Inject
     private ClockService clockService;
+
     protected ClockService getClockService() {
         return clockService;
     }
 
     @javax.inject.Inject
     private EventBusService eventBusService;
+
     protected EventBusService getEventBusService() {
         return eventBusService;
     }
 
     @javax.inject.Inject
     private MementoService mementoService;
+
     protected MementoService getMementoService() {
         return mementoService;
     }
 
-    private BookmarkService bookmarkService;
+    @Inject public BookmarkService bookmarkService;
+
     protected BookmarkService getBookmarkService() {
         return bookmarkService;
-    }
-    public final void injectBookmarkService(BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
     }
 
 }

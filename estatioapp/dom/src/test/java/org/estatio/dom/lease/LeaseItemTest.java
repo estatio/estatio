@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.lease;
 
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -93,7 +92,7 @@ public class LeaseItemTest {
                     return leaseTerm;
                 }
             };
-            leaseItem.injectClockService(mockClockService);
+            leaseItem.clockService = mockClockService;
         }
 
         @Test
@@ -205,7 +204,7 @@ public class LeaseItemTest {
                     .exercise(new LeaseItem());
         }
 
-        @SuppressWarnings({"rawtypes", "unchecked"})
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         private static FixtureDatumFactory<LeaseItemStatus> statii() {
             return new FixtureDatumFactory(LeaseItemStatus.class, (Object[]) LeaseItemStatus.values());
         }
@@ -222,8 +221,7 @@ public class LeaseItemTest {
 
         protected LeaseItem doCreateWithIntervalMutable(final WithIntervalMutable.Helper<LeaseItem> mockChangeDates) {
             return new LeaseItem() {
-                @Override
-                org.estatio.dom.WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
+                @Override org.estatio.dom.WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
                     return mockChangeDates;
                 }
             };
@@ -237,7 +235,7 @@ public class LeaseItemTest {
 
     }
 
-    public static class ChoicesNewSourceItem extends LeaseItemTest{
+    public static class ChoicesNewSourceItem extends LeaseItemTest {
 
         @Mock
         LeaseItemSourceRepository mockLeaseItemSourceRepository;
@@ -254,7 +252,7 @@ public class LeaseItemTest {
             itemNotLinked = new LeaseItem();
             itemNotLinked.setType(LeaseItemType.RENT_DISCOUNT);
 
-            lease = new Lease(){
+            lease = new Lease() {
                 @Override public SortedSet<LeaseItem> getItems() {
                     return new TreeSet<>(Arrays.asList(itemLinked, itemNotLinked, leaseItem));
                 }
@@ -291,7 +289,6 @@ public class LeaseItemTest {
         }
 
     }
-
 
     public static class CompareTo extends ComparableContractTest_compareTo<LeaseItem> {
 
@@ -338,11 +335,10 @@ public class LeaseItemTest {
             final LeaseItem li = new LeaseItem();
             li.setLease(lease);
             li.setType(type);
-            li.setSequence(sequence!=null? BigInteger.valueOf(sequence.longValue()):null);
+            li.setSequence(sequence != null ? BigInteger.valueOf(sequence.longValue()) : null);
             return li;
         }
 
     }
-
 
 }

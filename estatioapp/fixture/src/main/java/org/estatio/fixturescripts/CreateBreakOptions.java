@@ -67,10 +67,7 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     @Inject
     private BreakOptions breakOptions;
 
+    @Inject
     private ClockService clockService;
-
-    public final void injectClockService(ClockService clockService) {
-        this.clockService = clockService;
-    }
 
 }

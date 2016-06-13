@@ -249,7 +249,6 @@ public class LeaseTest {
             leaseItems.setContainer(mockContainer);
             leaseItems.estatioApplicationTenancyRepository = mockApplicationTenancyRepository;
 
-
             Property property = new Property();
             Party party = new Party() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
@@ -257,7 +256,7 @@ public class LeaseTest {
                 }
             };
 
-            lease = new Lease(){
+            lease = new Lease() {
                 @Override public Party getPrimaryParty() {
                     return party;
                 }
@@ -293,13 +292,11 @@ public class LeaseTest {
                 }
             });
 
-
             final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
             assertThat(newItem, is(leaseItem));
             assertThat(leaseItem.getLease(), is(lease));
             assertThat(leaseItem.getSequence(), is(BigInteger.ONE));
             assertThat(leaseItem.getApplicationTenancyPath(), is("/it/XXX/_"));
-
 
             // this assertion not true for unit tests, because we rely on JDO
             // to manage the bidir relationship for us.
@@ -442,13 +439,13 @@ public class LeaseTest {
             tenantAgreementRole = new AgreementRole();
             tenantAgreementRole.setParty(tenant);
             tenantAgreementRole.setType(tenantAgreementRoleType);
-            tenantAgreementRole.injectClockService(mockClockService);
+            tenantAgreementRole.clockService = mockClockService;
 
             landlord = new PartyForTesting();
             landlordAgreementRole = new AgreementRole();
             landlordAgreementRole.setParty(landlord);
             landlordAgreementRole.setType(landlordAgreementRoleType);
-            landlordAgreementRole.injectClockService(mockClockService);
+            landlordAgreementRole.clockService = mockClockService;
 
             bankMandate = new BankMandate();
             bankMandate.setContainer(mockContainer);
@@ -463,7 +460,6 @@ public class LeaseTest {
             sequenceType = SequenceType.FIRST;
             scheme = Scheme.CORE;
             signatureDate = new LocalDate(2013, 4, 1);
-
 
             // a mini integration test, since using the real BankMandateMenu and BankMandateRepository impl
 
@@ -483,7 +479,7 @@ public class LeaseTest {
             lease.financialAccounts = mockFinancialAccounts;
             lease.bankMandateRepository = mandateRepository;
             lease.setContainer(mockContainer);
-            lease.injectClockService(mockClockService);
+            lease.clockService = mockClockService;
             lease.agreementRepository = agreementRepository;
         }
 
@@ -703,7 +699,7 @@ public class LeaseTest {
             arTenant = new AgreementRole();
             arTenant.setParty(tenant);
             arTenant.setType(tenantAgreementRoleType);
-            arTenant.injectClockService(mockClockService);
+            arTenant.clockService = mockClockService;
 
             bankMandate = new BankMandate();
             someOtherBankMandate = new BankMandate();
@@ -712,7 +708,7 @@ public class LeaseTest {
             lease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
             lease.agreementRepository = mockAgreementRepository;
             lease.agreementTypeRepository = mockAgreementTypeRepository;
-            lease.injectClockService(mockClockService);
+            lease.clockService = mockClockService;
         }
 
         @Test

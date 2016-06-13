@@ -18,12 +18,15 @@
  */
 package org.estatio.dom;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.jmock.auto.Mock;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.services.clock.ClockService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -43,6 +46,7 @@ public class UdoDomainObjectTest {
             public SomeDomainObject() {
                 super(null);
             }
+
             @Override
             public ApplicationTenancy getApplicationTenancy() {
                 return null;
@@ -52,7 +56,7 @@ public class UdoDomainObjectTest {
         @Test
         public void testImpl() {
             final SomeDomainObject someDomainObject = new SomeDomainObject();
-            someDomainObject.injectClockService(mockClockService);
+            someDomainObject.clockService = mockClockService;
 
             assertThat(someDomainObject.getClockService(), is(mockClockService));
         }
@@ -63,10 +67,12 @@ public class UdoDomainObjectTest {
         public static class WithCodeGetterImpl implements WithCodeGetter {
 
             private String code;
+
             @Override
             public String getCode() {
                 return code;
             }
+
             public void setCode(String code) {
                 this.code = code;
             }
@@ -75,10 +81,12 @@ public class UdoDomainObjectTest {
         public static class WithDescriptionGetterImpl implements WithDescriptionGetter {
 
             private String description;
+
             @Override
             public String getDescription() {
                 return description;
             }
+
             public void setDescription(String description) {
                 this.description = description;
             }
@@ -87,10 +95,12 @@ public class UdoDomainObjectTest {
         public static class WithNameGetterImpl implements WithNameGetter {
 
             private String name;
+
             @Override
             public String getName() {
                 return name;
             }
+
             public void setName(String name) {
                 this.name = name;
             }
@@ -99,10 +109,12 @@ public class UdoDomainObjectTest {
         public static class WithReferenceUniqueImpl implements WithReferenceGetter {
 
             private String reference;
+
             @Override
             public String getReference() {
                 return reference;
             }
+
             public void setReference(String reference) {
                 this.reference = reference;
             }
@@ -111,16 +123,18 @@ public class UdoDomainObjectTest {
         public static class WithTitleGetterImpl implements WithTitleGetter {
 
             private String title;
+
             @Override
             public String getTitle() {
                 return title;
             }
+
             public void setTitle(String title) {
                 this.title = title;
             }
         }
 
-        public static class SomeDomainObject extends UdoDomainObject<SomeDomainObject>  {
+        public static class SomeDomainObject extends UdoDomainObject<SomeDomainObject> {
             public SomeDomainObject() {
                 super("withCode,withReference,withName,withDescription,withTitle");
             }
@@ -190,7 +204,6 @@ public class UdoDomainObjectTest {
                 return null;
             }
         }
-
 
         @Test
         public void test() {

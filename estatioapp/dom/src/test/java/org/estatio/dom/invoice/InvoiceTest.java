@@ -126,12 +126,16 @@ public class InvoiceTest {
                     @Override
                     public String getInvoiceNumber() {
                         return invoiceNumber;
-                    };
+                    }
+
+                    ;
 
                     @Override
                     public LocalDate getInvoiceDate() {
                         return invoiceDate;
-                    };
+                    }
+
+                    ;
                 })));
             }
         });
@@ -152,7 +156,7 @@ public class InvoiceTest {
         invoice.setContainer(mockContainer);
         invoice.invoiceRepository = mockInvoiceRepository;
         invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
-        invoice.injectClockService(mockClockService);
+        invoice.clockService = mockClockService;
         return invoice;
     }
 
@@ -245,9 +249,13 @@ public class InvoiceTest {
                             return new BankAccount() {
                                 public boolean isValidIban() {
                                     return true;
-                                };
+                                }
+
+                                ;
                             };
-                        };
+                        }
+
+                        ;
                     }));
                 }
             });
@@ -366,7 +374,9 @@ public class InvoiceTest {
             invoice = new Invoice() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
                     return new ApplicationTenancy();
-                };
+                }
+
+                ;
             };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
             invoice.invoiceRepository = mockInvoiceRepository;

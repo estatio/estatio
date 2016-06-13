@@ -19,11 +19,13 @@
 package org.estatio.dom.numerator;
 
 import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
@@ -83,18 +85,20 @@ public class NumeratorsTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<Numerator> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
         };
-        numerators.injectBookmarkService(mockBookmarkService);
+        numerators.bookmarkService = mockBookmarkService;
     }
 
     public static class FindScopedNumerator extends NumeratorsTest {
@@ -106,9 +110,9 @@ public class NumeratorsTest {
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Numerator.class));
             assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)Constants.INVOICE_NUMBER_NUMERATOR_NAME));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("objectType"), is((Object)"PROP"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("objectIdentifier"), is((Object)"123"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) Constants.INVOICE_NUMBER_NUMERATOR_NAME));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("objectType"), is((Object) "PROP"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("objectIdentifier"), is((Object) "123"));
 
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
         }
