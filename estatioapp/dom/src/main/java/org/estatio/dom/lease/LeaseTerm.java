@@ -210,7 +210,7 @@ public abstract class LeaseTerm
     }
 
     protected boolean allowOpenEndDate(){
-        return true;
+        return getLeaseItem().getType().allowOpenEndDate();
     }
 
     // //////////////////////////////////////

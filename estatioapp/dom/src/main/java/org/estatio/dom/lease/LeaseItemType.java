@@ -26,22 +26,23 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseItemType implements PowerType<LeaseTerm> {
 
-    RENT(LeaseTermForIndexable.class, true, false),
-    RENT_FIXED(LeaseTermForFixed.class, false, false),
-    TURNOVER_RENT(LeaseTermForTurnoverRent.class, true, true),
-    RENTAL_FEE(LeaseTermForPercentage.class, true, true),
-    DEPOSIT(LeaseTermForDeposit.class, false, true),
-    SERVICE_CHARGE(LeaseTermForServiceCharge.class, true, false),
-    SERVICE_CHARGE_BUDGETED(LeaseTermForServiceCharge.class, false, false),
-    SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true, false),
-    DISCOUNT(LeaseTermForFixed.class, false, false),
-    RENT_DISCOUNT(LeaseTermForIndexable.class, false, false),
-    ENTRY_FEE(LeaseTermForFixed.class, false, false),
-    TAX(LeaseTermForTax.class, true, false);
+    RENT(LeaseTermForIndexable.class, true, false, true),
+    RENT_FIXED(LeaseTermForFixed.class, false, false, true),
+    TURNOVER_RENT(LeaseTermForTurnoverRent.class, true, true, true),
+    RENTAL_FEE(LeaseTermForPercentage.class, true, true, true),
+    DEPOSIT(LeaseTermForDeposit.class, false, true, true),
+    SERVICE_CHARGE(LeaseTermForServiceCharge.class, true, false, true),
+    SERVICE_CHARGE_BUDGETED(LeaseTermForServiceCharge.class, false, false, false),
+    SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true, false, true),
+    DISCOUNT(LeaseTermForFixed.class, false, false, true),
+    RENT_DISCOUNT(LeaseTermForIndexable.class, false, false, true),
+    ENTRY_FEE(LeaseTermForFixed.class, false, false, true),
+    TAX(LeaseTermForTax.class, true, false, false);
 
     private final Class<? extends LeaseTerm> clss;
     private final boolean autoCreateTerms;
     private final boolean useSource;
+    private final boolean allowOpenEndDate;
 
 
     // //////////////////////////////////////
@@ -49,10 +50,12 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     private LeaseItemType(
             final Class<? extends LeaseTerm> clss,
             final boolean autoCreateTerms,
-            final boolean useSource) {
+            final boolean useSource,
+            final boolean allowOpenEndDate) {
         this.clss = clss;
         this.autoCreateTerms = autoCreateTerms;
         this.useSource = useSource;
+        this.allowOpenEndDate = allowOpenEndDate;
     }
 
     // //////////////////////////////////////
@@ -81,4 +84,7 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     public boolean useSource() {
         return useSource; }
 
+    public boolean allowOpenEndDate() {
+        return allowOpenEndDate;
+    }
 }
