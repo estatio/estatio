@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -432,7 +433,7 @@ public abstract class LeaseTerm
         if (nextTerm != null) {
             return nextTerm;
         }
-        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, startDate, endDate);
+        nextTerm = leaseTermRepository.newLeaseTerm(getLeaseItem(), this, startDate, endDate);
         return nextTerm;
     }
 
@@ -451,7 +452,7 @@ public abstract class LeaseTerm
     public String validateCreateNext(
             final LocalDate nextStartDate,
             final LocalDate nextEndDate) {
-        return terms.validateNewLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
+        return leaseTermRepository.validateNewLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
     }
 
     public LocalDate default0CreateNext(
@@ -562,8 +563,8 @@ public abstract class LeaseTerm
     @Action(restrictTo = RestrictTo.PROTOTYPING)
     public String showCalculationResults() {
         return StringUtils.join(calculationResults(
-                        getEffectiveInterval(),
-                        getStartDate().plusYears(2)),
+                getEffectiveInterval(),
+                getStartDate().plusYears(2)),
                 "\t");
     }
 
@@ -586,16 +587,10 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+    @Inject
     private InvoiceCalculationService invoiceCalculationService;
 
-    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
-        this.invoiceCalculationService = invoiceCalculationService;
-    }
-
-    LeaseTerms terms;
-
-    public final void injectLeaseTerms(final LeaseTerms terms) {
-        this.terms = terms;
-    }
+    @Inject
+    public LeaseTermRepository leaseTermRepository;
 
 }
