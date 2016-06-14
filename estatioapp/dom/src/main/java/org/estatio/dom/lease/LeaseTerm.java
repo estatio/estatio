@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -87,10 +86,10 @@ import lombok.Setter;
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_sequence_IDX",
-                members = { "leaseItem", "sequence" }),
+                members = {"leaseItem", "sequence"}),
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_startDate_IDX",
-                members = { "leaseItem", "startDate" })
+                members = {"leaseItem", "startDate"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -198,6 +197,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
@@ -209,8 +209,8 @@ public abstract class LeaseTerm
         }
     }
 
-    protected boolean allowOpenEndDate() {
-        return true;
+    protected boolean allowOpenEndDate(){
+        return getLeaseItem().getType().allowOpenEndDate();
     }
 
     // //////////////////////////////////////
@@ -234,7 +234,7 @@ public abstract class LeaseTerm
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        if (getStatus().isApproved()) {
+        if (getStatus().isApproved()){
             return "Already approved";
         }
         if (valueType() == LeaseTermValueType.FIXED) {
@@ -321,6 +321,7 @@ public abstract class LeaseTerm
     }
 
     // //////////////////////////////////////
+
 
     @Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
     @PropertyLayout(named = "Previous Term")
@@ -431,7 +432,7 @@ public abstract class LeaseTerm
         if (nextTerm != null) {
             return nextTerm;
         }
-        nextTerm = leaseTermRepository.newLeaseTerm(getLeaseItem(), this, startDate, endDate);
+        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, startDate, endDate);
         return nextTerm;
     }
 
@@ -450,7 +451,7 @@ public abstract class LeaseTerm
     public String validateCreateNext(
             final LocalDate nextStartDate,
             final LocalDate nextEndDate) {
-        return leaseTermRepository.validateNewLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
+        return terms.validateNewLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
     }
 
     public LocalDate default0CreateNext(
@@ -561,8 +562,8 @@ public abstract class LeaseTerm
     @Action(restrictTo = RestrictTo.PROTOTYPING)
     public String showCalculationResults() {
         return StringUtils.join(calculationResults(
-                getEffectiveInterval(),
-                getStartDate().plusYears(2)),
+                        getEffectiveInterval(),
+                        getStartDate().plusYears(2)),
                 "\t");
     }
 
@@ -585,10 +586,16 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Inject
     private InvoiceCalculationService invoiceCalculationService;
 
-    @Inject
-    public LeaseTermRepository leaseTermRepository;
+    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
+        this.invoiceCalculationService = invoiceCalculationService;
+    }
+
+    LeaseTerms terms;
+
+    public final void injectLeaseTerms(final LeaseTerms terms) {
+        this.terms = terms;
+    }
 
 }

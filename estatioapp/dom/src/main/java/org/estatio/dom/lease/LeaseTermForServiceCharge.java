@@ -53,12 +53,6 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Getter @Setter
     private BigDecimal auditedValue;
 
-
-    @Override
-    protected boolean allowOpenEndDate(){
-        return getLeaseItem().getType() == LeaseItemType.SERVICE_CHARGE_BUDGETED ? false : true ;
-    }
-
     // //////////////////////////////////////
 
     public LeaseTermForServiceCharge changeValues(

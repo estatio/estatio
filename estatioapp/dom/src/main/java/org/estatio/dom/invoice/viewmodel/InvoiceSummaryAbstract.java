@@ -30,13 +30,14 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 
-public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
+public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements WithApplicationTenancy {
 
     public Object approveAll() {
         for (Invoice invoice : getInvoices()) {
