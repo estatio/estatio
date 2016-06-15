@@ -23,8 +23,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.States;
+import org.estatio.dom.geography.CountryRepository;
+import org.estatio.dom.geography.StateRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PersonGenderType;
@@ -80,10 +80,10 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    protected Countries countries;
+    protected CountryRepository countryRepository;
 
     @Inject
-    protected States states;
+    protected StateRepository stateRepository;
 
     @Inject
     protected Parties parties;

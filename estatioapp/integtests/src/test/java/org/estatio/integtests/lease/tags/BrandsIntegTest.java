@@ -29,9 +29,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.BrandMenu;
+import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.lease.tags.BrandsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -40,10 +41,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BrandsIntegTest extends EstatioIntegrationTest {
 
     @Inject
-    Brands brands;
+    BrandMenu brandMenu;
 
     @Inject
-    Countries countries;
+    BrandRepository brandRepository;
+
+    @Inject
+    CountryRepository countryRepository;
 
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
@@ -65,7 +69,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             // when
-            final List<Brand> results = brands.allBrands();
+            final List<Brand> results = brandMenu.allBrands();
             // then
             assertThat(results.size()).isEqualTo(3);
             assertThat(results.get(0).getName()).isEqualTo(BrandsFixture.YU_S_NOODLE_JOINT);
@@ -78,7 +82,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             // when
-            final List<String> results = brands.findUniqueNames();
+            final List<String> results = brandRepository.findUniqueNames();
             // then
             assertThat(results.size()).isEqualTo(3);
         }
@@ -90,7 +94,7 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             // when
-            final List<String> uniqueGroups = brands.findUniqueGroups();
+            final List<String> uniqueGroups = brandRepository.findUniqueGroups();
             // then
             assertThat(uniqueGroups.size()).isEqualTo(1);
             assertThat(uniqueGroups.get(0)).isEqualTo(BrandsFixture.YU_GROUP);

@@ -18,6 +18,7 @@
  */
 package org.estatio.dom;
 
+import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -29,12 +30,11 @@ import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
 import org.estatio.services.clock.ClockService;
 
-
 /**
  * A domain object that is mutable and can be changed by multiple users over time,
  * and should therefore have optimistic locking controls in place.
- *
- * <p>
+ * <p/>
+ * <p/>
  * Subclasses must be annotated with:
  * <pre>
  * @javax.jdo.annotations.DatastoreIdentity(
@@ -47,8 +47,8 @@ import org.estatio.services.clock.ClockService;
  *   ...
  * }
  * </pre>
- *
- * <p>
+ * <p/>
+ * <p/>
  * Note however that if a subclass that has a supertype which is annotated
  * with {@link javax.jdo.annotations.Version} (eg <tt>CommunicationChannel</tt>)
  * then the subtype must not also have a <tt>Version</tt> annotation (otherwise JDO
@@ -56,17 +56,16 @@ import org.estatio.services.clock.ClockService;
  * kept in sync).
  */
 public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
-        extends AbstractDomainObject 
+        extends AbstractDomainObject
         implements Comparable<T>, WithApplicationTenancy {
 
     protected static ObjectContracts UDO_OBJECT_CONTRACTS =
             new ObjectContracts()
-    .with(WithReferenceGetter.ToString.evaluator())
-                .with(WithCodeGetter.ToString.evaluator())
-                .with(WithNameGetter.ToString.evaluator())
-                .with(WithTitleGetter.ToString.evaluator())
-                .with(WithDescriptionGetter.ToString.evaluator())
-                ;
+                    .with(WithReferenceGetter.ToString.evaluator())
+                    .with(WithCodeGetter.ToString.evaluator())
+                    .with(WithNameGetter.ToString.evaluator())
+                    .with(WithTitleGetter.ToString.evaluator())
+                    .with(WithDescriptionGetter.ToString.evaluator());
 
     private final String keyProperties;
 
@@ -83,7 +82,7 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
     @Programmatic
     public String getId() {
         Object objectId = JDOHelper.getObjectId(this);
-        if(objectId == null) {
+        if (objectId == null) {
             return "";
         }
         String objectIdStr = objectId.toString();
@@ -91,29 +90,23 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
         return id;
     }
 
-
-
     // //////////////////////////////////////
 
+    @Inject public ClockService clockService;
 
-    private ClockService clockService;
     protected ClockService getClockService() {
         return clockService;
     }
-    public final void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
-    
+
     /**
-     * a default value is used to prevent null pointers for objects 
+     * a default value is used to prevent null pointers for objects
      * being initialized where the service has not yet been injected into.
      */
+    @Inject
     private EventBusService eventBusService = EventBusService.NOOP;
+
     protected EventBusService getEventBusService() {
         return eventBusService;
-    }
-    public final void injectEventBusService(final EventBusService eventBusService) {
-        this.eventBusService = eventBusService;
     }
 
     // //////////////////////////////////////

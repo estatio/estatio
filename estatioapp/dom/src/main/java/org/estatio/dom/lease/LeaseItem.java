@@ -65,7 +65,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
@@ -287,7 +287,7 @@ public class LeaseItem
 
     @Programmatic
     public LeaseTerm findTermWithSequence(final BigInteger sequence) {
-        return leaseTerms.findByLeaseItemAndSequence(this, sequence);
+        return leaseTermRepository.findByLeaseItemAndSequence(this, sequence);
     }
 
     // //////////////////////////////////////
@@ -363,7 +363,7 @@ public class LeaseItem
     }
 
     public List<Charge> choices3Copy() {
-        return charges.chargesForCountry(this.getApplicationTenancy());
+        return chargeRepository.chargesForCountry(this.getApplicationTenancy());
     }
 
     public String validateCopy(
@@ -446,7 +446,7 @@ public class LeaseItem
     private Charge charge;
 
     public List<Charge> choicesCharge() {
-        return charges.allCharges();
+        return chargeRepository.allCharges();
     }
 
     // //////////////////////////////////////
@@ -461,7 +461,7 @@ public class LeaseItem
     }
 
     public List<Charge> choices0ChangeCharge() {
-        return charges.chargesForCountry(getApplicationTenancyPath());
+        return chargeRepository.chargesForCountry(getApplicationTenancyPath());
     }
 
 
@@ -571,7 +571,7 @@ public class LeaseItem
     public LeaseTerm newTerm(
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        return leaseTerms.newLeaseTerm(this, lastInChain(), startDate, endDate);
+        return leaseTermRepository.newLeaseTerm(this, lastInChain(), startDate, endDate);
     }
 
     private LeaseTerm lastInChain() {
@@ -585,7 +585,7 @@ public class LeaseItem
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        return leaseTerms.validateNewLeaseTerm(this, lastInChain(), startDate, endDate);
+        return leaseTermRepository.validateNewLeaseTerm(this, lastInChain(), startDate, endDate);
     }
 
     public LocalDate default0NewTerm(
@@ -734,10 +734,10 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @Inject
-    private Charges charges;
+    private ChargeRepository chargeRepository;
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
 
     @Inject
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

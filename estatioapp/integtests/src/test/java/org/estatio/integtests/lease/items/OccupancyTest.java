@@ -26,7 +26,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -55,14 +56,17 @@ public class OccupancyTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Leases leases;
+        private LeaseMenu leaseMenu;
+
+        @Inject
+        private LeaseRepository leaseRepository;
 
         private Lease leaseTopModel;
         private Occupancy occupancy;
 
         @Before
         public void setup() {
-            leaseTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             occupancy = leaseTopModel.getOccupancies().first();
         }
 

@@ -52,7 +52,7 @@ public class BudgetItemAllocationsForOxf extends BudgetItemAllocationAbstact {
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         BudgetItem budgetItem1 = budget.getItems().first();
         BudgetItem budgetItem2 = budget.getItems().last();
-        Charge charge = chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+        Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
         final List<KeyTable> keyTables = keyTableRepository.findByBudget(budget);
         KeyTable keyTable1 = keyTables.get(0);
         KeyTable keyTable2 = keyTables.get(1);

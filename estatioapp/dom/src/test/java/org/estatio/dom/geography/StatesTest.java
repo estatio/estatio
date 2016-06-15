@@ -33,7 +33,7 @@ public class StatesTest {
 
     FinderInteraction finderInteraction;
 
-    States states;
+    StateRepository stateRepository;
 
     Country country;
 
@@ -42,7 +42,7 @@ public class StatesTest {
         
         country = new Country();
         
-        states = new States() {
+        stateRepository = new StateRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -67,7 +67,7 @@ public class StatesTest {
         @Test
         public void happyCase() {
 
-            states.findState("*REF?1*");
+            stateRepository.findState("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
@@ -82,7 +82,7 @@ public class StatesTest {
         @Test
         public void happyCase() {
 
-            states.findStatesByCountry(country);
+            stateRepository.findStatesByCountry(country);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
@@ -98,7 +98,7 @@ public class StatesTest {
         @Test
         public void happyCase() {
 
-            states.allStates();
+            stateRepository.allStates();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

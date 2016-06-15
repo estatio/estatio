@@ -37,9 +37,9 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValueRepository;
+import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
-import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.services.clock.ClockService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -60,7 +60,7 @@ public class LeaseTermForIndexableTest {
     ClockService mockClockService;
 
     @Mock
-    LeaseTerms mockLeaseTerms;
+    LeaseTermRepository mockLeaseTermRepository;
 
     @Mock
     IndexValueRepository mockIndexValueRepository;
@@ -72,21 +72,21 @@ public class LeaseTermForIndexableTest {
     public void setup() {
 
         lease = new Lease();
-        lease.setStartDate(new LocalDate(2011,1,1));
-        lease.setEndDate(new LocalDate(2020,12,31));
+        lease.setStartDate(new LocalDate(2011, 1, 1));
+        lease.setEndDate(new LocalDate(2020, 12, 31));
 
         item = new LeaseItem();
-        item.injectClockService(mockClockService);
+        item.clockService = mockClockService;
 
         lease.getItems().add(item);
         item.setLease(lease);
 
         item.setType(LeaseItemType.RENT);
-        item.leaseTerms = mockLeaseTerms;
+        item.leaseTermRepository = mockLeaseTermRepository;
 
         term = new LeaseTermForIndexable();
-        term.injectClockService(mockClockService);
-        term.injectIndexationService(new IndexationService());
+        term.clockService = mockClockService;
+        term.indexationService = new IndexationService();
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.setBaseIndexStartDate(new LocalDate(2010, 1, 1));
         term.setNextIndexStartDate(new LocalDate(2011, 1, 1));
@@ -206,7 +206,7 @@ public class LeaseTermForIndexableTest {
             assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
         }
     }
-    
+
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
         @Test
@@ -220,13 +220,11 @@ public class LeaseTermForIndexableTest {
                     .exercise(new LeaseTermForIndexable());
         }
 
-
         @SuppressWarnings({ "rawtypes", "unchecked" })
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
-            return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
+            return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[]) LeaseTermStatus.values());
         }
 
     }
-
 
 }

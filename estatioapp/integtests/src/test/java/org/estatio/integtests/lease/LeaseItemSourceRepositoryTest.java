@@ -27,14 +27,15 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemSourceRepository;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
@@ -57,13 +58,16 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     LeaseItemSourceRepository leaseItemSourceRepository;
 
     @Inject
-    Charges charges;
+    ChargeRepository chargeRepository;
 
     Lease lease;
 
@@ -75,7 +79,7 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
         depositItem = lease.findFirstItemOfType(LeaseItemType.DEPOSIT);
         rentItem = lease.findFirstItemOfType(LeaseItemType.RENT);
         serviceChargeItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
@@ -108,7 +112,7 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
     public void findByItemTest() throws Exception {
 
         // given
-        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, charges.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,new LocalDate(2016, 01, 01));
+        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,new LocalDate(2016, 01, 01));
 
         // when
         newDeposit.newSourceItem(serviceChargeItem);

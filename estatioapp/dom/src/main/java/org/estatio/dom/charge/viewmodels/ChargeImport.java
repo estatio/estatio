@@ -23,7 +23,7 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.dom.tax.viewmodels.TaxImport;
@@ -79,7 +79,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 
         final Tax tax = taxes.findOrCreate(taxReference, taxReference, applicationTenancy);
-        final Charge charge = charges.newCharge(applicationTenancy, reference, name, description, tax, chargeGroup);
+        final Charge charge = chargeRepository.newCharge(applicationTenancy, reference, name, description, tax, chargeGroup);
 
         charge.setExternalReference(externalReference);
         charge.setSortOrder(sortOrder);
@@ -108,7 +108,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private Taxes taxes;
 
     @Inject
-    private Charges charges;
+    private ChargeRepository chargeRepository;
 
     @Inject
     private ChargeGroups chargeGroups;

@@ -63,7 +63,7 @@ public class InvoiceTest {
     Numerator numerator;
 
     @Mock
-    Invoices mockInvoices;
+    InvoiceRepository mockInvoiceRepository;
 
     @Mock
     EstatioNumeratorRepository mockEstatioNumeratorRepository;
@@ -121,17 +121,21 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnInvoice(final String invoiceNumber, final LocalDate invoiceDate) {
         context.checking(new Expectations() {
             {
-                allowing(mockInvoices).findByInvoiceNumber(with(any(String.class)));
+                allowing(mockInvoiceRepository).findByInvoiceNumber(with(any(String.class)));
                 will(returnValue(Arrays.asList(new Invoice() {
                     @Override
                     public String getInvoiceNumber() {
                         return invoiceNumber;
-                    };
+                    }
+
+                    ;
 
                     @Override
                     public LocalDate getInvoiceDate() {
                         return invoiceDate;
-                    };
+                    }
+
+                    ;
                 })));
             }
         });
@@ -150,9 +154,9 @@ public class InvoiceTest {
         };
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
-        invoice.invoices = mockInvoices;
+        invoice.invoiceRepository = mockInvoiceRepository;
         invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
-        invoice.injectClockService(mockClockService);
+        invoice.clockService = mockClockService;
         return invoice;
     }
 
@@ -229,7 +233,7 @@ public class InvoiceTest {
                 }
             };
             invoice.setContainer(mockContainer);
-            invoice.invoices = mockInvoices;
+            invoice.invoiceRepository = mockInvoiceRepository;
             invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
             return invoice;
         }
@@ -245,9 +249,13 @@ public class InvoiceTest {
                             return new BankAccount() {
                                 public boolean isValidIban() {
                                     return true;
-                                };
+                                }
+
+                                ;
                             };
-                        };
+                        }
+
+                        ;
                     }));
                 }
             });
@@ -366,10 +374,12 @@ public class InvoiceTest {
             invoice = new Invoice() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
                     return new ApplicationTenancy();
-                };
+                }
+
+                ;
             };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
-            invoice.invoices = mockInvoices;
+            invoice.invoiceRepository = mockInvoiceRepository;
             invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
             invoice.setFixedAsset(invoiceProperty);
         }

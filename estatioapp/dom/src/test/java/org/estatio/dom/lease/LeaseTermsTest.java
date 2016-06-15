@@ -38,7 +38,7 @@ public class LeaseTermsTest {
 
     FinderInteraction finderInteraction;
 
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
 
     LeaseItem leaseItem;
     BigInteger sequence = BigInteger.TEN;
@@ -51,7 +51,7 @@ public class LeaseTermsTest {
 
         leaseItem = new LeaseItem();
 
-        leaseTerms = new LeaseTerms() {
+        leaseTermRepository = new LeaseTermRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -78,7 +78,7 @@ public class LeaseTermsTest {
         @Test
         public void happyCase() {
 
-            leaseTerms.findByLeaseItemAndSequence(leaseItem, sequence);
+            leaseTermRepository.findByLeaseItemAndSequence(leaseItem, sequence);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
 
@@ -96,7 +96,7 @@ public class LeaseTermsTest {
         @Test
         public void happyCase() {
 
-            leaseTerms.allLeaseTermsToBeApproved(date);
+            leaseTermRepository.allLeaseTermsToBeApproved(date);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
 
@@ -115,7 +115,7 @@ public class LeaseTermsTest {
         @Test
         public void allInvoices() {
 
-            leaseTerms.allLeaseTerms();
+            leaseTermRepository.allLeaseTerms();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }
@@ -162,7 +162,7 @@ public class LeaseTermsTest {
         }
 
         private void testValidate(LeaseItem leaseItem, LeaseTerm previous, LocalDate startDate, LocalDate endDate, String value) {
-            assertThat(leaseTerms.validateNewLeaseTerm(leaseItem, previous, startDate, endDate), is(value));
+            assertThat(leaseTermRepository.validateNewLeaseTerm(leaseItem, previous, startDate, endDate), is(value));
         }
 
     }

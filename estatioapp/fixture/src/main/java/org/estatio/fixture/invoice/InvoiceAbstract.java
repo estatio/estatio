@@ -26,15 +26,16 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -64,7 +65,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
 
         final String interactionId = null;
 
-        final Invoice invoice = invoices.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
+        final Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
 
         return executionContext.addResult(this, invoice);
@@ -79,7 +80,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
         final LeaseItem firstLeaseItem = lease.findFirstItemOfType(leaseItemType);
         final SortedSet<LeaseTerm> terms = firstLeaseItem.getTerms();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, interval, startDate, null);
+            InvoiceItemForLease item = invoiceItemForLeaseRepository.newInvoiceItem(term, interval, startDate, null);
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
 
@@ -97,13 +98,16 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
     private Currencies currencies;
 
     @Inject
-    private Invoices invoices;
+    private InvoiceRepository invoiceRepository;
 
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
+
+    @Inject
+    protected LeaseRepository leaseRepository;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

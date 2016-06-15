@@ -52,7 +52,7 @@ public class PropertyForCARTEST extends PropertyAbstract {
         final Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
         final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country italy = countries.findCountry(CountriesRefData.ITA);
+        final Country italy = countryRepository.findCountry(CountriesRefData.ITA);
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Centro Carosello test", "Milano", italy, PropertyType.SHOPPING_CENTER,

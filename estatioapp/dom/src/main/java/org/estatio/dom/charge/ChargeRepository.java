@@ -50,10 +50,10 @@ import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.3")
-public class Charges extends UdoDomainRepositoryAndFactory<Charge> {
+public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
-    public Charges() {
-        super(Charges.class, Charge.class);
+    public ChargeRepository() {
+        super(ChargeRepository.class, Charge.class);
     }
 
     // //////////////////////////////////////

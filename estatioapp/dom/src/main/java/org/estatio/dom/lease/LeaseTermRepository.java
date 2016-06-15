@@ -39,10 +39,10 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
-public class LeaseTerms extends UdoDomainRepositoryAndFactory<LeaseTerm> {
+public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm> {
 
-    public LeaseTerms() {
-        super(LeaseTerms.class, LeaseTerm.class);
+    public LeaseTermRepository() {
+        super(LeaseTermRepository.class, LeaseTerm.class);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT, hidden = Where.EVERYWHERE)

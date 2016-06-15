@@ -40,15 +40,16 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.domsettings.EstatioSettingsService;
@@ -63,12 +64,12 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     /**
      * class to store the result a calculation
-     * 
      */
     public static class CalculationResult {
         private static final BigDecimal ZERO = new BigDecimal("0.00");
         private BigDecimal value;
-        private BigDecimal mockValue;;
+        private BigDecimal mockValue;
+        ;
 
         private InvoicingInterval invoicingInterval;
         private LocalDateInterval effectiveInterval;
@@ -131,7 +132,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     }
 
     private LocalDate systemEpochDate() {
-        return estatioSettingsService == null ? new LocalDate(1980,1,1) : estatioSettingsService.fetchEpochDate();
+        return estatioSettingsService == null ? new LocalDate(1980, 1, 1) : estatioSettingsService.fetchEpochDate();
     }
 
     private String interactionId;
@@ -149,10 +150,10 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     @Programmatic
     public String calculateAndInvoice(InvoiceCalculationParameters parameters) {
         String lastInteractionId = null;
-        invoices.removeRuns(parameters);
+        invoiceRepository.removeRuns(parameters);
         try {
             startInteraction(parameters.toString());
-            for (Lease lease : parameters.leases() == null ? leases.findLeasesByProperty(parameters.property()) : parameters.leases()) {
+            for (Lease lease : parameters.leases() == null ? leaseRepository.findLeasesByProperty(parameters.property()) : parameters.leases()) {
                 lease.verifyUntil(parameters.dueDateRange().endDateExcluding());
                 if (lease.getStatus() != LeaseStatus.SUSPENDED) {
                     SortedSet<LeaseItem> leaseItems =
@@ -215,6 +216,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     /**
      * Calculates a term for a given interval
+     *
      * @param term
      * @param interval
      * @param dueDate
@@ -224,17 +226,16 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     public List<CalculationResult> calculateDateRange(
             final LeaseTerm term,
             final LocalDateInterval interval,
-            final LocalDate dueDate)
-    {
-      if (!interval.isOpenEnded() && interval.isValid()) {
+            final LocalDate dueDate) {
+        if (!interval.isOpenEnded() && interval.isValid()) {
             return calculateTerm(term, term.getLeaseItem().getInvoicingFrequency().intervalsInRange(interval), dueDate);
-       }
+        }
         return Lists.newArrayList();
     }
 
-
     /**
      * Calculates a term for a given list of invoicing intervals
+     *
      * @param leaseTerm
      * @param intervals
      * @param dueDateForCalculation
@@ -279,7 +280,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             final BigDecimal annualFactor,
             final BigDecimal value,
             final LeaseTermValueType valueType) {
-        if(valueType == LeaseTermValueType.FIXED){
+        if (valueType == LeaseTermValueType.FIXED) {
             // If it's fixed we don't care about the factors, always return the full value
             // TODO: offload this responsibility to the lease term
             return value.setScale(2, RoundingMode.HALF_UP);
@@ -305,12 +306,12 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             // TODO: this is a hack to speed up processing by ignoring zero
             // values on a normal run
             if (result.value().compareTo(BigDecimal.ZERO) != 0 || parameters.invoiceRunType().equals(InvoiceRunType.RETRO_RUN)) {
-                BigDecimal invoicedValue = invoiceItemsForLease.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
+                BigDecimal invoicedValue = invoiceItemForLeaseRepository.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
                 BigDecimal newValue = result.value().subtract(invoicedValue).subtract(result.mockValue());
                 if (newValue.compareTo(BigDecimal.ZERO) != 0) {
                     boolean adjustment = invoicedValue.add(result.mockValue()).compareTo(BigDecimal.ZERO) != 0;
                     InvoiceItemForLease invoiceItem =
-                            invoiceItemsForLease.createUnapprovedInvoiceItem(
+                            invoiceItemForLeaseRepository.createUnapprovedInvoiceItem(
                                     leaseTerm,
                                     result.invoicingInterval().asLocalDateInterval(),
                                     parameters.invoiceDueDate(),
@@ -346,12 +347,15 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     EstatioSettingsService estatioSettingsService;
 
     @Inject
-    private Invoices invoices;
+    private InvoiceRepository invoiceRepository;
 
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     @Inject
-    private Leases leases;
+    private LeaseMenu leaseMenu;
+
+    @Inject
+    private LeaseRepository leaseRepository;
 
 }

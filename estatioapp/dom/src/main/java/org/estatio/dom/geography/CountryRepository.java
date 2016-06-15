@@ -42,10 +42,10 @@ import org.estatio.dom.RegexValidation;
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.5")
-public class Countries extends UdoDomainRepositoryAndFactory<Country> {
+public class CountryRepository extends UdoDomainRepositoryAndFactory<Country> {
 
-    public Countries() {
-        super(Countries.class, Country.class);
+    public CountryRepository() {
+        super(CountryRepository.class, Country.class);
     }
 
     // //////////////////////////////////////

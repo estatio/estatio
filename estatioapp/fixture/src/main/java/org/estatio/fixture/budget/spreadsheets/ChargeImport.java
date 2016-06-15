@@ -25,7 +25,7 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 
@@ -77,9 +77,9 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
             ref = ref.substring(0,24);
         }
 
-        Charge charge = charges.findByReference(ref);
+        Charge charge = chargeRepository.findByReference(ref);
         if (charge == null) {
-            charge = charges.newCharge(applicationTenancy, ref,name,chargeDescription,tax, chargeGroup);
+            charge = chargeRepository.newCharge(applicationTenancy, ref,name,chargeDescription,tax, chargeGroup);
             numberOfChargesCreated++;
         }
 
@@ -193,7 +193,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     DomainObjectContainer container;
 
     @Inject
-    private Charges charges;
+    private ChargeRepository chargeRepository;
 
     @Inject
     private ChargeGroups chargeGroups;

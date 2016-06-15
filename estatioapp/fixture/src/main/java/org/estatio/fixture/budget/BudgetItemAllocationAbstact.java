@@ -25,7 +25,7 @@ import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 import javax.inject.Inject;
@@ -58,7 +58,7 @@ public abstract class BudgetItemAllocationAbstact extends EstatioFixtureScript {
     protected BudgetRepository budgetRepository;
 
     @Inject
-    protected Charges chargesRepository;
+    protected ChargeRepository chargeRepository;
 
     @Inject
     protected KeyTableRepository keyTableRepository;

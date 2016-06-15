@@ -154,13 +154,13 @@ public class LeaseTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        private Leases leases;
+        private LeaseMenu leaseMenu;
 
         @Before
         public void setUp() throws Exception {
 
-            leases = new Leases();
-            leases.setContainer(mockContainer);
+            leaseMenu = new LeaseMenu();
+            leaseMenu.setContainer(mockContainer);
 
             lease = new Lease();
 
@@ -249,7 +249,6 @@ public class LeaseTest {
             leaseItems.setContainer(mockContainer);
             leaseItems.estatioApplicationTenancyRepository = mockApplicationTenancyRepository;
 
-
             Property property = new Property();
             Party party = new Party() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
@@ -257,7 +256,7 @@ public class LeaseTest {
                 }
             };
 
-            lease = new Lease(){
+            lease = new Lease() {
                 @Override public Party getPrimaryParty() {
                     return party;
                 }
@@ -293,13 +292,11 @@ public class LeaseTest {
                 }
             });
 
-
             final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
             assertThat(newItem, is(leaseItem));
             assertThat(leaseItem.getLease(), is(lease));
             assertThat(leaseItem.getSequence(), is(BigInteger.ONE));
             assertThat(leaseItem.getApplicationTenancyPath(), is("/it/XXX/_"));
-
 
             // this assertion not true for unit tests, because we rely on JDO
             // to manage the bidir relationship for us.
@@ -330,7 +327,7 @@ public class LeaseTest {
         @Mock
         private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
         @Mock
-        private AgreementRoleRepository mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoleRepository;
         @Mock
         private AgreementTypeRepository mockAgreementTypeRepository;
         @Mock
@@ -442,13 +439,13 @@ public class LeaseTest {
             tenantAgreementRole = new AgreementRole();
             tenantAgreementRole.setParty(tenant);
             tenantAgreementRole.setType(tenantAgreementRoleType);
-            tenantAgreementRole.injectClockService(mockClockService);
+            tenantAgreementRole.clockService = mockClockService;
 
             landlord = new PartyForTesting();
             landlordAgreementRole = new AgreementRole();
             landlordAgreementRole.setParty(landlord);
             landlordAgreementRole.setType(landlordAgreementRoleType);
-            landlordAgreementRole.injectClockService(mockClockService);
+            landlordAgreementRole.clockService = mockClockService;
 
             bankMandate = new BankMandate();
             bankMandate.setContainer(mockContainer);
@@ -464,7 +461,6 @@ public class LeaseTest {
             scheme = Scheme.CORE;
             signatureDate = new LocalDate(2013, 4, 1);
 
-
             // a mini integration test, since using the real BankMandateMenu and BankMandateRepository impl
 
             BankMandateRepository mandateRepository = new BankMandateRepository() {{
@@ -477,14 +473,14 @@ public class LeaseTest {
             lease = new Lease();
             lease.setApplicationTenancyPath("/it");
 
-            lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            lease.injectAgreementRoles(mockAgreementRoles);
-            lease.injectAgreementTypes(mockAgreementTypeRepository);
+            lease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            lease.agreementRoleRepository = mockAgreementRoleRepository;
+            lease.agreementTypeRepository = mockAgreementTypeRepository;
             lease.financialAccounts = mockFinancialAccounts;
             lease.bankMandateRepository = mandateRepository;
             lease.setContainer(mockContainer);
-            lease.injectClockService(mockClockService);
-            lease.injectAgreements(agreementRepository);
+            lease.clockService = mockClockService;
+            lease.agreementRepository = agreementRepository;
         }
 
         @Test
@@ -703,16 +699,16 @@ public class LeaseTest {
             arTenant = new AgreementRole();
             arTenant.setParty(tenant);
             arTenant.setType(tenantAgreementRoleType);
-            arTenant.injectClockService(mockClockService);
+            arTenant.clockService = mockClockService;
 
             bankMandate = new BankMandate();
             someOtherBankMandate = new BankMandate();
 
             lease = new Lease();
-            lease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            lease.injectAgreements(mockAgreementRepository);
-            lease.injectAgreementTypes(mockAgreementTypeRepository);
-            lease.injectClockService(mockClockService);
+            lease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            lease.agreementRepository = mockAgreementRepository;
+            lease.agreementTypeRepository = mockAgreementTypeRepository;
+            lease.clockService = mockClockService;
         }
 
         @Test

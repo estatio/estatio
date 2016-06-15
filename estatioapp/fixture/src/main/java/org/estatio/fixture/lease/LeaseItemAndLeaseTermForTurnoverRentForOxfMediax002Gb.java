@@ -36,7 +36,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends Lease
 
         // exec
         String leaseReference = LEASE_REF;
-        Lease lease = leases.findLeaseByReference(leaseReference);
+        Lease lease = leaseRepository.findLeaseByReference(leaseReference);
 
         createLeaseTermForTurnoverRent(
                 leaseReference,

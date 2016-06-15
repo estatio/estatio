@@ -21,7 +21,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScript {
@@ -51,6 +51,6 @@ public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScr
     @javax.inject.Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;
     @javax.inject.Inject
-    protected Countries countries;
+    protected CountryRepository countryRepository;
 
 }

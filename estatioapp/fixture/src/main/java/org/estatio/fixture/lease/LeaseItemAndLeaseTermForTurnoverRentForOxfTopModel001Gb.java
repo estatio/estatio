@@ -35,7 +35,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb extends Lea
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         createLeaseTermForTurnoverRent(
                 LEASE_REF,

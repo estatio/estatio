@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -47,15 +48,15 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.lease.tags.Activities;
+import org.estatio.dom.lease.tags.ActivityRepository;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.dom.lease.tags.Sector;
-import org.estatio.dom.lease.tags.Sectors;
+import org.estatio.dom.lease.tags.SectorRepository;
 import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.lease.tags.UnitSizes;
+import org.estatio.dom.lease.tags.UnitSizeRepository;
 import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -311,7 +312,7 @@ public class Occupancy
     public List<Activity> choices2ChangeClassification(
             final UnitSize unitSize,
             final Sector sector) {
-        return activities.findBySector(sector);
+        return activityRepository.findBySector(sector);
     }
 
     // //////////////////////////////////////
@@ -321,25 +322,25 @@ public class Occupancy
             final String name,
             @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage brandCoverage,
             @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin) {
-        setBrand(brands.findOrCreate(getApplicationTenancy(), name, brandCoverage, countryOfOrigin));
+        setBrand(brandRepository.findOrCreate(getApplicationTenancy(), name, brandCoverage, countryOfOrigin));
         return this;
     }
 
     @Programmatic
     public Occupancy setUnitSizeName(final String name) {
-        setUnitSize(unitSizes.findOrCreate(name));
+        setUnitSize(unitSizeRepository.findOrCreate(name));
         return this;
     }
 
     @Programmatic
     public Occupancy setSectorName(final String name) {
-        setSector(sectors.findOrCreate(name));
+        setSector(sectorRepository.findOrCreate(name));
         return this;
     }
 
     @Programmatic
     public Occupancy setActivityName(final String name) {
-        setActivity(activities.findOrCreate(getSector(), name));
+        setActivity(activityRepository.findOrCreate(getSector(), name));
         return this;
     }
 
@@ -399,30 +400,6 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    private UnitSizes unitSizes;
-
-    public final void injectUnitSizes(final UnitSizes unitSizes) {
-        this.unitSizes = unitSizes;
-    }
-
-    private Brands brands;
-
-    public final void injectBrands(final Brands brands) {
-        this.brands = brands;
-    }
-
-    private Sectors sectors;
-
-    public final void injectSectors(final Sectors sectors) {
-        this.sectors = sectors;
-    }
-
-    private Activities activities;
-
-    public final void injectActivities(final Activities activities) {
-        this.activities = activities;
-    }
-
     // //////////////////////////////////////
 
     public enum OccupancyReportingType {
@@ -453,4 +430,16 @@ public class Occupancy
             setEndDate(lease.getTenancyEndDate());
         }
     }
+
+    @Inject
+    private BrandRepository brandRepository;
+
+    @Inject
+    private SectorRepository sectorRepository;
+
+    @Inject
+    private ActivityRepository activityRepository;
+
+    @Inject
+    private UnitSizeRepository unitSizeRepository;
 }

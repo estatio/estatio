@@ -34,11 +34,12 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForTax;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseTermRepository;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
@@ -64,16 +65,19 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseRepository leaseRepository;
+
+    @Inject
+    LeaseTermRepository leaseTermRepository;
 
     Lease lease;
 
     @Before
     public void setUp() throws Exception {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
 
     public static class AllLeaseTerms extends LeaseTermsTest {
@@ -82,7 +86,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
         public void whenExists() throws Exception {
 
             // when
-            List<LeaseTerm> allLeaseTerms = leaseTerms.allLeaseTerms();
+            List<LeaseTerm> allLeaseTerms = leaseTermRepository.allLeaseTerms();
 
             // then
             Assert.assertThat(allLeaseTerms.isEmpty(), is(false));
@@ -104,7 +108,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
         @Test
         public void findByPropertyAndTypeAndStartDate() throws Exception {
             Property property = lease.getProperty();
-            List<LeaseTerm> results = leaseTerms.findByPropertyAndTypeAndStartDate(property, LeaseItemType.RENT, lease.getStartDate());
+            List<LeaseTerm> results = leaseTermRepository.findByPropertyAndTypeAndStartDate(property, LeaseItemType.RENT, lease.getStartDate());
             assertThat(results.size(), is(1));
             assertThat(results.get(0), is(lease.getItems().first().getTerms().first()));
         }
@@ -115,7 +119,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
         @Test
         public void findStartDatesByPropertyAndType() throws Exception {
             Property property = lease.getProperty();
-            List<LocalDate> results = leaseTerms.findStartDatesByPropertyAndType(property, LeaseItemType.RENT);
+            List<LocalDate> results = leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.RENT);
             assertThat(results.size(), is(1));
             assertThat(results.get(0), is(lease.getItems().first().getTerms().first().getStartDate()));
         }

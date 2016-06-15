@@ -1,6 +1,6 @@
 /*
  *
- *  Copyright 2012-2014 Eurocommercial Properties NV
+ *  Copyright 2012-2015 Eurocommercial Properties NV
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
@@ -16,18 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
 package org.estatio.dom.tax;
 
-import java.math.BigDecimal;
 import java.util.List;
-
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -37,10 +34,10 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.8")
-public class TaxRates extends UdoDomainRepositoryAndFactory<TaxRate> {
+public class TaxRateMenu extends UdoDomainRepositoryAndFactory<TaxRate> {
 
-    public TaxRates() {
-        super(TaxRates.class, TaxRate.class);
+    public TaxRateMenu() {
+        super(TaxRateMenu.class, TaxRate.class);
     }
 
     // //////////////////////////////////////
@@ -49,37 +46,6 @@ public class TaxRates extends UdoDomainRepositoryAndFactory<TaxRate> {
     @Action(semantics = SemanticsOf.SAFE)
     public List<TaxRate> allTaxRates() {
         return allInstances();
-    }
-
-    // //////////////////////////////////////
-
-    @Programmatic
-    public TaxRate newRate(
-            final Tax tax,
-            final LocalDate startDate,
-            final BigDecimal percentage) {
-        TaxRate currentRate = tax.taxRateFor(startDate);
-        TaxRate rate;
-        if (currentRate == null || !startDate.equals(currentRate.getStartDate())) {
-            rate = newTransientInstance(TaxRate.class);
-            rate.setTax(tax);
-            rate.setStartDate(startDate);
-            persist(rate);
-        } else {
-            rate = currentRate;
-        }
-        rate.setPercentage(percentage);
-        if (currentRate != null) {
-            TaxRate currentNextRate = currentRate.getNext();
-            currentRate.modifyNext(rate);
-            rate.modifyNext(currentNextRate);
-        }
-        return rate;
-    }
-
-    @Programmatic
-    public TaxRate findTaxRateByTaxAndDate(final Tax tax, final LocalDate date) {
-        return firstMatch("findByTaxAndDate", "tax", tax, "date", date);
     }
 
 }

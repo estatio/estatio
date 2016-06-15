@@ -12,8 +12,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 
 @DomainService(
@@ -28,7 +28,7 @@ public class PartyDtoFactory {
         dto.setName(party.getName());
         dto.setReference(party.getReference());
 
-        final SortedSet<CommunicationChannel> postalAddresses = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
+        final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
         final Optional<CommunicationChannel> postalAddressIfAny = postalAddresses.stream().filter(x -> x.isLegal()).findFirst();
 
         if(postalAddressIfAny.isPresent()) {
@@ -41,5 +41,5 @@ public class PartyDtoFactory {
     DtoMappingHelper mappingHelper;
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 }

@@ -69,7 +69,7 @@ public class LeaseTermTest {
     LeaseItem item;
 
     @Mock
-    LeaseTerms mockLeaseTerms;
+    LeaseTermRepository mockLeaseTermRepository;
 
     @Mock
     ClockService mockClockService;
@@ -82,7 +82,7 @@ public class LeaseTermTest {
             {
                 allowing(mockClockService).now();
                 will(returnValue(now));
-                allowing(mockLeaseTerms).newLeaseTerm(
+                allowing(mockLeaseTermRepository).newLeaseTerm(
                         with(any(LeaseItem.class)),
                         with(any(LeaseTerm.class)),
                         with(any(LocalDate.class)),
@@ -99,8 +99,8 @@ public class LeaseTermTest {
         lease.getItems().add(item);
         item.setLease(lease);
 
-        item.leaseTerms = mockLeaseTerms;
-        item.injectClockService(mockClockService);
+        item.leaseTermRepository = mockLeaseTermRepository;
+        item.clockService = mockClockService;
 
         term = new LeaseTermForTesting();
 
@@ -109,8 +109,8 @@ public class LeaseTermTest {
 
         term.setStartDate(new LocalDate(2012, 1, 1));
         term.setFrequency(LeaseTermFrequency.YEARLY);
-        term.injectClockService(mockClockService);
-        term.injectLeaseTerms(mockLeaseTerms);
+        term.clockService = mockClockService;
+        term.leaseTermRepository = mockLeaseTermRepository;
         term.initialize();
     }
 
@@ -131,7 +131,7 @@ public class LeaseTermTest {
                 // set values
                 ltt.modifyStartDate(startDate);
                 ltt.modifyEndDate(endDate);
-                ltt.injectClockService(mockClockService);
+                ltt.clockService = mockClockService;
                 return ltt;
             }
 
@@ -164,11 +164,10 @@ public class LeaseTermTest {
             final LeaseItem item = new LeaseItem();
             item.setType(leaseItemType);
             term.setLeaseItem(item);
-             //when, then
+            //when, then
             then(leaseItemType.autoCreateTerms()).isFalse();
             then(term.hideCreateNext(null, null)).isTrue();
         }
-
 
     }
 
@@ -257,8 +256,8 @@ public class LeaseTermTest {
             lease.getItems().add(item);
             item.setLease(lease);
 
-            item.leaseTerms = mockLeaseTerms;
-            item.injectClockService(mockClockService);
+            item.leaseTermRepository = mockLeaseTermRepository;
+            item.clockService = mockClockService;
 
             LeaseTerm term = new LeaseTermForTesting();
 
@@ -268,7 +267,7 @@ public class LeaseTermTest {
             term.setStartDate(parseDate(termStartDate));
             term.setEndDate(parseDate(termEndDate));
             term.setFrequency(LeaseTermFrequency.YEARLY);
-            term.injectClockService(mockClockService);
+            term.clockService = mockClockService;
             term.initialize();
 
             return term.getEffectiveInterval();
@@ -304,7 +303,7 @@ public class LeaseTermTest {
                     .exercise(new LeaseTermForTesting());
         }
 
-        @SuppressWarnings({"rawtypes", "unchecked"})
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
             return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[]) LeaseTermStatus.values());
         }
@@ -322,8 +321,7 @@ public class LeaseTermTest {
 
         protected LeaseTerm doCreateWithIntervalMutable(final WithIntervalMutable.Helper<LeaseTerm> mockChangeDates) {
             return new LeaseTerm() {
-                @Override
-                org.estatio.dom.WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
+                @Override org.estatio.dom.WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
                     return mockChangeDates;
                 }
 
@@ -413,7 +411,7 @@ public class LeaseTermTest {
             term.setLeaseItem(leaseItem);
             term.setStartDate(new LocalDate(2014, 6, 1));
             term.setEndDate(new LocalDate(2014, 8, 31));
-            term.terms = new LeaseTerms();
+            term.leaseTermRepository = new LeaseTermRepository();
         }
 
         @Test

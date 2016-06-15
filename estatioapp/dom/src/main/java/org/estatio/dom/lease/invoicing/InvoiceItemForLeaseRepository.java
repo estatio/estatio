@@ -21,11 +21,14 @@ package org.estatio.dom.lease.invoicing;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -33,19 +36,19 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@DomainService(menuOrder = "50", repositoryFor = InvoiceItemForLease.class)
-public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {
+@DomainService(repositoryFor = InvoiceItemForLease.class, nature = NatureOfService.DOMAIN)
+public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {
 
-    public InvoiceItemsForLease() {
-        super(InvoiceItemsForLease.class, InvoiceItemForLease.class);
+    public InvoiceItemForLeaseRepository() {
+        super(InvoiceItemForLeaseRepository.class, InvoiceItemForLease.class);
     }
 
     // //////////////////////////////////////
@@ -58,7 +61,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
             final LocalDate dueDate,
             final String interactionId) {
         Lease lease = leaseTerm.getLeaseItem().getLease();
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(
+        Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
                 leaseTerm.getApplicationTenancy(),
                 leaseTerm.getLeaseItem().getPaymentMethod(),
                 lease,
@@ -89,7 +92,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
     }
 
 
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
+    @Programmatic
     public List<InvoiceItemForLease> findByLeaseTermAndInterval(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval) {
@@ -100,7 +103,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
                 "endDate", interval.endDate());
     }
 
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
+    @Programmatic
     public List<InvoiceItemForLease> findByLeaseTermAndIntervalAndInvoiceStatus(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
@@ -113,7 +116,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
                 "invoiceStatus", invoiceStatus);
     }
 
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
+    @Programmatic
     public List<InvoiceItemForLease> findByLeaseAndInvoiceStatus(
             final Lease lease,
             final InvoiceStatus invoiceStatus) {
@@ -123,7 +126,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
                 "invoiceStatus", invoiceStatus);
     }
 
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
+    @Programmatic
     public List<InvoiceItemForLease> findByLeaseItemAndInvoiceStatus(
             final LeaseItem leaseItem,
             final InvoiceStatus invoiceStatus) {
@@ -133,7 +136,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
                 "invoiceStatus", invoiceStatus);
     }
 
-    @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
+    @Programmatic
     public List<InvoiceItemForLease> findByLeaseTermAndInvoiceStatus(
             final LeaseTerm leaseTerm,
             final InvoiceStatus invoiceStatus) {
@@ -202,10 +205,7 @@ public class InvoiceItemsForLease extends UdoDomainRepositoryAndFactory<InvoiceI
 
     // //////////////////////////////////////
 
-    private Invoices invoices;
-
-    public void injectInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
+    @Inject
+    private InvoiceRepository invoiceRepository;
 
 }

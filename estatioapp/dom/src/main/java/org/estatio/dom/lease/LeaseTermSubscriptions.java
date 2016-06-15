@@ -50,7 +50,7 @@ public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscripti
         case VALIDATE:
             final StringBuilder buf = new StringBuilder();
 
-            final List<LeaseTerm> terms = leaseTerms.findByLeaseItem(sourceLeaseItem);
+            final List<LeaseTerm> terms = leaseTermRepository.findByLeaseItem(sourceLeaseItem);
             terms.stream()
                     .map(LeaseTerm::getInvoiceItems)
                     .filter(invoiceTerms -> !invoiceTerms.isEmpty())
@@ -69,7 +69,7 @@ public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscripti
     }
 
     @Inject
-    LeaseTerms leaseTerms;
+    LeaseTermRepository leaseTermRepository;
     @Inject
     TitleService titleService;
 }

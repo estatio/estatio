@@ -29,7 +29,7 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 /**
@@ -66,6 +66,6 @@ public abstract class BudgetAbstact extends EstatioFixtureScript {
     protected PropertyRepository propertyRepository;
 
     @Inject
-    protected Charges chargesRepository;
+    protected ChargeRepository chargeRepository;
 
 }

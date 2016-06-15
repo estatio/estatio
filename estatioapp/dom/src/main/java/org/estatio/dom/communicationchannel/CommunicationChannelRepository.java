@@ -35,10 +35,10 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
 @DomainService(repositoryFor = CommunicationChannel.class, nature = NatureOfService.VIEW)
-public class CommunicationChannels extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
+public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
-    public CommunicationChannels() {
-        super(CommunicationChannels.class, CommunicationChannel.class);
+    public CommunicationChannelRepository() {
+        super(CommunicationChannelRepository.class, CommunicationChannel.class);
     }
 
     @Programmatic

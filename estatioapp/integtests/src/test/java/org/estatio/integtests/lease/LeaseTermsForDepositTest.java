@@ -29,11 +29,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForDeposit;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
@@ -45,13 +46,16 @@ import org.estatio.integtests.EstatioIntegrationTest;
 public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     InvoiceService invoiceService;
 
     @Inject
-    Invoices invoices;
+    InvoiceRepository invoiceRepository;
 
     public static class LeaseTermForDepositForOxfScenario extends LeaseTermsForDepositTest {
 
@@ -77,7 +81,7 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
 
             // given
             startDate = new LocalDate(2010,10,1);
-            topmodelLease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
             invoiceService.calculate(
@@ -87,8 +91,8 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
                     startDate, startDate, startDate.plusDays(1));
 
             // then
-            Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(1);
-            Assertions.assertThat(invoices.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("10000.00"));
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).size()).isEqualTo(1);
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("10000.00"));
 
 
             // and when (after couple of indexations of rent items)
@@ -99,12 +103,12 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
                     startDate.plusYears(5), startDate.plusYears(5), startDate.plusYears(5).plusDays(1));
 
             // then
-            Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(2);
-            Assertions.assertThat(invoices.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("10000.00"));
-            Assertions.assertThat(invoices.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).size()).isEqualTo(2);
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("10000.00"));
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
 
             // and after approval of first invoice only the delta is invoiced
-            invoices.findByLease(topmodelLease).get(0).approve();
+            invoiceRepository.findByLease(topmodelLease).get(0).approve();
             invoiceService.calculate(
                     topmodelLease,
                     InvoiceRunType.NORMAL_RUN,
@@ -113,13 +117,13 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
 
 
             // then
-            Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(2);
-            Assertions.assertThat(invoices.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).size()).isEqualTo(2);
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
 
             // and after terminating the invoiced deposit is credited
             depositTerm = (LeaseTermForDeposit) topmodelLease.findFirstItemOfType(LeaseItemType.DEPOSIT).getTerms().first();
             depositTerm.terminate(startDate.plusYears(5).minusDays(1));
-            invoices.findByLease(topmodelLease).get(1).approve();
+            invoiceRepository.findByLease(topmodelLease).get(1).approve();
             invoiceService.calculate(
                     topmodelLease,
                     InvoiceRunType.RETRO_RUN,
@@ -127,8 +131,8 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
                     startDate.plusYears(5), startDate.plusYears(5), startDate.plusYears(5).plusDays(1));
 
             //then
-            Assertions.assertThat(invoices.findByLease(topmodelLease).size()).isEqualTo(3);
-            Assertions.assertThat(invoices.findByLease(topmodelLease).get(2).getNetAmount()).isEqualTo(new BigDecimal("-10652.51"));
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).size()).isEqualTo(3);
+            Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(2).getNetAmount()).isEqualTo(new BigDecimal("-10652.51"));
 
         }
 

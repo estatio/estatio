@@ -25,8 +25,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -57,7 +57,7 @@ public class CommunicationChannelTest extends EstatioIntegrationTest {
         private Parties parties;
 
         @Inject
-        private CommunicationChannels communicationChannels;
+        private CommunicationChannelRepository communicationChannelRepository;
 
         private Party party;
 
@@ -68,7 +68,7 @@ public class CommunicationChannelTest extends EstatioIntegrationTest {
         @Before
         public void setUp() throws Exception {
             party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
-            final SortedSet<CommunicationChannel> postalAddresses = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
+            final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
             assertThat(postalAddresses.size(), is(2));
             communicationChannel = postalAddresses.first();
             communicationChannelReplacement = postalAddresses.last();
@@ -87,7 +87,7 @@ public class CommunicationChannelTest extends EstatioIntegrationTest {
         @Test
         public void withReplacement() throws Exception {
             wrap(communicationChannel).remove(communicationChannelReplacement);
-            final SortedSet<CommunicationChannel> postalAddresses = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
+            final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
             assertThat(postalAddresses.size(), is(1));
             assertThat(postalAddresses.first(), is(communicationChannelReplacement));
         }

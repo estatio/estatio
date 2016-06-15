@@ -30,7 +30,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Fraction;
@@ -39,6 +39,8 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.lease.LeaseTermForFixed;
@@ -48,8 +50,7 @@ import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -73,12 +74,12 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             throw new IllegalStateException("Lease '" + leaseRef + "' has an app tenancy '" + leaseApplicationTenancy.getName() + "' whose parent is not at the country level");
         }
 
-        final Charge charge = charges.findByReference(chargeReference);
+        final Charge charge = chargeRepository.findByReference(chargeReference);
         return findOrCreateLeaseItem(leaseRef, leaseItemAtPath, charge, leaseItemType, invoicingFrequency, executionContext);
     }
 
     private Lease findLease(final String leaseRef) {
-        return leases.findLeaseByReference(leaseRef);
+        return leaseRepository.findLeaseByReference(leaseRef);
     }
 
     protected LeaseItem findOrCreateLeaseItem(
@@ -430,13 +431,16 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     protected IndexRepository indexRepository;
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
 
     @Inject
-    protected LeaseTerms leaseTerms;
+    protected LeaseRepository leaseRepository;
 
     @Inject
-    protected Charges charges;
+    protected LeaseTermRepository leaseTermRepository;
+
+    @Inject
+    protected ChargeRepository chargeRepository;
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancies;

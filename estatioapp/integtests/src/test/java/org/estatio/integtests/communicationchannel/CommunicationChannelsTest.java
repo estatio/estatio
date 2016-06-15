@@ -30,8 +30,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -52,7 +52,7 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
     Parties parties;
@@ -67,22 +67,22 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
     public static class FindByOwner extends CommunicationChannelsTest {
         @Test
         public void happyCase() throws Exception {
-            Assert.assertThat(communicationChannels.findByOwner(party).size(), is(5));
+            Assert.assertThat(communicationChannelRepository.findByOwner(party).size(), is(5));
         }
     }
 
     public static class FindByOwnerAndType extends CommunicationChannelsTest {
         @Test
         public void happyCase() throws Exception {
-            Assert.assertThat(communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).size(), is(2));
+            Assert.assertThat(communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).size(), is(2));
         }
     }
 
     public static class FindOtherByOwnerAndType extends CommunicationChannelsTest {
         @Test
         public void happyCase() throws Exception {
-            CommunicationChannel exclude = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
-            Assert.assertThat(communicationChannels.findOtherByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS, exclude).size(), is(1));
+            CommunicationChannel exclude = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
+            Assert.assertThat(communicationChannelRepository.findOtherByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS, exclude).size(), is(1));
         }
     }
 }

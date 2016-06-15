@@ -55,7 +55,8 @@ public class InvoicesTest {
 
     FinderInteraction finderInteraction;
 
-    Invoices invoices;
+    InvoiceRepository invoiceRepository;
+    InvoiceMenu invoiceMenu;
     EstatioNumeratorRepository estatioNumeratorRepository;
 
     Party seller;
@@ -80,7 +81,7 @@ public class InvoicesTest {
         invoiceStatus = InvoiceStatus.APPROVED;
         dueDate = new LocalDate(2013,4,1);
 
-        invoices = new Invoices() {
+        invoiceRepository = new InvoiceRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -98,6 +99,26 @@ public class InvoicesTest {
                 return null;
             }
         };
+
+        invoiceMenu = new InvoiceMenu() {
+
+            @Override
+            protected <T> T firstMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return null;
+            }
+            @Override
+            protected List<Invoice> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
+                return null;
+            }
+            @Override
+            protected <T> List<T> allMatches(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
+                return null;
+            }
+        };
+
         estatioNumeratorRepository = new EstatioNumeratorRepository() {
         };
     }
@@ -107,7 +128,7 @@ public class InvoicesTest {
         @Test
         public void happyCase() {
 
-            invoices.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+            invoiceRepository.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Invoice.class));
@@ -130,7 +151,7 @@ public class InvoicesTest {
             final Invoice invoice2 = new Invoice();
             final Invoice invoice3 = new Invoice();
 
-            invoices = new Invoices() {
+            invoiceRepository = new InvoiceRepository() {
                 @Override
                 @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
                 public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
@@ -138,13 +159,13 @@ public class InvoicesTest {
                 }
             };
 
-            assertThat(invoices.findMatchingInvoice(null, null, null, null, null, null), is(invoice1));
+            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null), is(invoice1));
         }
 
         @Test
         public void whenEmpty_returnsNull() {
 
-            invoices = new Invoices() {
+            invoiceRepository = new InvoiceRepository() {
                 @Override
                 @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
                 public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
@@ -155,7 +176,7 @@ public class InvoicesTest {
                     return null;
                 }
             };
-            assertThat(invoices.findMatchingInvoice(null, null, null, null, null, null), is(nullValue()));
+            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null), is(nullValue()));
         }
 
     }
@@ -165,7 +186,7 @@ public class InvoicesTest {
         @Test
         public void happyCase() {
 
-            invoices.allInvoices();
+            invoiceMenu.allInvoices();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }
@@ -194,7 +215,7 @@ public class InvoicesTest {
             format = "0%6d";
             lastIncrement = BigInteger.TEN;
 
-            invoices = new Invoices();
+            invoiceRepository = new InvoiceRepository();
             estatioNumeratorRepository = new EstatioNumeratorRepository();
             estatioNumeratorRepository.numerators = mockNumerators;
 

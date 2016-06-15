@@ -34,9 +34,10 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
@@ -110,7 +111,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
         for (Property property : properties) {
             executionContext.addResult(this, property.getReference(), property);
 
-            for (Lease lease : leases.findLeasesByProperty(property)) {
+            for (Lease lease : leaseRepository.findLeasesByProperty(property)) {
                 executionContext.addResult(this, lease.getReference(), lease);
                 createLease(lease, startDueDate, nextDueDate, executionContext);
             }
@@ -145,7 +146,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final ExecutionContext executionContext) {
         invoiceCalculationService.calculateAndInvoice(parameters);
 
-        for (Invoice invoice : invoices.findByStatus(InvoiceStatus.NEW)) {
+        for (Invoice invoice : invoiceRepository.findByStatus(InvoiceStatus.NEW)) {
             invoice.saveAsHistoric();
             executionContext.addResult(this, invoice.getInvoiceNumber(), invoice);
         }
@@ -153,10 +154,13 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
     }
 
     @Inject
-    public Invoices invoices;
+    public InvoiceRepository invoiceRepository;
 
     @Inject
-    public Leases leases;
+    public LeaseMenu leaseMenu;
+
+    @Inject
+    public LeaseRepository leaseRepository;
 
     @Inject
     public PropertyMenu propertyMenu;

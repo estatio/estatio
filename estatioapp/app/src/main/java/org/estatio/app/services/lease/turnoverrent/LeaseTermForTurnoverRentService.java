@@ -36,7 +36,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseTermRepository;
 
 @DomainService(menuOrder = "00")
 @Immutable
@@ -68,7 +68,7 @@ public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermF
     }
 
     public List<LocalDate> choices1MaintainTurnoverRent(final Property property) {
-        return leaseTerms.findStartDatesByPropertyAndType(property, LeaseItemType.TURNOVER_RENT);
+        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.TURNOVER_RENT);
     }
 
     // //////////////////////////////////////
@@ -77,6 +77,6 @@ public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermF
     private ExcelService excelService;
 
     @javax.inject.Inject
-    private LeaseTerms leaseTerms;
+    private LeaseTermRepository leaseTermRepository;
 
 }

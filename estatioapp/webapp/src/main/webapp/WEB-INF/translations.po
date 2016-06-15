@@ -3710,8 +3710,8 @@ msgid "Start due date"
 msgstr ""
 
 
-#: org.estatio.dom.geography.Country#states()
-#: org.estatio.dom.geography.StateContributions#states()
+#: org.estatio.dom.geography.Country#stateRepository()
+#: org.estatio.dom.geography.StateContributions#stateRepository()
 msgid "States"
 msgstr ""
 

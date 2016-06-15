@@ -72,7 +72,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
         // exec
 
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         final LocalDate startDate = startDateFor(lease);
 
