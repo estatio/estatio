@@ -23,7 +23,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseTermRepository;
+
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
@@ -35,7 +36,7 @@ public class FixLeaseTerms extends DiscoverableFixtureScript {
         int countEffectiveDate = 0;
         int countBaseStartDate = 0;
         int countLevelling = 0;
-        for (LeaseTerm term : leaseTerms.allLeaseTerms()) {
+        for (LeaseTerm term : leaseTermRepository.allLeaseTerms()) {
             if (term instanceof LeaseTermForIndexable) {
                 if (fixEffectiveDate((LeaseTermForIndexable) term)) {
                     countEffectiveDate++;
@@ -110,6 +111,6 @@ public class FixLeaseTerms extends DiscoverableFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    private LeaseTerms leaseTerms;
+    private LeaseTermRepository leaseTermRepository;
 
 }

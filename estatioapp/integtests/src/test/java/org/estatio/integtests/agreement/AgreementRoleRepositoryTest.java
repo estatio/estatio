@@ -41,7 +41,8 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -127,7 +128,9 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Leases leases;
+        private LeaseMenu leaseMenu;
+        @Inject
+        private LeaseRepository leaseRepository;
         @Inject
         private Parties parties;
         @Inject
@@ -136,7 +139,7 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
         @Before
         public void setUp() throws Exception {
             artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
-            leaseOxfTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseOxfTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             partyTopModel = parties.findPartyByReference(OrganisationForTopModelGb.REF);
         }
 

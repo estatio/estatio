@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.communicationchannel.v1.PostalAddressDto;
 import org.estatio.dom.DtoMappingHelper;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -48,5 +48,5 @@ public class PostalAddressDtoFactory {
     DtoMappingHelper mappingHelper;
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 }

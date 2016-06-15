@@ -28,6 +28,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 import org.joda.time.LocalDate;
 
@@ -121,8 +122,8 @@ public class AgreementRoleCommunicationChannel
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
-            )
-            public ApplicationTenancy getApplicationTenancy() {
+    )
+    public ApplicationTenancy getApplicationTenancy() {
         return getRole().getApplicationTenancy();
     }
 
@@ -195,7 +196,8 @@ public class AgreementRoleCommunicationChannel
         return this;
     }
 
-    public String disableChangeDates(final LocalDate startDate,
+    public String disableChangeDates(
+            final LocalDate startDate,
             final LocalDate endDate) {
         return null;
     }
@@ -211,7 +213,8 @@ public class AgreementRoleCommunicationChannel
     }
 
     @Override
-    public String validateChangeDates(final LocalDate startDate,
+    public String validateChangeDates(
+            final LocalDate startDate,
             final LocalDate endDate) {
         return helper.validateChangeDates(startDate, endDate);
     }
@@ -270,7 +273,8 @@ public class AgreementRoleCommunicationChannel
         private final AgreementRoleCommunicationChannel arcc;
         private final CommunicationChannel cc;
 
-        public SiblingFactory(final AgreementRoleCommunicationChannel arcc,
+        public SiblingFactory(
+                final AgreementRoleCommunicationChannel arcc,
                 final CommunicationChannel cc) {
             this.arcc = arcc;
             this.cc = cc;
@@ -367,7 +371,7 @@ public class AgreementRoleCommunicationChannel
         final AgreementRoleCommunicationChannel predecessor = getPredecessor();
         if (predecessor != null
                 && communicationChannel == predecessor
-                        .getCommunicationChannel()) {
+                .getCommunicationChannel()) {
             return "Predecessor's communication channel cannot be the same as that of existing predecessor";
         }
         final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
@@ -386,15 +390,6 @@ public class AgreementRoleCommunicationChannel
 
     // //////////////////////////////////////
 
-    private CommunicationChannelContributions communicationChannelContributions;
-
-    public final void injectCommunicationChannelContributions(
-            final CommunicationChannelContributions ccc) {
-        this.communicationChannelContributions = ccc;
-    }
-
-    // //////////////////////////////////////
-
     @ActionLayout(describedAs = "Change Communication Channel Type")
     public AgreementRoleCommunicationChannel changeType(
             final @Parameter(optionality = Optionality.OPTIONAL) AgreementRoleCommunicationChannelType type) {
@@ -405,5 +400,10 @@ public class AgreementRoleCommunicationChannel
     public AgreementRoleCommunicationChannelType default0ChangeType() {
         return getType();
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private CommunicationChannelContributions communicationChannelContributions;
 
 }

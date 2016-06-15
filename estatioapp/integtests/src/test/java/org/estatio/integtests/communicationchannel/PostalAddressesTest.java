@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.party.Parties;
@@ -54,7 +54,7 @@ public class PostalAddressesTest extends EstatioIntegrationTest {
     PostalAddresses postalAddresses;
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
     Parties parties;
@@ -68,7 +68,7 @@ public class PostalAddressesTest extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
-        SortedSet<CommunicationChannel> results = communicationChannels.findByOwner(party);
+        SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwner(party);
         Iterator<CommunicationChannel> it = results.iterator();
         while (it.hasNext()) {
             CommunicationChannel next = it.next();

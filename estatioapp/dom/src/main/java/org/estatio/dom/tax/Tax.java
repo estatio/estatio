@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -151,14 +152,14 @@ public class Tax
     public TaxRate newRate(
             final LocalDate startDate,
             final BigDecimal percentage) {
-        return taxRates.newRate(this, startDate, percentage);
+        return taxRateRepository.newRate(this, startDate, percentage);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public TaxRate taxRateFor(final LocalDate date) {
-        TaxRate rate = taxRates.findTaxRateByTaxAndDate(this, date);
+        TaxRate rate = taxRateRepository.findTaxRateByTaxAndDate(this, date);
         return rate;
     }
 
@@ -175,15 +176,14 @@ public class Tax
 
     // //////////////////////////////////////
 
-    private TaxRates taxRates;
-
-    public final void injectTaxRates(final TaxRates taxRates) {
-        this.taxRates = taxRates;
-    }
-
     @Programmatic
     public BigDecimal grossFromNet(final BigDecimal net, LocalDate date) {
         return net.add(percentageFor(date.minusDays(1)).multiply(net).divide(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    public TaxRateRepository taxRateRepository;
 
 }

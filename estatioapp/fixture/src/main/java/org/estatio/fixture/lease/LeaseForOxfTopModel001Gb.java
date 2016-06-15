@@ -28,7 +28,7 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.tags.BrandCoverage;
@@ -60,7 +60,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
     @Inject
-    private CommunicationChannels communicationChannels;
+    private CommunicationChannelRepository communicationChannelRepository;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -101,7 +101,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
         AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
                 .findByTitle(addressType);
-        final SortedSet<CommunicationChannel> channels = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
+        final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
         final CommunicationChannel postalAddress = channels.first();
         agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress, null);
     }

@@ -45,7 +45,7 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
 
         // exec
 
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
         createLeaseTermForIndexableServiceCharge(
                 LEASE_REF,
                 AT_PATH, lease.getStartDate(), null,

@@ -39,7 +39,7 @@ public class LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb extends LeaseI
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         createLeaseItemForServiceChargeBudgeted(
                 LEASE_REF,

@@ -35,7 +35,7 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class BudgetImport implements ExcelFixtureRowHandler, Importable {
@@ -105,7 +105,7 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
         //Hack to be able to import existing charge for Italy
         String targetChargeRef = getTargetChargeReference().replace("ITA","");
 
-        final Charge targetCharge = charges.findByReference(targetChargeRef);
+        final Charge targetCharge = chargeRepository.findByReference(targetChargeRef);
         final LocalDate startDate = getStartDate();
         final LocalDate endDate = getEndDate();
 
@@ -144,7 +144,7 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
 
         try {
 
-            Charge sourceCharge = charges.findByReference(getChargeReference());
+            Charge sourceCharge = chargeRepository.findByReference(getChargeReference());
 
             //find or create budget item
             BudgetItem budgetItem = findOrCreateBudgetItem(property, startDate, budget, getBudgetedValue(), sourceCharge);
@@ -331,7 +331,7 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
     DomainObjectContainer container;
 
     @Inject
-    private Charges charges;
+    private ChargeRepository chargeRepository;
 
     @Inject
     private BudgetRepository budgetRepository;

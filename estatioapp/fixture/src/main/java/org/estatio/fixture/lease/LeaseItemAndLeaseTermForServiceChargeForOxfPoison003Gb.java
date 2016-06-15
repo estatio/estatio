@@ -41,7 +41,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb extends Leas
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
         createLeaseTermForServiceCharge(
                 LEASE_REF,

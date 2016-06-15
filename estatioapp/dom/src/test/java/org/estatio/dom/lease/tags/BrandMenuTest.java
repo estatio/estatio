@@ -19,66 +19,95 @@
 package org.estatio.dom.lease.tags;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BrandsTest {
+public class BrandMenuTest {
 
     FinderInteraction finderInteraction;
 
-    Brands brands;
+    BrandMenu brandMenu;
+
+    BrandRepository brandRepository;
 
     @Before
     public void setup() {
 
-        brands = new Brands() {
+        brandMenu = new BrandMenu() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<Brand> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
         };
+
+        brandRepository = new BrandRepository() {
+            @Override
+            protected <T> T firstMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return null;
+            }
+
+            @Override
+            protected List<Brand> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
+                return null;
+            }
+
+            @Override
+            protected <T> List<T> allMatches(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
+                return null;
+            }
+        };
+
+        brandMenu.brandRepository = brandRepository;
     }
 
-    public static class MatchByName extends BrandsTest {
+    public static class MatchByName extends BrandMenuTest {
         @Test
         public void byReferenceWildcard() {
-            brands.matchByName("*REF?1*");
+            brandRepository.matchByName("*REF?1*");
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
             assertThat(finderInteraction.getQueryName(), is("matchByName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)"(?i).*REF.1.*"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) "(?i).*REF.1.*"));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
         }
     }
 
-    public static class AutoComplete extends BrandsTest {
+    public static class AutoComplete extends BrandMenuTest {
 
         @Test
         public void byReference() {
-            brands.autoComplete("REF1");
+            brandMenu.autoComplete("REF1");
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
             assertThat(finderInteraction.getQueryName(), is("matchByName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)"(?i).*REF1.*"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) "(?i).*REF1.*"));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
         }
 

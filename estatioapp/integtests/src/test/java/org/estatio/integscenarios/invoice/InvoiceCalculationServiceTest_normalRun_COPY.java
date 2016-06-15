@@ -34,16 +34,17 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseTermRepository;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.domsettings.EstatioSettingsService;
@@ -74,11 +75,13 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
     private InvoiceService invoiceService;
 
     @Inject
-    private Leases leases;
+    private LeaseMenu leaseMenu;
     @Inject
-    private LeaseTerms leaseTerms;
+    private LeaseRepository leaseRepository;
     @Inject
-    private InvoiceItemsForLease invoiceItemsForLease;
+    private LeaseTermRepository leaseTermRepository;
+    @Inject
+    private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
     @Inject
     private EstatioSettingsService estatioSettingsService;
     @Inject
@@ -108,7 +111,7 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
             }
         });
 
-        lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        lease = leaseRepository.findLeaseByReference("OXF-TOPMODEL-001");
         assertThat(lease.getItems().size(), is(9));
 
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
@@ -221,10 +224,10 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
                 VT.ld(startDueDate),
                 VT.ld(startDueDate),
                 VT.ld(nextDueDate)));
-        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
+        InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
 
         BigDecimal netAmount = invoiceItem == null ? VT.bd("0.00") : invoiceItem.getNetAmount();
-        final String reason = "size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
+        final String reason = "size " + invoiceItemForLeaseRepository.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
         assertThat(reason,
                 netAmount, is(VT.bd2hup(expected)));
 

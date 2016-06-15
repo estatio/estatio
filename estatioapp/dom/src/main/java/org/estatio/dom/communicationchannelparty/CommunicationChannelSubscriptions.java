@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -50,7 +50,7 @@ public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFac
             // We don't care if being deleted
             break;
         case EXECUTING:
-            for (CommunicationChannel communicationChannel : communicationChannels.findByOwner(sourceParty)) {
+            for (CommunicationChannel communicationChannel : communicationChannelRepository.findByOwner(sourceParty)) {
                 if (replacementParty == null) {
                     communicationChannel.remove(null);
                 } else {
@@ -65,6 +65,6 @@ public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFac
 
 
     @Inject
-    private CommunicationChannels communicationChannels;
+    private CommunicationChannelRepository communicationChannelRepository;
 
 }

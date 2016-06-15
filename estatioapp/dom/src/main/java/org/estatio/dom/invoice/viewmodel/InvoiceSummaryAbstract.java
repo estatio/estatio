@@ -36,7 +36,7 @@ import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceRepository;
 
 public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements WithApplicationTenancy, WithApplicationTenancyAny {
 
@@ -91,7 +91,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements
     public abstract List<Invoice> getInvoices();
 
     @Inject
-    protected Invoices invoiceRepository;
+    protected InvoiceRepository invoiceRepository;
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;

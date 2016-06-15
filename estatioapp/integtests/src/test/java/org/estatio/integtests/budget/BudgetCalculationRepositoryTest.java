@@ -22,7 +22,7 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.CalculationType;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
@@ -50,7 +50,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
     BudgetCalculationService budgetCalculationService;
 
     @Inject
-    Charges charges;
+    ChargeRepository chargeRepository;
 
     @Before
     public void setupData() {
@@ -110,8 +110,8 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            Charge charge = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-            Charge chargeNotToBeFound = charges.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            Charge chargeNotToBeFound = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
             budgetCalculationRepository.resetAndUpdateOrCreateBudgetCalculations(budget, budgetCalculationService.calculate(budget));
 
 

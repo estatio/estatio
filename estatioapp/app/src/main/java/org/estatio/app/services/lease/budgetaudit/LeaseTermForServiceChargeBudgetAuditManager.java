@@ -39,7 +39,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.utils.TitleBuilder;
 
 @Immutable
@@ -84,7 +84,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
     }
 
     public List<LocalDate> choices1SelectProperty(Property property) {
-        return leaseTerms.findServiceChargeDatesByProperty(property);
+        return leaseTermRepository.findServiceChargeDatesByProperty(property);
     }
 
     // //////////////////////////////////////
@@ -112,7 +112,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
     }
 
     public List<LocalDate> choices0SelectStartDate() {
-        return leaseTerms.findServiceChargeDatesByProperty(property);
+        return leaseTermRepository.findServiceChargeDatesByProperty(property);
     }
 
     public LocalDate default0SelectStartDate() {
@@ -123,7 +123,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
 
     @Render(Type.EAGERLY)
     public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() {
-        final List<LeaseTermForServiceCharge> terms = leaseTerms.findServiceChargeByPropertyAndStartDate(getProperty(), getStartDate());
+        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndStartDate(getProperty(), getStartDate());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
@@ -168,7 +168,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewMode
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private LeaseTerms leaseTerms;
+    private LeaseTermRepository leaseTermRepository;
 
     @javax.inject.Inject
     private ExcelService excelService;

@@ -19,11 +19,14 @@
 package org.estatio.dom.tax;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
@@ -34,7 +37,9 @@ public class TaxRatesTest {
 
     FinderInteraction finderInteraction;
 
-    TaxRates taxRates;
+    TaxRateRepository taxRateRepository;
+
+    TaxRateMenu taxRateMenu;
 
     Tax tax;
     LocalDate date;
@@ -43,20 +48,43 @@ public class TaxRatesTest {
     public void setup() {
 
         tax = new Tax();
-        date = new LocalDate(2013,4,1);
+        date = new LocalDate(2013, 4, 1);
 
-        taxRates = new TaxRates() {
+        taxRateRepository = new TaxRateRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<TaxRate> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
+            @Override
+            protected <T> List<T> allMatches(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
+                return null;
+            }
+        };
+
+        taxRateMenu = new TaxRateMenu() {
+
+            @Override
+            protected <T> T firstMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return null;
+            }
+
+            @Override
+            protected List<TaxRate> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
+                return null;
+            }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
@@ -69,13 +97,13 @@ public class TaxRatesTest {
         @Test
         public void happyCase() {
 
-            taxRates.findTaxRateByTaxAndDate(tax, date);
+            taxRateRepository.findTaxRateByTaxAndDate(tax, date);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(TaxRate.class));
             assertThat(finderInteraction.getQueryName(), is("findByTaxAndDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("tax"), is((Object)tax));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object)date));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("tax"), is((Object) tax));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object) date));
 
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
         }
@@ -86,7 +114,7 @@ public class TaxRatesTest {
         @Test
         public void happyCase() {
 
-            taxRates.allTaxRates();
+            taxRateMenu.allTaxRates();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

@@ -41,7 +41,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.utils.TitleBuilder;
 
 @Immutable
@@ -86,7 +86,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
     }
 
     public List<LocalDate> choices1SelectProperty(Property property) {
-        return leaseTerms.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
+        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
     }
 
     // //////////////////////////////////////
@@ -114,7 +114,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
     }
 
     public List<LocalDate> choices0SelectStartDate() {
-        return leaseTerms.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
+        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
     }
 
     public LocalDate default0SelectStartDate() {
@@ -127,7 +127,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
 
     @Render(Type.EAGERLY)
     public List<LeaseTermForTurnoverRentLineItem> getTurnoverRents() {
-        final List<LeaseTerm> terms = leaseTerms.findByPropertyAndTypeAndStartDate(getProperty(), LeaseItemType.TURNOVER_RENT, getStartDate());
+        final List<LeaseTerm> terms = leaseTermRepository.findByPropertyAndTypeAndStartDate(getProperty(), LeaseItemType.TURNOVER_RENT, getStartDate());
         return Lists.transform(terms, newLeaseTermForTurnoverRentAuditBulkUpdate());
     }
 
@@ -172,7 +172,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private LeaseTerms leaseTerms;
+    private LeaseTermRepository leaseTermRepository;
 
     @javax.inject.Inject
     private ExcelService excelService;

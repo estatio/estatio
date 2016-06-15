@@ -30,13 +30,14 @@ import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypes;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.BrandCoverage;
@@ -70,7 +71,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
         final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH));
-        Lease lease = leases.newLease(
+        Lease lease = leaseMenu.newLease(
                 unit.getApplicationTenancy(), reference,
                 name,
                 leaseType,
@@ -87,7 +88,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
-            Country countryOfOrigin = countries.findCountry(countryOfOriginRef);
+            Country countryOfOrigin = countryRepository.findCountry(countryOfOriginRef);
             Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
@@ -95,7 +96,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             fixtureResults.addResult(this, occupancy);
         }
 
-        if (leases.findLeaseByReference(reference) == null) {
+        if (leaseRepository.findLeaseByReference(reference) == null) {
             throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
         return lease;
@@ -113,7 +114,10 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     protected UnitRepository unitRepository;
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
+
+    @Inject
+    protected LeaseRepository leaseRepository;
 
     @Inject
     protected Occupancies occupancies;
@@ -128,7 +132,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     protected LeaseTypes leaseTypes;
 
     @Inject
-    Countries countries;
+    CountryRepository countryRepository;
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;

@@ -78,7 +78,7 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
@@ -146,7 +146,7 @@ import lombok.Setter;
                         "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) " +
                         "ORDER BY endDate")
 })
-@DomainObject(autoCompleteRepository = Leases.class, autoCompleteAction = "autoComplete")
+@DomainObject(autoCompleteRepository = LeaseMenu.class, autoCompleteAction = "autoComplete")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Lease
         extends Agreement
@@ -795,7 +795,7 @@ public class Lease
             final Party tenant,
             final LocalDate startDate
     ) {
-        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
+        return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
     }
 
     // //////////////////////////////////////
@@ -809,7 +809,7 @@ public class Lease
             final LocalDate endDate,
             final LocalDate tenancyStartDate,
             final LocalDate tenancyEndDate) {
-        Lease newLease = leases.newLease(
+        Lease newLease = leaseRepository.newLease(
                 this.getApplicationTenancy(),
                 reference,
                 name,
@@ -861,7 +861,7 @@ public class Lease
         if (getSecondaryParty() == newLease.getSecondaryParty()) {
             // renew
             for (AgreementRole role : getRoles()) {
-                AgreementRole newRole = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
+                AgreementRole newRole = agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
                 if (newRole != null) {
                     for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : role.getCommunicationChannels()) {
                         newRole.addCommunicationChannel(
@@ -908,7 +908,7 @@ public class Lease
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";
         }
-        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
+        return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
     }
 
     // //////////////////////////////////////
@@ -985,7 +985,10 @@ public class Lease
     BankMandateRepository bankMandateRepository;
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
+
+    @Inject
+    private LeaseRepository leaseRepository;
 
     @Inject
     UnitMenu unitMenu;
@@ -997,7 +1000,7 @@ public class Lease
     AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

@@ -21,7 +21,7 @@ package org.estatio.integtests.geography;
 import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.geography.CountriesRefData;
@@ -39,11 +39,11 @@ public class CountriesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Countries countries;
+        private CountryRepository countryRepository;
 
         @Test
         public void whenExists() throws Exception {
-            final Country country = countries.findCountry(CountriesRefData.NLD);
+            final Country country = countryRepository.findCountry(CountriesRefData.NLD);
             assertThat(country.getReference(), is(CountriesRefData.NLD));
         }
 

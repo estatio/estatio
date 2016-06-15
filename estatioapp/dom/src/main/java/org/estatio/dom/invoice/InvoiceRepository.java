@@ -22,21 +22,13 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -49,10 +41,10 @@ import org.estatio.domsettings.EstatioSettingsService;
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.4")
-public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
+public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
 
-    public Invoices() {
-        super(Invoices.class, Invoice.class);
+    public InvoiceRepository() {
+        super(InvoiceRepository.class, Invoice.class);
     }
 
     @Programmatic
@@ -158,32 +150,6 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
                 "status", status);
     }
 
-
-    // //////////////////////////////////////
-
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    public Invoice newInvoiceForLease(
-            final Lease lease,
-            final LocalDate dueDate,
-            final PaymentMethod paymentMethod,
-            final Currency currency,
-            final ApplicationTenancy applicationTenancy) {
-        return newInvoice(applicationTenancy,
-                lease.getPrimaryParty(),
-                lease.getSecondaryParty(),
-                paymentMethod,
-                currency,
-                dueDate,
-                lease, null);
-    }
-
-    public List<ApplicationTenancy> choices4NewInvoiceForLease() {
-        return estatioApplicationTenancyRepository.selfOrChildrenOf(meService.me().getTenancy());
-    }
-
-
     // //////////////////////////////////////
 
     @Programmatic
@@ -269,14 +235,6 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(sequence = "98")
-    public List<Invoice> allInvoices() {
-        return allInstances();
-    }
-
-    // //////////////////////////////////////
-
     @Programmatic
     public void removeRuns(InvoiceCalculationParameters parameters) {
         List<Invoice> invoices = findByFixedAssetAndDueDateAndStatus(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
@@ -289,11 +247,5 @@ public class Invoices extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @javax.inject.Inject
     private EstatioSettingsService settings;
-
-    @javax.inject.Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
-
-    @javax.inject.Inject
-    private MeService meService;
 
 }

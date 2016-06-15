@@ -47,7 +47,7 @@ import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.TaxRates;
+import org.estatio.dom.tax.TaxRateRepository;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.domsettings.EstatioSettingsService;
 
@@ -60,7 +60,6 @@ public class InvoiceCalculationServiceTest {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
-
 
         InvoiceCalculationService ic;
 
@@ -110,10 +109,10 @@ public class InvoiceCalculationServiceTest {
         AgreementRoleType artTenant;
 
         @Mock
-        TaxRates mockTaxRates;
+        TaxRateRepository mockTaxRateRepository;
 
         @Mock
-        AgreementRoleRepository mockAgreementRoles;
+        AgreementRoleRepository mockAgreementRoleRepository;
 
         @Mock
         AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
@@ -144,7 +143,7 @@ public class InvoiceCalculationServiceTest {
             });
 
             lease = new Lease();
-            lease.injectAgreementRoles(mockAgreementRoles);
+            lease.agreementRoleRepository = mockAgreementRoleRepository;
             lease.setStartDate(LEASE_START_DATE);
             lease.setEndDate(LEASE_END_DATE);
 
@@ -161,7 +160,7 @@ public class InvoiceCalculationServiceTest {
             leaseItem.getTerms().add(leaseTerm);
 
             tax = new Tax();
-            tax.injectTaxRates(mockTaxRates);
+            tax.taxRateRepository = mockTaxRateRepository;
             tax.setReference("VAT");
 
             taxRate = new TaxRate();
@@ -174,8 +173,8 @@ public class InvoiceCalculationServiceTest {
             invoiceItemForLease = new InvoiceItemForLease();
             invoiceItemForLease.setLeaseTerm(leaseTerm);
 
-            invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            invoiceItemForLease.injectAgreementTypes(mockAgreementTypeRepository);
+            invoiceItemForLease.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            invoiceItemForLease.agreementTypeRepository = mockAgreementTypeRepository;
 
             ic = new InvoiceCalculationService();
             ic.estatioSettingsService = mockSettings;
@@ -407,12 +406,11 @@ public class InvoiceCalculationServiceTest {
                         20000.00, 20000.00, 20000.00, 20000.00);
             }
 
-
         }
 
     }
 
-    public static class CalculateDateRange extends InvoiceCalculationServiceTest  {
+    public static class CalculateDateRange extends InvoiceCalculationServiceTest {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -436,7 +434,6 @@ public class InvoiceCalculationServiceTest {
 
         }
 
-
         @Test
         public void testDateRange() throws Exception {
 
@@ -457,18 +454,16 @@ public class InvoiceCalculationServiceTest {
             compareResults(calculationResults, results);
         }
 
-        private void compareResults(List<CalculationResult> results, Double... value ){
+        private void compareResults(List<CalculationResult> results, Double... value) {
             assertThat(results.size(), is(value.length));
             Arrays.asList(value);
 
-            for (int i= 0; i <results.size(); i++){
-                assertThat(results.get(i).value(),is(BigDecimal.valueOf(value[i]).setScale(2)));
+            for (int i = 0; i < results.size(); i++) {
+                assertThat(results.get(i).value(), is(BigDecimal.valueOf(value[i]).setScale(2)));
             }
 
         }
 
-
     }
-
 
 }

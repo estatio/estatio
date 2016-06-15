@@ -35,7 +35,7 @@ public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstrac
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LEASE_REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
         newBreakOptionPlusYears(
                 lease, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
         newBreakOptionAtEndDate(

@@ -29,10 +29,10 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
-public class Sectors extends UdoDomainRepositoryAndFactory<Sector> {
+public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
 
-    public Sectors() {
-        super(Sectors.class, Sector.class);
+    public SectorRepository() {
+        super(SectorRepository.class, Sector.class);
     }
 
     public List<String> findUniqueNames() {

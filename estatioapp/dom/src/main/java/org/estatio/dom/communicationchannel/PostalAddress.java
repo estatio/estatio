@@ -21,6 +21,7 @@ package org.estatio.dom.communicationchannel;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.base.Predicate;
@@ -38,7 +39,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
+import org.estatio.dom.geography.StateRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -115,9 +116,9 @@ public class PostalAddress extends CommunicationChannel {
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Update using Action")
     @Getter @Setter
     private State state;
-    
+
     public List<State> choicesState() {
-        return states.findStatesByCountry(getCountry());
+        return stateRepository.findStatesByCountry(getCountry());
     }
 
     // //////////////////////////////////////
@@ -148,16 +149,10 @@ public class PostalAddress extends CommunicationChannel {
 
     public List<State> choices1UpdateCountryAndState(
             final Country country) {
-        return states.findStatesByCountry(country);
+        return stateRepository.findStatesByCountry(country);
     }
 
     // //////////////////////////////////////
-
-    private States states;
-
-    public final void injectStates(final States states) {
-        this.states = states;
-    }
 
     public PostalAddress changePostalAddress(
             final String addressLine1,
@@ -197,7 +192,9 @@ public class PostalAddress extends CommunicationChannel {
     // //////////////////////////////////////
 
     public static class Predicates {
-        private Predicates(){}
+
+        private Predicates() {
+        }
 
         public static Predicate<PostalAddress> equalTo(
                 final String address1,
@@ -214,6 +211,12 @@ public class PostalAddress extends CommunicationChannel {
                 }
             };
         }
+
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private StateRepository stateRepository;
 
 }

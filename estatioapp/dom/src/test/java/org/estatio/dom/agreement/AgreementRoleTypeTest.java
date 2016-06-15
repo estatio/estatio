@@ -46,7 +46,7 @@ public class AgreementRoleTypeTest {
         @Before
         public void setUp() throws Exception {
             at = new AgreementType();
-            at.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+            at.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
 
             art = new AgreementRoleType();
             art.setAppliesTo(at);

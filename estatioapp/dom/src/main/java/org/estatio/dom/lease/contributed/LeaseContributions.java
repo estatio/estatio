@@ -20,6 +20,8 @@ package org.estatio.dom.lease.contributed;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -107,10 +109,7 @@ public class LeaseContributions extends UdoDomainService<LeaseContributions> {
     
     // //////////////////////////////////////
 
+    @Inject
     private AgreementTypeRepository agreementTypeRepository;
-
-    public final void injectAgreementTypes(final AgreementTypeRepository agreementTypeRepository) {
-        this.agreementTypeRepository = agreementTypeRepository;
-    }
 
 }

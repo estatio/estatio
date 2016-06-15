@@ -226,11 +226,11 @@ public abstract class CommunicationChannel
     }
 
     public SortedSet<CommunicationChannel> choices0Remove() {
-        return communicationChannels.findOtherByOwnerAndType(getOwner(), getType(), this);
+        return communicationChannelRepository.findOtherByOwnerAndType(getOwner(), getType(), this);
     }
 
     @Inject
-    CommunicationChannels communicationChannels;
+    CommunicationChannelRepository communicationChannelRepository;
     @Inject
     CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
 

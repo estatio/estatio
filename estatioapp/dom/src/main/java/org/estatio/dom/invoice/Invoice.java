@@ -535,7 +535,7 @@ public class Invoice
         if (numerator != null) {
             final String invoiceNumber = numerator.lastIncrementStr();
             if (invoiceNumber != null) {
-                List<Invoice> result = invoices.findByInvoiceNumber(invoiceNumber);
+                List<Invoice> result = invoiceRepository.findByInvoiceNumber(invoiceNumber);
                 if (result.size() > 0) {
                     return result.get(0).getInvoiceDate().compareTo(invoiceDate) <= 0;
                 }
@@ -676,7 +676,7 @@ public class Invoice
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @javax.inject.Inject
-    Invoices invoices;
+    InvoiceRepository invoiceRepository;
 
     @javax.inject.Inject
     InvoiceItems invoiceItems;

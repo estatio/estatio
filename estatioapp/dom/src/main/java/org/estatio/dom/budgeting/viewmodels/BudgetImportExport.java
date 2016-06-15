@@ -30,7 +30,7 @@ import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -109,7 +109,7 @@ public class BudgetImportExport implements Importable {
     }
 
     private Charge fetchCharge(final String chargeReference) {
-        final Charge charge = charges
+        final Charge charge = chargeRepository
                 .findByReference(chargeReference);
         if (charge == null) {
             throw new ApplicationException(String.format("Charge with reference %s not found.", chargeReference));
@@ -123,7 +123,7 @@ public class BudgetImportExport implements Importable {
 
 
     @Inject
-    private Charges charges;
+    private ChargeRepository chargeRepository;
 
     @Inject
     private BudgetRepository budgetRepository;

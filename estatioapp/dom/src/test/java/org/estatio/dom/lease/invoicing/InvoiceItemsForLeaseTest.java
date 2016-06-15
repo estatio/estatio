@@ -29,7 +29,7 @@ public class InvoiceItemsForLeaseTest {
 
     FinderInteraction finderInteraction;
 
-    InvoiceItemsForLease invoiceItems;
+    InvoiceItemForLeaseRepository invoiceItems;
 
     LocalDate startDate;
     LocalDate dueDate;
@@ -40,7 +40,7 @@ public class InvoiceItemsForLeaseTest {
         startDate = new LocalDate(2013, 4, 1);
         dueDate = new LocalDate(2013, 5, 2);
 
-        invoiceItems = new InvoiceItemsForLease() {
+        invoiceItems = new InvoiceItemForLeaseRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {

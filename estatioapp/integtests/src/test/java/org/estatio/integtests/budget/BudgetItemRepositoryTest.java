@@ -17,7 +17,7 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;
@@ -41,7 +41,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
     PropertyRepository propertyRepository;
 
     @Inject
-    Charges chargesRepository;
+    ChargeRepository chargeRepository;
 
 
     @Before
@@ -79,7 +79,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             LocalDate startDate = new LocalDate(2016, 01, 01);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-            Charge charge = chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
             // when
             final BudgetItem item = budgetItemRepository.findByBudgetAndCharge(budget, charge);
             // then
@@ -96,7 +96,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Charge charge = chargesRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
             LocalDate startDate = new LocalDate(2016, 01, 01);
             // when
             final BudgetItem item = budgetItemRepository.findByPropertyAndChargeAndStartDate(property,charge,startDate);

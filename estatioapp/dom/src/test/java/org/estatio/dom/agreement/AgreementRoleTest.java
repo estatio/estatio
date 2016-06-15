@@ -148,7 +148,7 @@ public class AgreementRoleTest  {
             });
 
             agreementRole = new AgreementRole();
-            agreementRole.injectClockService(clockService);
+            agreementRole.clockService = clockService;
         }
 
         @Test

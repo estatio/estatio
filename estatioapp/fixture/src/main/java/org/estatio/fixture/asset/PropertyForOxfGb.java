@@ -54,7 +54,7 @@ public class PropertyForOxfGb extends PropertyAbstract {
         final Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
         final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country greatBritain = countries.findCountry(CountriesRefData.GBR);
+        final Country greatBritain = countryRepository.findCountry(CountriesRefData.GBR);
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Oxford Super Mall", "Oxford", greatBritain, PropertyType.SHOPPING_CENTER,

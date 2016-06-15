@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -56,7 +57,7 @@ import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.TitleBuilder;
@@ -67,8 +68,8 @@ import lombok.Setter;
 
 /**
  * Represents a line-item of an {@link #getInvoice() owning} {@link Invoice}.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * This class is, in fact, abstract. The <tt>InvoiceItemForLease</tt> subclass
  * decouples the <tt>invoice</tt> module from the <tt>lease</tt> module, and
  * provides a many-to-many between the two concepts.
@@ -100,7 +101,6 @@ public abstract class InvoiceItem
                 .withName(getCharge())
                 .toString();
     }
-
 
     // TODO: added a uuid since there can be similar invoice items having a
     // different source (leaseTerm)
@@ -140,7 +140,7 @@ public abstract class InvoiceItem
     private Charge charge;
 
     public List<Charge> choicesCharge() {
-        return charges.allCharges();
+        return chargeRepository.allCharges();
     }
 
     // //////////////////////////////////////
@@ -180,17 +180,17 @@ public abstract class InvoiceItem
     private Tax tax;
 
     @MemberOrder(name = "tax", sequence = "1")
-    public InvoiceItem changeTax(final Tax tax){
+    public InvoiceItem changeTax(final Tax tax) {
         setTax(tax);
         this.calculateTax();
         return this;
     }
 
-    public Tax default0ChangeTax(final Tax tax){
+    public Tax default0ChangeTax(final Tax tax) {
         return getTax();
     }
 
-    public String disableChangeTax(final Tax tax){
+    public String disableChangeTax(final Tax tax) {
         return getSource() == null ? null : "Cannot change tax on a generated invoice item";
     }
 
@@ -221,7 +221,6 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Property(editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
@@ -229,7 +228,6 @@ public abstract class InvoiceItem
     private LocalDate dueDate;
 
     // //////////////////////////////////////
-
 
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
     @javax.jdo.annotations.Persistent
@@ -247,7 +245,6 @@ public abstract class InvoiceItem
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate effectiveStartDate;
-
 
     @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent
@@ -359,13 +356,14 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    private Charges charges;
-
-    public final void injectCharges(final Charges charges) {
-        this.charges = charges;
-    }
-
-    @Override public ApplicationTenancy getApplicationTenancy() {
+    @Override
+    public ApplicationTenancy getApplicationTenancy() {
         return getInvoice().getApplicationTenancy();
     }
+
+    // //////////////////////////////////////
+
+    @Inject
+    private ChargeRepository chargeRepository;
+
 }

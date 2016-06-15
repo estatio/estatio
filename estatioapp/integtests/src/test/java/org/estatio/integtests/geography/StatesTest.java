@@ -27,10 +27,10 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
+import org.estatio.dom.geography.StateRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -43,22 +43,22 @@ public class StatesTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        countries = service(Countries.class);
-        states = service(States.class);
+        countryRepository = service(CountryRepository.class);
+        stateRepository = service(StateRepository.class);
     }
 
-    Countries countries;
+    CountryRepository countryRepository;
 
-    States states;
+    StateRepository stateRepository;
 
     public static class FindStatesByCountry extends StatesTest {
 
         @Test
         public void whenCountryWithStates() throws Exception {
             // given
-            final Country country = countries.findCountry("NLD");
+            final Country country = countryRepository.findCountry("NLD");
             // when
-            final List<State> statesInCountry = states.findStatesByCountry(country);
+            final List<State> statesInCountry = stateRepository.findStatesByCountry(country);
             // then
             assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
             for (State state : statesInCountry) {
@@ -72,10 +72,10 @@ public class StatesTest extends EstatioIntegrationTest {
         @Test
         public void findState() throws Exception {
             // given
-            final Country country = countries.findCountry("NLD");
+            final Country country = countryRepository.findCountry("NLD");
 
             // when
-            final State state = states.findState("NL-DRN");
+            final State state = stateRepository.findState("NL-DRN");
 
             // then
             assertThat(state.getCountry(), is(country));

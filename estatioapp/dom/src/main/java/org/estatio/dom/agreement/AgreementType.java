@@ -20,6 +20,7 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
@@ -108,17 +109,10 @@ public class AgreementType
 
     // //////////////////////////////////////
 
-    private AgreementRoleTypeRepository agreementRoleTypeRepository;
+    @Inject
+    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    public final void injectAgreementRoleTypes(final AgreementRoleTypeRepository agreementRoleTypeRepository) {
-        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
-    }
-
+    @Inject
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
-
-    public final void injectAgreementRoleCommunicationChannelTypes(
-            final AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository) {
-        this.agreementRoleCommunicationChannelTypeRepository = agreementRoleCommunicationChannelTypeRepository;
-    }
 
 }

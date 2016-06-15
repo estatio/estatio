@@ -28,7 +28,8 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
@@ -43,7 +44,10 @@ import static org.junit.Assert.assertThat;
 public class GuaranteeTest extends EstatioIntegrationTest {
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     Guarantees guarantees;
@@ -68,7 +72,7 @@ public class GuaranteeTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
         guaranteeWithFinancialAccount = guarantees.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
         guaranteeWithoutFinancialAccount = guarantees.newGuarantee(

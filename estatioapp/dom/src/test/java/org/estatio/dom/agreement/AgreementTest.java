@@ -135,17 +135,17 @@ public class AgreementTest {
             arLandlord = new AgreementRole();
             arLandlord.setType(landlordArt);
             arLandlord.setParty(landlord);
-            arLandlord.injectClockService(mockClockService);
+            arLandlord.clockService = mockClockService;
 
             arTenant1 = new AgreementRole();
             arTenant1.setType(tenantArt);
             arTenant1.setParty(tenant1);
-            arTenant1.injectClockService(mockClockService);
+            arTenant1.clockService = mockClockService;
 
             arTenant2 = new AgreementRole();
             arTenant2.setType(tenantArt);
             arTenant2.setParty(tenant2);
-            arTenant2.injectClockService(mockClockService);
+            arTenant2.clockService = mockClockService;
 
             // tenant 1 superceded by tenant 2
             arTenant1.setEndDate(clockDate.minusMonths(1));
@@ -241,27 +241,27 @@ public class AgreementTest {
             creditorAr.setType(creditorAgreementRoleType);
             creditorAr.setParty(creditor);
             creditorAr.setStartDate(new LocalDate(2013, 7, 1)); // current
-            creditorAr.injectClockService(mockClockService);
+            creditorAr.clockService = mockClockService;
 
             creditorAr2 = new AgreementRole();
             creditorAr2.setType(creditorAgreementRoleType);
             creditorAr2.setParty(creditor);
             creditorAr2.setStartDate(new LocalDate(2012, 7, 1)); // not current
             creditorAr2.setEndDate(new LocalDate(2013, 6, 30));
-            creditorAr2.injectClockService(mockClockService);
+            creditorAr2.clockService = mockClockService;
 
             debtorAr = new AgreementRole();
             debtorAr.setType(debtorAgreementRoleType);
             debtorAr.setParty(debtor);
             debtorAr.setStartDate(new LocalDate(2013, 7, 1)); // current
-            debtorAr.injectClockService(mockClockService);
+            debtorAr.clockService = mockClockService;
 
             debtorAr2 = new AgreementRole();
             debtorAr2.setType(debtorAgreementRoleType);
             debtorAr2.setParty(debtor);
             debtorAr2.setStartDate(new LocalDate(2012, 7, 1)); // not current
             debtorAr2.setEndDate(new LocalDate(2013, 6, 30));
-            debtorAr2.injectClockService(mockClockService);
+            debtorAr2.clockService = mockClockService;
 
             context.checking(new Expectations() {
                 {
@@ -277,7 +277,7 @@ public class AgreementTest {
             });
 
             agreement = new AgreementForSubtypeTesting();
-            agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+            agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
         }
 
         @Test
@@ -297,7 +297,7 @@ public class AgreementTest {
     public static class FindRole extends AgreementTest {
 
         @Mock
-        private AgreementRoleRepository mockAgreementRoles;
+        private AgreementRoleRepository mockAgreementRoleRepository;
 
         private AgreementRoleType art;
         private Party party;
@@ -314,7 +314,7 @@ public class AgreementTest {
             date = new LocalDate(2013, 4, 1);
 
             agreement = new AgreementForTesting();
-            agreement.injectAgreementRoles(mockAgreementRoles);
+            agreement.agreementRoleRepository = mockAgreementRoleRepository;
         }
 
         @Test
@@ -322,7 +322,7 @@ public class AgreementTest {
             final AgreementRole agreementRole = new AgreementRole();
             context.checking(new Expectations() {
                 {
-                    oneOf(mockAgreementRoles).findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, art, date);
+                    oneOf(mockAgreementRoleRepository).findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, art, date);
                     will(returnValue(agreementRole));
                 }
             });
@@ -330,39 +330,6 @@ public class AgreementTest {
         }
 
     }
-
-    public static class Inject extends AgreementTest {
-
-        @Mock
-        private AgreementRepository mockAgreementRepository;
-        @Mock
-        private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
-        @Mock
-        private AgreementTypeRepository mockAgreementTypeRepository;
-        @Mock
-        private AgreementRoleRepository mockAgreementRoles;
-
-        private Agreement agreement;
-
-        @Before
-        public void setup() {
-            agreement = new AgreementForTesting();
-        }
-
-        @Test
-        public void injected() {
-            agreement.injectAgreementTypes(mockAgreementTypeRepository);
-            agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
-            agreement.injectAgreements(mockAgreementRepository);
-            agreement.injectAgreementRoles(mockAgreementRoles);
-
-            assertThat(agreement.agreementRepository, is(mockAgreementRepository));
-            assertThat(agreement.agreementRoles, is(mockAgreementRoles));
-            assertThat(agreement.agreementRoleTypeRepository, is(mockAgreementRoleTypeRepository));
-            assertThat(agreement.agreementTypeRepository, is(mockAgreementTypeRepository));
-        }
-    }
-
 
     public static class IsCurrent extends AgreementTest {
 
@@ -374,7 +341,7 @@ public class AgreementTest {
         @Before
         public void setUp() throws Exception {
             agreement = new AgreementForTesting();
-            agreement.injectClockService(mockClockService);
+            agreement.clockService = mockClockService;
         }
 
         @Test
@@ -524,7 +491,7 @@ public class AgreementTest {
 
                 agreement = new AgreementForTesting();
                 agreement.setType(art);
-                agreement.injectAgreementRoleTypes(mockAgreementRoleTypeRepository);
+                agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
             }
 
             @Test
@@ -667,7 +634,7 @@ public class AgreementTest {
             @Test
             public void validateNewRole_invalid_nullStartAnd_existingRolesDoesContainType() {
                 final AgreementRole existingRole = new AgreementRole();
-                existingRole.injectClockService(mockClockService);
+                existingRole.clockService = mockClockService;
 
                 context.checking(new Expectations() {{
                     allowing(mockClockService).now();

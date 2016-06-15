@@ -41,7 +41,7 @@ public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAnd
         }
 
         // exec
-        final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
         createLeaseTermForTax(
                 LEASE_REF,
                 AT_PATH, lease.getStartDate(), null,
