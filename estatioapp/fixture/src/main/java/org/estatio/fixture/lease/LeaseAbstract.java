@@ -34,10 +34,10 @@ import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypes;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.BrandCoverage;
@@ -71,7 +71,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
         final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH));
-        Lease lease = leases.newLease(
+        Lease lease = leaseMenu.newLease(
                 unit.getApplicationTenancy(), reference,
                 name,
                 leaseType,
@@ -114,7 +114,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     protected UnitRepository unitRepository;
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
 
     @Inject
     protected LeaseRepository leaseRepository;

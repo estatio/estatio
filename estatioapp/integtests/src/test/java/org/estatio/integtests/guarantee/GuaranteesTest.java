@@ -27,8 +27,8 @@ import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.guarantee.contributed.OnLease;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
@@ -62,7 +62,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;

@@ -34,9 +34,9 @@ import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.BrandCoverage;
@@ -187,7 +187,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        Lease lease = leases.newLease(unit.getApplicationTenancy(), reference, name, null, startDate, null, endDate, landlord, tenant);
+        Lease lease = leaseMenu.newLease(unit.getApplicationTenancy(), reference, name, null, startDate, null, endDate, landlord, tenant);
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
@@ -231,7 +231,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
         }
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(getAtPath());
 
-        this.lease = leases.newLease(applicationTenancy, getReference(), getName(), getLeaseType(), getStartDate(), getDuration(), getEndDate(), getLandlord(), getTenant());
+        this.lease = leaseMenu.newLease(applicationTenancy, getReference(), getName(), getLeaseType(), getStartDate(), getDuration(), getEndDate(), getLandlord(), getTenant());
     }
 
     // //////////////////////////////////////
@@ -242,7 +242,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
     protected UnitRepository unitRepository;
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
 
     @Inject
     protected LeaseRepository leaseRepository;

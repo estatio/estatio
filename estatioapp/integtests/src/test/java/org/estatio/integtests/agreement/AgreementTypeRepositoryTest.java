@@ -10,8 +10,8 @@ import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
@@ -53,7 +53,7 @@ public class AgreementTypeRepositoryTest extends EstatioIntegrationTest {
     AgreementTypeRepository agreementTypeRepository;
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;

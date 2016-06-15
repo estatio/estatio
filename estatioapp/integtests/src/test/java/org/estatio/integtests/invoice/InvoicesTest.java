@@ -48,8 +48,8 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -90,7 +90,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
     Parties parties;
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -308,7 +308,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Test
         public void byLease() {
-            List<Lease> allLeases = leases.allLeases();
+            List<Lease> allLeases = leaseMenu.allLeases();
 
             assertThat(invoiceMenu.allInvoices().size(), is(2));
 

@@ -39,6 +39,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForDeposit;
@@ -50,7 +51,6 @@ import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTermRepository;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -431,7 +431,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
     protected IndexRepository indexRepository;
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
 
     @Inject
     protected LeaseRepository leaseRepository;

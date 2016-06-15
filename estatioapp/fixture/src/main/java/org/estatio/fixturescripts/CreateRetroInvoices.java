@@ -37,7 +37,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
@@ -157,7 +157,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
     public InvoiceRepository invoiceRepository;
 
     @Inject
-    public Leases leases;
+    public LeaseMenu leaseMenu;
 
     @Inject
     public LeaseRepository leaseRepository;

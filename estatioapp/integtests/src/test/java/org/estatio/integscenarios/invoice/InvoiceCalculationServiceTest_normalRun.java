@@ -50,7 +50,7 @@ import static org.junit.Assert.assertThat;
 public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationTest {
     
     @Inject
-    private Leases leases;
+    private LeaseMenu leaseMenu;
 
     @Inject
     private LeaseRepository leaseRepository;

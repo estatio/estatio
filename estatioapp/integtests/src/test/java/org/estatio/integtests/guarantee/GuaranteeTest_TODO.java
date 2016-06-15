@@ -27,7 +27,7 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
@@ -81,7 +81,7 @@ public class GuaranteeTest_TODO extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Leases leases;
+        private LeaseMenu leaseMenu;
 
         @Inject
         private LeaseRepository leaseRepository;

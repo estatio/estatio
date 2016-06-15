@@ -42,7 +42,7 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
@@ -71,7 +71,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;

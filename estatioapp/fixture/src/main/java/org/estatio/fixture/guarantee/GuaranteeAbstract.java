@@ -28,7 +28,7 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.fixture.EstatioFixtureScript;
 
 public abstract class GuaranteeAbstract extends EstatioFixtureScript {
@@ -53,7 +53,7 @@ public abstract class GuaranteeAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    protected Leases leases;
+    protected LeaseMenu leaseMenu;
 
     @Inject
     protected Guarantees guarantees;

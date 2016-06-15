@@ -35,9 +35,9 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
@@ -73,7 +73,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
     PropertyMenu propertyMenu;
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -91,7 +91,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
     @Before
     public void setup() {
         creator = new CreateRetroInvoices();
-        creator.leases = leases;
+        creator.leaseMenu = leaseMenu;
         creator.invoiceRepository = invoiceRepository;
         creator.propertyMenu = propertyMenu;
         creator.invoiceCalculationService = invoiceCalculationService;

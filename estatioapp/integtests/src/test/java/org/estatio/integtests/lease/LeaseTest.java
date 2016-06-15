@@ -41,9 +41,9 @@ import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -68,7 +68,7 @@ import static org.junit.Assert.assertThat;
 public class LeaseTest extends EstatioIntegrationTest {
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -393,7 +393,7 @@ public class LeaseTest extends EstatioIntegrationTest {
         private Lease leaseTopModel;
 
         @Inject
-        private Leases leases;
+        private LeaseMenu leaseMenu;
 
         @Before
         public void setup() {
@@ -426,7 +426,7 @@ public class LeaseTest extends EstatioIntegrationTest {
         private Lease leaseTopModel;
 
         @Inject
-        private Leases leases;
+        private LeaseMenu leaseMenu;
 
         @Before
         public void setup() {

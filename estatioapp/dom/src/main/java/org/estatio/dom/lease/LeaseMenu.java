@@ -71,10 +71,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "40.1"
 )
-public class Leases extends UdoDomainRepositoryAndFactory<Lease> {
+public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
 
-    public Leases() {
-        super(Leases.class, Lease.class);
+    public LeaseMenu() {
+        super(LeaseMenu.class, Lease.class);
     }
 
     // //////////////////////////////////////

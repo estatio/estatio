@@ -39,7 +39,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.LeaseTermRepository;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
@@ -65,7 +65,7 @@ public class LeaseTermsTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;

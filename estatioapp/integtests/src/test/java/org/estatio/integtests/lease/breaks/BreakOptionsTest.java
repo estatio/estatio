@@ -35,7 +35,7 @@ import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptions;
@@ -57,7 +57,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
     BreakOptions breakOptions;
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;

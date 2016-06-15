@@ -35,7 +35,7 @@ import java.math.BigDecimal;
 public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;

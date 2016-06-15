@@ -35,9 +35,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
+import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermsForIndexable;
-import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -58,7 +58,7 @@ public class LeaseTermsForIndexableTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    Leases leases;
+    LeaseMenu leaseMenu;
 
     @Inject
     IndexRepository indexes;

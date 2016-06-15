@@ -154,13 +154,13 @@ public class LeaseTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        private Leases leases;
+        private LeaseMenu leaseMenu;
 
         @Before
         public void setUp() throws Exception {
 
-            leases = new Leases();
-            leases.setContainer(mockContainer);
+            leaseMenu = new LeaseMenu();
+            leaseMenu.setContainer(mockContainer);
 
             lease = new Lease();
 
