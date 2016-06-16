@@ -78,6 +78,16 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         return findOrCreateLeaseItem(leaseRef, leaseItemAtPath, charge, leaseItemType, invoicingFrequency, executionContext);
     }
 
+    private LeaseItem findOrCreateRentItem(final String leaseRef, final String leaseItemAtPath, final ExecutionContext executionContext){
+        return findOrCreateLeaseItem(
+                leaseRef,
+                leaseItemAtPath,
+                ChargeRefData.IT_RENT,
+                LeaseItemType.RENT,
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                executionContext);
+    }
+
     private Lease findLease(final String leaseRef) {
         return leaseRepository.findLeaseByReference(leaseRef);
     }
@@ -163,14 +173,8 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final Fraction fraction,
             final ExecutionContext executionContext) {
 
-        //Find the rent Item,
-        final LeaseItem rentItem = findOrCreateLeaseItem(
-                leaseRef,
-                leaseItemAtPath,
-                ChargeRefData.IT_RENT,
-                LeaseItemType.RENT,
-                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
-                executionContext);
+        //Find the rent Item
+        final LeaseItem rentItem = findOrCreateRentItem(leaseRef, leaseItemAtPath, executionContext);
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
@@ -305,14 +309,8 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final String turnoverRentRule,
             final ExecutionContext executionContext) {
 
-        //Find the rent Item,
-        final LeaseItem rentItem = findOrCreateLeaseItem(
-                leaseRef,
-                leaseItemAtPath,
-                ChargeRefData.IT_RENT,
-                LeaseItemType.RENT,
-                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
-                executionContext);
+        //Find the rent Item
+        final LeaseItem rentItem = findOrCreateRentItem(leaseRef, leaseItemAtPath, executionContext);
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef,
@@ -394,12 +392,19 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final boolean taxable,
             final ExecutionContext executionContext) {
 
+        //Find the rent Item
+        final LeaseItem rentItem = findOrCreateRentItem(leaseRef, leaseItemAtPath, executionContext);
+
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
                 ChargeRefData.IT_TAX,
                 LeaseItemType.TAX,
                 InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
+        if (leaseItem.getSourceItems().size() == 0) {
+            leaseItem.newSourceItem(rentItem);
+        }
+
         final LeaseTermForTax leaseTerm = (LeaseTermForTax) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);

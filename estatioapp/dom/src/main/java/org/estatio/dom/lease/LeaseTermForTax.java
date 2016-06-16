@@ -319,8 +319,8 @@ public class LeaseTermForTax extends LeaseTerm {
     @Programmatic
     public BigDecimal rentValueForDate() {
         BigDecimal rentValue = BigDecimal.ZERO;
-        for (LeaseItem leaseItem : leaseItems.findLeaseItemsByType(getLeaseItem().getLease(), LeaseItemType.RENT)) {
-            final BigDecimal valueForDate = leaseItem.valueForDate(getStartDate());
+        for (LeaseItemSource leaseItemSource : getLeaseItem().getSourceItems()){
+            final BigDecimal valueForDate = leaseItemSource.getSourceItem().valueForDate(getStartDate());
             rentValue = rentValue.add(valueForDate == null ? BigDecimal.ZERO : valueForDate);
         }
         return rentValue;

@@ -89,6 +89,7 @@ public class LeaseTermForTaxTest extends EstatioIntegrationTest {
             lease.verifyUntil(new LocalDate(2014, 1, 1));
             final LeaseTermForTax taxTerm = (LeaseTermForTax) taxItem.findTerm(new LocalDate(2012, 7, 15));
             // Then
+            assertThat(taxItem.getSourceItems().size(), is(1));
             assertThat(taxTerm.rentValueForDate(), is(new BigDecimal("20846.40")));
             assertThat(taxTerm.getTaxableValue(), is(new BigDecimal("20846.40")));
         }
@@ -99,9 +100,11 @@ public class LeaseTermForTaxTest extends EstatioIntegrationTest {
             lease.verifyUntil(new LocalDate(2014, 1, 1));
             final LeaseTermForTax taxTerm = (LeaseTermForTax) taxItem.findTerm(new LocalDate(2012, 7, 15));
             // When
-            item.copy(new LocalDate(2012, 7, 15), item.getInvoicingFrequency(), item.getPaymentMethod(), item.getCharge());
+            LeaseItem secondRentItem = item.copy(new LocalDate(2012, 7, 15), item.getInvoicingFrequency(), item.getPaymentMethod(), item.getCharge());
+            taxItem.newSourceItem(secondRentItem);
             lease.verifyUntil(new LocalDate(2014, 1, 1));
             // Then
+            assertThat(taxItem.getSourceItems().size(), is(2));
             assertThat(taxTerm.rentValueForDate(), is(new BigDecimal("20846.40")));
             assertThat(taxTerm.getTaxableValue(), is(new BigDecimal("20846.40")));
         }
