@@ -193,7 +193,7 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
             final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
             final boolean includeTerminated) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
-        return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
+        return leaseRepository.matchByReferenceOrName(referenceOrName, includeTerminated);
     }
 
     @ActionLayout(contributed = Contributed.AS_NEITHER)
@@ -210,7 +210,7 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
     public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset,
             final LocalDate activeOnDate) {
-        return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
+        return leaseRepository.findByAssetAndActiveOnDate(fixedAsset, activeOnDate);
     }
 
     public List<FixedAsset> autoComplete0FindLeasesActiveOnDate(final String searchPhrase) {
@@ -267,7 +267,7 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Lease> allLeases() {
-        return allInstances();
+        return leaseRepository.allLeases();
     }
 
     // //////////////////////////////////////

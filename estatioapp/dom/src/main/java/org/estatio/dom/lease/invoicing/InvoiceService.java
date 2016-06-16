@@ -16,7 +16,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 
 @DomainService
 @DomainServiceLayout(
@@ -101,7 +101,7 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
             final LocalDate nextDueDate) {
         String runId = null;
 
-        for (Lease lease : leaseMenu.allLeases()){
+        for (Lease lease : leaseRepository.allLeases()){
             if (lease.getApplicationTenancy().getPath().matches(applicationTenancy.getPath()+".*")){
                 for (LocalDate dueDate : lease.dueDatesInRange(startDueDate, nextDueDate)) {
                     InvoiceCalculationParameters parameters =
@@ -200,7 +200,7 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private LeaseMenu leaseMenu;
+    private LeaseRepository leaseRepository;
 
     @javax.inject.Inject
     private InvoiceCalculationService invoiceCalculationService;

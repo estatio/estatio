@@ -37,9 +37,11 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)
 public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
@@ -86,6 +88,23 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     // //////////////////////////////////////
 
+    public List<Lease> allLeases() {
+        return allInstances();
+    }
+
+    public List<Lease> matchByReferenceOrName(
+            final String referenceOrName,
+            final boolean includeTerminated) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
+        return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
+    }
+
+    public List<Lease> findByAssetAndActiveOnDate(
+            final FixedAsset fixedAsset,
+            final LocalDate activeOnDate) {
+        return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
+    }
+
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
         return uniqueMatch("findByReference", "reference", reference);
@@ -127,6 +146,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
-    private ClockService clockService;
+    ClockService clockService;
 
 }

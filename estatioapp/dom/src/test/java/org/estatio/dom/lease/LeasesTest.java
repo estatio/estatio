@@ -62,27 +62,6 @@ public class LeasesTest {
 
         property = new Property();
 
-        leaseMenu = new LeaseMenu() {
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
-                return (T) new Lease();
-            }
-
-            @Override
-            protected List<Lease> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-
         leaseRepository = new LeaseRepository() {
 
             @Override
@@ -104,7 +83,9 @@ public class LeasesTest {
             }
         };
 
-        leaseMenu.clockService = new ClockService();
+        leaseRepository.clockService = new ClockService();
+
+        leaseMenu = new LeaseMenu();
     }
 
     public static class FindLeaseByReference extends LeasesTest {
@@ -126,7 +107,7 @@ public class LeasesTest {
         @Test
         public void byReferenceWildcard() {
 
-            leaseMenu.findLeases("*REF?1*", false);
+            leaseRepository.matchByReferenceOrName("*REF?1*", false);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
@@ -165,7 +146,7 @@ public class LeasesTest {
         @Test
         public void happyCase() {
 
-            leaseMenu.findLeasesActiveOnDate(asset, date);
+            leaseRepository.findByAssetAndActiveOnDate(asset, date);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
@@ -181,7 +162,7 @@ public class LeasesTest {
         @Test
         public void happyCase() {
 
-            leaseMenu.allLeases();
+            leaseRepository.allLeases();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

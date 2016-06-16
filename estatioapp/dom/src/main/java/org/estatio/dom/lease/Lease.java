@@ -62,15 +62,12 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
@@ -78,7 +75,6 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
@@ -985,25 +981,10 @@ public class Lease
     BankMandateRepository bankMandateRepository;
 
     @Inject
-    LeaseMenu leaseMenu;
-
-    @Inject
     private LeaseRepository leaseRepository;
 
     @Inject
-    UnitMenu unitMenu;
-
-    @Inject
     UnitRepository unitRepository;
-
-    @Inject
-    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
-
-    @Inject
-    CommunicationChannelRepository communicationChannelRepository;
-
-    @Inject
-    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject
     BreakOptions breakOptionsService;

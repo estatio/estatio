@@ -20,14 +20,14 @@ package org.estatio.fixturescripts;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -59,9 +59,6 @@ public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
     }
 
     // //////////////////////////////////////
-
-    @Inject
-    private LeaseMenu leaseMenu;
 
 //    public void setLeases(final Leases leases) {
 //        this.leases = leases;

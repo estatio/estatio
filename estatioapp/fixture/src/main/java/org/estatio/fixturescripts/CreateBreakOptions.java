@@ -25,7 +25,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptions;
@@ -57,9 +56,6 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     }
 
     // //////////////////////////////////////
-
-    @Inject
-    private LeaseMenu leaseMenu;
 
     @Inject
     private LeaseRepository leaseRepository;

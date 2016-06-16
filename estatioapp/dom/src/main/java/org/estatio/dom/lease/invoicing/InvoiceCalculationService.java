@@ -45,7 +45,6 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
@@ -351,9 +350,6 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     @Inject
     private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
-
-    @Inject
-    private LeaseMenu leaseMenu;
 
     @Inject
     private LeaseRepository leaseRepository;

@@ -36,7 +36,6 @@ import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -56,9 +55,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class LeasesTest extends EstatioIntegrationTest {
-
-    @Inject
-    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -159,7 +155,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         @Test
         public void whenWildcard() {
             // Given
-            final List<Lease> matchingLeases = leaseMenu.findLeases("OXF*", false);
+            final List<Lease> matchingLeases = leaseRepository.matchByReferenceOrName("OXF*", false);
             assertThat(matchingLeases.size(), is(5));
 
             // When
@@ -169,8 +165,8 @@ public class LeasesTest extends EstatioIntegrationTest {
 
             // Then
             assertThat(oxfTop.getTenancyEndDate(), is(new LocalDate(2014, 1, 1)));
-            assertThat(leaseMenu.findLeases("OXF*", false).size(), is(4));
-            assertThat(leaseMenu.findLeases("OXF*", true).size(), is(5));
+            assertThat(leaseRepository.matchByReferenceOrName("OXF*", false).size(), is(4));
+            assertThat(leaseRepository.matchByReferenceOrName("OXF*", true).size(), is(5));
         }
 
     }
@@ -260,8 +256,6 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private PropertyMenu propertyMenu;
-        @Inject
         PropertyRepository propertyRepository;
 
         @Test
@@ -270,8 +264,8 @@ public class LeasesTest extends EstatioIntegrationTest {
             final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             System.out.println(property);
             // when
-            assertThat(leaseMenu.findLeasesActiveOnDate(property, new LocalDate(2010, 7, 14)).size(), is(0));
-            assertThat(leaseMenu.findLeasesActiveOnDate(property, new LocalDate(2010, 7, 15)).size(), is(1));
+            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size(), is(0));
+            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size(), is(1));
         }
     }
 
@@ -297,7 +291,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         @Test
         public void renew() {
             // Given
-            Lease lease = leaseMenu.allLeases().get(0);
+            Lease lease = leaseRepository.allLeases().get(0);
             String newReference = lease.default0Renew() + "-2";
             String newName = lease.default1Renew() + "-2";
             LocalDate newStartDate = lease.default2Renew();
@@ -325,7 +319,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         @Test
         public void reneWithTerminatedOccupancies() {
             // Given
-            Lease lease = leaseMenu.allLeases().get(0);
+            Lease lease = leaseRepository.allLeases().get(0);
             String newReference = lease.default0Renew() + "-2";
             String newName = lease.default1Renew() + "-2";
             LocalDate newStartDate = lease.default2Renew();
