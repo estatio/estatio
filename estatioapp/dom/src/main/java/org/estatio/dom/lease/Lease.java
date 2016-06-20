@@ -604,10 +604,16 @@ public class Lease
 
         final BankMandate bankMandate =
                 bankMandateRepository.newBankMandate(
-                        reference, reference,
-                        startDate, endDate,
-                        debtor, creditor, bankAccount,
-                        sequenceType, scheme, signatureDate);
+                        reference,
+                        reference,
+                        startDate,
+                        endDate,
+                        debtor,
+                        creditor,
+                        bankAccount,
+                        sequenceType,
+                        scheme,
+                        signatureDate);
         paidBy(bankMandate);
         return this;
     }
@@ -660,7 +666,7 @@ public class Lease
         if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
         }
-        if (agreementRepository.findAgreementByReference(reference) != null) {
+        if (bankMandateRepository.findByReference(reference) != null) {
             return "Reference already exists";
         }
         return null;

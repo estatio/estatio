@@ -61,8 +61,7 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.utils.ValueUtils;
@@ -86,11 +85,13 @@ import lombok.Setter;
         // to cover the 'findAssetsByReferenceOrName' query
         // both in this superclass and the subclasses
         @javax.jdo.annotations.Index(
-                name = "Lease_reference_name_IDX", members = { "reference", "name" })
+                name = "Lease_reference_name_IDX", members = { "reference", "name" }),
+        @javax.jdo.annotations.Index(
+                name = "Lease_reference_name_type_IDX", members = { "reference", "name", "type" })
 })
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "Agreement_reference_UNQ", members = { "reference" })
+                name = "Agreement_reference_type_UNQ", members = { "reference", "type" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -98,6 +99,12 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.Agreement "
                         + "WHERE reference == :reference"),
+        @javax.jdo.annotations.Query(
+                name = "findByTypeAndReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.Agreement "
+                        + "WHERE type == :agreementType "
+                        + "&& reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndReferenceOrName", language = "JDOQL",
                 value = "SELECT "
@@ -118,16 +125,18 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Agreement
         extends EstatioDomainObject<Agreement>
-        implements WithReferenceComparable<Agreement>,
-        WithReferenceUnique,
-        WithIntervalMutable<Agreement>, Chained<Agreement>,
+        implements
+        WithReferenceGetter,
+        //WithReferenceComparable<Agreement>,
+        WithIntervalMutable<Agreement>,
+        Chained<Agreement>,
         WithNameGetter {
 
     protected final String primaryRoleTypeTitle;
     protected final String secondaryRoleTypeTitle;
 
     public Agreement(final String primaryRoleTypeTitle, final String secondaryRoleTypeTitle) {
-        super("reference");
+        super("type,reference");
         this.primaryRoleTypeTitle = primaryRoleTypeTitle;
         this.secondaryRoleTypeTitle = secondaryRoleTypeTitle;
     }

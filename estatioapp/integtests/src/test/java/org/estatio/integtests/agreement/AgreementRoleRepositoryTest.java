@@ -103,8 +103,8 @@ public class AgreementRoleRepositoryTest extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreement = agreementRepository.findAgreementByReference(LeaseForOxfTopModel001Gb.REF);
         agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
+        agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
         agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
 
     }

@@ -18,16 +18,18 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -69,23 +71,6 @@ public class AgreementsTest {
                 return null;
             }
         };
-    }
-
-
-    public static class FindAgreementByReference extends AgreementsTest {
-
-        @Test
-        public void happyCase() {
-
-            agreementRepository.findAgreementByReference("*some?Reference*");
-
-            // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReference"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "*some?Reference*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
-        }
     }
 
     public static class FindByAgreementTypeAndRoleTypeAndParty extends AgreementsTest {

@@ -18,21 +18,25 @@
  */
 package org.estatio.dom.bankmandate;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
 
 @DomainService(
     nature = NatureOfService.DOMAIN,
@@ -92,6 +96,10 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
     }
 
+    public BankMandate findByReference(final String reference){
+        return (BankMandate) agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE), reference);
+    }
+
     // //////////////////////////////////////
 
     @PostConstruct
@@ -110,5 +118,8 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
 
     @Inject
     protected AgreementRoleTypeRepository agreementRoleTypeRepository;
+
+    @Inject
+    protected AgreementRepository agreementRepository;
 
 }

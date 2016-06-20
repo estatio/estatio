@@ -45,6 +45,7 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 import org.estatio.services.clock.ClockService;
@@ -177,16 +178,17 @@ public class LeaseItemTest {
         @Before
         public void setUp() throws Exception {
             lease = new Lease();
-
+            AgreementType type = new AgreementType();
+            type.setTitle("Lease");
+            lease.setType(type);
             lease.setReference("A");
             leaseItem = new LeaseItem();
-
             leaseItem.setLease(lease);
         }
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(lease.toString(), is("Lease{reference=A}"));
+            assertThat(lease.toString(), is("Lease{type=Lease, reference=A}"));
             assertThat(leaseItem.toString(), is("LeaseItem{lease=A, type=null, charge=null, startDate=null, sequence=null}"));
         }
     }

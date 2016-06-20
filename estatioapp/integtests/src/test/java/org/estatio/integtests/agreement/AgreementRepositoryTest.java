@@ -18,19 +18,31 @@
  */
 package org.estatio.integtests.agreement;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.agreement.*;
+
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.*;
+import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.inject.Inject;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -90,7 +102,7 @@ public class AgreementRepositoryTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            Agreement agreement = agreementRepository.findAgreementByReference(lease.getReference());
+            Lease agreement = leaseRepository.findLeaseByReference(lease.getReference());
             assertThat(agreement.getName(), is(lease.getName()));
         }
     }

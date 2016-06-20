@@ -40,8 +40,9 @@ public class AgreementRepository extends UdoDomainRepositoryAndFactory<Agreement
 
     // //////////////////////////////////////
 
-    public Agreement findAgreementByReference(final String reference) {
-        return firstMatch("findByReference",
+    public Agreement findAgreementByTypeAndReference(final AgreementType agreementType, final String reference) {
+        return firstMatch("findByTypeAndReference",
+                "agreementType", agreementType,
                 "reference", reference);
     }
 

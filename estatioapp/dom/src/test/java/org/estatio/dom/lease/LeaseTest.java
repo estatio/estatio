@@ -19,7 +19,6 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,9 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -57,16 +53,12 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTest;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -88,44 +80,6 @@ public class LeaseTest {
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     Lease lease;
-
-    public static class AddUnit extends LeaseTest {
-
-        @Mock
-        private DomainObjectContainer mockContainer;
-
-        private Occupancies occupancies;
-
-        private Unit unit;
-
-        @Before
-        public void setUp() throws Exception {
-            unit = new Unit();
-            // this is actually a mini-integration test...
-            occupancies = new Occupancies();
-            occupancies.setContainer(mockContainer);
-            lease = new Lease();
-            lease.occupanciesRepo = occupancies;
-        }
-
-        @Test
-        public void test() {
-            final Occupancy leaseUnit = new Occupancy();
-            context.checking(new Expectations() {
-                {
-                    oneOf(mockContainer).newTransientInstance(Occupancy.class);
-                    will(returnValue(leaseUnit));
-                    oneOf(mockContainer).persistIfNotAlready(leaseUnit);
-                }
-            });
-
-            final Occupancy addedUnit = occupancies.newOccupancy(lease, unit, null);
-            assertThat(addedUnit, is(leaseUnit));
-            assertThat(leaseUnit.getLease(), is(lease));
-            assertThat(leaseUnit.getUnit(), is(unit));
-        }
-
-    }
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -154,24 +108,9 @@ public class LeaseTest {
         @Mock
         private DomainObjectContainer mockContainer;
 
-        private LeaseMenu leaseMenu;
-
         @Before
         public void setUp() throws Exception {
-
-            leaseMenu = new LeaseMenu();
-            leaseMenu.setContainer(mockContainer);
-
             lease = new Lease();
-
-            context.checking(new Expectations() {
-                {
-                    allowing(mockContainer).newTransientInstance(with(IsisMatchers.anySubclassOf(Object.class)));
-                    will(IsisActions.returnNewTransientInstance());
-                    ignoring(mockContainer);
-                }
-            });
-
         }
 
         @Test
@@ -234,73 +173,33 @@ public class LeaseTest {
     public static class NewItem extends LeaseTest {
 
         @Mock
-        private DomainObjectContainer mockContainer;
-
-        @Mock
-        private EstatioApplicationTenancyRepository mockApplicationTenancyRepository;
-
-        private LeaseItems leaseItems;
+        private LeaseItems mockLeaseItems;
 
         @Before
         public void setUp() throws Exception {
-
-            // this is actually a mini-integration test...
-            leaseItems = new LeaseItems();
-            leaseItems.setContainer(mockContainer);
-            leaseItems.estatioApplicationTenancyRepository = mockApplicationTenancyRepository;
-
-            Property property = new Property();
-            Party party = new Party() {
-                @Override public ApplicationTenancy getApplicationTenancy() {
-                    return null;
-                }
-            };
-
-            lease = new Lease() {
-                @Override public Party getPrimaryParty() {
-                    return party;
-                }
-
-                @Override public Property getProperty() {
-                    return property;
-                }
-            };
-            lease.leaseItems = leaseItems;
+            lease = new Lease();
+            lease.leaseItems = mockLeaseItems;
         }
 
-        @SuppressWarnings("unchecked")
         @Test
-        public void test() {
-            assertThat(lease.getItems(), Matchers.empty());
+        public void happy_case() {
+            //Given
 
-            final ApplicationTenancy leaseItemApplicationTenancy = new ApplicationTenancy();
-            leaseItemApplicationTenancy.setPath("/it/XXX/_");
+            final LeaseItemType leaseItemType = LeaseItemType.RENT;
+            final Charge charge = new Charge();
+            final InvoicingFrequency invoicingFrequency = InvoicingFrequency.MONTHLY_IN_ADVANCE;
+            final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER;
+            final LocalDate startDate = new LocalDate(2013, 1, 1);
 
-            final LeaseItem leaseItem = new LeaseItem();
+            // Then
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(LeaseItem.class);
-                    will(returnValue(leaseItem));
-
-                    oneOf(mockContainer).persistIfNotAlready(leaseItem);
-                    oneOf(mockContainer).allMatches(with(any(QueryDefault.class)));
-                    will(returnValue(new ArrayList<LeaseItem>()));
-
-                    oneOf(mockApplicationTenancyRepository);
-                    will(returnValue(leaseItemApplicationTenancy));
-
+                    oneOf(mockLeaseItems).newLeaseItem(lease,leaseItemType,charge,invoicingFrequency,paymentMethod,startDate);
                 }
             });
 
-            final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
-            assertThat(newItem, is(leaseItem));
-            assertThat(leaseItem.getLease(), is(lease));
-            assertThat(leaseItem.getSequence(), is(BigInteger.ONE));
-            assertThat(leaseItem.getApplicationTenancyPath(), is("/it/XXX/_"));
-
-            // this assertion not true for unit tests, because we rely on JDO
-            // to manage the bidir relationship for us.
-            // assertThat(lease.getItems(), Matchers.contains(newItem));
+            // When
+            lease.newItem(leaseItemType, charge, invoicingFrequency, paymentMethod, startDate);
         }
 
     }
@@ -334,12 +233,10 @@ public class LeaseTest {
         private BankAccounts mockFinancialAccounts;
         @Mock
         private ClockService mockClockService;
-
         @Mock
         private DomainObjectContainer mockContainer;
-
         @Mock
-        private AgreementRepository agreementRepository;
+        private BankMandateRepository mockBankMandateRepository;
 
         private BankMandate bankMandate;
 
@@ -397,7 +294,7 @@ public class LeaseTest {
             });
             context.checking(new Expectations() {
                 {
-                    allowing(agreementRepository).findAgreementByReference("MANDATEREF");
+                    allowing(mockBankMandateRepository).findByReference("MANDATEREF");
                     will(returnValue(null));
                 }
             });
@@ -461,14 +358,6 @@ public class LeaseTest {
             scheme = Scheme.CORE;
             signatureDate = new LocalDate(2013, 4, 1);
 
-            // a mini integration test, since using the real BankMandateMenu and BankMandateRepository impl
-
-            BankMandateRepository mandateRepository = new BankMandateRepository() {{
-                setContainer(mockContainer);
-                this.agreementTypeRepository = mockAgreementTypeRepository;
-                this.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
-            }};
-
             // the main class under test
             lease = new Lease();
             lease.setApplicationTenancyPath("/it");
@@ -477,10 +366,8 @@ public class LeaseTest {
             lease.agreementRoleRepository = mockAgreementRoleRepository;
             lease.agreementTypeRepository = mockAgreementTypeRepository;
             lease.financialAccounts = mockFinancialAccounts;
-            lease.bankMandateRepository = mandateRepository;
-            lease.setContainer(mockContainer);
             lease.clockService = mockClockService;
-            lease.agreementRepository = agreementRepository;
+            lease.bankMandateRepository = mockBankMandateRepository;
         }
 
         @Test
@@ -573,20 +460,9 @@ public class LeaseTest {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(BankMandate.class);
+                    oneOf(mockBankMandateRepository).newBankMandate(with(any(String.class)), with(any(String.class)), with(any(LocalDate.class)), with(any(LocalDate.class)), with(any(Party.class)), with(any(Party.class)), with(any(BankAccount.class)), with(any(SequenceType.class)),with(any(Scheme.class)), with(any(LocalDate.class)));
                     will(returnValue(bankMandate));
 
-                    oneOf(mockContainer).persistIfNotAlready(bankMandate);
-
-                    oneOf(mockContainer).newTransientInstance(AgreementRole.class);
-                    will(returnValue(newBankMandateAgreementRoleForCreditor));
-
-                    oneOf(mockContainer).newTransientInstance(AgreementRole.class);
-                    will(returnValue(newBankMandateAgreementRoleForDebtor));
-
-                    oneOf(mockContainer).persistIfNotAlready(newBankMandateAgreementRoleForCreditor);
-
-                    oneOf(mockContainer).persistIfNotAlready(newBankMandateAgreementRoleForDebtor);
                 }
             });
 
@@ -597,20 +473,6 @@ public class LeaseTest {
             assertThat(returned, is(lease));
 
             assertThat(lease.getPaidBy(), is(bankMandate));
-            Assertions.assertThat(lease.getPaidBy().getApplicationTenancyPath()).isEqualTo(lease.getApplicationTenancyPath());
-            assertThat(bankMandate.getType(), is(bankMandateAgreementType));
-            assertThat(bankMandate.getBankAccount(), is((FinancialAccount) bankAccount));
-            assertThat(bankMandate.getStartDate(), is(startDate));
-            assertThat(bankMandate.getEndDate(), is(endDate));
-            assertThat(bankMandate.getReference(), is("MANDATEREF"));
-            assertThat(bankMandate.getSequenceType(), is(SequenceType.FIRST));
-            assertThat(bankMandate.getScheme(), is(Scheme.CORE));
-            assertThat(bankMandate.getSignatureDate(), is(startDate));
-
-            assertThat(newBankMandateAgreementRoleForCreditor.getAgreement(), is((Agreement) bankMandate));
-            assertThat(newBankMandateAgreementRoleForCreditor.getParty(), is(landlord));
-            assertThat(newBankMandateAgreementRoleForDebtor.getAgreement(), is((Agreement) bankMandate));
-            assertThat(newBankMandateAgreementRoleForDebtor.getParty(), is(tenant));
         }
 
         @Test
