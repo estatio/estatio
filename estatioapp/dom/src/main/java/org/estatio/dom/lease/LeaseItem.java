@@ -643,8 +643,8 @@ public class LeaseItem
     }
 
     @Programmatic
-    public LeaseItem findOrCreateSourceItem(final LeaseItem sourceItem){
-        return leaseItemSourceRepository.findOrCreateSource(this, sourceItem).getSourceItem();
+    public LeaseItemSource findOrCreateSourceItem(final LeaseItem sourceItem){
+        return leaseItemSourceRepository.findOrCreateSource(this, sourceItem);
     }
 
     // //////////////////////////////////////
