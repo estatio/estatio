@@ -39,7 +39,6 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -122,6 +121,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     @Getter @Setter
     private String name;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public KeyTable changeName(final String name) {
         setName(name);
         return this;
@@ -145,7 +145,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     @Getter @Setter
     private FoundationValueType foundationValueType;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public KeyTable changeFoundationValueType(
             final FoundationValueType foundationValueType) {
         setFoundationValueType(foundationValueType);
@@ -167,7 +167,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     @Getter @Setter
     private KeyValueMethod keyValueMethod;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public KeyTable changeKeyValueMethod(
             final KeyValueMethod keyValueMethod) {
         setKeyValueMethod(keyValueMethod);
@@ -189,7 +189,7 @@ public class KeyTable extends EstatioDomainObject<Budget> implements WithApplica
     @Getter @Setter
     private Integer precision;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public KeyTable changePrecision(
             final Integer numberOfDigits) {
         setPrecision(numberOfDigits);
