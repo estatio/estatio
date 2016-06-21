@@ -630,16 +630,22 @@ public class LeaseItem
 
     public List<LeaseItem> choices0NewSourceItem(final LeaseItem leaseItem){
         List<LeaseItem> choices = new ArrayList<>();
-        for (LeaseItem item : getLease().getItems()){
-            if (item != this){
-                for (LeaseItemSource source : getSourceItems()) {
-                    if (source.getSourceItem() != item) {
-                        choices.add(item);
-                    }
-                }
+        for (LeaseItem item : getLease().getItems()) {
+            // items should not be linked to themselves and be linked only once
+            if (!item.equals(this) && leaseItemNotLinked(item)){
+                choices.add(item);
             }
+
         }
         return choices;
+    }
+
+    @Programmatic
+    private boolean leaseItemNotLinked(final LeaseItem item) {
+        for (LeaseItemSource src : getSourceItems()){
+            if (src.getSourceItem().equals(item)) {return false;}
+        }
+        return true;
     }
 
     @Programmatic
