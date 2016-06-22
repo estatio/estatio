@@ -54,12 +54,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class LeasesTest extends EstatioIntegrationTest {
+public class LeaseRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
     LeaseRepository leaseRepository;
 
-    public static class FindExpireInDateRange extends LeasesTest {
+    public static class FindExpireInDateRange extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -90,7 +90,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindLeaseByReference extends LeasesTest {
+    public static class FindLeaseByReference extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -112,7 +112,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindLeaseByReferenceOrNull extends LeasesTest {
+    public static class FindLeaseByReferenceOrNull extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -133,7 +133,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindLeases extends LeasesTest {
+    public static class FindLeases extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -171,7 +171,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindLeasesByProperty extends LeasesTest {
+    public static class FindLeasesByProperty extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -207,7 +207,7 @@ public class LeasesTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindByBrand extends LeasesTest {
+    public static class FindByBrand extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -242,7 +242,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindLeasesActiveOnDate extends LeasesTest {
+    public static class FindLeasesActiveOnDate extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -269,7 +269,7 @@ public class LeasesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class Renew extends LeasesTest {
+    public static class Renew extends LeaseRepositoryTest {
 
         @Before
         public void setupData() {
@@ -313,7 +313,6 @@ public class LeasesTest extends EstatioIntegrationTest {
             assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypeRepository
                     .findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size(), is(2));
             assertThat(newLease.getOccupancies().size(), is(1));
-
         }
 
         @Test
@@ -331,7 +330,6 @@ public class LeasesTest extends EstatioIntegrationTest {
 
             // Then
             assertThat(newLease.getOccupancies().size(), is(1));
-
         }
 
     }

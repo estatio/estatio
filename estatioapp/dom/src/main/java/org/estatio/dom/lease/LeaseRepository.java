@@ -20,8 +20,12 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -33,6 +37,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
@@ -48,6 +53,18 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     public LeaseRepository() {
         super(LeaseRepository.class, Lease.class);
+    }
+
+    @PostConstruct
+    @Programmatic
+    public void init(final Map<String, String> properties) {
+        super.init(properties);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AT_LEASE);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
     }
 
     @Programmatic
@@ -85,8 +102,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         }
         return lease;
     }
-
-    // //////////////////////////////////////
 
     public List<Lease> allLeases() {
         return allInstances();
@@ -137,6 +152,13 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
                 "date", clockService.now());
     }
 
+    @Programmatic
+    public List<Lease> autoComplete(final String searchPhrase) {
+        return searchPhrase.length() > 2
+                ? matchByReferenceOrName("*" + searchPhrase + "*", true)
+                : Lists.<Lease>newArrayList();
+    }
+
     // //////////////////////////////////////
 
     @Inject
@@ -147,5 +169,9 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Inject
     ClockService clockService;
+
+    @Inject
+    private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+
 
 }

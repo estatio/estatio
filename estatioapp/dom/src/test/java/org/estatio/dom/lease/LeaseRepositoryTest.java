@@ -20,7 +20,6 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,24 +27,19 @@ import org.junit.Test;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.party.Party;
 import org.estatio.services.clock.ClockService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LeasesTest {
+public class LeaseRepositoryTest {
 
     FinderInteraction finderInteraction;
-
-    LeaseMenu leaseMenu;
 
     LeaseRepository leaseRepository;
 
@@ -84,11 +78,9 @@ public class LeasesTest {
         };
 
         leaseRepository.clockService = new ClockService();
-
-        leaseMenu = new LeaseMenu();
     }
 
-    public static class FindLeaseByReference extends LeasesTest {
+    public static class FindLeaseByReference extends LeaseRepositoryTest {
         @Test
         public void byReferenceWildcard() {
 
@@ -102,7 +94,7 @@ public class LeasesTest {
         }
     }
 
-    public static class findLeases extends LeasesTest {
+    public static class findLeases extends LeaseRepositoryTest {
 
         @Test
         public void byReferenceWildcard() {
@@ -117,7 +109,7 @@ public class LeasesTest {
         }
     }
 
-    public static class FindLeasesByProperty extends LeasesTest {
+    public static class FindLeasesByProperty extends LeaseRepositoryTest {
 
         @Test
         public void happyCase() {
@@ -141,7 +133,7 @@ public class LeasesTest {
         }
     }
 
-    public static class FindLeasesActiveOnDate extends LeasesTest {
+    public static class FindLeasesActiveOnDate extends LeaseRepositoryTest {
 
         @Test
         public void happyCase() {
@@ -157,7 +149,7 @@ public class LeasesTest {
         }
     }
 
-    public static class AllLeases extends LeasesTest {
+    public static class AllLeases extends LeaseRepositoryTest {
 
         @Test
         public void happyCase() {
@@ -165,72 +157,6 @@ public class LeasesTest {
             leaseRepository.allLeases();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
-        }
-
-    }
-
-    public static class validateNewLease extends LeasesTest {
-
-        ApplicationTenancy applicationTenancy;
-        Party landLordFra;
-        Party landLordIta;
-        Party tenantFra;
-        Party tenantIta;
-        String error;
-
-        @Test
-        public void happyCase() {
-
-            // given
-            applicationTenancy = new ApplicationTenancy();
-            applicationTenancy.setPath("/FRA");
-
-            // when
-            landLordFra = new Party() {
-                @Override public ApplicationTenancy getApplicationTenancy() {
-                    ApplicationTenancy applicationTenancyParty = new ApplicationTenancy();
-                    applicationTenancyParty.setPath("/FRA/BLAHBLAH");
-                    return applicationTenancyParty;
-                }
-            };
-            tenantFra = new Party() {
-                @Override public ApplicationTenancy getApplicationTenancy() {
-                    ApplicationTenancy applicationTenancyParty = new ApplicationTenancy();
-                    applicationTenancyParty.setPath("/FRA/BlAHBLAH");
-                    return applicationTenancyParty;
-                }
-            };
-            error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantFra);
-
-            // then
-            Assertions.assertThat(error).isEqualTo(null);
-
-            // and when
-            landLordIta = new Party() {
-                @Override public ApplicationTenancy getApplicationTenancy() {
-                    ApplicationTenancy applicationTenancyParty = new ApplicationTenancy();
-                    applicationTenancyParty.setPath("/ITA/BLAHBLAH");
-                    return applicationTenancyParty;
-                }
-            };
-            error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordIta, tenantFra);
-
-            // then
-            Assertions.assertThat(error).isEqualTo("Landlord not valid. (wrong application tenancy)");
-
-            // and when
-            tenantIta = new Party() {
-                @Override public ApplicationTenancy getApplicationTenancy() {
-                    ApplicationTenancy applicationTenancyParty = new ApplicationTenancy();
-                    applicationTenancyParty.setPath("/ITA/BlAHBLAH");
-                    return applicationTenancyParty;
-                }
-            };
-            error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantIta);
-
-            // then
-            Assertions.assertThat(error).isEqualTo("Tenant not valid. (wrong application tenancy)");
-
         }
 
     }

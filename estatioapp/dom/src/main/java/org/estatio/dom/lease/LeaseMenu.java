@@ -20,12 +20,8 @@ package org.estatio.dom.lease;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
-import com.google.common.collect.Lists;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -37,24 +33,18 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -65,21 +55,14 @@ import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@DomainService(repositoryFor = Lease.class)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Leases",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "40.1"
 )
-public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
+public class LeaseMenu {
 
-    public LeaseMenu() {
-        super(LeaseMenu.class, Lease.class);
-    }
-
-    // //////////////////////////////////////
-
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
@@ -159,7 +142,7 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
                 .equals(ApplicationTenancyLevel.of(landlord.getApplicationTenancy()))
                 ||
                 ApplicationTenancyLevel.of(landlord.getApplicationTenancy())
-                        .childOf(ApplicationTenancyLevel.of(applicationTenancy))
+                        .parentOf(ApplicationTenancyLevel.of(applicationTenancy))
         )) {
             return "Landlord not valid. (wrong application tenancy)";
         }
@@ -167,7 +150,7 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
                 .equals(ApplicationTenancyLevel.of(tenant.getApplicationTenancy()))
                 ||
                 ApplicationTenancyLevel.of(tenant.getApplicationTenancy())
-                        .childOf(ApplicationTenancyLevel.of(applicationTenancy))
+                        .parentOf(ApplicationTenancyLevel.of(applicationTenancy))
         )) {
             return "Tenant not valid. (wrong application tenancy)";
         }
@@ -184,8 +167,6 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
         }
         return endDate;
     }
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
@@ -218,10 +199,8 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
     }
 
     public LocalDate default1FindLeasesActiveOnDate() {
-        return getClockService().now();
+        return clockService.now();
     }
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "4")
@@ -241,36 +220,11 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public List<Lease> autoComplete(final String searchPhrase) {
-        return searchPhrase.length() > 2
-                ? findLeases("*" + searchPhrase + "*", true)
-                : Lists.<Lease>newArrayList();
-    }
-
-    // //////////////////////////////////////
-
-    @PostConstruct
-    @Programmatic
-    public void init(final Map<String, String> properties) {
-        super.init(properties);
-        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AT_LEASE);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
-    }
-
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Lease> allLeases() {
         return leaseRepository.allLeases();
     }
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "98")
@@ -278,25 +232,14 @@ public class LeaseMenu extends UdoDomainRepositoryAndFactory<Lease> {
         DateTime dt = DateTime.now();
         List<Lease> leases = allLeases();
         for (Lease lease : leases) {
-            lease.verifyUntil(getClockService().now());
+            lease.verifyUntil(clockService.now());
         }
         Period p = new Period(dt, DateTime.now());
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
 
-    // //////////////////////////////////////
-
     @Inject
     private FixedAssetRepository fixedAssetRepository;
-
-    @Inject
-    private AgreementTypeRepository agreementTypeRepository;
-
-    @Inject
-    private AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    @Inject
-    private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
     @Inject
     ClockService clockService;
