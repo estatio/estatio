@@ -64,7 +64,7 @@ import lombok.Setter;
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& budgetCalculation == :budgetCalculation")
 })
-@DomainObject(autoCompleteRepository = BudgetCalculationLinkRepository.class)
+@DomainObject()
 public class BudgetCalculationLink extends EstatioDomainObject<BudgetCalculationLink> implements WithApplicationTenancyProperty {
 
     public BudgetCalculationLink() {

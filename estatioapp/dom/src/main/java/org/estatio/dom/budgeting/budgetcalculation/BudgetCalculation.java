@@ -92,7 +92,7 @@ import lombok.Setter;
                         "WHERE budgetItemAllocation == :budgetItemAllocation")
 })
 @Unique(name = "BudgetCalculation_budgetItemAllocation_keyItem_calculationType_UNQ", members = {"budgetItemAllocation", "keyItem", "calculationType"})
-@DomainObject(autoCompleteRepository = BudgetCalculationRepository.class)
+@DomainObject()
 public class BudgetCalculation extends EstatioDomainObject<BudgetCalculation> implements Distributable, WithApplicationTenancyProperty, Timestampable {
 
     public BudgetCalculation() {

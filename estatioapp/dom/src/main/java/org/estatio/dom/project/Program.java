@@ -79,7 +79,7 @@ import lombok.Setter;
                         "FROM org.estatio.dom.project.Program " +
                         "WHERE property == :property ")
 })
-@DomainObject(editing=Editing.DISABLED, autoCompleteRepository=Programs.class, autoCompleteAction = "autoComplete")
+@DomainObject(editing=Editing.DISABLED)
 public class Program 
 			extends UdoDomainObject<Program>
 			implements WithReferenceUnique, WithApplicationTenancyPathPersisted, WithApplicationTenancyGlobalAndCountry {

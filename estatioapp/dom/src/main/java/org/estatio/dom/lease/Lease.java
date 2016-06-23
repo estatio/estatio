@@ -142,7 +142,7 @@ import lombok.Setter;
                         "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) " +
                         "ORDER BY endDate")
 })
-@DomainObject(autoCompleteRepository = LeaseMenu.class, autoCompleteAction = "autoComplete")
+@DomainObject()
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Lease
         extends Agreement

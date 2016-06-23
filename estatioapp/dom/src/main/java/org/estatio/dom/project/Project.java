@@ -76,7 +76,7 @@ import lombok.Setter;
 		@Query(name = "findByProgram", language = "JDOQL", value = "SELECT "
 				+ "FROM org.estatio.dom.project.Project "
 				+ "WHERE program == :program ") })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Projects.class, autoCompleteAction = "autoComplete")
+@DomainObject(editing = Editing.DISABLED)
 public class Project extends UdoDomainObject<Project> implements
 		WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
 
