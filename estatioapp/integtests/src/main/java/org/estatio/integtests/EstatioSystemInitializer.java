@@ -16,20 +16,24 @@
  */
 package org.estatio.integtests;
 
+import java.util.List;
+import java.util.Map;
+
 import com.google.common.collect.Lists;
+
+import org.apache.log4j.Level;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
-import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
-import org.apache.log4j.Level;
-import org.estatio.app.EstatioAppManifest;
+
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
-import java.util.List;
+import org.estatio.app.EstatioAppManifest;
 
 /**
  * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on
@@ -46,20 +50,26 @@ public class EstatioSystemInitializer {
         if (isft == null) {
             isft = new IsisSystemForTest.Builder()
                     .withLoggingAt(Level.DEBUG)
-                    .with(new IsisConfigurationForJdoIntegTests())
                     .with(new AuthenticationRequestNameOnly("estatio-admin"))
                     .with(new EstatioAppManifest() {
-                              @Override
-                              public List<Class<?>> getAdditionalServices() {
-                                  List<Class<?>> additionalServices = Lists.newArrayList();
-                                  appendEstatioClockService(additionalServices);
-                                  appendOptionalServicesForSecurityModule(additionalServices);
-                                  appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
-                                  additionalServices.add(FakeLookupLocationService.class);
-                                  return additionalServices;
-                              }
-                          }
-                    )
+                        @Override
+                        public Map<String, String> getConfigurationProperties() {
+                            Map<String, String> props = super.getConfigurationProperties();
+                            Util.withIsisIntegTestProperties(props);
+                            Util.withJavaxJdoRunInMemoryProperties(props);
+                            Util.withDataNucleusProperties(props);
+                            return props;
+                        }
+                        @Override
+                        public List<Class<?>> getAdditionalServices() {
+                            List<Class<?>> additionalServices = Lists.newArrayList();
+                            appendEstatioClockService(additionalServices);
+                            appendOptionalServicesForSecurityModule(additionalServices);
+                            appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
+                            additionalServices.add(FakeLookupLocationService.class);
+                            return additionalServices;
+                        }
+                    })
                     .build()
                     .setUpSystem();
             IsisSystemForTest.set(isft);
