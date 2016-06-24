@@ -22,7 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroups;
+import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
@@ -34,7 +34,7 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
-    public String title(){
+    public String title() {
         return "charge import";
     }
 
@@ -93,9 +93,9 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     }
 
     private ChargeGroup fetchOrCreateChargeGroup(final String reference, final String name) {
-        ChargeGroup chargeGroup = chargeGroups.findChargeGroup(reference);
+        ChargeGroup chargeGroup = chargeGroupRepository.findChargeGroup(reference);
         if (chargeGroup == null) {
-            chargeGroup = chargeGroups.createChargeGroup(reference, name);
+            chargeGroup = chargeGroupRepository.createChargeGroup(reference, name);
         }
         chargeGroup.setName(name);
         return chargeGroup;
@@ -111,6 +111,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private ChargeRepository chargeRepository;
 
     @Inject
-    private ChargeGroups chargeGroups;
+    private ChargeGroupRepository chargeGroupRepository;
 
 }

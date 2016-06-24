@@ -20,38 +20,32 @@ package org.estatio.dom.charge;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.utils.ValueUtils;
 
-@DomainService(repositoryFor = ChargeGroup.class)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "80.2")
-public class ChargeGroups extends UdoDomainRepositoryAndFactory<ChargeGroup> {
-
-    public ChargeGroups() {
-        super(ChargeGroups.class, ChargeGroup.class);
-    }
-
-    // //////////////////////////////////////
+public class ChargeGroupMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public List<ChargeGroup> newChargeGroup(
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Description") String description) {
-        createChargeGroup(reference, description);
+        chargeGroupRepository.createChargeGroup(reference, description);
         return allChargeGroups();
     }
 
@@ -60,24 +54,11 @@ public class ChargeGroups extends UdoDomainRepositoryAndFactory<ChargeGroup> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<ChargeGroup> allChargeGroups() {
-        return allInstances();
+        return chargeGroupRepository.allChargeGroups();
     }
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public ChargeGroup createChargeGroup(final String reference, final String description) {
-        final ChargeGroup chargeGroup = newTransientInstance();
-        chargeGroup.setReference(reference);
-        chargeGroup.setName(ValueUtils.coalesce(description, reference));
-        persist(chargeGroup);
-        return chargeGroup;
-    }
-
-    @Programmatic
-    public ChargeGroup findChargeGroup(
-            final String reference) {
-        return firstMatch("findByReference", "reference", reference);
-    }
-
+    @Inject
+    private ChargeGroupRepository chargeGroupRepository;
 }

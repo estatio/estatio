@@ -24,7 +24,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroups;
+import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
@@ -50,15 +50,15 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
     private ChargeGroup findOrCreateChargeGroup(String name) {
 
-        String chargeRef = name.toUpperCase().replace(" ","_");
-        if (chargeRef.length()>20) {
-            chargeRef = chargeRef.substring(0,20);
+        String chargeRef = name.toUpperCase().replace(" ", "_");
+        if (chargeRef.length() > 20) {
+            chargeRef = chargeRef.substring(0, 20);
         }
 
-        ChargeGroup group = chargeGroups.findChargeGroup(chargeRef);
-        if (group == null ) {
-            group = chargeGroups.createChargeGroup(chargeRef, name);
-            numberOfChargeGroupsCreated ++;
+        ChargeGroup group = chargeGroupRepository.findChargeGroup(chargeRef);
+        if (group == null) {
+            group = chargeGroupRepository.createChargeGroup(chargeRef, name);
+            numberOfChargeGroupsCreated++;
         }
         return group;
 
@@ -72,14 +72,14 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
             Tax tax,
             ChargeGroup chargeGroup) {
 
-        ref = ref.toUpperCase().replace(" ","_");
-        if (ref.length()>24) {
-            ref = ref.substring(0,24);
+        ref = ref.toUpperCase().replace(" ", "_");
+        if (ref.length() > 24) {
+            ref = ref.substring(0, 24);
         }
 
         Charge charge = chargeRepository.findByReference(ref);
         if (charge == null) {
-            charge = chargeRepository.newCharge(applicationTenancy, ref,name,chargeDescription,tax, chargeGroup);
+            charge = chargeRepository.newCharge(applicationTenancy, ref, name, chargeDescription, tax, chargeGroup);
             numberOfChargesCreated++;
         }
 
@@ -87,13 +87,13 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     }
 
     @Override
-    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public List<Object> importData() {
 
         ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath("/" + getApplicationTenancyPath());
         Tax tax = taxes.findByReference(getChargeTaxReference());
 
-        numberOfRecords ++;
+        numberOfRecords++;
 
         try {
 
@@ -113,7 +113,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
             System.out.println("Number of records read: " + numberOfRecords);
             System.out.println("Number of chargeGroups created: " + numberOfChargeGroupsCreated);
             System.out.println("Number of charges created: " + numberOfChargesCreated);
-
 
         } catch (Exception e) {
             // REVIEW: ignore any garbage
@@ -182,11 +181,8 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         this.applicationTenancyPath = applicationTenancyPath;
     }
 
-
-
-
     private static String pretty(final String str) {
-        return str == null? null : StringUtils.capitalize(str.toLowerCase());
+        return str == null ? null : StringUtils.capitalize(str.toLowerCase());
     }
 
     @Inject
@@ -196,7 +192,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private ChargeRepository chargeRepository;
 
     @Inject
-    private ChargeGroups chargeGroups;
+    private ChargeGroupRepository chargeGroupRepository;
 
     @Inject
     private Taxes taxes;

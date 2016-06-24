@@ -18,33 +18,50 @@
  */
 package org.estatio.integtests.charge;
 
-import static org.junit.Assert.assertNotNull;
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroups;
+import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class ChargeGroupsTest extends EstatioIntegrationTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public static class FindChargeGroup extends ChargeGroupsTest {
+public class ChargeGroupRepositoryTest extends EstatioIntegrationTest {
+
+    @Inject
+    ChargeGroupRepository chargeGroupRepository;
+
+    public static class FindChargeGroup extends ChargeGroupRepositoryTest {
 
         @Before
         public void setupData() {
             runFixtureScript(new EstatioBaseLineFixture());
         }
 
-        @Inject
-        private ChargeGroups chargeGroups;
-
         @Test
         public void whenExists() throws Exception {
-            ChargeGroup chargeGroup = chargeGroups.findChargeGroup(ChargeGroupRefData.REF_RENT);
-            assertNotNull(chargeGroup);
+            ChargeGroup chargeGroup = chargeGroupRepository.findChargeGroup(ChargeGroupRefData.REF_RENT);
+            assertThat(chargeGroup).isNotNull();
         }
 
+    }
+
+    public static class CreateChargeGroup extends ChargeGroupRepositoryTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new EstatioBaseLineFixture());
+        }
+
+        @Test
+        public void happyCase() throws Exception {
+            final ChargeGroup chargeGroup = chargeGroupRepository.createChargeGroup("TEST CHARGE GROUP", "Test charge group");
+            assertThat(chargeGroup.getReference()).isEqualTo("TEST CHARGE GROUP");
+        }
     }
 }
