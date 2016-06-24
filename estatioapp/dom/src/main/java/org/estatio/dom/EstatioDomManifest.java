@@ -21,7 +21,7 @@ public class EstatioDomManifest implements AppManifest {
     @Override
     public List<Class<?>> getModules() {
         List<Class<?>> modules = Lists.newArrayList();
-        modules.add(EstatioDomManifest.class);
+        modules.add(EstatioDomainModule.class);
         modules.add(SecurityModule.class);
         return modules;
     }
