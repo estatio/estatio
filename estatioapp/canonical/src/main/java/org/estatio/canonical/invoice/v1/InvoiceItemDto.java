@@ -34,6 +34,7 @@ import lombok.Setter;
         "effectiveEndDate",
         "agreementReference",
         "fixedAssetReference", // of the unit
+        "fixedAssetExternalReference", // of the unit
         "occupancyBrand"
 })
 public class InvoiceItemDto {
@@ -106,6 +107,9 @@ public class InvoiceItemDto {
 
     @Getter @Setter
     protected String fixedAssetReference;
+
+    @Getter @Setter
+    protected String fixedAssetExternalReference;
 
     @Getter @Setter
     protected String occupancyBrand;

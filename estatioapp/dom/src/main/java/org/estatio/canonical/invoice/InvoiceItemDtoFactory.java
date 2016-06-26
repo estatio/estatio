@@ -62,6 +62,7 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
                 final Brand brand = occupancy.getBrand();
                 dto.setOccupancyBrand(brand == null ? null : brand.getName());
                 dto.setFixedAssetReference(occupancy.getUnit().getReference());
+                dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
             }
         }
         return dto;
