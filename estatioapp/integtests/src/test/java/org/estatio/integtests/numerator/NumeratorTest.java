@@ -19,16 +19,20 @@
 package org.estatio.integtests.numerator;
 
 import java.math.BigInteger;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.numerator.Numerator;
@@ -39,6 +43,7 @@ import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class NumeratorTest extends EstatioIntegrationTest {
@@ -63,7 +68,9 @@ public class NumeratorTest extends EstatioIntegrationTest {
     @Inject
     PropertyRepository propertyRepository;
     @Inject
-    EstatioApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    @Inject
+    ApplicationTenancyRepository applicationTenancyRepository;
 
     Property propertyOxf;
     Property propertyKal;
@@ -76,8 +83,8 @@ public class NumeratorTest extends EstatioIntegrationTest {
     public void setUp() throws Exception {
         propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
-        applicationTenancyKal = applicationTenancyRepository.findOrCreateTenancyFor(propertyKal);
-        applicationTenancyOxf = applicationTenancyRepository.findOrCreateTenancyFor(propertyOxf);
+        applicationTenancyKal = estatioApplicationTenancyRepository.findOrCreateTenancyFor(propertyKal);
+        applicationTenancyOxf = estatioApplicationTenancyRepository.findOrCreateTenancyFor(propertyOxf);
     }
 
 
@@ -129,6 +136,34 @@ public class NumeratorTest extends EstatioIntegrationTest {
 
             // then
             assertThat(in.getLastIncrement(), is(new BigInteger("10")));
+        }
+
+        ApplicationTenancy wildCardAppTenancy;
+        ApplicationTenancy appTenToBefound;
+        ApplicationTenancy appTenNotToBefound1;
+        ApplicationTenancy appTenNotToBefound2;
+
+        @Test
+        public void withWildCard() throws Exception {
+
+            // given
+            wildCardAppTenancy = applicationTenancyRepository.newTenancy("France/wildcard/FR03", "/FRA/%/FR03", null);
+            numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "AAA-%05d", new BigInteger("100"), wildCardAppTenancy);
+
+            appTenToBefound = applicationTenancyRepository.newTenancy("France/property/FR03", "/FRA/ABC/FR03", null);
+            appTenNotToBefound1 = applicationTenancyRepository.newTenancy("France/property/FR02", "/FRA/ABC/FR02", null);
+            appTenNotToBefound2 = applicationTenancyRepository.newTenancy("France/no property", "/FRA", null);
+
+            // when
+            Numerator inToBeFound = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenToBefound);
+            Numerator inNotToBeFound1 = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenNotToBefound1);
+            Numerator inNotToBeFound2 = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenNotToBefound2);
+
+            // then
+            assertThat(inToBeFound.getLastIncrement(), is(new BigInteger("100")));
+            assertNull(inNotToBeFound1);
+            assertNull(inNotToBeFound2);
+
         }
 
     }

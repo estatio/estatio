@@ -19,9 +19,11 @@
 package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
@@ -81,6 +83,20 @@ public class NumeratorTest {
         }
     }
 
+    public static class AppTenancyPathAdaption extends NumeratorTest {
+
+        @Test
+        public void appTenancyPathWithWildCardIsSetToParent() {
+
+            //when
+            numerator.setApplicationTenancyPath("/FRA/%/FR03");
+
+            //then
+            assertEquals(numerator.adaptedAppPathIfNeeded(), "/FRA");
+        }
+
+    }
+
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -93,4 +109,5 @@ public class NumeratorTest {
         }
 
     }
+
 }
