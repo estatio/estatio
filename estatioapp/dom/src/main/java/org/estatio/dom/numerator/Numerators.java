@@ -64,14 +64,16 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
     }
     
     @Programmatic
-    public Numerator findScopedNumerator(
+    public Numerator findScopedNumeratorIncludeWildCardMatching(
             final String numeratorName,
             final Object scopedTo,
             final ApplicationTenancy applicationTenancy) {
-        return findNumerator(numeratorName, scopedTo, applicationTenancy);
+        Numerator result = findNumerator(numeratorName, scopedTo, applicationTenancy);
+        return result == null ? findFirstNumeratorForObjectTypeMatchingAppTenancyPath(numeratorName, scopedTo, applicationTenancy) : result;
     }
 
-    private Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
+    @Programmatic
+    public Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
         if(scopedToIfAny == null) {
             return firstMatch("findByNameAndApplicationTenancyPath",
                     "name", numeratorName,
@@ -86,6 +88,15 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
                     "objectIdentifier", objectIdentifier,
                     "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
         }
+    }
+
+    private Numerator findFirstNumeratorForObjectTypeMatchingAppTenancyPath(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy){
+        final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
+        final String objectType = bookmark.getObjectType();
+        return firstMatch("findByNameAndObjectTypeAndApplicationTenancyPath",
+                "name", numeratorName,
+                "objectType", objectType,
+                "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
     }
 
     // //////////////////////////////////////

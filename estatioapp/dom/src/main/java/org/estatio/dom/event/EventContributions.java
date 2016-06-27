@@ -42,10 +42,10 @@ public class EventContributions extends UdoDomainService<EventContributions> {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Event> events(final EventSource eventSource) {
-        return events.findBySource(eventSource);
+        return eventRepository.findBySource(eventSource);
     }
     //endregion
 
     @Inject
-    private Events events;
+    private EventRepository eventRepository;
 }

@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -90,8 +91,7 @@ import lombok.Setter;
                         "runId == :runId ")
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@ViewModel
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(editing = Editing.DISABLED, nature = Nature.VIEW_MODEL)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 

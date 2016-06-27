@@ -105,16 +105,15 @@ public class NumeratorsTest {
         @Test
         public void findNumeratorByType() {
 
-            numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, applicationTenancy);
+            numerators.findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, applicationTenancy);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Numerator.class));
-            assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath"));
+            assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndApplicationTenancyPath"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) Constants.INVOICE_NUMBER_NUMERATOR_NAME));
             assertThat(finderInteraction.getArgumentsByParameterName().get("objectType"), is((Object) "PROP"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("objectIdentifier"), is((Object) "123"));
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
         }
     }
 

@@ -274,7 +274,7 @@ msgstr ""
 
 
 #: org.estatio.dom.currency.Currencies#allCurrencies()
-msgid "All Currencies"
+msgid "All CurrencyMenu"
 msgstr ""
 
 

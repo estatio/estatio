@@ -39,7 +39,7 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
@@ -66,7 +66,7 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
             final FinancialAccount financialAccount) {
         final FixedAssetRole role = fixedAssetRoleRepository.findRole(fixedAsset, FixedAssetRoleType.PROPERTY_OWNER);
         if (role != null) {
-            return financialAccounts.findAccountsByOwner(role.getParty());
+            return financialAccountRepository.findAccountsByOwner(role.getParty());
         }
         return null;
     }
@@ -101,7 +101,7 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @Inject
-    FinancialAccounts financialAccounts;
+    FinancialAccountRepository financialAccountRepository;
 
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;

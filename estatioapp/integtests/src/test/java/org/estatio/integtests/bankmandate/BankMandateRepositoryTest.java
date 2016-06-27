@@ -31,9 +31,10 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
@@ -63,10 +64,13 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
     BankMandateRepository bankMandateRepository;
 
     @Inject
-    BankAccounts bankAccounts;
+    BankAccountRepository bankAccountRepository;
 
     @Inject
     LeaseRepository leaseRepository;
+
+    @Inject
+    Parties partyRepository;
 
     Lease lease;
 
@@ -76,7 +80,8 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
         public void happy_case() throws Exception {
 
             // Given
-            BankAccount bankAccount = bankAccounts.findBankAccountByReference(BankAccountForTopModelGb.REF);
+            Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+            BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountForTopModelGb.REF);
 
             final String reference = "REF";
             final String name = "NAME";
@@ -104,29 +109,6 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
 
         }
 
-
     }
-
-
-//
-//    public static class FindByTypeAndReferenceOrName extends BankMandateRepositoryTest {
-//
-//        @Test
-//        public void whenPresent() throws Exception {
-//            final AgreementType type = agreementTypeRepository.find("Lease");
-//            assertNotNull(type);
-//            final List<Agreement> results = agreementRepository.findByTypeAndReferenceOrName(type, ".*OXF.*");
-//            assertThat(results.size(), is(5));
-//        }
-//    }
-//
-//    public static class FindAgreementByReference extends BankMandateRepositoryTest {
-//
-//        @Test
-//        public void happyCase() throws Exception {
-//            Lease agreement = leaseRepository.findLeaseByReference(lease.getReference());
-//            assertThat(agreement.getName(), is(lease.getName()));
-//        }
-//    }
 
 }

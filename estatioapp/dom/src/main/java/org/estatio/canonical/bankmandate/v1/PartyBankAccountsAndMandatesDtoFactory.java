@@ -22,7 +22,7 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
 
@@ -36,7 +36,7 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
 
         final BankAccountsAndMandatesDto dto = new BankAccountsAndMandatesDto();
 
-        final List<FinancialAccount> financialAccountList = financialAccounts.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
+        final List<FinancialAccount> financialAccountList = financialAccountRepository.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
         final List<BankAccountDto> bankAccountDtos =
                 financialAccountList.stream()
                         .map(x -> bankAccountDtoFactory.newDto((BankAccount) x))
@@ -60,7 +60,7 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
     }
 
     @Inject
-    FinancialAccounts financialAccounts;
+    FinancialAccountRepository financialAccountRepository;
     @Inject
     BankAccountDtoFactory bankAccountDtoFactory;
 

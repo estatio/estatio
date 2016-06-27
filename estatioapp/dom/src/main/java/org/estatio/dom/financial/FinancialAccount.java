@@ -45,7 +45,7 @@ import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
@@ -66,14 +66,17 @@ import lombok.Setter;
         column = "discriminator")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "FinancialAccount_reference_UNQ", members = "reference")
+//                name = "FinancialAccount_reference_UNQ", members = "reference")
+                name = "FinancialAccount_owner_reference_UNQ", members = {"owner", "reference"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByReference", language = "JDOQL",
+                name = "findByOwnerAndReference", language = "JDOQL",
+//                name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.financial.FinancialAccount "
-                        + "WHERE reference == :reference"),
+                        + "WHERE owner == :owner "
+                        + "&& reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndOwner", language = "JDOQL",
                 value = "SELECT "
@@ -89,10 +92,12 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 public class FinancialAccount
         extends EstatioDomainObject<FinancialAccount>
-        implements WithNameGetter, WithReferenceUnique,     WithApplicationTenancyCountry {
+        implements WithNameGetter, WithReferenceGetter, WithApplicationTenancyCountry {
+//        implements WithNameGetter, WithReferenceUnique,     WithApplicationTenancyCountry {
 
     public FinancialAccount() {
-        super("type, reference");
+        super("type, owner, reference");
+//        super("type, reference");
     }
 
     public String title() {
@@ -153,7 +158,7 @@ public class FinancialAccount
 
     @Programmatic
     public BigDecimal getBalance() {
-        return financialAccountTransactions.balance(this);
+        return financialAccountTransactionRepository.balance(this);
     }
 
     // //////////////////////////////////////
@@ -163,7 +168,7 @@ public class FinancialAccount
             final LocalDate transactionDate,
             final String description,
             final BigDecimal amount) {
-        financialAccountTransactions.newTransaction(this, transactionDate, description, amount);
+        financialAccountTransactionRepository.newTransaction(this, transactionDate, description, amount);
     }
 
     // //////////////////////////////////////
@@ -179,5 +184,5 @@ public class FinancialAccount
     }
 
     @Inject
-    private FinancialAccountTransactions financialAccountTransactions;
+    private FinancialAccountTransactionRepository financialAccountTransactionRepository;
 }

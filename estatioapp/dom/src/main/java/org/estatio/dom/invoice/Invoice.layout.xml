@@ -12,58 +12,78 @@
         </col>
     </row>
     <row>
-        <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="seller"/>
-                <ns2:property id="buyer"/>
-                <ns2:property id="collectionNumber"/>
-                <ns2:property id="invoiceNumber"/>
-                <ns2:property id="lastItemSequence"/>
-                <ns2:property id="status"/>
-                <ns2:property id="uuid"/>
-                <ns2:property id="applicationTenancyPath"/>
-                <ns2:property id="number"/>
-                <ns2:property id="runId"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
-        </col>
-        <col span="4">
-            <ns2:fieldSet name="Dates" id="dates">
-                <ns2:property id="invoiceDate"/>
-                <ns2:property id="dueDate">
-                    <ns2:action id="changeDueDate" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="RelatedTo" id="relatedTo">
-                <ns2:property id="fixedAsset"/>
-                <ns2:property id="lease"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Payment" id="payment">
-                <ns2:property id="paymentMethod">
-                    <ns2:action id="changePaymentMethod" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="paidBy"/>
-            </ns2:fieldSet>
-        </col>
-        <col span="4">
-            <ns2:fieldSet name="Amounts" id="amounts">
-                <ns2:property id="currency"/>
-                <ns2:property id="netAmount"/>
-                <ns2:property id="vatAmount"/>
-                <ns2:property id="grossAmount"/>
-            </ns2:fieldSet>
+        <col span="12">
+            <tabGroup>
+                <tab name="invoice">
+                    <row>
+                        <col span="4">
+                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <ns2:property id="seller"/>
+                                <ns2:property id="buyer"/>
+                                <ns2:property id="collectionNumber"/>
+                                <ns2:property id="invoiceNumber"/>
+                                <ns2:property id="lastItemSequence"/>
+                                <ns2:property id="status"/>
+                                <ns2:property id="uuid"/>
+                                <ns2:property id="applicationTenancyPath"/>
+                                <ns2:property id="number"/>
+                                <ns2:property id="runId"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="RelatedTo" id="relatedTo">
+                                <ns2:property id="fixedAsset"/>
+                                <ns2:property id="lease"/>
+                            </ns2:fieldSet>
+                        </col>
+                        <col span="4">
+                            <ns2:fieldSet name="Dates" id="dates">
+                                <ns2:property id="invoiceDate"/>
+                                <ns2:property id="dueDate">
+                                    <ns2:action id="changeDueDate" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Payment" id="payment">
+                                <ns2:property id="paymentMethod">
+                                    <ns2:action id="changePaymentMethod" position="BELOW"/>
+                                </ns2:property>
+                                <ns2:property id="paidBy"/>
+                            </ns2:fieldSet>
+                        </col>
+                        <col span="4">
+                            <ns2:fieldSet name="Amounts" id="amounts">
+                                <ns2:property id="currency"/>
+                                <ns2:property id="netAmount"/>
+                                <ns2:property id="vatAmount"/>
+                                <ns2:property id="grossAmount"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application Level">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
         <col span="12" unreferencedCollections="true">
             <ns2:collection id="items">

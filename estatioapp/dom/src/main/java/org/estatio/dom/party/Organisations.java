@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -36,6 +37,7 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.numerator.Numerators;
 
 @DomainService(repositoryFor = Organisation.class)
 @DomainServiceLayout(
@@ -53,30 +55,46 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
+            final boolean useNumereratorForReference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setApplicationTenancyPath(applicationTenancy.getPath());
-        organisation.setReference(reference);
+        String refToUse = reference;
+        if (useNumereratorForReference){
+            refToUse = referenceByNumerator(applicationTenancy);
+        }
+        organisation.setReference(refToUse);
         organisation.setName(name);
         persist(organisation);
         return organisation;
     }
 
-    public List<ApplicationTenancy> choices2NewOrganisation() {
+    private String referenceByNumerator(final ApplicationTenancy applicationTenancy){
+        return numerators.findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy).nextIncrementStr();
+    }
+
+    public List<ApplicationTenancy> choices3NewOrganisation() {
         return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
     }
 
-    public ApplicationTenancy default2NewOrganisation() {
-        return Dflt.of(choices2NewOrganisation());
+    public ApplicationTenancy default3NewOrganisation() {
+        return Dflt.of(choices3NewOrganisation());
     }
 
     public String validateNewOrganisation(
             final String reference,
+            final boolean useNumereratorForReference,
             final String name,
             final ApplicationTenancy applicationTenancy
     ) {
+        if (useNumereratorForReference){
+            if (numerators.findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
+                return "No numerator found";
+            }
+            return null;
+        }
         return partyRepository.validateNewParty(reference);
     }
 
@@ -95,6 +113,9 @@ public class Organisations extends UdoDomainRepositoryAndFactory<Organisation> {
 
     @Inject
     private Parties partyRepository;
+
+    @Inject
+    private Numerators numerators;
 
 
 }

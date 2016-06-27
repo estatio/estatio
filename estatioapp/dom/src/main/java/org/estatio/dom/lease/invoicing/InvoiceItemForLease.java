@@ -25,11 +25,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -43,7 +41,6 @@ import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -120,21 +117,15 @@ public class InvoiceItemForLease extends InvoiceItem {
         return getLeaseTerm();
     }
 
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private Lease lease;
 
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private LeaseTerm leaseTerm;
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
@@ -143,30 +134,9 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Getter @Setter
     private FixedAsset fixedAsset;
 
-    // //////////////////////////////////////
-
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private Boolean adjustment;
-
-    // //////////////////////////////////////
-
-    @Override
-    @Programmatic
-    public LocalDateInterval getEffectiveInterval() {
-        return getInterval().overlap(getLeaseTerm().getEffectiveInterval());
-    }
-
-    // //////////////////////////////////////
-
-    @Action(hidden = Where.EVERYWHERE)
-    public void remove() {
-        // no safeguard, assuming being called with precaution
-        setLeaseTerm(null);
-        super.remove();
-    }
-
-    // //////////////////////////////////////
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
         public int compare(final InvoiceItemForLease p, final InvoiceItemForLease q) {
@@ -184,8 +154,6 @@ public class InvoiceItemForLease extends InvoiceItem {
         }
     };
 
-    // //////////////////////////////////////
-
     @Override
     public int compareTo(final InvoiceItem other) {
         int compare = super.compareTo(other);
@@ -197,8 +165,6 @@ public class InvoiceItemForLease extends InvoiceItem {
         }
         return getClass().getName().compareTo(other.getClass().getName());
     }
-
-    // //////////////////////////////////////
 
     @Inject
     protected AgreementTypeRepository agreementTypeRepository;

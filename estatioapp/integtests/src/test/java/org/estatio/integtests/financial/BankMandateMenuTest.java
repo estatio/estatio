@@ -32,12 +32,15 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForPoisonNl;
+import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -60,19 +63,22 @@ public class BankMandateMenuTest extends EstatioIntegrationTest {
             });
         }
 
-
         @Inject
-        private FinancialAccounts financialAccounts;
+        private FinancialAccountRepository financialAccountRepository;
         @Inject
         private BankMandateMenu bankMandateMenu;
         @Inject
         private BankMandateRepository bankMandateRepository;
+        @Inject
+        private Parties parties;
 
         @Test
         public void forAccountWithMandate() {
 
             // given
-            FinancialAccount account = financialAccounts.findAccountByReference(BankAccountForPoisonNl.REF);
+            Party owner = parties.findPartyByReference(LeaseForKalPoison001Nl.PARTY_REF_TENANT);
+            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, BankAccountForPoisonNl.REF);
+
             Assert.assertThat(account instanceof BankAccount, is(true));
             final BankAccount bankAccount = (BankAccount) account;
 

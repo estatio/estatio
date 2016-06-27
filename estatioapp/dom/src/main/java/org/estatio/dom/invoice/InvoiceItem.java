@@ -46,6 +46,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -191,7 +192,13 @@ public abstract class InvoiceItem
     }
 
     public String disableChangeTax(final Tax tax) {
-        return getSource() == null ? null : "Cannot change tax on a generated invoice item";
+        if (getInvoice().isImmutable()){
+            return "Invoice is immutable";
+        }
+        if(getSource() == null){
+            return  "Cannot change tax on a generated invoice item";
+        }
+        return null;
     }
 
     // //////////////////////////////////////
@@ -213,7 +220,7 @@ public abstract class InvoiceItem
 
     public String disableChangeDescription(
             final String description) {
-        if (!getInvoice().getStatus().invoiceIsChangable()) {
+        if (getInvoice().isImmutable()) {
             return "Invoice can't be changed";
         }
         return null;
@@ -267,6 +274,10 @@ public abstract class InvoiceItem
         return getEffectiveEndDate();
     }
 
+    public String disableChangeEffectiveDates() {
+        return getInvoice().isImmutable() ? "Invoice cannot be changed" : null;
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -301,12 +312,16 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
-    public void remove() {
-        if (getInvoice().getStatus().equals(InvoiceStatus.NEW)) {
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Invoice remove() {
+        if (!getInvoice().isImmutable()) {
             getContainer().remove(this);
-            getContainer().flush();
         }
+        return getInvoice();
+    }
+
+    public String disableRemove(){
+        return getInvoice().isImmutable() ? "Cannot change invoice" : null;
     }
 
     @Programmatic
@@ -345,8 +360,6 @@ public abstract class InvoiceItem
         setNetAmount(BigDecimal.ZERO);
     }
 
-    // //////////////////////////////////////
-
     /**
      * Lifecycle
      */
@@ -354,14 +367,10 @@ public abstract class InvoiceItem
         initialize();
     }
 
-    // //////////////////////////////////////
-
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getInvoice().getApplicationTenancy();
     }
-
-    // //////////////////////////////////////
 
     @Inject
     private ChargeRepository chargeRepository;

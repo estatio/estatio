@@ -23,6 +23,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
@@ -32,6 +34,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
 
@@ -61,9 +64,42 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         return firstMatch("findByName", "name", name);
     }
 
+    public Brand findUnique(final String name, final ApplicationTenancy applicationTenancy){
+        return uniqueMatch("findByNameAndAtPath", "name", name, "atPath", applicationTenancy.getPath());
+    }
+
+
     @Programmatic
     public List<Brand> matchByName(final String name) {
         return allMatches("matchByName", "name", StringUtils.wildcardToCaseInsensitiveRegex(name));
+    }
+
+    @Programmatic
+    public List<Brand> findByNameLowerCaseAndAppTenancy(final String name, final ApplicationTenancy applicationTenancy) {
+        return allMatches("findByNameLowerCaseAndAppTenancy", "name", name.toLowerCase(), "atPath", applicationTenancy.getPath());
+    }
+
+    public List<Brand> autoComplete(final String searchPhrase) {
+        return searchPhrase.length() > 0
+                ? matchByName("*" + searchPhrase + "*")
+                : Lists.<Brand>newArrayList();
+    }
+
+    public Brand newBrand(
+            final String name,
+            final BrandCoverage coverage,
+            final Country countryOfOrigin,
+            final String group,
+            final ApplicationTenancy applicationTenancy) {
+        Brand brand;
+        brand = newTransientInstance(Brand.class);
+        brand.setName(name);
+        brand.setCoverage(coverage);
+        brand.setCountryOfOrigin(countryOfOrigin);
+        brand.setGroup(group);
+        brand.setApplicationTenancyPath(applicationTenancy.getPath());
+        persist(brand);
+        return brand;
     }
 
     @Programmatic
@@ -77,11 +113,12 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         }
         Brand brand = findByName(name);
         if (brand == null) {
-            brand = brandMenu.newBrand(name, brandCoverage, countryOfOrigin, null, applicationTenancy);
+            brand = newBrand(name, brandCoverage, countryOfOrigin, null, estatioApplicationTenancyRepository.findCountryTenancyFor(applicationTenancy));
         }
         return brand;
     }
 
     @Inject
-    private BrandMenu brandMenu;
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
 }

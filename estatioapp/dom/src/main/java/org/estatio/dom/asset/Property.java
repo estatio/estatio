@@ -19,8 +19,10 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -54,6 +56,8 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.asset.ownership.FixedAssetOwnership;
+import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
@@ -81,8 +85,6 @@ import lombok.Setter;
 public class Property
         extends FixedAsset<Property>
         implements Locatable, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
-
-
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
@@ -209,7 +211,6 @@ public class Property
         return role;
     }
 
-
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT
     )
@@ -224,7 +225,6 @@ public class Property
     public UnitType default2NewUnit() {
         return UnitType.BOUTIQUE;
     }
-
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Property dispose(
@@ -244,15 +244,13 @@ public class Property
     public int compareTo(final Property other) {
 
         /* Ordering first by display order */
-        if(getDisplayOrder() != null) {
-            if(other.getDisplayOrder() != null) {
+        if (getDisplayOrder() != null) {
+            if (other.getDisplayOrder() != null) {
                 return getDisplayOrder().compareTo(other.getDisplayOrder());
-            }
-            else {
+            } else {
                 return -1;
             }
-        }
-        else if(other.displayOrder != null) {
+        } else if (other.displayOrder != null) {
             return 1;
         }
         /* Further ordering as specified in the superclass */
@@ -267,6 +265,9 @@ public class Property
 
     @Inject
     LocationLookupService locationLookupService;
+
+    @Inject
+    FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
 
 }
 

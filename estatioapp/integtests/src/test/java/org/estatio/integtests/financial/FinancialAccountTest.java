@@ -37,7 +37,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -46,6 +46,7 @@ import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -68,7 +69,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         @Inject
         private Parties parties;
         @Inject
-        private FinancialAccounts financialAccounts;
+        private FinancialAccountRepository financialAccountRepository;
 
         private Party party;
 
@@ -82,7 +83,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         public void atLeastOneAccountIsOwnedByParty() throws Exception {
 
             // given
-            List<FinancialAccount> allAccounts = financialAccounts.allAccounts();
+            List<FinancialAccount> allAccounts = financialAccountRepository.allAccounts();
 
             // when
             List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
@@ -105,25 +106,31 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new BankAccountForHelloWorldNl());
                 }
             });
         }
 
         @Inject
-        private FinancialAccounts financialAccounts;
+        private FinancialAccountRepository financialAccountRepository;
 
         @Inject
         private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+
+        @Inject
+        private Parties partyRepository;
 
         private BankAccount bankAccount;
 
         private FixedAssetFinancialAccount fixedAssetFinancialAccount;
 
+        private Party owner;
+
         @Before
         public void setUp() throws Exception {
-            FinancialAccount financialAccount = financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF);
+            owner = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            FinancialAccount financialAccount = financialAccountRepository.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF);
+
             Assert.assertTrue(financialAccount instanceof BankAccount);
             bankAccount = (BankAccount) financialAccount;
         }
@@ -147,7 +154,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF));
+            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF));
         }
     }
 }

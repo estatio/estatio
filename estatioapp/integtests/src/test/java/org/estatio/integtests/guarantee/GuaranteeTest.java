@@ -26,7 +26,7 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.guarantee.Guarantees;
+import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseMenu;
@@ -50,7 +50,7 @@ public class GuaranteeTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    Guarantees guarantees;
+    GuaranteeRepository guaranteeRepository;
 
     Lease lease;
 
@@ -73,9 +73,9 @@ public class GuaranteeTest extends EstatioIntegrationTest {
     @Before
     public void setUp() {
         lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-        guaranteeWithFinancialAccount = guarantees.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
+        guaranteeWithFinancialAccount = guaranteeRepository.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
-        guaranteeWithoutFinancialAccount = guarantees.newGuarantee(
+        guaranteeWithoutFinancialAccount = guaranteeRepository.newGuarantee(
                 lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld("20120101"), null, "", VT.bd(1000), null);
     }
 

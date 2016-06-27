@@ -46,7 +46,7 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.lease.Lease;
 
 import lombok.Getter;
@@ -80,7 +80,7 @@ import lombok.Setter;
                         + "|| name.matches(:referenceOrNameOrComments)"
                         + "|| comments.matches(:referenceOrNameOrComments)")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Guarantees.class, autoCompleteAction = "autoComplete")
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = GuaranteeRepository.class, autoCompleteAction = "autoComplete")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Guarantee
         extends Agreement
@@ -123,7 +123,7 @@ public class Guarantee
     public void changeGuaranteeType(GuaranteeType guaranteeType) {
         FinancialAccountType financialAccountType = guaranteeType.getFinancialAccountType();
         if (financialAccountType != null) {
-            FinancialAccount financialAccount = financialAccounts.newFinancialAccount(
+            FinancialAccount financialAccount = financialAccountRepository.newFinancialAccount(
                     financialAccountType,
                     this.getReference(),
                     this.getName(),
@@ -223,5 +223,5 @@ public class Guarantee
     }
 
     @Inject
-    FinancialAccounts financialAccounts;
+    FinancialAccountRepository financialAccountRepository;
 }

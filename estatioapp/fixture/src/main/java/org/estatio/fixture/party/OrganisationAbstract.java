@@ -58,7 +58,7 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
 
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
 
-        Party party = organisations.newOrganisation(partyReference, partyName, applicationTenancy);
+        Party party = organisations.newOrganisation(partyReference, false, partyName, applicationTenancy);
 
         createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
 

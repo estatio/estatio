@@ -41,7 +41,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
@@ -137,7 +136,7 @@ import lombok.Setter;
                         + "&& (endDate == null || endDate > :date )")
 })
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject()
 public abstract class LeaseTerm
         extends EstatioDomainObject<LeaseTerm>
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence, InvoiceSource, WithApplicationTenancyPropertyLocal {
@@ -159,6 +158,7 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @PropertyLayout(
+            hidden = Where.PARENTED_TABLES,
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
@@ -170,7 +170,7 @@ public abstract class LeaseTerm
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull = "false")
-    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
+    @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private LeaseItem leaseItem;
 
@@ -182,7 +182,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Property(editing = Editing.DISABLED)
+    @Property()
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate startDate;
@@ -199,7 +199,7 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
 
-    @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
+    @Property(optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate endDate;
@@ -304,14 +304,12 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
-    @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private LeaseTermStatus status;
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
-    @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private LeaseTermFrequency frequency;
 

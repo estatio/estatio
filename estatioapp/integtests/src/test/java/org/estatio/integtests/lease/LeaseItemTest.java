@@ -38,7 +38,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.invoice.InvoiceItems;
+import org.estatio.dom.invoice.InvoiceItemRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -202,7 +202,7 @@ public class LeaseItemTest extends EstatioIntegrationTest {
         public ExpectedException thrown = ExpectedException.none();
 
         @Inject
-        private InvoiceItems invoiceItems;
+        private InvoiceItemRepository invoiceItemRepository;
 
         @Test
         public void happyCase() throws Exception {

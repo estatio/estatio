@@ -77,6 +77,13 @@ import lombok.Setter;
                         + "&& objectType == :objectType "
                         + "&& applicationTenancyPath == :applicationTenancyPath "),
         @javax.jdo.annotations.Query(
+                name = "findByNameAndObjectTypeAndApplicationTenancyPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.numerator.Numerator "
+                        + "WHERE name == :name "
+                        + "&& objectType == :objectType "
+                        + "&& :applicationTenancyPath.matches(applicationTenancyPath) "),
+        @javax.jdo.annotations.Query(
                 name = "findByNameAndApplicationTenancyPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.numerator.Numerator "
@@ -104,7 +111,16 @@ public class Numerator
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
+        return securityApplicationTenancyRepository.findByPathCached(adaptedAppPathIfNeeded());
+    }
+
+    // helper to set appTenancyPath to parent when containing wildcard '%'
+    @Programmatic
+    String adaptedAppPathIfNeeded(){
+        if (getApplicationTenancyPath() != null && getApplicationTenancyPath().contains("/%/")) {
+            return getApplicationTenancyPath().split("/%/")[0];
+        }
+        return getApplicationTenancyPath();
     }
 
     // //////////////////////////////////////

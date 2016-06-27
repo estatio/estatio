@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.ViewModelLayout;
 
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.event.Event;
-import org.estatio.dom.event.Events;
+import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 
@@ -52,7 +52,7 @@ public class EstatioAppHomePage extends EstatioViewModel {
 
     @CollectionLayout(render = RenderType.EAGERLY, named = "Upcoming events")
     public List<Event> getUpcomingEvents() {
-        return events.findEventsInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
+        return eventRepository.findEventsInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
     }
 
     // //////////////////////////////////////
@@ -61,6 +61,6 @@ public class EstatioAppHomePage extends EstatioViewModel {
     private LeaseRepository leaseRepository;
 
     @Inject
-    private Events events;
+    private EventRepository eventRepository;
 
 }

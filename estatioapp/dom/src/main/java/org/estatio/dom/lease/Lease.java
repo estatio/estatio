@@ -26,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -46,6 +47,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -77,7 +79,7 @@ import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptions;
@@ -142,7 +144,7 @@ import lombok.Setter;
                         "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) " +
                         "ORDER BY endDate")
 })
-@DomainObject()
+@DomainObject(autoCompleteRepository = LeaseRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Lease
         extends Agreement
@@ -157,7 +159,6 @@ public class Lease
     public void created() {
         setStatus(LeaseStatus.ACTIVE);
     }
-
 
     // //////////////////////////////////////
 
@@ -240,8 +241,8 @@ public class Lease
     /**
      * The {@link Property} of the (first of the) {@link #getOccupancies()
      * LeaseUnit}s.
-     * <p>
-     * <p>
+     * <p/>
+     * <p/>
      * It is not possible for the {@link Occupancy}s to belong to different
      * {@link Property properties}, and so it is sufficient to obtain the
      * {@link Property} of the first such {@link Occupancy occupancy}.
@@ -275,6 +276,24 @@ public class Lease
 
     public LeaseType default1Change() {
         return getLeaseType();
+    }
+
+    @Column(allowsNull = "true", length = JdoColumnLength.NOTES)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String comments;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Lease changeComments(
+            @ParameterLayout(multiLine = 5)
+            final String comments
+    ){
+        setComments(comments);
+        return this;
+    }
+
+    public String default0ChangeComments(){
+        return getComments();
     }
 
     // //////////////////////////////////////
@@ -362,7 +381,6 @@ public class Lease
 
     // //////////////////////////////////////
 
-
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     @Getter @Setter
@@ -404,7 +422,7 @@ public class Lease
      * EST-233.
      */
     @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY, paged = 999)
     @Getter @Setter
     private SortedSet<LeaseItem> items = new TreeSet<>();
 
@@ -427,11 +445,12 @@ public class Lease
         return leaseItems.default5NewLeaseItem(this);
     }
 
-    public String validateNewItem(final LeaseItemType type,
-                                  final Charge charge,
-                                  final InvoicingFrequency invoicingFrequency,
-                                  final PaymentMethod paymentMethod,
-                                  final LocalDate startDate) {
+    public String validateNewItem(
+            final LeaseItemType type,
+            final Charge charge,
+            final InvoicingFrequency invoicingFrequency,
+            final PaymentMethod paymentMethod,
+            final LocalDate startDate) {
         return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
     }
 
@@ -442,10 +461,10 @@ public class Lease
     public Agreement changePrevious(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Agreement previousAgreement) {
-        if (getPrevious()!=null) {
+        if (getPrevious() != null) {
             getPrevious().setNext(null);
         }
-        if (previousAgreement!=null) {
+        if (previousAgreement != null) {
             previousAgreement.setNext(this);
         }
         return this;
@@ -456,14 +475,14 @@ public class Lease
             // OK to set to null
             return null;
         }
-        if (previousAgreement.getNext() != null){
+        if (previousAgreement.getNext() != null) {
             return "Not allowed: the agreement chosen already is already linked to a next.";
         }
-        if (this.getInterval().overlaps(previousAgreement.getInterval())){
+        if (this.getInterval().overlaps(previousAgreement.getInterval())) {
             return "Not allowed: overlapping date intervals";
         }
         // case: interval previous not overlapping, but before this interval
-        if (previousAgreement.getEndDate()==null || this.getStartDate().isBefore(previousAgreement.getEndDate())){
+        if (previousAgreement.getEndDate() == null || this.getStartDate().isBefore(previousAgreement.getEndDate())) {
             return "Not allowed: previous agreement interval should be before this agreements interval";
         }
         Lease previousLease = (Lease) previousAgreement;
@@ -527,14 +546,12 @@ public class Lease
 
     // //////////////////////////////////////
 
-
     @CollectionLayout(render = RenderType.EAGERLY)
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     @Getter @Setter
     private SortedSet<BreakOption> breakOptions = new TreeSet<>();
 
     // //////////////////////////////////////
-
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Column(name = "paidByBankMandateId")
@@ -574,7 +591,7 @@ public class Lease
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<BankMandate> existingBankMandatesForTenant() {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
         if (tenantRole == null || !tenantRole.isCurrent()) {
@@ -675,7 +692,7 @@ public class Lease
     private List<BankAccount> existingBankAccountsForTenant() {
         final Party tenant = getSecondaryParty();
         if (tenant != null) {
-            return financialAccounts.findBankAccountsByOwner(tenant);
+            return bankAccountRepository.findBankAccountsByOwner(tenant);
         } else {
             return Collections.emptyList();
         }
@@ -741,8 +758,11 @@ public class Lease
         return null;
     }
 
-    public boolean hideTerminate() {
-        return !getStatus().equals(LeaseStatus.ACTIVE);
+    public String disableTerminate() {
+        if (!(getStatus().equals(LeaseStatus.ACTIVE ) || getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY))){
+            return "Status is not Active or Suspended Partially";
+        }
+        return null;
     }
 
     // //////////////////////////////////////
@@ -802,8 +822,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Programmatic
-    Lease copyToNewLease(
+    @Programmatic Lease copyToNewLease(
             final String reference,
             final String name,
             final Party tenant,
@@ -827,6 +846,7 @@ public class Lease
         copyItemsAndTerms(newLease, tenancyStartDate);
         breakOptionsService.copyBreakOptions(this, newLease, tenancyStartDate);
         copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
+        newLease.setComments(this.getComments());
         this.setNext(newLease);
         return newLease;
     }
@@ -981,7 +1001,7 @@ public class Lease
     Occupancies occupanciesRepo;
 
     @Inject
-    BankAccounts financialAccounts;
+    BankAccountRepository bankAccountRepository;
 
     @Inject
     BankMandateRepository bankMandateRepository;

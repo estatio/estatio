@@ -25,23 +25,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(repositoryFor = Country.class)
-@DomainServiceLayout(
-        named = "Other",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.5")
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Country.class)
 public class CountryRepository extends UdoDomainRepositoryAndFactory<Country> {
 
     public CountryRepository() {
@@ -50,20 +42,18 @@ public class CountryRepository extends UdoDomainRepositoryAndFactory<Country> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
+    @Programmatic
     public List<Country> newCountry(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Alpha-2 Code") String alpha2Code,
-            final @ParameterLayout(named = "Name") String name) {
+            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final String alpha2Code,
+            final String name) {
         createCountry(reference, alpha2Code, name);
         return allCountries();
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
+    @Programmatic
     public List<Country> allCountries() {
         return allInstances();
     }

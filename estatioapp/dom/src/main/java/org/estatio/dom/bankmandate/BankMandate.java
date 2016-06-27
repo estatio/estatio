@@ -41,7 +41,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -104,13 +104,13 @@ public class BankMandate
 
     public BankMandate changeBankAccount(
             final BankAccount bankAccount
-            ) {
+    ) {
         setBankAccount(bankAccount);
         return this;
     }
 
     public List<? extends FinancialAccount> choices0ChangeBankAccount() {
-        return financialAccounts.findBankAccountsByOwner(getSecondaryParty());
+        return bankAccountRepository.findBankAccountsByOwner(getSecondaryParty());
     }
 
     // //////////////////////////////////////
@@ -192,6 +192,6 @@ public class BankMandate
     // //////////////////////////////////////
 
     @Inject
-    private BankAccounts financialAccounts;
+    private BankAccountRepository bankAccountRepository;
 
 }

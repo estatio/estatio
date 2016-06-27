@@ -25,7 +25,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
@@ -44,7 +44,7 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
 
         final Party party = parties.findPartyByReference(partyStr);
 
-        final BankAccount bankAccount = bankAccounts.newBankAccount(party, bankAccountRef, null);
+        final BankAccount bankAccount = bankAccountRepository.newBankAccount(party, bankAccountRef, null);
         executionContext.addResult(this, bankAccount.getReference(), bankAccount);
 
         if (propertyRef != null) {
@@ -55,11 +55,8 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
         return bankAccount;
     }
 
-
-    // //////////////////////////////////////
-
     @Inject
-    private BankAccounts bankAccounts;
+    private BankAccountRepository bankAccountRepository;
 
     @Inject
     private Parties parties;

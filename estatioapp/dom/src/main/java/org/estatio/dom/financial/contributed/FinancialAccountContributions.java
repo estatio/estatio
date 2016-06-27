@@ -33,16 +33,15 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactions;
+import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.party.Party;
 
@@ -60,7 +59,7 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
             final FinancialAccountType financialAccountType,
             final @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
             final String name) {
-        return financialAccounts.newFinancialAccount(financialAccountType, reference, name, owner);
+        return financialAccountRepository.newFinancialAccount(financialAccountType, reference, name, owner);
     }
 
     // //////////////////////////////////////
@@ -68,16 +67,16 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<FinancialAccount> financialAccounts(final Party owner) {
-        return financialAccounts.findAccountsByOwner(owner);
+        return financialAccountRepository.findAccountsByOwner(owner);
     }
 
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public List<FinancialAccountTransaction> transactions(Guarantee guarantee) {
-        return financialAccountTransactions.transactions(guarantee.getFinancialAccount());
+        return financialAccountTransactionRepository.transactions(guarantee.getFinancialAccount());
     }
 
     // //////////////////////////////////////
@@ -89,7 +88,7 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
             final String description,
             final BigDecimal amount) {
 
-        financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
+        financialAccountTransactionRepository.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
         return guarantee;
     }
 
@@ -97,12 +96,18 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
         return guarantee.getFinancialAccount() == null;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public BigDecimal balance(FinancialAccount financialAccount) {
+        BigDecimal balance = financialAccountTransactionRepository.balance(financialAccount);
+        return balance;
+    }
+
     // //////////////////////////////////////
 
     @Inject
-    private FinancialAccounts financialAccounts;
+    private FinancialAccountRepository financialAccountRepository;
 
     @Inject
-    private FinancialAccountTransactions financialAccountTransactions;
+    private FinancialAccountTransactionRepository financialAccountTransactionRepository;
 
 }

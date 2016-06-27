@@ -40,6 +40,11 @@ ALTER TABLE LeaseTerm
 DROP COLUMN excludedAmount, depositValue, depositType
 GO
 
+--EST-736
+ALTER TABLE BankAccount
+DROP COLUMN bankAccountType
+GO
+
 --EST-667
 IF NOT EXISTS (SELECT *
   FROM [INFORMATION_SCHEMA].[COLUMNS]
@@ -51,6 +56,10 @@ IF NOT EXISTS (SELECT *
   GO
   ALTER TABLE [dbo].[LeaseType] ALTER COLUMN  atPath [varchar](255) NOT NULL
   GO
+
+-- EST-752
+ALTER TABLE [dbo].[Brand] DROP CONSTRAINT [Brand_name_UNQ]
+GO
 
 
 GO
@@ -67,7 +76,10 @@ IF EXISTS (SELECT *
   GO
 
 
- ALTER TABLE [dbo].LeaseTerm ALTER COLUMN  indexationPercentage [decimal](19,3)
+ALTER TABLE [dbo].LeaseTerm ALTER COLUMN  indexationPercentage [decimal](19,3)
+
+ALTER TABLE [dbo].[FinancialAccount] DROP CONSTRAINT [FinancialAccount_reference_UNQ]
+
 
  
 /*

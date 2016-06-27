@@ -35,7 +35,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -63,11 +62,6 @@ public class BankAccount
     @Column(name = "bankPartyId", allowsNull = "true")
     @Getter @Setter
     private Party bank;
-
-    @Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Property(editing = Editing.DISABLED)
-    @Getter @Setter
-    private BankAccountType bankAccountType;
 
     @Column(name = "countryId", allowsNull = "true")
     @Getter @Setter
@@ -169,6 +163,6 @@ public class BankAccount
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @Inject
-    BankAccounts bankAccounts;
+    BankAccountRepository bankAccountRepository;
 
 }

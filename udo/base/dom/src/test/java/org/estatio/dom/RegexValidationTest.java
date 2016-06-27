@@ -139,6 +139,10 @@ public class RegexValidationTest {
 
         tester(RegexValidation.Lease.REFERENCE, "X-CAR-GUESS2-1112N", false);
         tester(RegexValidation.Lease.REFERENCE, "Z-CAR-GUES2-1112N", true);
+
+        // ECP-130
+        tester(RegexValidation.Lease.REFERENCE, "CH-CELIO", true);
+        tester(RegexValidation.Lease.REFERENCE, "CH-CELIO ", false);
     }
 
     private void tester(String regex, String pattern, boolean expected) {

@@ -48,6 +48,7 @@ public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbs
 
         // exec
         createBankMandate(
+                LeaseForOxfTopModel001Gb.PARTY_REF_TENANT,
                 REF, SEQUENCE, SEQUENCE_TYPE, SCHEME,
                 executionContext);
     }

@@ -15,6 +15,7 @@ import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.PaymentMethod;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
 import org.estatio.dom.tax.Tax;
@@ -69,7 +70,9 @@ public class InvoiceDtoFactoryTest {
     private static InvoiceItemForTesting newItem(final Invoice invoice, final String netAmt, final String grossAmt, final String vatAmt) {
         final InvoiceItemForTesting invoiceItem = new InvoiceItemForTesting();
         invoiceItem.setInvoice(invoice);
+        final ChargeGroup chargeGroup = new ChargeGroup();
         final Charge charge = new Charge();
+        charge.setGroup(chargeGroup);
         invoiceItem.setCharge(charge);
         final Tax tax = new Tax();
         invoiceItem.setTax(tax);

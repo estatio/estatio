@@ -47,7 +47,7 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
         }
 
         // exec
-        createBankMandate(BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);
+        createBankMandate(LeaseForKalPoison001Nl.PARTY_REF_TENANT, BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);
     }
 
 }

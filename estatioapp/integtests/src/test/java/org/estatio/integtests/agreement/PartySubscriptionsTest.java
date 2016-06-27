@@ -94,7 +94,7 @@ public class PartySubscriptionsTest extends EstatioIntegrationTest {
             oldParty = parties.findPartyByReference(OrganisationForTopModelGb.REF);
             // EST-467: shouldn't be using global here.
             ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
-            newParty = organisations.newOrganisation("TEST", "Test", applicationTenancy);
+            newParty = organisations.newOrganisation("TEST", false, "Test", applicationTenancy);
         }
 
         @Test

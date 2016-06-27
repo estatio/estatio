@@ -38,8 +38,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.geography.Country;
@@ -55,13 +53,23 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Unique(name = "Brand_name_UNQ", members = {"name"})
+@javax.jdo.annotations.Unique(name = "Brand_name_atPath_UNQ", members = {"name", "applicationTenancyPath"})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.tags.Brand "
                         + "WHERE name == :name"),
+        @javax.jdo.annotations.Query(
+                name = "findByNameAndAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.tags.Brand "
+                        + "WHERE name == :name && applicationTenancyPath == :atPath "),
+        @javax.jdo.annotations.Query(
+                name = "findByNameLowerCaseAndAppTenancy", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.tags.Brand "
+                        + "WHERE name.toLowerCase() == :name && applicationTenancyPath == :atPath "),
         @javax.jdo.annotations.Query(
                 name = "matchByName", language = "JDOQL",
                 value = "SELECT "
@@ -77,18 +85,20 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.lease.tags.Brand WHERE this.group != null "
                         + "ORDER BY this.group ")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BrandMenu.class, autoCompleteAction = "autoComplete")
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BrandRepository.class, autoCompleteAction = "autoComplete")
 public class Brand
         extends EstatioDomainObject<Brand>
-        implements WithNameUnique, WithNameComparable<Brand>, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
+        implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
     public Brand() {
-        super("name");
+        super("name, applicationTenancyPath");
     }
 
     public String title() {
         return TitleBuilder.start()
                 .withName(getName())
+                .withName(" - ")
+                .withName(getApplicationTenancy().getName())
                 .toString();
     }
 
@@ -97,7 +107,6 @@ public class Brand
             allowsNull = "false",
             name = "atPath"
     )
-
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private String applicationTenancyPath;

@@ -85,7 +85,7 @@ public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumerato
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
             final ApplicationTenancy applicationTenancy) {
-        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset, applicationTenancy);
+        return numerators.findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset, applicationTenancy);
     }
 
     // //////////////////////////////////////

@@ -46,6 +46,7 @@ import org.estatio.dom.numerator.Numerator;
 import org.estatio.services.clock.ClockService;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -401,4 +402,20 @@ public class InvoiceTest {
         }
 
     }
+
+    public static class NewItem extends InvoiceTest {
+
+        @Test
+        public void disabled_when_immutable() throws Exception {
+            //Given
+            Invoice invoice = new Invoice();
+            invoice.setStatus(InvoiceStatus.INVOICED);
+            // When, Then
+            assertThat(invoice.disableNewItem(null,null,null,null,null), notNullValue());
+
+        }
+
+
+    }
+
 }

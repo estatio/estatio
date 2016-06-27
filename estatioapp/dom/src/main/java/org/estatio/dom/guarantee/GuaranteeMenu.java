@@ -23,7 +23,7 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.StringUtils;
 import org.joda.time.LocalDate;
@@ -58,7 +58,7 @@ public class GuaranteeMenu extends UdoDomainService<Guarantee> {
             final BigDecimal startAmount
             ) {
 
-        return guarantees.newGuarantee(lease,reference,name,guaranteeType,startDate,endDate,description,contractualAmount,startAmount);
+        return guaranteeRepository.newGuarantee(lease,reference,name,guaranteeType,startDate,endDate,description,contractualAmount,startAmount);
     }
 
     // //////////////////////////////////////
@@ -68,14 +68,14 @@ public class GuaranteeMenu extends UdoDomainService<Guarantee> {
     public List<Guarantee> findGuarantees(
             final @ParameterLayout(named = "Reference, Name or Comments", describedAs = "May include wildcards '*' and '?'") String refOrNameOrComments) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrNameOrComments);
-        return guarantees.findGuarantees(refOrNameOrComments);
+        return guaranteeRepository.findGuarantees(refOrNameOrComments);
     }
 
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Guarantee> allGuarantees() {
-        return guarantees.allGuarantees();
+        return guaranteeRepository.allGuarantees();
     }
 
     // //////////////////////////////////////
@@ -87,9 +87,9 @@ public class GuaranteeMenu extends UdoDomainService<Guarantee> {
     private AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
-    private FinancialAccounts financialAccounts;
+    private FinancialAccountRepository financialAccountRepository;
 
     @Inject
-    private Guarantees guarantees;
+    private GuaranteeRepository guaranteeRepository;
 
 }

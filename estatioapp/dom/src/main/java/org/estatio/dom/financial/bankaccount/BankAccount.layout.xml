@@ -45,7 +45,6 @@
         <col span="8">
             <ns2:fieldSet name="Account Details" id="accountDetails">
                 <ns2:property id="bank"/>
-                <ns2:property id="bankAccountType"/>
                 <ns2:property id="country"/>
                 <ns2:property id="nationalCheckCode"/>
                 <ns2:property id="nationalBankCode"/>

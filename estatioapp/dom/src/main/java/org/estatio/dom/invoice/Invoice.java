@@ -303,7 +303,7 @@ public class Invoice
 
     public String disableChangeDueDate(
             final LocalDate dueDate) {
-        if (!getStatus().invoiceIsChangable()) {
+        if (isImmutable()) {
             return "Due date can't be changed";
         }
         return null;
@@ -518,7 +518,7 @@ public class Invoice
 
     public String validateInvoice(final LocalDate invoiceDate) {
         return !validInvoiceDate(invoiceDate)
-                ? String.format("Invoice date %s is invalid for %s because it's before the invoice date of the last invoice", invoiceDate.toString(), getContainer().titleOf(this))
+                ? String.format("Invoice date %s is invalid for %s because it's before the invoice date of the last invoice or after the due date", invoiceDate.toString(), getContainer().titleOf(this))
                 : null;
 
     }
@@ -552,7 +552,7 @@ public class Invoice
             final BigDecimal netAmount,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
+        InvoiceItem invoiceItem = invoiceItemRepository.newInvoiceItem(this, getDueDate());
         invoiceItem.setQuantity(quantity);
         invoiceItem.setCharge(charge);
         invoiceItem.setDescription(charge.getDescription());
@@ -588,6 +588,19 @@ public class Invoice
             return "Start date must be before end date";
         }
         return null;
+    }
+
+    public String disableNewItem(
+            final Charge charge,
+            final BigDecimal quantity,
+            final BigDecimal netAmount,
+            final LocalDate startDate,
+            final LocalDate endDate){
+        return isImmutable() ? "Cannot add new item" : null;
+    }
+
+    boolean isImmutable() {
+        return !getStatus().invoiceIsChangable();
     }
 
     // //////////////////////////////////////
@@ -679,5 +692,5 @@ public class Invoice
     InvoiceRepository invoiceRepository;
 
     @javax.inject.Inject
-    InvoiceItems invoiceItems;
+    InvoiceItemRepository invoiceItemRepository;
 }
