@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -50,6 +51,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -84,6 +86,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
     @Inject
     EstatioNumeratorRepository estatioNumeratorRepository;
+
+    @Inject
+    Numerators numerators;
 
     @Inject
     Parties parties;
@@ -249,6 +254,56 @@ public class InvoicesTest extends EstatioIntegrationTest {
             Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
             // then
             Assert.assertNull(numerator);
+        }
+
+    }
+
+    public static class FindInvoiceNumberNumeratorUsingWildCard extends InvoicesTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
+                    executionContext.executeChild(this, new PropertyForOxfGb());
+                }
+            });
+        }
+
+        private Property propertyOxf;
+        private ApplicationTenancy applicationTenancyForOxf;
+        private ApplicationTenancy applicationTenancyWithWildCard;
+        private String OXFTENANCYPATH = "/GBR/OXF/GB01";
+        private String WILCARDTENANCYPATH = "/GBR/%/GB01";
+        private Numerator numeratorForOxfUsingWildCard;
+
+
+        @Before
+        public void setUp() throws Exception {
+            applicationTenancyForOxf = applicationTenancyRepository.newTenancy(OXFTENANCYPATH, OXFTENANCYPATH, null);
+            applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
+            numeratorForOxfUsingWildCard = numerators.createScopedNumerator(
+                    Constants.INVOICE_NUMBER_NUMERATOR_NAME,
+                    propertyOxf,
+                    propertyOxf.getReference().concat("-%04d"),
+                    BigInteger.ZERO,
+                    applicationTenancyWithWildCard
+            );
+        }
+
+        @Test
+        public void whenUsingWildCardForAppTenancyPath() throws Exception {
+
+            // when
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath(OXFTENANCYPATH));
+
+            // then
+            Assertions.assertThat(numerator).isEqualTo(numeratorForOxfUsingWildCard);
+
         }
 
     }

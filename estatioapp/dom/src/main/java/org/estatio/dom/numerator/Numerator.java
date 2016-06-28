@@ -75,6 +75,13 @@ import lombok.Setter;
                         + "WHERE name == :name "
                         + "&& objectIdentifier == :objectIdentifier "
                         + "&& objectType == :objectType "
+                        + "&& applicationTenancyPath == :applicationTenancyPath "),
+        @javax.jdo.annotations.Query(
+                name = "findByNameAndObjectTypeAndApplicationTenancyPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.numerator.Numerator "
+                        + "WHERE name == :name "
+                        + "&& objectType == :objectType "
                         + "&& :applicationTenancyPath.matches(applicationTenancyPath) "),
         @javax.jdo.annotations.Query(
                 name = "findByNameAndApplicationTenancyPath", language = "JDOQL",

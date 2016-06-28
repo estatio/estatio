@@ -132,7 +132,7 @@ public class NumeratorTest extends EstatioIntegrationTest {
             numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
             // when
-            Numerator in = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, applicationTenancyOxf);
+            Numerator in = numerators.findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, applicationTenancyOxf);
 
             // then
             assertThat(in.getLastIncrement(), is(new BigInteger("10")));
@@ -155,9 +155,9 @@ public class NumeratorTest extends EstatioIntegrationTest {
             appTenNotToBefound2 = applicationTenancyRepository.newTenancy("France/no property", "/FRA", null);
 
             // when
-            Numerator inToBeFound = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenToBefound);
-            Numerator inNotToBeFound1 = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenNotToBefound1);
-            Numerator inNotToBeFound2 = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenNotToBefound2);
+            Numerator inToBeFound = numerators.findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenToBefound);
+            Numerator inNotToBeFound1 = numerators.findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenNotToBefound1);
+            Numerator inNotToBeFound2 = numerators.findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, appTenNotToBefound2);
 
             // then
             assertThat(inToBeFound.getLastIncrement(), is(new BigInteger("100")));
@@ -187,7 +187,6 @@ public class NumeratorTest extends EstatioIntegrationTest {
         public void forScopedNumerator() throws Exception {
 
             // given
-            //Numerator scopedNumerator = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
             assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("10")));
 
             // when
