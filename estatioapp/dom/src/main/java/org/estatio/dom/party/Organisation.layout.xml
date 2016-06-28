@@ -23,7 +23,8 @@
             </ns2:fieldSet>
             <ns2:fieldSet name="Registrations" id="registrations">
                 <ns2:property id="vatCode"/>
-                <ns2:property id="fiscalCode">
+                <ns2:property id="fiscalCode"/>
+                <ns2:property id="chamberOfCommerceCode">
                     <ns2:action id="change" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>

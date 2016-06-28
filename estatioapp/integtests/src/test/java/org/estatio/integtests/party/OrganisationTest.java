@@ -23,6 +23,7 @@ import java.util.SortedSet;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -97,6 +98,20 @@ public class OrganisationTest extends EstatioIntegrationTest {
 
             // when
             wrap(organisation).changeName(organisation.getName(), new LocalDate(2050, 1, 1));
+        }
+
+        @Test
+        public void changeTest() throws Exception {
+            // given
+            Assertions.assertThat(organisation.getChamberOfCommerceCode()).isEqualTo(null);
+            String cocCode = "0608869419";
+
+            // when
+            wrap(organisation).change(null, null, cocCode);
+
+            //then
+            Assertions.assertThat(organisation.getChamberOfCommerceCode()).isEqualTo(cocCode);
+            Assertions.assertThat(organisation.default2Change()).isEqualTo(cocCode);
         }
     }
 }

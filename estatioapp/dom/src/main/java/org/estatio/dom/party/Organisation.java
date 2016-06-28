@@ -90,6 +90,14 @@ public class Organisation
 
     // //////////////////////////////////////
 
+
+    @javax.jdo.annotations.Column(length = JdoColumnLength.Organisation.COC_CODE)
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private String chamberOfCommerceCode;
+
+    // //////////////////////////////////////
+
     @Persistent(mappedBy = "organisation")
     @CollectionLayout(defaultView = "table")
     @Getter @Setter
@@ -99,10 +107,11 @@ public class Organisation
 
     public Organisation change(
             final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String vatCode,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode) {
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String fiscalCode,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String chamberOfCommerceCode) {
         setVatCode(vatCode);
         setFiscalCode(fiscalCode);
-
+        setChamberOfCommerceCode(chamberOfCommerceCode);
         return this;
     }
 
@@ -112,6 +121,10 @@ public class Organisation
 
     public String default1Change() {
         return getFiscalCode();
+    }
+
+    public String default2Change() {
+        return getChamberOfCommerceCode();
     }
 
     public Organisation changeName(
