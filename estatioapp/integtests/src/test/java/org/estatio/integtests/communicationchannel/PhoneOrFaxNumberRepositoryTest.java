@@ -27,17 +27,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
-import org.estatio.dom.communicationchannel.EmailAddress;
-import org.estatio.dom.communicationchannel.EmailAddresses;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumber;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumberRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class EmailAddressesTest extends EstatioIntegrationTest {
+public class PhoneOrFaxNumberRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -51,7 +51,7 @@ public class EmailAddressesTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    EmailAddresses emailAddresses;
+    PhoneOrFaxNumberRepository phoneOrFaxNumberRepository;
 
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
@@ -63,7 +63,7 @@ public class EmailAddressesTest extends EstatioIntegrationTest {
 
     CommunicationChannel communicationChannel;
 
-    EmailAddress emailAddress;
+    PhoneOrFaxNumber phoneOrFaxNumber;
 
     @Before
     public void setUp() throws Exception {
@@ -72,23 +72,23 @@ public class EmailAddressesTest extends EstatioIntegrationTest {
         Iterator<CommunicationChannel> it = results.iterator();
         while (it.hasNext()) {
             CommunicationChannel next = it.next();
-            if (next.getType() == CommunicationChannelType.EMAIL_ADDRESS) {
-                emailAddress = (EmailAddress) next;
+            if (next.getType() == CommunicationChannelType.PHONE_NUMBER) {
+                phoneOrFaxNumber = (PhoneOrFaxNumber) next;
             }
         }
 
-        assertThat(emailAddress.getEmailAddress(), is("info@topmodel.example.com"));
+        assertThat(phoneOrFaxNumber.getPhoneNumber(), is("+31202211333"));
     }
 
-    public static class FindByEmailAddress extends EmailAddressesTest {
+    public static class FindByPhoneOrFaxNumber extends PhoneOrFaxNumberRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
             // when
-            EmailAddress email = emailAddresses.findByEmailAddress(party, emailAddress.getEmailAddress());
+            PhoneOrFaxNumber result = phoneOrFaxNumberRepository.findByPhoneOrFaxNumber(party, phoneOrFaxNumber.getPhoneNumber());
 
             // then
-            assertThat(email, is(emailAddress));
+            assertThat(result, is(phoneOrFaxNumber));
         }
     }
 }

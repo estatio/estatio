@@ -18,26 +18,27 @@
  */
 package org.estatio.integtests.communicationchannel;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import java.util.Iterator;
-import java.util.SortedSet;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+
 import javax.inject.Inject;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.PhoneOrFaxNumber;
-import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class PhoneOrFaxNumbersTest extends EstatioIntegrationTest {
+public class CommunicationChannelRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -51,9 +52,6 @@ public class PhoneOrFaxNumbersTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    PhoneOrFaxNumbers phoneOrFaxNumbers;
-
-    @Inject
     CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
@@ -61,34 +59,30 @@ public class PhoneOrFaxNumbersTest extends EstatioIntegrationTest {
 
     Party party;
 
-    CommunicationChannel communicationChannel;
-
-    PhoneOrFaxNumber phoneOrFaxNumber;
-
     @Before
     public void setUp() throws Exception {
         party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
-        SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwner(party);
-        Iterator<CommunicationChannel> it = results.iterator();
-        while (it.hasNext()) {
-            CommunicationChannel next = it.next();
-            if (next.getType() == CommunicationChannelType.PHONE_NUMBER) {
-                phoneOrFaxNumber = (PhoneOrFaxNumber) next;
-            }
-        }
-
-        assertThat(phoneOrFaxNumber.getPhoneNumber(), is("+31202211333"));
     }
 
-    public static class FindByPhoneOrFaxNumber extends PhoneOrFaxNumbersTest {
-
+    public static class FindByOwner extends CommunicationChannelRepositoryTest {
         @Test
         public void happyCase() throws Exception {
-            // when
-            PhoneOrFaxNumber result = phoneOrFaxNumbers.findByPhoneOrFaxNumber(party, phoneOrFaxNumber.getPhoneNumber());
+            Assert.assertThat(communicationChannelRepository.findByOwner(party).size(), is(5));
+        }
+    }
 
-            // then
-            assertThat(result, is(phoneOrFaxNumber));
+    public static class FindByOwnerAndType extends CommunicationChannelRepositoryTest {
+        @Test
+        public void happyCase() throws Exception {
+            Assert.assertThat(communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).size(), is(2));
+        }
+    }
+
+    public static class FindOtherByOwnerAndType extends CommunicationChannelRepositoryTest {
+        @Test
+        public void happyCase() throws Exception {
+            CommunicationChannel exclude = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
+            Assert.assertThat(communicationChannelRepository.findOtherByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS, exclude).size(), is(1));
         }
     }
 }

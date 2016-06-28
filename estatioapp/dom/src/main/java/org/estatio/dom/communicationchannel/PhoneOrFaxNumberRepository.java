@@ -31,11 +31,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "70", repositoryFor = PhoneOrFaxNumber.class, nature = NatureOfService.DOMAIN)
-public class PhoneOrFaxNumbers extends UdoDomainRepositoryAndFactory<PhoneOrFaxNumber> {
+@DomainService(repositoryFor = PhoneOrFaxNumber.class, nature = NatureOfService.DOMAIN)
+public class PhoneOrFaxNumberRepository extends UdoDomainRepositoryAndFactory<PhoneOrFaxNumber> {
 
-    public PhoneOrFaxNumbers() {
-        super(PhoneOrFaxNumbers.class, PhoneOrFaxNumber.class);
+    public PhoneOrFaxNumberRepository() {
+        super(PhoneOrFaxNumberRepository.class, PhoneOrFaxNumber.class);
     }
 
     // //////////////////////////////////////
@@ -56,7 +56,7 @@ public class PhoneOrFaxNumbers extends UdoDomainRepositoryAndFactory<PhoneOrFaxN
 
     private Optional<PhoneOrFaxNumber> findByPhoneOrFaxNumber(final CommunicationChannelOwner owner, final String phoneNumber, final CommunicationChannelType communicationChannelType) {
         final List<CommunicationChannelOwnerLink> links =
-                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, communicationChannelType);
+                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, communicationChannelType);
         final Iterable<PhoneOrFaxNumber> phoneOrFaxNumbers =
                 Iterables.transform(
                         links,
@@ -65,5 +65,5 @@ public class PhoneOrFaxNumbers extends UdoDomainRepositoryAndFactory<PhoneOrFaxN
     }
 
     @Inject
-    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
+    CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 }

@@ -33,7 +33,7 @@ import org.apache.isis.applib.services.bookmark.BookmarkService;
         nature = NatureOfService.DOMAIN,
         repositoryFor = CommunicationChannelOwnerLink.class
 )
-public class CommunicationChannelOwnerLinks {
+public class CommunicationChannelOwnerLinkRepository {
 
     //region > init
     PolymorphicAssociationLink.Factory<CommunicationChannel,CommunicationChannelOwner,CommunicationChannelOwnerLink,CommunicationChannelOwnerLink.InstantiateEvent> linkFactory;

@@ -35,12 +35,11 @@ import org.estatio.dom.geography.Country;
 /**
  * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.
  */
-@DomainService(menuOrder = "70", repositoryFor = PostalAddress.class, nature = NatureOfService.DOMAIN)
-public class PostalAddresses 
-        extends UdoDomainRepositoryAndFactory<PostalAddress> {
+@DomainService(repositoryFor = PostalAddress.class, nature = NatureOfService.DOMAIN)
+public class PostalAddressRepository extends UdoDomainRepositoryAndFactory<PostalAddress> {
 
-    public PostalAddresses() {
-        super(PostalAddresses.class, PostalAddress.class);
+    public PostalAddressRepository() {
+        super(PostalAddressRepository.class, PostalAddress.class);
     }
 
     // //////////////////////////////////////
@@ -54,7 +53,7 @@ public class PostalAddresses
             final Country country) {
 
         final List<CommunicationChannelOwnerLink> links =
-                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.POSTAL_ADDRESS);
+                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.POSTAL_ADDRESS);
         final Iterable<PostalAddress> postalAddresses =
                 Iterables.transform(
                         links,
@@ -65,6 +64,6 @@ public class PostalAddresses
     }
 
     @Inject
-    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
+    CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
 }

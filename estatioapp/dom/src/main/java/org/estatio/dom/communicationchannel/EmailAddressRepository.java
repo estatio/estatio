@@ -31,11 +31,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "70", repositoryFor = EmailAddress.class, nature = NatureOfService.DOMAIN)
-public class EmailAddresses extends UdoDomainRepositoryAndFactory<EmailAddress> {
+@DomainService(repositoryFor = EmailAddress.class, nature = NatureOfService.DOMAIN)
+public class EmailAddressRepository extends UdoDomainRepositoryAndFactory<EmailAddress> {
 
-    public EmailAddresses() {
-        super(EmailAddresses.class, EmailAddress.class);
+    public EmailAddressRepository() {
+        super(EmailAddressRepository.class, EmailAddress.class);
     }
 
     // //////////////////////////////////////
@@ -46,7 +46,7 @@ public class EmailAddresses extends UdoDomainRepositoryAndFactory<EmailAddress> 
             final String emailAddress) {
 
         final List<CommunicationChannelOwnerLink> links =
-                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.EMAIL_ADDRESS);
+                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.EMAIL_ADDRESS);
         final Iterable<EmailAddress> emailAddresses =
                 Iterables.transform(
                         links,
@@ -57,6 +57,6 @@ public class EmailAddresses extends UdoDomainRepositoryAndFactory<EmailAddress> 
     }
 
     @Inject
-    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
+    CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
 }

@@ -18,27 +18,26 @@
  */
 package org.estatio.integtests.communicationchannel;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import java.util.Iterator;
+import java.util.SortedSet;
 import javax.inject.Inject;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
+import org.estatio.dom.communicationchannel.EmailAddress;
+import org.estatio.dom.communicationchannel.EmailAddressRepository;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class CommunicationChannelsTest extends EstatioIntegrationTest {
+public class EmailAddressRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -52,6 +51,9 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
     }
 
     @Inject
+    EmailAddressRepository emailAddressRepository;
+
+    @Inject
     CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
@@ -59,30 +61,34 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
 
     Party party;
 
+    CommunicationChannel communicationChannel;
+
+    EmailAddress emailAddress;
+
     @Before
     public void setUp() throws Exception {
         party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
-    }
-
-    public static class FindByOwner extends CommunicationChannelsTest {
-        @Test
-        public void happyCase() throws Exception {
-            Assert.assertThat(communicationChannelRepository.findByOwner(party).size(), is(5));
+        SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwner(party);
+        Iterator<CommunicationChannel> it = results.iterator();
+        while (it.hasNext()) {
+            CommunicationChannel next = it.next();
+            if (next.getType() == CommunicationChannelType.EMAIL_ADDRESS) {
+                emailAddress = (EmailAddress) next;
+            }
         }
+
+        assertThat(emailAddress.getEmailAddress(), is("info@topmodel.example.com"));
     }
 
-    public static class FindByOwnerAndType extends CommunicationChannelsTest {
-        @Test
-        public void happyCase() throws Exception {
-            Assert.assertThat(communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).size(), is(2));
-        }
-    }
+    public static class FindByEmailAddress extends EmailAddressRepositoryTest {
 
-    public static class FindOtherByOwnerAndType extends CommunicationChannelsTest {
         @Test
         public void happyCase() throws Exception {
-            CommunicationChannel exclude = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
-            Assert.assertThat(communicationChannelRepository.findOtherByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS, exclude).size(), is(1));
+            // when
+            EmailAddress email = emailAddressRepository.findByEmailAddress(party, emailAddress.getEmailAddress());
+
+            // then
+            assertThat(email, is(emailAddress));
         }
     }
 }
