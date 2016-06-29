@@ -33,10 +33,17 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationPreviousName;
+import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.geography.CountriesRefData;
+import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -49,6 +56,15 @@ public class OrganisationTest extends EstatioIntegrationTest {
 
     @Inject
     Parties parties;
+
+    @Inject
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
+    @Inject
+    CountryRepository countryRepository;
+
+    @Inject
+    Organisations organisations;
 
     Organisation organisation;
 
@@ -113,5 +129,55 @@ public class OrganisationTest extends EstatioIntegrationTest {
             Assertions.assertThat(organisation.getChamberOfCommerceCode()).isEqualTo(cocCode);
             Assertions.assertThat(organisation.default2Change()).isEqualTo(cocCode);
         }
+    }
+
+    public static class NewOrganisationUsingNumerator extends OrganisationTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override protected void execute(final ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new NumeratorForOrganisationFra());
+                }
+            });
+
+        }
+
+        Organisation organisation1;
+        Organisation organisation2;
+
+        @Test
+        public void newOrganisationUsingNumerator() throws Exception {
+
+            // given
+            ApplicationTenancy applicationTenancyForFra = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(CountriesRefData.FRA));
+
+            // when
+            organisation1 = wrap(organisations).newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);
+            organisation2 = wrap(organisations).newOrganisation(null, true, "SOME_OTHER_NAME", applicationTenancyForFra);
+
+            // then
+            Assertions.assertThat(organisation1.getReference()).isEqualTo("FRCL0001");
+            Assertions.assertThat(organisation2.getReference()).isEqualTo("FRCL0002");
+
+        }
+
+        @Test
+        public void noNumeratorFound() throws Exception {
+
+            // given
+            ApplicationTenancy applicationTenancyForGbr = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(CountriesRefData.GBR));
+
+            // then
+            exception.expect(InvalidException.class);
+            exception.expectMessage("No numerator found");
+
+            // when
+            wrap(organisations).newOrganisation(null, true, "SOME_NAME", applicationTenancyForGbr);
+
+        }
+
+
     }
 }

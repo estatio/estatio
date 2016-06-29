@@ -48,6 +48,7 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.fixture.project.ProgramForGra;
@@ -96,6 +97,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new BudgetItemAllocationsForOxf());
         executionContext.executeChild(this, new PropertyForCARTEST());
+        executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
         fixtureClock.reset();

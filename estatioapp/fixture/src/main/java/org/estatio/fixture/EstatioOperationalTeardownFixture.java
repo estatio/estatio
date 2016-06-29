@@ -156,6 +156,8 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(Organisation.class);
         deleteFrom(Person.class);
         deleteFrom(Party.class);
+
+        deleteFrom(Numerator.class);
     }
 
     protected void deleteFrom(final Class cls) {
