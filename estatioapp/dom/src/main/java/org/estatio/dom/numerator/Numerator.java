@@ -115,8 +115,9 @@ public class Numerator
     }
 
     // helper to set appTenancyPath to parent when containing wildcard '%'
+    @Programmatic
     String adaptedAppPathIfNeeded(){
-        if (getApplicationTenancyPath().contains("/%/")) {
+        if (getApplicationTenancyPath() != null && getApplicationTenancyPath().contains("/%/")) {
             return getApplicationTenancyPath().split("/%/")[0];
         }
         return getApplicationTenancyPath();
