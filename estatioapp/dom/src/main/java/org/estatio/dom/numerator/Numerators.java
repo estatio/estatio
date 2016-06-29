@@ -72,7 +72,8 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
         return result == null ? findFirstNumeratorForObjectTypeMatchingAppTenancyPath(numeratorName, scopedTo, applicationTenancy) : result;
     }
 
-    private Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
+    @Programmatic
+    public Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
         if(scopedToIfAny == null) {
             return firstMatch("findByNameAndApplicationTenancyPath",
                     "name", numeratorName,
