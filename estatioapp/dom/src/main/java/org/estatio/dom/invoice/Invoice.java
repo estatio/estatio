@@ -518,7 +518,7 @@ public class Invoice
 
     public String validateInvoice(final LocalDate invoiceDate) {
         return !validInvoiceDate(invoiceDate)
-                ? String.format("Invoice date %s is invalid for %s because it's before the invoice date of the last invoice", invoiceDate.toString(), getContainer().titleOf(this))
+                ? String.format("Invoice date %s is invalid for %s because it's before the invoice date of the last invoice or after the due date", invoiceDate.toString(), getContainer().titleOf(this))
                 : null;
 
     }
