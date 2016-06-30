@@ -40,6 +40,11 @@ ALTER TABLE LeaseTerm
 DROP COLUMN excludedAmount, depositValue, depositType
 GO
 
+--EST-736
+ALTER TABLE BankAccount
+DROP COLUMN bankAccountType
+GO
+
 --EST-667
 IF NOT EXISTS (SELECT *
   FROM [INFORMATION_SCHEMA].[COLUMNS]
