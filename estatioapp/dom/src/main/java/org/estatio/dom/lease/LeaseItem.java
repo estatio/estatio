@@ -185,6 +185,7 @@ public class LeaseItem
 
     @PropertyLayout(
             named = "Application Level",
+            hidden = Where.PARENTED_TABLES,
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
