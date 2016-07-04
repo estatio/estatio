@@ -13,6 +13,7 @@ import org.estatio.canonical.DtoFactoryAbstract;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.DtoMappingHelper;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
@@ -33,6 +34,10 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
         dto.setChargeDescription(charge.getDescription());
         dto.setChargeExternalReference(charge.getExternalReference());
         dto.setChargeName(charge.getName());
+
+        final ChargeGroup group = charge.getGroup();
+        dto.setChargeGroupReference(group.getReference());
+        dto.setChargeGroupName(group.getName());
 
         final Tax tax = item.getTax();
         dto.setTaxReference(tax.getReference());
