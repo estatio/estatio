@@ -279,7 +279,7 @@ public class Lease
         return getLeaseType();
     }
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = JdoColumnLength.NOTES)
     @PropertyLayout(multiLine = 5)
     @Getter @Setter
     private String comments;
