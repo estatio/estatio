@@ -280,7 +280,7 @@ public class Lease
     }
 
     @Column(allowsNull = "true", length = JdoColumnLength.NOTES)
-    @PropertyLayout(multiLine = 5)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
     @Getter @Setter
     private String comments;
 
