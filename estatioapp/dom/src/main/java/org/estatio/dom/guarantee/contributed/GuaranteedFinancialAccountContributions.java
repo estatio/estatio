@@ -48,7 +48,7 @@ public class GuaranteedFinancialAccountContributions {
             final FinancialAccount financialAccount // contributee
     ) {
         // don't show if there is no guarantee pointing back to financialAccount
-        return guarantees.findFor(financialAccount) == null;
+        return guarantees.findbyFinancialAccount(financialAccount) == null;
     }
 
     @Inject

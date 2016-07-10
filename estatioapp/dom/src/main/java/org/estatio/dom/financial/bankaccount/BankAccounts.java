@@ -65,13 +65,13 @@ public class BankAccounts extends UdoDomainRepositoryAndFactory<BankAccount> {
             @Parameter(optionality = Optionality.OPTIONAL)
             final String bic) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
+        bankAccount.setOwner(owner);
         bankAccount.setReference(iban);
         bankAccount.setName(iban);
         bankAccount.setIban(iban);
         bankAccount.setBic(bic);
         bankAccount.refresh();
         persistIfNotAlready(bankAccount);
-        bankAccount.setOwner(owner);
         return bankAccount;
     }
 
@@ -93,8 +93,8 @@ public class BankAccounts extends UdoDomainRepositoryAndFactory<BankAccount> {
     }
 
     @Programmatic
-    public BankAccount findBankAccountByReference(final String reference) {
-        return (BankAccount) financialAccounts.findAccountByReference(reference);
+    public BankAccount findBankAccountByReference(final Party owner, final String reference) {
+        return (BankAccount) financialAccounts.findByOwnerAndReference(owner, reference);
     }
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)

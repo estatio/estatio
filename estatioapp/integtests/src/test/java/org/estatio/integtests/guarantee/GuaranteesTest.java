@@ -18,7 +18,17 @@
  */
 package org.estatio.integtests.guarantee;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -29,21 +39,18 @@ import org.estatio.dom.guarantee.contributed.OnLease;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
 
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class GuaranteesTest extends EstatioIntegrationTest {
@@ -72,6 +79,9 @@ public class GuaranteesTest extends EstatioIntegrationTest {
 
     @Inject
     OnLease onLease;
+
+    @Inject
+    Parties parties;
 
     @Inject
     FinancialAccounts financialAccounts;
@@ -242,15 +252,16 @@ public class GuaranteesTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindFor extends GuaranteesTest {
+    public static class FindByFinancialAccount extends GuaranteesTest {
 
         @Test
-        public void findFor() throws Exception {
+        public void happy_case() throws Exception {
             // given
-            FinancialAccount account = financialAccounts.findAccountByReference(LeaseForOxfTopModel001Gb.REF + "-D");
+            Party owner = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+            FinancialAccount account = financialAccounts.findByOwnerAndReference(owner, LeaseForOxfTopModel001Gb.REF + "-D");
 
             // when
-            Guarantee guarantee = guarantees.findFor(account);
+            Guarantee guarantee = guarantees.findbyFinancialAccount(account);
 
             // then
             assertThat(guarantee.getReference(), is(LeaseForOxfTopModel001Gb.REF + "-D"));

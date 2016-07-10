@@ -55,9 +55,6 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
         return bankAccount;
     }
 
-
-    // //////////////////////////////////////
-
     @Inject
     private BankAccounts bankAccounts;
 
