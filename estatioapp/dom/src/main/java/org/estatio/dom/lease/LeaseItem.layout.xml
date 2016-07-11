@@ -14,87 +14,61 @@
         </col>
     </row>
     <row>
-        <col span="12">
-            <tabGroup>
-                <tab name="lease item">
-                    <row>
-                        <col span="3">
-                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                                <ns2:property id="lease"/>
-                                <ns2:property id="sequence"/>
-                                <ns2:property id="type"/>
-                                <ns2:property id="status">
-                                    <ns2:action id="resume" position="BELOW"/>
-                                    <ns2:action id="suspend" position="BELOW"/>
-                                    <ns2:action id="terminate" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="applicationTenancyPath"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="3">
-                            <ns2:fieldSet name="Invoicing" id="invoicing">
-                                <ns2:property id="invoicingFrequency">
-                                    <ns2:action id="changeInvoicingFrequency" position="BELOW" />
-                                </ns2:property>
-                                <ns2:property id="paymentMethod">
-                                    <ns2:action id="changePaymentMethod" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="charge">
-                                    <ns2:action id="changeCharge" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="tax">
-                                    <ns2:action id="overrideTax" position="BELOW"/>
-                                    <ns2:action id="cancelOverrideTax" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="3">
-                            <ns2:fieldSet name="Dates" id="dates">
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate">
-                                    <ns2:action id="changeDates" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="nextDueDate"/>
-                                <ns2:property id="epochDate"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="3">
-                            <ns2:fieldSet name="Current Value" id="currentValue">
-                                <ns2:property id="value"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Application level">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
+        <col span="3">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="lease"/>
+                <ns2:property id="sequence"/>
+                <ns2:property id="type"/>
+                <ns2:property id="status">
+                    <ns2:action id="resume" position="BELOW"/>
+                    <ns2:action id="suspend" position="BELOW"/>
+                    <ns2:action id="terminate" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="applicationTenancyPath"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Invoicing" id="invoicing">
+                <ns2:property id="invoicingFrequency">
+                    <ns2:action id="changeInvoicingFrequency" position="BELOW" />
+                </ns2:property>
+                <ns2:property id="paymentMethod">
+                    <ns2:action id="changePaymentMethod" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="charge">
+                    <ns2:action id="changeCharge" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="tax">
+                    <ns2:action id="overrideTax" position="BELOW"/>
+                    <ns2:action id="cancelOverrideTax" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
         </col>
-    </row>
-    <row>
-        <col span="12" unreferencedCollections="true">
+        <col span="3">
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="startDate"/>
+                <ns2:property id="endDate">
+                    <ns2:action id="changeDates" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="nextDueDate"/>
+                <ns2:property id="epochDate"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Current Value" id="currentValue">
+                <ns2:property id="value"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="6" unreferencedCollections="true">
             <ns2:collection id="terms">
                 <ns2:action id="newTerm"/>
             </ns2:collection>

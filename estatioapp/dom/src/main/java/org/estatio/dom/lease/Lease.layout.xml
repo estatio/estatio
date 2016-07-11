@@ -15,157 +15,84 @@
         </col>
     </row>
     <row>
-        <col span="12">
-            <tabGroup>
-                <tab name="Lease">
-                    <row>
-                        <col span="4">
-                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                                <ns2:property id="type"/>
-                                <ns2:property id="reference"/>
-                                <ns2:property id="name"/>
-                                <ns2:property id="leaseType">
-                                    <ns2:action id="change" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="property"/>
-                                <ns2:property id="paidBy">
-                                    <ns2:action id="newMandate" position="BELOW"/>
-                                    <ns2:action id="paidBy" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="applicationTenancyPath"/>
-                                <ns2:property id="secondaryParty"/>
-                                <ns2:property id="primaryParty"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"/>
-                        </col>
-                        <col span="4">
-                            <ns2:fieldSet name="Dates" id="dates">
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate">
-                                    <ns2:action id="changeDates" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="tenancyStartDate"/>
-                                <ns2:property id="tenancyEndDate"/>
-                                <ns2:property id="tenancyDuration">
-                                    <ns2:action id="changeTenancyDates" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="4">
-                            <ns2:fieldSet name="StatusInfo" id="statusInfo">
-                                <ns2:property id="status">
-                                    <ns2:action id="renew" position="BELOW"/>
-                                    <ns2:action id="terminate" position="BELOW"/>
-                                    <ns2:action id="assign" position="BELOW"/>
-                                    <ns2:action id="suspendAll" position="BELOW"/>
-                                    <ns2:action id="resumeAll" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Related">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Related" id="related">
-                                <ns2:property id="previous"/>
-                                <ns2:property id="next">
-                                    <ns2:action id="changePrevious" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Comments">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Comments" id="comments">
-                                <ns2:property id="comments">
-                                    <ns2:action id="changeComments" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Application level">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="applicationTenancy" id="applicationTenancy">
-                                <ns2:property id="applicationTenancy"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
+        <col span="4">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="type"/>
+                <ns2:property id="reference"/>
+                <ns2:property id="name"/>
+                <ns2:property id="leaseType">
+                    <ns2:action id="change" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="property"/>
+                <ns2:property id="paidBy">
+                    <ns2:action id="newMandate" position="BELOW"/>
+                    <ns2:action id="paidBy" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="applicationTenancyPath"/>
+                <ns2:property id="secondaryParty"/>
+                <ns2:property id="primaryParty"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="StatusInfo" id="statusInfo">
+                <ns2:property id="status">
+                    <ns2:action id="renew" position="BELOW"/>
+                    <ns2:action id="terminate" position="BELOW"/>
+                    <ns2:action id="assign" position="BELOW"/>
+                    <ns2:action id="suspendAll" position="BELOW"/>
+                    <ns2:action id="resumeAll" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="comments" id="comments">
+                <ns2:property id="comments"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="applicationTenancy" id="applicationTenancy">
+                <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Related" id="related">
+                <ns2:property id="previous"/>
+                <ns2:property id="next">
+                    <ns2:action id="changePrevious" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="id"/>
+                <ns2:property id="versionSequence"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
         </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup>
-                <tab name="Items">
-                    <row>
-                        <col span="12" unreferencedCollections="true">
-                            <ns2:collection id="items" defaultView="table">
-                                <ns2:action id="newItem"/>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Occupancies">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="occupancies" defaultView="table">
-                                <ns2:action id="newOccupancy"/>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="roles">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="roles" defaultView="table">
-                                <ns2:action id="newRole"/>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="breakoptions and guarantees">
-                    <row>
-                        <col span="6">
-                            <ns2:collection id="breakOptions" defaultView="table">
-                                <ns2:action id="newBreakOption"/>
-                            </ns2:collection>
-                        </col>
-                        <col span="6">
-                            <ns2:collection id="guarantees" defaultView="table">
-                                <ns2:action id="newGuarantee"/>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="invoices">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="invoices" defaultView="table"/>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
+        <col span="2">
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="startDate"/>
+                <ns2:property id="endDate">
+                    <ns2:action id="changeDates" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="tenancyStartDate"/>
+                <ns2:property id="tenancyEndDate"/>
+                <ns2:property id="tenancyDuration">
+                    <ns2:action id="changeTenancyDates" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+        </col>
+        <col span="6" unreferencedCollections="true">
+            <ns2:collection id="items">
+                <ns2:action id="newItem"/>
+            </ns2:collection>
+            <ns2:collection id="roles">
+                <ns2:action id="newRole"/>
+            </ns2:collection>
+            <ns2:collection id="occupancies">
+                <ns2:action id="newOccupancy"/>
+            </ns2:collection>
+            <ns2:collection id="breakOptions">
+                <ns2:action id="newBreakOption"/>
+            </ns2:collection>
+            <ns2:collection id="invoices"/>
+            <ns2:collection id="guarantees">
+                <ns2:action id="newGuarantee"/>
+            </ns2:collection>
         </col>
     </row>
 </grid>
