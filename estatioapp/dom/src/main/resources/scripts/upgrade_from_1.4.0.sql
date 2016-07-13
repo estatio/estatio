@@ -76,7 +76,10 @@ IF EXISTS (SELECT *
   GO
 
 
- ALTER TABLE [dbo].LeaseTerm ALTER COLUMN  indexationPercentage [decimal](19,3)
+ALTER TABLE [dbo].LeaseTerm ALTER COLUMN  indexationPercentage [decimal](19,3)
+
+ALTER TABLE [dbo].[FinancialAccount] DROP CONSTRAINT [FinancialAccount_reference_UNQ]
+
 
  
 /*
