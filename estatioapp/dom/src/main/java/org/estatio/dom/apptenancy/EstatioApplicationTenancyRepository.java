@@ -61,6 +61,22 @@ public class EstatioApplicationTenancyRepository {
                 allTenancies(), Predicates.isGlobalOrCountryTenancyFor(tenancy)));
     }
 
+    public ApplicationTenancy findCountryTenancyFor(final ApplicationTenancy applicationTenancy){
+        ApplicationTenancy result = applicationTenancy;
+        while (
+                !
+                        (
+                                ApplicationTenancyLevel.of(result).isCountry()
+                                        || ApplicationTenancyLevel.of(result).isCountryOther()
+                                        || ApplicationTenancyLevel.of(result).isRoot()
+                                        || ApplicationTenancyLevel.of(result).isRootOther()
+                        )
+                ) {
+            result = result.getParent();
+        }
+        return result;
+    }
+
     // //////////////////////////////////////
 
     public List<ApplicationTenancy> countryTenanciesForCurrentUser() {

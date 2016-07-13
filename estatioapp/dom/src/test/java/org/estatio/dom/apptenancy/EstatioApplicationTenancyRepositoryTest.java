@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -323,6 +324,40 @@ public class EstatioApplicationTenancyRepositoryTest {
         final Party pa = partyWith("HELLO");
         //then
         assertThat(estatioApplicationTenancyRepository.pathFor(p,pa)).isEqualTo("/ITA/GRA/HELLO");
+    }
+
+    ApplicationTenancy applicationTenancyCountry;
+
+    @Test
+    public void testFindCountryTenancyFor() {
+
+        // given
+        ApplicationTenancy atGlobalLevel = new ApplicationTenancy();
+        atGlobalLevel.setPath("/");
+        ApplicationTenancy atGlobalLevel_ = new ApplicationTenancy();
+        atGlobalLevel_.setPath("/_");
+
+        ApplicationTenancy atCountryLevel = new ApplicationTenancy();
+        atCountryLevel.setPath("/ABC");
+        ApplicationTenancy atCountryLevel_ = new ApplicationTenancy();
+        atCountryLevel_.setPath("/ABC/_");
+
+        ApplicationTenancy atPropertyLevel = new ApplicationTenancy();
+        atPropertyLevel.setPath("/ABC/DEF");
+        atPropertyLevel.setParent(atCountryLevel);
+
+        ApplicationTenancy atLandLordLevel = new ApplicationTenancy();
+        atLandLordLevel.setPath("/ABC/DEF/GHI");
+        atLandLordLevel.setParent(atPropertyLevel);
+
+        // when, then
+        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel).getPath()).isEqualTo("/");
+        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel_).getPath()).isEqualTo("/_");
+        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel).getPath()).isEqualTo("/ABC");
+        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel_).getPath()).isEqualTo("/ABC/_");
+        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atPropertyLevel).getPath()).isEqualTo("/ABC");
+        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atLandLordLevel).getPath()).isEqualTo("/ABC");
+
     }
 
     private Party partyWith(final String hello) {

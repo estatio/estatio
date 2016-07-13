@@ -22,8 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -32,7 +30,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -62,16 +59,9 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
             final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
             final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
             final @Parameter(optionality = Optionality.OPTIONAL) String group,
-            final ApplicationTenancy applicationTenancy) {
-        Brand brand;
-        brand = newTransientInstance(Brand.class);
-        brand.setName(name);
-        brand.setCoverage(coverage);
-        brand.setCountryOfOrigin(countryOfOrigin);
-        brand.setGroup(group);
-        brand.setApplicationTenancyPath(applicationTenancy.getPath());
-        persist(brand);
-        return brand;
+            final ApplicationTenancy applicationTenancy
+    ){
+        return brandRepository.newBrand(name, coverage, countryOfOrigin, group, applicationTenancy);
     }
 
     public List<String> choices3NewBrand() {
@@ -86,19 +76,23 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
         return Dflt.of(choices4NewBrand());
     }
 
+    public String validateNewBrand(final String name,
+            final BrandCoverage coverage,
+            final Country countryOfOrigin,
+            final String group,
+            final ApplicationTenancy applicationTenancy){
+        if (brandRepository.findByNameLowerCaseAndAppTenancy(name, applicationTenancy).size()>0){
+            return String.format("Brand with name %s exists already for %s", name, applicationTenancy.getName());
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Brand> allBrands() {
         return allInstances();
-    }
-
-    @Action(hidden = Where.EVERYWHERE)
-    public List<Brand> autoComplete(final String searchPhrase) {
-        return searchPhrase.length() > 0
-                ? brandRepository.matchByName("*" + searchPhrase + "*")
-                : Lists.<Brand>newArrayList();
     }
 
     @Inject

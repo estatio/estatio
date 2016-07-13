@@ -26,43 +26,22 @@ import org.junit.Test;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BrandMenuTest {
+public class BrandRepositoryTest {
 
     FinderInteraction finderInteraction;
-
-    BrandMenu brandMenu;
 
     BrandRepository brandRepository;
 
     @Before
     public void setup() {
-
-        brandMenu = new BrandMenu() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<Brand> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
 
         brandRepository = new BrandRepository() {
             @Override
@@ -82,12 +61,44 @@ public class BrandMenuTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
+
+            @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
+                return null;
+            }
         };
 
-        brandMenu.brandRepository = brandRepository;
     }
 
-    public static class MatchByName extends BrandMenuTest {
+    public static class FindUnique extends BrandRepositoryTest {
+
+        String name;
+        String atPath;
+        ApplicationTenancy applicationTenancy;
+
+        @Before
+        public void setUp() {
+            name= "SOME_NAME";
+            atPath = "/SOME/PATH";
+            applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath(atPath);
+        }
+
+
+        @Test
+        public void findUnique() {
+            brandRepository.findUnique(name, applicationTenancy);
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
+            assertThat(finderInteraction.getQueryName(), is("findByNameAndAtPath"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is(name));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("atPath"), is(atPath));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+        }
+    }
+
+    public static class MatchByName extends BrandRepositoryTest {
         @Test
         public void byReferenceWildcard() {
             brandRepository.matchByName("*REF?1*");
@@ -99,11 +110,37 @@ public class BrandMenuTest {
         }
     }
 
-    public static class AutoComplete extends BrandMenuTest {
+    public static class FindByNameLowerCaseAndAppTenancy extends BrandRepositoryTest {
+
+        String name;
+        String atPath;
+        ApplicationTenancy applicationTenancy;
+
+        @Before
+        public void setUp() {
+            name= "SOME_NAME";
+            atPath = "/SOME/PATH";
+            applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath(atPath);
+        }
+
+        @Test
+        public void findByNameLowerCaseAndAppTenancy() {
+            brandRepository.findByNameLowerCaseAndAppTenancy(name, applicationTenancy);
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
+            assertThat(finderInteraction.getQueryName(), is("findByNameLowerCaseAndAppTenancy"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is(name.toLowerCase()));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("atPath"), is(atPath));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+        }
+    }
+
+    public static class AutoComplete extends BrandRepositoryTest {
 
         @Test
         public void byReference() {
-            brandMenu.autoComplete("REF1");
+            brandRepository.autoComplete("REF1");
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
             assertThat(finderInteraction.getQueryName(), is("matchByName"));
