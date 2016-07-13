@@ -17,6 +17,7 @@ import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.tax.Tax;
 
@@ -28,6 +29,13 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
     @Programmatic
     public InvoiceItemDto newDto(final InvoiceItem item) {
         InvoiceItemDto dto = new InvoiceItemDto();
+
+        if (item  instanceof InvoiceItemForLease) {
+            InvoiceItemForLease invoiceItemForLease = (InvoiceItemForLease) item;
+            if (invoiceItemForLease.getLease() !=null) {
+                dto.setAgreementReference(invoiceItemForLease.getLease().getReference());
+            }
+        }
 
         final Charge charge = item.getCharge();
         dto.setChargeReference(charge.getReference());
