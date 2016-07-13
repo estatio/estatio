@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
@@ -69,7 +70,7 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
     public List<ApplicationTenancy> choices4NewBrand() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
+        return estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalForCurrentUser();
     }
 
     public ApplicationTenancy default4NewBrand() {
@@ -103,5 +104,8 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+
+    @Inject
+    private MeService meService;
 
 }

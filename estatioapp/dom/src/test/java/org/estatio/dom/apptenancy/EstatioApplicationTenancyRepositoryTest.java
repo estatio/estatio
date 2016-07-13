@@ -194,6 +194,24 @@ public class EstatioApplicationTenancyRepositoryTest {
     }
 
     @Test
+    public void testAllCountryTenanciesIncludeGlobalIfUserIsGlobalFor() throws Exception {
+        List<ApplicationTenancy> applicationTenancies;
+
+        // when
+        applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(france);
+
+        // then
+        assertThat(applicationTenancies).containsExactly(france);
+
+        // when
+        applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(global);
+
+        // then
+        assertThat(applicationTenancies).containsExactly(global, france, italy);
+
+    }
+
+    @Test
     public void testAllPropertyTenanciesFor() throws Exception {
         List<ApplicationTenancy> applicationTenancies;
 

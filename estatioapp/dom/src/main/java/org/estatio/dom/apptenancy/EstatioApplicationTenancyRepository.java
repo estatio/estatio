@@ -61,6 +61,10 @@ public class EstatioApplicationTenancyRepository {
                 allTenancies(), Predicates.isGlobalOrCountryTenancyFor(tenancy)));
     }
 
+    public List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(final ApplicationTenancy tenancy) {
+        return tenancy.getName() == "Global" ? globalOrCountryTenanciesFor(tenancy) : countryTenanciesFor(tenancy);
+    }
+
     public ApplicationTenancy findCountryTenancyFor(final ApplicationTenancy applicationTenancy){
         ApplicationTenancy result = applicationTenancy;
         while (
@@ -87,6 +91,11 @@ public class EstatioApplicationTenancyRepository {
     public List<ApplicationTenancy> globalOrCountryTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
         return globalOrCountryTenanciesFor(currentUser.getTenancy());
+    }
+
+    public List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalForCurrentUser() {
+        final ApplicationUser currentUser = meService.me();
+        return countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(currentUser.getTenancy());
     }
 
     public List<ApplicationTenancy> propertyTenanciesUnder(final ApplicationTenancy tenancy) {
