@@ -57,7 +57,7 @@ public class FinancialAccountTransactions extends UdoDomainRepositoryAndFactory<
             final LocalDate transactionDate,
             final String description,
             final BigDecimal amount
-    ) §{
+    ) {
 
         final FinancialAccountTransaction transaction = newTransientInstance(FinancialAccountTransaction.class);
         transaction.setFinancialAccount(financialAccount);
