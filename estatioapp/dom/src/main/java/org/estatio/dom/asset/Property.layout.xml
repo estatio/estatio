@@ -38,6 +38,9 @@
                                 <ns2:property id="type"/>
                                 <ns2:property id="area"/>
                             </ns2:fieldSet>
+                            <ns2:fieldSet name="Ownership" id="ownership">
+                                <ns2:property id="fullOwnership"/>
+                            </ns2:fieldSet>
                         </col>
                         <col span="6">
                             <ns2:fieldSet name="Location" id="location">
@@ -149,6 +152,14 @@
                         <col span="12">
                             <ns2:collection id="registrations" defaultView="table"/>
                             <ns2:collection id="findServiceChargeDatesByProperty" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Owners">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="owners" defaultView="table"/>
+                            <ns2:action id="addOwner" position="RIGHT"/>
                         </col>
                     </row>
                 </tab>

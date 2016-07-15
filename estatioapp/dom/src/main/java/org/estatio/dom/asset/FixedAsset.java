@@ -21,6 +21,7 @@ package org.estatio.dom.asset;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -32,6 +33,7 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -44,12 +46,15 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.asset.ownership.FixedAssetOwnership;
+import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
@@ -106,7 +111,6 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
                 .toString();
     }
 
-
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
@@ -145,7 +149,6 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
@@ -159,6 +162,48 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     public String default0ChangeExternalReference(final String externalReference) {
         return getExternalReference();
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent(mappedBy = "fixedAsset")
+    @CollectionLayout(defaultView = "table")
+    @Getter @Setter
+    private SortedSet<FixedAssetOwnership> owners = new TreeSet<>();
+
+    public FixedAsset addOwner(final Party newOwner, final OwnershipType type) {
+        FixedAssetOwnership fixedAssetOwnership = fixedAssetOwnershipRepository.newOwnership(newOwner, type, this);
+        getOwners().add(fixedAssetOwnership);
+        return this;
+    }
+
+    public List<Party> choices0AddOwner() {
+        List<FixedAssetRole> roles = fixedAssetRoleRepository.findByAssetAndType(this, FixedAssetRoleType.PROPERTY_OWNER);
+        return roles.stream().map(FixedAssetRole::getParty).collect(Collectors.toList());
+    }
+
+    public String validateAddOwner(final Party newOwner, final OwnershipType type) {
+        if (getOwners().stream().filter(owner -> owner.getOwner().equals(newOwner)).toArray().length > 0) {
+            return "This owner already has its share defined";
+        } else if (type.equals(OwnershipType.FULL) && getOwners().size() != 0 && (getOwners().stream().filter(owner -> owner.getOwnershipType().equals(OwnershipType.FULL)).toArray().length == 0)) {
+            return "This owner can not be a full owner as there is already a shared owner defined";
+        } else {
+            return null;
+        }
+    }
+
+    public String disableAddOwner(final Party newOwner, final OwnershipType type) {
+        if (getOwners().stream().filter(owner -> owner.getOwnershipType().equals(OwnershipType.FULL)).toArray().length > 0) {
+            return "This property is fully owned. To add another owner, first change the ownership type of the current owner to 'shared'";
+        } else {
+            return null;
+        }
+    }
+
+    @Action(hidden = Where.ALL_TABLES)
+    public boolean getFullOwnership() {
+        final SortedSet<FixedAssetOwnership> owners = getOwners();
+        return (owners.size() == 1 && owners.first().getOwnershipType().equals(OwnershipType.FULL));
     }
 
     // //////////////////////////////////////
@@ -221,4 +266,6 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
         return role;
     }
 
+    @Inject
+    FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
 }

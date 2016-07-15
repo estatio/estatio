@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -36,7 +37,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@DomainService(repositoryFor = FinancialAccountTransaction.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class FinancialAccountTransactions extends UdoDomainRepositoryAndFactory<FinancialAccountTransaction> {
 
     public FinancialAccountTransactions() {
@@ -56,7 +57,7 @@ public class FinancialAccountTransactions extends UdoDomainRepositoryAndFactory<
             final LocalDate transactionDate,
             final String description,
             final BigDecimal amount
-            ) {
+    ) §{
 
         final FinancialAccountTransaction transaction = newTransientInstance(FinancialAccountTransaction.class);
         transaction.setFinancialAccount(financialAccount);
