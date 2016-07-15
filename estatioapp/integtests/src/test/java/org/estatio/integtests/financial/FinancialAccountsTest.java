@@ -76,7 +76,7 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
         @Test
         public void forAccount() {
             // when
-            FinancialAccount account = financialAccounts.findAccountByReference(BankAccountAndMandateForTopModelGb.REF);
+            FinancialAccount account = financialAccounts.findByOwnerAndReference(party, BankAccountAndMandateForTopModelGb.REF);
             // then
             assertThat(account, is(notNullValue()));
             Assert.assertThat(account instanceof BankAccount, is(true));

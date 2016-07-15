@@ -57,6 +57,10 @@ IF NOT EXISTS (SELECT *
   ALTER TABLE [dbo].[LeaseType] ALTER COLUMN  atPath [varchar](255) NOT NULL
   GO
 
+-- EST-752
+ALTER TABLE [dbo].[Brand] DROP CONSTRAINT [Brand_name_UNQ]
+GO
+
 
 GO
 IF EXISTS (SELECT *
@@ -72,7 +76,10 @@ IF EXISTS (SELECT *
   GO
 
 
- ALTER TABLE [dbo].LeaseTerm ALTER COLUMN  indexationPercentage [decimal](19,3)
+ALTER TABLE [dbo].LeaseTerm ALTER COLUMN  indexationPercentage [decimal](19,3)
+
+ALTER TABLE [dbo].[FinancialAccount] DROP CONSTRAINT [FinancialAccount_reference_UNQ]
+
 
  
 /*

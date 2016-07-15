@@ -26,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -46,6 +47,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -275,6 +277,24 @@ public class Lease
 
     public LeaseType default1Change() {
         return getLeaseType();
+    }
+
+    @Column(allowsNull = "true", length = JdoColumnLength.NOTES)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String comments;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Lease changeComments(
+            @ParameterLayout(multiLine = 5)
+            final String comments
+    ){
+        setComments(comments);
+        return this;
+    }
+
+    public String default0ChangeComments(){
+        return getComments();
     }
 
     // //////////////////////////////////////

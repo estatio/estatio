@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.invoice;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -44,10 +45,12 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.invoice.viewmodel.InvoiceImportLine;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.numerator.Numerator;
@@ -57,6 +60,8 @@ import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
@@ -509,6 +514,97 @@ public class InvoicesTest extends EstatioIntegrationTest {
             // then
             Assert.assertThat(invoice2, is(sameInstance(invoice)));
         }
+
+    }
+
+    public static class InvoiceForLeaseImportTest extends InvoicesTest {
+
+        @Before
+        public void setup(){
+
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+                }
+            });
+
+        }
+
+        String leaseReference;
+        LocalDate dueDate;
+        String paymentMethodStr;
+        String itemDescription;
+        String itemChargeReference;
+        BigDecimal netAmount;
+        LocalDate itemStartDate;
+        LocalDate itemEndDate;
+
+
+        @Test
+        public void importInvoiceLine() throws Exception {
+
+            // given
+            leaseReference = LeaseForOxfPoison003Gb.REF;
+            dueDate = new LocalDate(2016,07,01);
+            itemStartDate = new LocalDate(2015,01,01);
+            itemEndDate = new LocalDate(2015,12,31);
+            paymentMethodStr = "DIRECT_DEBIT";
+            itemChargeReference = ChargeRefData.IT_SERVICE_CHARGE;
+            itemDescription = "Some description";
+            netAmount = new BigDecimal("100.23");
+
+            InvoiceImportLine invoiceImportLine = new InvoiceImportLine(
+                    leaseReference,
+                    dueDate,
+                    paymentMethodStr,
+                    itemChargeReference,
+                    itemDescription,
+                    netAmount,
+                    itemStartDate,
+                    itemEndDate);
+
+            InvoiceImportLine invoiceImportLine2 = new InvoiceImportLine(
+                    leaseReference,
+                    dueDate,
+                    paymentMethodStr,
+                    itemChargeReference,
+                    null,
+                    netAmount,
+                    itemStartDate,
+                    itemEndDate);
+
+            // when
+            wrap(invoiceImportLine).importData();
+            wrap(invoiceImportLine2).importData();
+
+            // then
+
+            // two import lines create to invoices
+            Assertions.assertThat(invoiceRepository.findByStatus(InvoiceStatus.NEW).size()).isEqualTo(2);
+
+            // for first invoice
+            Invoice invoice = invoiceRepository.findByStatus(InvoiceStatus.NEW).get(0);
+            Assertions.assertThat(invoice.getDueDate()).isEqualTo(dueDate);
+            Assertions.assertThat(invoice.getNetAmount()).isEqualTo(netAmount);
+            Assertions.assertThat(invoice.getCurrency().getReference()).isEqualTo(CurrenciesRefData.EUR);
+
+            InvoiceItem item = invoice.getItems().first();
+            Assertions.assertThat(item.getDescription()).isEqualTo(itemDescription);
+            Assertions.assertThat(item.getStartDate()).isEqualTo(itemStartDate);
+            Assertions.assertThat(item.getEndDate()).isEqualTo(itemEndDate);
+            Assertions.assertThat(item.getCharge().getReference()).isEqualTo(itemChargeReference);
+            Assertions.assertThat(item.getQuantity()).isEqualTo(BigDecimal.ONE);
+
+            // second invoice item defaults to charge description
+            Invoice invoice2 = invoiceRepository.findByStatus(InvoiceStatus.NEW).get(1);
+            InvoiceItem item2 = invoice2.getItems().first();
+            Assertions.assertThat(item2.getDescription()).isEqualTo(item2.getCharge().getDescription());
+
+        }
+
 
     }
 

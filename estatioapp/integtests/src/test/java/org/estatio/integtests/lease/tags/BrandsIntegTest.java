@@ -22,14 +22,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandMenu;
 import org.estatio.dom.lease.tags.BrandRepository;
@@ -45,9 +48,6 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
 
     @Inject
     BrandRepository brandRepository;
-
-    @Inject
-    CountryRepository countryRepository;
 
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
@@ -100,6 +100,65 @@ public class BrandsIntegTest extends EstatioIntegrationTest {
             assertThat(uniqueGroups.get(0)).isEqualTo(BrandsFixture.YU_GROUP);
 
         }
+    }
+
+    public static class FindUniqueBrand extends BrandsIntegTest {
+
+        @Test
+        public void happyCase () throws Exception {
+            // given
+            // when
+            final Brand brand = brandRepository.findUnique(BrandsFixture.YU_S_NOODLE_JOINT,  applicationTenancyRepository.findByPath("/"));
+            // then
+            assertThat(brand.getName()).isEqualTo(BrandsFixture.YU_S_NOODLE_JOINT);
+            assertThat(brand.getApplicationTenancyPath()).isEqualTo("/");
+
+        }
+
+        @Test
+        public void sadCase () throws Exception {
+            // given
+            // when
+            final Brand brand = brandRepository.findUnique(BrandsFixture.YU_S_NOODLE_JOINT,  applicationTenancyRepository.findByPath("/FRA"));
+            // then
+            Assertions.assertThat(brand).isEqualTo(null);
+
+        }
+
+    }
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    public static class NewBrand extends BrandsIntegTest {
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given, when
+            Brand brandFra = wrap(brandMenu).newBrand("Test123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
+            Brand brandGbr = wrap(brandMenu).newBrand("Test123", null, null, null, applicationTenancyRepository.findByPath("/GBR"));
+            // then
+            Assertions.assertThat(brandFra.getName()).isEqualTo("Test123");
+            Assertions.assertThat(brandGbr.getName()).isEqualTo("Test123");
+
+        }
+
+        @Test
+        public void validationFails() throws Exception {
+
+            // given
+            brandRepository.newBrand("test123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
+
+            // then
+            exception.expect(InvalidException.class);
+            exception.expectMessage("Brand with name TeSt123 exists already for France");
+
+            // when
+            wrap(brandMenu).newBrand("TeSt123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
+
+        }
+
     }
 
 }

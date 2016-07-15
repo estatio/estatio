@@ -436,7 +436,6 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
-    @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private PaymentMethod paymentMethod;
 

@@ -20,6 +20,8 @@ import lombok.Setter;
         "chargeName",
         "chargeDescription",
         "chargeExternalReference",
+        "chargeGroupReference",
+        "chargeGroupName",
         "taxReference",
         "taxName",
         "taxDescription",
@@ -52,6 +54,14 @@ public class InvoiceItemDto {
 
     @Getter @Setter
     protected String chargeExternalReference;
+
+    // Charge group
+
+    @Getter @Setter
+    protected String chargeGroupReference;
+
+    @Getter @Setter
+    protected String chargeGroupName;
 
     //Tax
 

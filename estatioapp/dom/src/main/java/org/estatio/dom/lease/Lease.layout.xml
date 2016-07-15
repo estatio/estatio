@@ -41,6 +41,11 @@
                     <ns2:action id="resumeAll" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
+            <ns2:fieldSet name="comments" id="comments">
+                <ns2:property id="comments">
+                    <ns2:action id="changeComments" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
             <ns2:fieldSet name="applicationTenancy" id="applicationTenancy">
                 <ns2:property id="applicationTenancy"/>
             </ns2:fieldSet>

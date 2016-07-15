@@ -146,7 +146,7 @@ public class Guarantees extends UdoDomainRepositoryAndFactory<Guarantee> {
     // //////////////////////////////////////
 
     @Programmatic
-    public Guarantee findFor(FinancialAccount financialAccount) {
+    public Guarantee findbyFinancialAccount(FinancialAccount financialAccount) {
         return firstMatch("findByFinancialAccount", "financialAccount", financialAccount);
     }
 

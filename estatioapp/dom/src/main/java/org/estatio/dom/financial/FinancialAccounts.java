@@ -68,8 +68,8 @@ public class FinancialAccounts extends UdoDomainRepositoryAndFactory<FinancialAc
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public FinancialAccount findAccountByReference(final @ParameterLayout(named = "Reference") String reference) {
-        return firstMatch("findByReference", "reference", reference);
+    public FinancialAccount findByOwnerAndReference(final Party owner, final @ParameterLayout(named = "Reference") String reference) {
+        return firstMatch("findByOwnerAndReference", "owner", owner, "reference", reference);
     }
 
     // //////////////////////////////////////

@@ -46,6 +46,7 @@ import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -105,7 +106,6 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new BankAccountForHelloWorldNl());
                 }
             });
@@ -117,13 +117,19 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         @Inject
         private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
+        @Inject
+        private Parties partyRepository;
+
         private BankAccount bankAccount;
 
         private FixedAssetFinancialAccount fixedAssetFinancialAccount;
 
+        private Party owner;
+
         @Before
         public void setUp() throws Exception {
-            FinancialAccount financialAccount = financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF);
+            owner = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            FinancialAccount financialAccount = financialAccounts.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF);
             Assert.assertTrue(financialAccount instanceof BankAccount);
             bankAccount = (BankAccount) financialAccount;
         }
@@ -147,7 +153,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccounts.findAccountByReference(BankAccountForHelloWorldNl.REF));
+            Assert.assertNull(financialAccounts.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF));
         }
     }
 }
