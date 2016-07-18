@@ -80,7 +80,7 @@ import lombok.Setter;
 public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocation> implements WithApplicationTenancyProperty {
 
     public BudgetItemAllocation() {
-        super("budgetItem, keyTable");
+        super("budgetItem, charge, keyTable");
     }
 
     //region > identificatiom
