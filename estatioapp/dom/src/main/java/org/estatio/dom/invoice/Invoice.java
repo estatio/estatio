@@ -303,7 +303,7 @@ public class Invoice
 
     public String disableChangeDueDate(
             final LocalDate dueDate) {
-        if (!getStatus().invoiceIsChangable()) {
+        if (isImmutable()) {
             return "Due date can't be changed";
         }
         return null;
@@ -588,6 +588,19 @@ public class Invoice
             return "Start date must be before end date";
         }
         return null;
+    }
+
+    public String disableNewItem(
+            final Charge charge,
+            final BigDecimal quantity,
+            final BigDecimal netAmount,
+            final LocalDate startDate,
+            final LocalDate endDate){
+        return isImmutable() ? "Cannot add new item" : null;
+    }
+
+    boolean isImmutable() {
+        return !getStatus().invoiceIsChangable();
     }
 
     // //////////////////////////////////////
