@@ -28,7 +28,6 @@ import com.google.common.collect.Ordering;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -42,7 +41,6 @@ import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -139,12 +137,6 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private Boolean adjustment;
-
-    @Override
-    @Programmatic
-    public LocalDateInterval getEffectiveInterval() {
-        return getInterval().overlap(getLeaseTerm().getEffectiveInterval());
-    }
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
         public int compare(final InvoiceItemForLease p, final InvoiceItemForLease q) {

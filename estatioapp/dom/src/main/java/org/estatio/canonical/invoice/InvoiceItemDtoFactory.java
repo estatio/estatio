@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.canonical.DtoFactoryAbstract;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.DtoMappingHelper;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.InvoiceItem;
@@ -32,8 +33,14 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
 
         if (item  instanceof InvoiceItemForLease) {
             InvoiceItemForLease invoiceItemForLease = (InvoiceItemForLease) item;
-            if (invoiceItemForLease.getLease() !=null) {
-                dto.setAgreementReference(invoiceItemForLease.getLease().getReference());
+            final Lease lease = invoiceItemForLease.getLease();
+            if (lease !=null) {
+                dto.setAgreementReference(lease.getReference());
+            }
+            final FixedAsset fixedAsset = invoiceItemForLease.getFixedAsset();
+            if (fixedAsset !=null) {
+                dto.setFixedAssetReference(fixedAsset.getReference());
+                dto.setFixedAssetExternalReference(fixedAsset.getExternalReference());
             }
         }
 
@@ -67,15 +74,18 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
         final Lease leaseIfAny = item.getInvoice().getLease();
         if(leaseIfAny != null) {
             final SortedSet<Occupancy> occupancies = leaseIfAny.getOccupancies();
-            final Optional<Occupancy> occupancyIfAny =
-                    occupancies.stream().filter(x -> x.getInterval().contains(item.getDueDate())).findFirst();
-
-            if(occupancyIfAny.isPresent()) {
-                final Occupancy occupancy = occupancyIfAny.get();
-                final Brand brand = occupancy.getBrand();
-                dto.setOccupancyBrand(brand == null ? null : brand.getName());
-                dto.setFixedAssetReference(occupancy.getUnit().getReference());
-                dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
+            if (!occupancies.isEmpty()) {
+                final Optional<Occupancy> occupancyIfAny =
+                        occupancies.stream().filter(x -> x.getInterval().overlaps(item.getEffectiveInterval())).findFirst();
+                if (occupancyIfAny.isPresent()) {
+                    final Occupancy occupancy = occupancyIfAny.orElse(occupancies.last());
+                    final Brand brand = occupancy.getBrand();
+                    dto.setOccupancyBrand(brand == null ? null : brand.getName());
+                    dto.setFixedAssetReference(occupancy.getUnit().getReference());
+                    dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
+                } else {
+                    throw new IllegalArgumentException("Invoice has an effective date range outside the scope of the occupanies");
+                }
             }
         }
         return dto;
