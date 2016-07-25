@@ -81,8 +81,11 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
                     final Occupancy occupancy = occupancyIfAny.orElse(occupancies.last());
                     final Brand brand = occupancy.getBrand();
                     dto.setOccupancyBrand(brand == null ? null : brand.getName());
-                    dto.setFixedAssetReference(occupancy.getUnit().getReference());
-                    dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
+                    if (dto.getFixedAssetReference()== null) {
+                        // the unit was not retrieved through the invoice item, so get it from the occupancy then.
+                        dto.setFixedAssetReference(occupancy.getUnit().getReference());
+                        dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
+                    }
                 } else {
                     throw new IllegalArgumentException("Invoice has an effective date range outside the scope of the occupanies");
                 }
