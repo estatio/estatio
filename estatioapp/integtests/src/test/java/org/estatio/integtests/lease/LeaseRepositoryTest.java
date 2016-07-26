@@ -296,6 +296,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             String newName = lease.default1Renew() + "-2";
             LocalDate newStartDate = lease.default2Renew();
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
+            lease.setComments("Some comments");
 
             // When
             Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
@@ -308,6 +309,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             assertThat(newLease.getEndDate(), is(newEndDate));
             assertThat(newLease.getTenancyStartDate(), is(newStartDate));
             assertThat(newLease.getTenancyEndDate(), is(newEndDate));
+            assertThat(newLease.getComments(), is("Some comments"));
 
             // Then
             assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypeRepository

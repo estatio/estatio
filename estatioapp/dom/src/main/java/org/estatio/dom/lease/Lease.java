@@ -847,6 +847,7 @@ public class Lease
         copyItemsAndTerms(newLease, tenancyStartDate);
         breakOptionsService.copyBreakOptions(this, newLease, tenancyStartDate);
         copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
+        newLease.setComments(this.getComments());
         this.setNext(newLease);
         return newLease;
     }
