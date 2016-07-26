@@ -761,8 +761,11 @@ public class Lease
         return null;
     }
 
-    public boolean hideTerminate() {
-        return !getStatus().equals(LeaseStatus.ACTIVE);
+    public String disableTerminate() {
+        if (!(getStatus().equals(LeaseStatus.ACTIVE ) || getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY))){
+            return "Status is not Active or Suspended Partially";
+        }
+        return null;
     }
 
     // //////////////////////////////////////

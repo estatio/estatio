@@ -118,7 +118,13 @@ public class LeaseTest {
             lease.setStatus(LeaseStatus.ACTIVE);
             assertTrue(lease.hideResumeAll());
             assertFalse(lease.hideSuspendAll());
-            assertFalse(lease.hideTerminate());
+            assertNull(lease.disableTerminate());
+        }
+
+        @Test
+        public void testWhenSuspendedPartially() {
+            lease.setStatus(LeaseStatus.SUSPENDED_PARTIALLY);
+            assertNull(lease.disableTerminate());
         }
 
         @Test
@@ -126,7 +132,7 @@ public class LeaseTest {
             lease.setStatus(LeaseStatus.SUSPENDED);
             assertFalse(lease.hideResumeAll());
             assertTrue(lease.hideSuspendAll());
-            assertTrue(lease.hideTerminate());
+            assertThat(lease.disableTerminate(), is("Status is not Active or Suspended Partially"));
         }
 
         @Test
@@ -134,7 +140,7 @@ public class LeaseTest {
             lease.setStatus(LeaseStatus.TERMINATED);
             assertTrue(lease.hideResumeAll());
             assertTrue(lease.hideSuspendAll());
-            assertTrue(lease.hideTerminate());
+            assertThat(lease.disableTerminate(), is("Status is not Active or Suspended Partially"));
         }
 
         @Test
