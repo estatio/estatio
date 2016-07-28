@@ -424,7 +424,7 @@ public class Lease
      * EST-233.
      */
     @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(render = RenderType.EAGERLY, paged = 999)
     @Getter @Setter
     private SortedSet<LeaseItem> items = new TreeSet<>();
 
