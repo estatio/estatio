@@ -20,19 +20,19 @@ package org.estatio.dom;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithIntervalMutable<T extends WithIntervalMutable<T>> extends WithInterval<T> {
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public T changeDates(
-            final @Named("Start Date") @Optional LocalDate startDate,
-            final @Named("End Date") @Optional LocalDate endDate);
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL)  LocalDate endDate);
 
     public LocalDate default0ChangeDates();
 
@@ -66,13 +66,13 @@ public interface WithIntervalMutable<T extends WithIntervalMutable<T>> extends W
         }
 
         public LocalDate default0ChangeDates() {
-            LocalDateInterval effectiveInterval = withInterval.getEffectiveInterval();
-            return effectiveInterval == null ? null : effectiveInterval.startDate();
+            LocalDateInterval interval = withInterval.getInterval();
+            return interval == null ? null : interval.startDate();
         }
 
         public LocalDate default1ChangeDates() {
-            LocalDateInterval effectiveInterval = withInterval.getEffectiveInterval();
-            return effectiveInterval == null ? null : effectiveInterval.endDate();
+            LocalDateInterval interval = withInterval.getInterval();
+            return interval == null ? null : interval.endDate();
         }
 
         public String validateChangeDates(
