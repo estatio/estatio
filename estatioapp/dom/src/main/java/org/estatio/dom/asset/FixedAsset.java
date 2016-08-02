@@ -171,6 +171,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     @Getter @Setter
     private SortedSet<FixedAssetOwnership> owners = new TreeSet<>();
 
+    @MemberOrder(name = "owners", sequence = "1")
     public FixedAsset addOwner(final Party newOwner, final OwnershipType type) {
         FixedAssetOwnership fixedAssetOwnership = fixedAssetOwnershipRepository.newOwnership(newOwner, type, this);
         getOwners().add(fixedAssetOwnership);

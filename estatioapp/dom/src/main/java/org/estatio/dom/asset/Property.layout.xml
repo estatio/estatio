@@ -159,7 +159,6 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="owners" defaultView="table"/>
-                            <ns2:action id="addOwner" position="RIGHT"/>
                         </col>
                     </row>
                 </tab>
