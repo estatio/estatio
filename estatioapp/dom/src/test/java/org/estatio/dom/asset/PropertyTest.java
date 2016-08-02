@@ -32,14 +32,12 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PropertyTest {
 
@@ -75,7 +73,7 @@ public class PropertyTest {
         @Test
         public void test() {
             // given
-            assertThat(property.getLocation(), is(nullValue()));
+            assertThat(property.getLocation()).isNull();
 
             // when
             final Location location = new Location();
@@ -89,7 +87,7 @@ public class PropertyTest {
             property.lookupLocation("Buckingham Palace, London");
 
             // then
-            assertThat(property.getLocation(), is(location));
+            assertThat(property.getLocation()).isEqualTo(location);
         }
     }
 
@@ -122,6 +120,51 @@ public class PropertyTest {
 
     }
 
+    public static class ValidateAddOwner extends PropertyTest {
+
+        private Property property;
+        private FixedAssetOwnership fixedAssetOwnership;
+        private Party party;
+
+        @Before
+        public void setUp() throws Exception {
+            party = new PartyForTesting();
+            property = new Property();
+
+            fixedAssetOwnership = new FixedAssetOwnership();
+            fixedAssetOwnership.setOwner(party);
+            fixedAssetOwnership.setFixedAsset(property);
+
+            property.getOwners().add(fixedAssetOwnership);
+            assertThat(property.getOwners().size()).isEqualTo(1);
+        }
+
+        @Test
+        public void alreadyDefined() throws Exception {
+            // given
+            fixedAssetOwnership.setOwnershipType(OwnershipType.FULL);
+
+            // when
+            final String validation = property.validateAddOwner(party, OwnershipType.FULL);
+
+            // then
+            assertThat(validation).isEqualToIgnoringCase("This owner already has its share defined");
+        }
+
+        @Test
+        public void fullOwnershipUnavailable() throws Exception {
+            // given
+            fixedAssetOwnership.setOwnershipType(OwnershipType.SHARED);
+            final Party newParty = new PartyForTesting();
+
+            // when
+            final String validation = property.validateAddOwner(newParty, OwnershipType.FULL);
+
+            // then
+            assertThat(validation).isEqualToIgnoringCase("This owner can not be a full owner as there is already a shared owner defined");
+        }
+    }
+
     public static class Dispose extends PropertyTest {
         private Property property;
 
@@ -130,11 +173,11 @@ public class PropertyTest {
             // given
             property = new Property();
             // then
-            assertNull(property.disableDispose(null));
+            assertThat(property.disableDispose(null)).isNull();
             // when
             property.dispose(new LocalDate(2000, 1, 1));
             // then
-            assertNotNull(property.disableDispose(null));
+            assertThat(property.disableDispose(null)).isNotNull();
         }
     }
 
@@ -156,10 +199,10 @@ public class PropertyTest {
             thatProperty.setDisplayOrder(2);
 
             // then
-            assertEquals(thisProperty.compareTo(thatProperty), -1);
-            assertEquals(thatProperty.compareTo(thisProperty), 1);
-            assertEquals(thisProperty.compareTo(thisProperty), 0);
-            assertEquals(thatProperty.compareTo(thatProperty), 0);
+            assertThat(thisProperty.compareTo(thatProperty)).isEqualTo(-1);
+            assertThat(thatProperty.compareTo(thisProperty)).isEqualTo(1);
+            assertThat(thisProperty.compareTo(thisProperty)).isEqualTo(0);
+            assertThat(thatProperty.compareTo(thatProperty)).isEqualTo(0);
         }
 
     }
