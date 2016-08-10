@@ -155,6 +155,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
             Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF));
+
         }
     }
 }

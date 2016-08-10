@@ -52,7 +52,6 @@ public class BankAccountMenu {
             final String iban,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String bic) {
-
         return bankAccountRepository.newBankAccount(owner, iban, bic);
     }
 

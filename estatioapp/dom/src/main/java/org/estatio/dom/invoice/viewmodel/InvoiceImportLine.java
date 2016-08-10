@@ -43,6 +43,7 @@ public class InvoiceImportLine implements Importable {
     }
 
     public InvoiceImportLine() {
+
     }
 
     public InvoiceImportLine(
@@ -83,7 +84,9 @@ public class InvoiceImportLine implements Importable {
     private LocalDate itemEndDate;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    @Override public List<Class> importAfter() {
+    @Override
+
+    public List<Class> importAfter() {
         return null;
     }
 
