@@ -18,14 +18,13 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import org.assertj.core.api.Assertions;
-import org.hamcrest.Matchers;
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -53,6 +52,7 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTest;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;
@@ -66,12 +66,9 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class LeaseTest {
@@ -132,7 +129,7 @@ public class LeaseTest {
             lease.setStatus(LeaseStatus.SUSPENDED);
             assertFalse(lease.hideResumeAll());
             assertTrue(lease.hideSuspendAll());
-            assertThat(lease.disableTerminate(), is("Status is not Active or Suspended Partially"));
+            assertThat(lease.disableTerminate()).isEqualTo("Status is not Active or Suspended Partially");
         }
 
         @Test
@@ -140,7 +137,7 @@ public class LeaseTest {
             lease.setStatus(LeaseStatus.TERMINATED);
             assertTrue(lease.hideResumeAll());
             assertTrue(lease.hideSuspendAll());
-            assertThat(lease.disableTerminate(), is("Status is not Active or Suspended Partially"));
+            assertThat(lease.disableTerminate()).isEqualTo("Status is not Active or Suspended Partially");
         }
 
         @Test
@@ -153,9 +150,9 @@ public class LeaseTest {
             item2.setSequence(new BigInteger("2"));
             lease.getItems().add(item1);
             lease.getItems().add(item2);
-            assertThat(lease.getEffectiveStatus(), Matchers.is(LeaseStatus.SUSPENDED));
+            assertThat(lease.getEffectiveStatus()).isEqualTo(LeaseStatus.SUSPENDED);
             item2.setStatus(LeaseItemStatus.ACTIVE);
-            assertThat(lease.getEffectiveStatus(), Matchers.is(LeaseStatus.SUSPENDED_PARTIALLY));
+            assertThat(lease.getEffectiveStatus()).isEqualTo(LeaseStatus.SUSPENDED_PARTIALLY);
         }
     }
 
@@ -218,10 +215,10 @@ public class LeaseTest {
             Lease lease = new Lease();
 
             // when
-            Assertions.assertThat(lease.getProperty()).isEqualTo(null);
+            assertThat(lease.getProperty()).isEqualTo(null);
 
             // then
-            Assertions.assertThat(lease.disableNewItem()).isEqualTo("Please set occupancy first");
+            assertThat(lease.disableNewItem()).isEqualTo("Please set occupancy first");
 
         }
 
@@ -380,13 +377,13 @@ public class LeaseTest {
         public void whenSecondaryPartyIsUnknown_isDisabled() {
 
             // given
-            assertThat(lease.getRoles(), Matchers.empty());
+            assertThat(lease.getRoles()).hasSize(0);
 
             // when
             final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
 
             // then
-            assertThat(disabledReason, is("Could not determine the tenant (secondary party) of this lease"));
+            assertThat(disabledReason).isEqualTo("Could not determine the tenant (secondary party) of this lease");
         }
 
         @Test
@@ -402,11 +399,11 @@ public class LeaseTest {
             final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
 
             // then
-            assertThat(disabledReason, is(not(nullValue())));
+            assertThat(disabledReason).isNotNull();
 
             // and when/then
             // (defaultXxx wouldn't get called, but for coverage...)
-            assertThat(lease.default0PaidBy(), is(nullValue()));
+            assertThat(lease.default0PaidBy()).isNull();
         }
 
         @Test
@@ -425,7 +422,7 @@ public class LeaseTest {
 
             // when, then
             final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
-            assertThat(disabledReason, is(not(nullValue())));
+            assertThat(disabledReason).isNotNull();
         }
 
         @Test
@@ -445,22 +442,22 @@ public class LeaseTest {
 
             // when/then
             final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
-            assertThat(disabledReason, is(nullValue()));
+            assertThat(disabledReason).isNull();
 
             // and when/then
             final List<BankAccount> bankAccounts = lease.choices0NewMandate();
-            assertThat(bankAccounts, Matchers.contains(bankAccount));
+            assertThat(bankAccounts).contains(bankAccount);
 
             // and when/then
             final BankAccount defaultBankAccount = lease.default0NewMandate();
-            assertThat(defaultBankAccount, is(bankAccount));
+            assertThat(defaultBankAccount).isEqualTo(bankAccount);
 
             // and when/then
             final String validateReason = lease.validateNewMandate(defaultBankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
-            assertThat(validateReason, is(nullValue()));
+            assertThat(validateReason).isNull();
 
             // and given
-            assertThat(lease.getPaidBy(), is(nullValue()));
+            assertThat(lease.getPaidBy()).isNull();
             final AgreementRole newBankMandateAgreementRoleForCreditor = new AgreementRole();
             final AgreementRole newBankMandateAgreementRoleForDebtor = new AgreementRole();
 
@@ -476,9 +473,9 @@ public class LeaseTest {
             final Lease returned = lease.newMandate(defaultBankAccount, "MANDATEREF", startDate, endDate, SequenceType.FIRST, Scheme.CORE, startDate);
 
             // then
-            assertThat(returned, is(lease));
+            assertThat(returned).isEqualTo(lease);
 
-            assertThat(lease.getPaidBy(), is(bankMandate));
+            assertThat(lease.getPaidBy()).isEqualTo(bankMandate);
         }
 
         @Test
@@ -497,7 +494,7 @@ public class LeaseTest {
 
             // when/then
             final String validateReason = lease.validateNewMandate(someOtherBankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
-            assertThat(validateReason, is("Bank account is not owned by this lease's tenant"));
+            assertThat(validateReason).isEqualTo("Bank account is not owned by this lease's tenant");
         }
 
     }
@@ -583,13 +580,13 @@ public class LeaseTest {
         public void whenSecondaryPartyIsUnknown_isDisabled() {
 
             // given
-            assertThat(lease.getRoles(), Matchers.empty());
+            assertThat(lease.getRoles()).isEmpty();
 
             // when
             final String reason = lease.disablePaidBy(bankMandate);
 
             // then
-            assertThat(reason, is("There are no valid mandates; set one up using 'New Mandate'"));
+            assertThat(reason).isEqualTo("There are no valid mandates; set one up using 'New Mandate'");
         }
 
         @Test
@@ -608,7 +605,7 @@ public class LeaseTest {
 
             // when, then
             final String disabledReason = lease.disablePaidBy(bankMandate);
-            assertThat(disabledReason, is(not(nullValue())));
+            assertThat(disabledReason).isNotNull();
         }
 
         @Test
@@ -629,11 +626,11 @@ public class LeaseTest {
             final String reason = lease.disablePaidBy(bankMandate);
 
             // then
-            assertThat(reason, is(not(nullValue())));
+            assertThat(reason).isNotNull();
 
             // and when/then
             // (defaultXxx wouldn't get called, but for coverage...)
-            assertThat(lease.default0PaidBy(), is(nullValue()));
+            assertThat(lease.default0PaidBy()).isNull();
         }
 
         @Test
@@ -652,29 +649,29 @@ public class LeaseTest {
 
             // when/then
             final String disabledReason = lease.disablePaidBy(bankMandate);
-            assertThat(disabledReason, is(nullValue()));
+            assertThat(disabledReason).isNull();
 
             // and when/then
             final List<BankMandate> bankMandates = lease.choices0PaidBy();
-            assertThat(bankMandates, Matchers.contains(bankMandate));
+            assertThat(bankMandates).contains(bankMandate);
 
             // and when/then
             final BankMandate defaultBankMandate = lease.default0PaidBy();
-            assertThat(defaultBankMandate, is(bankMandate));
+            assertThat(defaultBankMandate).isEqualTo(bankMandate);
 
             // and when/then
             final String validateReason = lease.validatePaidBy(bankMandate);
-            assertThat(validateReason, is(nullValue()));
+            assertThat(validateReason).isNull();
 
             // and given
-            assertThat(lease.getPaidBy(), is(nullValue()));
+            assertThat(lease.getPaidBy()).isNull();
 
             // when
             final Lease returned = lease.paidBy(bankMandate);
 
             // then
-            assertThat(lease.getPaidBy(), is(bankMandate));
-            assertThat(returned, is(lease));
+            assertThat(lease.getPaidBy()).isEqualTo(bankMandate);
+            assertThat(returned).isEqualTo(lease);
         }
 
         @Test
@@ -693,7 +690,7 @@ public class LeaseTest {
 
             // when/then
             final String validateReason = lease.validatePaidBy(someOtherBankMandate);
-            assertThat(validateReason, is("Invalid mandate; the mandate's debtor must be this lease's tenant"));
+            assertThat(validateReason).isEqualTo("Invalid mandate; the mandate's debtor must be this lease's tenant");
         }
 
     }
@@ -718,7 +715,7 @@ public class LeaseTest {
             lease.setTenancyStartDate(startDate);
             lease.setTenancyEndDate(endDate);
 
-            assertThat(lease.getTenancyDuration(), is("3y11m30d"));
+            assertThat(lease.getTenancyDuration()).isEqualTo("3y11m30d");
         }
 
         @Test
@@ -796,7 +793,7 @@ public class LeaseTest {
             previousAgreement.setNext(otherAgreement);
 
             // when, then
-            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: the agreement chosen already is already linked to a next."));
+            assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: the agreement chosen already is already linked to a next.");
 
         }
 
@@ -811,7 +808,7 @@ public class LeaseTest {
             // when
             agreement.setStartDate(new LocalDate("2000-01-01"));
             // then
-            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: overlapping date intervals"));
+            assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: overlapping date intervals");
 
             // when
             agreement.setStartDate(new LocalDate("2000-01-02"));
@@ -832,7 +829,7 @@ public class LeaseTest {
             agreement.setEndDate(new LocalDate("1998-12-31"));
 
             // then
-            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: previous agreement interval should be before this agreements interval"));
+            assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: previous agreement interval should be before this agreements interval");
 
         }
 
@@ -847,13 +844,66 @@ public class LeaseTest {
             // when
             agreement.setApplicationTenancyPath("/SomeOtherPath");
             // then
-            assertThat(agreement.validateChangePrevious(previousAgreement), is("Not allowed: application tenancy should be equal"));
+            assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: application tenancy should be equal");
 
             // when
             agreement.setApplicationTenancyPath("/SomePath");
             // then
             assertNull(agreement.validateChangePrevious(previousAgreement));
 
+        }
+
+    }
+
+    public static class PrimaryOccupancy{
+
+        @Test
+        public void highest_start_date_first() throws Exception {
+            Lease lease = new Lease();
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2015,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2013,1,1), "100.00"));
+            assertThat(lease.getOccupancies()).hasSize(3);
+            assertThat(lease.primaryOccupancy().get().getStartDate()).isEqualTo(new LocalDate(2015,1,1));
+        }
+
+        @Test
+        public void null_start_date_first() throws Exception {
+            Lease lease = new Lease();
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(null, "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2013,1,1), "100.00"));
+            assertThat(lease.getOccupancies()).hasSize(3);
+            assertThat(lease.primaryOccupancy().get().getStartDate()).isNull();
+        }
+
+        @Test
+        public void largest_area_first() throws Exception {
+            Lease lease = new Lease();
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "99.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "88.00"));
+            assertThat(lease.getOccupancies()).hasSize(3);
+            assertThat(lease.primaryOccupancy().get().getUnit().getArea()).isEqualTo(new BigDecimal("100.00"));
+        }
+
+        @Test
+        public void null_when_no_occupancies() throws Exception {
+            Lease lease = new Lease();
+            assertThat(lease.getOccupancies()).hasSize(0);
+            assertThat(lease.primaryOccupancy().isPresent()).isFalse();
+        }
+
+
+        private Occupancy newOccupancy(final LocalDate startDate, final String area) {
+            Occupancy o = new Occupancy();
+            o.setStartDate(startDate);
+            Unit unit = new Unit();
+            unit.setReference(area);
+            unit.setName(area);
+            unit.setArea(new BigDecimal(area));
+            o.setUnit(unit);
+            return o;
         }
 
     }

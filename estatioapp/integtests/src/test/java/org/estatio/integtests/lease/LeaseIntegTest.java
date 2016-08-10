@@ -22,7 +22,6 @@ import java.util.SortedSet;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,14 +57,11 @@ import org.estatio.fixture.party.OrganisationForMediaXGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.integtests.VT.ld;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
-public class LeaseTest extends EstatioIntegrationTest {
+public class LeaseIntegTest extends EstatioIntegrationTest {
 
     @Inject
     LeaseMenu leaseMenu;
@@ -76,7 +72,7 @@ public class LeaseTest extends EstatioIntegrationTest {
     @Inject
     Parties parties;
 
-    public static class Assign extends LeaseTest {
+    public static class Assign extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -105,22 +101,22 @@ public class LeaseTest extends EstatioIntegrationTest {
                     newStartDate);
 
             // then
-            assertThat(newLease.getReference(), is(newReference));
-            assertThat(newLease.getName(), is(newReference));
-            assertThat(newLease.getStartDate(), is(lease.getStartDate()));
-            assertThat(newLease.getEndDate(), is(lease.getEndDate()));
-            assertThat(newLease.getTenancyStartDate(), is(newStartDate));
-            assertThat(newLease.getTenancyEndDate(), is(lease.getEndDate()));
-            assertThat(newLease.getPrimaryParty(), is(lease.getPrimaryParty()));
-            assertThat(newLease.getSecondaryParty(), is(newParty));
-            assertThat(newLease.getItems().size(), is(lease.getItems().size()));
+            assertThat(newLease.getReference()).isEqualTo(newReference);
+            assertThat(newLease.getName()).isEqualTo(newReference);
+            assertThat(newLease.getStartDate()).isEqualTo(lease.getStartDate());
+            assertThat(newLease.getEndDate()).isEqualTo(lease.getEndDate());
+            assertThat(newLease.getTenancyStartDate()).isEqualTo(newStartDate);
+            assertThat(newLease.getTenancyEndDate()).isEqualTo(lease.getEndDate());
+            assertThat(newLease.getPrimaryParty()).isEqualTo(lease.getPrimaryParty());
+            assertThat(newLease.getSecondaryParty()).isEqualTo(newParty);
+            assertThat(newLease.getItems().size()).isEqualTo(lease.getItems().size());
 
-            assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
+            assertThat(lease.getTenancyEndDate()).isEqualTo(newStartDate.minusDays(1));
         }
     }
 
 
-    public static class FindItem extends LeaseTest {
+    public static class FindItem extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -139,7 +135,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
             // given
             Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(lease.getItems().size(), is(9));
+            assertThat(lease.getItems().size()).isEqualTo(9);
 
             // when
             LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
@@ -152,7 +148,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
     }
 
-    public static class GetItems extends LeaseTest {
+    public static class GetItems extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -169,11 +165,11 @@ public class LeaseTest extends EstatioIntegrationTest {
         @Test
         public void whenNonEmpty() throws Exception {
             Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(lease.getItems().size(), is(9));
+            assertThat(lease.getItems().size()).isEqualTo(9);
         }
     }
 
-    public static class NewItem extends LeaseTest {
+    public static class NewItem extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -214,13 +210,13 @@ public class LeaseTest extends EstatioIntegrationTest {
                     leasePoison.getStartDate());
 
             // then
-            Assertions.assertThat(leaseItem.getLease()).isEqualTo(leasePoison);
-            Assertions.assertThat(leaseItem.getType()).isEqualTo(LeaseItemType.DISCOUNT);
-            Assertions.assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
-            Assertions.assertThat(leaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
-            Assertions.assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
-            Assertions.assertThat(leaseItem.getSequence()).isEqualTo(VT.bi(1));
-            Assertions.assertThat(leaseItem.getApplicationTenancy()).isEqualTo(firstChildAppTenancy);
+            assertThat(leaseItem.getLease()).isEqualTo(leasePoison);
+            assertThat(leaseItem.getType()).isEqualTo(LeaseItemType.DISCOUNT);
+            assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
+            assertThat(leaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
+            assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
+            assertThat(leaseItem.getSequence()).isEqualTo(VT.bi(1));
+            assertThat(leaseItem.getApplicationTenancy()).isEqualTo(firstChildAppTenancy);
         }
 
         @Test
@@ -238,9 +234,11 @@ public class LeaseTest extends EstatioIntegrationTest {
                     LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate());
         }
+
+
     }
 
-    public static class VerifyUntil extends LeaseTest {
+    public static class VerifyUntil extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -263,10 +261,10 @@ public class LeaseTest extends EstatioIntegrationTest {
             leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             leaseTopModelRentItem = leaseTopModel.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
-            assertNotNull(leaseTopModelRentItem);
+            assertThat(leaseTopModelRentItem).isNotNull();
 
             leaseTopModelServiceChargeItem = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
-            assertNotNull(leaseTopModelServiceChargeItem);
+            assertThat(leaseTopModelServiceChargeItem).isNotNull();
         }
 
         /**
@@ -278,20 +276,20 @@ public class LeaseTest extends EstatioIntegrationTest {
         public void createsTermsForLeaseTermItems() throws Exception {
 
             // given
-            assertNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
-            assertNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
+            assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNull();
+            assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNull();
 
             // when
             leaseTopModel.verifyUntil(VT.ld(2014, 1, 1));
 
             // then
-            assertNotNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
-            assertNotNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
+            assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNotNull();
+            assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNotNull();
         }
 
     }
 
-    public static class VerifyUntil_1 extends LeaseTest {
+    public static class VerifyUntil_1 extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -315,7 +313,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
             LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2008, 1, 1), VT.bi(1));
             LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));
-            assertNotNull(leaseMediaXServiceChargeTerm);
+            assertThat(leaseMediaXServiceChargeTerm).isNotNull();
 
             // when
             leaseMediax.verifyUntil(VT.ld(2014, 1, 1));
@@ -330,10 +328,10 @@ public class LeaseTest extends EstatioIntegrationTest {
 
             // then
             leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));
-            assertNotNull(leaseMediaXServiceChargeTerm);
+            assertThat(leaseMediaXServiceChargeTerm).isNotNull();
 
             final LeaseTerm leaseMediaXServiceChargeTermN = leaseMediaXServiceChargeItem.getTerms().last();
-            assertThat(leaseMediaXServiceChargeTermN.getEffectiveValue(), is(VT.bd("6000.00")));
+            assertThat(leaseMediaXServiceChargeTermN.getEffectiveValue()).isEqualTo(VT.bd("6000.00"));
         }
 
         @Test
@@ -345,7 +343,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
             LeaseItem leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, VT.ld(2011, 1, 1), VT.bi(1));
             LeaseItem leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2011, 1, 1), VT.bi(1));
-            assertNotNull(leasePoisonServiceChargeItem);
+            assertThat(leasePoisonServiceChargeItem).isNotNull();
 
             // when
             leasePoison.verifyUntil(VT.ld(2014, 1, 1));
@@ -359,24 +357,21 @@ public class LeaseTest extends EstatioIntegrationTest {
 
             // then
             final LeaseTerm leaseTerm1 = leasePoisonServiceChargeItem.findTerm(VT.ld(2011, 1, 1));
-            assertNotNull(leaseTerm1);
+            assertThat(leaseTerm1).isNotNull();
 
             final LeaseTerm leaseTerm2 = leasePoisonServiceChargeItem.getTerms().last();
-            assertThat(leaseTerm2.getEffectiveValue(), is(VT.bd("12400.00")));
+            assertThat(leaseTerm2.getEffectiveValue()).isEqualTo(VT.bd("12400.00"));
 
             // and then
             SortedSet<LeaseTerm> terms = leasePoisonRentItem.getTerms();
 
-            assertThat(
-                    leasePoisonServiceChargeItem.getEffectiveInterval().toString()
-                            .concat(terms.toString()),
-                    terms.size(), is(3));
-            assertNotNull(leasePoisonRentItem.findTerm(VT.ld(2011, 1, 1)));
+            assertThat(terms.size()).isEqualTo(3);
+            assertThat(leasePoisonRentItem.findTerm(VT.ld(2011, 1, 1))).isNotNull();
         }
 
     }
 
-    public static class GetRoles extends LeaseTest {
+    public static class GetRoles extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -404,12 +399,12 @@ public class LeaseTest extends EstatioIntegrationTest {
         public void whenNonEmpty() throws Exception {
             // TODO: this seems to be merely asserting on the contents of the
             // fixture
-            assertThat(leaseTopModel.getRoles().size(), is(3));
+            assertThat(leaseTopModel.getRoles().size()).isEqualTo(3);
         }
 
     }
 
-    public static class ChangeDates extends LeaseTest {
+    public static class ChangeDates extends LeaseIntegTest {
 
         @Before
         public void setupData() {
@@ -439,7 +434,7 @@ public class LeaseTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class changePrevious extends LeaseTest {
+    public static class changePrevious extends LeaseIntegTest {
 
         private Lease leaseTopModel1;
         private Lease leaseTopModel2a;
@@ -476,27 +471,27 @@ public class LeaseTest extends EstatioIntegrationTest {
         public void changePrevious () throws Exception {
 
             // given
-            assertThat(leaseTopModel2a.getReference(), is("OXF-TOPMODEL-002A"));
-            assertThat(leaseTopModel2b.getReference(), is("OXF-TOPMODEL-002B"));
-            assertThat(leaseTopModel3.getReference(), is("OXF-TOPMODEL-003"));
+            assertThat(leaseTopModel2a.getReference()).isEqualTo("OXF-TOPMODEL-002A");
+            assertThat(leaseTopModel2b.getReference()).isEqualTo("OXF-TOPMODEL-002B");
+            assertThat(leaseTopModel3.getReference()).isEqualTo("OXF-TOPMODEL-003");
 
-            assertThat(leaseTopModel1.getNext(), is(leaseTopModel2a));
-            assertThat(leaseTopModel2a.getNext(), is(leaseTopModel3));
-            assertNull(leaseTopModel2b.getNext());
+            assertThat(leaseTopModel1.getNext()).isEqualTo(leaseTopModel2a);
+            assertThat(leaseTopModel2a.getNext()).isEqualTo(leaseTopModel3);
+            assertThat(leaseTopModel2b.getNext()).isNull();
 
-            assertThat(leaseTopModel2a.getPrevious(), is(leaseTopModel1));
-            assertNull(leaseTopModel2b.getPrevious());
-            assertThat(leaseTopModel3.getPrevious(), is(leaseTopModel2a));
+            assertThat(leaseTopModel2a.getPrevious()).isEqualTo(leaseTopModel1);
+            assertThat(leaseTopModel2b.getPrevious()).isNull();
+            assertThat(leaseTopModel3.getPrevious()).isEqualTo(leaseTopModel2a);
 
 
             // when
             leaseTopModel3.changePrevious(leaseTopModel2b);
 
             // then
-            assertThat(leaseTopModel2b.getNext(), is(leaseTopModel3));
-            assertNull(leaseTopModel2a.getNext());
+            assertThat(leaseTopModel2b.getNext()).isEqualTo(leaseTopModel3);
+            assertThat(leaseTopModel2a.getNext()).isNull();
             //TODO: find way to test this; Datanucleus issue with bi-direcitonal relationship
-            //assertThat(leaseTopModel3.getPrevious(), is(leaseTopModel2b));
+            //assertThat(leaseTopModel3.getPrevious()).isEqualTo(leaseTopModel2b));
 
         }
 
@@ -505,7 +500,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
     }
 
-    public static class setPreviousNull extends LeaseTest {
+    public static class setPreviousNull extends LeaseIntegTest {
 
         private Lease leaseTopModel1;
         private Lease leaseTopModel2;
@@ -530,23 +525,49 @@ public class LeaseTest extends EstatioIntegrationTest {
         public void changePreviousToNull () throws Exception {
 
             // given
-            assertThat(leaseTopModel2.getReference(), is("OXF-TOPMODEL-002"));
-            assertThat(leaseTopModel3.getReference(), is("OXF-TOPMODEL-003"));
-            assertThat(leaseTopModel1.getNext(), is(leaseTopModel2));
-            assertThat(leaseTopModel2.getNext(), is(leaseTopModel3));
-            assertThat(leaseTopModel2.getPrevious(), is(leaseTopModel1));
+            assertThat(leaseTopModel2.getReference()).isEqualTo("OXF-TOPMODEL-002");
+            assertThat(leaseTopModel3.getReference()).isEqualTo("OXF-TOPMODEL-003");
+            assertThat(leaseTopModel1.getNext()).isEqualTo(leaseTopModel2);
+            assertThat(leaseTopModel2.getNext()).isEqualTo(leaseTopModel3);
+            assertThat(leaseTopModel2.getPrevious()).isEqualTo(leaseTopModel1);
             //TODO: Datanucleus issue with bi-direcitonal relationship
-//            assertThat(leaseTopModel3.getPrevious(), is(leaseTopModel2));
+//            assertThat(leaseTopModel3.getPrevious()).isEqualTo(leaseTopModel2));
 
             // when
             leaseTopModel2.changePrevious(null);
 
             // then
-            assertNull(leaseTopModel1.getNext());
+            assertThat(leaseTopModel1.getNext()).isNull();
             //TODO: find way to test this; Datanucleus issue with bi-direcitonal relationship
             // assertNull(leaseTopModel2.getPrevious());
 
         }
+
+    }
+
+    public static class PrimaryOccupancy extends LeaseIntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                }
+            });
+        }
+        
+        @Test
+        public void xxx() throws Exception {
+            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+
+            assertThat(lease.getOccupancies().size()).isEqualTo(1);
+            assertThat(lease.primaryOccupancy().get()).isEqualTo(lease.getOccupancies().first());
+
+        }
+
+
 
     }
 }

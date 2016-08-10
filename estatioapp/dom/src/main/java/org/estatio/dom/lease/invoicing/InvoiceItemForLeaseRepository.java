@@ -20,6 +20,7 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -31,7 +32,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
@@ -42,6 +42,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = InvoiceItemForLease.class, nature = NatureOfService.DOMAIN)
@@ -77,7 +78,8 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
         // redundantly persist, these are immutable
         // assumes only one occupancy per lease...
         invoiceItem.setLease(lease);
-        Unit unit = lease.getOccupancies().first().getUnit();
+        final Optional<Occupancy> occupancy = lease.primaryOccupancy();
+        Unit unit = occupancy.get().getUnit();
         invoiceItem.setFixedAsset(unit);
 
         persistIfNotAlready(invoiceItem);

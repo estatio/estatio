@@ -101,7 +101,6 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             final ExecutionContext executionContext) {
 
         final Lease lease = findLease(leaseRef);
-        final ApplicationTenancy leaseItemApplicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(lease.getProperty(), lease.getPrimaryParty());
 
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {

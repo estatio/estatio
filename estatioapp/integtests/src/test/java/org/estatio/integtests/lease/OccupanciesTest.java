@@ -232,7 +232,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         @Before
         public void setup() {
             leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            occupancy = leaseTopModel.getOccupancies().first();
+            occupancy = leaseTopModel.primaryOccupancy().get();
         }
 
         @Test
@@ -270,7 +270,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         @Before
         public void setup() {
             leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            occupancy = leaseTopModel.getOccupancies().first();
+            occupancy = leaseTopModel.primaryOccupancy().get();
         }
 
         @Test

@@ -136,7 +136,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
             final InvoiceItemForLease invoiceItem = (InvoiceItemForLease) foundInvoice.getItems().first();
             assertThat(invoiceItem.getNetAmount(), is(VT.bd("10000.123")));
             assertThat(invoiceItem.getLease(), is(lease));
-            assertThat(invoiceItem.getFixedAsset(), is((FixedAsset) lease.getOccupancies().first().getUnit()));
+            assertThat(invoiceItem.getFixedAsset(), is((FixedAsset) lease.primaryOccupancy().get().getUnit()));
 
             // TODO: EST-290: netAmount has scale set to two but the example above
             // proves that it's possible to store with a higher precision

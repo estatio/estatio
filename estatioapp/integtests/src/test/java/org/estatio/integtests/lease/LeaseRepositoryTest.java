@@ -327,7 +327,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
 
             // When
-            lease.getOccupancies().first().setEndDate(lease.getTenancyEndDate());
+            lease.primaryOccupancy().get().setEndDate(lease.getTenancyEndDate());
             Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
 
             // Then

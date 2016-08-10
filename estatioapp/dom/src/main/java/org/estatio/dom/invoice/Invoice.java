@@ -565,8 +565,8 @@ public class Invoice
         // requires a database change so this is quick fix
         InvoiceItemForLease invoiceItemForLease = (InvoiceItemForLease) invoiceItem;
         invoiceItemForLease.setLease(getLease());
-        if (getLease() != null && getLease().getOccupancies() != null && getLease().getOccupancies().first() != null) {
-            invoiceItemForLease.setFixedAsset(getLease().getOccupancies().first().getUnit());
+        if (getLease() != null && getLease().primaryOccupancy().isPresent()) {
+            invoiceItemForLease.setFixedAsset(getLease().primaryOccupancy().get().getUnit());
         }
         return invoiceItemForLease;
     }

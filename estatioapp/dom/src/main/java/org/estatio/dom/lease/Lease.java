@@ -21,7 +21,9 @@ package org.estatio.dom.lease;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -251,10 +253,10 @@ public class Lease
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     public Property getProperty() {
-        if (getOccupancies().isEmpty()) {
-            return null;
+        if (!getOccupancies().isEmpty()){
+            return getOccupancies().first().getUnit().getProperty();
         }
-        return getOccupancies().first().getUnit().getProperty();
+        return null;
     }
 
     // //////////////////////////////////////
@@ -417,7 +419,18 @@ public class Lease
         }
     }
 
-    // //////////////////////////////////////
+    public Optional<Occupancy> primaryOccupancy() {
+        Comparator<Occupancy> byStartDateDescendingNullsFirst = (e1, e2) -> ObjectUtils.compare(e2.getStartDate(), e1.getStartDate(), true);
+        Comparator<Occupancy> byUnitAreaDescendingNullsLast = (e1, e2) -> ObjectUtils.compare(e2.getUnit().getArea(), e1.getUnit().getArea(), false);
+
+        //TODO: Dunno why but in order to make the sorted() work we have to convert getOccupancies from SortedSet to List. Argh.
+        final List<Occupancy> occupancies = new ArrayList<>(getOccupancies());
+        final Optional<Occupancy> first = occupancies.stream().sorted(
+                byStartDateDescendingNullsFirst.thenComparing(byUnitAreaDescendingNullsLast)
+        ).findFirst();
+        return first;
+
+    }
 
     /**
      * Added to the default fetch group in an attempt to resolve pre-prod error,
