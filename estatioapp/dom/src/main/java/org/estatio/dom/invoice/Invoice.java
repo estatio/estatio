@@ -587,6 +587,12 @@ public class Invoice
         if (ObjectUtils.compare(startDate, endDate) > 0) {
             return "Start date must be before end date";
         }
+        if (startDate == null && endDate == null) {
+            warnUser("Both start date and end date are empty. Is this done intentionally?");
+        }
+        if (startDate == null && endDate != null) {
+            warnUser("Start date is empty. Is this done intentionally?");
+        }
         return null;
     }
 

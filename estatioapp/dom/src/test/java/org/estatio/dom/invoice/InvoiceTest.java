@@ -418,4 +418,64 @@ public class InvoiceTest {
 
     }
 
+    public static class ValidateNewItemWithEmptyDates extends InvoiceTest {
+
+        @Mock
+        DomainObjectContainer mockContainer2;
+
+        String s = "Both start date and end date are empty. Is this done intentionally?";
+
+        @Before
+        public void setup() {
+            context.checking(new Expectations() {
+                {
+                    atLeast(1).of(mockContainer2).warnUser(s);
+                }
+            });
+        }
+
+        @Test
+        public void giveWarningForEmptyDates() throws Exception {
+            //Given
+            Invoice invoice = new Invoice();
+            invoice.setContainer(mockContainer2);
+
+            //When
+            //Then
+            invoice.validateNewItem(null, null, null, null, null);
+
+        }
+
+    }
+
+    public static class ValidateNewItemWithEmptyStartDate extends InvoiceTest {
+
+        @Mock
+        DomainObjectContainer mockContainer2;
+
+        String s = "Start date is empty. Is this done intentionally?";
+
+        @Before
+        public void setup() {
+            context.checking(new Expectations() {
+                {
+                    atLeast(1).of(mockContainer2).warnUser(s);
+                }
+            });
+        }
+
+        @Test
+        public void giveWarningForEmptyStartDate() throws Exception {
+            //Given
+            Invoice invoice = new Invoice();
+            invoice.setContainer(mockContainer2);
+
+            //When
+            //Then
+            invoice.validateNewItem(null, null, null, null, new LocalDate(2000,01,01));
+
+        }
+
+    }
+
 }
