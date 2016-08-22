@@ -19,10 +19,11 @@
 package org.estatio.app;
 
 import javax.inject.Inject;
+
 import org.apache.isis.applib.AbstractContainedObject;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
-import org.estatio.services.clock.ClockService;
 
 public abstract class EstatioViewModel extends AbstractContainedObject {
 

@@ -21,7 +21,7 @@ import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
-import org.estatio.services.clock.ClockService;
+import org.estatio.services.calendar.CalendarService;
 
 public class EstatioAppManifest implements AppManifest {
 
@@ -86,17 +86,17 @@ public class EstatioAppManifest implements AppManifest {
     @Override
     public List<Class<?>> getAdditionalServices() {
         List<Class<?>> additionalServices = Lists.newArrayList();
-        appendEstatioClockService(additionalServices);
+        appendEstatioCalendarService(additionalServices);
         appendOptionalServicesForSecurityModule(additionalServices);
         appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
         return additionalServices;
     }
 
-    protected void appendEstatioClockService(final List<Class<?>> additionalServices) {
+    protected void appendEstatioCalendarService(final List<Class<?>> additionalServices) {
         // TODO: need to create a module for this (the Estatio ClockService... else maybe use Isis')
         additionalServices.addAll(
                 Arrays.asList(
-                        ClockService.class
+                        CalendarService.class
                 )
         );
     }

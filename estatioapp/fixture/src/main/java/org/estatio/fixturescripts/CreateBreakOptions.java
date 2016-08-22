@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
@@ -30,7 +31,6 @@ import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.services.clock.ClockService;
 
 public class CreateBreakOptions extends DiscoverableFixtureScript {
 

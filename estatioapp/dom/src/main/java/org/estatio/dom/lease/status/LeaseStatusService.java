@@ -9,13 +9,14 @@ import com.google.common.eventbus.Subscribe;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseStatus;
-import org.estatio.services.clock.ClockService;
+
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class LeaseStatusService {

@@ -16,17 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.services.clock;
+package org.estatio.services.calendar;
+
+import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.clock.Clock;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class ClockService extends org.apache.isis.applib.services.clock.ClockService {
+public class CalendarService {
 
     private static final int MONTHS_IN_QUARTER = 3;
 
@@ -36,16 +37,20 @@ public class ClockService extends org.apache.isis.applib.services.clock.ClockSer
         return "estatioClockService";
     }
 
+    /**
+     * @deprecated - use {@link org.apache.isis.applib.services.clock.ClockService#nowAsMillis()}.
+     */
+    @Deprecated
     @Programmatic
     public long timestamp() {
-        return Clock.getTime();
+        return clockService.nowAsMillis();
     }
     
     // //////////////////////////////////////
 
     @Programmatic
     public LocalDate beginningOfMonth() {
-        return beginningOfMonth(now());
+        return beginningOfMonth(clockService.now());
     }
 
     static LocalDate beginningOfMonth(final LocalDate date) {
@@ -57,13 +62,13 @@ public class ClockService extends org.apache.isis.applib.services.clock.ClockSer
 
     @Programmatic
     public LocalDate beginningOfQuarter() {
-        final LocalDate date = now();
+        final LocalDate date = clockService.now();
         return beginningOfQuarter(date);
     }
 
     @Programmatic
     public LocalDate beginningOfNextQuarter() {
-        final LocalDate date = now().plusMonths(3);
+        final LocalDate date = clockService.now().plusMonths(3);
         return beginningOfQuarter(date);
     }
     
@@ -75,4 +80,6 @@ public class ClockService extends org.apache.isis.applib.services.clock.ClockSer
         return beginningOfMonth.minusMonths(monthOfYear-monthStartOfQuarter);
     }
 
+    @Inject
+    org.apache.isis.applib.services.clock.ClockService clockService;
 }

@@ -66,15 +66,15 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
-        return getClockService().beginningOfNextQuarter();
+        return getCalendarService().beginningOfNextQuarter();
     }
 
     public LocalDate default4CalculateInvoicesForProperty() {
-        return getClockService().beginningOfNextQuarter();
+        return getCalendarService().beginningOfNextQuarter();
     }
 
     public LocalDate default5CalculateInvoicesForProperty() {
-        return getClockService().beginningOfNextQuarter().plusDays(1);
+        return getCalendarService().beginningOfNextQuarter().plusDays(1);
     }
 
     public String validateCalculateInvoicesForProperty(
@@ -161,15 +161,15 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
     }
 
     public LocalDate default3Calculate() {
-        return getClockService().beginningOfNextQuarter();
+        return getCalendarService().beginningOfNextQuarter();
     }
 
     public LocalDate default4Calculate() {
-        return getClockService().beginningOfNextQuarter();
+        return getCalendarService().beginningOfNextQuarter();
     }
 
     public LocalDate default5Calculate() {
-        return getClockService().beginningOfNextQuarter().plusDays(1);
+        return getCalendarService().beginningOfNextQuarter().plusDays(1);
     }
 
     public String validateCalculate(

@@ -27,10 +27,11 @@ import javax.inject.Inject;
 import org.apache.isis.applib.AbstractService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.memento.MementoService;
 
-import org.estatio.services.clock.ClockService;
+import org.estatio.services.calendar.CalendarService;
 
 public abstract class UdoDomainService<T> extends AbstractService {
 
@@ -76,6 +77,13 @@ public abstract class UdoDomainService<T> extends AbstractService {
 
     protected ClockService getClockService() {
         return clockService;
+    }
+
+    @javax.inject.Inject
+    private CalendarService calendarService;
+
+    protected CalendarService getCalendarService() {
+        return calendarService;
     }
 
     @javax.inject.Inject

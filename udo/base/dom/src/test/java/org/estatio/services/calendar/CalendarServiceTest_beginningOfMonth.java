@@ -15,10 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.services.clock;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+package org.estatio.services.calendar;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,10 +27,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(Parameterized.class)
-public class ClockServiceTest_beginningOfMonth {
+import org.apache.isis.applib.services.clock.ClockService;
 
-    private ClockService clockService;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+@RunWith(Parameterized.class)
+public class CalendarServiceTest_beginningOfMonth {
+
+    private CalendarService calendarService;
+    private ClockService stubClockService;
     protected LocalDate now;
     private LocalDate expected;
 
@@ -47,24 +50,28 @@ public class ClockServiceTest_beginningOfMonth {
               });
     }
     
-    public ClockServiceTest_beginningOfMonth(LocalDate date, LocalDate expected) {
+    public CalendarServiceTest_beginningOfMonth(LocalDate date, LocalDate expected) {
         this.now = date;
         this.expected = expected;
     }
     
     @Before
     public void setUp() throws Exception {
-        clockService = new ClockService() {
+
+        stubClockService = new ClockService() {
             @Override
             public LocalDate now() {
                 return now;
             }
         };
+
+        calendarService = new CalendarService();
+        calendarService.clockService = stubClockService;
     }
     
     @Test
     public void test() throws Exception {
-        assertThat(clockService.beginningOfMonth(), is(expected));
+        assertThat(calendarService.beginningOfMonth(), is(expected));
     }
 
 
