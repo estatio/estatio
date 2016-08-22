@@ -65,7 +65,6 @@ public class EstatioSystemInitializer {
                             List<Class<?>> additionalServices = Lists.newArrayList();
                             appendEstatioCalendarService(additionalServices);
                             appendOptionalServicesForSecurityModule(additionalServices);
-                            appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
                             additionalServices.add(FakeLookupLocationService.class);
                             return additionalServices;
                         }

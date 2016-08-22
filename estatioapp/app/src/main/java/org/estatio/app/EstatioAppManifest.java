@@ -11,9 +11,7 @@ import com.google.common.collect.Maps;
 import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.SecurityModule;
-import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.dom.EstatioDomainModule;
@@ -88,7 +86,6 @@ public class EstatioAppManifest implements AppManifest {
         List<Class<?>> additionalServices = Lists.newArrayList();
         appendEstatioCalendarService(additionalServices);
         appendOptionalServicesForSecurityModule(additionalServices);
-        appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(additionalServices);
         return additionalServices;
     }
 
@@ -106,16 +103,6 @@ public class EstatioAppManifest implements AppManifest {
                 Arrays.asList(
                         org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
                         org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
-                )
-        );
-    }
-
-    protected void appendServicesForAddonsWithServicesThatAreCurrentlyMissingModules(final List<Class<?>> additionalServices) {
-        // TODO: missing a module to reference
-        additionalServices.addAll(
-                Arrays.asList(
-                        ExcelService.class,
-                        StringInterpolatorService.class
                 )
         );
     }
