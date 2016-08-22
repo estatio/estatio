@@ -62,6 +62,7 @@ import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.api.BudgetItemCreator;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationLink;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationLinkRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
@@ -71,6 +72,13 @@ import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.budgeting.viewmodels.BudgetOverview;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseItems;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.utils.TitleBuilder;
@@ -218,6 +226,34 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return budgetItemRepository.validateNewBudgetItem(this,budgetedValue,charge);
     }
 
+    /* TODO: this action meant is for convenience during developing and testing and has to be removed / disabled when being taken into production*/
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void removeBudget(){
+        /* delete budget calculation links*/
+        for (BudgetCalculationLink link : this.getBudgetCalculationLinks()){
+            link.remove();
+        }
+
+        /* delete budget calculations*/
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)){
+            calculation.remove();
+        }
+
+        /* of all lease items of type service_charge_budgeted delete all lease terms with no calculations*/
+        for (Lease lease : leaseRepository.allLeases()){
+            for (LeaseItem leaseItem : leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.SERVICE_CHARGE_BUDGETED)){
+                for (LeaseTerm term : leaseItem.getTerms()){
+                    LeaseTermForServiceCharge termForServiceCharge = (LeaseTermForServiceCharge) term;
+                    if (budgetCalculationLinkRepository.findByLeaseTerm(termForServiceCharge).isEmpty()){
+                        termForServiceCharge.remove();
+                    }
+                }
+            }
+        }
+
+        remove(this);
+    }
+
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout()
     public Budget removeAllBudgetItems() {
@@ -335,5 +371,14 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
 
     @Inject
     private KeyTableRepository keyTableRepository;
+
+    @Inject
+    private LeaseRepository leaseRepository;
+
+    @Inject
+    private LeaseItems leaseItemRepository;
+
+    @Inject
+    private BudgetCalculationLinkRepository budgetCalculationLinkRepository;
 
 }
