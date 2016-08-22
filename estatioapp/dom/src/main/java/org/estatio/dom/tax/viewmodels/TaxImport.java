@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
@@ -53,17 +54,20 @@ public class TaxImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String rateExternalReference;
 
-    @Override public List<Class> importAfter() {
-        return Lists.newArrayList();
+    @Programmatic
+    @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
+        return importData(previousRow);
     }
 
-    @Override
-    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
-        return importData();
-    }
-
-    @Override
+    // REVIEW: other import view models have @Action annotation here...  but in any case, is this view model actually ever surfaced in the UI?
     public List<Object> importData() {
+        return importData(null);
+    }
+
+    @Programmatic
+    @Override
+    public List<Object> importData(final Object previousRow) {
 
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 

@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -26,7 +27,6 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
-import org.estatio.dom.tax.viewmodels.TaxImport;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,14 +65,21 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String externalReference;
 
+    @Programmatic
     @Override
-    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
-        return importData();
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
+        return importData(previousRow);
+    }
+
+    // REVIEW: is this view model actually ever surfaced in the UI?
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
+    public List<Object> importData() {
+        return importData(null);
     }
 
     @Override
-    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
-    public List<Object> importData() {
+    @Programmatic
+    public List<Object> importData(Object previousRow) {
 
         final ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
 
@@ -85,11 +92,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         charge.setSortOrder(sortOrder);
 
         return Lists.newArrayList(charge);
-    }
-
-    @Override
-    public List<Class> importAfter() {
-        return Lists.newArrayList(TaxImport.class);
     }
 
     private ChargeGroup fetchOrCreateChargeGroup(final String reference, final String name) {

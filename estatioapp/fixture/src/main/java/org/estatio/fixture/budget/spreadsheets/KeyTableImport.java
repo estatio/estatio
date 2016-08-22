@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
@@ -62,11 +63,6 @@ public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
     private BigDecimal keytableJSourceValue;
     private BigDecimal keytableJValue;
 
-    @Override
-    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
-        return importData();
-    }
-
 
     private KeyItem findOrCreatKeyItem(
             final KeyTable keyTable,
@@ -83,8 +79,20 @@ public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
         return keyItem;
     }
 
+    @Programmatic
     @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
+        return importData(previousRow);
+    }
+
+    // REVIEW: other import view models have @Action annotation here...  but in any case, is this view model actually ever surfaced in the UI?
     public List<Object> importData() {
+        return importData(null);
+    }
+
+    @Programmatic
+    @Override
+    public List<Object> importData(final Object previousRow) {
 
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         Budget budget = budgetRepository.findOrCreateBudget(property, startDate, endDate);
@@ -187,10 +195,6 @@ public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
         }
 
         return Lists.newArrayList();
-    }
-
-    @Override public List<Class> importAfter() {
-        return null;
     }
 
     public String getPropertyReference() {

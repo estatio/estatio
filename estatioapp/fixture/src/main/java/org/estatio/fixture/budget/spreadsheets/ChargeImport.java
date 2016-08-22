@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
@@ -42,11 +43,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private String chargeDescription;
     private String chargeTaxReference;
     private String applicationTenancyPath;
-
-    @Override
-    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
-        return importData();
-    }
 
     private ChargeGroup findOrCreateChargeGroup(String name) {
 
@@ -86,9 +82,21 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         return charge;
     }
 
+    @Programmatic
     @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
+        return importData();
+    }
+
+    // REVIEW: is this view model actually ever surfaced in the UI?
     @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
     public List<Object> importData() {
+        return importData(null);
+    }
+
+    @Override
+    @Programmatic
+    public List<Object> importData(Object previousRow) {
 
         ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath("/" + getApplicationTenancyPath());
         Tax tax = taxes.findByReference(getChargeTaxReference());
@@ -122,10 +130,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         }
 
         return Lists.newArrayList();
-    }
-
-    @Override public List<Class> importAfter() {
-        return null;
     }
 
     @MemberOrder(sequence = "1")

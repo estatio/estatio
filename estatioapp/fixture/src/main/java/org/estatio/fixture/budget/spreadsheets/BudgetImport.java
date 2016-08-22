@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
@@ -61,11 +62,6 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
     private BigDecimal keytableIPercentage;
     private BigDecimal keytableJPercentage;
 
-    @Override
-    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
-        return importData();
-    }
-
     private BudgetItem findOrCreateBudgetItem(
             final Property property,
             final LocalDate startDate,
@@ -93,9 +89,22 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
         return budgetItemAllocation;
     }
 
+
+    @Programmatic
     @Override
+    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
+        return importData(previousRow);
+    }
+
+    // REVIEW: is this view model actually ever surfaced in the UI?
     @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION)
     public List<Object> importData() {
+        return importData(null);
+    }
+
+    @Programmatic
+    @Override
+    public List<Object> importData(final Object previousRow) {
 
         final Property property = propertyRepository.findPropertyByReference(getPropertyReference());
 
@@ -173,10 +182,6 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
         }
 
         return Lists.newArrayList();
-    }
-
-    @Override public List<Class> importAfter() {
-        return null;
     }
 
     @MemberOrder(sequence = "1")

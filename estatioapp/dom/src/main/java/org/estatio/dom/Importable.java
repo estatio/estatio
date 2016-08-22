@@ -22,7 +22,10 @@ import java.util.List;
 
 public interface Importable {
 
-    public List<Object> importData();
+    /**
+     * @param previousRow, if any.
+     * @return created objects (so that the fixture framework can make available to calling test or in the UI)
+     */
+    List<Object> importData(Object previousRow);
 
-    public List<Class> importAfter();
 }

@@ -10,13 +10,12 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -82,15 +81,15 @@ public class InvoiceImportLine implements Importable {
     @Getter @Setter
     private LocalDate itemEndDate;
 
-
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    @Override public List<Class> importAfter() {
-        return null;
+    // REVIEW: is this view model actually ever surfaced in the UI?
+    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public List<Object> importData() {
+        return importData(null);
     }
 
     @Override
-    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public List<Object> importData() {
+    @Programmatic
+    public List<Object> importData(final Object previousRow) {
 
         List<Object> result = new ArrayList<>();
         Lease lease = fetchLease(getLeaseReference());

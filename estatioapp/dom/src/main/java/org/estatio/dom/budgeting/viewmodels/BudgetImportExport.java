@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -86,13 +87,15 @@ public class BudgetImportExport implements Importable {
     @Getter @Setter
     private BigDecimal percentage;
 
-    @Override public List<Class> importAfter() {
-        return null;
+    // REVIEW: is this view model actually ever surfaced in the UI?
+    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
+    public List<Object> importData() {
+        return importData(null);
     }
 
     @Override
-    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
-    public List<Object> importData() {
+    @Programmatic
+    public List<Object> importData(final Object previousRow) {
 
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         if (property == null) throw  new ApplicationException(String.format("Property with reference [%s] not found.", getPropertyReference()));
