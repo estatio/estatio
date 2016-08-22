@@ -10,38 +10,67 @@
         </col>
     </row>
     <row>
-        <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="lease"/>
-                <ns2:property id="unit"/>
-                <ns2:property id="startDate"/>
-                <ns2:property id="endDate">
-                    <ns2:action id="changeDates" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
+        <col span="6">
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <ns2:property id="lease"/>
+                                <ns2:property id="unit"/>
+                                <ns2:property id="startDate"/>
+                                <ns2:property id="endDate">
+                                    <ns2:action id="changeDates" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
-        <col span="4">
-            <ns2:fieldSet name="Classification" id="classification">
-                <ns2:property id="sector"/>
-                <ns2:property id="activity"/>
-                <ns2:property id="brand"/>
-                <ns2:property id="unitSize">
-                    <ns2:action id="changeClassification" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
+        <col span="6">
+            <tabGroup>
+                <tab name="Estatio Classifications">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Classification" id="classification">
+                                <ns2:property id="sector"/>
+                                <ns2:property id="activity"/>
+                                <ns2:property id="brand"/>
+                                <ns2:property id="unitSize">
+                                    <ns2:action id="changeClassification" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other Classifications">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="classifications"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
             <ns2:fieldSet name="Reporting" id="reporting">
                 <ns2:property id="reportTurnover"/>
                 <ns2:property id="reportRent"/>
@@ -50,6 +79,7 @@
                 </ns2:property>
             </ns2:fieldSet>
         </col>
-        <col span="8" unreferencedCollections="true"/>
+        <col span="12" unreferencedCollections="true">
+        </col>
     </row>
 </grid>
