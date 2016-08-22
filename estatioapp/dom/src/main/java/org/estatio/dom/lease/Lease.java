@@ -60,6 +60,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -366,6 +367,13 @@ public class Lease
     }
 
     // //////////////////////////////////////
+
+    @Override
+    public String disableChangeDates(
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to change the dates" : null;
+    }
 
     @Programmatic
     @Override

@@ -25,9 +25,12 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
@@ -406,6 +409,10 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
 
     public static class ChangeDates extends LeaseIntegTest {
 
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
+
         @Before
         public void setupData() {
             runFixtureScript(new FixtureScript() {
@@ -431,6 +438,12 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
         @Test
         public void onDateChange() throws Exception {
 
+            //then
+            expectedException.expect(DisabledException.class);
+            expectedException.expectMessage("You need administrator rights to change the dates");
+
+            // when
+            wrap(leaseTopModel).changeDates(null, null);
         }
     }
 
