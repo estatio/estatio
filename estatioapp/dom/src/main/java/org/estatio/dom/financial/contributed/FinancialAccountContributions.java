@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
@@ -54,6 +55,7 @@ public class FinancialAccountContributions extends UdoDomainService<FinancialAcc
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(hidden = Where.EVERYWHERE)
     @MemberOrder(name = "financialAccounts", sequence = "1")
     public FinancialAccount addAccount(
             final Party owner,

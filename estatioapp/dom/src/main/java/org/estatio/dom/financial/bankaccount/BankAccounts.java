@@ -58,7 +58,7 @@ public class BankAccounts extends UdoDomainRepositoryAndFactory<BankAccount> {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public BankAccount newBankAccount(
             final Party owner,
             final String iban,

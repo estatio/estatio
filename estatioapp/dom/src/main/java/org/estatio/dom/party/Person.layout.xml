@@ -52,7 +52,9 @@
                 <ns2:action id="newRelatedPerson"/>
             </ns2:collection>
             <ns2:collection id="currentBankMandates"/>
-            <ns2:collection id="financialAccounts"/>
+            <ns2:collection id="financialAccounts">
+                <ns2:action id="newBankAccount"/>
+            </ns2:collection>
             <ns2:collection id="registrations"/>
             <ns2:collection id="agreements"/>
             <ns2:collection id="invoicesFrom"/>
