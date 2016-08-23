@@ -20,9 +20,7 @@ package org.estatio.dom.apptenancy;
  * For entities that can reside only at the property (eg <tt>/it/CAR</tt>) level in the application tenancy hierarchy.
  *
  * <p>
- *     Examples (unsurprisingly) include {@link org.estatio.dom.asset.Property} itself and {@link org.estatio.dom.asset.Unit},
- *     but also {@link org.estatio.dom.lease.Lease} and {@link org.estatio.dom.lease.Occupancy} and
- *     {@link org.estatio.dom.agreement.AgreementRole}.
+ *     Examples (unsurprisingly) include Property itself and Unit, but also Lease and Occupancy and AgreementRole.
  * </p>
  */
 public interface WithApplicationTenancyProperty {

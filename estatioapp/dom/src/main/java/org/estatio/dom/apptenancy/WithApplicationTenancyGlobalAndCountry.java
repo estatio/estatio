@@ -21,7 +21,7 @@ package org.estatio.dom.apptenancy;
  * in the application tenancy hierarchy.
  *
  * <p>
- *     None currently.  We expect that to change if {@link org.estatio.dom.party.Organisation organisation} hierarchies
+ *     None currently.  We expect that to change if Organisation hierarchies
  *     are introduced into Estatio in the future.
  * </p>
  */

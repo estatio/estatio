@@ -20,8 +20,7 @@ package org.estatio.dom.apptenancy;
  * For entities that can reside only at the country (eg <tt>/it</tt>) level in the application tenancy hierarchy.
  * 
  * <p>
- *     Examples include {@link org.estatio.dom.party.Organisation} and associated entities such as 
- *     {@link org.estatio.dom.financial.bankaccount.BankAccount}, {@link org.estatio.dom.communicationchannel.CommunicationChannel}.
+ *     Examples include Organisation and associated entities such as BankAccount, CommunicationChannel.
  * </p>
  */
 public interface WithApplicationTenancyCountry {

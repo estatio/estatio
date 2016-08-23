@@ -22,8 +22,7 @@ package org.estatio.dom.apptenancy;
  * that is <i>not</i> the purvue of the Carasello TA.
  * 
  * <p>
- *     Examples of entities include {@link org.estatio.dom.lease.LeaseItem}, {@link org.estatio.dom.lease.LeaseTerm},
- *     {@link org.estatio.dom.invoice.InvoiceItem} and {@link org.estatio.dom.invoice.Invoice}.
+ *     Examples of entities include LeaseItem, LeaseTerm, InvoiceItem and Invoice.
  * </p>
  */
 public interface WithApplicationTenancyPropertyLocal {

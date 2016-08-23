@@ -20,9 +20,7 @@ package org.estatio.dom.apptenancy;
  * For entities that reside only at the global (<tt>/</tt>) level in the application tenancy hierarchy.
  *
  * <p>
- *     Examples include {@link org.estatio.dom.charge.ChargeGroup}, {@link org.estatio.dom.currency.Currency},
- *     {@link org.estatio.dom.agreement.AgreementType}, {@link org.estatio.dom.geography.Country},
- *     {@link org.estatio.dom.lease.tags.Sector}.
+ *     Examples include ChargeGroup, Currency, AgreementType, Country, Sector
  * </p>
  */
 public interface WithApplicationTenancyGlobal {
