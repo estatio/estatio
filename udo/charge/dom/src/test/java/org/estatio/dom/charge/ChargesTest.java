@@ -18,21 +18,24 @@
  */
 package org.estatio.dom.charge;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.tax.Tax;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.List;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.IsisMatchers;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.tax.Tax;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

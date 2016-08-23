@@ -20,101 +20,74 @@ package org.estatio.dom.tax;
 
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
+import org.estatio.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class TaxRatesTest {
+public class TaxRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    TaxRateRepository taxRateRepository;
-
-    TaxRateMenu taxRateMenu;
-
-    Tax tax;
-    LocalDate date;
+    TaxRepository taxRepository;
 
     @Before
     public void setup() {
 
-        tax = new Tax();
-        date = new LocalDate(2013, 4, 1);
-
-        taxRateRepository = new TaxRateRepository() {
+        taxRepository = new TaxRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
-
             @Override
-            protected List<TaxRate> allInstances() {
+            protected List<Tax> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
-
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
-        };
-
-        taxRateMenu = new TaxRateMenu() {
-
             @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
                 return null;
             }
 
-            @Override
-            protected List<TaxRate> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
         };
     }
 
-    public static class FindTaxRateByTaxAndDate extends TaxRatesTest {
+    public static class FindByReference extends TaxRepositoryTest {
         @Test
         public void happyCase() {
 
-            taxRateRepository.findTaxRateByTaxAndDate(tax, date);
+            taxRepository.findByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(TaxRate.class));
-            assertThat(finderInteraction.getQueryName(), is("findByTaxAndDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("tax"), is((Object) tax));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object) date));
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Tax.class));
+            assertThat(finderInteraction.getQueryName(), is("findByReference"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
         }
     }
 
-    public static class AllTaxRates extends TaxRatesTest {
+    public static class AllTaxes extends TaxRepositoryTest {
 
         @Test
-        public void happyCase() {
+        public void allTaxes() {
 
-            taxRateMenu.allTaxRates();
+            taxRepository.allTaxes();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

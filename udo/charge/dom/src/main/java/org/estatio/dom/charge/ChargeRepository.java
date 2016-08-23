@@ -20,8 +20,6 @@ package org.estatio.dom.charge;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -36,7 +34,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
@@ -115,10 +112,6 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
                 "reference", reference);
     }
 
-    // //////////////////////////////////////
-
-    @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
 
 }

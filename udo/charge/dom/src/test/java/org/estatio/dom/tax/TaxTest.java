@@ -20,6 +20,8 @@ package org.estatio.dom.tax;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.jmock.Expectations;
 import org.jmock.api.Action;
@@ -30,12 +32,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.estatio.IsisMatchers;
+
 import static org.junit.Assert.assertEquals;
 
 public class TaxTest {
@@ -152,7 +155,7 @@ public class TaxTest {
                 };
             };
             //when, then
-            assertThat(tax.grossFromNet(new BigDecimal("100.00"), new LocalDate(2013,1,1))).isEqualTo(new BigDecimal("121.00"));
+            Assertions.assertThat(tax.grossFromNet(new BigDecimal("100.00"), new LocalDate(2013,1,1))).isEqualTo(new BigDecimal("121.00"));
 
         }
 
