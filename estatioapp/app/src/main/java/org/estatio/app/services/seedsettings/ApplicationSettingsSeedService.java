@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domsettings;
+package org.estatio.app.services.seedsettings;
 
 import java.util.Map;
 
@@ -29,6 +29,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.domsettings.ApplicationSettingKey;
+import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 /**
  *Installs default settings on  {@link #init(Map) initialization}.
