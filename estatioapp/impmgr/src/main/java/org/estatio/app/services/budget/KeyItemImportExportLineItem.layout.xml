@@ -2,7 +2,9 @@
 <grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
+            <ns2:domainObject bookmarking="AS_ROOT">
+                <ns2:named>Bulk import/export budget key line item</ns2:named>
+            </ns2:domainObject>
             <ns2:action id="recentChanges"/>
             <ns2:action id="downloadLayoutXml"/>
             <ns2:action id="apply"/>
@@ -13,13 +15,13 @@
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="keyTableName"/>
-                <ns2:property id="comments"/>
-                <ns2:property id="propertyReference"/>
-                <ns2:property id="keyValue"/>
-                <ns2:property id="sourceValue"/>
-                <ns2:property id="startDate"/>
                 <ns2:property id="unitReference"/>
+                <ns2:property id="propertyReference"/>
+                <ns2:property id="startDate"/>
+                <ns2:property id="sourceValue"/>
+                <ns2:property id="keyValue"/>
                 <ns2:property id="status"/>
+                <ns2:property id="comments"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>

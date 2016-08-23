@@ -26,14 +26,12 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -49,14 +47,11 @@ import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel
-@DomainObjectLayout(
-        named = "Bulk import/export budget key line item",
-        bookmarking = BookmarkPolicy.AS_ROOT
-)
+@DomainObject(nature = Nature.VIEW_MODEL)
 public class KeyItemImportExportLineItem
         implements Comparable<KeyItemImportExportLineItem> {
 
+    //region > constructors, title
     public KeyItemImportExportLineItem() {
     }
 
@@ -85,45 +80,37 @@ public class KeyItemImportExportLineItem
     public String title() {
         return "key item import / export";
     }
+    //endregion
 
-    @MemberOrder(sequence = "1")
+
     @Getter @Setter
     private String keyTableName;
 
-    @MemberOrder(sequence = "2")
     @Getter @Setter
     private String unitReference;
 
-    @MemberOrder(sequence = "3")
     @Getter @Setter
     private String propertyReference;
 
-    @MemberOrder(sequence = "4")
     @Getter @Setter
     private LocalDate startDate;
 
     @Column(scale = 6)
-    @MemberOrder(sequence = "5")
     @Getter @Setter
     private BigDecimal sourceValue;
 
     @Column(scale = 6)
-    @MemberOrder(sequence = "6")
     @Getter @Setter
     private BigDecimal keyValue;
 
-    @MemberOrder(sequence = "7")
     @Getter @Setter
     private Status status;
 
-    @MemberOrder(sequence = "8")
     @Getter @Setter
     private String comments;
 
-    // //////////////////////////////////////
-    // apply
-    // //////////////////////////////////////
 
+    //region > apply (action)
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             invokeOn = InvokeOn.OBJECT_AND_COLLECTION,
@@ -164,6 +151,8 @@ public class KeyItemImportExportLineItem
 
         return getKeyItem();
     }
+    //endregion
+
 
     @Programmatic
     public void validate() {
@@ -225,19 +214,15 @@ public class KeyItemImportExportLineItem
         return property;
     }
 
-    // //////////////////////////////////////
-    // compareTo
-    // //////////////////////////////////////
-
+    //region > compareTo
     @Override
     public int compareTo(final KeyItemImportExportLineItem other) {
         return this.keyItem.compareTo(other.keyItem);
     }
+    //endregion
 
-    // //////////////////////////////////////
-    // injected services
-    // //////////////////////////////////////
 
+    //region > injected services
     @javax.inject.Inject
     private KeyItemRepository keyItemRepository;
 
@@ -255,5 +240,6 @@ public class KeyItemImportExportLineItem
 
     @Inject
     private BudgetRepository budgetRepository;
+    //endregion
 
 }
