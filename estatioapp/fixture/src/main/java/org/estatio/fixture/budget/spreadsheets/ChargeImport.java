@@ -30,6 +30,9 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
@@ -37,11 +40,22 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private static int numberOfChargeGroupsCreated = 0;
     private static int numberOfChargesCreated = 0;
 
+    @Getter @Setter
     private String chargeReference;
+
+    @Getter @Setter
     private String chargeGroupName;
+
+    @Getter @Setter
     private String chargeName;
+
+    @Getter @Setter
     private String chargeDescription;
+
+    @Getter @Setter
     private String chargeTaxReference;
+
+    @Getter @Setter
     private String applicationTenancyPath;
 
     private ChargeGroup findOrCreateChargeGroup(String name) {
@@ -129,33 +143,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         }
 
         return Lists.newArrayList();
-    }
-
-    @MemberOrder(sequence = "1")
-    public String getChargeReference() {
-        return chargeReference;
-    }
-
-    public void setChargeReference(String chargeReference) {
-        this.chargeReference = chargeReference;
-    }
-
-    @MemberOrder(sequence = "2")
-    public String getChargeGroupName() {
-        return chargeGroupName;
-    }
-
-    public void setChargeGroupName(String chargeGroupName) {
-        this.chargeGroupName = chargeGroupName;
-    }
-
-    @MemberOrder(sequence = "3")
-    public String getChargeName() {
-        return chargeName;
-    }
-
-    public void setChargeName(String chargeName) {
-        this.chargeName = chargeName;
     }
 
     @MemberOrder(sequence = "4")

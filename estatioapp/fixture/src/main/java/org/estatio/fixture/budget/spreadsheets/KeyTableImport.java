@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Programmatic;
@@ -32,35 +31,85 @@ import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @ViewModel
 public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
 
     private static int numberOfRecords = 0;
     private static int[] counter = new int[10];
 
+    @Getter @Setter
     private String propertyReference;
+
+    @Getter @Setter
     private LocalDate startDate;
+
+    @Getter @Setter
     private LocalDate endDate;
+
+    @Getter @Setter
     private String unitReference;
+
+    @Getter @Setter
     private BigDecimal keytableASourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableAValue;
+
+    @Getter @Setter
     private BigDecimal keytableBSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableBValue;
+
+    @Getter @Setter
     private BigDecimal keytableCSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableCValue;
+
+    @Getter @Setter
     private BigDecimal keytableDSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableDValue;
+
+    @Getter @Setter
     private BigDecimal keytableESourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableEValue;
+
+    @Getter @Setter
     private BigDecimal keytableFSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableFValue;
+
+    @Getter @Setter
     private BigDecimal keytableGSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableGValue;
+
+    @Getter @Setter
     private BigDecimal keytableHSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableHValue;
+
+    @Getter @Setter
     private BigDecimal keytableISourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableIValue;
+
+    @Getter @Setter
     private BigDecimal keytableJSourceValue;
+
+    @Getter @Setter
     private BigDecimal keytableJValue;
 
 
@@ -197,202 +246,7 @@ public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
         return Lists.newArrayList();
     }
 
-    public String getPropertyReference() {
-        return propertyReference;
-    }
 
-    public void setPropertyReference(String propertyReference) {
-        this.propertyReference = propertyReference;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getUnitReference() {
-        return unitReference;
-    }
-
-    public void setUnitReference(String unitReference) {
-        this.unitReference = unitReference;
-    }
-
-    public BigDecimal getKeytableASourceValue() {
-        return keytableASourceValue;
-    }
-
-    public void setKeytableASourceValue(BigDecimal keytableASourceValue) {
-        this.keytableASourceValue = keytableASourceValue;
-    }
-
-    public BigDecimal getKeytableAValue() {
-        return keytableAValue;
-    }
-
-    public void setKeytableAValue(BigDecimal keytableAValue) {
-        this.keytableAValue = keytableAValue;
-    }
-
-    public BigDecimal getKeytableBSourceValue() {
-        return keytableBSourceValue;
-    }
-
-    public void setKeytableBSourceValue(BigDecimal keytableBSourceValue) {
-        this.keytableBSourceValue = keytableBSourceValue;
-    }
-
-    public BigDecimal getKeytableBValue() {
-        return keytableBValue;
-    }
-
-    public void setKeytableBValue(BigDecimal keytableBValue) {
-        this.keytableBValue = keytableBValue;
-    }
-
-    public BigDecimal getKeytableCSourceValue() {
-        return keytableCSourceValue;
-    }
-
-    public void setKeytableCSourceValue(BigDecimal keytableCSourceValue) {
-        this.keytableCSourceValue = keytableCSourceValue;
-    }
-
-    public BigDecimal getKeytableCValue() {
-        return keytableCValue;
-    }
-
-    public void setKeytableCValue(BigDecimal keytableCValue) {
-        this.keytableCValue = keytableCValue;
-    }
-
-    public BigDecimal getKeytableDSourceValue() {
-        return keytableDSourceValue;
-    }
-
-    public void setKeytableDSourceValue(BigDecimal keytableDSourceValue) {
-        this.keytableDSourceValue = keytableDSourceValue;
-    }
-
-    public BigDecimal getKeytableDValue() {
-        return keytableDValue;
-    }
-
-    public void setKeytableDValue(BigDecimal keytableDValue) {
-        this.keytableDValue = keytableDValue;
-    }
-
-    public BigDecimal getKeytableESourceValue() {
-        return keytableESourceValue;
-    }
-
-    public void setKeytableESourceValue(BigDecimal keytableESourceValue) {
-        this.keytableESourceValue = keytableESourceValue;
-    }
-
-    public BigDecimal getKeytableEValue() {
-        return keytableEValue;
-    }
-
-    public void setKeytableEValue(BigDecimal keytableEValue) {
-        this.keytableEValue = keytableEValue;
-    }
-
-    public BigDecimal getKeytableFSourceValue() {
-        return keytableFSourceValue;
-    }
-
-    public void setKeytableFSourceValue(BigDecimal keytableFSourceValue) {
-        this.keytableFSourceValue = keytableFSourceValue;
-    }
-
-    public BigDecimal getKeytableFValue() {
-        return keytableFValue;
-    }
-
-    public void setKeytableFValue(BigDecimal keytableFValue) {
-        this.keytableFValue = keytableFValue;
-    }
-
-    public BigDecimal getKeytableGSourceValue() {
-        return keytableGSourceValue;
-    }
-
-    public void setKeytableGSourceValue(BigDecimal keytableGSourceValue) {
-        this.keytableGSourceValue = keytableGSourceValue;
-    }
-
-    public BigDecimal getKeytableGValue() {
-        return keytableGValue;
-    }
-
-    public void setKeytableGValue(BigDecimal keytableGValue) {
-        this.keytableGValue = keytableGValue;
-    }
-
-    public BigDecimal getKeytableHSourceValue() {
-        return keytableHSourceValue;
-    }
-
-    public void setKeytableHSourceValue(BigDecimal keytableHSourceValue) {
-        this.keytableHSourceValue = keytableHSourceValue;
-    }
-
-    public BigDecimal getKeytableHValue() {
-        return keytableHValue;
-    }
-
-    public void setKeytableHValue(BigDecimal keytableHValue) {
-        this.keytableHValue = keytableHValue;
-    }
-
-    public BigDecimal getKeytableISourceValue() {
-        return keytableISourceValue;
-    }
-
-    public void setKeytableISourceValue(BigDecimal keytableISourceValue) {
-        this.keytableISourceValue = keytableISourceValue;
-    }
-
-    public BigDecimal getKeytableIValue() {
-        return keytableIValue;
-    }
-
-    public void setKeytableIValue(BigDecimal keytableIValue) {
-        this.keytableIValue = keytableIValue;
-    }
-
-    public BigDecimal getKeytableJSourceValue() {
-        return keytableJSourceValue;
-    }
-
-    public void setKeytableJSourceValue(BigDecimal keytableJSourceValue) {
-        this.keytableJSourceValue = keytableJSourceValue;
-    }
-
-    public BigDecimal getKeytableJValue() {
-        return keytableJValue;
-    }
-
-    public void setKeytableJValue(BigDecimal keytableJValue) {
-        this.keytableJValue = keytableJValue;
-    }
-
-
-    private static String pretty(final String str) {
-        return str == null? null : StringUtils.capitalize(str.toLowerCase());
-    }
 
     @Inject
     private PropertyRepository propertyRepository;

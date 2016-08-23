@@ -13,12 +13,12 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="applicationTenancyPath"/>
-                <ns2:property id="chargeTaxReference"/>
                 <ns2:property id="chargeReference"/>
                 <ns2:property id="chargeGroupName"/>
                 <ns2:property id="chargeName"/>
                 <ns2:property id="chargeDescription"/>
+                <ns2:property id="chargeTaxReference"/>
+                <ns2:property id="applicationTenancyPath"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>
