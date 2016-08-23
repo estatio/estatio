@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domlink;
+package org.estatio.app.menus.link;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,6 +30,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Root;
 
+import org.estatio.domlink.Link;
+import org.estatio.domlink.LinkRepository;
 import org.estatio.domsettings.EstatioSettingsService;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)

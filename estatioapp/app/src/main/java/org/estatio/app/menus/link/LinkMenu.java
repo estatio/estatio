@@ -1,4 +1,4 @@
-package org.estatio.domlink;
+package org.estatio.app.menus.link;
 
 import java.util.List;
 
@@ -11,6 +11,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.domlink.Link;
+import org.estatio.domlink.LinkRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(named = "Administration", menuBar = DomainServiceLayout.MenuBar.SECONDARY)
