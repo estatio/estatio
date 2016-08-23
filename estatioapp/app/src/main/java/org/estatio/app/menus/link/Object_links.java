@@ -23,8 +23,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
@@ -34,13 +33,20 @@ import org.estatio.domlink.Link;
 import org.estatio.domlink.LinkRepository;
 import org.estatio.domsettings.EstatioSettingsService;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class LinkContributions  {
+@Mixin
+public class Object_links {
+
+    //region > constructor
+    private final Object domainObject;
+
+    public Object_links(final Object domainObject) {
+        this.domainObject = domainObject;
+    }
+    //endregion
+
 
     @Action(semantics = SemanticsOf.SAFE)
-    public URL links(
-            final Object domainObject,
-            final Link link) throws MalformedURLException {
+    public URL $$(final Link link) throws MalformedURLException {
         final Root root = new Root(domainObject){
             @SuppressWarnings("unused")
             public String getReportServerBaseUrl() {
@@ -51,19 +57,16 @@ public class LinkContributions  {
         return new URL(urlStr);
     }
     
-    public boolean hideLinks(final Object domainObject, final Link link) {
-         return allForClassHierarchyOf(domainObject).isEmpty();
+    public boolean hide$$(final Link link) {
+         return choices0$$(link).isEmpty();
     }
 
-    public List<Link> choices1Links(final Object domainObject, final Link link) {
-        return allForClassHierarchyOf(domainObject);
-    }
-
-    private List<Link> allForClassHierarchyOf(final Object domainObject) {
+    public List<Link> choices0$$(final Link link) {
         return linkRepository.findAllForClassHierarchy(domainObject);
     }
 
-    // //////////////////////////////////////
+
+    //region > injected services
 
     @javax.inject.Inject
     private StringInterpolatorService stringInterpolator;
@@ -73,4 +76,7 @@ public class LinkContributions  {
     
     @javax.inject.Inject
     private EstatioSettingsService estatioSettingsService;
+
+    //endregion
+
 }
