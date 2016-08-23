@@ -36,7 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -82,7 +82,8 @@ public class AgreementRoleCommunicationChannelType
 
     @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        return securityApplicationTenancyRepository.findByPathCached(
+                ApplicationTenancyConstants.GLOBAL_PATH);
     }
 
     // //////////////////////////////////////

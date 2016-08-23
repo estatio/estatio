@@ -33,8 +33,6 @@ import org.estatio.dom.UdoDomainService;
 @DomainService
 public class ApplicationTenancyInvariantsService extends UdoDomainService<ApplicationTenancyInvariantsService> {
 
-    public static final String GLOBAL_APPLICATION_TENANCY_PATH = "/";
-
     // //////////////////////////////////////
 
     private ApplicationTenancySubscriberAlgorithmRegistry algorithmRegistry;

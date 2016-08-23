@@ -36,7 +36,7 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
-import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.ClassUtils;
 import org.estatio.dom.utils.TitleBuilder;
@@ -74,7 +74,8 @@ public class FixedAssetRegistrationType
 
     @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH);
+        return securityApplicationTenancyRepository.findByPathCached(
+                ApplicationTenancyConstants.GLOBAL_PATH);
     }
 
     // //////////////////////////////////////

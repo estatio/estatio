@@ -26,7 +26,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
+import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
@@ -70,7 +70,8 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(ApplicationTenancyInvariantsService.GLOBAL_APPLICATION_TENANCY_PATH));
+        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(
+                ApplicationTenancyConstants.GLOBAL_PATH));
         Lease lease = leaseMenu.newLease(
                 unit.getApplicationTenancy(), reference,
                 name,
