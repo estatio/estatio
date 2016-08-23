@@ -1,4 +1,4 @@
-package org.estatio.dom.tax.viewmodels;
+package org.estatio.app.services.budget;
 
 import java.math.BigDecimal;
 import java.util.List;
