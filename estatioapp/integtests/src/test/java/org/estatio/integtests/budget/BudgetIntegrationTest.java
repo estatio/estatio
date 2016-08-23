@@ -5,9 +5,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -72,6 +75,9 @@ public class BudgetIntegrationTest extends EstatioIntegrationTest {
         Budget budget2015;
         LeaseItem topmodelBudgetServiceChargeItem;
 
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
         @Before
         public void setUp() {
             propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
@@ -96,7 +102,7 @@ public class BudgetIntegrationTest extends EstatioIntegrationTest {
             assertThat(topmodelBudgetServiceChargeItem.getTerms().size()).isEqualTo(1);
 
             // when
-            wrap(budget2015).removeBudget();
+            budget2015.removeBudget(true);
 
             // then
             assertThat(budgetRepository.findByProperty(propertyOxf).size()).isEqualTo(1);
@@ -104,6 +110,17 @@ public class BudgetIntegrationTest extends EstatioIntegrationTest {
             assertThat(budgetCalculationLinkRepository.allBudgetCalculationLinks().size()).isEqualTo(0);
             assertThat(topmodelBudgetServiceChargeItem.getTerms().size()).isEqualTo(0);
             assertThat(keyTableRepository.allKeyTables().size()).isEqualTo(0);
+        }
+
+        @Test
+        public void removeBudgetOnlyInPrototypeMode() throws Exception {
+
+            //then
+            expectedException.expect(HiddenException.class);
+            expectedException.expectMessage("Reason: Prototyping action not visible in production mode.");
+            // when
+            wrap(budget2015).removeBudget(true);
+
         }
 
     }

@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -226,9 +227,11 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return budgetItemRepository.validateNewBudgetItem(this,budgetedValue,charge);
     }
 
-    /* TODO: this action meant is for convenience during developing and testing and has to be removed / disabled when being taken into production*/
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void removeBudget(){
+    @Action(restrictTo = RestrictTo.PROTOTYPING ,semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void removeBudget(
+            @ParameterLayout(named = "This will delete the budget and all associated data including keytables, generated lease terms and calculations. (You may consider downloading the budget and the keytables beforehand.) Are you sure?")
+            final boolean areYouSure
+    ){
         /* delete budget calculation links*/
         for (BudgetCalculationLink link : this.getBudgetCalculationLinks()){
             link.remove();
@@ -252,6 +255,10 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         }
 
         remove(this);
+    }
+
+    public String validateRemoveBudget(final boolean areYouSure){
+        return areYouSure ? null : "Please confirm";
     }
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
