@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.asset.Property;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
