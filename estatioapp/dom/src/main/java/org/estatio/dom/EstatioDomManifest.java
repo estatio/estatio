@@ -12,12 +12,15 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.SecurityModule;
 
+import org.estatio.domsettings.EstatioDomainSettingsModule;
+
 public class EstatioDomManifest implements AppManifest {
 
     @Override
     public List<Class<?>> getModules() {
         List<Class<?>> modules = Lists.newArrayList();
         modules.add(EstatioDomainModule.class);
+        modules.add(EstatioDomainSettingsModule.class);
         modules.add(SecurityModule.class);
         return modules;
     }

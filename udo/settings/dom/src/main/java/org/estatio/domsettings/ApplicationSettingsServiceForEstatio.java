@@ -49,7 +49,7 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
 
     @Programmatic
     public ApplicationSetting find(final ApplicationSettingCreator creator) {
-        return (ApplicationSettingForEstatio) find(ApplicationSettingCreator.Helper.getKey(creator));
+        return find(ApplicationSettingCreator.Helper.getKey(creator));
     }
 
     @Programmatic
@@ -126,31 +126,10 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
         return setting;
     }
 
-
-    
     @Programmatic
     @PostConstruct
     public void init(final Map<String,String> props) {
         super.init(props);
-        installDefaultsIfRequired();
-    }
-
-    private void installDefaultsIfRequired() {
-        createSettingsIfRequired(ApplicationSettingKey.values());
-        createSettingsIfRequired(org.estatio.dom.lease.ApplicationSettingKey.values());
-    }
-
-    private void createSettingsIfRequired(final ApplicationSettingCreator[] values) {
-        for(ApplicationSettingCreator creator: values) {
-            createIfRequired(creator);
-        }
-    }
-
-    private void createIfRequired(final ApplicationSettingCreator creator) {
-        ApplicationSetting find = creator.find(this);
-        if(find == null) {
-            creator.create(this);
-        }
     }
 
 }

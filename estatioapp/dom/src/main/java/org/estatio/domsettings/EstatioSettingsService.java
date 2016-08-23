@@ -18,8 +18,6 @@
  */
 package org.estatio.domsettings;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -127,16 +125,10 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public List<ApplicationSetting> listAll() {
-        return applicationSettingsService.listAll();
-    }
-
-    // //////////////////////////////////////
-
-    @Inject ApplicationSettingsServiceForEstatio applicationSettingsService;
+    @Inject
+    ApplicationSettingsServiceForEstatio applicationSettingsService;
 
     @Inject
-    private CurrencyRepository currencyRepository;
+    CurrencyRepository currencyRepository;
 
 }

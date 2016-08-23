@@ -37,6 +37,7 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.domsettings.ApplicationSettingForEstatio;
+import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 import org.estatio.domsettings.EstatioSettingsService;
 
 @DomainService()
@@ -75,7 +76,7 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
     )
     @MemberOrder(sequence = "2")
     public List<ApplicationSetting> listAllSettings() {
-        return settingsService.listAll();
+        return applicationSettingsService.listAll();
     }
     //endregion
 
@@ -83,6 +84,9 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
 
     @Inject
     private EstatioSettingsService settingsService;
+
+    @Inject
+    ApplicationSettingsServiceForEstatio applicationSettingsService;
 
     //endregion
 

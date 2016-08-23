@@ -19,14 +19,17 @@
 package org.estatio.domsettings;
 
 import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.AbstractService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
+
 import org.isisaddons.module.settings.dom.SettingAbstract;
 import org.isisaddons.module.settings.dom.SettingType;
 import org.isisaddons.module.settings.dom.UserSetting;
 import org.isisaddons.module.settings.dom.UserSettingsServiceRW;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.AbstractService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.query.QueryDefault;
 
 /**
  * An implementation of {@link org.isisaddons.module.settings.dom.UserSettingsService} that
