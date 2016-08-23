@@ -30,7 +30,7 @@ import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.tax.TaxRefData;
@@ -183,7 +183,7 @@ public class ChargeRefData extends EstatioFixtureScript {
 
         final String code = chargeReference;
 
-        final Tax tax = taxes.findByReference(taxReference);
+        final Tax tax = taxRepository.findByReference(taxReference);
         final ApplicationTenancy taxApplicationTenancy = tax.getApplicationTenancy();
 
         final Charge charge = chargeRepository.newCharge(
@@ -201,7 +201,7 @@ public class ChargeRefData extends EstatioFixtureScript {
     private ChargeRepository chargeRepository;
 
     @Inject
-    private Taxes taxes;
+    private TaxRepository taxRepository;
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

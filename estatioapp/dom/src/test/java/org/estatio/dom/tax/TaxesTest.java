@@ -36,12 +36,12 @@ public class TaxesTest {
 
     FinderInteraction finderInteraction;
 
-    Taxes taxes;
+    TaxRepository taxRepository;
 
     @Before
     public void setup() {
 
-        taxes = new Taxes() {
+        taxRepository = new TaxRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -71,7 +71,7 @@ public class TaxesTest {
         @Test
         public void happyCase() {
 
-            taxes.findByReference("*REF?1*");
+            taxRepository.findByReference("*REF?1*");
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Tax.class));
@@ -87,7 +87,7 @@ public class TaxesTest {
         @Test
         public void allTaxes() {
 
-            taxes.allTaxes();
+            taxRepository.allTaxes();
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
         }

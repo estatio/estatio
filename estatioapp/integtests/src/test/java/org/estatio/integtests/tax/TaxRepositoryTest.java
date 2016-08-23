@@ -32,7 +32,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.tax.TaxRefData;
@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TaxRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
-    Taxes taxRepository;
+    TaxRepository taxRepository;
 
     @Inject
     CountryRepository countryRepository;

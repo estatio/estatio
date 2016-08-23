@@ -26,7 +26,7 @@ import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -90,7 +90,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 
-        final Tax tax = taxes.findOrCreate(taxReference, taxReference, applicationTenancy);
+        final Tax tax = taxRepository.findOrCreate(taxReference, taxReference, applicationTenancy);
         final Charge charge = chargeRepository.newCharge(applicationTenancy, reference, name, description, tax, chargeGroup);
 
         charge.setExternalReference(externalReference);
@@ -112,7 +112,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private ApplicationTenancyRepository securityApplicationTenancyRepository;
 
     @Inject
-    private Taxes taxes;
+    private TaxRepository taxRepository;
 
     @Inject
     private ChargeRepository chargeRepository;

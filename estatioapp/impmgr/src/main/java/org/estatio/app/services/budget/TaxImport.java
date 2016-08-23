@@ -22,7 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.dom.Importable;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -76,7 +76,7 @@ public class TaxImport implements ExcelFixtureRowHandler, Importable {
 
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 
-        final Tax tax = taxes.findOrCreate(reference, name, applicationTenancy);
+        final Tax tax = taxRepository.findOrCreate(reference, name, applicationTenancy);
         tax.setExternalReference(externalReference);
         tax.setDescription(description);
         final TaxRate rate = tax.newRate(rateStartDate, ratePercentage);
@@ -89,6 +89,6 @@ public class TaxImport implements ExcelFixtureRowHandler, Importable {
     private ApplicationTenancyRepository securityApplicationTenancyRepository;
 
     @Inject
-    private Taxes taxes;
+    private TaxRepository taxRepository;
 
 }

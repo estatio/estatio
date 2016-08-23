@@ -23,7 +23,7 @@ import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeGroupMenu;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 import javax.inject.Inject;
@@ -82,7 +82,7 @@ public class ChargeGroupRefData extends EstatioFixtureScript {
     private ChargeRepository chargeRepository;
 
     @Inject
-    private Taxes taxes;
+    private TaxRepository taxRepository;
 
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;

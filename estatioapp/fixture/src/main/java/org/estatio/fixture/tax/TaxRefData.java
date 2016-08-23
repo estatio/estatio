@@ -27,7 +27,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 import static org.estatio.integtests.VT.bd;
@@ -52,7 +52,7 @@ public class TaxRefData extends EstatioFixtureScript {
             final String countryPrefix = countryTenancy.getPath().substring(1).toUpperCase();
 
             final String reference = countryPrefix + SUFFIX_VATSTD;
-            final Tax tax = taxes.newTax(
+            final Tax tax = taxRepository.newTax(
                     reference,
                     "Value Added Tax (Standard, " + countryPrefix + ")",
                     countryTenancy);
@@ -67,7 +67,7 @@ public class TaxRefData extends EstatioFixtureScript {
     }
 
     @Inject
-    private Taxes taxes;
+    private TaxRepository taxRepository;
     @Inject
     private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
