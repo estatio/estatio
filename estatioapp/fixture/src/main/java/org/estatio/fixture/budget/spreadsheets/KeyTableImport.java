@@ -128,6 +128,11 @@ public class KeyTableImport implements ExcelFixtureRowHandler, Importable {
         return keyItem;
     }
 
+    @Override
+    public List<Class> importAfter() {
+        return Lists.newArrayList();
+    }
+
     @Programmatic
     @Override
     public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {

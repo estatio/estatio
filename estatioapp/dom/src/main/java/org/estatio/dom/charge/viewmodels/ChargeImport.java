@@ -27,6 +27,7 @@ import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.viewmodels.TaxImport;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -64,6 +65,11 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
     @Getter @Setter
     private String externalReference;
+
+    @Override
+    public List<Class> importAfter() {
+        return Lists.newArrayList(TaxImport.class);
+    }
 
     @Programmatic
     @Override

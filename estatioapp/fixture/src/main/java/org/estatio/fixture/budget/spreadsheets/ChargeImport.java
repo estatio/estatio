@@ -96,6 +96,13 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         return charge;
     }
 
+
+    @Override
+    public List<Class> importAfter() {
+        return Lists.newArrayList();
+    }
+
+
     @Programmatic
     @Override
     public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {

@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
@@ -37,6 +39,7 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class InvoiceImportLine implements Importable {
 
+    //region > constructors, title
     public String title() {
         return "Invoice Import";
     }
@@ -64,6 +67,7 @@ public class InvoiceImportLine implements Importable {
         this.itemStartDate = itemStartDate;
         this.itemEndDate = itemEndDate;
     }
+    //endregion
 
     @Getter @Setter
     private String leaseReference;
@@ -81,6 +85,11 @@ public class InvoiceImportLine implements Importable {
     private LocalDate itemStartDate;
     @Getter @Setter
     private LocalDate itemEndDate;
+
+    @Override
+    public List<Class> importAfter() {
+        return Lists.newArrayList();
+    }
 
     // REVIEW: is this view model actually ever surfaced in the UI?
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -139,6 +148,7 @@ public class InvoiceImportLine implements Importable {
         return charge;
     }
 
+    //region > injected services
     @Inject
     private ChargeRepository chargeRepository;
 
@@ -153,5 +163,6 @@ public class InvoiceImportLine implements Importable {
 
     @Inject
     private CurrencyRepository currencyRepository;
+    //endregion
 
 }

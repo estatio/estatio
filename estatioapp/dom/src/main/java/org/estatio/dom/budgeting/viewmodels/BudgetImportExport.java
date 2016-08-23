@@ -39,6 +39,7 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class BudgetImportExport implements Importable {
 
+    //region > constructors, title
     public String title() {
         return "Budget Import / Export";
     }
@@ -67,6 +68,8 @@ public class BudgetImportExport implements Importable {
         this.allocationChargeReference = allocationChargeReference;
         this.percentage = percentage;
     }
+    //endregion
+
 
     @Getter @Setter
     private String propertyReference;
@@ -86,6 +89,12 @@ public class BudgetImportExport implements Importable {
     private String allocationChargeReference;
     @Getter @Setter
     private BigDecimal percentage;
+
+
+    @Override
+    public List<Class> importAfter() {
+        return Lists.newArrayList();
+    }
 
     // REVIEW: is this view model actually ever surfaced in the UI?
     @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
@@ -124,7 +133,7 @@ public class BudgetImportExport implements Importable {
        return keyTableRepository.findOrCreateBudgetKeyTable(budget, keyTableName, FoundationValueType.MANUAL, KeyValueMethod.DEFAULT, 6);
     }
 
-
+    //region > injected services
     @Inject
     private ChargeRepository chargeRepository;
 
@@ -142,5 +151,6 @@ public class BudgetImportExport implements Importable {
 
     @Inject
     private KeyTableRepository keyTableRepository;
+    //endregion
 
 }
