@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
@@ -47,10 +45,22 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class KeyTableTest extends EstatioIntegrationTest {
+public class KeyTableIntegrationTest extends EstatioIntegrationTest {
 
+    @Inject
+    KeyTableRepository keyTableRepository;
 
+    @Inject
+    PropertyRepository propertyRepository;
 
+    @Inject
+    BudgetRepository budgetRepository;
+
+    @Inject
+    KeyItemRepository keyItemRepository;
+
+    @Inject
+    UnitRepository unitRepository;
 
     @Before
     public void setupData() {
@@ -64,65 +74,42 @@ public class KeyTableTest extends EstatioIntegrationTest {
         });
     }
 
-    @Inject
-    KeyTableRepository tables;
+    public static class ChangeKeytableTest extends KeyTableIntegrationTest {
 
-    @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
-    BudgetRepository budgetRepository;
-
-    protected KeyTable keyTable =  new KeyTable();
-
-    public static class AllKeyTables extends KeyTableTest {
+        KeyTable keyTable;
 
         @Test
-        public void whenExists() throws Exception {
-            assertThat(tables.allKeyTables().size()).isGreaterThan(0);
-        }
-    }
-
-    public static class changeKeyTable extends KeyTableTest {
-
-        @Test
-        public void whenSetUp() throws Exception {
+        public void changeKeyTableTest() throws Exception {
 
             //given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
-            assertThat(keyTable.getName().equals(KeyTablesForOxf.NAME_BY_AREA));
-            assertThat(keyTable.getFoundationValueType().equals(KeyTablesForOxf.BUDGET_FOUNDATION_VALUE_TYPE));
-            assertThat(keyTable.getKeyValueMethod().equals(KeyTablesForOxf.BUDGET_KEY_VALUE_METHOD));
-            assertThat(keyTable.isValidForKeyValues() == true);
+            keyTable = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
+            assertThat(keyTable.getName()).isEqualTo(KeyTablesForOxf.NAME_BY_AREA);
+            assertThat(keyTable.getFoundationValueType()).isEqualTo(KeyTablesForOxf.BUDGET_FOUNDATION_VALUE_TYPE);
+            assertThat(keyTable.getKeyValueMethod()).isEqualTo(KeyTablesForOxf.BUDGET_KEY_VALUE_METHOD);
+            assertThat(keyTable.isValidForKeyValues()).isEqualTo(true);
 
 
             //when
             keyTable.changeName("something else");
             keyTable.changeFoundationValueType(FoundationValueType.COUNT);
-            keyTable.changeKeyValueMethod(KeyValueMethod.DEFAULT);
+            keyTable.changeKeyValueMethod(KeyValueMethod.PERCENT);
 
             //then
-            assertThat(keyTable.getName().equals("something else"));
-            assertThat(keyTable.getFoundationValueType().equals(FoundationValueType.COUNT));
-            assertThat(keyTable.getKeyValueMethod().equals(KeyValueMethod.DEFAULT));
-            //due to changing KeyValueMethod
-            assertThat(keyTable.isValidForKeyValues() == false);
+            assertThat(keyTable.getName()).isEqualTo("something else");
+            assertThat(keyTable.getFoundationValueType()).isEqualTo(FoundationValueType.COUNT);
+            assertThat(keyTable.getKeyValueMethod()).isEqualTo(KeyValueMethod.PERCENT);
+            //due to changing foundation value and key value method
+            assertThat(keyTable.isValidForKeyValues()).isEqualTo(false);
         }
 
 
     }
 
-    public static class generateKeyItemRepositoryTest extends KeyTableTest {
+    public static class GenerateKeyItemsTest extends KeyTableIntegrationTest {
 
-        @Inject
-        KeyItemRepository items;
-
-        @Inject
-        UnitMenu unitMenu;
-        @Inject
-        UnitRepository unitRepository;
+        KeyTable keyTableByArea;
 
         @Test
         public void whenSetUp() throws Exception {
@@ -130,33 +117,34 @@ public class KeyTableTest extends EstatioIntegrationTest {
             //given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
+            keyTableByArea = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
 
             //when
-            keyTable.generateItems();
+            wrap(keyTableByArea).generateItems();
 
             //then
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitRepository.findUnitByReference("OXF-001")).getValue().equals(new BigDecimal(3)));
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitRepository.findUnitByReference("OXF-002")).getValue().equals(new BigDecimal(6)));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("OXF-001")).getValue()).isEqualTo(new BigDecimal("3.077"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("OXF-002")).getValue()).isEqualTo(new BigDecimal("6.154"));
         }
 
         Unit unitWithAreaNull;
+
         @Test
         public void whenSetUpWithNullValues() throws Exception {
 
             //given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
+            keyTableByArea = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
             unitWithAreaNull = unitRepository.findUnitByReference("OXF-001");
             unitWithAreaNull.setArea(null);
 
             //when
-            keyTable.generateItems();
+            wrap(keyTableByArea).generateItems();
 
             //then
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitWithAreaNull).getValue().equals(BigDecimal.ZERO));
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitRepository.findUnitByReference("OXF-002")).getValue().equals(new BigDecimal(6)));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitWithAreaNull).getValue()).isEqualTo(new BigDecimal("0.000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("OXF-002")).getValue()).isEqualTo(new BigDecimal("6.173"));
         }
 
         Unit unitNotIncluded;
@@ -172,7 +160,7 @@ public class KeyTableTest extends EstatioIntegrationTest {
             //given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            keyTable = tables.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
+            keyTableByArea = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
 
             //when
             unitNotIncludedWithEndDateOnly = unitRepository.findUnitByReference("OXF-001");
@@ -198,16 +186,16 @@ public class KeyTableTest extends EstatioIntegrationTest {
             unitIncludedWithoutStartAndEndDate.setStartDate(null);
             unitIncludedWithoutStartAndEndDate.setEndDate(null);
 
-            keyTable.generateItems();
+            wrap(keyTableByArea).generateItems();
 
             //then
-            Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncludedWithEndDateOnly));
-            Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncluded));
-            Assert.assertNull(items.findByKeyTableAndUnit(keyTable, unitNotIncludedWithStartDateOnly));
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitIncluded).getValue().equals(new BigDecimal(6)));
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitIncludedWithEndDateOnly).getValue().equals(new BigDecimal(6)));
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitIncludedWithStartDateOnly).getValue().equals(new BigDecimal(6)));
-            assertThat(items.findByKeyTableAndUnit(keyTable, unitIncludedWithoutStartAndEndDate).getValue().equals(new BigDecimal(6)));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitNotIncludedWithEndDateOnly)).isEqualTo(null);
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitNotIncluded)).isEqualTo(null);
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitNotIncludedWithStartDateOnly)).isEqualTo(null);
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncluded).getValue()).isEqualTo("12.539");
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithEndDateOnly).getValue()).isEqualTo("15.674");
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithStartDateOnly).getValue()).isEqualTo("18.808");
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithoutStartAndEndDate).getValue()).isEqualTo("21.944");
 
         }
 

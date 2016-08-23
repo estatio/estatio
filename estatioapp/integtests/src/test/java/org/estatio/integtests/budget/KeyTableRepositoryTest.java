@@ -23,9 +23,6 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by jodo on 19/08/15.
- */
 public class KeyTableRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
@@ -67,7 +64,6 @@ public class KeyTableRepositoryTest extends EstatioIntegrationTest {
 
     }
 
-
     public static class FindByBudget extends KeyTableRepositoryTest {
 
         @Test
@@ -83,6 +79,14 @@ public class KeyTableRepositoryTest extends EstatioIntegrationTest {
             assertThat(keyTables.get(0).getBudget()).isEqualTo(budget);
         }
 
+    }
+
+    public static class AllKeyTables extends KeyTableIntegrationTest {
+
+        @Test
+        public void allKeytablesTest() throws Exception {
+            assertThat(keyTableRepository.allKeyTables().size()).isEqualTo(2);
+        }
     }
 
     @Inject
