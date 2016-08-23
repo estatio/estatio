@@ -31,6 +31,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -49,16 +51,13 @@ public class FinancialAccountTransactionMenu {
     public FinancialAccountTransaction findTransaction(
             final FinancialAccount financialAccount,
             final LocalDate transactionDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final BigInteger sequence) {
-        return financialAccountTransactionRepository.findTransaction(financialAccount, transactionDate, sequence);
-    }
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(sequence = "99")
-    public FinancialAccountTransaction findTransaction(
-            final FinancialAccount financialAccount,
-            final LocalDate transactionDate) {
-        return financialAccountTransactionRepository.findTransaction(financialAccount, transactionDate);
+        if(sequence == null) {
+            return financialAccountTransactionRepository.findTransaction(financialAccount, transactionDate);
+        } else {
+            return financialAccountTransactionRepository.findTransaction(financialAccount, transactionDate, sequence);
+        }
     }
 
     @Inject
