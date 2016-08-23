@@ -18,10 +18,6 @@
  */
 package org.estatio.dom;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 /**
@@ -32,6 +28,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
  * Subclasses must be annotated with:
  * 
  * <pre>
+ * @javax.jdo.annotations.PersistenceCapable
  * @javax.jdo.annotations.DatastoreIdentity(
  *     strategy = IdGeneratorStrategy.NATIVE,
  *     column = "id")
@@ -50,8 +47,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
  * will end up putting a <tt>version</tt> column in both tables, and they are
  * not kept in sync).
  */
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
+// @PersistenceCapable  (all subclasses are annotated with this already)
+// @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class UdoDomainObject2<T extends UdoDomainObject2<T>>
         extends UdoDomainObject<T> {
 
