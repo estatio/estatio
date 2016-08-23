@@ -35,7 +35,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuOrder = "30")
+@DomainServiceLayout(menuOrder = "30", named = "Accounts")
 public class FinancialAccountTransactionMenu {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
