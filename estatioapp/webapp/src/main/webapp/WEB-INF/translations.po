@@ -1426,13 +1426,13 @@ msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#fetchEpochDate()
-#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchEpochDate()
+#: org.estatio.dom.appsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchEpochDate()
 msgid "Fetch Epoch Date"
 msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#fetchReportServerBaseUrl()
-#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchReportServerBaseUrl()
+#: org.estatio.dom.appsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#fetchReportServerBaseUrl()
 msgid "Fetch Report Server Base Url"
 msgstr ""
 
@@ -2226,7 +2226,7 @@ msgstr ""
 #: org.estatio.dom.party.Person#allBankMandates()
 #: org.estatio.dom.party.Person#allLeases()
 #: org.estatio.services.settings.EstatioSettingsService#listAll()
-#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#listAll()
+#: org.estatio.dom.appsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#listAll()
 #: org.isisaddons.module.settings.dom.jdo.ApplicationSettingsServiceJdo#listAll()
 #: org.isisaddons.module.settings.dom.jdo.ApplicationSettingsServiceJdoHidden#listAll()
 #: org.isisaddons.module.settings.dom.jdo.UserSettingsServiceJdo#listAll()
@@ -3749,7 +3749,7 @@ msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#systemCurrency()
-#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#systemCurrency()
+#: org.estatio.dom.appsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#systemCurrency()
 msgid "System Currency"
 msgstr ""
 
@@ -4185,7 +4185,7 @@ msgstr ""
 
 
 #: org.estatio.services.settings.EstatioSettingsService#updateEpochDate()
-#: org.estatio.domsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#updateEpochDate()
+#: org.estatio.dom.appsettings.EstatioSettingsServiceTest$EstatioSettingsServiceForTesting#updateEpochDate()
 msgid "Update Epoch Date"
 msgstr ""
 

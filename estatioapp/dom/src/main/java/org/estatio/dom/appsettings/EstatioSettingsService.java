@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domsettings;
+package org.estatio.dom.appsettings;
 
 import javax.inject.Inject;
 
@@ -31,6 +31,9 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.domsettings.ApplicationSettingForEstatio;
+import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 /**
  * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch

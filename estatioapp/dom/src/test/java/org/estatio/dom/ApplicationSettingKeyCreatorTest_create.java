@@ -19,7 +19,7 @@
 package org.estatio.dom;
 
 
-import org.estatio.domsettings.ApplicationSettingKey;
+import org.estatio.dom.appsettings.ApplicationSettingKey;
 
 public class ApplicationSettingKeyCreatorTest_create extends ApplicationSettingCreatorTestAbstract.Instantiate {
 

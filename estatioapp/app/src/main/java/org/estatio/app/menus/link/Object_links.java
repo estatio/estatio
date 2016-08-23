@@ -31,7 +31,7 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Ro
 
 import org.estatio.domlink.Link;
 import org.estatio.domlink.LinkRepository;
-import org.estatio.domsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 
 @Mixin
 public class Object_links {

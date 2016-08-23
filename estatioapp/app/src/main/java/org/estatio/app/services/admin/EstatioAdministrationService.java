@@ -38,7 +38,7 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.domsettings.ApplicationSettingForEstatio;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
-import org.estatio.domsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 
 @DomainService()
 @DomainServiceLayout(

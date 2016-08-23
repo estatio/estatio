@@ -23,7 +23,7 @@ import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.*;
-import org.estatio.domsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;

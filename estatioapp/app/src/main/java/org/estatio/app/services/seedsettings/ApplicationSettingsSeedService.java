@@ -30,7 +30,7 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.domsettings.ApplicationSettingCreator;
-import org.estatio.domsettings.ApplicationSettingKey;
+import org.estatio.dom.appsettings.ApplicationSettingKey;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 /**
