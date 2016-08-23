@@ -42,7 +42,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
@@ -87,7 +87,8 @@ import lombok.Setter;
                     + "&& budget.startDate == :startDate")
 })
 @DomainObject()
-public class BudgetItem extends EstatioDomainObject<BudgetItem> implements WithApplicationTenancyProperty, BudgetItemAllocationCreator {
+public class BudgetItem extends UdoDomainObject2<BudgetItem>
+        implements WithApplicationTenancyProperty, BudgetItemAllocationCreator {
 
     public BudgetItem() {
         super("budget, charge, budgetedValue");

@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -67,7 +67,7 @@ import lombok.Setter;
 })
 @DomainObject(bounded = true)
 public class Charge
-        extends EstatioDomainObject<Charge>
+        extends UdoDomainObject2<Charge>
         implements WithReferenceUnique, WithNameUnique, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Charge() {

@@ -52,10 +52,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
  */
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
-public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
+public abstract class UdoDomainObject2<T extends UdoDomainObject2<T>>
         extends UdoDomainObject<T> {
 
-    public EstatioDomainObject(
+    public UdoDomainObject2(
             final String keyProperties) {
         super(keyProperties);
     }

@@ -41,9 +41,9 @@ import static org.junit.Assert.assertThat;
 /**
  * Automatically tests all enums implementing {@link TitledEnum}.
  */
-public class EstatioDomainObjectContractTest {
+public class UdoDomainObject2ContractTest {
 
-    public static class JdoAnnotations extends EstatioDomainObjectContractTest {
+    public static class JdoAnnotations extends UdoDomainObject2ContractTest {
 
         @SuppressWarnings("rawtypes")
         @Test
@@ -63,7 +63,7 @@ public class EstatioDomainObjectContractTest {
                 }
 
                 // TODO: nasty: special case, but really need some formalized way for UDO to know that this particular subclass is ok to not be annotated as @PersistenceCapable
-                if (subtype.getName().equals("org.estatio.dom.EstatioDomainObject")) {
+                if (subtype.getName().equals("org.estatio.dom.UdoDomainObject2")) {
                     // skip
                     continue;
                 }

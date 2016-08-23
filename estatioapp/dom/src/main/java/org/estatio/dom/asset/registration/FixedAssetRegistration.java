@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
@@ -69,7 +69,7 @@ import lombok.Setter;
 })
 @DomainObject()
 public abstract class FixedAssetRegistration
-        extends EstatioDomainObject<FixedAssetRegistration>
+        extends UdoDomainObject2<FixedAssetRegistration>
         implements WithIntervalMutable<FixedAssetRegistration>, Chained<FixedAssetRegistration>, WithApplicationTenancyProperty {
 
     public FixedAssetRegistration() {

@@ -57,7 +57,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
@@ -138,7 +138,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 @DomainObject()
 public abstract class LeaseTerm
-        extends EstatioDomainObject<LeaseTerm>
+        extends UdoDomainObject2<LeaseTerm>
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence, InvoiceSource, WithApplicationTenancyPropertyLocal {
 
     public LeaseTerm() {

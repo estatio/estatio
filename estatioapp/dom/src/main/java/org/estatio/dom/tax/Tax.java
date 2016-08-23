@@ -41,7 +41,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
@@ -74,7 +74,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class Tax
-        extends EstatioDomainObject<Tax>
+        extends UdoDomainObject2<Tax>
         implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique,
                    WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 

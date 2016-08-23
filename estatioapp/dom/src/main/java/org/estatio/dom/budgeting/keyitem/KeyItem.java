@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
@@ -65,7 +65,7 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgeting.keyitem.KeyItem " +
                         "WHERE keyTable == :keyTable && unit == :unit")
 })
-public class KeyItem extends EstatioDomainObject<KeyItem>
+public class KeyItem extends UdoDomainObject2<KeyItem>
         implements WithApplicationTenancyProperty, Distributable {
 
     public KeyItem() {

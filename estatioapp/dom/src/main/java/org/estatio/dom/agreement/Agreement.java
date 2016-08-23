@@ -55,7 +55,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithInterval;
@@ -124,7 +124,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Agreement
-        extends EstatioDomainObject<Agreement>
+        extends UdoDomainObject2<Agreement>
         implements
         WithReferenceGetter,
         //WithReferenceComparable<Agreement>,

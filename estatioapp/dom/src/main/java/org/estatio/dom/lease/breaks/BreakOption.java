@@ -48,7 +48,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.event.Event;
@@ -93,7 +93,7 @@ import lombok.Setter;
                         + "&& exerciseType == :exerciseType ") })
 @DomainObject(editing = Editing.DISABLED)
 public abstract class BreakOption
-        extends EstatioDomainObject<BreakOption>
+        extends UdoDomainObject2<BreakOption>
         implements EventSource, WithApplicationTenancyProperty {
 
     public BreakOption() {

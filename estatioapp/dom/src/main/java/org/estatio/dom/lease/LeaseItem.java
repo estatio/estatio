@@ -57,7 +57,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
@@ -146,7 +146,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
-        extends EstatioDomainObject<LeaseItem>
+        extends UdoDomainObject2<LeaseItem>
         implements WithIntervalMutable<LeaseItem>, WithSequence, WithApplicationTenancyPropertyLocal, WithApplicationTenancyPathPersisted {
 
     private static final int PAGE_SIZE = 15;

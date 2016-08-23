@@ -43,7 +43,7 @@ import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
  * @javax.jdo.annotations.Version(
  *     strategy=VersionStrategy.VERSION_NUMBER,
  *     column="version")
- * public class MyDomainObject extends EstatioDomainObject {
+ * public class MyDomainObject extends UdoDomainObject2 {
  *   ...
  * }
  * </pre>

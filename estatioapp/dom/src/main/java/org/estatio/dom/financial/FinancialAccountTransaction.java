@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.app.security.EstatioRole;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -64,7 +64,7 @@ import lombok.Setter;
         name = "FinancialAccountTransaction_financialAccount_transactionDate_IDX",
         members = { "financialAccount", "transactionDate" })
 public class FinancialAccountTransaction
-        extends EstatioDomainObject<FinancialAccountTransaction>
+        extends UdoDomainObject2<FinancialAccountTransaction>
         implements WithApplicationTenancyCountry {
 
     public FinancialAccountTransaction() {

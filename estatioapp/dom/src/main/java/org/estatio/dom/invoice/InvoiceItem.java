@@ -51,7 +51,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithDescriptionGetter;
@@ -89,7 +89,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem
-        extends EstatioDomainObject<InvoiceItem>
+        extends UdoDomainObject2<InvoiceItem>
         implements WithInterval<InvoiceItem>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
     public InvoiceItem() {

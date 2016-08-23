@@ -55,7 +55,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -125,7 +125,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class AgreementRole
-        extends EstatioDomainObject<AgreementRole>
+        extends UdoDomainObject2<AgreementRole>
         implements WithIntervalContiguous<AgreementRole>, WithApplicationTenancyProperty {
 
     private final WithIntervalContiguous.Helper<AgreementRole> helper =

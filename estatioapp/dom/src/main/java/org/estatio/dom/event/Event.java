@@ -40,7 +40,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.TitleBuilder;
@@ -69,7 +69,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED)
 public class Event
-        extends EstatioDomainObject<Event>
+        extends UdoDomainObject2<Event>
         implements CalendarEventable, WithApplicationTenancyProperty {
 
     private static final int NUMBER_OF_LINES = 8;

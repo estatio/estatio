@@ -30,7 +30,7 @@ import javax.jdo.annotations.Version;
 import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.TitledEnum;
 import org.estatio.dom.UdoDomainObject;
 
@@ -58,7 +58,7 @@ public class UdoDomainObjectContractTestAll_jdoAnnotations {
                 // skip (probably a testing class)
                 continue;
             }
-            if (UdoDomainObject.class == subtype || EstatioDomainObject.class == subtype) {
+            if (UdoDomainObject.class == subtype || UdoDomainObject2.class == subtype) {
                 // skip
                 continue;
             }
@@ -67,7 +67,7 @@ public class UdoDomainObjectContractTestAll_jdoAnnotations {
 
             // must have a @PersistenceCapable(identityType=...) annotation
             final PersistenceCapable persistenceCapable = subtype.getAnnotation(PersistenceCapable.class);
-            assertThat("Class " + subtype.getName() + " inherits from EstatioDomainObject "
+            assertThat("Class " + subtype.getName() + " inherits from UdoDomainObject2 "
                     + "but is not annotated with @PersistenceCapable",
                     persistenceCapable, is(not(nullValue())));
             IdentityType identityType = persistenceCapable.identityType();

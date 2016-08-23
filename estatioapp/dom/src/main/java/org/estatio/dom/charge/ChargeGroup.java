@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.RenderType;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithReferenceComparable;
@@ -66,7 +66,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class ChargeGroup
-        extends EstatioDomainObject<ChargeGroup>
+        extends UdoDomainObject2<ChargeGroup>
         implements WithReferenceComparable<ChargeGroup>, WithReferenceUnique, WithApplicationTenancyGlobal {
 
     public ChargeGroup() {

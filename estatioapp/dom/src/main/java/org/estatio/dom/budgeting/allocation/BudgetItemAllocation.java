@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -77,7 +77,7 @@ import lombok.Setter;
 })
 @Unique(name = "ScheduleItem_charge_budgetItem_keyTable_UNQ", members = {"charge", "budgetItem", "keyTable"})
 @DomainObject()
-public class BudgetItemAllocation extends EstatioDomainObject<BudgetItemAllocation> implements WithApplicationTenancyProperty {
+public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation> implements WithApplicationTenancyProperty {
 
     public BudgetItemAllocation() {
         super("budgetItem, charge, keyTable");

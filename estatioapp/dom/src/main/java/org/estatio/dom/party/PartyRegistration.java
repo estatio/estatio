@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -72,7 +72,7 @@ import lombok.Setter;
 })
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
-        extends EstatioDomainObject<PartyRegistration>
+        extends UdoDomainObject2<PartyRegistration>
         implements WithIntervalMutable<PartyRegistration>, WithApplicationTenancyCountry {
 
     public PartyRegistration() {

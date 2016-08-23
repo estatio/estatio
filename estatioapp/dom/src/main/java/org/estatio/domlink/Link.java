@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -51,7 +51,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Unique(members = { "className", "name" })
 @MemberGroupLayout(columnSpans = { 12, 0, 0, 12 })
 public class Link
-        extends EstatioDomainObject<Link>
+        extends UdoDomainObject2<Link>
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Link() {

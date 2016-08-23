@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 
 /**
  * The original intent of this registry was to centralize mechanisms (algorithms) by which application tenancy paths of different
@@ -46,7 +46,7 @@ import org.estatio.dom.EstatioDomainObject;
  *    });
  *
  * add(new ApplicationTenancySubscriberAlgorithm.OnChanged.CascadeUpdate&lt;&gt;(FixedAsset.class, new AccessMany&lt;FixedAsset&gt;() {
- *       public Iterable&lt;? extends EstatioDomainObject&lt;?&gt;&gt; get(final FixedAsset source) {
+ *       public Iterable&lt;? extends UdoDomainObject2&lt;?&gt;&gt; get(final FixedAsset source) {
  *        return fixedAssetRoles.findByAsset(source);
  *       }
  *       private FixedAssetRoles fixedAssetRoles;
@@ -58,7 +58,7 @@ import org.estatio.dom.EstatioDomainObject;
  * <pre>
  * add(new ApplicationTenancySubscriberAlgorithm.OnMovedDown.InvalidIfRelatedBecomesPeer&lt;&gt;(Agreement.class, &quot;Primary party&quot;,
  *     new AccessOne&lt;Agreement&gt;() {
- *         public EstatioDomainObject&lt;?&gt; get(final Agreement source) {
+ *         public UdoDomainObject2&lt;?&gt; get(final Agreement source) {
  *           return source.getPrimaryParty();
  *         }
  *       }));
@@ -97,10 +97,10 @@ class ApplicationTenancySubscriberAlgorithmRegistry {
     }
 
     List<ApplicationTenancySubscriberAlgorithm> lookup(
-            final EstatioDomainObject source,
+            final UdoDomainObject2 source,
             final Class<? extends ApplicationTenancyEventChanged> eventClass) {
 
-        final Class<? extends EstatioDomainObject> sourceClass = source.getClass();
+        final Class<? extends UdoDomainObject2> sourceClass = source.getClass();
 
         Map<Class<? extends ApplicationTenancyEventChanged>, List<ApplicationTenancySubscriberAlgorithm>> flattenedAlgorithmListByEventClass = flattenedAlgorithmListByEventClassBySourceClass.get(sourceClass);
         if(flattenedAlgorithmListByEventClass == null) {
@@ -133,10 +133,10 @@ class ApplicationTenancySubscriberAlgorithmRegistry {
         return algorithmList;
     }
 
-    private static List<Class<?>> superTypesOf(final EstatioDomainObject source) {
+    private static List<Class<?>> superTypesOf(final UdoDomainObject2 source) {
         List<Class<?>> types = Lists.newArrayList();
         Class<?> type = source.getClass();
-        while(EstatioDomainObject.class.isAssignableFrom(type) && type != EstatioDomainObject.class) {
+        while(UdoDomainObject2.class.isAssignableFrom(type) && type != UdoDomainObject2.class) {
             types.add(type);
             type = type.getSuperclass();
         }

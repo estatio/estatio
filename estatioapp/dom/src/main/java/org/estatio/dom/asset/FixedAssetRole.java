@@ -44,7 +44,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -89,7 +89,7 @@ import lombok.Setter;
 })
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole
-        extends EstatioDomainObject<FixedAssetRole>
+        extends UdoDomainObject2<FixedAssetRole>
         implements WithIntervalContiguous<FixedAssetRole>, WithApplicationTenancyProperty {
 
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =

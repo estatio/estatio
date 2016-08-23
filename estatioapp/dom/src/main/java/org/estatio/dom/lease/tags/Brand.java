@@ -36,7 +36,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -87,7 +87,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BrandRepository.class, autoCompleteAction = "autoComplete")
 public class Brand
-        extends EstatioDomainObject<Brand>
+        extends UdoDomainObject2<Brand>
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
     public Brand() {

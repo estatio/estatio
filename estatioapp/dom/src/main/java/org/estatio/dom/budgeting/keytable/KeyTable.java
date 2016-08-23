@@ -51,7 +51,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
@@ -94,7 +94,7 @@ import lombok.Setter;
 })
 @Unique(name = "KeyTable_budget_name", members = { "budget", "name" })
 @DomainObject(autoCompleteRepository = KeyTableRepository.class, autoCompleteAction = "autoComplete")
-public class KeyTable extends EstatioDomainObject<Budget> implements WithApplicationTenancyProperty {
+public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicationTenancyProperty {
 
     public KeyTable() {
         super("name, budget");

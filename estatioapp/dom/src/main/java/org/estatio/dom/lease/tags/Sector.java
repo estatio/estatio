@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
@@ -65,7 +65,7 @@ import lombok.Setter;
 })
 @DomainObject(bounded = true, editing = Editing.DISABLED)
 public class Sector
-        extends EstatioDomainObject<Sector>
+        extends UdoDomainObject2<Sector>
         implements WithNameUnique, WithNameComparable<Sector>, WithApplicationTenancyGlobal {
 
     public Sector() {

@@ -22,9 +22,9 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 
-public class ApplicationTenancyEventChanged extends ActionDomainEvent<EstatioDomainObject> {
+public class ApplicationTenancyEventChanged extends ActionDomainEvent<UdoDomainObject2> {
 
     /**
      * The proposed new {@link org.isisaddons.module.security.dom.tenancy.ApplicationTenancy} for the object.

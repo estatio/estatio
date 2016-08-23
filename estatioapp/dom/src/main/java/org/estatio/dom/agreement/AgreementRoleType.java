@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
@@ -65,7 +65,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class AgreementRoleType
-        extends EstatioDomainObject<AgreementRoleType>
+        extends UdoDomainObject2<AgreementRoleType>
         implements WithTitleComparable<AgreementRoleType>, WithApplicationTenancyGlobal {
 
     public AgreementRoleType() {

@@ -34,7 +34,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -73,7 +73,7 @@ import lombok.Setter;
         name = "IndexValue_indexBase_startDate_IDX",
         members = { "indexBase", "startDate" })
 public class IndexValue
-        extends EstatioDomainObject<IndexValue>
+        extends UdoDomainObject2<IndexValue>
         implements WithStartDate, WithApplicationTenancyCountry {
 
     public IndexValue() {

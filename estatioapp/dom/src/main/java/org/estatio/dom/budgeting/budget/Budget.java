@@ -53,7 +53,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
@@ -113,7 +113,8 @@ import lombok.Setter;
 })
 @Unique(name = "Budget_property_startDate_UNQ", members = { "property", "startDate" })
 @DomainObject()
-public class Budget extends EstatioDomainObject<Budget> implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty, BudgetItemCreator {
+public class Budget extends UdoDomainObject2<Budget>
+        implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty, BudgetItemCreator {
 
     public Budget() {
         super("property, startDate");

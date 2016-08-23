@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
@@ -70,7 +70,7 @@ import lombok.Setter;
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
 public class FixedAssetFinancialAccount
-        extends EstatioDomainObject<FixedAssetFinancialAccount>
+        extends UdoDomainObject2<FixedAssetFinancialAccount>
         implements WithApplicationTenancyProperty {
 
     public FixedAssetFinancialAccount() {

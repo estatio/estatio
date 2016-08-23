@@ -45,7 +45,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -84,7 +84,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel
-        extends EstatioDomainObject<CommunicationChannel>
+        extends UdoDomainObject2<CommunicationChannel>
         implements WithNameGetter, WithReferenceGetter, WithApplicationTenancyCountry {
 
     public CommunicationChannel() {

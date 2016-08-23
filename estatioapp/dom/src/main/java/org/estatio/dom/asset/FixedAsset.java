@@ -48,7 +48,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameComparable;
@@ -97,7 +97,7 @@ import lombok.Setter;
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class FixedAsset<X extends FixedAsset<X>>
-        extends EstatioDomainObject<X>
+        extends UdoDomainObject2<X>
         implements WithNameComparable<X>, WithReferenceUnique, CommunicationChannelOwner {
 
     public FixedAsset() {

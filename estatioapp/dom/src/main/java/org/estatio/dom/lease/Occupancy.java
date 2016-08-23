@@ -42,7 +42,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.app.security.EstatioRole;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -109,7 +109,7 @@ import lombok.Setter;
                         + "&& (:includeTerminated || endDate == null || endDate >= :date)")
 })
 public class Occupancy
-        extends EstatioDomainObject<Occupancy>
+        extends UdoDomainObject2<Occupancy>
         implements WithIntervalMutable<Occupancy>, WithApplicationTenancyProperty {
 
     public Occupancy() {

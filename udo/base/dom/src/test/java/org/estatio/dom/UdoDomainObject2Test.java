@@ -15,12 +15,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-public class EstatioDomainObjectTest {
+public class UdoDomainObject2Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
-    public static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
+    public static class SomeDomainObject extends UdoDomainObject2<SomeDomainObject> {
 
         private String applicationTenancyPath = "/";
 
@@ -52,7 +52,7 @@ public class EstatioDomainObjectTest {
         domainObject.securityApplicationTenancyRepository = mockApplicationTenancies;
     }
 
-    public static class GetApplicationTenancy extends EstatioDomainObjectTest {
+    public static class GetApplicationTenancy extends UdoDomainObject2Test {
 
         @Test
         public void whenNonNull() throws Exception {

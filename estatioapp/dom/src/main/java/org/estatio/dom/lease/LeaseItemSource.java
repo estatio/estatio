@@ -14,7 +14,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 
 import lombok.Getter;
@@ -43,7 +43,7 @@ import lombok.Setter;
 })
 @Unique(name = "LeaseItemSource_item_sourceItem_UNQ", members = {"item", "sourceItem"})
 @DomainObject
-public class LeaseItemSource extends EstatioDomainObject<LeaseItemSource> implements WithApplicationTenancyPropertyLocal {
+public class LeaseItemSource extends UdoDomainObject2<LeaseItemSource> implements WithApplicationTenancyPropertyLocal {
 
     public LeaseItemSource() {
         super("item, sourceItem");

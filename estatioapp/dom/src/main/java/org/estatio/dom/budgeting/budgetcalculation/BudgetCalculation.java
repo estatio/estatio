@@ -50,7 +50,7 @@ import org.apache.isis.applib.services.timestamp.Timestampable;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
@@ -93,7 +93,8 @@ import lombok.Setter;
 })
 @Unique(name = "BudgetCalculation_budgetItemAllocation_keyItem_calculationType_UNQ", members = {"budgetItemAllocation", "keyItem", "calculationType"})
 @DomainObject()
-public class BudgetCalculation extends EstatioDomainObject<BudgetCalculation> implements Distributable, WithApplicationTenancyProperty, Timestampable {
+public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
+        implements Distributable, WithApplicationTenancyProperty, Timestampable {
 
     public BudgetCalculation() {
         super("budgetItemAllocation, keyItem");

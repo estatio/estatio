@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.ApplicationTenancyInvariantsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
@@ -67,7 +67,7 @@ import lombok.Setter;
 
 @DomainObject(bounded = true, editing = Editing.DISABLED)
 public class AgreementRoleCommunicationChannelType 
-        extends EstatioDomainObject<AgreementRoleCommunicationChannelType>
+        extends UdoDomainObject2<AgreementRoleCommunicationChannelType>
         implements WithApplicationTenancyGlobal {
 
     public AgreementRoleCommunicationChannelType() {

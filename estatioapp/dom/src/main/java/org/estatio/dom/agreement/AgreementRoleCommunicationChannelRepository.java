@@ -19,19 +19,13 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
@@ -73,7 +67,7 @@ public class AgreementRoleCommunicationChannelRepository
                 "communicationChannel", communicationChannel);
     }
 
-    public Iterable<? extends EstatioDomainObject<?>> findByAgreement(final Agreement agreement) {
+    public Iterable<? extends UdoDomainObject2<?>> findByAgreement(final Agreement agreement) {
         return allMatches("findByAgreement",
                 "agreement", agreement);
     }

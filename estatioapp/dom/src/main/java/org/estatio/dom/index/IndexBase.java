@@ -50,7 +50,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.index.api.IndexValueCreator;
@@ -92,7 +92,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED)
 public class IndexBase
-        extends EstatioDomainObject<IndexBase>
+        extends UdoDomainObject2<IndexBase>
         implements WithStartDate, Chained<IndexBase>, WithApplicationTenancyCountry, IndexValueCreator {
 
     public static final int FACTOR_SCALE = 4;

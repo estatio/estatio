@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenancyEventChanged> {
@@ -40,8 +40,8 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
     /**
      * Convenience for subclasses.
      */
-    protected void sync(final EstatioDomainObject<?> source, final Iterable<? extends EstatioDomainObject<?>> targetList) {
-        for (EstatioDomainObject<?> target : targetList) {
+    protected void sync(final UdoDomainObject2<?> source, final Iterable<? extends UdoDomainObject2<?>> targetList) {
+        for (UdoDomainObject2<?> target : targetList) {
             if (target instanceof WithApplicationTenancyPathPersisted) {
                 final WithApplicationTenancyPathPersisted withApplicationTenancyPathPersisted = (WithApplicationTenancyPathPersisted) target;
                 withApplicationTenancyPathPersisted.setApplicationTenancyPath(source.getApplicationTenancy().getPath());
@@ -131,7 +131,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
             @Override
             public void executed(final ApplicationTenancyEventChanged ev, final S source) {
                 container.injectServicesInto(accessMany);
-                sync((EstatioDomainObject<?>)source, accessMany.get(source));
+                sync((UdoDomainObject2<?>)source, accessMany.get(source));
             }
         }
     }
@@ -221,8 +221,8 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
                 } else {
                     container.injectServicesInto(relatedAccessMany);
 
-                    for (final EstatioDomainObject<?> estatioDomainObject : relatedAccessMany.get(source)) {
-                        final ApplicationTenancyLevel relatedLevel = ApplicationTenancyLevel.of(estatioDomainObject);
+                    for (final UdoDomainObject2<?> udoDomainObject2 : relatedAccessMany.get(source)) {
+                        final ApplicationTenancyLevel relatedLevel = ApplicationTenancyLevel.of(udoDomainObject2);
 
                         if(proposedLevel.peerOf(relatedLevel)) {
                             ev.veto(relatedRoleName + " is at a peer level '%s'.", relatedLevel);
@@ -234,7 +234,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
         }
     }
 
-    public static class OnMovedUp<S extends EstatioDomainObject<S>> extends ApplicationTenancySubscriberAlgorithm<S, ApplicationTenancyEventMovedUp> {
+    public static class OnMovedUp<S extends UdoDomainObject2<S>> extends ApplicationTenancySubscriberAlgorithm<S, ApplicationTenancyEventMovedUp> {
         public OnMovedUp(final Class<S> sourceClass) {
             super(sourceClass, ApplicationTenancyEventMovedUp.class);
         }
@@ -242,7 +242,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
         @Inject
         DomainObjectContainer container;
 
-        public static class Hide<S extends EstatioDomainObject<S>> extends OnMovedUp<S> {
+        public static class Hide<S extends UdoDomainObject2<S>> extends OnMovedUp<S> {
 
             public Hide(final Class<S> sourceClass) {
                 super(sourceClass);
@@ -254,7 +254,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
             }
         }
 
-        public static class Disable<S extends EstatioDomainObject<S>> extends OnMovedUp<S> {
+        public static class Disable<S extends UdoDomainObject2<S>> extends OnMovedUp<S> {
             private final String reason;
 
             public Disable(final Class<S> sourceClass, final String reason) {
@@ -268,7 +268,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
             }
         }
 
-        public static class Invalid<S extends EstatioDomainObject<S>> extends OnMovedUp<S> {
+        public static class Invalid<S extends UdoDomainObject2<S>> extends OnMovedUp<S> {
             private final String reason;
 
             public Invalid(final Class<S> sourceClass, final String reason) {

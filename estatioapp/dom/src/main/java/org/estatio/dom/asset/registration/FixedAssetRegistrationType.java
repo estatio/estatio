@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleComparable;
@@ -61,7 +61,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED, bounded = true)
 public class FixedAssetRegistrationType 
-        extends EstatioDomainObject<FixedAssetRegistrationType>
+        extends UdoDomainObject2<FixedAssetRegistrationType>
         implements WithTitleComparable<FixedAssetRegistrationType>, 
                    WithTitleUnique, PowerType<FixedAssetRegistration>,
                    WithApplicationTenancyProperty {

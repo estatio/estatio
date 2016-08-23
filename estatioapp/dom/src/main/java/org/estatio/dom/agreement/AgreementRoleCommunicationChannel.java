@@ -50,7 +50,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
@@ -99,7 +99,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 @DomainObject(editing = Editing.DISABLED)
 public class AgreementRoleCommunicationChannel
-        extends EstatioDomainObject<AgreementRoleCommunicationChannel>
+        extends UdoDomainObject2<AgreementRoleCommunicationChannel>
         implements WithIntervalContiguous<AgreementRoleCommunicationChannel>, WithApplicationTenancyProperty {
 
     private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =

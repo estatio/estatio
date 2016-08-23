@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -49,7 +49,7 @@ import lombok.Setter;
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
 public class LeaseAssignment
-        extends EstatioDomainObject<LeaseAssignment>
+        extends UdoDomainObject2<LeaseAssignment>
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     

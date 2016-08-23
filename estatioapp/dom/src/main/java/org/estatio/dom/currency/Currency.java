@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
@@ -76,7 +76,7 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED, autoCompleteRepository = CurrencyRepository.class, autoCompleteAction = "autoComplete", bounded = true)
 public class Currency
-        extends EstatioDomainObject<Currency>
+        extends UdoDomainObject2<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {
 
     public Currency() {
