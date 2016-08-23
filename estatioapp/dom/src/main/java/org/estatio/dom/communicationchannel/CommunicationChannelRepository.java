@@ -101,7 +101,7 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
 
     @Programmatic
     public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
-        final List<CommunicationChannelOwnerLink> links = communicationChannelOwnerLinks.findByOwner(owner);
+        final List<CommunicationChannelOwnerLink> links = communicationChannelOwnerLinkRepository.findByOwner(owner);
         return Sets.newTreeSet(
                 Iterables.transform(links, CommunicationChannelOwnerLink.Functions.communicationChannel()));
     }
@@ -111,7 +111,7 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type) {
         final List<CommunicationChannelOwnerLink> links =
-                communicationChannelOwnerLinks.findByOwnerAndCommunicationChannelType(owner, type);
+                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, type);
         return Sets.newTreeSet(Iterables.transform(
                 links, CommunicationChannelOwnerLink.Functions.communicationChannel()));
     }
@@ -127,5 +127,5 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
     }
 
     @Inject
-    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
+    CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 }

@@ -19,6 +19,7 @@
 package org.estatio.fixture;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;

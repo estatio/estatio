@@ -74,7 +74,7 @@ import lombok.Setter;
                         + "WHERE reference.matches(:searchArg) "
                         + "|| description.matches(:searchArg)")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = Currencies.class, autoCompleteAction = "autoComplete", bounded = true)
+@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = CurrencyRepository.class, autoCompleteAction = "autoComplete", bounded = true)
 public class Currency
         extends EstatioDomainObject<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {

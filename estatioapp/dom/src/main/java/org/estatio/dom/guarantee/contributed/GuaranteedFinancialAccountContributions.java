@@ -18,15 +18,18 @@
  */
 package org.estatio.dom.guarantee.contributed;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountTransactions;
-import org.estatio.dom.guarantee.Guarantees;
-import org.joda.time.LocalDate;
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.dom.guarantee.GuaranteeRepository;
 
 public class GuaranteedFinancialAccountContributions {
 
@@ -36,8 +39,8 @@ public class GuaranteedFinancialAccountContributions {
             final LocalDate transactionDate,
             final String description,
             final BigDecimal amount
-            ) {
-        financialAccountTransactions.newTransaction(
+    ) {
+        financialAccountTransactionRepository.newTransaction(
                 financialAccount,
                 transactionDate,
                 description,
@@ -48,13 +51,13 @@ public class GuaranteedFinancialAccountContributions {
             final FinancialAccount financialAccount // contributee
     ) {
         // don't show if there is no guarantee pointing back to financialAccount
-        return guarantees.findbyFinancialAccount(financialAccount) == null;
+        return guaranteeRepository.findbyFinancialAccount(financialAccount) == null;
     }
 
     @Inject
-    FinancialAccountTransactions financialAccountTransactions;
+    FinancialAccountTransactionRepository financialAccountTransactionRepository;
 
     @Inject
-    Guarantees guarantees;
+    GuaranteeRepository guaranteeRepository;
 
 }

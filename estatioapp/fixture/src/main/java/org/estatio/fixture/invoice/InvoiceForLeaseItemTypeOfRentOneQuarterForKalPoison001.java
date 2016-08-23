@@ -18,9 +18,12 @@
  */
 package org.estatio.fixture.invoice;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.joda.time.LocalDate;
+
 import org.apache.isis.core.commons.ensure.Ensure;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;

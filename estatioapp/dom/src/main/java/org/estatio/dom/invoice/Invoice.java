@@ -552,7 +552,7 @@ public class Invoice
             final BigDecimal netAmount,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
+        InvoiceItem invoiceItem = invoiceItemRepository.newInvoiceItem(this, getDueDate());
         invoiceItem.setQuantity(quantity);
         invoiceItem.setCharge(charge);
         invoiceItem.setDescription(charge.getDescription());
@@ -698,5 +698,5 @@ public class Invoice
     InvoiceRepository invoiceRepository;
 
     @javax.inject.Inject
-    InvoiceItems invoiceItems;
+    InvoiceItemRepository invoiceItemRepository;
 }

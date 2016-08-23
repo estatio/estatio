@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.event.Event;
-import org.estatio.dom.event.Events;
+import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 
@@ -47,7 +47,7 @@ public class EstatioAppHomePage {
     }
 
     public List<Event> getUpcomingEvents() {
-        return events.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
+        return eventRepository.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }
 
     //region > injected services
@@ -55,7 +55,7 @@ public class EstatioAppHomePage {
     private LeaseRepository leaseRepository;
 
     @Inject
-    private Events events;
+    private EventRepository eventRepository;
 
     @Inject
     private ClockService clockService;

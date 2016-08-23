@@ -130,7 +130,7 @@ public abstract class CommunicationChannel
     @Programmatic
     public void setOwner(final CommunicationChannelOwner owner) {
         removeOwnerLink();
-        final CommunicationChannelOwnerLink link = communicationChannelOwnerLinks.createLink(this, owner);
+        final CommunicationChannelOwnerLink link = communicationChannelOwnerLinkRepository.createLink(this, owner);
     }
 
     private void removeOwnerLink() {
@@ -141,7 +141,7 @@ public abstract class CommunicationChannel
     }
 
     private CommunicationChannelOwnerLink getOwnerLink() {
-        return communicationChannelOwnerLinks.findByCommunicationChannel(this);
+        return communicationChannelOwnerLinkRepository.findByCommunicationChannel(this);
     }
 
     // //////////////////////////////////////
@@ -232,6 +232,6 @@ public abstract class CommunicationChannel
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
     @Inject
-    CommunicationChannelOwnerLinks communicationChannelOwnerLinks;
+    CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
 }

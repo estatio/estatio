@@ -23,7 +23,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -41,7 +41,8 @@ public class InvoiceImportLine implements Importable {
         return "Invoice Import";
     }
 
-    public InvoiceImportLine(){
+    public InvoiceImportLine() {
+
     }
 
     public InvoiceImportLine(
@@ -53,7 +54,7 @@ public class InvoiceImportLine implements Importable {
             final BigDecimal itemNetAmount,
             final LocalDate itemStartDate,
             final LocalDate itemEndDate
-            ){
+    ) {
         this.leaseReference = leaseReference;
         this.dueDate = dueDate;
         this.paymentMethod = paymentMethod;
@@ -82,7 +83,7 @@ public class InvoiceImportLine implements Importable {
     private LocalDate itemEndDate;
 
     // REVIEW: is this view model actually ever surfaced in the UI?
-    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public List<Object> importData() {
         return importData(null);
     }
@@ -90,7 +91,6 @@ public class InvoiceImportLine implements Importable {
     @Override
     @Programmatic
     public List<Object> importData(final Object previousRow) {
-
         List<Object> result = new ArrayList<>();
         Lease lease = fetchLease(getLeaseReference());
         PaymentMethod paymentMethod = fetchPaymentMethod(getPaymentMethod());
@@ -100,12 +100,12 @@ public class InvoiceImportLine implements Importable {
                 lease.getPrimaryParty(),
                 lease.getSecondaryParty(),
                 paymentMethod,
-                currencies.findCurrency("EUR"),
+                currencyRepository.findCurrency("EUR"),
                 getDueDate(),
                 lease, null);
 
-        InvoiceItem invoiceItem = invoice.newItem(fetchCharge(getItemChargeReference()),BigDecimal.ONE,getItemNetAmount(),getItemStartDate(),getItemEndDate());
-        if (getItemDescription() != null){
+        InvoiceItem invoiceItem = invoice.newItem(fetchCharge(getItemChargeReference()), BigDecimal.ONE, getItemNetAmount(), getItemStartDate(), getItemEndDate());
+        if (getItemDescription() != null) {
             invoiceItem.setDescription(getItemDescription());
         }
 
@@ -114,7 +114,7 @@ public class InvoiceImportLine implements Importable {
         return result;
     }
 
-    private Lease fetchLease(final String leaseReference){
+    private Lease fetchLease(final String leaseReference) {
         final Lease lease = leaseRepository.findLeaseByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
@@ -122,10 +122,10 @@ public class InvoiceImportLine implements Importable {
         return lease;
     }
 
-    private PaymentMethod fetchPaymentMethod(final String paymentMethod){
+    private PaymentMethod fetchPaymentMethod(final String paymentMethod) {
         try {
             return PaymentMethod.valueOf(paymentMethod);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ApplicationException(String.format("Paymentmethod with value %s not found.", paymentMethod));
         }
     }
@@ -138,7 +138,6 @@ public class InvoiceImportLine implements Importable {
         }
         return charge;
     }
-
 
     @Inject
     private ChargeRepository chargeRepository;
@@ -153,7 +152,6 @@ public class InvoiceImportLine implements Importable {
     private ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
-    private Currencies currencies;
-
+    private CurrencyRepository currencyRepository;
 
 }

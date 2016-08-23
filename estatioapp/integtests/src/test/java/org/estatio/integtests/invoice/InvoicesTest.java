@@ -284,7 +284,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
         private String WILCARDTENANCYPATH = "/GBR/%/GB01";
         private Numerator numeratorForOxfUsingWildCard;
 
-
         @Before
         public void setUp() throws Exception {
             applicationTenancyForOxf = applicationTenancyRepository.newTenancy(OXFTENANCYPATH, OXFTENANCYPATH, null);
@@ -520,7 +519,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
     public static class InvoiceForLeaseImportTest extends InvoicesTest {
 
         @Before
-        public void setup(){
+        public void setup() {
 
             runFixtureScript(new FixtureScript() {
                 @Override
@@ -542,15 +541,14 @@ public class InvoicesTest extends EstatioIntegrationTest {
         LocalDate itemStartDate;
         LocalDate itemEndDate;
 
-
         @Test
         public void importInvoiceLine() throws Exception {
 
             // given
             leaseReference = LeaseForOxfPoison003Gb.REF;
-            dueDate = new LocalDate(2016,07,01);
-            itemStartDate = new LocalDate(2015,01,01);
-            itemEndDate = new LocalDate(2015,12,31);
+            dueDate = new LocalDate(2016, 07, 01);
+            itemStartDate = new LocalDate(2015, 01, 01);
+            itemEndDate = new LocalDate(2015, 12, 31);
             paymentMethodStr = "DIRECT_DEBIT";
             itemChargeReference = ChargeRefData.IT_SERVICE_CHARGE;
             itemDescription = "Some description";
@@ -604,7 +602,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
             Assertions.assertThat(item2.getDescription()).isEqualTo(item2.getCharge().getDescription());
 
         }
-
 
     }
 

@@ -22,14 +22,14 @@ import java.util.List;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
 
 /**
  * Will reset to a fixed baseline of the {@link org.estatio.fixture.EstatioRefDataSetupFixture reference data}
  * but no transactional data.
- *
+ * <p/>
  * <p>
  * As a minor optimization, the script checks if any (immutable read-only) reference data exists, is only installs
  * it the first time (an idempotent operation).
@@ -41,12 +41,11 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
         super(null, "baseline");
     }
 
-
     @Override
     protected void execute(ExecutionContext executionContext) {
         executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
         executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
-        if(isRefDataPresent()) {
+        if (isRefDataPresent()) {
             return;
         }
         executionContext.executeChild(this, new EstatioRefDataSetupFixture());
@@ -58,11 +57,11 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
      * any reference data has previously been {@link EstatioRefDataSetupFixture setup}.
      */
     private boolean isRefDataPresent() {
-        final List<Currency> currencyList = currencies.allCurrencies();
+        final List<Currency> currencyList = currencyRepository.allCurrencies();
         return !currencyList.isEmpty();
     }
 
     @javax.inject.Inject
-    private Currencies currencies;
+    private CurrencyRepository currencyRepository;
 
 }

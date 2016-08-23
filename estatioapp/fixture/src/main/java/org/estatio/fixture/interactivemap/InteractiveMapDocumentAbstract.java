@@ -31,7 +31,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.document.DocumentType;
-import org.estatio.dom.document.asset.DocumentsForFixedAsset;
+import org.estatio.dom.document.asset.DocumentForFixedAssetMenu;
 
 public abstract class InteractiveMapDocumentAbstract extends DiscoverableFixtureScript {
 
@@ -57,5 +57,5 @@ public abstract class InteractiveMapDocumentAbstract extends DiscoverableFixture
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    private DocumentsForFixedAsset documents;
+    private DocumentForFixedAssetMenu documents;
 }

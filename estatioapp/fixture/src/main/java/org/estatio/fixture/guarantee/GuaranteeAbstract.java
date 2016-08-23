@@ -25,8 +25,8 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.fixture.EstatioFixtureScript;
@@ -44,7 +44,7 @@ public abstract class GuaranteeAbstract extends EstatioFixtureScript {
             final BigDecimal maximumAmount,
             final ExecutionContext executionContext) {
 
-        final Guarantee guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
+        final Guarantee guarantee = guaranteeRepository.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
         return executionContext.addResult(this, guarantee);
 
@@ -56,6 +56,6 @@ public abstract class GuaranteeAbstract extends EstatioFixtureScript {
     protected LeaseMenu leaseMenu;
 
     @Inject
-    protected Guarantees guarantees;
+    protected GuaranteeRepository guaranteeRepository;
 
 }

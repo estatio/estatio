@@ -32,7 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.event.Event;
-import org.estatio.dom.event.Events;
+import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseMenu;
@@ -92,7 +92,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
 
         LeaseBuilder fs;
         @Inject
-        Events events;
+        EventRepository eventRepository;
         @Inject
         ClockService clockService;
 
@@ -155,7 +155,7 @@ public class BreakOptionsTest extends EstatioIntegrationTest {
 
             Assertions.assertThat(breakOption.getCalendarEvents()).hasSize(1);
 
-            final List<Event> eventList = events.findBySource(breakOption);
+            final List<Event> eventList = eventRepository.findBySource(breakOption);
             Assertions.assertThat(eventList).hasSize(1);
             final Event event = eventList.get(0);
             Assertions.assertThat(event.getDate()).isEqualTo(breakOption.getExerciseDate());

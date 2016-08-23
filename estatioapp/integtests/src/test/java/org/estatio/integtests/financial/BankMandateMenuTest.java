@@ -32,7 +32,7 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -63,9 +63,8 @@ public class BankMandateMenuTest extends EstatioIntegrationTest {
             });
         }
 
-
         @Inject
-        private FinancialAccounts financialAccounts;
+        private FinancialAccountRepository financialAccountRepository;
         @Inject
         private BankMandateMenu bankMandateMenu;
         @Inject
@@ -78,7 +77,8 @@ public class BankMandateMenuTest extends EstatioIntegrationTest {
 
             // given
             Party owner = parties.findPartyByReference(LeaseForKalPoison001Nl.PARTY_REF_TENANT);
-            FinancialAccount account = financialAccounts.findByOwnerAndReference(owner, BankAccountForPoisonNl.REF);
+            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, BankAccountForPoisonNl.REF);
+
             Assert.assertThat(account instanceof BankAccount, is(true));
             final BankAccount bankAccount = (BankAccount) account;
 

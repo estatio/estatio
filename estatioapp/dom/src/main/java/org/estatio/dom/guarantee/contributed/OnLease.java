@@ -4,8 +4,8 @@ import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.joda.time.LocalDate;
 
@@ -34,17 +34,17 @@ public class OnLease extends UdoDomainService<Guarantee> {
             final BigDecimal startAmount
     ) {
 
-        return guarantees.newGuarantee(lease,reference,name,guaranteeType,startDate,endDate,description,contractualAmount,startAmount);
+        return guaranteeRepository.newGuarantee(lease,reference,name,guaranteeType,startDate,endDate,description,contractualAmount,startAmount);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
     public List<Guarantee> guarantees(final Lease lease) {
-        return guarantees.findByLease(lease);
+        return guaranteeRepository.findByLease(lease);
     }
 
     @Inject
-    private Guarantees guarantees;
+    private GuaranteeRepository guaranteeRepository;
 
 }

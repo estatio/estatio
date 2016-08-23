@@ -31,14 +31,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.currency.CurrencyRepository;
 
 /**
  * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch
  * date}.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * Delegates to injected {@link ApplicationSettingsServiceForEstatio application
  * settings service} to actually do the persistence. Also ensures that any
  * {@link ApplicationSettingKey defaults for keys} have been installed if
@@ -61,13 +61,13 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     @Programmatic
     public Currency systemCurrency() {
         //TODO: Make system default currency configurable
-        return currencies.findCurrency("EUR");
+        return currencyRepository.findCurrency("EUR");
     }
 
     // //////////////////////////////////////
 
     private LocalDate cachedEpochDate;
-    
+
     /**
      * @see ApplicationSettingKey#epochDate
      */
@@ -108,7 +108,7 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     // //////////////////////////////////////
 
     private String cachedReportServerBaseUrl;
-    
+
     /**
      * @see ApplicationSettingKey#reportServerBaseUrl
      */
@@ -137,6 +137,6 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     @Inject ApplicationSettingsServiceForEstatio applicationSettingsService;
 
     @Inject
-    private Currencies currencies;
+    private CurrencyRepository currencyRepository;
 
 }

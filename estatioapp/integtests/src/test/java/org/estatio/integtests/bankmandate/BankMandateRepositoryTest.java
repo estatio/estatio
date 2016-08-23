@@ -31,7 +31,7 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccounts;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.party.Parties;
@@ -64,7 +64,7 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
     BankMandateRepository bankMandateRepository;
 
     @Inject
-    BankAccounts bankAccounts;
+    BankAccountRepository bankAccountRepository;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -81,7 +81,7 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
 
             // Given
             Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-            BankAccount bankAccount = bankAccounts.findBankAccountByReference(owner, BankAccountForTopModelGb.REF);
+            BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountForTopModelGb.REF);
 
             final String reference = "REF";
             final String name = "NAME";
@@ -110,6 +110,5 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
         }
 
     }
-
 
 }

@@ -118,7 +118,7 @@ public class Event
     @Programmatic
     public void setSource(final EventSource eventSource) {
         removeSourceLink();
-        eventSourceLinks.createLink(this, eventSource);
+        eventSourceLinkRepository.createLink(this, eventSource);
     }
 
     private void removeSourceLink() {
@@ -132,7 +132,7 @@ public class Event
         if (!getContainer().isPersistent(this)) {
             return null;
         }
-        return eventSourceLinks.findByEvent(this);
+        return eventSourceLinkRepository.findByEvent(this);
     }
 
     // //////////////////////////////////////
@@ -212,6 +212,6 @@ public class Event
     }
 
     @Inject
-    private EventSourceLinks eventSourceLinks;
+    private EventSourceLinkRepository eventSourceLinkRepository;
 
 }
