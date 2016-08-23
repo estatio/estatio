@@ -24,22 +24,16 @@ language governing permissions and limitations under the License.
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-app</artifactId>
+    <artifactId>estatio-canonicalfactory</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) App</name>
+    <name>Estatio (Open Source) Canonical Factory</name>
     <description>
-        Estatio App (manifest and application-scoped services)
+        Estatio Canonical DTO Factories
     </description>
 
     <properties>
         <siteBaseDir>..</siteBaseDir>
-        <!-- targetJdk required as a workaround for pmd error, 
-            see https://issues.apache.org/jira/browse/ACCUMULO-443
-            and http://jira.codehaus.org/browse/MPMD-86 -->
-            <!-- 
-        <targetJdk>1.6</targetJdk>
-             -->
     </properties>
 
     <build>
@@ -64,70 +58,23 @@ language governing permissions and limitations under the License.
     <dependencies>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-canonical</artifactId>
+        </dependency>
+
+		<dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom</artifactId>
+        </dependency>
+
+        <!-- testing -->
+		<dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-impmgr</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-fixture</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-canonicalfactory</artifactId>
-        </dependency>
-
-        <!-- isis modules -->
-        <dependency>
-            <groupId>org.isisaddons.module.settings</groupId>
-            <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.security</groupId>
-            <artifactId>isis-module-security-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.sessionlogger</groupId>
-            <artifactId>isis-module-sessionlogger-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-
-        <!-- isis addons (wicket cpts) -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.excel</groupId>
-            <artifactId>isis-wicket-excel-cpt</artifactId>
-        </dependency>
-
-
-        <!--
-        defined as optional dependency in security module, so need to reference explicitly here
-        -->
-        <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>0.3m</version>
-        </dependency>
-
-        <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-unittestsupport</artifactId>
@@ -195,73 +142,24 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
     </dependencies>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
     <profiles>
-
-        <profile>
-            <id>canonical-mappings</id>
-            <activation>
-                <property>
-                    <name>!skip.canonical-mappings</name>
-                </property>
-            </activation>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.isis.core</groupId>
-                    <artifactId>isis-core-viewer-restfulobjects-rendering</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <profile>
             <id>analysis</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>2.6</version>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <check>
-
-                            </check>
-                            <formats>
-                                <format>xml</format>
-                            </formats>
-                            <instrumentation>
-                                <excludes>
-                                    <exclude>org/estatio/**/*Test*.class</exclude>
-                                </excludes>
-                            </instrumentation>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
- 
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <configuration>
                             <configLocation>${checkstyle.configLocation}</configLocation>
+                            <excludes>org/estatio/api/**</excludes>
                         </configuration>
                         <executions>
                             <execution>
@@ -321,6 +219,7 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -330,6 +229,7 @@ language governing permissions and limitations under the License.
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
+
     </profiles>
 
 </project>
