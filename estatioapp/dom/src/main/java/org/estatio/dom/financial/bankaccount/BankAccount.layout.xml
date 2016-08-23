@@ -3,6 +3,7 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
+            <ns2:action id="findTransaction"/>
         </col>
     </row>
     <row>
@@ -52,9 +53,6 @@
                 <ns2:property id="accountNumber"/>
             </ns2:fieldSet>
             <ns2:collection id="fixedAssets"/>
-            <ns2:collection id="transactions">
-                <ns2:action id="findTransaction"/>
-            </ns2:collection>
         </col>
         <col span="12" unreferencedCollections="true">
 
