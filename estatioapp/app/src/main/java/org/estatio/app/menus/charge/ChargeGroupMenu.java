@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.app.menus.charge;
 
 import java.util.List;
 
@@ -32,6 +32,8 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.ChargeGroupRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

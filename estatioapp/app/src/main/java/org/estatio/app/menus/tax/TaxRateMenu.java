@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.tax;
+package org.estatio.app.menus.tax;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.tax.TaxRate;
 
 @DomainService(repositoryFor = TaxRate.class)
 @DomainServiceLayout(

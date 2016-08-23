@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.numerator;
+package org.estatio.app.menus.numerator;
 
 import java.math.BigInteger;
 
@@ -35,6 +35,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.PartyConstants;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tax;
+package org.estatio.app.menus.tax;
 
 import java.util.List;
 
@@ -28,6 +28,9 @@ import org.apache.isis.applib.query.Query;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
+import org.estatio.dom.tax.TaxRateRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

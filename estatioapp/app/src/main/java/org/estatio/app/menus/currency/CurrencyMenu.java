@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.currency;
+package org.estatio.app.menus.currency;
 
 import java.util.List;
 
@@ -37,6 +37,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.currency.CurrencyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, repositoryFor = Currency.class)
 @DomainServiceLayout(

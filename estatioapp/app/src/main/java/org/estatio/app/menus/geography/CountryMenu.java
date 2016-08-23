@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.geography;
+package org.estatio.app.menus.geography;
 
 import java.util.List;
 
@@ -33,6 +33,8 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
