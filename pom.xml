@@ -705,6 +705,19 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-impmgr</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-impmgr</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-canonical</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
             </dependency>
@@ -982,6 +995,7 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
+                <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
@@ -1002,6 +1016,7 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
+                <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
@@ -1021,6 +1036,7 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
+                <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
@@ -1044,6 +1060,7 @@ mvn clean install -DskipTests -o
                 <module>udo/party/dom</module>
                 <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
+                <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
             </modules>
         </profile>

@@ -24,12 +24,12 @@ language governing permissions and limitations under the License.
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-app</artifactId>
+    <artifactId>estatio-impmgr</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) App</name>
+    <name>Estatio (Open Source) Import Managers</name>
     <description>
-        Estatio App (manifest and application-scoped services)
+        Estatio Import Managers
     </description>
 
     <properties>
@@ -64,54 +64,7 @@ language governing permissions and limitations under the License.
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-impmgr</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-fixture</artifactId>
-        </dependency>
-
-        <!-- isis modules -->
-        <dependency>
-            <groupId>org.isisaddons.module.settings</groupId>
-            <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.security</groupId>
-            <artifactId>isis-module-security-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.sessionlogger</groupId>
-            <artifactId>isis-module-sessionlogger-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-
-        <!-- isis addons (wicket cpts) -->
-        <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.excel</groupId>
-            <artifactId>isis-wicket-excel-cpt</artifactId>
-        </dependency>
-
-
-        <!--
-        defined as optional dependency in security module, so need to reference explicitly here
-        -->
-        <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>0.3m</version>
+            <artifactId>estatio-dom</artifactId>
         </dependency>
 
         <!-- testing -->
@@ -127,20 +80,8 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -169,13 +110,6 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
-        <!-- needed by gmap3/HttpClient; not correctly declared as transitive dependency, it would seem... -->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
@@ -195,23 +129,6 @@ language governing permissions and limitations under the License.
     </reporting>
 
     <profiles>
-
-        <profile>
-            <id>canonical-mappings</id>
-            <activation>
-                <property>
-                    <name>!skip.canonical-mappings</name>
-                </property>
-            </activation>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.isis.core</groupId>
-                    <artifactId>isis-core-viewer-restfulobjects-rendering</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <profile>
             <id>analysis</id>
             <build>

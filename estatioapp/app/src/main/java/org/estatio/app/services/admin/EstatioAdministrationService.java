@@ -50,6 +50,7 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
         super(EstatioAdministrationService.class);
     }
 
+    //region > updateEpochDate (action)
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
@@ -64,8 +65,9 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
     public LocalDate default0UpdateEpochDate() {
         return settingsService.fetchEpochDate();
     }
+    //endregion
 
-    // //////////////////////////////////////
+    //region > listAllSettings (action)
 
     @Action(
             semantics = SemanticsOf.SAFE,
@@ -75,10 +77,13 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
     public List<ApplicationSetting> listAllSettings() {
         return settingsService.listAll();
     }
+    //endregion
 
-    // //////////////////////////////////////
+    //region > injected dependencies
 
     @Inject
     private EstatioSettingsService settingsService;
 
-}
+    //endregion
+
+        }
