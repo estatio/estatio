@@ -26,16 +26,11 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -45,11 +40,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
-@DomainService(repositoryFor = Charge.class)
-@DomainServiceLayout(
-        named = "Other",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.3")
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Charge.class)
 public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
     public ChargeRepository() {
@@ -58,9 +49,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
-    @MemberOrder(sequence = "1")
+    @Programmatic
     public Charge newCharge(
             final ApplicationTenancy applicationTenancy,
             final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
@@ -82,14 +71,10 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
         return charge;
     }
 
-    public List<ApplicationTenancy> choices0NewCharge() {
-        return estatioApplicationTenancyRepository.allCountryTenancies();
-    }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
+    @Programmatic
     public List<Charge> allCharges() {
         return allInstances();
     }
