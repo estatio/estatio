@@ -50,7 +50,7 @@ import org.estatio.dom.invoice.InvoiceMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.invoice.viewmodel.InvoiceImportLine;
+import org.estatio.app.services.invoice.InvoiceImportLine;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.numerator.Numerator;

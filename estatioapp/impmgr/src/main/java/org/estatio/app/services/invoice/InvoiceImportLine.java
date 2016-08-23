@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice.viewmodel;
+package org.estatio.app.services.invoice;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.estatio.dom.charge.viewmodels;
+package org.estatio.app.services.budget;
 
 import java.util.List;
 

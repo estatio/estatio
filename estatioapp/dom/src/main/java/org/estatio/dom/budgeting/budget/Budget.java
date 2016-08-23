@@ -302,6 +302,7 @@ public class Budget extends EstatioDomainObject<Budget> implements WithIntervalM
         return total;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
     public BudgetOverview budgetOverview() {
         return new BudgetOverview(this);
     }

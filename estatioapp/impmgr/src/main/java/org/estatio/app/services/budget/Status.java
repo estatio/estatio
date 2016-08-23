@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.viewmodels;
+package org.estatio.app.services.budget;
 
 public enum Status {
     NOT_FOUND,

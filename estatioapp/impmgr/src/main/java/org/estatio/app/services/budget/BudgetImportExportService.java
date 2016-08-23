@@ -36,7 +36,6 @@ import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.viewmodels.BudgetImportExport;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetImportExportService {

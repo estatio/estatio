@@ -17,7 +17,6 @@
 package org.estatio.app.services.budget;
 
 
-//import org.apache.isis.applib.annotation.*;
 
 import javax.annotation.PostConstruct;
 
@@ -44,39 +43,28 @@ public class BudgetSpreadsheetImportMenu {
         }
     }
 
-    // //////////////////////////////////////
 
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public ChargeImportManager uploadCharges() {
-
         return new ChargeImportManager();
-
     }
 
 
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "2")
     public BudgetImportExportManager uploadBudget() {
-
         return new BudgetImportExportManager();
-
     }
 
 
-    // //////////////////////////////////////
-    // Injected Services
-    // //////////////////////////////////////
 
+    //region > injected services
     @javax.inject.Inject
     private ExcelService excelService;
 
     @javax.inject.Inject
     private ActionInvocationContext actionInvocationContext;
+    //endregion
 
 }
