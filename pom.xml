@@ -1058,7 +1058,6 @@ mvn clean install -DskipTests -o
                 <module>udo/invoice/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/party/dom</module>
-                <module>udo/tax/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
