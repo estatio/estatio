@@ -18,8 +18,8 @@
             <ns2:fieldSet name="Metadata" id="metadata"/>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="budgeted"/>
-            <ns2:collection id="audited"/>
+            <ns2:collection id="budgeted" defaultView="table"/>
+            <ns2:collection id="audited" defaultView="table"/>
         </col>
     </row>
 </grid>

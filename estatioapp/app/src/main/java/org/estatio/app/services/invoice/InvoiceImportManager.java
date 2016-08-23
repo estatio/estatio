@@ -21,18 +21,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.invoice.viewmodel.InvoiceImportLine;
 
 import lombok.Getter;
@@ -41,11 +37,7 @@ import lombok.Setter;
 @DomainObject(
         nature = Nature.VIEW_MODEL
 )
-@DomainObjectLayout(
-        named = "Import manager for invoice for lease",
-        bookmarking = BookmarkPolicy.AS_ROOT
-)
-public class InvoiceImportManager extends EstatioViewModel {
+public class InvoiceImportManager {
 
     public String title() {
         return "Import manager for invoice for lease";
@@ -56,7 +48,6 @@ public class InvoiceImportManager extends EstatioViewModel {
     }
 
     @Action
-    @ActionLayout(cssClassFa = "fa-upload")
     @CollectionLayout(paged = -1)
     public List<InvoiceImportLine> importInvoices(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {

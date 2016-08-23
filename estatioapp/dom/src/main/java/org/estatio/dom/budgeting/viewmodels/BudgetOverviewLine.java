@@ -1,19 +1,20 @@
 package org.estatio.dom.budgeting.viewmodels;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
-import org.estatio.app.EstatioViewModel;
+
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 @DomainObject(nature = Nature.VIEW_MODEL)
-public class BudgetOverviewLine extends EstatioViewModel implements Comparable<BudgetOverviewLine> {
+public class BudgetOverviewLine implements Comparable<BudgetOverviewLine> {
 
     public BudgetOverviewLine(){}
 

@@ -22,55 +22,44 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.ViewModelLayout;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.charge.viewmodels.ChargeImport;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL
 )
-@DomainObjectLayout(
-        named = "Import manager for charges",
-        bookmarking = BookmarkPolicy.AS_ROOT
-)
-@ViewModelLayout(paged = -1)
-public class ChargeImportManager extends EstatioViewModel {
+@DomainObjectLayout(paged = -1)
+public class ChargeImportManager {
+
+    //region > constructors, title
+    public ChargeImportManager() {
+        this.name = "Charge Import";
+    }
 
     public String title() {
         return "Import manager for Charges";
     }
 
-    public ChargeImportManager() {
-        this.name = "Charge Import";
-    }
-
-    //region > name (property)
-    private String name;
-
-    @MemberOrder(sequence = "1")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
     //endregion
 
+
+    @Getter @Setter
+    private String name;
+
+
+    //region > importBlob (action)
     @Action
-    @ActionLayout(named = "Import", cssClassFa = "fa-upload")
     @CollectionLayout(paged = -1)
     public List<ChargeImport> importBlob(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
@@ -78,11 +67,16 @@ public class ChargeImportManager extends EstatioViewModel {
                 excelService.fromExcel(spreadsheet, ChargeImport.class);
         return lineItems;
     }
+    //endregion
 
+
+    //region > injected services
     @Inject
     private DomainObjectContainer container;
 
     @Inject
     private ExcelService excelService;
+
+    //endregion
 
 }

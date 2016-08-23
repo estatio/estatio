@@ -1,10 +1,16 @@
 package org.estatio.dom.budgeting.viewmodels;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.estatio.app.EstatioViewModel;
+
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.budgeting.budget.Budget;
@@ -15,15 +21,13 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @DomainObject(nature = Nature.VIEW_MODEL)
-public class BudgetOverview extends EstatioViewModel {
+public class BudgetOverview  {
 
+    //region > constructors, title
     public BudgetOverview(){}
 
     public BudgetOverview(final Budget budget) {
@@ -34,6 +38,13 @@ public class BudgetOverview extends EstatioViewModel {
 
     }
 
+    public TranslatableString title() {
+        return TranslatableString.tr("{name}", "name", "Budget overview");
+    }
+
+    //endregion
+
+
     @Getter @Setter
     private Budget budget;
 
@@ -43,8 +54,8 @@ public class BudgetOverview extends EstatioViewModel {
     @Getter @Setter
     private BigDecimal totalAuditedValue;
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.EAGERLY)
+
+    //region > budgeted (derived collection)
     public List<BudgetOverviewLine> getBudgeted(){
         List<BudgetOverviewLine> lines = new ArrayList<>();
 
@@ -75,9 +86,10 @@ public class BudgetOverview extends EstatioViewModel {
 
         return lines;
     }
+    //endregion
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.EAGERLY)
+
+    //region > audited (derived collection)
     public List<BudgetOverviewLine> getAudited(){
         List<BudgetOverviewLine> lines = new ArrayList<>();
 
@@ -109,9 +121,7 @@ public class BudgetOverview extends EstatioViewModel {
         return lines;
     }
 
-    public TranslatableString title() {
-        return TranslatableString.tr("{name}", "name", "Budget overview");
-    }
+
 
     List<BudgetOverviewLine> aggregateByCharge(BudgetOverviewLine lineToBeMerged, List<BudgetOverviewLine> list) {
 
@@ -134,7 +144,10 @@ public class BudgetOverview extends EstatioViewModel {
         list.add(lineToBeMerged);
         return list;
     }
+    //endregion
 
+
+    //region > injected services
     @Inject
     BudgetItemAllocationRepository budgetItemAllocationRepository;
 
@@ -143,5 +156,7 @@ public class BudgetOverview extends EstatioViewModel {
 
     @Inject
     private Occupancies occupancies;
+
+    //endregion
 
 }

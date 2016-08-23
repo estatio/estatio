@@ -19,21 +19,21 @@ package org.estatio.dom.party.relationship;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel
-public class PartyRelationshipView extends EstatioViewModel {
+@DomainObject(nature = Nature.VIEW_MODEL)
+public class PartyRelationshipView  {
 
+    //region > constructors, title
     public PartyRelationshipView() {
 
     }
@@ -53,8 +53,6 @@ public class PartyRelationshipView extends EstatioViewModel {
         this.description = partyRelationship.getDescription();
     }
 
-    // //////////////////////////////////////
-
     public String title() {
         return String.format("%s is %s of %s",
                 getFrom().getName(),
@@ -62,50 +60,50 @@ public class PartyRelationshipView extends EstatioViewModel {
                 getTo().getName());
     }
 
-    // //////////////////////////////////////
+    //endregion
+
 
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private PartyRelationship partyRelationship;
 
-    // //////////////////////////////////////
 
     @Property(hidden = Where.EVERYWHERE)
     @MemberOrder(sequence = "1")
     @Getter @Setter
     private Party from;
 
-    // //////////////////////////////////////
 
     @MemberOrder(sequence = "2")
     @Getter @Setter
     private Party to;
 
-    // //////////////////////////////////////
 
     @MemberOrder(sequence = "3")
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private PartyRelationshipType relationshipType;
 
-    @PropertyLayout(named = "Title")
+
+    // derived property
     public String getRelationshipToTitle() {
         return getRelationshipType().toTitle();
     }
 
-    @PropertyLayout(named = "Title")
+
     @Property(hidden = Where.EVERYWHERE)
     public String getRelationshipFromTitle() {
         return getRelationshipType().toTitle();
     }
 
-    // //////////////////////////////////////
 
     @MemberOrder(sequence = "4")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private LocalDate startDate;
 
+
+    //region > changeDates (action)
     public PartyRelationshipView changeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
@@ -123,23 +121,23 @@ public class PartyRelationshipView extends EstatioViewModel {
     public String validateChangeDates(final LocalDate startDate, final LocalDate endDate) {
         return partyRelationship.validateChangeDates(startDate, endDate);
     }
+    //endregion
 
-    // //////////////////////////////////////
 
-    @MemberOrder(sequence = "5")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private LocalDate endDate;
 
-    // //////////////////////////////////////
 
-    @MemberOrder(sequence = "6")
+
     @Getter @Setter
     private String description;
 
+    //region > changeDescription (action)
     public PartyRelationshipView changeDescription(
             final String description) {
         return new PartyRelationshipView(partyRelationship.changeDescription(description), getFrom());
     }
+    //endregion
 
 }

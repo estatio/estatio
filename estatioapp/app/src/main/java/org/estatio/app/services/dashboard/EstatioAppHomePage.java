@@ -22,45 +22,43 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.ViewModel;
-import org.apache.isis.applib.annotation.ViewModelLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 
-@ViewModel
-@ViewModelLayout(named = "Dashboard")
-public class EstatioAppHomePage extends EstatioViewModel {
+@DomainObject(nature = Nature.VIEW_MODEL)
+public class EstatioAppHomePage {
 
     private static final int MONTHS = 3;
 
+    //region > title
     public String title() {
         return "Home Page";
     }
+    //endregion
 
-    // //////////////////////////////////////
-
-    @CollectionLayout(render = RenderType.EAGERLY, named = "Leases about to expire")
     public List<Lease> getLeasesAboutToExpire() {
-        return leaseRepository.findExpireInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
+        return leaseRepository.findExpireInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY, named = "Upcoming events")
     public List<Event> getUpcomingEvents() {
-        return events.findEventsInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
+        return events.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }
 
-    // //////////////////////////////////////
-
+    //region > injected services
     @Inject
     private LeaseRepository leaseRepository;
 
     @Inject
     private Events events;
+
+    @Inject
+    private ClockService clockService;
+    //endregion
 
 }

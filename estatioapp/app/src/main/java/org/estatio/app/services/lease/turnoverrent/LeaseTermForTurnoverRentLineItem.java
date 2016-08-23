@@ -19,28 +19,30 @@ package org.estatio.app.services.lease.turnoverrent;
 
 import java.math.BigDecimal;
 
-import org.apache.isis.applib.annotation.MemberGroupLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Paged;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.utils.TitleBuilder;
 
-@Paged(Integer.MAX_VALUE)
-@MemberGroupLayout(columnSpans = { 4, 4, 4, 0 }, left = { "Selected" }, right = { "Next" })
-@ViewModel
-public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
+import lombok.Getter;
+import lombok.Setter;
+
+@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObjectLayout(paged = Integer.MAX_VALUE)
+public class LeaseTermForTurnoverRentLineItem  {
+
+    //region > constructors, title
+    public LeaseTermForTurnoverRentLineItem() {
+    }
 
     public LeaseTermForTurnoverRentLineItem(LeaseTerm leaseTerm) {
         this.leaseTerm = (LeaseTermForTurnoverRent) leaseTerm;
         this.auditedTurnover = getLeaseTerm().getAuditedTurnover();
-    }
-
-    public LeaseTermForTurnoverRentLineItem() {
     }
 
     public String title() {
@@ -48,31 +50,17 @@ public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
                 .withName(getLeaseTerm())
                 .toString();
     }
+    //endregion
 
+
+    @Getter @Setter
     private LeaseTermForTurnoverRent leaseTerm;
 
-    @MemberOrder(name = "Selected", sequence = "1")
-    public LeaseTermForTurnoverRent getLeaseTerm() {
-        return leaseTerm;
-    }
 
-    public void setLeaseTerm(LeaseTermForTurnoverRent leaseTerm) {
-        this.leaseTerm = leaseTerm;
-    }
-
-    // //////////////////////////////////////
-
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true") // required??
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
     private BigDecimal auditedTurnover;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    @MemberOrder(name = "Selected", sequence = "2")
-    public BigDecimal getAuditedTurnover() {
-        return auditedTurnover;
-    }
-
-    public void setAuditedTurnover(BigDecimal auditedTurnover) {
-        this.auditedTurnover = auditedTurnover;
-    }
 
 }

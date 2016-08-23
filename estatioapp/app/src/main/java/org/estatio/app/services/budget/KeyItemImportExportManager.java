@@ -24,51 +24,38 @@ import javax.inject.Inject;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.viewmodels.KeyItemImportExportLineItem;
 import org.estatio.dom.budgeting.viewmodels.Status;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @DomainObject(
         nature = Nature.VIEW_MODEL
 )
-@DomainObjectLayout(
-        named = "Import/export manager for key item",
-        bookmarking = BookmarkPolicy.AS_ROOT
-)
-@MemberGroupLayout(left = {"File", "Criteria"})
-public class KeyItemImportExportManager extends EstatioViewModel {
+public class KeyItemImportExportManager {
+
+    //region > constructors, title
+    public KeyItemImportExportManager() {
+    }
 
     public KeyItemImportExportManager(KeyItemImportExportManager keyItemImportExportManager) {
         this.keyTable = keyItemImportExportManager.getKeyTable();
         this.fileName = keyItemImportExportManager.getFileName();
-    }
-
-    // //////////////////////////////////////
-
-    public String title() {
-        return "Import export key items";
-    }
-
-    public KeyItemImportExportManager() {
     }
 
     public KeyItemImportExportManager(final KeyTable keyTable) {
@@ -76,34 +63,20 @@ public class KeyItemImportExportManager extends EstatioViewModel {
         this.fileName = "export.xlsx";
     }
 
+    public String title() {
+        return "Import export key items";
+    }
+
+    //endregion
+
+
+    @Getter @Setter
     private KeyTable keyTable;
 
-    public KeyTable getKeyTable() {
-        return keyTable;
-    }
-
-    public void setKeyTable(final KeyTable keyTable) {
-        this.keyTable = keyTable;
-    }
-
-    // //////////////////////////////////////
-    // fileName (property)
-    // changeFileName
-    // //////////////////////////////////////
-
+    @Getter @Setter
     private String fileName;
 
-    @MemberOrder(name = "File", sequence = "1")
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(final String fileName) {
-        this.fileName = fileName;
-    }
-
-    // //////////////////////////////////////
-
+    //region > changeFileName (action)
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Change File Name")
     @MemberOrder(name = "fileName", sequence = "1")
@@ -116,23 +89,16 @@ public class KeyItemImportExportManager extends EstatioViewModel {
         return getFileName();
     }
 
-    // //////////////////////////////////////
-    // allBudgetKeyItems
-    // //////////////////////////////////////
+    //endregion
+
 
     @SuppressWarnings("unchecked")
     @Collection
-    @CollectionLayout(
-            render = RenderType.EAGERLY
-    )
     public List<KeyItemImportExportLineItem> getKeyItems() {
         return keyItemImportExportService.items(this);
     }
 
-    // //////////////////////////////////////
-    // export (action)
-    // //////////////////////////////////////
-
+    //region > export (action)
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     @MemberOrder(name = "keyItems", sequence = "1")
@@ -148,10 +114,9 @@ public class KeyItemImportExportManager extends EstatioViewModel {
     private static String withExtension(final String fileName, final String fileExtension) {
         return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
+    //endregion
 
-    // //////////////////////////////////////
-    // import (action)
-    // //////////////////////////////////////
+    //region > import (action)
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
@@ -184,10 +149,10 @@ public class KeyItemImportExportManager extends EstatioViewModel {
         return newItems;
     }
 
+    //endregion
 
-    // //////////////////////////////////////
-    // Injected Services
-    // //////////////////////////////////////
+    //region > injected services
+
 
     @javax.inject.Inject
     private DomainObjectContainer container;
@@ -200,5 +165,7 @@ public class KeyItemImportExportManager extends EstatioViewModel {
 
     @Inject
     private KeyTableRepository keyTableRepository;
+
+    //endregion
 
 }

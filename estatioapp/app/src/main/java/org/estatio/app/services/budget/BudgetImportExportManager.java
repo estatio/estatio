@@ -39,7 +39,6 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.viewmodels.BudgetImportExport;
 
@@ -54,7 +53,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @ViewModelLayout(paged = -1)
-public class BudgetImportExportManager extends EstatioViewModel {
+public class BudgetImportExportManager {
 
     public String title() {
         return "Import / Export manager for budget";

@@ -27,18 +27,19 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 
-public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements WithApplicationTenancy, WithApplicationTenancyAny {
+public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 
     public Object approveAll() {
         for (Invoice invoice : getInvoices()) {
@@ -64,7 +65,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements
     }
 
     public LocalDate default0InvoiceAll() {
-        return getClockService().now();
+        return clockService.now();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -84,7 +85,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements
     }
 
     public boolean hideSaveAllAsHistoric(){
-        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
+        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(userService.getUser());
     }
 
     @CollectionLayout(render = RenderType.EAGERLY)
@@ -98,5 +99,12 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel implements
 
     @Inject
     protected WrapperFactory wrapperFactory;
+
+    @Inject
+    protected ClockService clockService;
+
+    @Inject
+    protected UserService userService;
+
 
 }

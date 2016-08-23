@@ -12,7 +12,9 @@
         <col span="4">
             <ns2:fieldSet name="Relationship" id="relationship" unreferencedProperties="true">
                 <ns2:property id="from"/>
-                <ns2:property id="relationshipFromTitle"/>
+                <ns2:property id="relationshipFromTitle">
+                    <ns2:named>Title</ns2:named>
+                </ns2:property>
                 <ns2:property id="to"/>
                 <ns2:property id="relationshipToTitle"/>
                 <ns2:property id="relationshipType"/>
