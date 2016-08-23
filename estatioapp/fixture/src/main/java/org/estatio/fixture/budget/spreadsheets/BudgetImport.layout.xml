@@ -5,7 +5,6 @@
             <ns2:domainObject/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="handleRow"/>
             <ns2:action id="importData"/>
             <ns2:action id="links"/>
         </col>
@@ -13,21 +12,21 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="keytableDPercentage"/>
-                <ns2:property id="keytableEPercentage"/>
-                <ns2:property id="targetChargeReference"/>
+                <ns2:property id="propertyReference"/>
+                <ns2:property id="startDate"/>
                 <ns2:property id="endDate"/>
-                <ns2:property id="keytableFPercentage"/>
-                <ns2:property id="keytableCPercentage"/>
-                <ns2:property id="keytableBPercentage"/>
+                <ns2:property id="chargeReference"/>
+                <ns2:property id="targetChargeReference"/>
                 <ns2:property id="budgetedValue"/>
                 <ns2:property id="keytableAPercentage"/>
+                <ns2:property id="keytableBPercentage"/>
+                <ns2:property id="keytableCPercentage"/>
+                <ns2:property id="keytableDPercentage"/>
+                <ns2:property id="keytableEPercentage"/>
+                <ns2:property id="keytableFPercentage"/>
                 <ns2:property id="keytableGPercentage"/>
-                <ns2:property id="keytableIPercentage"/>
                 <ns2:property id="keytableHPercentage"/>
-                <ns2:property id="propertyReference"/>
-                <ns2:property id="chargeReference"/>
-                <ns2:property id="startDate"/>
+                <ns2:property id="keytableIPercentage"/>
                 <ns2:property id="keytableJPercentage"/>
             </ns2:fieldSet>
         </col>

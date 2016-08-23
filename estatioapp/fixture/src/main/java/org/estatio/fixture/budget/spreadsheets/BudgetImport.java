@@ -8,14 +8,12 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -38,6 +36,9 @@ import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class BudgetImport implements ExcelFixtureRowHandler, Importable {
 
@@ -45,22 +46,54 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
     private static int numberOfBudgetItemsCreated = 0;
     private static int[] counter = new int[10];
 
+    @Getter @Setter
     private String propertyReference;
+
+    @Getter @Setter
     private LocalDate startDate;
+
+    @Getter @Setter
     private LocalDate endDate;
+
+    @Getter @Setter
     private String chargeReference;
+
+    @Getter @Setter
     private String targetChargeReference;
+
+    @Getter @Setter
     private BigDecimal budgetedValue;
+
+    @Getter @Setter
     private BigDecimal keytableAPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableBPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableCPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableDPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableEPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableFPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableGPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableHPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableIPercentage;
+
+    @Getter @Setter
     private BigDecimal keytableJPercentage;
+
 
     private BudgetItem findOrCreateBudgetItem(
             final Property property,
@@ -184,153 +217,7 @@ public class BudgetImport implements ExcelFixtureRowHandler, Importable {
         return Lists.newArrayList();
     }
 
-    @MemberOrder(sequence = "1")
-    public String getPropertyReference() {
-        return propertyReference;
-    }
 
-    public void setPropertyReference(String propertyReference) {
-        this.propertyReference = propertyReference;
-    }
-
-    @MemberOrder(sequence = "2")
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    @MemberOrder(sequence = "3")
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    @MemberOrder(sequence = "4")
-    public String getChargeReference() {
-        return chargeReference;
-    }
-
-    public void setChargeReference(String chargeReference) {
-        this.chargeReference = chargeReference;
-    }
-
-    @MemberOrder(sequence = "5")
-    public String getTargetChargeReference() {
-        return targetChargeReference;
-    }
-
-    public void setTargetChargeReference(String targetChargeReference) {
-        this.targetChargeReference = targetChargeReference;
-    }
-
-    @MemberOrder(sequence = "6")
-    public BigDecimal getBudgetedValue() {
-        return budgetedValue;
-    }
-
-    public void setBudgetedValue(BigDecimal budgetedValue) {
-        this.budgetedValue = budgetedValue;
-    }
-
-    @MemberOrder(sequence = "7")
-    public BigDecimal getKeytableAPercentage() {
-        return keytableAPercentage;
-    }
-
-    public void setKeytableAPercentage(BigDecimal keytableAPercentage) {
-        this.keytableAPercentage = keytableAPercentage;
-    }
-
-    @MemberOrder(sequence = "8")
-    public BigDecimal getKeytableBPercentage() {
-        return keytableBPercentage;
-    }
-
-    public void setKeytableBPercentage(BigDecimal keytableBPercentage) {
-        this.keytableBPercentage = keytableBPercentage;
-    }
-
-    @MemberOrder(sequence = "9")
-    public BigDecimal getKeytableCPercentage() {
-        return keytableCPercentage;
-    }
-
-    public void setKeytableCPercentage(BigDecimal keytableCPercentage) {
-        this.keytableCPercentage = keytableCPercentage;
-    }
-
-    @MemberOrder(sequence = "10")
-    public BigDecimal getKeytableDPercentage() {
-        return keytableDPercentage;
-    }
-
-    public void setKeytableDPercentage(BigDecimal keytableDPercentage) {
-        this.keytableDPercentage = keytableDPercentage;
-    }
-
-    @MemberOrder(sequence = "11")
-    public BigDecimal getKeytableEPercentage() {
-        return keytableEPercentage;
-    }
-
-    public void setKeytableEPercentage(BigDecimal keytableEPercentage) {
-        this.keytableEPercentage = keytableEPercentage;
-    }
-
-    @MemberOrder(sequence = "12")
-    public BigDecimal getKeytableFPercentage() {
-        return keytableFPercentage;
-    }
-
-    public void setKeytableFPercentage(BigDecimal keytableFPercentage) {
-        this.keytableFPercentage = keytableFPercentage;
-    }
-
-    @MemberOrder(sequence = "13")
-    public BigDecimal getKeytableGPercentage() {
-        return keytableGPercentage;
-    }
-
-    public void setKeytableGPercentage(BigDecimal keytableGPercentage) {
-        this.keytableGPercentage = keytableGPercentage;
-    }
-
-    @MemberOrder(sequence = "14")
-    public BigDecimal getKeytableHPercentage() {
-        return keytableHPercentage;
-    }
-
-    public void setKeytableHPercentage(BigDecimal keytableHPercentage) {
-        this.keytableHPercentage = keytableHPercentage;
-    }
-
-    @MemberOrder(sequence = "15")
-    public BigDecimal getKeytableIPercentage() {
-        return keytableIPercentage;
-    }
-
-    public void setKeytableIPercentage(BigDecimal keytableIPercentage) {
-        this.keytableIPercentage = keytableIPercentage;
-    }
-
-    @MemberOrder(sequence = "16")
-    public BigDecimal getKeytableJPercentage() {
-        return keytableJPercentage;
-    }
-
-    public void setKeytableJPercentage(BigDecimal keytableJPercentage) {
-        this.keytableJPercentage = keytableJPercentage;
-    }
-
-    private static String pretty(final String str) {
-        return str == null? null : StringUtils.capitalize(str.toLowerCase());
-    }
 
     @Inject
     DomainObjectContainer container;
