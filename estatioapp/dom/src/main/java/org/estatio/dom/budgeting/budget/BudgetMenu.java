@@ -21,7 +21,11 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        named = "Budgets",
+        menuOrder = "70"
+)
 public class BudgetMenu {
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.SAFE)

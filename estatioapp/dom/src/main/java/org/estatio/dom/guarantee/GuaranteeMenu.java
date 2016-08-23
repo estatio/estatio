@@ -18,7 +18,24 @@
  */
 package org.estatio.dom.guarantee;
 
-import org.apache.isis.applib.annotation.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -26,16 +43,13 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.StringUtils;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.List;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Guarantees",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY)
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "75"
+)
 public class GuaranteeMenu extends UdoDomainService<Guarantee> {
 
     public GuaranteeMenu() {
