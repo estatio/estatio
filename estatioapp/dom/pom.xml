@@ -140,6 +140,29 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.incode.module.doctemplates</groupId>
+            <artifactId>incode-module-doctemplates-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.doctemplates</groupId>
+            <artifactId>incode-module-doctemplates-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.freemarker</groupId>
+            <artifactId>isis-module-freemarker-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.freemarker</groupId>
+            <artifactId>isis-module-freemarker-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-canonical</artifactId>
         </dependency>

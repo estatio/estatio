@@ -26,6 +26,8 @@ public final class DocTemplatesModule {
 
         public static final int AT_PATH = 255;  // as per security module's ApplicationTenancy#MAX_LENGTH_PATH
 
+        public static final int DOC_TEMPLATE_REFERENCE = 30;
+
         public static final int BOOKMARK = 2000;
     }
 

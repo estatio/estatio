@@ -315,12 +315,12 @@ Copyright 2014~2015 Dan Haywood
                         <artifactId>isis-maven-plugin</artifactId>
                         <version>${isis.version}</version>
                         <configuration>
-                            <appManifest>org.incode.module.alias.dom.AliasModuleDomManifest</appManifest>
+                            <appManifest>org.incode.module.doctemplates.dom.DocTemplatesModuleDomManifest</appManifest>
                         </configuration>
                         <dependencies>
                             <dependency>
                                 <groupId>${project.groupId}</groupId>
-                                <artifactId>incode-module-alias-dom</artifactId>
+                                <artifactId>incode-module-doctemplates-dom</artifactId>
                                 <version>${project.version}</version>
                             </dependency>
                             <!--
