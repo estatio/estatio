@@ -27,6 +27,7 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
@@ -61,8 +62,18 @@ import lombok.Setter;
 @Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceAndAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.doctemplates.dom.DocTemplate "
+                        + "WHERE reference == :reference "
+                        + "   && atPath    == :atPath ")
 })
 @Uniques({
+        @Unique(
+                name = "DocTemplate_reference_atPath_IDX",
+                members = { "reference", "atPath" }
+        )
 })
 @DomainObject(
         objectType = "incodeDocTemplates.DocTemplate",

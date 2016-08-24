@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -47,6 +48,18 @@ public class DocTemplateRepository {
 
 
     @Programmatic
+    public DocTemplate findByReferenceAndAtPath(
+            final String reference,
+            final String atPath) {
+        return repositoryService.firstMatch(
+                new QueryDefault<>(DocTemplate.class,
+                        "findByReferenceAndAtPath",
+                        "reference", reference,
+                        "atPath", atPath));
+    }
+
+
+    @Programmatic
     public List<DocTemplate> allTemplates() {
         return repositoryService.allInstances(DocTemplate.class);
     }
@@ -57,7 +70,6 @@ public class DocTemplateRepository {
     RepositoryService repositoryService;
 
     @Inject ServiceRegistry2 serviceRegistry;
-
 
     //endregion
 
