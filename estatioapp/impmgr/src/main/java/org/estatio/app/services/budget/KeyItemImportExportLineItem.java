@@ -124,8 +124,8 @@ public class KeyItemImportExportLineItem
                 KeyItem keyItem = new KeyItem();
                 keyItem.setKeyTable(getKeyTable());
                 keyItem.setUnit(getUnit());
-                keyItem.setValue(BigDecimal.ZERO);
-                keyItem.setSourceValue(BigDecimal.ZERO);
+                keyItem.setValue(getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
+                keyItem.setSourceValue(getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
                 container.persistIfNotAlready(keyItem);
                 break;
 
