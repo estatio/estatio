@@ -18,9 +18,11 @@
  */
 package org.estatio.dom;
 
+import org.joda.time.LocalDate;
+
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
-import org.joda.time.LocalDate;
+
 import org.estatio.domsettings.ApplicationSettingCreator;
 
 
@@ -37,7 +39,11 @@ public class ApplicationSettingKeyCreatorTestEach_create extends ApplicationSett
         private final Object defaultValue;
         private final String description;
         private final Class<?> dataType;
-        
+
+        public String prefix() {
+            return"org.estatio.dom";
+        }
+
         private DummyApplicationSettingKey(Class<?> dataType, String description, Object defaultValue) {
             this.dataType = dataType;
             this.description = description;

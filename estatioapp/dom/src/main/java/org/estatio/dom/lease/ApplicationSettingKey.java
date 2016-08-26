@@ -18,13 +18,19 @@
  */
 package org.estatio.dom.lease;
 
+import org.joda.time.LocalDate;
+
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
-import org.joda.time.LocalDate;
+
 import org.estatio.domsettings.ApplicationSettingCreator;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
-    foo(LocalDate.class, "Lease's foo", new LocalDate(2013,4,1));
+    foo(LocalDate.class, "Lease's foo", new LocalDate(2013,4,1)) {
+        @Override public String prefix() {
+            return "org.estatio.dom.lease";
+        }
+    };
     
     private final Object defaultValue;
     private final String description;

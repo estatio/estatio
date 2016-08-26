@@ -24,7 +24,13 @@ import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 public interface ApplicationSettingCreator {
     void create(ApplicationSettingsServiceRW appSettings);
     ApplicationSetting find(ApplicationSettingsServiceRW appSettings);
-    
+
+    /**
+     *
+     * @return
+     */
+    String prefix();
+
     String name();
     
     Class<?> getDataType();
@@ -73,7 +79,7 @@ public interface ApplicationSettingCreator {
         }
 
         public static String getKey(final ApplicationSettingCreator creator) {
-            return creator.getClass().getPackage().getName()+"."+creator.name();
+            return creator.prefix()+"."+creator.name();
         }
     }
 
