@@ -51,8 +51,8 @@ public class PropertyForOxfGb extends PropertyAbstract {
         }
 
         // exec
-        final Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
-        final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
+        final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
+        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
         final Country greatBritain = countryRepository.findCountry(CountriesRefData.GBR);
         createPropertyAndUnits(

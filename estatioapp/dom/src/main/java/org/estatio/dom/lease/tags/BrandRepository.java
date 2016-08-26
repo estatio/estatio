@@ -64,10 +64,9 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         return firstMatch("findByName", "name", name);
     }
 
-    public Brand findUnique(final String name, final ApplicationTenancy applicationTenancy){
+    public Brand findUnique(final String name, final ApplicationTenancy applicationTenancy) {
         return uniqueMatch("findByNameAndAtPath", "name", name, "atPath", applicationTenancy.getPath());
     }
-
 
     @Programmatic
     public List<Brand> matchByName(final String name) {
@@ -87,9 +86,9 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
 
     public Brand newBrand(
             final String name,
-            final BrandCoverage coverage,
-            final Country countryOfOrigin,
-            final String group,
+            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
+            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
+            final @Parameter(optionality = Optionality.OPTIONAL) String group,
             final ApplicationTenancy applicationTenancy) {
         Brand brand;
         brand = newTransientInstance(Brand.class);
@@ -100,6 +99,18 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         brand.setApplicationTenancyPath(applicationTenancy.getPath());
         persist(brand);
         return brand;
+    }
+
+    public String validateNewBrand(
+            final String name,
+            final BrandCoverage coverage,
+            final Country countryOfOrigin,
+            final String group,
+            final ApplicationTenancy applicationTenancy) {
+        if (findByNameLowerCaseAndAppTenancy(name, applicationTenancy).size() > 0) {
+            return String.format("Brand with name %s exists already for %s", name, applicationTenancy.getName());
+        }
+        return null;
     }
 
     @Programmatic
@@ -116,6 +127,11 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
             brand = newBrand(name, brandCoverage, countryOfOrigin, null, estatioApplicationTenancyRepository.findCountryTenancyFor(applicationTenancy));
         }
         return brand;
+    }
+
+    @Programmatic
+    public List<Brand> allBrands() {
+        return allInstances();
     }
 
     @Inject

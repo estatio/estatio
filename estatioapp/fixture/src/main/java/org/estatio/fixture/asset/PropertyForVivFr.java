@@ -49,8 +49,8 @@ public class PropertyForVivFr extends PropertyAbstract {
         }
 
         // exec
-        Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
-        Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
+        Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
+        Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
         Country france = countryRepository.findCountry(CountriesRefData.FRA);
         createPropertyAndUnits(

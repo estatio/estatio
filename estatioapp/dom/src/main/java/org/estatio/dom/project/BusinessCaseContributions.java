@@ -58,7 +58,7 @@ public class BusinessCaseContributions  {
 		return businesscases.findActiveBusinessCaseOnProject(project);
 	}
 	
-	@Inject 
-	BusinessCases businesscases;
+	@Inject
+	BusinessCaseRepository businesscases;
 
 }

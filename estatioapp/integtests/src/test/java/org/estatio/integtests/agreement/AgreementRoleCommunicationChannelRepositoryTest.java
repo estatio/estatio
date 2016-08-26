@@ -19,15 +19,18 @@
 package org.estatio.integtests.agreement;
 
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -58,7 +61,7 @@ public class AgreementRoleCommunicationChannelRepositoryTest extends EstatioInte
         AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
 
         @Inject
-        Parties parties;
+        PartyRepository partyRepository;
 
         CommunicationChannel communicationChannel;
 
@@ -66,10 +69,9 @@ public class AgreementRoleCommunicationChannelRepositoryTest extends EstatioInte
 
         @Before
         public void setUp() throws Exception {
-            party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+            party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
             communicationChannel = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
         }
-
 
         @Test
         public void happyCase() throws Exception {

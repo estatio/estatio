@@ -18,14 +18,17 @@
  */
 package org.estatio.dom;
 
-import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
+
 import org.estatio.domsettings.ApplicationSettingCreator;
 
 
@@ -47,7 +50,7 @@ public class ApplicationSettingCreatorTestAbstract {
         @Test
         public void test() throws Exception {
             for (final ApplicationSettingCreator creator : creators) {
-                final String name = creator.getClass().getPackage().getName() + "." + creator.name();
+                final String name = creator.prefix() + "." + creator.name();
                 final String description = creator.getDescription();
                 final Object defaultValue = creator.getDefaultValue();
                 context.checking(new Expectations() {

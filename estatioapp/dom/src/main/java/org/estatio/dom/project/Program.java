@@ -184,7 +184,7 @@ public class Program
 
 
     @Inject
-    public ProgramRoles programRoles;
+    public ProgramRoleRepository programRoleRepository;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

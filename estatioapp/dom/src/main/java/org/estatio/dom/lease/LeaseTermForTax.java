@@ -343,6 +343,6 @@ public class LeaseTermForTax extends LeaseTerm {
     // //////////////////////////////////////
 
     @Inject
-    private LeaseItems leaseItems;
+    private LeaseItemRepository leaseItemRepository;
 
 }

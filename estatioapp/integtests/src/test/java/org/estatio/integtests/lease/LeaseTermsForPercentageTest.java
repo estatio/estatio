@@ -18,24 +18,29 @@
  */
 package org.estatio.integtests.lease;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
-import org.estatio.dom.lease.*;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.integtests.EstatioIntegrationTest;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.math.BigDecimal;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.LeaseTermForPercentage;
+import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.integtests.EstatioIntegrationTest;
 
 public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
-
-    @Inject
-    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -76,9 +81,9 @@ public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
 
             // when
             Assertions.assertThat(indexTerm1.valueForDate(new LocalDate(2011, 07, 14))).isEqualTo(new BigDecimal("20200.00"));
-            Assertions.assertThat(indexTerm1.getStartDate()).isEqualTo(new LocalDate(2010,07,15));
+            Assertions.assertThat(indexTerm1.getStartDate()).isEqualTo(new LocalDate(2010, 07, 15));
             Assertions.assertThat(indexTerm2.valueForDate(new LocalDate(2012, 07, 14))).isEqualTo(new BigDecimal("20846.40"));
-            Assertions.assertThat(indexTerm2.getStartDate()).isEqualTo(new LocalDate(2011,07,15));
+            Assertions.assertThat(indexTerm2.getStartDate()).isEqualTo(new LocalDate(2011, 07, 15));
             Assertions.assertThat(torTerm.valueForDate(new LocalDate(2012, 01, 01))).isEqualTo(new BigDecimal("57279.16"));
             percentageTerm = (LeaseTermForPercentage) topmodelLease.findFirstItemOfType(LeaseItemType.RENTAL_FEE).getTerms().first();
 
@@ -119,9 +124,9 @@ public class LeaseTermsForPercentageTest extends EstatioIntegrationTest {
 
             // when
             Assertions.assertThat(indexTermLast.valueForDate(new LocalDate(2015, 07, 15))).isEqualTo(new BigDecimal("21305.02"));
-            Assertions.assertThat(indexTermLast.getStartDate()).isEqualTo(new LocalDate(2015,07,15));
+            Assertions.assertThat(indexTermLast.getStartDate()).isEqualTo(new LocalDate(2015, 07, 15));
             Assertions.assertThat(indexTermPrevious.valueForDate(new LocalDate(2014, 07, 14))).isEqualTo(new BigDecimal("21305.02"));
-            Assertions.assertThat(indexTermPrevious.getStartDate()).isEqualTo(new LocalDate(2014,07,15));
+            Assertions.assertThat(indexTermPrevious.getStartDate()).isEqualTo(new LocalDate(2014, 07, 15));
             percentageTermLast = (LeaseTermForPercentage) topmodelLease.findFirstItemOfType(LeaseItemType.RENTAL_FEE).getTerms().last();
 
             // then

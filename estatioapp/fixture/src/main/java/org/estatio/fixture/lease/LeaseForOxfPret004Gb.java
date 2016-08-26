@@ -21,7 +21,7 @@ package org.estatio.fixture.lease;
 import javax.inject.Inject;
 
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.geography.CountriesRefData;
@@ -55,7 +55,7 @@ public class LeaseForOxfPret004Gb extends LeaseAbstract {
         }
 
         // exec
-        Party manager = parties.findPartyByReference(PersonForGinoVannelliGb.REF);
+        Party manager = partyRepository.findPartyByReference(PersonForGinoVannelliGb.REF);
         createLease(
                 LEASE_REFERENCE,
                 "Pret-a-Partir lease",
@@ -76,6 +76,6 @@ public class LeaseForOxfPret004Gb extends LeaseAbstract {
     }
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
 }

@@ -236,6 +236,11 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
     // //////////////////////////////////////
 
     @Programmatic
+    public List<Invoice> allInvoices() {
+        return allInstances();
+    }
+
+    @Programmatic
     public void removeRuns(InvoiceCalculationParameters parameters) {
         List<Invoice> invoices = findByFixedAssetAndDueDateAndStatus(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
         for (Invoice invoice : invoices) {

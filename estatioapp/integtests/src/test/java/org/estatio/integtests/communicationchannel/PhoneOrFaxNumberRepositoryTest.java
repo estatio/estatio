@@ -18,24 +18,29 @@
  */
 package org.estatio.integtests.communicationchannel;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import java.util.Iterator;
 import java.util.SortedSet;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.PhoneOrFaxNumber;
 import org.estatio.dom.communicationchannel.PhoneOrFaxNumberRepository;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class PhoneOrFaxNumberRepositoryTest extends EstatioIntegrationTest {
 
@@ -57,7 +62,7 @@ public class PhoneOrFaxNumberRepositoryTest extends EstatioIntegrationTest {
     CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     Party party;
 
@@ -67,7 +72,7 @@ public class PhoneOrFaxNumberRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+        party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwner(party);
         Iterator<CommunicationChannel> it = results.iterator();
         while (it.hasNext()) {

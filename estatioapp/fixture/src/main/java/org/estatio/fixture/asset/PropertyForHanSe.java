@@ -49,8 +49,8 @@ public class PropertyForHanSe extends PropertyAbstract {
         }
 
         // exec
-        Party owner = parties.findPartyByReference(PARTY_REF_OWNER);
-        Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
+        Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
+        Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
         Country sweden = countryRepository.findCountry(CountriesRefData.SWE);
         createPropertyAndUnits(

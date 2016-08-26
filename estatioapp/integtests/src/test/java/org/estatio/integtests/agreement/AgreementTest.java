@@ -16,7 +16,7 @@ import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
@@ -33,7 +33,7 @@ public class AgreementTest extends EstatioIntegrationTest {
     AgreementRepository agreementRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
@@ -64,7 +64,7 @@ public class AgreementTest extends EstatioIntegrationTest {
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(LeaseConstants.AT_LEASE), LeaseForKalPoison001Nl.REF);
         assertNotNull(agreement);
 
-        party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+        party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
         assertThat(party.getReference(), is(PersonForJohnDoeNl.REF));
     }
 

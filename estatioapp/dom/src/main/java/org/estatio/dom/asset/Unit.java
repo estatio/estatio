@@ -43,7 +43,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -280,13 +280,13 @@ public class Unit
     // ///////////////////////////////////////
     @Programmatic
     public boolean hasOccupancyOverlappingInterval(final LocalDateInterval localDateInterval) {
-        if (occupancies.occupanciesByUnitAndInterval(this, localDateInterval).size() > 0) {
+        if (occupancyRepository.occupanciesByUnitAndInterval(this, localDateInterval).size() > 0) {
             return true;
         }
         return false;
     }
 
     @Inject
-    private Occupancies occupancies;
+    private OccupancyRepository occupancyRepository;
 
 }

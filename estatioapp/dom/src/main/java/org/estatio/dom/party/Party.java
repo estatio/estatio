@@ -83,7 +83,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Party "
                         + "WHERE reference == :reference") })
-@DomainObject(editing = Editing.DISABLED, autoCompleteAction = "autoComplete", autoCompleteRepository = Parties.class)
+@DomainObject(editing = Editing.DISABLED, autoCompleteAction = "autoComplete", autoCompleteRepository = PartyRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Party
         extends UdoDomainObject2<Party>

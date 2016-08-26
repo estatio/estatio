@@ -40,7 +40,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.fixture.EstatioFixtureScript;
@@ -63,8 +63,8 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
             String currencyStr,
             LocalDate startDate,
             ExecutionContext executionContext) {
-        final Party buyer = parties.findPartyByReference(buyerStr);
-        final Party seller = parties.findPartyByReference(sellerStr);
+        final Party buyer = partyRepository.findPartyByReference(buyerStr);
+        final Party seller = partyRepository.findPartyByReference(sellerStr);
         final Currency currency = currencyRepository.findCurrency(currencyStr);
 
         final String interactionId = null;
@@ -95,7 +95,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    private Parties parties;
+    private PartyRepository partyRepository;
 
     @Inject
     private CurrencyRepository currencyRepository;

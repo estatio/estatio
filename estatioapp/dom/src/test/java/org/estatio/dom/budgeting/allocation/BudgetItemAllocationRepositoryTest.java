@@ -143,10 +143,10 @@ public class BudgetItemAllocationRepositoryTest {
 
         @Before
         public void setup() {
-            budgetItemAllocationRepository1 = new BudgetItemAllocationRepository(){
+            budgetItemAllocationRepository1 = new BudgetItemAllocationRepository() {
                 @Override
-                public BudgetItemAllocation findByChargeAndBudgetItemAndKeyTable(final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable){
-                    return  null;
+                public BudgetItemAllocation findByChargeAndBudgetItemAndKeyTable(final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable) {
+                    return null;
                 }
             };
             budgetItemAllocationRepository1.setContainer(mockContainer);
@@ -162,7 +162,7 @@ public class BudgetItemAllocationRepositoryTest {
             final BudgetItemAllocation budgetItemAllocation = new BudgetItemAllocation();
 
             // expect
-            context.checking(new Expectations(){
+            context.checking(new Expectations() {
                 {
                     oneOf(mockContainer).newTransientInstance(BudgetItemAllocation.class);
                     will(returnValue(budgetItemAllocation));
@@ -183,6 +183,5 @@ public class BudgetItemAllocationRepositoryTest {
         }
 
     }
-
 
 }

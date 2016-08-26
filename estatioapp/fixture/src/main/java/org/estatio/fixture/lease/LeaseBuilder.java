@@ -37,10 +37,10 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
@@ -196,7 +196,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
         }
         if (createLeaseUnitAndTags) {
             Country countryOfOrigin = countryRepository.findCountry(countryOfOriginRef);
-            Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
+            Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
@@ -210,7 +210,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
     }
 
     protected Party findPartyByReferenceOrNameElseNull(String partyReference) {
-        return partyReference != null ? parties.findPartyByReference(partyReference) : null;
+        return partyReference != null ? partyRepository.findPartyByReference(partyReference) : null;
     }
 
     @Override
@@ -248,10 +248,10 @@ public class LeaseBuilder extends EstatioFixtureScript {
     protected LeaseRepository leaseRepository;
 
     @Inject
-    protected Occupancies occupancies;
+    protected OccupancyRepository occupancyRepository;
 
     @Inject
-    protected Parties parties;
+    protected PartyRepository partyRepository;
 
     @Inject
     protected AgreementRoleTypeRepository agreementRoleTypeRepository;

@@ -60,6 +60,13 @@
                                     <ns2:action id="changeClassification" position="BELOW"/>
                                 </ns2:property>
                             </ns2:fieldSet>
+                            <ns2:fieldSet name="Reporting" id="reporting">
+                                <ns2:property id="reportTurnover"/>
+                                <ns2:property id="reportRent"/>
+                                <ns2:property id="reportOCR">
+                                    <ns2:action id="changeReportingOptions" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
                         </col>
                     </row>
                 </tab>
@@ -71,13 +78,6 @@
                     </row>
                 </tab>
             </tabGroup>
-            <ns2:fieldSet name="Reporting" id="reporting">
-                <ns2:property id="reportTurnover"/>
-                <ns2:property id="reportRent"/>
-                <ns2:property id="reportOCR">
-                    <ns2:action id="changeReportingOptions" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
         </col>
         <col span="12" unreferencedCollections="true">
         </col>

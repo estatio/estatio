@@ -39,8 +39,8 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationPreviousName;
-import org.estatio.dom.party.Organisations;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.OrganisationRepository;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
@@ -55,7 +55,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
@@ -64,7 +64,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
     CountryRepository countryRepository;
 
     @Inject
-    Organisations organisations;
+    OrganisationRepository organisationRepository;
 
     Organisation organisation;
 
@@ -79,7 +79,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
                 }
             });
 
-            organisation = (Organisation) parties.findPartyByReference(OrganisationForTopModelGb.REF);
+            organisation = (Organisation) partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         }
 
         @Test
@@ -154,8 +154,8 @@ public class OrganisationTest extends EstatioIntegrationTest {
             ApplicationTenancy applicationTenancyForFra = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(CountriesRefData.FRA));
 
             // when
-            organisation1 = wrap(organisations).newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);
-            organisation2 = wrap(organisations).newOrganisation(null, true, "SOME_OTHER_NAME", applicationTenancyForFra);
+            organisation1 = wrap(organisationRepository).newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);
+            organisation2 = wrap(organisationRepository).newOrganisation(null, true, "SOME_OTHER_NAME", applicationTenancyForFra);
 
             // then
             Assertions.assertThat(organisation1.getReference()).isEqualTo("FRCL0001");
@@ -174,10 +174,9 @@ public class OrganisationTest extends EstatioIntegrationTest {
             exception.expectMessage("No numerator found");
 
             // when
-            wrap(organisations).newOrganisation(null, true, "SOME_NAME", applicationTenancyForGbr);
+            wrap(organisationRepository).newOrganisation(null, true, "SOME_NAME", applicationTenancyForGbr);
 
         }
-
 
     }
 }

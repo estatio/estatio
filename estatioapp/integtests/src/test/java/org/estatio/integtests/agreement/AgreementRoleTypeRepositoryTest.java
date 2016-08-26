@@ -1,19 +1,23 @@
 package org.estatio.integtests.agreement;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -25,7 +29,7 @@ import static org.junit.Assert.assertThat;
 public class AgreementRoleTypeRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     AgreementRepository agreementRepository;
@@ -54,7 +58,7 @@ public class AgreementRoleTypeRepositoryTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+        party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
         agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
         agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);

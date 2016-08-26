@@ -28,7 +28,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakOptions;
+import org.estatio.dom.lease.breaks.BreakOptionContributions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 
@@ -48,10 +48,10 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext fixtureResults) {
         final Lease lease = leaseRepository.findLeaseByReference(reference);
         final LocalDate now = clockService.now();
-        breakOptions.newBreakOption(lease, now.plusMonths(6), "3m", BreakType.FIXED, BreakExerciseType.LANDLORD, null);
-        breakOptions.newBreakOption(lease, now.plusMonths(12), "3m", BreakType.FIXED, BreakExerciseType.MUTUAL, null);
-        breakOptions.newBreakOption(lease, now.plusMonths(24), "3m", BreakType.FIXED, BreakExerciseType.TENANT, null);
-        breakOptions.newBreakOption(lease, now.plusMonths(24), "3m", BreakType.ROLLING, BreakExerciseType.TENANT, null);
+        breakOptionContributions.newBreakOption(lease, now.plusMonths(6), "3m", BreakType.FIXED, BreakExerciseType.LANDLORD, null);
+        breakOptionContributions.newBreakOption(lease, now.plusMonths(12), "3m", BreakType.FIXED, BreakExerciseType.MUTUAL, null);
+        breakOptionContributions.newBreakOption(lease, now.plusMonths(24), "3m", BreakType.FIXED, BreakExerciseType.TENANT, null);
+        breakOptionContributions.newBreakOption(lease, now.plusMonths(24), "3m", BreakType.ROLLING, BreakExerciseType.TENANT, null);
         fixtureResults.addResult(this, "lease", lease);
     }
 
@@ -61,7 +61,7 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     private LeaseRepository leaseRepository;
 
     @Inject
-    private BreakOptions breakOptions;
+    private BreakOptionContributions breakOptionContributions;
 
     @Inject
     private ClockService clockService;

@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.LeaseTypes;
+import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 public class LeaseTypeForItalyRefData extends EstatioFixtureScript {
@@ -64,14 +64,14 @@ public class LeaseTypeForItalyRefData extends EstatioFixtureScript {
     }
 
     private void createLeaseType(ExecutionContext fixtureResults, LeaseTypeData ltd) {
-        final LeaseType leaseType = leaseTypes.findOrCreate(ltd.name(), ltd.title(), applicationTenancyRepository.findByPath("/ITA"));
+        final LeaseType leaseType = leaseTypeRepository.findOrCreate(ltd.name(), ltd.title(), applicationTenancyRepository.findByPath("/ITA"));
         fixtureResults.addResult(this, leaseType.getReference(), leaseType);
     }
 
     // //////////////////////////////////////
 
     @Inject
-    private LeaseTypes leaseTypes;
+    private LeaseTypeRepository leaseTypeRepository;
 
     @Inject
     private ApplicationTenancyRepository applicationTenancyRepository;

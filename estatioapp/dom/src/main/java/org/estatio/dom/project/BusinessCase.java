@@ -180,7 +180,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 	// //////////////////////////////////////
 	
 	@Inject
-	BusinessCases businesscases;
+	BusinessCaseRepository businesscases;
 
 	@MemberOrder(sequence="9")
 	@Override public ApplicationTenancy getApplicationTenancy() {

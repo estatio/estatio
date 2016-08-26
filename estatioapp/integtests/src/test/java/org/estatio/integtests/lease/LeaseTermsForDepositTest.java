@@ -32,7 +32,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -44,9 +43,6 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
-
-    @Inject
-    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -80,7 +76,7 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
         public void invoiceScenarioTest() throws Exception {
 
             // given
-            startDate = new LocalDate(2010,10,1);
+            startDate = new LocalDate(2010, 10, 1);
             topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
@@ -93,7 +89,6 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             // then
             Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).size()).isEqualTo(1);
             Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("10000.00"));
-
 
             // and when (after couple of indexations of rent items)
             invoiceService.calculate(
@@ -114,7 +109,6 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
                     InvoiceRunType.NORMAL_RUN,
                     InvoiceCalculationSelection.ONLY_DEPOSIT,
                     startDate.plusYears(5), startDate.plusYears(5), startDate.plusYears(5).plusDays(1));
-
 
             // then
             Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).size()).isEqualTo(2);
@@ -137,6 +131,5 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
         }
 
     }
-
 
 }

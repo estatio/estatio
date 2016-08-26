@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
@@ -45,13 +45,13 @@ public class PersonTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Parties parties;
+        private PartyRepository partyRepository;
 
         private Person personJoeDoe;
 
         @Before
         public void setUp() throws Exception {
-            personJoeDoe = (Person) parties.findParties("Doe, Jo*").get(0);
+            personJoeDoe = (Person) partyRepository.findParties("Doe, Jo*").get(0);
         }
 
         @Test

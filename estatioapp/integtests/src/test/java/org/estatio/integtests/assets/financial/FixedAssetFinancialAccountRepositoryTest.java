@@ -35,8 +35,8 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForOxford;
@@ -59,7 +59,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
                 executionContext.executeChild(this, new BankAccountForOxford());
             }
         });
-        owner = parties.findPartyByReference(PropertyForOxfGb.PARTY_REF_OWNER);
+        owner = partyRepository.findPartyByReference(PropertyForOxfGb.PARTY_REF_OWNER);
     }
 
     @Inject
@@ -72,7 +72,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
     BankAccountRepository bankAccountRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     Party owner;
 
@@ -135,7 +135,7 @@ public class FixedAssetFinancialAccountRepositoryTest extends EstatioIntegration
         @Before
         public void setUp() throws Exception {
             oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountForOxford.BANK_ACCOUNT_REF);
-            newBankAccount = bankAccountRepository.newBankAccount(parties.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
+            newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
         }
 
         @Test

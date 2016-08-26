@@ -39,11 +39,15 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
      * require invoices from the predecessor system.
      */
     epochDate(LocalDate.class, "Epoch date", new LocalDate(2010,1,1)),
-    reportServerBaseUrl(String.class, "Report server base URL", "http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio+Italy+(prod)/");
+    reportServerBaseUrl(String.class, "Report server base URL", "http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio+(prod)/");
     
     private final Object defaultValue;
     private final String description;
     private final Class<?> dataType;
+
+    public String prefix(){
+        return "org.estatio.domsettings";
+    }
     
     private ApplicationSettingKey(final Class<?> dataType, final String description, final Object defaultValue) {
         this.dataType = dataType;

@@ -53,7 +53,7 @@ public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
 
         // exec
 
-        Party manager = parties.findPartyByReference(PersonForJohnSmithGb.REF);
+        Party manager = partyRepository.findPartyByReference(PersonForJohnSmithGb.REF);
 
         createLease(
                 REF,

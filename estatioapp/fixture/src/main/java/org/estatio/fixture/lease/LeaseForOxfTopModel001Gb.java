@@ -75,7 +75,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
         }
 
         // exec
-        Party manager = parties.findPartyByReference(PersonForGinoVannelliGb.REF);
+        Party manager = partyRepository.findPartyByReference(PersonForGinoVannelliGb.REF);
         Lease lease = createLease(
                 REF,
                 "Topmodel Lease",

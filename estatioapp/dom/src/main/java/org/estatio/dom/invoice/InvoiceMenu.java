@@ -1,6 +1,25 @@
 package org.estatio.dom.invoice;
 
-import org.apache.isis.applib.annotation.*;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -8,20 +27,12 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.util.List;
-
-import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.4")
-public class InvoiceMenu  extends UdoDomainRepositoryAndFactory<Invoice> {
+public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     public InvoiceMenu() {
         super(InvoiceMenu.class, Invoice.class);
@@ -78,7 +89,7 @@ public class InvoiceMenu  extends UdoDomainRepositoryAndFactory<Invoice> {
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "98")
     public List<Invoice> allInvoices() {
-        return allInstances();
+        return invoiceRepository.allInvoices();
     }
 
     @Inject

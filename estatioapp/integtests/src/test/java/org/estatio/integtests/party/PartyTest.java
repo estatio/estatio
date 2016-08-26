@@ -29,7 +29,7 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
@@ -41,7 +41,7 @@ import org.estatio.integtests.EstatioIntegrationTest;
 public class PartyTest extends EstatioIntegrationTest {
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -67,9 +67,9 @@ public class PartyTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() {
-            Party party = parties.findPartyByReference(PersonForJohnDoeNl.REF);
+            Party party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
             wrap(party).remove();
-            assertNull(parties.findPartyByReferenceOrNull(PersonForJohnDoeNl.REF));
+            assertNull(partyRepository.findPartyByReferenceOrNull(PersonForJohnDoeNl.REF));
         }
 
     }

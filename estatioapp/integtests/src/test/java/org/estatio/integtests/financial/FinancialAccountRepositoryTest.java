@@ -37,7 +37,7 @@ import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.contributed.FinancialAccountContributions;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
@@ -65,13 +65,13 @@ public class FinancialAccountRepositoryTest extends EstatioIntegrationTest {
     FinancialAccountRepository financialAccountRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     Party party;
 
     @Before
     public void setup() throws Exception {
-        party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+        party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
     }
 
     public static class FindAccountByReference extends FinancialAccountRepositoryTest {

@@ -53,7 +53,7 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
         }
 
         // exec
-        final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
+        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
         createLease(
                 REF,
                 "Poison Amsterdam",

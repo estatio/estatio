@@ -39,7 +39,7 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
@@ -67,7 +67,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private Parties parties;
+        private PartyRepository partyRepository;
         @Inject
         private FinancialAccountRepository financialAccountRepository;
 
@@ -75,7 +75,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            party = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            party = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
         }
 
         // this test really just makes an assertion about the fixture.
@@ -118,7 +118,7 @@ public class FinancialAccountTest extends EstatioIntegrationTest {
         private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
         @Inject
-        private Parties partyRepository;
+        private PartyRepository partyRepository;
 
         private BankAccount bankAccount;
 

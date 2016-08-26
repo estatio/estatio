@@ -46,7 +46,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -73,7 +73,7 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     public static class Assign extends LeaseIntegTest {
 
@@ -93,7 +93,7 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
             // given
             final String newReference = "OXF-MEDIA-001";
             final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            final Party newParty = parties.findPartyByReference(OrganisationForMediaXGb.REF);
+            final Party newParty = partyRepository.findPartyByReference(OrganisationForMediaXGb.REF);
             final LocalDate newStartDate = VT.ld(2014, 1, 1);
 
             // when

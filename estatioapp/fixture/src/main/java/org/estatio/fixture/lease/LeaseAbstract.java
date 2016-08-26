@@ -37,11 +37,11 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.LeaseTypes;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.LeaseTypeRepository;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -70,7 +70,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
-        final LeaseType leaseType = leaseTypes.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(
+        final LeaseType leaseType = leaseTypeRepository.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(
                 ApplicationTenancyConstants.GLOBAL_PATH));
         Lease lease = leaseMenu.newLease(
                 unit.getApplicationTenancy(), reference,
@@ -90,7 +90,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         }
         if (createLeaseUnitAndTags) {
             Country countryOfOrigin = countryRepository.findCountry(countryOfOriginRef);
-            Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
+            Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
@@ -104,7 +104,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     }
 
     protected Party findPartyByReferenceOrNameElseNull(String partyReference) {
-        return partyReference != null ? parties.findPartyByReference(partyReference) : null;
+        return partyReference != null ? partyRepository.findPartyByReference(partyReference) : null;
     }
 
     // //////////////////////////////////////
@@ -121,16 +121,16 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     protected LeaseRepository leaseRepository;
 
     @Inject
-    protected Occupancies occupancies;
+    protected OccupancyRepository occupancyRepository;
 
     @Inject
-    protected Parties parties;
+    protected PartyRepository partyRepository;
 
     @Inject
     protected AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
-    protected LeaseTypes leaseTypes;
+    protected LeaseTypeRepository leaseTypeRepository;
 
     @Inject
     CountryRepository countryRepository;

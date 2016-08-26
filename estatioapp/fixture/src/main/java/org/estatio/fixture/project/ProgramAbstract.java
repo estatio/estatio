@@ -24,11 +24,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.asset.PropertyMenu;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRoleType;
-import org.estatio.dom.project.Programs;
+import org.estatio.dom.project.ProgramRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
@@ -47,19 +47,19 @@ public abstract class ProgramAbstract extends EstatioFixtureScript {
             final Party boardmember,
             final ExecutionContext fixtureResults) {
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-        Program program = programs.newProgram(reference, name, programGoal, applicationTenancy);
-        program.programRoles.createRole(program, ProgramRoleType.PROGRAM_OWNER, owner, ld(1999, 1, 1), ld(2000, 1, 1));
-        program.programRoles.createRole(program, ProgramRoleType.PROGRAM_BOARDMEMBER, boardmember, ld(1999, 7, 1), ld(2000, 1, 1));
+        Program program = programRepository.newProgram(reference, name, programGoal, applicationTenancy);
+        program.programRoleRepository.createRole(program, ProgramRoleType.PROGRAM_OWNER, owner, ld(1999, 1, 1), ld(2000, 1, 1));
+        program.programRoleRepository.createRole(program, ProgramRoleType.PROGRAM_BOARDMEMBER, boardmember, ld(1999, 7, 1), ld(2000, 1, 1));
         return fixtureResults.addResult(this, program.getReference(), program);
     }
 
     // //////////////////////////////////////
 
   @Inject
-    protected Programs programs;
+    protected ProgramRepository programRepository;
   
   @Inject
-  	protected Parties parties;
+  	protected PartyRepository partyRepository;
   
   @Inject
   	protected PropertyMenu propertyMenu;

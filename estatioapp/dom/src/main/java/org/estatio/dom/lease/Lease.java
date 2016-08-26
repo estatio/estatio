@@ -81,12 +81,13 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.breaks.BreakOption;
-import org.estatio.dom.lease.breaks.BreakOptions;
+import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
@@ -253,7 +254,7 @@ public class Lease
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     public Property getProperty() {
-        if (!getOccupancies().isEmpty()){
+        if (!getOccupancies().isEmpty()) {
             return getOccupancies().first().getUnit().getProperty();
         }
         return null;
@@ -290,12 +291,12 @@ public class Lease
     public Lease changeComments(
             @ParameterLayout(multiLine = 5)
             final String comments
-    ){
+    ) {
         setComments(comments);
         return this;
     }
 
-    public String default0ChangeComments(){
+    public String default0ChangeComments() {
         return getComments();
     }
 
@@ -407,7 +408,7 @@ public class Lease
     public Occupancy newOccupancy(
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final Unit unit) {
-        Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
+        Occupancy occupancy = occupancyRepository.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
         return occupancy;
     }
@@ -454,16 +455,16 @@ public class Lease
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
-        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
+        LeaseItem leaseItem = leaseItemRepository.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
         return leaseItem;
     }
 
     public List<Charge> choices1NewItem() {
-        return leaseItems.choices2NewLeaseItem(this);
+        return chargeRepository.chargesForCountry(this.getApplicationTenancy());
     }
 
     public LocalDate default4NewItem() {
-        return leaseItems.default5NewLeaseItem(this);
+        return this.getStartDate();
     }
 
     public String validateNewItem(
@@ -472,7 +473,14 @@ public class Lease
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
-        return leaseItems.validateNewLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
+        final List<Charge> validCharges = choices1NewItem();
+        if (!validCharges.contains(charge)) {
+            return String.format(
+                    "Charge (with app tenancy level '%s') is not valid for this lease",
+                    charge.getApplicationTenancyPath());
+        }
+
+        return null;
     }
 
     public String disableNewItem() {
@@ -522,7 +530,7 @@ public class Lease
             final LeaseItemType itemType,
             final LocalDate itemStartDate,
             final BigInteger sequence) {
-        return leaseItems.findLeaseItem(this, itemType, itemStartDate, sequence);
+        return leaseItemRepository.findLeaseItem(this, itemType, itemStartDate, sequence);
     }
 
     @Programmatic
@@ -531,7 +539,7 @@ public class Lease
             final Charge charge,
             final LocalDate itemStartDate
     ) {
-        return leaseItems.findByLeaseAndTypeAndChargeAndStartDate(this, itemType, charge, itemStartDate);
+        return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDate(this, itemType, charge, itemStartDate);
     }
 
     @Programmatic
@@ -780,7 +788,7 @@ public class Lease
     }
 
     public String disableTerminate() {
-        if (!(getStatus().equals(LeaseStatus.ACTIVE ) || getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY))){
+        if (!(getStatus().equals(LeaseStatus.ACTIVE) || getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY))) {
             return "Status is not Active or Suspended Partially";
         }
         return null;
@@ -865,7 +873,7 @@ public class Lease
 
         copyOccupancies(newLease, tenancyStartDate);
         copyItemsAndTerms(newLease, tenancyStartDate);
-        breakOptionsService.copyBreakOptions(this, newLease, tenancyStartDate);
+        breakOptionRepository.copyBreakOptions(this, newLease, tenancyStartDate);
         copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
         newLease.setComments(this.getComments());
         this.setNext(newLease);
@@ -1016,10 +1024,10 @@ public class Lease
     // //////////////////////////////////////
 
     @Inject
-    LeaseItems leaseItems;
+    LeaseItemRepository leaseItemRepository;
 
     @Inject
-    Occupancies occupanciesRepo;
+    OccupancyRepository occupancyRepository;
 
     @Inject
     BankAccountRepository bankAccountRepository;
@@ -1034,7 +1042,10 @@ public class Lease
     UnitRepository unitRepository;
 
     @Inject
-    BreakOptions breakOptionsService;
+    BreakOptionRepository breakOptionRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
 
     @Inject
     ClockService clockService;

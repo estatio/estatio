@@ -19,8 +19,10 @@
 package org.estatio.integtests.index;
 
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

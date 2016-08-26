@@ -61,7 +61,7 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
             final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
             final @Parameter(optionality = Optionality.OPTIONAL) String group,
             final ApplicationTenancy applicationTenancy
-    ){
+    ) {
         return brandRepository.newBrand(name, coverage, countryOfOrigin, group, applicationTenancy);
     }
 
@@ -77,15 +77,13 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
         return Dflt.of(choices4NewBrand());
     }
 
-    public String validateNewBrand(final String name,
+    public String validateNewBrand(
+            final String name,
             final BrandCoverage coverage,
             final Country countryOfOrigin,
             final String group,
-            final ApplicationTenancy applicationTenancy){
-        if (brandRepository.findByNameLowerCaseAndAppTenancy(name, applicationTenancy).size()>0){
-            return String.format("Brand with name %s exists already for %s", name, applicationTenancy.getName());
-        }
-        return null;
+            final ApplicationTenancy applicationTenancy) {
+        return brandRepository.validateNewBrand(name, coverage, countryOfOrigin, group, applicationTenancy);
     }
 
     // //////////////////////////////////////
@@ -93,7 +91,7 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Brand> allBrands() {
-        return allInstances();
+        return brandRepository.allBrands();
     }
 
     @Inject

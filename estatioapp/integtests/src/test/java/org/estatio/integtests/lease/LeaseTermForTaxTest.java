@@ -31,7 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItems;
+import org.estatio.dom.lease.LeaseItemRepository;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForTax;
@@ -54,7 +54,7 @@ public class LeaseTermForTaxTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    LeaseItems leaseItems;
+    LeaseItemRepository leaseItemRepository;
 
     public static class RentValueForDate extends LeaseTermForTaxTest {
 
@@ -76,8 +76,8 @@ public class LeaseTermForTaxTest extends EstatioIntegrationTest {
         @Before
         public void setup() {
             lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            item = leaseItems.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0);
-            taxItem = leaseItems.findLeaseItemsByType(lease, LeaseItemType.TAX).get(0);
+            item = leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0);
+            taxItem = leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.TAX).get(0);
             assertNotNull(item);
             assertNotNull(item.getStartDate());
             assertNotNull(item.getEndDate());

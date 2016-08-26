@@ -266,7 +266,7 @@ public class Project extends UdoDomainObject<Project> implements
 	// //////////////////////////////////////
 
 	@Inject
-	public ProjectRoles projectRoles;
+	public ProjectRoleRepository projectRoleRepository;
 
 	// //////////////////////////////////////
 }

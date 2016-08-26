@@ -251,6 +251,6 @@ public class LeaseMenu {
     private LeaseRepository leaseRepository;
 
     @Inject
-    private LeaseTypes leaseTypeRepository;
+    private LeaseTypeRepository leaseTypeRepository;
 
 }
