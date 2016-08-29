@@ -29,12 +29,8 @@
                                 <ns2:action id="changeExternalReference" position="PANEL_DROPDOWN"/>
                                 <ns2:property id="reference"/>
                                 <ns2:property id="name"/>
-                                <ns2:property id="fullName">
-                                </ns2:property>
+                                <ns2:property id="fullName"/>
                                 <ns2:property id="externalReference"/>
-                                <ns2:property id="applicationTenancyPath"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Property2" id="property">
                                 <ns2:property id="type"/>
                                 <ns2:property id="area"/>
                             </ns2:fieldSet>
@@ -61,12 +57,10 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Application level">
+                <tab name="Classifications">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
-                            </ns2:fieldSet>
+                            <ns2:collection id="classifications"/>
                         </col>
                     </row>
                 </tab>
@@ -75,6 +69,15 @@
                         <col span="12">
                             <ns2:fieldSet name="Display Ordering" id="ordering">
                                 <ns2:property id="displayOrder"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application level">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
