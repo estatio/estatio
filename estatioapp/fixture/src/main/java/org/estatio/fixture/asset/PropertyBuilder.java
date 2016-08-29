@@ -34,7 +34,7 @@ import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.StateRepository;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -200,7 +200,7 @@ public class PropertyBuilder extends EstatioFixtureScript {
     protected UnitMenu unitMenu;
 
     @Inject
-    protected Parties parties;
+    protected PartyRepository partyRepository;
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;

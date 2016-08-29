@@ -46,7 +46,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
@@ -75,7 +75,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
     @Inject
     InvoiceRepository invoiceRepository;
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
     @Inject
     LeaseMenu leaseMenu;
     @Inject
@@ -112,8 +112,8 @@ public class InvoiceTest extends EstatioIntegrationTest {
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
-            seller = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
-            buyer = parties.findPartyByReference(OrganisationForPoisonGb.REF);
+            seller = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            buyer = partyRepository.findPartyByReference(OrganisationForPoisonGb.REF);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
 
             charge = chargeRepository.allCharges().get(0);
@@ -177,8 +177,8 @@ public class InvoiceTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
-            buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
+            seller = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
+            buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
             lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }

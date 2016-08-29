@@ -27,9 +27,9 @@ import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.StateRepository;
-import org.estatio.dom.party.Organisations;
+import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.Persons;
+import org.estatio.dom.party.PersonRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 
 /**
@@ -58,7 +58,7 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
 
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
 
-        Party party = organisations.newOrganisation(partyReference, false, partyName, applicationTenancy);
+        Party party = organisationRepository.newOrganisation(partyReference, false, partyName, applicationTenancy);
 
         createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
 
@@ -131,10 +131,10 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
     protected StateRepository stateRepository;
 
     @Inject
-    protected Organisations organisations;
+    protected OrganisationRepository organisationRepository;
 
     @Inject
-    protected Persons persons;
+    protected PersonRepository personRepository;
 
     @Inject
     protected CommunicationChannelContributions communicationChannelContributedActions;

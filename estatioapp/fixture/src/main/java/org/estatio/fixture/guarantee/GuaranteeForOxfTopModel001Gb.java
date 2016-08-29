@@ -29,7 +29,7 @@ import org.estatio.dom.guarantee.GuaranteeConstants;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForDagoBankGb;
@@ -62,7 +62,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
                 executionContext);
         guarantee.createRole(
                 agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_BANK),
-                parties.findPartyByReference(PARTY_REF_BANK),
+                partyRepository.findPartyByReference(PARTY_REF_BANK),
                 null,
                 null);
     }
@@ -71,7 +71,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
     AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     LeaseRepository leaseRepository;

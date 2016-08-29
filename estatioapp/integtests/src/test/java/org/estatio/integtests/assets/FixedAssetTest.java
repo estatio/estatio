@@ -16,7 +16,7 @@ import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertThat;
 public class FixedAssetTest extends EstatioIntegrationTest {
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     PropertyRepository properties;
@@ -56,7 +56,7 @@ public class FixedAssetTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() {
-        party = parties.findPartyByReferenceOrNull(OrganisationForAcmeNl.REF);
+        party = partyRepository.findPartyByReferenceOrNull(OrganisationForAcmeNl.REF);
         assertNotNull(party);
 
         property = properties.findPropertyByReference(PropertyForKalNl.REF);

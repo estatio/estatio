@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.relationship.PartyRelationshipView;
 import org.estatio.dom.party.relationship.PartyRelationshipContributions;
@@ -47,8 +47,8 @@ public class PartyrelationshipViewServiceTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new PersonForGinoVannelliGb());
             }
         });
-        org = parties.findPartyByReference(OrganisationForTopModelGb.REF);
-        person = parties.findPartyByReference(PersonForGinoVannelliGb.REF);
+        org = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+        person = partyRepository.findPartyByReference(PersonForGinoVannelliGb.REF);
     }
 
     private Party org;
@@ -59,7 +59,7 @@ public class PartyrelationshipViewServiceTest extends EstatioIntegrationTest {
     private PartyRelationshipContributions service;
 
     @Inject
-    private Parties parties;
+    private PartyRepository partyRepository;
 
     @Test
     public void parentChild() throws Exception {

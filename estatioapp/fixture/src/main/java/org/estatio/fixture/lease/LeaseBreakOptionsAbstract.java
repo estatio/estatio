@@ -26,7 +26,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakOptions;
+import org.estatio.dom.lease.breaks.BreakOptionContributions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -46,7 +46,7 @@ public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
     }
 
     protected Lease newBreakOption(Lease lease, LocalDate breakDate, String notificationPeriodStr, BreakExerciseType exerciseType, BreakType breakType, String description, ExecutionContext executionContext) {
-        final Lease breakOption = breakOptions.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, exerciseType, description);
+        final Lease breakOption = breakOptionContributions.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, exerciseType, description);
         return executionContext.addResult(this, breakOption);
     }
 
@@ -59,6 +59,6 @@ public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
     protected LeaseRepository leaseRepository;
 
     @Inject
-    protected BreakOptions breakOptions;
+    protected BreakOptionContributions breakOptionContributions;
 
 }

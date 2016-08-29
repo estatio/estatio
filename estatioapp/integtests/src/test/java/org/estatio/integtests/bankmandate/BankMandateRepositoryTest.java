@@ -34,8 +34,8 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
@@ -70,7 +70,7 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    Parties partyRepository;
+    PartyRepository partyRepository;
 
     Lease lease;
 

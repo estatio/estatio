@@ -18,7 +18,7 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.CalculationType;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
 
 import lombok.Getter;
@@ -64,7 +64,7 @@ public class BudgetOverview  {
 
                 for (BudgetCalculation calculation : budgetCalculationRepository.findByBudgetItemAllocationAndCalculationType(budgetItemAllocation, CalculationType.BUDGETED)) {
 
-                    List<Occupancy> occupancyList = occupancies.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), budget.getInterval());
+                    List<Occupancy> occupancyList = occupancyRepository.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), budget.getInterval());
                     if (occupancyList.size() == 0) {
 
                         lines = aggregateByCharge(new BudgetOverviewLine(null, calculation.getKeyItem().getUnit(), budgetItemAllocation.getCharge(), calculation.getValue()), lines);
@@ -98,7 +98,7 @@ public class BudgetOverview  {
 
                 for (BudgetCalculation calculation : budgetCalculationRepository.findByBudgetItemAllocationAndCalculationType(budgetItemAllocation, CalculationType.AUDITED)) {
 
-                    List<Occupancy> occupancyList = occupancies.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), budget.getInterval());
+                    List<Occupancy> occupancyList = occupancyRepository.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), budget.getInterval());
                     if (occupancyList.size() == 0) {
 
                         lines = aggregateByCharge(new BudgetOverviewLine(null, calculation.getKeyItem().getUnit(), budgetItemAllocation.getCharge(), calculation.getValue()), lines);
@@ -155,7 +155,7 @@ public class BudgetOverview  {
     private BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
-    private Occupancies occupancies;
+    private OccupancyRepository occupancyRepository;
 
     //endregion
 

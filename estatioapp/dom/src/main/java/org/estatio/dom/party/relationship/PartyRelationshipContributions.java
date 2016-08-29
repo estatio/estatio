@@ -50,7 +50,7 @@ public class PartyRelationshipContributions extends UdoDomainService<PartyRelati
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<PartyRelationshipView> relationships(Party party) {
         List<PartyRelationshipView> partyRelationshipViews = new ArrayList<>();
-        final List<PartyRelationship> relationships = partyRelationships.findByParty(party);
+        final List<PartyRelationship> relationships = partyRelationshipRepository.findByParty(party);
         for (PartyRelationship partyRelationship : relationships) {
             PartyRelationshipView viewModel = new PartyRelationshipView(partyRelationship, party);
             partyRelationshipViews.add(viewModel);
@@ -59,6 +59,6 @@ public class PartyRelationshipContributions extends UdoDomainService<PartyRelati
     }
 
     @Inject
-    private PartyRelationships partyRelationships;
+    private PartyRelationshipRepository partyRelationshipRepository;
 
 }

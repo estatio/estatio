@@ -45,7 +45,6 @@ public class KeyTableRepositoryTest extends EstatioIntegrationTest {
         });
     }
 
-
     public static class FindByBudgetAndName extends KeyTableRepositoryTest {
 
         @Test

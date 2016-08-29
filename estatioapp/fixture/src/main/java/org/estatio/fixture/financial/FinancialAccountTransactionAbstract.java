@@ -28,7 +28,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -39,7 +39,7 @@ public abstract class FinancialAccountTransactionAbstract extends EstatioFixture
     }
 
     protected FinancialAccountTransaction createFinancialAccountTransaction(String partyStr, LocalDate date, BigDecimal amount, ExecutionContext executionContext) {
-        Party party = parties.findPartyByReference(partyStr);
+        Party party = partyRepository.findPartyByReference(partyStr);
         FinancialAccount financialAccount = financialAccountRepository.findAccountsByOwner(party).get(0);
 
         FinancialAccountTransaction financialAccountTransaction = financialAccountTransactionRepository.newTransaction(
@@ -55,7 +55,7 @@ public abstract class FinancialAccountTransactionAbstract extends EstatioFixture
     // //////////////////////////////////////
 
     @Inject
-    private Parties parties;
+    private PartyRepository partyRepository;
 
     @Inject
     private FinancialAccountRepository financialAccountRepository;

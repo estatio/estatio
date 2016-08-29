@@ -34,7 +34,6 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemSourceRepository;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -56,9 +55,6 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
             }
         });
     }
-
-    @Inject
-    LeaseMenu leaseMenu;
 
     @Inject
     LeaseRepository leaseRepository;
@@ -105,14 +101,13 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
         // given, when, then
         Assertions.assertThat(leaseItemSourceRepository.findUnique(depositItem, rentItem)).isNotNull();
 
-
     }
 
     @Test
     public void findByItemTest() throws Exception {
 
         // given
-        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,new LocalDate(2016, 01, 01));
+        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, new LocalDate(2016, 01, 01));
 
         // when
         newDeposit.newSourceItem(serviceChargeItem);
@@ -121,7 +116,5 @@ public class LeaseItemSourceRepositoryTest extends EstatioIntegrationTest {
         Assertions.assertThat(leaseItemSourceRepository.findByItem(newDeposit).size()).isEqualTo(1);
 
     }
-
-
 
 }

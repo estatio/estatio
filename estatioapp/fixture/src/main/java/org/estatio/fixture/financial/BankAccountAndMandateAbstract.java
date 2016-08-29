@@ -37,7 +37,7 @@ import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -50,7 +50,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
     }
 
     protected void createBankMandate(String ownerRef, String bankAccountRef, Integer sequence, SequenceType sequenceType, Scheme scheme, ExecutionContext executionContext) {
-        final Party owner = parties.findPartyByReference(ownerRef);
+        final Party owner = partyRepository.findPartyByReference(ownerRef);
         final BankAccount bankAccount = (BankAccount) financialAccountRepository.findByOwnerAndReference(owner, bankAccountRef);
         final AgreementRoleType agreementRoleType = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
         final String partyRef = owner.getReference();
@@ -77,7 +77,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
     FinancialAccountRepository financialAccountRepository;
 
     @Inject
-    private Parties parties;
+    private PartyRepository partyRepository;
 
     @Inject
     private BankMandateMenu bankMandateMenu;

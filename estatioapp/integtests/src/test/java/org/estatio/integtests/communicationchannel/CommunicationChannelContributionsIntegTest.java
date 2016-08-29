@@ -29,7 +29,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
@@ -46,7 +46,7 @@ public class CommunicationChannelContributionsIntegTest extends EstatioIntegrati
     CommunicationChannelContributions communicationChannelContributions;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     Party party;
 
@@ -61,7 +61,7 @@ public class CommunicationChannelContributionsIntegTest extends EstatioIntegrati
                     executionContext.executeChild(this, new OrganisationForHelloWorldGb());
                 }
             });
-            party = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            party = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
         }
 
         @Test

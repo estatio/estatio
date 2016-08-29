@@ -196,7 +196,7 @@ public class ProgramRole
             final LocalDate endDate) {
     	
         LocalDateInterval newInterval = new LocalDateInterval(startDate, endDate);
-        for (Iterator<ProgramRole> it = programRoles.findByProgram(program).iterator(); it.hasNext();){
+        for (Iterator<ProgramRole> it = programRoleRepository.findByProgram(program).iterator(); it.hasNext();){
         	
         	ProgramRole pr = it.next();
         	if (!(pr.equals(this)) && pr.getParty().equals(party) && pr.getType().equals(type)){
@@ -244,24 +244,24 @@ public class ProgramRole
     @Override
     public ProgramRole getPredecessor() {
         return helper.getPredecessor(getProgram().getRoles(), getType().matchingRole());
-//    	return helper.getPredecessor(programRoles.findByProgramSet(getProgram()), getType().matchingRole());
+//    	return helper.getPredecessor(programRoleRepository.findByProgramSet(getProgram()), getType().matchingRole());
     }
 
     @Property(editing=Editing.DISABLED, optionality=Optionality.OPTIONAL, hidden=Where.ALL_TABLES)
     @Override
     public ProgramRole getSuccessor() {
         return helper.getSuccessor(getProgram().getRoles(), getType().matchingRole());
-//    	return helper.getSuccessor(programRoles.findByProgramSet(getProgram()), getType().matchingRole());
+//    	return helper.getSuccessor(programRoleRepository.findByProgramSet(getProgram()), getType().matchingRole());
     }
 
     @CollectionLayout(render=RenderType.EAGERLY)
     @Override
     public SortedSet<ProgramRole> getTimeline() {
         return helper.getTimeline(getProgram().getRoles(), getType().matchingRole());
-//        return helper.getTimeline(programRoles.findByProgramSet(getProgram()), getType().matchingRole());
+//        return helper.getTimeline(programRoleRepository.findByProgramSet(getProgram()), getType().matchingRole());
     }
 
-    @Inject ProgramRoles programRoles;
+    @Inject ProgramRoleRepository programRoleRepository;
 
     // //////////////////////////////////////
 
@@ -287,7 +287,7 @@ public class ProgramRole
 
         @Override
         public ProgramRole newRole(final LocalDate startDate, final LocalDate endDate) {
-            return pr.getProgram().programRoles.createRole(pr.getProgram(), pr.getType(), party, startDate, endDate);
+            return pr.getProgram().programRoleRepository.createRole(pr.getProgram(), pr.getType(), party, startDate, endDate);
         }
     }
 

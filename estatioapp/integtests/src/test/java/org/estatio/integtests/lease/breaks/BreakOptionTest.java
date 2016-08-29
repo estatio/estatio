@@ -33,7 +33,7 @@ import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
-import org.estatio.dom.lease.breaks.BreakOptions;
+import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
@@ -55,7 +55,7 @@ public class BreakOptionTest extends EstatioIntegrationTest {
     EventRepository eventRepository;
 
     @Inject
-    BreakOptions breakOptions;
+    BreakOptionRepository breakOptionRepository;
 
     public static class Change extends BreakOptionTest {
 
@@ -74,8 +74,8 @@ public class BreakOptionTest extends EstatioIntegrationTest {
 
             lease = leaseRepository.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
 
-            assertThat(breakOptions.allBreakOptions().size(), is(2));
-            final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);
+            assertThat(breakOptionRepository.allBreakOptions().size(), is(2));
+            final List<BreakOption> breakOptionList = breakOptionRepository.findByLease(lease);
             assertThat(breakOptionList.size(), is(2));
             breakOption = breakOptionList.get(0);
         }
@@ -114,8 +114,8 @@ public class BreakOptionTest extends EstatioIntegrationTest {
 
             lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
-            assertThat(breakOptions.allBreakOptions().size(), is(2));
-            final List<BreakOption> breakOptionList = breakOptions.findByLease(lease);
+            assertThat(breakOptionRepository.allBreakOptions().size(), is(2));
+            final List<BreakOption> breakOptionList = breakOptionRepository.findByLease(lease);
             assertThat(breakOptionList.size(), is(2));
             breakOption = breakOptionList.get(0);
         }
@@ -156,8 +156,8 @@ public class BreakOptionTest extends EstatioIntegrationTest {
 
             lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
-            assertThat(breakOptions.allBreakOptions().size(), is(2));
-            assertThat(breakOptions.findByLease(lease).size(), is(2));
+            assertThat(breakOptionRepository.allBreakOptions().size(), is(2));
+            assertThat(breakOptionRepository.findByLease(lease).size(), is(2));
 
         }
 
@@ -165,13 +165,13 @@ public class BreakOptionTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given
-            breakOption = breakOptions.findByLease(lease).get(0);
+            breakOption = breakOptionRepository.findByLease(lease).get(0);
 
             // when
             breakOption.remove("For some reason");
 
             // then
-            assertThat(breakOptions.findByLease(lease).size(), is(1));
+            assertThat(breakOptionRepository.findByLease(lease).size(), is(1));
 
         }
     }

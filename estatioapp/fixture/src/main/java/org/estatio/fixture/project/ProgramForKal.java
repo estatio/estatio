@@ -40,8 +40,8 @@ public class ProgramForKal extends ProgramAbstract {
         }
 
         // exec
-        Party owner = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-        Party manager = parties.findPartyByReference(PersonForLinusTorvaldsNl.REF);
+        Party owner = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
+        Party manager = partyRepository.findPartyByReference(PersonForLinusTorvaldsNl.REF);
 
         createProgram(
                 AT_PATH_COUNTRY, PROGRAM_REFERENCE, "2nd program", "Increase customer satisfaction", owner, manager,

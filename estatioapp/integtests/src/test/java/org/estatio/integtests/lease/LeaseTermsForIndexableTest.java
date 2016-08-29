@@ -18,9 +18,6 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,13 +32,15 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermsForIndexable;
+import org.estatio.dom.lease.LeaseTermForIndexableRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseTermsForIndexableTest extends EstatioIntegrationTest {
@@ -58,13 +57,10 @@ public class LeaseTermsForIndexableTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    LeaseMenu leaseMenu;
-
-    @Inject
     IndexRepository indexes;
 
     @Inject
-    LeaseTermsForIndexable leaseTerms;
+    LeaseTermForIndexableRepository leaseTerms;
 
     @Before
     public void setUp() throws Exception {

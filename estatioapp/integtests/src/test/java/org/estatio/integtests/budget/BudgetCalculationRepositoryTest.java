@@ -114,7 +114,6 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             Charge chargeNotToBeFound = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
             budgetCalculationRepository.resetAndUpdateOrCreateBudgetCalculations(budget, budgetCalculationService.calculate(budget));
 
-
             // when
             List<BudgetCalculation> budgetCalculationsForCharge = budgetCalculationRepository.findByBudgetAndCharge(budget, charge);
 

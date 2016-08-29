@@ -25,17 +25,17 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.BusinessCase;
-import org.estatio.dom.project.BusinessCases;
+import org.estatio.dom.project.BusinessCaseRepository;
 import org.estatio.dom.project.Program;
-import org.estatio.dom.project.Programs;
+import org.estatio.dom.project.ProgramRepository;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectPhase;
+import org.estatio.dom.project.ProjectRepository;
 import org.estatio.dom.project.ProjectRoleType;
-import org.estatio.dom.project.ProjectRoles;
-import org.estatio.dom.project.Projects;
+import org.estatio.dom.project.ProjectRoleRepository;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.joda.time.LocalDate;
 
@@ -56,9 +56,9 @@ public abstract class ProjectAbstract extends EstatioFixtureScript {
             final Party executive,
             final Party manager,
             final ExecutionContext fixtureResults) {
-        Project project = projects.newProject(reference, name, startDate, endDate, currency, estimatedCost, projectPhase, program);
-        projectRoles.createRole(project, ProjectRoleType.PROJECT_EXECUTIVE, executive, ld(1999, 1, 1), ld(2000, 1, 1));
-        projectRoles.createRole(project, ProjectRoleType.PROJECT_MANAGER, manager, ld(1999, 7, 1), ld(2000, 1, 1));
+        Project project = projectRepository.newProject(reference, name, startDate, endDate, currency, estimatedCost, projectPhase, program);
+        projectRoleRepository.createRole(project, ProjectRoleType.PROJECT_EXECUTIVE, executive, ld(1999, 1, 1), ld(2000, 1, 1));
+        projectRoleRepository.createRole(project, ProjectRoleType.PROJECT_MANAGER, manager, ld(1999, 7, 1), ld(2000, 1, 1));
         BusinessCase updatedCase = businesscases.newBusinessCase(project, "Updated business case description for " + project.getName(), ld(1999,8,1), ld(1999,1,1), ld(1999,2,1), 2);
         businesscases.newBusinessCase(project, "Business case description for " + project.getName(), ld(1999, 7, 1), ld(1999, 1, 1), null, 1, updatedCase);
         return fixtureResults.addResult(this, project.getReference(), project);
@@ -67,17 +67,17 @@ public abstract class ProjectAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
   @Inject
-    protected Projects projects;
+    protected ProjectRepository projectRepository;
   
   @Inject
-  	protected Parties parties;
+  	protected PartyRepository partyRepository;
   
   @Inject
-  protected Programs programs;
+  protected ProgramRepository programRepository;
   
   @Inject 
-  protected ProjectRoles projectRoles;
+  protected ProjectRoleRepository projectRoleRepository;
   
   @Inject
-  protected BusinessCases businesscases;
+  protected BusinessCaseRepository businesscases;
 }

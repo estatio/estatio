@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
@@ -48,7 +48,7 @@ public class CommunicationChannelContributionsTest extends EstatioIntegrationTes
         }
 
         @Inject
-        private Parties parties;
+        private PartyRepository partyRepository;
         @Inject
         private CommunicationChannelContributions communicationChannelContributions;
 
@@ -56,7 +56,7 @@ public class CommunicationChannelContributionsTest extends EstatioIntegrationTes
 
         @Before
         public void setUp() throws Exception {
-            partyHelloWorld = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            partyHelloWorld = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
         }
 
         @Test

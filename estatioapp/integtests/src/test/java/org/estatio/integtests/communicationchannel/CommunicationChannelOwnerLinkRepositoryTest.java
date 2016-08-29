@@ -36,8 +36,8 @@ import org.estatio.dom.communicationchannel.PostalAddressRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -61,7 +61,7 @@ public class CommunicationChannelOwnerLinkRepositoryTest extends EstatioIntegrat
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             final Country country = countryRepository.findCountry("GBR");
             final PostalAddress postalAddress = postalAddressRepository.findByAddress(party, "1 Circle Square", "W2AXXX", "London", country);
 
@@ -78,7 +78,7 @@ public class CommunicationChannelOwnerLinkRepositoryTest extends EstatioIntegrat
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
 
             // when
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwner(party);
@@ -93,7 +93,7 @@ public class CommunicationChannelOwnerLinkRepositoryTest extends EstatioIntegrat
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
 
             // when
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(party, CommunicationChannelType.PHONE_NUMBER);
@@ -108,7 +108,7 @@ public class CommunicationChannelOwnerLinkRepositoryTest extends EstatioIntegrat
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     CountryRepository countryRepository;

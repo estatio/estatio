@@ -17,20 +17,22 @@
 
 package org.estatio.dom.budgeting.budgetcalculation;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.List;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -130,7 +132,6 @@ public class BudgetCalculationLinkRepositoryTest {
 
             BudgetCalculationLink budgetCalculationLink = new BudgetCalculationLink();
 
-
             // expect
             context.checking(new Expectations() {
                 {
@@ -150,6 +151,5 @@ public class BudgetCalculationLinkRepositoryTest {
 
         }
     }
-
 
 }

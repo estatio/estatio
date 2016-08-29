@@ -176,12 +176,12 @@ public class LeaseTest {
     public static class NewItem extends LeaseTest {
 
         @Mock
-        private LeaseItems mockLeaseItems;
+        private LeaseItemRepository mockLeaseItemRepository;
 
         @Before
         public void setUp() throws Exception {
             lease = new Lease();
-            lease.leaseItems = mockLeaseItems;
+            lease.leaseItemRepository = mockLeaseItemRepository;
         }
 
         @Test
@@ -197,7 +197,7 @@ public class LeaseTest {
             // Then
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLeaseItems).newLeaseItem(lease,leaseItemType,charge,invoicingFrequency,paymentMethod,startDate);
+                    oneOf(mockLeaseItemRepository).newLeaseItem(lease,leaseItemType,charge,invoicingFrequency,paymentMethod,startDate);
                 }
             });
 

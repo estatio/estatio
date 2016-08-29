@@ -44,7 +44,6 @@ public class IndexValueRepositoryTest extends EstatioIntegrationTest {
     @Inject
     IndexValueRepository indexValueRepository;
 
-
     public static class FindIndexValueByIndexAndStartDate extends IndexValueRepositoryTest {
 
         @Before

@@ -37,10 +37,9 @@ import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.contributed.OnLease;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
@@ -66,9 +65,6 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    LeaseMenu leaseMenu;
-
-    @Inject
     LeaseRepository leaseRepository;
 
     @Inject
@@ -81,7 +77,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
     FinancialAccountRepository financialAccountRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     public static class NewGuarantee extends GuaranteeRepositoryTest {
 
@@ -270,7 +266,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
 
         public void happy_case() throws Exception {
             // given
-            Party owner = parties.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+            Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
             FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, LeaseForOxfTopModel001Gb.REF + "-D");
 
             // when

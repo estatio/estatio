@@ -44,9 +44,9 @@ public class ProjectsForKal extends ProjectAbstract {
         }
 
         // exec
-        Party executive = parties.findPartyByReference(PersonForJohnDoeNl.REF);
-        Party manager = parties.findPartyByReference(PersonForLinusTorvaldsNl.REF);
-        Program program = programs.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
+        Party executive = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
+        Party manager = partyRepository.findPartyByReference(PersonForLinusTorvaldsNl.REF);
+        Program program = programRepository.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
 
         createProject(
         		PROJECT_REFERENCE, "Augment parkingplace", ld(1999, 1, 1), ld(1999, 7, 1), null, null, ProjectPhase.EXECUTION, program, executive, manager,

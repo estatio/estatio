@@ -17,29 +17,30 @@
 
 package org.estatio.dom.budgeting.budgetcalculation;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keyitem.KeyItemForTesting;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.List;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keyitem.KeyItemForTesting;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class BudgetCalculationRepositoryTest {
-
 
     FinderInteraction finderInteraction;
 
@@ -133,11 +134,10 @@ public class BudgetCalculationRepositoryTest {
 
     }
 
-
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
-    public static class UpdateOrCreateWithoutExisting extends BudgetCalculationRepositoryTest{
+    public static class UpdateOrCreateWithoutExisting extends BudgetCalculationRepositoryTest {
 
         @Mock
         private DomainObjectContainer mockContainer;
@@ -187,7 +187,7 @@ public class BudgetCalculationRepositoryTest {
         }
     }
 
-    public static class UpdateOrCreateWithExisting extends BudgetCalculationRepositoryTest{
+    public static class UpdateOrCreateWithExisting extends BudgetCalculationRepositoryTest {
 
         @Mock
         private DomainObjectContainer mockContainer;
@@ -255,7 +255,7 @@ public class BudgetCalculationRepositoryTest {
     public static class ResetAndUpdateOrCreateBudgetCalculations extends BudgetCalculationRepositoryTest {
 
         @Test
-        public void illegalArgumentTest(){
+        public void illegalArgumentTest() {
 
         }
 

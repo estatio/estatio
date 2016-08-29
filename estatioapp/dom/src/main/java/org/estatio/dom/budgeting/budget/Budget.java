@@ -75,12 +75,12 @@ import org.estatio.dom.budgeting.viewmodels.BudgetOverview;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemRepository;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -332,7 +332,7 @@ public class Budget extends UdoDomainObject2<Budget>
     public List<Occupancy> getOccupanciesInBudgetInterval() {
         List<Occupancy> result = new ArrayList<>();
         for (Unit unit : unitRepository.findByProperty(getProperty())) {
-            result.addAll(occupancies.occupanciesByUnitAndInterval(unit, getInterval()));
+            result.addAll(occupancyRepository.occupanciesByUnitAndInterval(unit, getInterval()));
         }
         return result;
     }
@@ -373,7 +373,7 @@ public class Budget extends UdoDomainObject2<Budget>
     private UnitRepository unitRepository;
 
     @Inject
-    private Occupancies occupancies;
+    private OccupancyRepository occupancyRepository;
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
@@ -385,7 +385,7 @@ public class Budget extends UdoDomainObject2<Budget>
     private LeaseRepository leaseRepository;
 
     @Inject
-    private LeaseItems leaseItemRepository;
+    private LeaseItemRepository leaseItemRepository;
 
     @Inject
     private BudgetCalculationLinkRepository budgetCalculationLinkRepository;

@@ -38,13 +38,13 @@ import org.estatio.dom.asset.Unit;
 public class OccupancyContributions {
 
 @Inject
-private Occupancies occupancies;
+private OccupancyRepository occupancyRepository;
 
     @CollectionLayout(render = RenderType.EAGERLY)
     @MemberOrder(name = "Occupancies", sequence = "10")
     @Action(semantics = SemanticsOf.SAFE)
     public List<Occupancy> occupancies(final Unit unit) {
-        return occupancies.findByUnit(unit);
+        return occupancyRepository.findByUnit(unit);
     }
 
     // //////////////////////////////////////
@@ -53,7 +53,7 @@ private Occupancies occupancies;
     @ActionLayout(contributed = Contributed.AS_NEITHER) // Disable the cotrubution of this collection because there is a occupancy collection on Lease
     @Action(semantics = SemanticsOf.SAFE)
     public List<Occupancy> occupancies(final Lease lease) {
-        return occupancies.findByLease(lease);
+        return occupancyRepository.findByLease(lease);
     }
 
 }

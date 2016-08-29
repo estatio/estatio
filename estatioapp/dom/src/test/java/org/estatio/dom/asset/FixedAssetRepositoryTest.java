@@ -19,10 +19,13 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
@@ -59,7 +62,6 @@ public class FixedAssetRepositoryTest {
         };
     }
 
-
     public static class FindAssetRepositoryByReferenceOrName extends FixedAssetRepositoryTest {
 
         @Test
@@ -75,7 +77,6 @@ public class FixedAssetRepositoryTest {
         }
 
     }
-
 
     public static class AutoComplete extends FixedAssetRepositoryTest {
 

@@ -90,7 +90,6 @@ public class KeyTableIntegrationTest extends EstatioIntegrationTest {
             assertThat(keyTable.getKeyValueMethod()).isEqualTo(KeyTablesForOxf.BUDGET_KEY_VALUE_METHOD);
             assertThat(keyTable.isValidForKeyValues()).isEqualTo(true);
 
-
             //when
             keyTable.changeName("something else");
             keyTable.changeFoundationValueType(FoundationValueType.COUNT);
@@ -103,7 +102,6 @@ public class KeyTableIntegrationTest extends EstatioIntegrationTest {
             //due to changing foundation value and key value method
             assertThat(keyTable.isValidForKeyValues()).isEqualTo(false);
         }
-
 
     }
 
@@ -154,6 +152,7 @@ public class KeyTableIntegrationTest extends EstatioIntegrationTest {
         Unit unitIncludedWithEndDateOnly;
         Unit unitIncludedWithStartDateOnly;
         Unit unitIncludedWithoutStartAndEndDate;
+
         @Test
         public void whenSetUpWithUnitsNotInKeyTablePeriod() throws Exception {
 
@@ -180,7 +179,7 @@ public class KeyTableIntegrationTest extends EstatioIntegrationTest {
             unitIncludedWithEndDateOnly.setStartDate(null);
             unitIncludedWithEndDateOnly.setEndDate(new LocalDate(2015, 12, 31));
             unitIncludedWithStartDateOnly = unitRepository.findUnitByReference("OXF-006");
-            unitIncludedWithStartDateOnly.setStartDate(new LocalDate(2015,01,01));
+            unitIncludedWithStartDateOnly.setStartDate(new LocalDate(2015, 01, 01));
             unitIncludedWithStartDateOnly.setEndDate(null);
             unitIncludedWithoutStartAndEndDate = unitRepository.findUnitByReference("OXF-007");
             unitIncludedWithoutStartAndEndDate.setStartDate(null);
@@ -200,6 +199,5 @@ public class KeyTableIntegrationTest extends EstatioIntegrationTest {
         }
 
     }
-
 
 }

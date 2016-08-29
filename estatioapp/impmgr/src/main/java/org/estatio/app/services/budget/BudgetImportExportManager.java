@@ -63,12 +63,12 @@ public class BudgetImportExportManager {
         this.fileName = "export.xlsx";
     }
 
-    public BudgetImportExportManager(Budget budget){
+    public BudgetImportExportManager(Budget budget) {
         this();
         this.budget = budget;
     }
 
-    public BudgetImportExportManager(BudgetImportExportManager budgetImportExportManager){
+    public BudgetImportExportManager(BudgetImportExportManager budgetImportExportManager) {
         this.fileName = budgetImportExportManager.getFileName();
         this.name = budgetImportExportManager.getName();
         this.budget = budgetImportExportManager.getBudget();
@@ -80,7 +80,6 @@ public class BudgetImportExportManager {
     private Budget budget;
     @Getter @Setter
     private String fileName;
-
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Change File Name")
@@ -102,8 +101,6 @@ public class BudgetImportExportManager {
     public List<BudgetImportExport> getLines() {
         return budgetImportExportService.lines(this);
     }
-
-
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout()

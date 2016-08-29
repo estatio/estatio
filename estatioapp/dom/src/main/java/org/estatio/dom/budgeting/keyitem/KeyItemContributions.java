@@ -19,7 +19,7 @@ package org.estatio.dom.budgeting.keyitem;
 import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
 
 import javax.inject.Inject;
@@ -57,12 +57,12 @@ public class KeyItemContributions {
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Occupancy> occupancies(final KeyItem keyItem) {
 
-        return occupancies.occupanciesByUnitAndInterval(keyItem.getUnit(), keyItem.getKeyTable().getBudget().getInterval());
+        return occupancyRepository.occupanciesByUnitAndInterval(keyItem.getUnit(), keyItem.getKeyTable().getBudget().getInterval());
 
     }
 
     @Inject
-    private Occupancies occupancies;
+    private OccupancyRepository occupancyRepository;
 
     @Inject
     private KeyItemRepository keyItemRepository;

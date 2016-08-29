@@ -17,13 +17,9 @@
 
 package org.estatio.dom.budgeting.budget;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
+import java.util.Arrays;
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -31,8 +27,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.PropertyForTesting;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -124,7 +126,7 @@ public class BudgetRepositoryTest {
 
         @Before
         public void setup() {
-            budgetRepository = new BudgetRepository(){
+            budgetRepository = new BudgetRepository() {
                 @Override
                 public List<Budget> findByProperty(final Property property) {
                     return Arrays.asList(new Budget(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
@@ -138,12 +140,12 @@ public class BudgetRepositoryTest {
 
             //given
             Property property = new PropertyForTesting();
-            LocalDate startDate = new LocalDate(2015,01,01);
-            LocalDate endDate = new LocalDate(2015,12,31);
+            LocalDate startDate = new LocalDate(2015, 01, 01);
+            LocalDate endDate = new LocalDate(2015, 12, 31);
             final Budget budget = new Budget();
 
             // expect
-            context.checking(new Expectations(){
+            context.checking(new Expectations() {
                 {
                     oneOf(mockContainer).newTransientInstance(Budget.class);
                     will(returnValue(budget));
@@ -165,7 +167,7 @@ public class BudgetRepositoryTest {
         @Test
         public void overlappingDates() {
 
-            assertThat(budgetRepository.validateNewBudget(null, new LocalDate(2011,1,1), new LocalDate(2011,12,31)),
+            assertThat(budgetRepository.validateNewBudget(null, new LocalDate(2011, 1, 1), new LocalDate(2011, 12, 31)),
                     is("A budget cannot overlap an existing budget."));
         }
 
@@ -174,8 +176,8 @@ public class BudgetRepositoryTest {
 
             //given
             Property property = new PropertyForTesting();
-            LocalDate startDate = new LocalDate(2015,12,31);
-            LocalDate endDate = new LocalDate(2015,01,01);
+            LocalDate startDate = new LocalDate(2015, 12, 31);
+            LocalDate endDate = new LocalDate(2015, 01, 01);
 
             //when
             String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
@@ -191,7 +193,7 @@ public class BudgetRepositoryTest {
             //given
             Property property = new PropertyForTesting();
             LocalDate startDate = null;
-            LocalDate endDate = new LocalDate(2015,01,01);
+            LocalDate endDate = new LocalDate(2015, 01, 01);
 
             //when
             String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);

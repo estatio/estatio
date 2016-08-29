@@ -36,10 +36,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.PartySubscriptions;
-import org.estatio.dom.party.Organisations;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.OrganisationRepository;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.Persons;
+import org.estatio.dom.party.PersonRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
@@ -52,7 +52,7 @@ import static org.junit.Assert.assertTrue;
 public class PartySubscriptionsTest extends EstatioIntegrationTest {
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     AgreementRoleRepository agreementRoleRepository;
@@ -61,10 +61,10 @@ public class PartySubscriptionsTest extends EstatioIntegrationTest {
     ApplicationTenancies applicationTenancies;
 
     @Inject
-    Persons persons;
+    PersonRepository personRepository;
 
     @Inject
-    Organisations organisations;
+    OrganisationRepository organisationRepository;
 
     @Inject
     PartySubscriptions partySubscriptions;
@@ -91,10 +91,10 @@ public class PartySubscriptionsTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            oldParty = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+            oldParty = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             // EST-467: shouldn't be using global here.
             ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
-            newParty = organisations.newOrganisation("TEST", false, "Test", applicationTenancy);
+            newParty = organisationRepository.newOrganisation("TEST", false, "Test", applicationTenancy);
         }
 
         @Test

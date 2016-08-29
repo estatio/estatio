@@ -54,7 +54,7 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
         }
 
         // exec
-        final Party manager = parties.findPartyByReference(PARTY_REF_MANAGER);
+        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
         createLease(
                 REF,
                 "Poison Lease",

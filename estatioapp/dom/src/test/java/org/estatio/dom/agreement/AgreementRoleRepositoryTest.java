@@ -48,7 +48,7 @@ public class AgreementRoleRepositoryTest {
         private AgreementRoleType type;
         private LocalDate date;
 
-        private AgreementRoleRepository agreementRoles;
+        private AgreementRoleRepository agreementRoleRepository;
 
         @Before
         public void setup() {
@@ -59,7 +59,7 @@ public class AgreementRoleRepositoryTest {
             type = new AgreementRoleType();
             date = new LocalDate(2013, 4, 1);
 
-            agreementRoles = new AgreementRoleRepository() {
+            agreementRoleRepository = new AgreementRoleRepository() {
 
                 @Override
                 protected <T> T firstMatch(Query<T> query) {
@@ -83,7 +83,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void findByAgreementAndTypeAndContainsDate() {
-            agreementRoles.findByAgreementAndTypeAndContainsDate(agreement, type, date);
+            agreementRoleRepository.findByAgreementAndTypeAndContainsDate(agreement, type, date);
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
@@ -97,7 +97,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void findByAgreementAndPartyAndTypeAndStartDate() {
-            agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, type, date);
+            agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, type, date);
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
@@ -112,7 +112,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void findByParty() {
-            agreementRoles.findByParty(party);
+            agreementRoleRepository.findByParty(party);
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
@@ -123,7 +123,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void findByPartyAndTypeAndContainsDate() {
-            agreementRoles.findByPartyAndTypeAndContainsDate(party, type, date);
+            agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, type, date);
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));

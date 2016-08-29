@@ -157,7 +157,7 @@ public class BudgetCalculationService {
             final Budget budget,
             final Charge charge,
             final Lease lease){
-        LeaseItem leaseItem = leaseItems.findByLeaseAndTypeAndCharge(lease,LeaseItemType.SERVICE_CHARGE_BUDGETED, charge);
+        LeaseItem leaseItem = leaseItemRepository.findByLeaseAndTypeAndCharge(lease,LeaseItemType.SERVICE_CHARGE_BUDGETED, charge);
         if (leaseItem != null){
 
             LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) leaseItem.findTerm(budget.getStartDate());
@@ -184,6 +184,6 @@ public class BudgetCalculationService {
     private BudgetCalculationLinkRepository budgetCalculationLinkRepository;
 
     @Inject
-    private LeaseItems leaseItems;
+    private LeaseItemRepository leaseItemRepository;
 
 }

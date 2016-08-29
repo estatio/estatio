@@ -195,7 +195,7 @@ public class ProjectRole
             final LocalDate endDate) {
     	
         LocalDateInterval newInterval = new LocalDateInterval(startDate, endDate);
-        for (Iterator<ProjectRole> it = projectRoles.findByProject(project).iterator(); it.hasNext();){
+        for (Iterator<ProjectRole> it = projectRoleRepository.findByProject(project).iterator(); it.hasNext();){
         	
         	ProjectRole pr = it.next();
         	if (!(pr.equals(this)) && pr.getParty().equals(party) && pr.getType().equals(type)){
@@ -257,7 +257,7 @@ public class ProjectRole
         return helper.getTimeline(getProject().getRoles(), getType().matchingRole());
     }
 
-    @Inject ProjectRoles projectRoles;
+    @Inject ProjectRoleRepository projectRoleRepository;
 
     // //////////////////////////////////////
 
@@ -283,7 +283,7 @@ public class ProjectRole
 
         @Override
         public ProjectRole newRole(final LocalDate startDate, final LocalDate endDate) {
-            return pr.getProject().projectRoles.createRole(pr.getProject(),pr.getType(), party, startDate, endDate);
+            return pr.getProject().projectRoleRepository.createRole(pr.getProject(),pr.getType(), party, startDate, endDate);
         }
     }
 

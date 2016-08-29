@@ -29,8 +29,8 @@ import org.junit.Test;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

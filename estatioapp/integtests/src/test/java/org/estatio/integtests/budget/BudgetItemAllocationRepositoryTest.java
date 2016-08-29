@@ -46,7 +46,6 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
     @Inject
     ChargeRepository chargeRepository;
 
-
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
@@ -98,7 +97,6 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
 
     }
 
-
     public static class FindByKeyTable extends BudgetItemAllocationRepositoryTest {
 
         @Test
@@ -128,7 +126,7 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
             // when
-            final BudgetItemAllocation budgetItemAllocation = budgetItemAllocationRepository.findByChargeAndBudgetItemAndKeyTable(charge , budgetItem, keyTable);
+            final BudgetItemAllocation budgetItemAllocation = budgetItemAllocationRepository.findByChargeAndBudgetItemAndKeyTable(charge, budgetItem, keyTable);
             // then
             assertThat(budgetItemAllocation.getBudgetItem()).isEqualTo(budgetItem);
             assertThat(budgetItemAllocation.getKeyTable()).isEqualTo(keyTable);

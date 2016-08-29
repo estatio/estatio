@@ -30,11 +30,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
@@ -51,18 +50,16 @@ public class FixedAssetRoleRepositoryTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
             }
         });
     }
 
     @Inject
-    PropertyMenu propertyMenu;
-    @Inject
     PropertyRepository propertyRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
@@ -89,7 +86,7 @@ public class FixedAssetRoleRepositoryTest extends EstatioIntegrationTest {
         public void withExistingPropertyPartyAndRoleType() throws Exception {
 
             // given
-            Party party = parties.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
             Property property = propertyRepository.findPropertyByReference("OXF");
             // TODO: get right dates (although the date params are not actually
             // used in the query..)

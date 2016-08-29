@@ -150,8 +150,8 @@ public class BudgetItemRepositoryTest {
             BigDecimal zeroValue = BigDecimal.ZERO;
             BigDecimal positiveValue = BigDecimal.valueOf(0.01);
             //then
-            assertThat(budgetItemRepository.validateNewBudgetItem(budget,negativeValue,charge), is("Value can't be negative"));
-            assertThat(budgetItemRepository.validateNewBudgetItem(budget,zeroValue,charge), is(nullValue()));
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget, negativeValue, charge), is("Value can't be negative"));
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget, zeroValue, charge), is(nullValue()));
             assertThat(budgetItemRepository.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
 
         }
@@ -170,10 +170,10 @@ public class BudgetItemRepositoryTest {
 
         @Before
         public void setup() {
-            budgetItemRepository1 = new BudgetItemRepository(){
+            budgetItemRepository1 = new BudgetItemRepository() {
                 @Override
-                public BudgetItem findByBudgetAndCharge(final Budget budget, final Charge budgetItemCharge){
-                    return  null;
+                public BudgetItem findByBudgetAndCharge(final Budget budget, final Charge budgetItemCharge) {
+                    return null;
                 }
             };
             budgetItemRepository1.setContainer(mockContainer);
@@ -188,7 +188,7 @@ public class BudgetItemRepositoryTest {
             final BudgetItem budgetItem = new BudgetItem();
 
             // expect
-            context.checking(new Expectations(){
+            context.checking(new Expectations() {
                 {
                     oneOf(mockContainer).newTransientInstance(BudgetItem.class);
                     will(returnValue(budgetItem));
@@ -221,10 +221,10 @@ public class BudgetItemRepositoryTest {
 
         @Before
         public void setup() {
-            budgetItemRepository1 = new BudgetItemRepository(){
+            budgetItemRepository1 = new BudgetItemRepository() {
                 @Override
-                public BudgetItem findByBudgetAndCharge(final Budget budget, final Charge budgetItemCharge){
-                    return  null;
+                public BudgetItem findByBudgetAndCharge(final Budget budget, final Charge budgetItemCharge) {
+                    return null;
                 }
             };
             budgetItemRepository1.setContainer(mockContainer);
@@ -240,7 +240,7 @@ public class BudgetItemRepositoryTest {
             final BudgetItem budgetItem = new BudgetItem();
 
             // expect
-            context.checking(new Expectations(){
+            context.checking(new Expectations() {
                 {
                     oneOf(mockContainer).newTransientInstance(BudgetItem.class);
                     will(returnValue(budgetItem));
@@ -282,10 +282,10 @@ public class BudgetItemRepositoryTest {
             existingBudgetItem.setBudgetedValue(existingBudgetedValue);
             existingBudgetItem.setAuditedValue(existingAuditedValue);
 
-            budgetItemRepository1 = new BudgetItemRepository(){
+            budgetItemRepository1 = new BudgetItemRepository() {
                 @Override
-                public BudgetItem findByBudgetAndCharge(final Budget budget, final Charge budgetItemCharge){
-                    return  existingBudgetItem;
+                public BudgetItem findByBudgetAndCharge(final Budget budget, final Charge budgetItemCharge) {
+                    return existingBudgetItem;
                 }
             };
 

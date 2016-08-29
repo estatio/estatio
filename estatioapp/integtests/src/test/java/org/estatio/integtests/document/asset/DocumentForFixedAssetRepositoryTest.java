@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.document.Document;
 import org.estatio.dom.document.DocumentType;
@@ -74,8 +73,6 @@ public class DocumentForFixedAssetRepositoryTest extends EstatioIntegrationTest 
     public static class FindByFixedAsset extends DocumentForFixedAssetRepositoryTest {
 
         @Inject
-        private PropertyMenu propertyMenu;
-        @Inject
         PropertyRepository propertyRepository;
 
         @Test
@@ -91,8 +88,6 @@ public class DocumentForFixedAssetRepositoryTest extends EstatioIntegrationTest 
 
     public static class FindByFixedAssetAndType extends DocumentForFixedAssetRepositoryTest {
 
-        @Inject
-        private PropertyMenu propertyMenu;
         @Inject
         PropertyRepository propertyRepository;
 

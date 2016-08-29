@@ -20,17 +20,21 @@ package org.estatio.integtests.financial;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.FinancialAccountTransactionForTopModel;
@@ -62,7 +66,7 @@ public class FinancialAccountTransactionRepositoryTest extends EstatioIntegratio
     FinancialAccountTransactionRepository financialAccountTransactionRepository;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
     Party party;
 
@@ -70,7 +74,7 @@ public class FinancialAccountTransactionRepositoryTest extends EstatioIntegratio
 
     @Before
     public void setup() throws Exception {
-        party = parties.findPartyByReference(OrganisationForTopModelGb.REF);
+        party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         List<FinancialAccount> accounts = financialAccountRepository.findAccountsByOwner(party);
         assertThat(accounts.size(), is(1));
         financialAccount = accounts.get(0);

@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.agreement;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
 
 import org.junit.Before;
@@ -32,16 +29,19 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class AgreementTypeRepositoryTest {
 
     FinderInteraction finderInteraction;
 
-    AgreementTypeRepository agreements;
+    AgreementTypeRepository agreementTypeRepository;
 
     @Before
     public void setup() {
 
-        agreements = new AgreementTypeRepository() {
+        agreementTypeRepository = new AgreementTypeRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -68,7 +68,7 @@ public class AgreementTypeRepositoryTest {
         @Test
         public void happyCase() {
 
-            agreements.find("Some.exact*title");
+            agreementTypeRepository.find("Some.exact*title");
 
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));

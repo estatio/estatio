@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +15,7 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -43,7 +43,6 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
     @Inject
     ChargeRepository chargeRepository;
 
-
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
@@ -61,7 +60,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015,01,01));
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 01));
             // when
             final List<BudgetItem> budgetList = budgetItemRepository.findByBudget(budget);
             // then
@@ -99,7 +98,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
             LocalDate startDate = new LocalDate(2016, 01, 01);
             // when
-            final BudgetItem item = budgetItemRepository.findByPropertyAndChargeAndStartDate(property,charge,startDate);
+            final BudgetItem item = budgetItemRepository.findByPropertyAndChargeAndStartDate(property, charge, startDate);
             // then
             assertThat(item.getBudget().getProperty()).isEqualTo(property);
             assertThat(item.getBudget().getStartDate()).isEqualTo(startDate);
@@ -107,6 +106,5 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
         }
 
     }
-
 
 }

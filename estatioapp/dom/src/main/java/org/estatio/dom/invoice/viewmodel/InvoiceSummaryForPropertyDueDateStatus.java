@@ -40,7 +40,7 @@ import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -129,7 +129,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     public Party getSeller() {
         if (seller == null) {
-            seller = parties.findPartyByReference(getSellerReference());
+            seller = partyRepository.findPartyByReference(getSellerReference());
         }
         return seller;
     }
@@ -169,6 +169,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     PropertyMenu propertyMenu;
 
     @Inject
-    Parties parties;
+    PartyRepository partyRepository;
 
 }
