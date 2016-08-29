@@ -17,16 +17,18 @@
 
 package org.estatio.dom.budgeting.keyitem;
 
+import java.math.BigDecimal;
+
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.UnitForTesting;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
-import org.junit.Test;
 
-import java.math.BigDecimal;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class KeyItemTest {
 

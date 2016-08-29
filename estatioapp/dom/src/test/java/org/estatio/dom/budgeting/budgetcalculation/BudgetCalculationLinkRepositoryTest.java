@@ -19,7 +19,6 @@ package org.estatio.dom.budgeting.budgetcalculation;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -28,14 +27,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetCalculationLinkRepositoryTest {
 
@@ -84,11 +81,11 @@ public class BudgetCalculationLinkRepositoryTest {
             LeaseTermForServiceCharge leaseTerm = new LeaseTermForServiceCharge();
             budgetCalculationLinkRepository.findByLeaseTerm(leaseTerm);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetCalculationLink.class));
-            assertThat(finderInteraction.getQueryName(), is("findByLeaseTerm"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("leaseTerm"), is((Object) leaseTerm));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculationLink.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByLeaseTerm");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("leaseTerm")).isEqualTo((Object) leaseTerm);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -102,12 +99,12 @@ public class BudgetCalculationLinkRepositoryTest {
             LeaseTermForServiceCharge leaseTerm = new LeaseTermForServiceCharge();
             budgetCalculationLinkRepository.findByBudgetCalculationAndLeaseTerm(budgetCalculation, leaseTerm);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetCalculationLink.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetCalculationAndLeaseTerm"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetCalculation"), is((Object) budgetCalculation));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("leaseTerm"), is((Object) leaseTerm));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculationLink.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetCalculationAndLeaseTerm");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetCalculation")).isEqualTo((Object) budgetCalculation);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("leaseTerm")).isEqualTo((Object) leaseTerm);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
     }
@@ -146,8 +143,8 @@ public class BudgetCalculationLinkRepositoryTest {
             BudgetCalculationLink newBudgetCalculationlink = budgetCalculationLinkRepository.createBudgetCalculationLink(budgetCalculation, leaseTermForServiceCharge);
 
             //then
-            Assertions.assertThat(newBudgetCalculationlink.getBudgetCalculation()).isEqualTo(budgetCalculation);
-            Assertions.assertThat(newBudgetCalculationlink.getLeaseTerm()).isEqualTo(leaseTermForServiceCharge);
+            assertThat(newBudgetCalculationlink.getBudgetCalculation()).isEqualTo(budgetCalculation);
+            assertThat(newBudgetCalculationlink.getLeaseTerm()).isEqualTo(leaseTermForServiceCharge);
 
         }
     }

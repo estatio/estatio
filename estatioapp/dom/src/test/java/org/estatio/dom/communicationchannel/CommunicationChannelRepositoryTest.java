@@ -24,13 +24,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommunicationChannelRepositoryTest {
 
@@ -74,12 +72,12 @@ public class CommunicationChannelRepositoryTest {
 
             communicationChannelRepository.findByReferenceAndType("REF-1", type);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(CommunicationChannel.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReferenceAndType"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "REF-1"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(CommunicationChannel.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceAndType");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object) "REF-1");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) type);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
     }
 }

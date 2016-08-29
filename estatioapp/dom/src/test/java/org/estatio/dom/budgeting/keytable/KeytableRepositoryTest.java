@@ -17,24 +17,24 @@
 
 package org.estatio.dom.budgeting.keytable;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetForTesting;
+import java.util.Arrays;
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetForTesting;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jodo on 30/04/15.
@@ -84,12 +84,12 @@ public class KeytableRepositoryTest {
             String name = "KeyTableName";
             keyTableRepository.findByBudgetAndName(budget, name);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetAndName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) name));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(KeyTable.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetAndName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name")).isEqualTo((Object) name);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
 
@@ -104,11 +104,11 @@ public class KeytableRepositoryTest {
             Budget budget = new BudgetForTesting();
             keyTableRepository.findByBudget(budget);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(KeyTable.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudget"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(KeyTable.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudget");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
 
@@ -163,11 +163,11 @@ public class KeytableRepositoryTest {
                     6);
 
             //then
-            assertThat(newKeyTable.getBudget(), is(budget));
-            assertThat(newKeyTable.getName(), is("new keyTable"));
-            assertThat(newKeyTable.getFoundationValueType(), is(FoundationValueType.AREA));
-            assertThat(newKeyTable.getKeyValueMethod(), is(KeyValueMethod.PERCENT));
-            assertThat(newKeyTable.getPrecision(), is(6));
+            assertThat(newKeyTable.getBudget()).isEqualTo(budget);
+            assertThat(newKeyTable.getName()).isEqualTo("new keyTable");
+            assertThat(newKeyTable.getFoundationValueType()).isEqualTo(FoundationValueType.AREA);
+            assertThat(newKeyTable.getKeyValueMethod()).isEqualTo(KeyValueMethod.PERCENT);
+            assertThat(newKeyTable.getPrecision()).isEqualTo(6);
         }
 
     }

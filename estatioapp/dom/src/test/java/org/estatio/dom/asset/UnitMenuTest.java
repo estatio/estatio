@@ -27,8 +27,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UnitMenuTest {
 
@@ -60,8 +59,8 @@ public class UnitMenuTest {
 
         changeUnit.changeAsset("Name-2", UnitType.BOUTIQUE);
 
-        assertThat(changeUnit.getName(), is("Name-2"));
-        assertThat(changeUnit.getType(), is(UnitType.BOUTIQUE));
+        assertThat(changeUnit.getName()).isEqualTo("Name-2");
+        assertThat(changeUnit.getType()).isEqualTo(UnitType.BOUTIQUE);
     }
 
 }

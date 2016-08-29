@@ -14,8 +14,8 @@ import org.apache.isis.schema.common.v1.OidDto;
 
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.DtoMappingHelper;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 

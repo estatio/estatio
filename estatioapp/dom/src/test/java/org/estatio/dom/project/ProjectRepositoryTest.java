@@ -19,15 +19,16 @@
 package org.estatio.dom.project;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProjectRepositoryTest {
 
@@ -68,11 +69,11 @@ public class ProjectRepositoryTest {
 
         	projectRepository.findProject("some?search*Phrase");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Project.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("matcher"), is((Object) "(?i)some.search.*Phrase"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Project.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("matcher")).isEqualTo((Object) "(?i)some.search.*Phrase");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }

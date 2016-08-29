@@ -21,21 +21,18 @@ package org.estatio.dom.lease;
 import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OccupancyRepositoryTest {
 
@@ -79,14 +76,16 @@ public class OccupancyRepositoryTest {
     public static class FindByLeaseAndUnitAndStartDate extends OccupancyRepositoryTest {
         @Test
         public void happyCase() {
+
             occupancyRepository.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
-            assertThat(finderInteraction.getQueryName(), is("findByLeaseAndUnitAndStartDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object) unit));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Occupancy.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByLeaseAndUnitAndStartDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("lease")).isEqualTo((Object) lease);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("unit")).isEqualTo((Object) unit);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) startDate);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
+
         }
     }
 
@@ -96,11 +95,11 @@ public class OccupancyRepositoryTest {
     @Test
     public void happyCase() {
         occupancyRepository.findByLease(lease);
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
-        assertThat(finderInteraction.getQueryName(), is("findByLease"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+        assertThat(finderInteraction.getResultType()).isEqualTo(Occupancy.class);
+        assertThat(finderInteraction.getQueryName()).isEqualTo("findByLease");
+        assertThat(finderInteraction.getArgumentsByParameterName().get("lease")).isEqualTo((Object) lease);
+        assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
     }
 
     public static class FindByUnit extends OccupancyRepositoryTest {
@@ -108,11 +107,11 @@ public class OccupancyRepositoryTest {
         @Test
         public void happyCase() {
             occupancyRepository.findByUnit(unit);
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
-            assertThat(finderInteraction.getQueryName(), is("findByUnit"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object) unit));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Occupancy.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByUnit");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("unit")).isEqualTo((Object) unit);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -140,34 +139,34 @@ public class OccupancyRepositoryTest {
 
             //given
             Unit unit = new Unit();
-            LocalDateInterval localDateInterval = new LocalDateInterval(new LocalDate(2015,01,01), new LocalDate(2015,02,01));
+            LocalDateInterval localDateInterval = new LocalDateInterval(new LocalDate(2015, 01, 01), new LocalDate(2015, 02, 01));
 
             //when
             List<Occupancy> foundOccupancies = occupancyRepository.occupanciesByUnitAndInterval(unit, localDateInterval);
 
             //then
-            Assertions.assertThat(foundOccupancies.size()).isEqualTo(1);
+            assertThat(foundOccupancies).hasSize(1);
 
             //when
-            localDateInterval = new LocalDateInterval(new LocalDate(2015,01,01), new LocalDate(2016,01,01));
+            localDateInterval = new LocalDateInterval(new LocalDate(2015, 01, 01), new LocalDate(2016, 01, 01));
             foundOccupancies = occupancyRepository.occupanciesByUnitAndInterval(unit, localDateInterval);
 
             //then
-            Assertions.assertThat(foundOccupancies.size()).isEqualTo(2);
+            assertThat(foundOccupancies).hasSize(2);
 
             //when
-            localDateInterval = new LocalDateInterval(new LocalDate(2014,01,01), new LocalDate(2014,12,31));
+            localDateInterval = new LocalDateInterval(new LocalDate(2014, 01, 01), new LocalDate(2014, 12, 31));
             foundOccupancies = occupancyRepository.occupanciesByUnitAndInterval(unit, localDateInterval);
 
             //then
-            Assertions.assertThat(foundOccupancies.size()).isEqualTo(0);
+            assertThat(foundOccupancies).hasSize(0);
 
             //when
-            localDateInterval = new LocalDateInterval(new LocalDate(2017,01,01), new LocalDate(2017,01,01));
+            localDateInterval = new LocalDateInterval(new LocalDate(2017, 01, 01), new LocalDate(2017, 01, 01));
             foundOccupancies = occupancyRepository.occupanciesByUnitAndInterval(unit, localDateInterval);
 
             //then
-            Assertions.assertThat(foundOccupancies.size()).isEqualTo(0);
+            assertThat(foundOccupancies).hasSize(0);
         }
 
     }

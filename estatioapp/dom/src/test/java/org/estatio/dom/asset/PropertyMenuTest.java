@@ -20,7 +20,6 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -38,8 +36,7 @@ import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PropertyMenuTest {
 
@@ -78,11 +75,11 @@ public class PropertyMenuTest {
 
             propertyMenu.findProperties("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*REF.1.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object)"(?i).*REF.1.*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -94,11 +91,11 @@ public class PropertyMenuTest {
 
             propertyRepository.findPropertyByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReference"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object)"*REF?1*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -110,11 +107,11 @@ public class PropertyMenuTest {
 
             propertyRepository.autoComplete("X?yz");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*X.yz.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object)"(?i).*X.yz.*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 
@@ -125,7 +122,7 @@ public class PropertyMenuTest {
 
             propertyMenu.allProperties();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
     }
 
@@ -183,16 +180,16 @@ public class PropertyMenuTest {
             final Property newProperty = propertyMenu.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null);
 
             // then
-            Assertions.assertThat(newProperty.getReference()).isEqualTo("REF-1");
-            Assertions.assertThat(newProperty.getName()).isEqualTo("Name-1");
-            Assertions.assertThat(newProperty.getType()).isEqualTo(PropertyType.CINEMA);
-            Assertions.assertThat(newProperty.getCountry()).isNull();
-            Assertions.assertThat(newProperty.getApplicationTenancyPath()).isEqualTo("/it/REF-1");
+            assertThat(newProperty.getReference()).isEqualTo("REF-1");
+            assertThat(newProperty.getName()).isEqualTo("Name-1");
+            assertThat(newProperty.getType()).isEqualTo(PropertyType.CINEMA);
+            assertThat(newProperty.getCountry()).isNull();
+            assertThat(newProperty.getApplicationTenancyPath()).isEqualTo("/it/REF-1");
         }
 
         @Test
         public void defaults() {
-            assertThat(propertyMenu.default2NewProperty(), is(PropertyType.MIXED));
+            assertThat(propertyMenu.default2NewProperty()).isEqualTo(PropertyType.MIXED);
         }
 
     }

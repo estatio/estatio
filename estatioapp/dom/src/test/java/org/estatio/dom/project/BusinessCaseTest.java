@@ -1,7 +1,8 @@
 package org.estatio.dom.project;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.junit.Test;
+
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
 public class BusinessCaseTest {
 	

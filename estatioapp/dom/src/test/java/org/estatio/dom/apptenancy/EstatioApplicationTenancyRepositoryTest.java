@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -369,12 +368,12 @@ public class EstatioApplicationTenancyRepositoryTest {
         atLandLordLevel.setParent(atPropertyLevel);
 
         // when, then
-        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel).getPath()).isEqualTo("/");
-        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel_).getPath()).isEqualTo("/_");
-        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel).getPath()).isEqualTo("/ABC");
-        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel_).getPath()).isEqualTo("/ABC/_");
-        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atPropertyLevel).getPath()).isEqualTo("/ABC");
-        Assertions.assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atLandLordLevel).getPath()).isEqualTo("/ABC");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel).getPath()).isEqualTo("/");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel_).getPath()).isEqualTo("/_");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel).getPath()).isEqualTo("/ABC");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel_).getPath()).isEqualTo("/ABC/_");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atPropertyLevel).getPath()).isEqualTo("/ABC");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atLandLordLevel).getPath()).isEqualTo("/ABC");
 
     }
 

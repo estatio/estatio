@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
@@ -33,8 +32,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementRoleRepositoryTest {
 
@@ -85,54 +83,54 @@ public class AgreementRoleRepositoryTest {
         public void findByAgreementAndTypeAndContainsDate() {
             agreementRoleRepository.findByAgreementAndTypeAndContainsDate(agreement, type, date);
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
-            assertThat(finderInteraction.getQueryName(), is("findByAgreementAndTypeAndContainsDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("agreement"), is((Object) agreement));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) date));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) LocalDateInterval.endDateFromStartDate(date)));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementRole.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAgreementAndTypeAndContainsDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("agreement")).isEqualTo(agreement);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo(type);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo(date);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate")).isEqualTo(LocalDateInterval.endDateFromStartDate(date));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(4);
         }
 
         @Test
         public void findByAgreementAndPartyAndTypeAndStartDate() {
             agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, type, date);
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
-            assertThat(finderInteraction.getQueryName(), is("findByAgreementAndPartyAndTypeAndContainsDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("agreement"), is((Object) agreement));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) date));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) LocalDateInterval.endDateFromStartDate(date)));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(5));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementRole.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAgreementAndPartyAndTypeAndContainsDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("agreement")).isEqualTo(agreement);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("party")).isEqualTo(party);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo(type);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo(date);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate")).isEqualTo(LocalDateInterval.endDateFromStartDate(date));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(5);
         }
 
         @Test
         public void findByParty() {
             agreementRoleRepository.findByParty(party);
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
-            assertThat(finderInteraction.getQueryName(), is("findByParty"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementRole.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByParty");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("party")).isEqualTo((Object) party);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
         @Test
         public void findByPartyAndTypeAndContainsDate() {
             agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, type, date);
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
-            assertThat(finderInteraction.getQueryName(), is("findByPartyAndTypeAndContainsDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) date));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) LocalDateInterval.endDateFromStartDate(date)));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementRole.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByPartyAndTypeAndContainsDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("party")).isEqualTo((Object) party);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) type);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) date);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate")).isEqualTo((Object) LocalDateInterval.endDateFromStartDate(date));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(4);
         }
 
     }
@@ -141,7 +139,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void getId() {
-            assertThat(new AgreementRoleRepository().getId(), is(AgreementRoleRepository.class.getName()));
+            assertThat(new AgreementRoleRepository().getId()).isEqualTo(AgreementRoleRepository.class.getName());
         }
 
     }
@@ -150,7 +148,7 @@ public class AgreementRoleRepositoryTest {
 
         @Test
         public void iconName() {
-            assertThat(new AgreementRoleRepository().iconName(), is("AgreementRole"));
+            assertThat(new AgreementRoleRepository().iconName()).isEqualTo("AgreementRole");
         }
 
     }

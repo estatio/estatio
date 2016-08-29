@@ -18,13 +18,14 @@
  */
 package org.estatio.dom.agreement;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementRoleCommunicationChannelTypeTest {
 
@@ -56,19 +57,19 @@ public class AgreementRoleCommunicationChannelTypeTest {
 
         @Test
         public void whenNull() {
-            assertThat(arcct.matchingCommunicationChannel().apply(null), is(false));
+            assertThat(arcct.matchingCommunicationChannel().apply(null)).isFalse();
         }
 
         @Test
         public void whenTypeDifferent() {
             arcc.setType(arcct2);
-            assertThat(arcct.matchingCommunicationChannel().apply(arcc), is(false));
+            assertThat(arcct.matchingCommunicationChannel().apply(arcc)).isFalse();
         }
 
         @Test
         public void whenTypeSame() {
             arcc.setType(arcct);
-            assertThat(arcct.matchingCommunicationChannel().apply(arcc), is(true));
+            assertThat(arcct.matchingCommunicationChannel().apply(arcc)).isTrue();
         }
     }
 

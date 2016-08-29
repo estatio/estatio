@@ -20,12 +20,16 @@ package org.estatio.dom;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Set;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
+
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+
 import org.estatio.dom.contracttests.Constants;
 
 

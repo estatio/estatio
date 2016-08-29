@@ -17,18 +17,20 @@
 
 package org.estatio.dom.budgeting.budgetcalculation;
 
-import org.assertj.core.api.Assertions;
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetCalculationServiceTest {
 
@@ -84,9 +86,9 @@ public class BudgetCalculationServiceTest {
             List<BudgetCalculationResult> results = service.calculate(budget);
 
             // then
-            Assertions.assertThat(results.size()).isEqualTo(2);
-            Assertions.assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("333.33"));
-            Assertions.assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("666.67"));
+            assertThat(results).hasSize(2);
+            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("333.33"));
+            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("666.67"));
 
         }
 
@@ -101,9 +103,9 @@ public class BudgetCalculationServiceTest {
             List<BudgetCalculationResult> results = service.calculate(budget);
 
             // then
-            Assertions.assertThat(results.size()).isEqualTo(2);
-            Assertions.assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("330.00"));
-            Assertions.assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("660.00"));
+            assertThat(results).hasSize(2);
+            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("330.00"));
+            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("660.00"));
 
         }
 
@@ -118,9 +120,9 @@ public class BudgetCalculationServiceTest {
             List<BudgetCalculationResult> results = service.calculate(budget);
 
             // then
-            Assertions.assertThat(results.size()).isEqualTo(2);
-            Assertions.assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-            Assertions.assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results).hasSize(2);
+            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
 
         }
 
@@ -135,9 +137,9 @@ public class BudgetCalculationServiceTest {
             List<BudgetCalculationResult> results = service.calculate(budget);
 
             // then
-            Assertions.assertThat(results.size()).isEqualTo(2);
-            Assertions.assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-            Assertions.assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results).hasSize(2);
+            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
 
         }
 
@@ -154,9 +156,9 @@ public class BudgetCalculationServiceTest {
             List<BudgetCalculationResult> results = service.calculate(budget);
 
             // then
-            Assertions.assertThat(results.size()).isEqualTo(2);
-            Assertions.assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-            Assertions.assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results).hasSize(2);
+            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
 
         }
 

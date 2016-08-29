@@ -24,15 +24,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.charge.Charge;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseItemRepositoryTest {
 
@@ -72,7 +70,7 @@ public class LeaseItemRepositoryTest {
 
             leaseItemRepository.allLeaseItems();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
 
     }
@@ -88,13 +86,13 @@ public class LeaseItemRepositoryTest {
 
             leaseItemRepository.findByLeaseAndTypeAndCharge(lease, leaseItemType, charge);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(LeaseItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findByLeaseAndTypeAndCharge"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) leaseItemType));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(LeaseItem.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByLeaseAndTypeAndCharge");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("lease")).isEqualTo((Object) lease);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) leaseItemType);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
 
     }

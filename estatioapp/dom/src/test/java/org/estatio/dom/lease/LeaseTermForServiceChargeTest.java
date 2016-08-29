@@ -20,7 +20,6 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import org.hamcrest.core.Is;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -36,9 +35,8 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 public class LeaseTermForServiceChargeTest {
 
@@ -85,7 +83,7 @@ public class LeaseTermForServiceChargeTest {
         @Test
         public void testUpdate() {
             term.align();
-            assertThat(term.getEffectiveValue(), Is.is(term.getBudgetedValue()));
+            assertThat(term.getEffectiveValue()).isEqualTo(term.getBudgetedValue());
             LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
 
             item.getTerms().add(nextTerm);
@@ -95,7 +93,7 @@ public class LeaseTermForServiceChargeTest {
             nextTerm.doInitialize();
 
             nextTerm.align();
-            assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
+            assertThat(nextTerm.getBudgetedValue()).isEqualTo(term.getBudgetedValue());
         }
     }
 
@@ -112,19 +110,19 @@ public class LeaseTermForServiceChargeTest {
             term.setAuditedValue(BigDecimal.valueOf(6600));
 
             // when, then
-            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 4, 1)), is(BigDecimal.valueOf(6000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 7, 1)), is(BigDecimal.valueOf(6000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 10, 1)), is(BigDecimal.valueOf(6000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 1, 1)), is(BigDecimal.valueOf(6000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1))).isEqualTo(BigDecimal.valueOf(6000));
+            assertThat(term.valueForDate(new LocalDate(2011, 4, 1))).isEqualTo(BigDecimal.valueOf(6000));
+            assertThat(term.valueForDate(new LocalDate(2011, 7, 1))).isEqualTo(BigDecimal.valueOf(6000));
+            assertThat(term.valueForDate(new LocalDate(2011, 10, 1))).isEqualTo(BigDecimal.valueOf(6000));
+            assertThat(term.valueForDate(new LocalDate(2012, 1, 1))).isEqualTo(BigDecimal.valueOf(6000));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1))).isEqualTo(BigDecimal.valueOf(6000));
 
             // and given
             term.setEndDate(new LocalDate(2011, 12, 31));
 
             // when, then
-            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6600)));
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1))).isEqualTo(BigDecimal.valueOf(6000));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1))).isEqualTo(BigDecimal.valueOf(6600));
 
         }
     }

@@ -17,9 +17,10 @@
 
 package org.estatio.dom.budgeting.budgetcalculation;
 
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.junit.Test;
 
 public class BudgetCalculationLinkTest {
 

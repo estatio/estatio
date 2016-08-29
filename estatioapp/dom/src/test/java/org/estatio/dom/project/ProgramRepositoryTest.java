@@ -20,7 +20,6 @@ package org.estatio.dom.project;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -38,8 +36,7 @@ import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProgramRepositoryTest {
 
@@ -80,11 +77,11 @@ public class ProgramRepositoryTest {
 
         	programRepository.findProgram("some?search*Phrase");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Program.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("matcher"), is((Object) "(?i)some.search.*Phrase"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Program.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("matcher")).isEqualTo((Object) "(?i)some.search.*Phrase");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -134,10 +131,10 @@ public class ProgramRepositoryTest {
             final Program newProgram = programRepository.newProgram("REF-1", "Name-1", "Some-goal", countryApplicationTenancy);
 
             // then
-            Assertions.assertThat(newProgram.getReference()).isEqualTo("REF-1");
-            Assertions.assertThat(newProgram.getName()).isEqualTo("Name-1");
-            Assertions.assertThat(newProgram.getProgramGoal()).isEqualTo("Some-goal");
-            Assertions.assertThat(newProgram.getApplicationTenancyPath()).isEqualTo("/it");
+            assertThat(newProgram.getReference()).isEqualTo("REF-1");
+            assertThat(newProgram.getName()).isEqualTo("Name-1");
+            assertThat(newProgram.getProgramGoal()).isEqualTo("Some-goal");
+            assertThat(newProgram.getApplicationTenancyPath()).isEqualTo("/it");
         }
 
     }

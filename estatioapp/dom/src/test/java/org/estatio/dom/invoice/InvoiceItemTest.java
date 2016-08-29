@@ -20,7 +20,7 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -30,13 +30,15 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class InvoiceItemTest {
 
@@ -154,16 +156,16 @@ public class InvoiceItemTest {
         public void withLargeNetAmount() {
             invoiceItem.setNetAmount(new BigDecimal("100.00"));
             invoiceItem.verify();
-            assertThat(invoiceItem.getVatAmount(), is(new BigDecimal("17.50")));
-            assertThat(invoiceItem.getGrossAmount(), is(new BigDecimal("117.50")));
+            assertThat(invoiceItem.getVatAmount()).isEqualTo(new BigDecimal("17.50"));
+            assertThat(invoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("117.50"));
         }
 
         @Test
         public void withSmallNetAmount() {
             invoiceItem.setNetAmount(new BigDecimal("1.50"));
             invoiceItem.verify();
-            assertThat(invoiceItem.getVatAmount(), is(new BigDecimal("0.26")));
-            assertThat(invoiceItem.getGrossAmount(), is(new BigDecimal("1.76")));
+            assertThat(invoiceItem.getVatAmount()).isEqualTo(new BigDecimal("0.26"));
+            assertThat(invoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("1.76"));
         }
 
         @Test
@@ -171,8 +173,8 @@ public class InvoiceItemTest {
             invoiceItem.setTax(null);
             invoiceItem.setNetAmount(new BigDecimal("1.50"));
             invoiceItem.verify();
-            assertThat(invoiceItem.getVatAmount(), is(new BigDecimal("0")));
-            assertThat(invoiceItem.getGrossAmount(), is(new BigDecimal("1.50")));
+            assertThat(invoiceItem.getVatAmount()).isEqualTo(new BigDecimal("0"));
+            assertThat(invoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("1.50"));
         }
     }
 

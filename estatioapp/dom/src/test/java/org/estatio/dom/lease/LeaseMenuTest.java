@@ -1,6 +1,5 @@
 package org.estatio.dom.lease;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +7,8 @@ import org.junit.Test;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.party.Party;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseMenuTest {
 
@@ -51,7 +52,7 @@ public class LeaseMenuTest {
             error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantFra);
 
             // then
-            Assertions.assertThat(error).isEqualTo(null);
+            assertThat(error).isNull();
 
             // and when
             landLordIta = new Party() {
@@ -64,7 +65,7 @@ public class LeaseMenuTest {
             error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordIta, tenantFra);
 
             // then
-            Assertions.assertThat(error).isEqualTo("Landlord not valid. (wrong application tenancy)");
+            assertThat(error).isEqualTo("Landlord not valid. (wrong application tenancy)");
 
             // and when
             tenantIta = new Party() {
@@ -77,7 +78,7 @@ public class LeaseMenuTest {
             error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantIta);
 
             // then
-            Assertions.assertThat(error).isEqualTo("Tenant not valid. (wrong application tenancy)");
+            assertThat(error).isEqualTo("Tenant not valid. (wrong application tenancy)");
 
         }
 

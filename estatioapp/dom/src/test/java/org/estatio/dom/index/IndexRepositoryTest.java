@@ -19,15 +19,16 @@
 package org.estatio.dom.index;
 
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndexRepositoryTest {
 
@@ -65,11 +66,11 @@ public class IndexRepositoryTest {
 
             indexRepository.findByReference("REF-1");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Index.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReference"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "REF-1"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Index.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object) "REF-1");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -80,7 +81,7 @@ public class IndexRepositoryTest {
 
             indexRepository.all();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
     }
 }

@@ -18,13 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -32,12 +28,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import static org.hamcrest.Matchers.is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class LeaseTermForPercentageTest {
 
@@ -139,7 +141,7 @@ public class LeaseTermForPercentageTest {
 
             term.doAlign();
 
-            assertThat(term.getEffectiveValue(), is(parseBigDecimal(expectedValueStr)));
+            assertThat(term.getEffectiveValue()).isEqualTo(parseBigDecimal(expectedValueStr));
         }
 
         private BigDecimal parseBigDecimal(final String input) {
@@ -156,8 +158,8 @@ public class LeaseTermForPercentageTest {
 
         @Test
         public void testValidate(){
-            assertThat(term.validateChangeParameters(BigDecimal.valueOf(-0.00001)), is("Percentage should be between 0 and 100"));
-            assertThat(term.validateChangeParameters(BigDecimal.valueOf(100.00001)), is("Percentage should be between 0 and 100"));
+            assertThat(term.validateChangeParameters(BigDecimal.valueOf(-0.00001))).isEqualTo("Percentage should be between 0 and 100");
+            assertThat(term.validateChangeParameters(BigDecimal.valueOf(100.00001))).isEqualTo("Percentage should be between 0 and 100");
             assertNull(term.validateChangeParameters(new BigDecimal(0)));
             assertNull(term.validateChangeParameters(new BigDecimal(100)));
         }
@@ -175,7 +177,7 @@ public class LeaseTermForPercentageTest {
             //when
             term.doInitialize();
             //then
-            assertThat(term.getEndDate(), is(new LocalDate(2014,12,31)));
+            assertThat(term.getEndDate()).isEqualTo(new LocalDate(2014,12,31));
         }
 
         @Test
@@ -188,7 +190,7 @@ public class LeaseTermForPercentageTest {
             //when
             term.doInitialize();
             //then
-            assertThat(term.getEndDate(), is(term.getStartDate().plusDays(1)));
+            assertThat(term.getEndDate()).isEqualTo(term.getStartDate().plusDays(1));
         }
 
     }

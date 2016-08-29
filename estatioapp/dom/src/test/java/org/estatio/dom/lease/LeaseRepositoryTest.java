@@ -26,7 +26,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
@@ -34,8 +33,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseRepositoryTest {
 
@@ -86,11 +84,11 @@ public class LeaseRepositoryTest {
 
             leaseRepository.findLeaseByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReference"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "*REF?1*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Lease.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object) "*REF?1*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 
@@ -101,11 +99,11 @@ public class LeaseRepositoryTest {
 
             leaseRepository.matchByReferenceOrName("*REF?1*", false);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object) "(?i).*REF.1.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Lease.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object) "(?i).*REF.1.*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
     }
 
@@ -116,11 +114,11 @@ public class LeaseRepositoryTest {
 
             leaseRepository.findLeasesByProperty(property);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
-            assertThat(finderInteraction.getQueryName(), is("findByProperty"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Lease.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByProperty");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property")).isEqualTo((Object) property);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
 
             // REVIEW: Don't see the real benefit of these tests since the
             // application
@@ -140,12 +138,12 @@ public class LeaseRepositoryTest {
 
             leaseRepository.findByAssetAndActiveOnDate(asset, date);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));
-            assertThat(finderInteraction.getQueryName(), is("findByAssetAndActiveOnDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("asset"), is((Object) asset));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object) date));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Lease.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAssetAndActiveOnDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("asset")).isEqualTo((Object) asset);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("date")).isEqualTo((Object) date);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
     }
 
@@ -156,7 +154,7 @@ public class LeaseRepositoryTest {
 
             leaseRepository.allLeases();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
 
     }

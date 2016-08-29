@@ -38,9 +38,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.estatio.IsisMatchers.classEqualTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NumeratorsTest {
 
@@ -108,13 +106,13 @@ public class NumeratorsTest {
 
             numerators.findScopedNumeratorIncludeWildCardMatching(INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, applicationTenancy);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), classEqualTo(Numerator.class));
-            assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndApplicationTenancyPath"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) INVOICE_NUMBER_NUMERATOR_NAME));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("objectType"), is((Object) "PROP"));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Numerator.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByNameAndObjectTypeAndApplicationTenancyPath");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name")).isEqualTo((Object) INVOICE_NUMBER_NUMERATOR_NAME);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("objectType")).isEqualTo((Object) "PROP");
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
     }
 
@@ -125,7 +123,7 @@ public class NumeratorsTest {
 
             numerators.allNumerators();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
     }
 

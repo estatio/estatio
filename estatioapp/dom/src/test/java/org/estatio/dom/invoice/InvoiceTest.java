@@ -45,14 +45,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceTest {
 
@@ -169,11 +162,11 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnInvoice("XXX-00010", new LocalDate(2012, 1, 1));
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null), is(nullValue()));
+            assertThat(invoice.disableInvoice(null)).isNull();
             invoice.invoice(mockClockService.now());
 
-            assertThat(invoice.getInvoiceNumber(), is("XXX-00011"));
-            assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
+            assertThat(invoice.getInvoiceNumber()).isEqualTo("XXX-00011");
+            assertThat(invoice.getStatus()).isEqualTo(InvoiceStatus.INVOICED);
         }
 
         @Test
@@ -182,10 +175,10 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
-            assertThat(invoice.disableInvoice(null), is("Invoice number already assigned"));
+            assertThat(invoice.disableInvoice(null)).isEqualTo("Invoice number already assigned");
             invoice.invoice(mockClockService.now());
 
-            assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
+            assertThat(invoice.getInvoiceNumber()).isEqualTo("SOME-INVOICE-NUMBER");
         }
 
         @Test
@@ -194,10 +187,10 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null), is("No 'invoice number' numerator found for invoice's property"));
+            assertThat(invoice.disableInvoice(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
 
             invoice.invoice(mockClockService.now());
-            assertThat(invoice.getInvoiceNumber(), is(nullValue()));
+            assertThat(invoice.getInvoiceNumber()).isNull();
         }
 
         @Test
@@ -206,10 +199,10 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null), is("No 'invoice number' numerator found for invoice's property"));
+            assertThat(invoice.disableInvoice(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
 
             invoice.invoice(mockClockService.now());
-            assertThat(invoice.getInvoiceNumber(), is(nullValue()));
+            assertThat(invoice.getInvoiceNumber()).isNull();
         }
 
     }
@@ -264,11 +257,11 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(lease);
 
-            assertThat(invoice.hideCollect(), is(false));
-            assertNull(invoice.disableCollect());
+            assertThat(invoice.hideCollect()).isFalse();
+            assertThat(invoice.disableCollect()).isNull();
             invoice.doCollect();
 
-            assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
+            assertThat(invoice.getCollectionNumber()).isEqualTo("XXX-00011");
         }
 
         @Test
@@ -278,10 +271,10 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
-            assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
+            assertThat(invoice.hideCollect()).isFalse();
+            assertThat(invoice.disableCollect()).isEqualTo("No mandate assigned to invoice's lease");
             invoice.doCollect();
-            assertNull(invoice.getCollectionNumber());
+            assertThat(invoice.getCollectionNumber()).isNull();
         }
 
         @Test
@@ -292,11 +285,11 @@ public class InvoiceTest {
 
             invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
 
-            assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(), is("Collection number already assigned"));
+            assertThat(invoice.hideCollect()).isFalse();
+            assertThat(invoice.disableCollect()).isEqualTo("Collection number already assigned");
             invoice.doCollect();
 
-            assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
+            assertThat(invoice.getCollectionNumber()).isEqualTo("SOME-COLLECTION-NUMBER");
         }
 
         @Test
@@ -305,11 +298,11 @@ public class InvoiceTest {
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(), is("No 'collection number' numerator found for invoice's property"));
+            assertThat(invoice.hideCollect()).isFalse();
+            assertThat(invoice.disableCollect()).isEqualTo("No 'collection number' numerator found for invoice's property");
 
             invoice.doCollect();
-            assertThat(invoice.getCollectionNumber(), is(nullValue()));
+            assertThat(invoice.getCollectionNumber()).isNull();
         }
 
         @Test
@@ -319,12 +312,12 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
-            assertThat(invoice.hideCollect(), is(true));
-            assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
+            assertThat(invoice.hideCollect()).isTrue();
+            assertThat(invoice.disableCollect()).isEqualTo("No mandate assigned to invoice's lease");
 
             invoice.doCollect();
 
-            assertThat(invoice.getCollectionNumber(), is(nullValue()));
+            assertThat(invoice.getCollectionNumber()).isNull();
         }
 
         @Test
@@ -336,14 +329,14 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
             // then
-            assertThat(invoice.hideCollect(), is(false));
-            assertThat(invoice.disableCollect(), is("Must be in status of 'approved'"));
+            assertThat(invoice.hideCollect()).isFalse();
+            assertThat(invoice.disableCollect()).isEqualTo("Must be in status of 'approved'");
 
             // and
             invoice.doCollect();
 
             // then
-            assertThat(invoice.getCollectionNumber(), is(nullValue()));
+            assertThat(invoice.getCollectionNumber()).isNull();
         }
 
     }
@@ -387,7 +380,7 @@ public class InvoiceTest {
 
         @Test
         public void invoiceDateIsAfterDueDate() {
-            assertFalse(invoice.validInvoiceDate(new LocalDate(2012, 2, 3)));
+            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 3))).isFalse();
         }
 
         @Test
@@ -395,10 +388,10 @@ public class InvoiceTest {
             // given
             allowingMockInvoicesToReturnNumerator(numerator);
             allowingMockInvoicesToReturnInvoice("XXX-0010", new LocalDate(2012, 1, 1));
-            assertNotNull("App tenancy can't be null", invoice.getApplicationTenancy());
+            assertThat(invoice.getApplicationTenancy()).isNotNull();
 
             // when,then
-            assertTrue(invoice.validInvoiceDate(new LocalDate(2012, 2, 1)));
+            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 1))).isTrue();
         }
 
     }
@@ -411,10 +404,9 @@ public class InvoiceTest {
             Invoice invoice = new Invoice();
             invoice.setStatus(InvoiceStatus.INVOICED);
             // When, Then
-            assertThat(invoice.disableNewItem(null,null,null,null,null), notNullValue());
+            assertThat(invoice.disableNewItem(null, null, null, null, null)).isNotNull();
 
         }
-
 
     }
 

@@ -17,10 +17,11 @@
 
 package org.estatio.dom.budgeting.keytable;
 
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
-import org.junit.Test;
 
 /**
  * Created by jodo on 22/04/15.

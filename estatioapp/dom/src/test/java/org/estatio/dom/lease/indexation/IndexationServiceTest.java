@@ -19,6 +19,7 @@
 package org.estatio.dom.lease.indexation;
 
 import java.math.BigDecimal;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -26,14 +27,14 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndexationServiceTest {
 
@@ -81,8 +82,8 @@ public class IndexationServiceTest {
 
             indexer.indexate(indexable);
 
-            assertThat(indexable.getIndexationPercentage(), is(BigDecimal.valueOf(12.2)));
-            assertThat(indexable.getIndexedValue(), is(BigDecimal.valueOf(280500).setScale(2)));
+            assertThat(indexable.getIndexationPercentage()).isEqualTo(BigDecimal.valueOf(12.2));
+            assertThat(indexable.getIndexedValue()).isEqualTo(BigDecimal.valueOf(280500).setScale(2));
         }
 
         @Test
@@ -98,8 +99,8 @@ public class IndexationServiceTest {
 
             indexer.indexate(indexable);
 
-            assertThat(indexable.getIndexationPercentage(), is(BigDecimal.valueOf(4.5)));
-            assertThat(indexable.getIndexedValue(), is(BigDecimal.valueOf(258437.50).setScale(2)));
+            assertThat(indexable.getIndexationPercentage()).isEqualTo(BigDecimal.valueOf(4.5));
+            assertThat(indexable.getIndexedValue()).isEqualTo(BigDecimal.valueOf(258437.50).setScale(2));
         }
 
         @Test
@@ -116,8 +117,8 @@ public class IndexationServiceTest {
 
             indexer.indexate(indexable);
 
-            assertThat(indexable.getIndexationPercentage(), is(BigDecimal.valueOf(-4.3)));
-            assertThat(indexable.getIndexedValue(), is(new BigDecimal("250000.0")));
+            assertThat(indexable.getIndexationPercentage()).isEqualTo(BigDecimal.valueOf(-4.3));
+            assertThat(indexable.getIndexedValue()).isEqualTo(new BigDecimal("250000.0"));
         }
 
         @Test
@@ -133,8 +134,8 @@ public class IndexationServiceTest {
 
             indexer.indexate(indexable);
 
-            assertThat(indexable.getIndexationPercentage(), is(BigDecimal.valueOf(-4.348)));
-            assertThat(indexable.getIndexedValue(), is(new BigDecimal("239130.43")));
+            assertThat(indexable.getIndexationPercentage()).isEqualTo(BigDecimal.valueOf(-4.348));
+            assertThat(indexable.getIndexedValue()).isEqualTo(new BigDecimal("239130.43"));
         }
 
     }

@@ -26,8 +26,7 @@ import org.estatio.dom.budgeting.UnitForTesting;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jodo on 22/04/15.
@@ -53,7 +52,7 @@ public class KeyItemRepositoryTest {
                 keyValue);
 
         //then
-        assertThat(validateNewBudgetKeyItem, is("sourceValue cannot be zero or less than zero"));
+        assertThat(validateNewBudgetKeyItem).isEqualTo("sourceValue cannot be zero or less than zero");
     }
 
     @Test
@@ -73,7 +72,7 @@ public class KeyItemRepositoryTest {
                 keyValue);
 
         //then
-        assertThat(validateNewBudgetKeyItem, is("sourceValue cannot be zero or less than zero"));
+        assertThat(validateNewBudgetKeyItem).isEqualTo("sourceValue cannot be zero or less than zero");
     }
 
     @Test
@@ -93,7 +92,7 @@ public class KeyItemRepositoryTest {
                 keyValue);
 
         //then
-        assertThat(validateNewBudgetKeyItem, is("keyValue cannot be less than zero"));
+        assertThat(validateNewBudgetKeyItem).isEqualTo("keyValue cannot be less than zero");
     }
 
 }

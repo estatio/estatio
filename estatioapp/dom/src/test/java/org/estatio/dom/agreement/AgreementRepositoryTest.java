@@ -24,15 +24,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementRepositoryTest {
 
@@ -81,13 +79,13 @@ public class AgreementRepositoryTest {
             agreementRepository.findByAgreementTypeAndRoleTypeAndParty(agreementType, agreementRoleType, party);
 
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
-            assertThat(finderInteraction.getQueryName(), is("findByAgreementTypeAndRoleTypeAndParty"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType"), is((Object) agreementType));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("roleType"), is((Object) agreementRoleType));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Agreement.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAgreementTypeAndRoleTypeAndParty");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType")).isEqualTo((Object) agreementType);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("roleType")).isEqualTo((Object) agreementRoleType);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("party")).isEqualTo((Object) party);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
 
     }
@@ -99,12 +97,12 @@ public class AgreementRepositoryTest {
             agreementRepository.findByTypeAndReferenceOrName(agreementType, "");
 
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
-            assertThat(finderInteraction.getQueryName(), is("findByTypeAndReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType"), is((Object) agreementType));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("regex"), is((Object) ""));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Agreement.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByTypeAndReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType")).isEqualTo((Object) agreementType);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("regex")).isEqualTo((Object) "");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
     }

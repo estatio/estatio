@@ -20,8 +20,7 @@ package org.estatio.dom.asset;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class UnitTypeTest {
@@ -30,8 +29,8 @@ public class UnitTypeTest {
 
         @Test
         public void test() {
-            assertThat(UnitType.BOUTIQUE.title(), is("Boutique"));
-            assertThat(UnitType.HYPERMARKET.title(), is("Hypermarket"));
+            assertThat(UnitType.BOUTIQUE.title()).isEqualTo("Boutique");
+            assertThat(UnitType.HYPERMARKET.title()).isEqualTo("Hypermarket");
         }
 
 

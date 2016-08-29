@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -47,9 +46,7 @@ import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceRepositoryTest {
 
@@ -112,17 +109,18 @@ public class InvoiceRepositoryTest {
 
             invoiceRepository.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Invoice.class));
-            assertThat(finderInteraction.getQueryName(), is("findMatchingInvoices"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("buyer"), is((Object) buyer));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("seller"), is((Object) seller));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("paymentMethod"), is((Object) paymentMethod));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object) invoiceStatus));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate"), is((Object) dueDate));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Invoice.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findMatchingInvoices");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("buyer")).isEqualTo((Object) buyer);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("seller")).isEqualTo((Object) seller);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("paymentMethod")).isEqualTo((Object) paymentMethod);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("lease")).isEqualTo((Object) lease);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("status")).isEqualTo((Object) invoiceStatus);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate")).isEqualTo((Object) dueDate);
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(6));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(6);
+
         }
 
         @Test
@@ -140,7 +138,7 @@ public class InvoiceRepositoryTest {
                 }
             };
 
-            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null), is(invoice1));
+            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null)).isEqualTo(invoice1);
         }
 
         @Test
@@ -158,7 +156,7 @@ public class InvoiceRepositoryTest {
                     return null;
                 }
             };
-            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null), is(nullValue()));
+            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null)).isNull();
         }
 
     }
@@ -170,7 +168,7 @@ public class InvoiceRepositoryTest {
 
             invoiceRepository.allInvoices();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
     }
 

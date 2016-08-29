@@ -22,12 +22,12 @@ import java.math.BigDecimal;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.budgeting.CurrencyForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
 
@@ -60,7 +60,7 @@ public class BudgetItemTest {
             final BudgetItem budgetItem = new BudgetItemForTesting();
             assertThat(budgetItem.validateChangeBudgetedValue(BigDecimal.valueOf(-0.01))).isEqualTo("Value should be a positive non zero value");
             assertThat(budgetItem.validateChangeBudgetedValue(new BigDecimal(0))).isEqualTo("Value should be a positive non zero value");
-            assertThat(budgetItem.validateChangeBudgetedValue(BigDecimal.valueOf(0.01))).isEqualTo(null);
+            assertThat(budgetItem.validateChangeBudgetedValue(BigDecimal.valueOf(0.01))).isNull();
         }
 
     }
@@ -86,8 +86,8 @@ public class BudgetItemTest {
         public void testValidateChange() {
             final BudgetItem budgetItem = new BudgetItemForTesting();
             assertThat(budgetItem.validateChangeAuditedValue(BigDecimal.valueOf(-0.01))).isEqualTo("Value can't be negative");
-            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(0))).isEqualTo(null);
-            assertThat(budgetItem.validateChangeAuditedValue(BigDecimal.valueOf(0.01))).isEqualTo(null);
+            assertThat(budgetItem.validateChangeAuditedValue(new BigDecimal(0))).isNull();
+            assertThat(budgetItem.validateChangeAuditedValue(BigDecimal.valueOf(0.01))).isNull();
         }
 
     }

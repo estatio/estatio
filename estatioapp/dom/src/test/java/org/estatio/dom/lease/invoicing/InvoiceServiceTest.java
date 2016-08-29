@@ -18,10 +18,11 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import org.estatio.dom.lease.Lease;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceServiceTest {
 
@@ -32,10 +33,10 @@ public class InvoiceServiceTest {
         Lease lease = new Lease();
 
         // when
-        Assertions.assertThat(lease.getProperty()).isEqualTo(null);
+        assertThat(lease.getProperty()).isNull();
 
         // then
-        Assertions.assertThat(invoiceService.disableCalculate(lease, null, null, null, null, null)).isEqualTo("Please set occupancy first");
+        assertThat(invoiceService.disableCalculate(lease, null, null, null, null, null)).isEqualTo("Please set occupancy first");
 
     }
 

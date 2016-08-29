@@ -24,16 +24,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 public class PartyRepositoryTest {
 
@@ -51,11 +49,13 @@ public class PartyRepositoryTest {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<Party> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
@@ -70,12 +70,12 @@ public class PartyRepositoryTest {
 
             partyRepository.matchPartyByReferenceOrName("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Party.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*REF.1.*"));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Party.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object) "(?i).*REF.1.*");
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 
@@ -86,12 +86,12 @@ public class PartyRepositoryTest {
 
             partyRepository.findParties("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Party.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*REF.1.*"));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Party.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object) "(?i).*REF.1.*");
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 
@@ -102,7 +102,7 @@ public class PartyRepositoryTest {
 
             partyRepository.allParties();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
     }
 
@@ -133,10 +133,9 @@ public class PartyRepositoryTest {
             // when findPartyByReference( .. ) returns a result
             assertNotNull(partyRepository.findPartyByReference(reference));
             // then
-            assertThat(partyRepository.validateNewParty(reference), is("Reference should be unique; does similar party already exist?"));
+            assertThat(partyRepository.validateNewParty(reference)).isEqualTo("Reference should be unique; does similar party already exist?");
 
         }
-
 
     }
 

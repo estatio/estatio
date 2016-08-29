@@ -51,8 +51,7 @@ import org.estatio.dom.tax.TaxRateRepository;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceCalculationServiceTest {
 
@@ -88,8 +87,7 @@ public class InvoiceCalculationServiceTest {
                             startDueDate,
                             nextDueDate == null ? startDueDate.plusDays(1) : nextDueDate));
             for (int i = 0; i < results.size(); i++) {
-                assertThat(results.toString(), results.get(i).value().subtract(results.get(i).mockValue()),
-                        is(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP)));
+                assertThat(results.get(i).value().subtract(results.get(i).mockValue())).isEqualTo(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP));
             }
             return results;
         }
@@ -316,7 +314,7 @@ public class InvoiceCalculationServiceTest {
                 final List<CalculationResult> calculationResults = super.calculateDueDateRange(leaseTerm, startDueDate, nextDueDate, invoicingFrequency, values);
 
                 // REVIEW: this assertion done here because fails in some cases for the epoch case, below
-                assertThat(calculationResults.size(), is(values.length));
+                assertThat(calculationResults).hasSize(values.length);
 
                 return calculationResults;
             }
@@ -455,11 +453,11 @@ public class InvoiceCalculationServiceTest {
         }
 
         private void compareResults(List<CalculationResult> results, Double... value) {
-            assertThat(results.size(), is(value.length));
+            assertThat(results).hasSize(value.length);
             Arrays.asList(value);
 
             for (int i = 0; i < results.size(); i++) {
-                assertThat(results.get(i).value(), is(BigDecimal.valueOf(value[i]).setScale(2)));
+                assertThat(results.get(i).value()).isEqualTo(BigDecimal.valueOf(value[i]).setScale(2));
             }
 
         }

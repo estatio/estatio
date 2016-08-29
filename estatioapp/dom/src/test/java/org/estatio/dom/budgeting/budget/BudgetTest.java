@@ -20,7 +20,6 @@ package org.estatio.dom.budgeting.budget;
 import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
@@ -31,6 +30,8 @@ import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetTest {
 
@@ -66,7 +67,7 @@ public class BudgetTest {
             String budgetTitle = budget.title();
 
             // then
-            Assertions.assertThat(budgetTitle).isEqualTo(
+            assertThat(budgetTitle).isEqualTo(
                     property.getClass().getSimpleName()
                             + " [" + property.getReference() + "]"
                             + " > " + new LocalDateInterval(startDate, endDate).toString());
@@ -86,7 +87,7 @@ public class BudgetTest {
             charges = budget.getTargetCharges();
 
             // then
-            Assertions.assertThat(charges.size()).isEqualTo(0);
+            assertThat(charges).hasSize(0);
 
         }
 
@@ -102,8 +103,8 @@ public class BudgetTest {
             charges = budget.getTargetCharges();
 
             // then
-            Assertions.assertThat(charges.size()).isEqualTo(2);
-            Assertions.assertThat(charges.get(0).getReference()).isEqualTo("target1");
+            assertThat(charges).hasSize(2);
+            assertThat(charges.get(0).getReference()).isEqualTo("target1");
 
         }
 
@@ -118,10 +119,10 @@ public class BudgetTest {
             charges = budget.getTargetCharges();
 
             // then
-            Assertions.assertThat(budget.getItems().size()).isEqualTo(3);
-            Assertions.assertThat(charges.size()).isEqualTo(2);
-            Assertions.assertThat(charges.get(0).getReference()).isEqualTo("target0");
-            Assertions.assertThat(charges.get(1).getReference()).isEqualTo("target2");
+            assertThat(budget.getItems()).hasSize(3);
+            assertThat(charges).hasSize(2);
+            assertThat(charges.get(0).getReference()).isEqualTo("target0");
+            assertThat(charges.get(1).getReference()).isEqualTo("target2");
 
         }
 

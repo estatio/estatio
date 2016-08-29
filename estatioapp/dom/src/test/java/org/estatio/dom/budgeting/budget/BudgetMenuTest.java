@@ -3,7 +3,6 @@ package org.estatio.dom.budgeting.budget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -14,6 +13,8 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.asset.Property;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /*
  *
@@ -74,8 +75,8 @@ public class BudgetMenuTest {
 
             // when
             final List<Budget> budgets = budgetMenu.choices1FindBudget(property, null);
-            Assertions.assertThat(budgets).hasSize(1);
-            Assertions.assertThat(budgets.get(0)).isEqualTo(budget);
+            assertThat(budgets).hasSize(1);
+            assertThat(budgets.get(0)).isEqualTo(budget);
         }
 
     }

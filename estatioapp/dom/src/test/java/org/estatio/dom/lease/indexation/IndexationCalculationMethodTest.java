@@ -25,8 +25,7 @@ import org.junit.Test;
 
 import org.estatio.dom.lease.LeaseTermForIndexable;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndexationCalculationMethodTest {
 
@@ -78,8 +77,8 @@ public class IndexationCalculationMethodTest {
             final IndexationResult indexationResult = method.calc(indexable);
             indexationResult.apply(indexable);
 
-            assertThat(indexable.getIndexationPercentage(), is(expectedIndexationPercentage));
-            assertThat(indexable.getIndexedValue(), is(expectedIndexedValue));
+            assertThat(indexable.getIndexationPercentage()).isEqualTo(expectedIndexationPercentage);
+            assertThat(indexable.getIndexedValue()).isEqualTo(expectedIndexedValue);
         }
 
 

@@ -20,7 +20,6 @@ package org.estatio.dom.budgeting.budgetitem;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -30,7 +29,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.FinderInteraction;
@@ -40,9 +38,7 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.estatio.dom.charge.Charge;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetItemRepositoryTest {
 
@@ -88,11 +84,11 @@ public class BudgetItemRepositoryTest {
             Budget budget = new BudgetForTesting();
             budgetItemRepository.findByBudget(budget);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudget"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItem.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudget");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -106,12 +102,12 @@ public class BudgetItemRepositoryTest {
             Charge charge = new Charge();
             budgetItemRepository.findByBudgetAndCharge(budget, charge);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetAndCharge"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget"), is((Object) budget));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItem.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetAndCharge");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
     }
@@ -126,13 +122,13 @@ public class BudgetItemRepositoryTest {
             LocalDate startDate = new LocalDate();
             budgetItemRepository.findByPropertyAndChargeAndStartDate(property, charge, startDate);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItem.class));
-            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndChargeAndStartDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItem.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByPropertyAndChargeAndStartDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property")).isEqualTo((Object) property);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) startDate);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
 
     }
@@ -149,10 +145,11 @@ public class BudgetItemRepositoryTest {
             BigDecimal negativeValue = BigDecimal.valueOf(-0.01);
             BigDecimal zeroValue = BigDecimal.ZERO;
             BigDecimal positiveValue = BigDecimal.valueOf(0.01);
+
             //then
-            assertThat(budgetItemRepository.validateNewBudgetItem(budget, negativeValue, charge), is("Value can't be negative"));
-            assertThat(budgetItemRepository.validateNewBudgetItem(budget, zeroValue, charge), is(nullValue()));
-            assertThat(budgetItemRepository.validateNewBudgetItem(budget, positiveValue, charge), is(nullValue()));
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget, negativeValue, charge)).isEqualTo("Value can't be negative");
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget, zeroValue, charge)).isNull();
+            assertThat(budgetItemRepository.validateNewBudgetItem(budget, positiveValue, charge)).isNull();
 
         }
 
@@ -201,9 +198,9 @@ public class BudgetItemRepositoryTest {
             BudgetItem newBudgetItem = budgetItemRepository1.findOrCreateBudgetItem(budget, charge, budgetedValue);
 
             // then
-            Assertions.assertThat(newBudgetItem.getBudget()).isEqualTo(budget);
-            Assertions.assertThat(newBudgetItem.getCharge()).isEqualTo(charge);
-            Assertions.assertThat(newBudgetItem.getBudgetedValue()).isEqualTo(budgetedValue);
+            assertThat(newBudgetItem.getBudget()).isEqualTo(budget);
+            assertThat(newBudgetItem.getCharge()).isEqualTo(charge);
+            assertThat(newBudgetItem.getBudgetedValue()).isEqualTo(budgetedValue);
 
         }
 
@@ -253,10 +250,10 @@ public class BudgetItemRepositoryTest {
             BudgetItem newBudgetItem = budgetItemRepository1.updateOrCreateBudgetItem(budget, charge, budgetedValue, auditedValue);
 
             // then
-            Assertions.assertThat(newBudgetItem.getBudget()).isEqualTo(budget);
-            Assertions.assertThat(newBudgetItem.getCharge()).isEqualTo(charge);
-            Assertions.assertThat(newBudgetItem.getBudgetedValue()).isEqualTo(budgetedValue);
-            Assertions.assertThat(newBudgetItem.getAuditedValue()).isEqualTo(auditedValue);
+            assertThat(newBudgetItem.getBudget()).isEqualTo(budget);
+            assertThat(newBudgetItem.getCharge()).isEqualTo(charge);
+            assertThat(newBudgetItem.getBudgetedValue()).isEqualTo(budgetedValue);
+            assertThat(newBudgetItem.getAuditedValue()).isEqualTo(auditedValue);
 
         }
 
@@ -301,8 +298,8 @@ public class BudgetItemRepositoryTest {
             BudgetItem updatedBudgetItem = budgetItemRepository1.updateOrCreateBudgetItem(budget, charge, updatedBudgetedValue, updatedAuditedValue);
 
             // then
-            Assertions.assertThat(updatedBudgetItem.getBudgetedValue()).isEqualTo(updatedBudgetedValue);
-            Assertions.assertThat(updatedBudgetItem.getAuditedValue()).isEqualTo(updatedAuditedValue);
+            assertThat(updatedBudgetItem.getBudgetedValue()).isEqualTo(updatedBudgetedValue);
+            assertThat(updatedBudgetItem.getAuditedValue()).isEqualTo(updatedAuditedValue);
 
         }
 

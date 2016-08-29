@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -50,10 +49,7 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseItemTest {
 
@@ -98,8 +94,8 @@ public class LeaseItemTest {
 
         @Test
         public void test() {
-            assertThat(leaseItem.getValue(), is(BigDecimal.TEN));
-            assertThat(getCurrentValueDateArgument, is(now));
+            assertThat(leaseItem.getValue()).isEqualTo(BigDecimal.TEN);
+            assertThat(getCurrentValueDateArgument).isEqualTo(now);
         }
 
     }
@@ -136,7 +132,7 @@ public class LeaseItemTest {
             expectingRemoveAndFlush(leaseItem);
 
             Object returned = leaseItem.remove();
-            assertThat(returned, is((Object) lease));
+            assertThat(returned).isEqualTo((Object) lease);
         }
 
         @Test
@@ -146,7 +142,7 @@ public class LeaseItemTest {
             leaseTermSuccessfullyRemoved = false;
 
             Object returned = leaseItem.remove();
-            assertThat(returned, is((Object) leaseItem));
+            assertThat(returned).isEqualTo((Object) leaseItem);
         }
 
         @Test
@@ -157,7 +153,7 @@ public class LeaseItemTest {
             expectingRemoveAndFlush(leaseItem);
 
             Object returned = leaseItem.remove();
-            assertThat(returned, is((Object) lease));
+            assertThat(returned).isEqualTo((Object) lease);
         }
 
         private void expectingRemoveAndFlush(final LeaseItem obj) {
@@ -188,8 +184,8 @@ public class LeaseItemTest {
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(lease.toString(), is("Lease{type=Lease, reference=A}"));
-            assertThat(leaseItem.toString(), is("LeaseItem{lease=A, type=null, charge=null, startDate=null, sequence=null}"));
+            assertThat(lease.toString()).isEqualTo("Lease{type=Lease, reference=A}");
+            assertThat(leaseItem.toString()).isEqualTo("LeaseItem{lease=A, type=null, charge=null, startDate=null, sequence=null}");
         }
     }
 
@@ -232,7 +228,7 @@ public class LeaseItemTest {
         @Test
         public void changeDatesDelegate() {
             leaseItem = new LeaseItem();
-            assertThat(leaseItem.getChangeDates(), is(not(nullValue())));
+            assertThat(leaseItem.getChangeDates()).isNotNull();
         }
 
     }
@@ -284,9 +280,9 @@ public class LeaseItemTest {
             List<LeaseItem> choices = leaseItem.choices0NewSourceItem(leaseItem);
 
             // then
-            Assertions.assertThat(leaseItem.getLease().getItems().size()).isEqualTo(3);
-            Assertions.assertThat(choices.size()).isEqualTo(1);
-            Assertions.assertThat(choices.get(0)).isEqualTo(itemNotLinked);
+            assertThat(leaseItem.getLease().getItems()).hasSize(3);
+            assertThat(choices).hasSize(1);
+            assertThat(choices.get(0)).isEqualTo(itemNotLinked);
 
         }
 

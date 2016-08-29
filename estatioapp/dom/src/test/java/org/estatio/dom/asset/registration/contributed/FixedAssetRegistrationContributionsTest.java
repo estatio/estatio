@@ -22,18 +22,19 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FixedAssetRegistrationContributionsTest {
 
@@ -109,7 +110,7 @@ public class FixedAssetRegistrationContributionsTest {
                 }
             });
             final FixedAssetRegistration far = target.newRegistration(subject, registrationType);
-            assertThat(far.getType(), is(registrationType));
+            assertThat(far.getType()).isEqualTo(registrationType);
         }
 
     }

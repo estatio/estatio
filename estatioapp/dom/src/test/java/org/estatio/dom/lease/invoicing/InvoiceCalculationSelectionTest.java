@@ -1,10 +1,10 @@
 package org.estatio.dom.lease.invoicing;
 
 import org.junit.Test;
+
 import org.estatio.dom.lease.LeaseItemType;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceCalculationSelectionTest {
 
@@ -14,14 +14,14 @@ public class InvoiceCalculationSelectionTest {
 
         @Test
         public void selectedItemTypes() {
-            assertThat(invoiceCalculationSelection.selectedTypes().contains(LeaseItemType.RENT), is(true));
+            assertThat(invoiceCalculationSelection.selectedTypes().contains(LeaseItemType.RENT)).isTrue();
         }
     }
 
     public static class Title extends InvoiceCalculationSelectionTest {
         @Test
         public void testTitle() {
-            assertThat(invoiceCalculationSelection.title(), is("All Rent And Service Charge"));
+            assertThat(invoiceCalculationSelection.title()).isEqualTo("All Rent And Service Charge");
         }
 
     }

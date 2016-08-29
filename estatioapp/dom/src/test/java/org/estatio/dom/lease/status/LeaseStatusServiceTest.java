@@ -16,8 +16,7 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseStatus;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseStatusServiceTest {
 
@@ -37,7 +36,6 @@ public class LeaseStatusServiceTest {
                 return new LocalDate(2014, 4, 1);
             }
         };
-
     }
 
     @Test
@@ -81,8 +79,8 @@ public class LeaseStatusServiceTest {
             lease.getItems().add(item);
             seq++;
         }
-        assertThat(lease.getItems().size(), is(items.length));
-        assertThat(service.statusOf(lease), is(expectedStatus));
+        assertThat(lease.getItems()).hasSize(items.length);
+        assertThat(service.statusOf(lease)).isEqualTo(expectedStatus);
     }
 
     LeaseItem testItem(LocalDate startDate, LeaseItemStatus status) {

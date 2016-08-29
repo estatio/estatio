@@ -19,11 +19,11 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TurnoverRentRuleHelperTest {
 
@@ -46,7 +46,7 @@ public class TurnoverRentRuleHelperTest {
         protected void test(String rule, Double in, Double expected) {
             final BigDecimal input = in == null ? null : BigDecimal.valueOf(in);
             final BigDecimal result = new TurnoverRentRuleHelper(rule).calculateRent(input);
-            assertThat(result, is(BigDecimal.valueOf(expected).setScale(2)));
+            assertThat(result).isEqualTo(BigDecimal.valueOf(expected).setScale(2));
         }
 
     }

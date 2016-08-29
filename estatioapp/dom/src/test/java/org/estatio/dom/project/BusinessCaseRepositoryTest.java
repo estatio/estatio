@@ -2,18 +2,19 @@ package org.estatio.dom.project;
 
 import java.util.List;
 
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BusinessCaseRepositoryTest {
 	
@@ -65,11 +66,11 @@ public class BusinessCaseRepositoryTest {
 
         	businessCaseRepository.businessCaseHistory(project);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BusinessCase.class));
-            assertThat(finderInteraction.getQueryName(), is("findByProject"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("project"), is((Object) project));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BusinessCase.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByProject");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("project")).isEqualTo((Object) project);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -87,11 +88,11 @@ public class BusinessCaseRepositoryTest {
 
         	businessCaseRepository.findActiveBusinessCaseOnProject(project);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BusinessCase.class));
-            assertThat(finderInteraction.getQueryName(), is("findActiveBusinessCaseOnProject"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("project"), is((Object) project));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BusinessCase.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findActiveBusinessCaseOnProject");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("project")).isEqualTo((Object) project);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }

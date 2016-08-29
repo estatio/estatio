@@ -24,15 +24,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrandRepositoryTest {
 
@@ -89,12 +87,12 @@ public class BrandRepositoryTest {
         @Test
         public void findUnique() {
             brandRepository.findUnique(name, applicationTenancy);
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
-            assertThat(finderInteraction.getQueryName(), is("findByNameAndAtPath"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is(name));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("atPath"), is(atPath));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Brand.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByNameAndAtPath");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name")).isEqualTo(name);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("atPath")).isEqualTo(atPath);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
     }
 
@@ -102,11 +100,11 @@ public class BrandRepositoryTest {
         @Test
         public void byReferenceWildcard() {
             brandRepository.matchByName("*REF?1*");
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) "(?i).*REF.1.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Brand.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name")).isEqualTo((Object) "(?i).*REF.1.*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 
@@ -127,12 +125,12 @@ public class BrandRepositoryTest {
         @Test
         public void findByNameLowerCaseAndAppTenancy() {
             brandRepository.findByNameLowerCaseAndAppTenancy(name, applicationTenancy);
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
-            assertThat(finderInteraction.getQueryName(), is("findByNameLowerCaseAndAppTenancy"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is(name.toLowerCase()));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("atPath"), is(atPath));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Brand.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByNameLowerCaseAndAppTenancy");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name")).isEqualTo(name.toLowerCase());
+            assertThat(finderInteraction.getArgumentsByParameterName().get("atPath")).isEqualTo(atPath);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
     }
 
@@ -141,11 +139,11 @@ public class BrandRepositoryTest {
         @Test
         public void byReference() {
             brandRepository.autoComplete("REF1");
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object) "(?i).*REF1.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Brand.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("name")).isEqualTo((Object) "(?i).*REF1.*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }

@@ -20,7 +20,6 @@ package org.estatio.dom.budgeting.budgetcalculation;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.FinderInteraction;
@@ -37,8 +35,7 @@ import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItemForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetCalculationRepositoryTest {
 
@@ -86,13 +83,13 @@ public class BudgetCalculationRepositoryTest {
             CalculationType calculationType = CalculationType.BUDGETED;
             budgetCalculationRepository.findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, calculationType);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetCalculation.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetItemAllocationAndKeyItemAndCalculationType"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation"), is((Object) budgetItemAllocation));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("keyItem"), is((Object) keyItem));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType"), is((Object) calculationType));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItemAllocationAndKeyItemAndCalculationType");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("keyItem")).isEqualTo((Object) keyItem);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
 
     }
@@ -106,12 +103,12 @@ public class BudgetCalculationRepositoryTest {
             CalculationType calculationType = CalculationType.BUDGETED;
             budgetCalculationRepository.findByBudgetItemAllocationAndCalculationType(budgetItemAllocation, calculationType);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetCalculation.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetItemAllocationAndCalculationType"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation"), is((Object) budgetItemAllocation));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType"), is((Object) calculationType));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItemAllocationAndCalculationType");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
     }
@@ -125,11 +122,11 @@ public class BudgetCalculationRepositoryTest {
             KeyItem keyItem = new KeyItemForTesting();
             budgetCalculationRepository.findByBudgetItemAllocation(budgetItemAllocation);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetCalculation.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetItemAllocation"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation"), is((Object) budgetItemAllocation));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItemAllocation");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -180,10 +177,10 @@ public class BudgetCalculationRepositoryTest {
             BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateBudgetCalculation(budgetItemAllocation, keyItem, value, sourceValue, null);
 
             //then
-            Assertions.assertThat(newBudgetCalculation.getBudgetItemAllocation()).isEqualTo(budgetItemAllocation);
-            Assertions.assertThat(newBudgetCalculation.getKeyItem()).isEqualTo(keyItem);
-            Assertions.assertThat(newBudgetCalculation.getValue()).isEqualTo(value);
-            Assertions.assertThat(newBudgetCalculation.getSourceValue()).isEqualTo(sourceValue);
+            assertThat(newBudgetCalculation.getBudgetItemAllocation()).isEqualTo(budgetItemAllocation);
+            assertThat(newBudgetCalculation.getKeyItem()).isEqualTo(keyItem);
+            assertThat(newBudgetCalculation.getValue()).isEqualTo(value);
+            assertThat(newBudgetCalculation.getSourceValue()).isEqualTo(sourceValue);
         }
     }
 
@@ -227,12 +224,12 @@ public class BudgetCalculationRepositoryTest {
         public void updateOrCreateBudgetCalculation() {
 
             //given
-            Assertions.assertThat(
+            assertThat(
                     budgetCalculationRepository
                             .findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, null)
                             .getValue())
                     .isEqualTo(value);
-            Assertions.assertThat(
+            assertThat(
                     budgetCalculationRepository
                             .findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, null)
                             .getSourceValue())
@@ -244,10 +241,10 @@ public class BudgetCalculationRepositoryTest {
             BudgetCalculation updatedBudgetCalculation = budgetCalculationRepository.updateOrCreateBudgetCalculation(budgetItemAllocation, keyItem, updatedValue, updatedSourceValue, null);
 
             //then
-            Assertions.assertThat(updatedBudgetCalculation.getBudgetItemAllocation()).isEqualTo(budgetItemAllocation);
-            Assertions.assertThat(updatedBudgetCalculation.getKeyItem()).isEqualTo(keyItem);
-            Assertions.assertThat(updatedBudgetCalculation.getValue()).isEqualTo(updatedValue);
-            Assertions.assertThat(updatedBudgetCalculation.getSourceValue()).isEqualTo(updatedSourceValue);
+            assertThat(updatedBudgetCalculation.getBudgetItemAllocation()).isEqualTo(budgetItemAllocation);
+            assertThat(updatedBudgetCalculation.getKeyItem()).isEqualTo(keyItem);
+            assertThat(updatedBudgetCalculation.getValue()).isEqualTo(updatedValue);
+            assertThat(updatedBudgetCalculation.getSourceValue()).isEqualTo(updatedSourceValue);
         }
 
     }

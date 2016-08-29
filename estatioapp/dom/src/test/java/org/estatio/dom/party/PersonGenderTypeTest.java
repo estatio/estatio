@@ -18,10 +18,9 @@
  */
 package org.estatio.dom.party;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PersonGenderTypeTest {
 
@@ -29,7 +28,7 @@ public class PersonGenderTypeTest {
 
         @Test
         public void test() {
-            assertThat(PersonGenderType.MALE.title(), is("Male"));
+            assertThat(PersonGenderType.MALE.title()).isEqualTo("Male");
         }
 
     }

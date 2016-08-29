@@ -20,7 +20,6 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,6 +28,8 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FinancialAccountTest {
 
@@ -82,11 +83,11 @@ public class FinancialAccountTest {
         public void changeName(){
 
             // given
-            Assertions.assertThat(financialAccount.getName()).isEqualTo(name);
+            assertThat(financialAccount.getName()).isEqualTo(name);
             // when
             financialAccount.changeName("some other name");
             // then
-            Assertions.assertThat(financialAccount.getName()).isEqualTo("some other name");
+            assertThat(financialAccount.getName()).isEqualTo("some other name");
 
 
         }

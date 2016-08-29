@@ -36,9 +36,7 @@ import org.isisaddons.module.settings.dom.SettingType;
 
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class EstatioSettingsServiceTest {
 
@@ -68,32 +66,37 @@ public class EstatioSettingsServiceTest {
     static class ApplicationSettingForTesting extends SettingAbstract implements ApplicationSetting {
         private String valueRaw;
         private SettingType type;
+
         public ApplicationSettingForTesting(String valueRaw, SettingType type) {
             this.valueRaw = valueRaw;
             this.type = type;
         }
+
         public String getKey() {
             return null;
         }
+
         public String getDescription() {
             return null;
         }
+
         public SettingType getType() {
             return type;
         }
+
         public String getValueRaw() {
             return valueRaw;
         }
     }
-    
+
     @Before
     public void setUp() throws Exception {
         estatioSettingsService.applicationSettingsService = mockApplicationSettingsService;
     }
-    
+
     @Test
     public void happyCase() {
-        final LocalDate date = new LocalDate(2013,4,1);
+        final LocalDate date = new LocalDate(2013, 4, 1);
         context.checking(new Expectations() {
             {
                 oneOf(mockApplicationSettingsService).find(ApplicationSettingKey.epochDate);
@@ -101,7 +104,7 @@ public class EstatioSettingsServiceTest {
             }
         });
         final LocalDate fetchEpochDate = estatioSettingsService.fetchEpochDate();
-        assertThat(fetchEpochDate, is(date));
+        assertThat(fetchEpochDate).isEqualTo(date);
     }
 
     @Test
@@ -113,7 +116,7 @@ public class EstatioSettingsServiceTest {
             }
         });
         final LocalDate fetchEpochDate = estatioSettingsService.fetchEpochDate();
-        assertThat(fetchEpochDate, is(nullValue()));
+        assertThat(fetchEpochDate).isNull();
     }
 
 }

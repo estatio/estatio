@@ -26,12 +26,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 
-import org.estatio.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaxRateRepositoryTest {
 
@@ -77,16 +75,14 @@ public class TaxRateRepositoryTest {
 
             taxRateRepository.findTaxRateByTaxAndDate(tax, date);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(TaxRate.class));
-            assertThat(finderInteraction.getQueryName(), is("findByTaxAndDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("tax"), is((Object) tax));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object) date));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(TaxRate.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByTaxAndDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("tax")).isEqualTo((Object) tax);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("date")).isEqualTo((Object) date);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
 
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
         }
     }
-
-
 
 }

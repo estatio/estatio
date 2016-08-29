@@ -18,10 +18,21 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.List;
+
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.WithIntervalMutable;
@@ -31,17 +42,8 @@ import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OccupancyTest {
 
@@ -93,7 +95,7 @@ public class OccupancyTest {
         @Test
         public void changeDatesDelegate() {
             occupancy = new Occupancy();
-            assertThat(occupancy.getChangeDates(), is(not(nullValue())));
+            assertThat(occupancy.getChangeDates()).isNotNull();
         }
 
     }

@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.contracttests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,6 +35,8 @@ import org.reflections.Reflections;
 
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -60,7 +59,7 @@ public class DomainServicesInjectionTestAll_inject{
             f.setAccessible(true);
             final Object object = f.get(edo);
             System.out.println("invoking " + type.getName() + "#" + m.getName());
-            assertThat(object, is((Object)domainService));
+            assertThat(object).isEqualTo((Object)domainService);
         }
     }
     

@@ -24,13 +24,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementRoleTypeRepositoryTest {
 
@@ -74,11 +72,11 @@ public class AgreementRoleTypeRepositoryTest {
             agreementRoleTypeRepository.findApplicableTo(agreementType);
 
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRoleType.class));
-            assertThat(finderInteraction.getQueryName(), is("findByAgreementType"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType"), is((Object) agreementType));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementRoleType.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAgreementType");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType")).isEqualTo((Object) agreementType);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 
@@ -89,11 +87,11 @@ public class AgreementRoleTypeRepositoryTest {
 
             agreementRoleTypeRepository.findByTitle("someTitle");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRoleType.class));
-            assertThat(finderInteraction.getQueryName(), is("findByTitle"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("title"), is((Object) "someTitle"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementRoleType.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByTitle");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("title")).isEqualTo((Object) "someTitle");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }

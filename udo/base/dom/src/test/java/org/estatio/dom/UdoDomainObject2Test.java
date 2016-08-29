@@ -11,9 +11,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UdoDomainObject2Test {
 
@@ -39,7 +37,9 @@ public class UdoDomainObject2Test {
         public SomeDomainObject(final String keyProperties) {
             super(keyProperties);
         }
-    };
+    }
+
+    ;
 
     @Mock
     ApplicationTenancyRepository mockApplicationTenancies;
@@ -71,7 +71,7 @@ public class UdoDomainObject2Test {
             final ApplicationTenancy applicationTenancy = domainObject.getApplicationTenancy();
 
             // and then
-            assertThat(applicationTenancy, is(result));
+            assertThat(applicationTenancy).isEqualTo(result);
         }
 
         @Test
@@ -90,7 +90,7 @@ public class UdoDomainObject2Test {
             final ApplicationTenancy applicationTenancy = domainObject.getApplicationTenancy();
 
             // and then
-            assertThat(applicationTenancy, is(nullValue()));
+            assertThat(applicationTenancy).isNull();
         }
 
     }

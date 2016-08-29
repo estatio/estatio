@@ -19,10 +19,13 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 

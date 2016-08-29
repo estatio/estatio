@@ -39,8 +39,7 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseTermForTurnoverRentTest {
 
@@ -129,7 +128,7 @@ public class LeaseTermForTurnoverRentTest {
 
             term.doAlign();
 
-            assertThat(term.getEffectiveValue(), is(parseBigDecimal(expectedValueStr)));
+            assertThat(term.getEffectiveValue()).isEqualTo(parseBigDecimal(expectedValueStr));
         }
 
         private BigDecimal parseBigDecimal(final String input) {
@@ -151,7 +150,7 @@ public class LeaseTermForTurnoverRentTest {
             //when
             term.doInitialize();
             //then
-            assertThat(term.getEndDate(), is(new LocalDate(2014,12,31)));
+            assertThat(term.getEndDate()).isEqualTo(new LocalDate(2014,12,31));
         }
 
         @Test
@@ -164,7 +163,7 @@ public class LeaseTermForTurnoverRentTest {
             //when
             term.doInitialize();
             //then
-            assertThat(term.getEndDate(), is(term.getStartDate().plusDays(1)));
+            assertThat(term.getEndDate()).isEqualTo(term.getStartDate().plusDays(1));
         }
 
     }

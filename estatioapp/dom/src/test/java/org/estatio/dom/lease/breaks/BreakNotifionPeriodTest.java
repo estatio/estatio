@@ -19,8 +19,7 @@ package org.estatio.dom.lease.breaks;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BreakNotifionPeriodTest {
     public static class AddTo extends BreakNotifionPeriodTest {
@@ -38,7 +37,7 @@ public class BreakNotifionPeriodTest {
 
         private static void assertAddTo(
                 final BreakNotificationPeriod bnp, final LocalDate input, final LocalDate expected) {
-            assertThat(bnp.addTo(input), is(expected));
+            assertThat(bnp.addTo(input)).isEqualTo(expected);
         }
 
     }
@@ -58,7 +57,7 @@ public class BreakNotifionPeriodTest {
 
         private static void assertSubtractFrom(
                 final BreakNotificationPeriod bnp, final LocalDate input, final LocalDate expected) {
-            assertThat(bnp.subtractFrom(input), is(expected));
+            assertThat(bnp.subtractFrom(input)).isEqualTo(expected);
         }
 
     }

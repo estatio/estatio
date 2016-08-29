@@ -136,7 +136,7 @@ public class PropertyTest {
             fixedAssetOwnership.setFixedAsset(property);
 
             property.getOwners().add(fixedAssetOwnership);
-            assertThat(property.getOwners().size()).isEqualTo(1);
+            assertThat(property.getOwners()).hasSize(1);
         }
 
         @Test

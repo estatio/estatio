@@ -30,17 +30,19 @@ import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LinkRepositoryTest {
 
-    static class Animal {}
+    static class Animal {
+    }
 
-    static class Mammal extends Animal {}
+    static class Mammal extends Animal {
+    }
 
-    static class Lion extends Mammal {}
-    
+    static class Lion extends Mammal {
+    }
+
     public static class FindAllForClassHierarchy extends LinkRepositoryTest {
 
         @Mock
@@ -82,9 +84,9 @@ public class LinkRepositoryTest {
 
         @Test
         public void size() throws Exception {
-            assertThat(linkRepository.findAllForClassHierarchy(Animal.class).size(), is(2));
-            assertThat(linkRepository.findAllForClassHierarchy(Mammal.class).size(), is(2));
-            assertThat(linkRepository.findAllForClassHierarchy(Lion.class).size(), is(5));
+            assertThat(linkRepository.findAllForClassHierarchy(Animal.class)).hasSize(2);
+            assertThat(linkRepository.findAllForClassHierarchy(Mammal.class)).hasSize(2);
+            assertThat(linkRepository.findAllForClassHierarchy(Lion.class)).hasSize(5);
         }
     }
 }

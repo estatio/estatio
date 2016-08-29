@@ -25,9 +25,8 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.geography.Country;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class IBANHelperTest {
 
@@ -47,8 +46,8 @@ public class IBANHelperTest {
             BankAccount ba = new BankAccount();
             ba.setIban("NL31ABNA0580744434");
             IBANHelper.verifyAndUpdate(ba);
-            assertThat(ba.getNationalBankCode(), is("ABNA"));
-            assertThat(ba.getAccountNumber(), is("0580744434"));
+            assertThat(ba.getNationalBankCode()).isEqualTo("ABNA");
+            assertThat(ba.getAccountNumber()).isEqualTo("0580744434");
         }
 
         @Test
@@ -56,9 +55,9 @@ public class IBANHelperTest {
             BankAccount ba = new BankAccount();
             ba.setIban("IT69N0347501601000051986922");
             IBANHelper.verifyAndUpdate(ba);
-            assertThat(ba.getNationalBankCode(), is("03475"));
-            assertThat(ba.getBranchCode(), is("01601"));
-            assertThat(ba.getAccountNumber(), is("000051986922"));
+            assertThat(ba.getNationalBankCode()).isEqualTo("03475");
+            assertThat(ba.getBranchCode()).isEqualTo("01601");
+            assertThat(ba.getAccountNumber()).isEqualTo("000051986922");
         }
 
         @Test
@@ -89,7 +88,7 @@ public class IBANHelperTest {
             ba.setAccountNumber("000051986922");
             ba.setNationalCheckCode("N");
             IBANHelper.verifyAndUpdate(ba);
-            assertThat(ba.getIban(), is("IT69N0347501601000051986922"));
+            assertThat(ba.getIban()).isEqualTo("IT69N0347501601000051986922");
         }
 
 

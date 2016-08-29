@@ -19,20 +19,20 @@
 package org.estatio.dom.tax;
 
 import java.util.List;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaxRateTest {
 
@@ -72,7 +72,7 @@ public class TaxRateTest {
         @Test
         public void changeDatesDelegate() {
             taxRate = new TaxRate();
-            assertThat(taxRate.getChangeDates(), is(not(nullValue())));
+            assertThat(taxRate.getChangeDates()).isNotNull();
         }
 
 

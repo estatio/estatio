@@ -32,15 +32,13 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.tax.Tax;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ChargesTest {
+public class ChargeRepositoryTest {
 
     FinderInteraction finderInteraction;
 
@@ -76,38 +74,35 @@ public class ChargesTest {
         };
     }
 
-
-    public static class FindByAtPathAndReference extends ChargesTest {
-
+    public static class FindByAtPathAndReference extends ChargeRepositoryTest {
 
         @Test
         public void happyCase() {
 
             chargeRepository.findByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Charge.class));
-            assertThat(finderInteraction.getQueryName(), is("findByReference"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "*REF?1*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Charge.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object) "*REF?1*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
 
-
-    public static class AllChargeGroups extends ChargesTest {
+    public static class AllChargeGroups extends ChargeRepositoryTest {
 
         @Test
         public void happyCase() {
 
             chargeRepository.allCharges();
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
 
     }
 
-    public static class NewCharge extends ChargesTest {
+    public static class NewCharge extends ChargeRepositoryTest {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -151,11 +146,11 @@ public class ChargesTest {
             });
 
             final Charge newCharge = chargeRepository.newCharge(newApplicationTenancy("/it"), "CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
-            assertThat(newCharge.getReference(), is("CG-REF"));
-            assertThat(newCharge.getName(), is("CG-Name"));
-            assertThat(newCharge.getDescription(), is("CG-Description"));
-            assertThat(newCharge.getTax(), is(tax));
-            assertThat(newCharge.getGroup(), is(chargeGroup));
+            assertThat(newCharge.getReference()).isEqualTo("CG-REF");
+            assertThat(newCharge.getName()).isEqualTo("CG-Name");
+            assertThat(newCharge.getDescription()).isEqualTo("CG-Description");
+            assertThat(newCharge.getTax()).isEqualTo(tax);
+            assertThat(newCharge.getGroup()).isEqualTo(chargeGroup);
         }
 
         @Test
@@ -163,7 +158,7 @@ public class ChargesTest {
             existingCharge = new Charge();
 
             final Charge newCharge = chargeRepository.newCharge(newApplicationTenancy("/it"), "CG-REF", "Some other description", "Some other code", null, null);
-            assertThat(newCharge, is(existingCharge));
+            assertThat(newCharge).isEqualTo(existingCharge);
         }
 
         private ApplicationTenancy newApplicationTenancy(final String path) {

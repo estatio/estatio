@@ -1,12 +1,11 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseTermForFixedTest {
 
@@ -30,25 +29,25 @@ public class LeaseTermForFixedTest {
         @Test
         public void whenDiscountAndNegative() {
             leaseTerm = newLeaseTerm(LeaseItemType.DISCOUNT);
-            assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(-1)), is(nullValue()));
+            assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(-1))).isNull();
         }
 
         @Test
         public void whenDiscountAndZero() {
             leaseTerm = newLeaseTerm(LeaseItemType.DISCOUNT);
-            assertThat(leaseTerm.validateChangeValue(BigDecimal.ZERO), is(nullValue()));
+            assertThat(leaseTerm.validateChangeValue(BigDecimal.ZERO)).isNull();
         }
 
         @Test
         public void whenNotDiscountAndPositive() {
             leaseTerm = newLeaseTerm(LeaseItemType.ENTRY_FEE);
-            assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(+1)), is(nullValue()));
+            assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(+1))).isNull();
         }
 
         @Test
         public void whenDiscountAndPositive() {
             leaseTerm = newLeaseTerm(LeaseItemType.DISCOUNT);
-            assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(+1)), is("Discount should be negative or zero"));
+            assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(+1))).isEqualTo("Discount should be negative or zero");
         }
 
     }

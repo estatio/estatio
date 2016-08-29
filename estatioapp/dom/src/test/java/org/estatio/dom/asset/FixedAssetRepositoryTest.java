@@ -24,13 +24,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FixedAssetRepositoryTest {
 
@@ -69,11 +67,11 @@ public class FixedAssetRepositoryTest {
 
             fixedAssetRepository.matchAssetsByReferenceOrName("some?search*Phrase");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAsset.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("regex"), is((Object) "(?i)some.search.*Phrase"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(FixedAsset.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("regex")).isEqualTo((Object) "(?i)some.search.*Phrase");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -85,11 +83,11 @@ public class FixedAssetRepositoryTest {
 
             fixedAssetRepository.autoComplete("some?RegEx*Phrase");
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAsset.class));
-            assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("regex"), is((Object) "(?i).*some.RegEx.*Phrase.*"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(FixedAsset.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("regex")).isEqualTo((Object) "(?i).*some.RegEx.*Phrase.*");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }

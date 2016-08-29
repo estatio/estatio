@@ -74,7 +74,7 @@ public class InvoiceSummaryForPropertyDueDateStatusTest {
         //                    never(mockPropertyMenu);
         //                }
         //            });
-        //            assertThat(summary.getProperty(), is(property));
+        //            assertThat(summary.getProperty()).isEqualTo(property);
         //        }
         //
         //        @Test
@@ -86,7 +86,7 @@ public class InvoiceSummaryForPropertyDueDateStatusTest {
         //                }
         //            });
         //
-        //            assertThat(summary.getProperty(), is(property));
+        //            assertThat(summary.getProperty()).isEqualTo(property);
         //        }
     }
 }

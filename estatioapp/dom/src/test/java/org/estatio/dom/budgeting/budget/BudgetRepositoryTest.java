@@ -29,15 +29,13 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jodo on 30/04/15.
@@ -86,11 +84,11 @@ public class BudgetRepositoryTest {
             Property property = new PropertyForTesting();
             budgetRepository.findByProperty(property);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
-            assertThat(finderInteraction.getQueryName(), is("findByProperty"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Budget.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByProperty");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property")).isEqualTo((Object) property);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -104,12 +102,12 @@ public class BudgetRepositoryTest {
             LocalDate startDate = new LocalDate();
             budgetRepository.findByPropertyAndStartDate(property, startDate);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Budget.class));
-            assertThat(finderInteraction.getQueryName(), is("findByPropertyAndStartDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object) property));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(Budget.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByPropertyAndStartDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("property")).isEqualTo((Object) property);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) startDate);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
     }
@@ -158,17 +156,17 @@ public class BudgetRepositoryTest {
             Budget newBudget = budgetRepository.newBudget(property, startDate, endDate);
 
             //then
-            assertThat(newBudget.getProperty(), is(property));
-            assertThat(newBudget.getStartDate(), is(startDate));
-            assertThat(newBudget.getEndDate(), is(endDate));
+            assertThat(newBudget.getProperty()).isEqualTo(property);
+            assertThat(newBudget.getStartDate()).isEqualTo(startDate);
+            assertThat(newBudget.getEndDate()).isEqualTo(endDate);
 
         }
 
         @Test
         public void overlappingDates() {
 
-            assertThat(budgetRepository.validateNewBudget(null, new LocalDate(2011, 1, 1), new LocalDate(2011, 12, 31)),
-                    is("A budget cannot overlap an existing budget."));
+            assertThat(budgetRepository.validateNewBudget(null, new LocalDate(2011, 1, 1), new LocalDate(2011, 12, 31))).isEqualTo("A budget cannot overlap an existing budget.");
+
         }
 
         @Test
@@ -183,7 +181,7 @@ public class BudgetRepositoryTest {
             String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
 
             //then
-            assertThat(validateBudget, is("End date can not be before start date"));
+            assertThat(validateBudget).isEqualTo("End date can not be before start date");
 
         }
 
@@ -199,7 +197,7 @@ public class BudgetRepositoryTest {
             String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
 
             //then
-            assertThat(validateBudget, is("Start date is mandatory"));
+            assertThat(validateBudget).isEqualTo("Start date is mandatory");
 
         }
 

@@ -37,10 +37,9 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class AgreementRoleTest  {
+public class AgreementRoleTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -96,23 +95,23 @@ public class AgreementRoleTest  {
                             newAgreementRole(agreement1, null, null, null),
                             newAgreementRole(agreement2, null, null, null)
                     )
-                    ,listOf(
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), null, null),
-                            newAgreementRole(agreement1, new LocalDate(2013,3,1), null, null),
-                            newAgreementRole(agreement1, new LocalDate(2013,3,1), null, null),
+                    , listOf(
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), null, null),
+                            newAgreementRole(agreement1, new LocalDate(2013, 3, 1), null, null),
+                            newAgreementRole(agreement1, new LocalDate(2013, 3, 1), null, null),
                             newAgreementRole(agreement1, null, null, null)
                     )
-                    ,listOf(
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), null, null),
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, null),
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, null),
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type2, null)
+                    , listOf(
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), null, null),
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type1, null),
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type1, null),
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type2, null)
                     )
-                    ,listOf(
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, null),
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, party1),
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, party1),
-                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, party2)
+                    , listOf(
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type1, null),
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type1, party1),
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type1, party1),
+                            newAgreementRole(agreement1, new LocalDate(2013, 4, 1), type1, party2)
                     )
             );
         }
@@ -187,7 +186,7 @@ public class AgreementRoleTest  {
         private void assertIsCurrent(final LocalDate start, final LocalDate end, final boolean expect) {
             agreementRole.setStartDate(start);
             agreementRole.setEndDate(end);
-            assertThat(agreementRole.isCurrent(), is(expect));
+            assertThat(agreementRole.isCurrent()).isEqualTo(expect);
         }
 
     }

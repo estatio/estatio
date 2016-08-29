@@ -20,8 +20,10 @@ package org.estatio.dom.contracttests;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;
+
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;

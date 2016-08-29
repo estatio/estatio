@@ -27,9 +27,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 public class NumeratorTest {
 
@@ -60,7 +59,7 @@ public class NumeratorTest {
             numerator.setObjectIdentifier("123");
             numerator.setLastIncrement(BigInteger.ONE);
 
-            assertThat(numerator.isScoped(), is(true));
+            assertThat(numerator.isScoped()).isTrue();
 
             assertEquals("XXX-00001", numerator.title());
             assertEquals("XXX-00001", numerator.format(BigInteger.ONE));
@@ -69,7 +68,7 @@ public class NumeratorTest {
         @Test
         public void whenGlobal() {
             numerator.setName("Bananas");
-            assertThat(numerator.isScoped(), is(false));
+            assertThat(numerator.isScoped()).isFalse();
 
             assertEquals("Bananas", numerator.title());
         }

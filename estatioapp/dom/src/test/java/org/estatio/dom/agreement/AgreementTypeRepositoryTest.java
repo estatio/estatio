@@ -24,13 +24,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementTypeRepositoryTest {
 
@@ -71,11 +69,11 @@ public class AgreementTypeRepositoryTest {
             agreementTypeRepository.find("Some.exact*title");
 
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementType.class));
-            assertThat(finderInteraction.getQueryName(), is("findByTitle"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("title"), is((Object) "Some.exact*title"));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(AgreementType.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByTitle");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("title")).isEqualTo((Object) "Some.exact*title");
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
     }
 }

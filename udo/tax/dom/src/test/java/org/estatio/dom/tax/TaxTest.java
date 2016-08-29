@@ -56,7 +56,6 @@ public class TaxTest {
         @Mock
         private TaxRateRepository mockTaxRateRepository;
 
-
         @Before
         public void setup() {
 
@@ -129,7 +128,6 @@ public class TaxTest {
 
         }
 
-
         @Ignore // TODO: reinstate or delete
         @Test
         public void testTaxPercentageForDate() {
@@ -152,13 +150,14 @@ public class TaxTest {
             Tax tax = new Tax() {
                 @Override public TaxRate taxRateFor(final LocalDate date) {
                     return rate;
-                };
+                }
+
+                ;
             };
             //when, then
-            Assertions.assertThat(tax.grossFromNet(new BigDecimal("100.00"), new LocalDate(2013,1,1))).isEqualTo(new BigDecimal("121.00"));
+            Assertions.assertThat(tax.grossFromNet(new BigDecimal("100.00"), new LocalDate(2013, 1, 1))).isEqualTo(new BigDecimal("121.00"));
 
         }
-
 
     }
 }

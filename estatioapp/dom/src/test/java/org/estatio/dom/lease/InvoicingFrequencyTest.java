@@ -1,14 +1,14 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import java.util.List;
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoicingFrequencyTest {
 
@@ -31,7 +31,7 @@ public class InvoicingFrequencyTest {
     @Test
     public void testIntervalsInRange() {
         List<InvoicingInterval> intervalsInRange = InvoicingFrequency.QUARTERLY_IN_ADVANCE.intervalsInRange(new LocalDate(2012, 1, 1), new LocalDate(2014, 4, 1));
-        assertThat(intervalsInRange.size(), is(9));
+        assertThat(intervalsInRange).hasSize(9);
     }
 
     @Test
@@ -67,7 +67,6 @@ public class InvoicingFrequencyTest {
         dueDateRangeTester(InvoicingFrequency.FIXED_IN_ADVANCE, "2012-01-01/2014-04-01", "2011-01-31/2011-12-31", null, 0);
     }
 
-
     private void dueDateRangeTester(
             final InvoicingFrequency frequency,
             final String intervalStr,
@@ -76,7 +75,7 @@ public class InvoicingFrequencyTest {
                 frequency.intervalsInDueDateRange(
                         LocalDateInterval.parseString(intervalStr),
                         LocalDateInterval.parseString(intervalStr));
-        assertThat(intervalsInDueDateRange.size(), is(result));
+        assertThat(intervalsInDueDateRange).hasSize(result);
     }
 
     private void dueDateRangeTester(
@@ -90,16 +89,15 @@ public class InvoicingFrequencyTest {
                         LocalDateInterval.parseString(periodIntervalStr),
                         LocalDateInterval.parseString(sourceIntervalStr));
         String result = intervalsInDueDateRange.size() == 0 ? null : intervalsInDueDateRange.get(0).toString();
-        assertThat(intervalsInDueDateRange.size(), is(expectedSize));
-        assertThat(result, is(expectedIntervalStr));
+        assertThat(intervalsInDueDateRange).hasSize(expectedSize);
+        assertThat(result).isEqualTo(expectedIntervalStr);
     }
 
     private void testRange(
             final InvoicingFrequency frequency,
             final String dateStr,
             final String expectedStr) {
-        assertThat(frequency.intervalContaining(new LocalDate(dateStr)).asLocalDateInterval(),
-                is(LocalDateInterval.parseString(expectedStr)));
+        assertThat(frequency.intervalContaining(new LocalDate(dateStr)).asLocalDateInterval()).isEqualTo(LocalDateInterval.parseString(expectedStr));
     }
 
 }

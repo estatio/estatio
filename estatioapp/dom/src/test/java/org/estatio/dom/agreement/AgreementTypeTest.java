@@ -18,8 +18,9 @@
  */
 package org.estatio.dom.agreement;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.junit.Test;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 

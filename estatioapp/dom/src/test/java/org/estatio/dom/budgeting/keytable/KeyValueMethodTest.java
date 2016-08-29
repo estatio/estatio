@@ -49,7 +49,7 @@ public class KeyValueMethodTest {
 
         // then
         assertThat(method.keySum(keyTable)).isEqualTo(BigDecimal.valueOf(999.999).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(method.isValid(keyTable)).isEqualTo(false);
+        assertThat(method.isValid(keyTable)).isFalse();
 
 
     }
@@ -74,7 +74,7 @@ public class KeyValueMethodTest {
 
         // then
         assertThat(method.keySum(keyTable)).isEqualTo(new BigDecimal(1000).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(method.isValid(keyTable)).isEqualTo(true);
+        assertThat(method.isValid(keyTable)).isTrue();
 
     }
 
@@ -98,7 +98,7 @@ public class KeyValueMethodTest {
 
         // then
         assertThat(method.keySum(keyTable)).isEqualTo(new BigDecimal(1000).setScale(3, BigDecimal.ROUND_HALF_UP));
-        assertThat(method.isValid(keyTable)).isEqualTo(true);
+        assertThat(method.isValid(keyTable)).isTrue();
 
     }
 

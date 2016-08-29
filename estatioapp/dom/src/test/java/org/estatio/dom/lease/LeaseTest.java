@@ -25,7 +25,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -168,7 +167,7 @@ public class LeaseTest {
         public void getEffectiveInterval() {
             Assert.assertNull(lease.getEffectiveInterval().endDateExcluding());
             lease.setTenancyEndDate(new LocalDate(2012, 6, 30));
-            Assert.assertThat(lease.getEffectiveInterval().endDateExcluding(), Is.is(new LocalDate(2012, 7, 1)));
+            assertThat(lease.getEffectiveInterval().endDateExcluding()).isEqualTo(new LocalDate(2012, 7, 1));
         }
 
     }
@@ -215,7 +214,7 @@ public class LeaseTest {
             Lease lease = new Lease();
 
             // when
-            assertThat(lease.getProperty()).isEqualTo(null);
+            assertThat(lease.getProperty()).isNull();
 
             // then
             assertThat(lease.disableNewItem()).isEqualTo("Please set occupancy first");

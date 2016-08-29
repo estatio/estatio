@@ -23,7 +23,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.hamcrest.Description;
-import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.api.Action;
 import org.jmock.api.Invocation;
@@ -52,12 +51,8 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class LeaseTermTest {
 
@@ -151,8 +146,8 @@ public class LeaseTermTest {
             anotherTerm.setLeaseItem(item);
 
             LeaseTermForTesting next = (LeaseTermForTesting) term.createNext(new LocalDate(2013, 1, 1), null);
-            Assert.assertThat(this.term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
-            Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
+            assertThat(this.term.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
+            assertThat(next.getStartDate()).isEqualTo(new LocalDate(2013, 1, 1));
             Assert.assertNull(next.getEndDate());
         }
 
@@ -181,7 +176,7 @@ public class LeaseTermTest {
             term.setNext(nextTerm);
             nextTerm.modifyStartDate(new LocalDate(2013, 1, 1));
             // term.update();
-            assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
+            assertThat(term.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
         }
     }
 
@@ -220,17 +215,17 @@ public class LeaseTermTest {
         @Test
         public void testEffectiveInterval() throws Exception {
             term.align();
-            assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2013, 6, 30)));
+            assertThat(term.getEffectiveInterval().endDate()).isEqualTo(new LocalDate(2013, 6, 30));
             lease.setTenancyEndDate(new LocalDate(2012, 3, 31));
-            assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 3, 31)));
+            assertThat(term.getEffectiveInterval().endDate()).isEqualTo(new LocalDate(2012, 3, 31));
         }
 
         @Test
         public void testEI() throws Exception {
-            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString(), is("2011-02-01/2012-01-01"));
-            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString(), is("2012-01-01/2012-07-01"));
-            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", null).toString(), is("2011-02-01/----------"));
-            assertNull(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2013-12-31", "2011-02-01", null, "2014-01-01", null));
+            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString()).isEqualTo("2011-02-01/2012-01-01");
+            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString()).isEqualTo("2012-01-01/2012-07-01");
+            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", null).toString()).isEqualTo("2011-02-01/----------");
+            assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2013-12-31", "2011-02-01", null, "2014-01-01", null)).isNull();
         }
 
         // //////////////////////////////////////
@@ -287,7 +282,7 @@ public class LeaseTermTest {
 
         @Test
         public void nextStartDate() throws Exception {
-            assertThat(term.nextStartDate(), is(new LocalDate(2013, 1, 1)));
+            assertThat(term.nextStartDate()).isEqualTo(new LocalDate(2013, 1, 1));
         }
     }
 
@@ -352,7 +347,7 @@ public class LeaseTermTest {
                     return null;
                 }
             };
-            assertThat(leaseTerm.getChangeDates(), is(not(nullValue())));
+            assertThat(leaseTerm.getChangeDates()).isNotNull();
         }
 
     }
@@ -416,28 +411,28 @@ public class LeaseTermTest {
 
         @Test
         public void happy() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014, 7, 1), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 7, 1), null)).isNull();
         }
 
         @Test
         public void canStartOnStartDateAsThis() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014, 6, 1), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 6, 1), null)).isNull();
         }
 
         @Test
         public void canEndOnEndDateAsThis() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014, 8, 31), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 8, 31), null)).isNull();
         }
 
         @Test
         public void tooEarly() throws Exception {
-            assertThat(term.validateCreateNext(new LocalDate(2014, 5, 31), null), is("Start date must be on or after 2014-06-01"));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 5, 31), null)).isEqualTo("Start date must be on or after 2014-06-01");
         }
 
         @Test
         public void canStartAfterThisEnds() throws Exception {
             // because the action itself will auto-align
-            assertThat(term.validateCreateNext(new LocalDate(2014, 9, 1), null), is(nullValue()));
+            assertThat(term.validateCreateNext(new LocalDate(2014, 9, 1), null)).isNull();
         }
 
     }
@@ -472,11 +467,11 @@ public class LeaseTermTest {
         @Test
         public void validate() throws Exception {
             // Before start date prev
-            assertThat(term.validateChangeDates(new LocalDate(2008, 12, 31), new LocalDate(2010, 12, 31)), is("New start date can't be before start date of previous term"));
+            assertThat(term.validateChangeDates(new LocalDate(2008, 12, 31), new LocalDate(2010, 12, 31))).isEqualTo("New start date can't be before start date of previous term");
             // Invalid interval
-            assertThat(term.validateChangeDates(new LocalDate(2011, 1, 2), new LocalDate(2010, 12, 31)), is("End date must be after start date"));
+            assertThat(term.validateChangeDates(new LocalDate(2011, 1, 2), new LocalDate(2010, 12, 31))).isEqualTo("End date must be after start date");
             // Can't change end date when there's a next term
-            assertThat(term.validateChangeDates(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1)), is("The end date of this term is set by the start date of the next term"));
+            assertThat(term.validateChangeDates(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1))).isEqualTo("The end date of this term is set by the start date of the next term");
         }
 
         @Test
@@ -484,7 +479,7 @@ public class LeaseTermTest {
             // Given, when
             term.changeDates(term.getStartDate().plusMonths(1), term.getEndDate());
             // then
-            assertThat(prev.getEndDate(), is(LocalDateInterval.endDateFromStartDate(term.getStartDate())));
+            assertThat(prev.getEndDate()).isEqualTo(LocalDateInterval.endDateFromStartDate(term.getStartDate()));
 
         }
 

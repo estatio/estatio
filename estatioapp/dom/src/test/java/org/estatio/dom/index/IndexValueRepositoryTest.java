@@ -42,9 +42,8 @@ import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.apache.isis.core.commons.matchers.IsisMatchers.classEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class IndexValueRepositoryTest {
 
@@ -113,12 +112,12 @@ public class IndexValueRepositoryTest {
             indexValueRepository.findByIndexAndStartDate(index, startDate);
 
             // then
-            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-            assertThat(finderInteraction.getResultType(), classEqualTo(IndexValue.class));
-            assertThat(finderInteraction.getQueryName(), is("findByIndexAndStartDate"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("index"), is((Object) index));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(IndexValue.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByIndexAndStartDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("index")).isEqualTo((Object) index);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) startDate);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
         }
 
         private static Matcher<Object[]> arrayOf(final Object... elements) {

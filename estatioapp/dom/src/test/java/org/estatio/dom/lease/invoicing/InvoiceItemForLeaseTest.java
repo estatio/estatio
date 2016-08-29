@@ -43,8 +43,7 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRateRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceItemForLeaseTest {
     public static class BeanProperties extends AbstractBeanPropertiesTest {
@@ -106,8 +105,8 @@ public class InvoiceItemForLeaseTest {
             });
             item.setNetAmount(BigDecimal.valueOf(12.34));
             item.verify();
-            assertThat(item.getVatAmount(), is(BigDecimal.valueOf(2.59)));
-            assertThat(item.getGrossAmount(), is(BigDecimal.valueOf(14.93)));
+            assertThat(item.getVatAmount()).isEqualTo(BigDecimal.valueOf(2.59));
+            assertThat(item.getGrossAmount()).isEqualTo(BigDecimal.valueOf(14.93));
         }
 
     }

@@ -6,11 +6,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseTermForTaxTest {
 
@@ -31,11 +27,11 @@ public class LeaseTermForTaxTest {
             // when
             term.changeRegistration(new LocalDate(2014, 1, 1), "registrationNumber", "officeCode", "officeName", "description");
 
-            assertThat(term.getRegistrationDate(), is(new LocalDate(2014, 1, 1)));
-            assertThat(term.getRegistrationNumber(), is("registrationNumber"));
-            assertThat(term.getOfficeCode(), is("officeCode"));
-            assertThat(term.getOfficeName(), is("officeName"));
-            assertThat(term.getDescription(), is("description"));
+            assertThat(term.getRegistrationDate()).isEqualTo(new LocalDate(2014, 1, 1));
+            assertThat(term.getRegistrationNumber()).isEqualTo("registrationNumber");
+            assertThat(term.getOfficeCode()).isEqualTo("officeCode");
+            assertThat(term.getOfficeName()).isEqualTo("officeName");
+            assertThat(term.getDescription()).isEqualTo("description");
 
         }
     }
@@ -51,13 +47,17 @@ public class LeaseTermForTaxTest {
                 @Override
                 public BigDecimal rentValueForDate() {
                     return new BigDecimal(VALUE);
-                };
+                }
+
+                ;
             };
             term2 = new LeaseTermForTax() {
                 @Override
                 public BigDecimal rentValueForDate() {
                     return BigDecimal.ZERO;
-                };
+                }
+
+                ;
             };
         }
 
@@ -67,8 +67,8 @@ public class LeaseTermForTaxTest {
             // when
             term1.doAlign();
             // then
-            assertThat(term1.getTaxableValue(), is(new BigDecimal(VALUE)));
-            assertThat(term1.getTaxValue(), is(new BigDecimal("0.00")));
+            assertThat(term1.getTaxableValue()).isEqualTo(new BigDecimal(VALUE));
+            assertThat(term1.getTaxValue()).isEqualTo(new BigDecimal("0.00"));
 
         }
 
@@ -80,9 +80,9 @@ public class LeaseTermForTaxTest {
             // when
             term1.doAlign();
             // then
-            assertThat(term1.getTaxableValue(), is(new BigDecimal(VALUE)));
-            assertThat(term1.getPayableValue(), is(new BigDecimal("123.00")));
-            assertThat(term1.getTaxValue(), is(new BigDecimal("61.50")));
+            assertThat(term1.getTaxableValue()).isEqualTo(new BigDecimal(VALUE));
+            assertThat(term1.getPayableValue()).isEqualTo(new BigDecimal("123.00"));
+            assertThat(term1.getTaxValue()).isEqualTo(new BigDecimal("61.50"));
         }
 
         @Test
@@ -97,12 +97,11 @@ public class LeaseTermForTaxTest {
             // then
             term1.doAlign();
             // when
-            assertThat(term1.getTaxableValue(), is(new BigDecimal(VALUE)));
-            assertThat(term1.getPayableValue(), is(new BigDecimal("222.00")));
-            assertThat(term1.getTaxValue(), is(new BigDecimal("111.00")));
+            assertThat(term1.getTaxableValue()).isEqualTo(new BigDecimal(VALUE));
+            assertThat(term1.getPayableValue()).isEqualTo(new BigDecimal("222.00"));
+            assertThat(term1.getTaxValue()).isEqualTo(new BigDecimal("111.00"));
         }
 
-        
         @Test
         public void noRent() throws Exception {
             // given
@@ -115,9 +114,9 @@ public class LeaseTermForTaxTest {
             // then
             term2.doAlign();
             // when
-            assertThat(term2.getTaxableValue(), is(new BigDecimal("0")));
-            assertThat(term2.getPayableValue(), is(new BigDecimal("222.00")));
-            assertThat(term2.getTaxValue(), is(new BigDecimal("111.00")));
+            assertThat(term2.getTaxableValue()).isEqualTo(new BigDecimal("0"));
+            assertThat(term2.getPayableValue()).isEqualTo(new BigDecimal("222.00"));
+            assertThat(term2.getTaxValue()).isEqualTo(new BigDecimal("111.00"));
         }
 
     }
@@ -132,7 +131,9 @@ public class LeaseTermForTaxTest {
                 @Override
                 public BigDecimal rentValueForDate() {
                     return BigDecimal.valueOf(20000.00);
-                };
+                }
+
+                ;
             };
         }
 
@@ -145,15 +146,15 @@ public class LeaseTermForTaxTest {
             // when
             term.changeTax(bd(5), bd(123.45));
             // then
-            assertThat(term.getPayableValue(), is(bd(123.45)));
-            assertThat(term.getTaxPercentage(), is(bd(5)));
-            assertTrue(term.isOverridePayableValue());
+            assertThat(term.getPayableValue()).isEqualTo(bd(123.45));
+            assertThat(term.getTaxPercentage()).isEqualTo(bd(5));
+            assertThat(term.isOverridePayableValue()).isTrue();
             // when
             term.changeTax(bd(4), null);
             // then
-            assertNull(term.getPayableValue());
-            assertThat(term.getTaxPercentage(), is(bd(4)));
-            assertFalse(term.isOverridePayableValue());
+            assertThat(term.getPayableValue()).isNull();
+            assertThat(term.getTaxPercentage()).isEqualTo(bd(4));
+            assertThat(term.isOverridePayableValue()).isFalse();
         }
     }
 
@@ -167,7 +168,9 @@ public class LeaseTermForTaxTest {
                 @Override
                 public BigDecimal rentValueForDate() {
                     return BigDecimal.valueOf(20000.00);
-                };
+                }
+
+                ;
             };
         }
 
@@ -180,15 +183,15 @@ public class LeaseTermForTaxTest {
             // when
             term.changeInvoicing(bd(50), bd(200));
             // then
-            assertThat(term.getRecoverablePercentage(), is(bd(50)));
-            assertThat(term.getTaxValue(), is(bd(200)));
-            assertTrue(term.isOverrideTaxValue());
+            assertThat(term.getRecoverablePercentage()).isEqualTo(bd(50));
+            assertThat(term.getTaxValue()).isEqualTo(bd(200));
+            assertThat(term.isOverrideTaxValue()).isTrue();
             // when
             term.changeInvoicing(bd(100), null);
             // then
-            assertThat(term.getRecoverablePercentage(), is(bd(100)));
-            assertFalse(term.isOverrideTaxValue());
-            assertNull(term.getTaxValue());
+            assertThat(term.getRecoverablePercentage()).isEqualTo(bd(100));
+            assertThat(term.isOverrideTaxValue()).isFalse();
+            assertThat(term.getTaxValue()).isNull();
         }
     }
 
@@ -198,7 +201,7 @@ public class LeaseTermForTaxTest {
         LeaseItem item;
 
         @Before
-        public void setUp(){
+        public void setUp() {
             term = new LeaseTermForTax();
             item = new LeaseItem();
             term.setLeaseItem(item);
@@ -211,7 +214,7 @@ public class LeaseTermForTaxTest {
             item.setType(LeaseItemType.TAX);
 
             //then
-            assertFalse(term.allowOpenEndDate());
+            assertThat(term.allowOpenEndDate()).isFalse();
         }
 
     }

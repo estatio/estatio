@@ -20,7 +20,6 @@ package org.estatio.dom.budgeting.allocation;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.FinderInteraction;
@@ -37,8 +35,7 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetItemAllocationRepositoryTest {
 
@@ -84,11 +81,11 @@ public class BudgetItemAllocationRepositoryTest {
             BudgetItem budgetItem = new BudgetItem();
             budgetItemAllocationRepository.findByBudgetItem(budgetItem);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItemAllocation.class));
-            assertThat(finderInteraction.getQueryName(), is("findByBudgetItem"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem"), is((Object) budgetItem));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItemAllocation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItem");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem")).isEqualTo((Object) budgetItem);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -101,11 +98,11 @@ public class BudgetItemAllocationRepositoryTest {
             KeyTable keyTable = new KeyTable();
             budgetItemAllocationRepository.findByKeyTable(keyTable);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.ALL_MATCHES));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItemAllocation.class));
-            assertThat(finderInteraction.getQueryName(), is("findByKeyTable"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable"), is((Object) keyTable));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItemAllocation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByKeyTable");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable")).isEqualTo((Object) keyTable);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -120,13 +117,13 @@ public class BudgetItemAllocationRepositoryTest {
             KeyTable keyTable = new KeyTable();
             budgetItemAllocationRepository.findByChargeAndBudgetItemAndKeyTable(charge, budgetItem, keyTable);
 
-            assertThat(finderInteraction.getFinderMethod(), is(FinderInteraction.FinderMethod.UNIQUE_MATCH));
-            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(BudgetItemAllocation.class));
-            assertThat(finderInteraction.getQueryName(), is("findByChargeAndBudgetItemAndKeyTable"));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("charge"), is((Object) charge));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem"), is((Object) budgetItem));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable"), is((Object) keyTable));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItemAllocation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByChargeAndBudgetItemAndKeyTable");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem")).isEqualTo((Object) budgetItem);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable")).isEqualTo((Object) keyTable);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
 
     }
@@ -175,10 +172,10 @@ public class BudgetItemAllocationRepositoryTest {
             BudgetItemAllocation newBudgetItemAllocation = budgetItemAllocationRepository1.findOrCreateBudgetItemAllocation(budgetItem, charge, keyTable, percentage);
 
             // then
-            Assertions.assertThat(newBudgetItemAllocation.getCharge()).isEqualTo(charge);
-            Assertions.assertThat(newBudgetItemAllocation.getBudgetItem()).isEqualTo(budgetItem);
-            Assertions.assertThat(newBudgetItemAllocation.getKeyTable()).isEqualTo(keyTable);
-            Assertions.assertThat(newBudgetItemAllocation.getPercentage()).isEqualTo(percentage);
+            assertThat(newBudgetItemAllocation.getCharge()).isEqualTo(charge);
+            assertThat(newBudgetItemAllocation.getBudgetItem()).isEqualTo(budgetItem);
+            assertThat(newBudgetItemAllocation.getKeyTable()).isEqualTo(keyTable);
+            assertThat(newBudgetItemAllocation.getPercentage()).isEqualTo(percentage);
 
         }
 

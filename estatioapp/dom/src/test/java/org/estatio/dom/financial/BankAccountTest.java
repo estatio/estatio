@@ -31,9 +31,8 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class BankAccountTest {
@@ -67,7 +66,7 @@ public class BankAccountTest {
         public void happyCase() {
             account.setIban("NL31ABNA0580744434");
             account.verifyIban();
-            assertThat(account.getAccountNumber(), is("0580744434"));
+            assertThat(account.getAccountNumber()).isEqualTo("0580744434");
         }
 
         @Test
@@ -76,7 +75,7 @@ public class BankAccountTest {
             account.setNationalBankCode("ABNA");
             account.setAccountNumber("0580744434");
             account.verifyIban();
-            assertThat(account.getIban(), is("NL31ABNA0580744434"));
+            assertThat(account.getIban()).isEqualTo("NL31ABNA0580744434");
         }
 
     }
@@ -93,9 +92,9 @@ public class BankAccountTest {
             // When
             bankAccount.change(iban, "BIC", "EXT");
             // Then
-            assertThat(bankAccount.getIban(), is(iban));
-            assertThat(bankAccount.getBic(), is("BIC"));
-            assertThat(bankAccount.getExternalReference(), is("EXT"));
+            assertThat(bankAccount.getIban()).isEqualTo(iban);
+            assertThat(bankAccount.getBic()).isEqualTo("BIC");
+            assertThat(bankAccount.getExternalReference()).isEqualTo("EXT");
         }
     }
 

@@ -18,10 +18,11 @@
  */
 package org.estatio.dom.lease;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import java.math.BigDecimal;
+
 import org.joda.time.LocalDate;
 
-import java.math.BigDecimal;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class LeaseTermForTesting extends LeaseTerm {
 

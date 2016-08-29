@@ -42,8 +42,7 @@ import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseTermForIndexableTest {
 
@@ -148,32 +147,32 @@ public class LeaseTermForIndexableTest {
             term.setBaseValue(BigDecimal.valueOf(20000));
             term.setIndexedValue(BigDecimal.valueOf(30000));
             term.setEffectiveDate(null);
-            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(30000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(30000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1))).isEqualTo(BigDecimal.valueOf(30000));
+            assertThat(term.valueForDate(new LocalDate(2011, 12, 31))).isEqualTo(BigDecimal.valueOf(30000));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1))).isEqualTo(BigDecimal.valueOf(30000));
+            assertThat(term.valueForDate(new LocalDate(2012, 7, 31))).isEqualTo(BigDecimal.valueOf(30000));
 
             term.setStartDate(new LocalDate(2011, 2, 1));
             term.setEffectiveDate(new LocalDate(2011, 2, 1));
 
-            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(30000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1))).isEqualTo(BigDecimal.valueOf(20000));
+            assertThat(term.valueForDate(new LocalDate(2011, 12, 31))).isEqualTo(BigDecimal.valueOf(30000));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1))).isEqualTo(BigDecimal.valueOf(30000));
+            assertThat(term.valueForDate(new LocalDate(2012, 7, 31))).isEqualTo(BigDecimal.valueOf(30000));
 
             term.setStartDate(new LocalDate(2011, 1, 1));
             term.setEffectiveDate(new LocalDate(2012, 4, 1));
 
-            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1))).isEqualTo(BigDecimal.valueOf(20000));
+            assertThat(term.valueForDate(new LocalDate(2011, 12, 31))).isEqualTo(BigDecimal.valueOf(20000));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1))).isEqualTo(BigDecimal.valueOf(30000));
+            assertThat(term.valueForDate(new LocalDate(2012, 7, 31))).isEqualTo(BigDecimal.valueOf(30000));
 
             term.setSettledValue(BigDecimal.valueOf(31000));
-            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
-            assertThat(term.valueForDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(31000)));
-            assertThat(term.valueForDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(31000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1))).isEqualTo(BigDecimal.valueOf(20000));
+            assertThat(term.valueForDate(new LocalDate(2011, 12, 31))).isEqualTo(BigDecimal.valueOf(20000));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1))).isEqualTo(BigDecimal.valueOf(31000));
+            assertThat(term.valueForDate(new LocalDate(2012, 7, 31))).isEqualTo(BigDecimal.valueOf(31000));
         }
     }
 
@@ -188,8 +187,8 @@ public class LeaseTermForIndexableTest {
             // when
             nextTerm.initialize();
             // then
-            assertThat(nextTerm.getBaseIndexStartDate(), is(term.getNextIndexStartDate()));
-            assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
+            assertThat(nextTerm.getBaseIndexStartDate()).isEqualTo(term.getNextIndexStartDate());
+            assertThat(nextTerm.getNextIndexStartDate()).isEqualTo(term.getNextIndexStartDate().plusYears(1));
         }
 
         @Test
@@ -202,8 +201,8 @@ public class LeaseTermForIndexableTest {
             // when
             nextTerm.initialize();
             // then
-            assertThat(nextTerm.getBaseIndexStartDate(), is(term.getBaseIndexStartDate()));
-            assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
+            assertThat(nextTerm.getBaseIndexStartDate()).isEqualTo(term.getBaseIndexStartDate());
+            assertThat(nextTerm.getNextIndexStartDate()).isEqualTo(term.getNextIndexStartDate().plusYears(1));
         }
     }
 

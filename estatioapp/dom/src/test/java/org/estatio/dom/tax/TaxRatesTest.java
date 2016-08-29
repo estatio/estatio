@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.dom.tax;
 
 import java.util.List;
 
@@ -28,34 +28,25 @@ import org.apache.isis.applib.query.Query;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FixedAssetRoleRepositoryTest {
+public class TaxRatesTest {
 
     FinderInteraction finderInteraction;
 
-    FixedAsset asset;
-    Party party;
-    FixedAssetRoleType type;
-    LocalDate startDate;
-    LocalDate endDate;
+    TaxRateRepository taxRateRepository;
 
-    FixedAssetRoleRepository fixedAssetRoleRepository;
+    Tax tax;
+    LocalDate date;
 
     @Before
     public void setup() {
 
-        asset = new FixedAssetForTesting();
-        party = new PartyForTesting();
-        type = FixedAssetRoleType.ASSET_MANAGER;
+        tax = new Tax();
+        date = new LocalDate(2013, 4, 1);
 
-        startDate = new LocalDate(2013, 1, 4);
-        endDate = new LocalDate(2013, 2, 5);
-
-        fixedAssetRoleRepository = new FixedAssetRoleRepository() {
+        taxRateRepository = new TaxRateRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -64,7 +55,7 @@ public class FixedAssetRoleRepositoryTest {
             }
 
             @Override
-            protected List<FixedAssetRole> allInstances() {
+            protected List<TaxRate> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -77,22 +68,20 @@ public class FixedAssetRoleRepositoryTest {
         };
     }
 
-    public static class FindRole_5Args extends FixedAssetRoleRepositoryTest {
-
+    public static class FindTaxRateByTaxAndDate extends TaxRatesTest {
         @Test
-        public void findRole2() {
+        public void happyCase() {
 
-            // TODO: need also to search by dates
-            fixedAssetRoleRepository.findRole(asset, party, type, startDate, endDate);
+            taxRateRepository.findTaxRateByTaxAndDate(tax, date);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(FixedAssetRole.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAssetAndPartyAndType");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("asset")).isEqualTo((Object) asset);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("party")).isEqualTo((Object) party);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) type);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
-        }
+            assertThat(finderInteraction.getResultType()).isEqualTo(TaxRate.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByTaxAndDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("tax")).isEqualTo((Object) tax);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("date")).isEqualTo((Object) date);
 
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
+        }
     }
+
 }

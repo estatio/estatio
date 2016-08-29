@@ -17,10 +17,11 @@
 
 package org.estatio.dom.budgeting.budgetcalculation;
 
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.junit.Test;
 
 public class BudgetCalculationTest {
 

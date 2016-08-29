@@ -20,11 +20,11 @@ package org.estatio.dom.party;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartyRegistrationTest {
 
@@ -51,7 +51,7 @@ public class PartyRegistrationTest {
         @Test
         public void changeDatesDelegate() {
             partyRegistration = new PartyRegistration();
-            assertThat(partyRegistration.getChangeDates(), is(not(nullValue())));
+            assertThat(partyRegistration.getChangeDates()).isNotNull();
         }
 
     }
