@@ -701,6 +701,20 @@ mvn clean install -DskipTests -o
             </dependency>
 
 
+            <dependency>
+                <groupId>org.isisaddons.module.xdocreport</groupId>
+                <artifactId>isis-module-xdocreport-dom</artifactId>
+                <version>1.14.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.xdocreport</groupId>
+                <artifactId>isis-module-xdocreport-dom</artifactId>
+                <version>1.14.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+
             <!-- EstatioApp modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -1012,6 +1026,7 @@ mvn clean install -DskipTests -o
                 <module>udo/settings/dom</module>
                 <module>incode/doctemplates/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
+                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalfactory</module>
@@ -1035,6 +1050,7 @@ mvn clean install -DskipTests -o
                 <module>udo/settings/dom</module>
                 <module>incode/doctemplates/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
+                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalfactory</module>
@@ -1057,6 +1073,7 @@ mvn clean install -DskipTests -o
                 <module>udo/settings/dom</module>
                 <module>incode/doctemplates/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
+                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/canonical</module>
                 <module>estatioapp/canonicalfactory</module>
@@ -1083,6 +1100,7 @@ mvn clean install -DskipTests -o
                 <module>udo/settings/dom</module>
                 <module>incode/doctemplates/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
+                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
