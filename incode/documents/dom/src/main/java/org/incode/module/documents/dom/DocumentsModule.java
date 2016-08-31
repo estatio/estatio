@@ -22,6 +22,7 @@ public final class DocumentsModule {
 
     public static class JdoColumnLength {
 
+
         private JdoColumnLength(){}
 
         public static final int ID = 36; // to allow for a UUID
@@ -36,6 +37,8 @@ public final class DocumentsModule {
         public final static int FQCN = 254;
 
         public static final int TEXT = 4000; // long varchar
+
+        public static final int BOOKMARK = 2000;
 
     }
 

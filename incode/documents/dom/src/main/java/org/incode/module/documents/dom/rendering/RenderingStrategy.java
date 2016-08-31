@@ -56,9 +56,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        identityType=IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "RenderingStrategy"
+        identityType=IdentityType.DATASTORE
+//        ,
+//        schema = "incodeDocuments",
+//        table = "RenderingStrategy"
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(

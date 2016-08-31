@@ -69,9 +69,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        identityType= IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "DocumentTemplate"
+        identityType= IdentityType.DATASTORE
+//        ,
+//        schema = "incodeDocuments",
+//        table = "DocumentTemplate"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
@@ -80,18 +81,18 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
-                        + "   && atPathCopy == :atPath "
-                        + "ORDER BY startDate DESC "
+                        + "   && atPathCopy.startsWith(:atPath) "
+                        + "ORDER BY atPathCopy DESC, startDate DESC "
         ),
         @javax.jdo.annotations.Query(
                 name = "findCurrentByTypeAndAtPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
-                        + "   && atPathCopy == :atPath "
+                        + "   && atPathCopy.startsWith(:atPath) "
                         + "   && (startDate == null || startDate <= :now) "
                         + "   && (endDate == null   || endDate   > :now) "
-                        + "ORDER BY startDate DESC "
+                        + "ORDER BY atPathCopy DESC, startDate DESC "
         ),
         @javax.jdo.annotations.Query(
                 name = "findCurrentByType", language = "JDOQL",
@@ -100,16 +101,16 @@ import lombok.Setter;
                         + "WHERE typeCopy   == :type "
                         + "   && (startDate == null || startDate <= :now) "
                         + "   && (endDate == null   || endDate   > :now) "
-                        + "ORDER BY atPathCopy, startDate DESC "
+                        + "ORDER BY atPathCopy DESC, startDate DESC "
         ),
         @javax.jdo.annotations.Query(
                 name = "findCurrentByAtPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
-                        + "WHERE atPathCopy == :atPath "
+                        + "   && atPathCopy.startsWith(:atPath) "
                         + "   && (startDate == null || startDate <= :now) "
                         + "   && (endDate == null   || endDate > :now) "
-                        + "ORDER BY typeCopy, startDate DESC "
+                        + "ORDER BY atPathCopy DESC, typeCopy, startDate DESC "
         )
 })
 @Uniques({
@@ -325,9 +326,11 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     //endregion
 
     //region > asChars, asBytes (programmatic)
+    @Programmatic
     public String asChars() {
         return getSort().asChars(this);
     }
+    @Programmatic
     public byte[] asBytes() {
         return getSort().asBytes(this);
     }

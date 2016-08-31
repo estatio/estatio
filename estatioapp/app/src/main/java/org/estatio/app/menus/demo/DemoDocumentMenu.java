@@ -122,7 +122,7 @@ public class DemoDocumentMenu {
             @ParameterLayout(named = "Mime type")
             final String mimeType,
             final ApplicationTenancy applicationTenancy,
-            @ParameterLayout(named = "Template text")
+            @ParameterLayout(named = "Template text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
             final String templateText,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Data model class name")

@@ -19,6 +19,7 @@ package org.incode.module.documents.dom.docs;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -26,6 +27,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
 
+@Mixin
 public class Document_moveToExternal {
 
     //region > constructor
@@ -53,7 +55,9 @@ public class Document_moveToExternal {
         document.setExternalUrl(externalUrl);
         document.setBlobBytes(null);
         document.setClobChars(null);
-        document.setSort(DocumentSort.EXTERNAL_BLOB);
+
+        final DocumentSort sort = document.getSort();
+        document.setSort(sort.asExternal());
 
         if(name != null) {
             document.setName(name);

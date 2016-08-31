@@ -3,18 +3,13 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
+            <cpt:action id="delete"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
         <bs3:col span="6">
             <cpt:fieldSet name="Identifier">
-                <cpt:property id="name"/>
-                <cpt:property id="type"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Application tenancy">
-                <cpt:property id="atPath" hidden="ALL_TABLES"/>
-                <!-- assuming a mixin is present to look this up -->
-                <cpt:property id="applicationTenancy"/>
+                <cpt:property id="attachedTo"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
@@ -29,18 +24,8 @@
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:fieldSet name="Sort">
-                <cpt:property id="sort"/>
-                <cpt:property id="mimeType"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Content" id="content">
-                <cpt:property id="blob" hidden="ALL_TABLES">
-                </cpt:property>
-                <cpt:property id="clob" hidden="ALL_TABLES">
-                </cpt:property>
-                <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
-                </cpt:property>
-                <cpt:property id="externalUrl"/>
+            <cpt:fieldSet name="Details">
+                <cpt:property id="document"/>
             </cpt:fieldSet>
         </bs3:col>
     </bs3:row>

@@ -56,9 +56,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        identityType=IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "Document"
+        identityType=IdentityType.DATASTORE
+//        ,
+//        schema = "incodeDocuments",
+//        table = "Document"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -343,7 +344,6 @@ public class Document<T extends Document> implements Comparable<T> {
     }
     //endregion
 
-
     //region > clob (derived property)
     public static class ClobDomainEvent extends PropertyDomainEvent<Clob> { }
     @javax.jdo.annotations.NotPersistent
@@ -360,6 +360,9 @@ public class Document<T extends Document> implements Comparable<T> {
         return getSort() != DocumentSort.CLOB;
     }
     //endregion
+
+
+    
 
 
     //region > toString, compareTo

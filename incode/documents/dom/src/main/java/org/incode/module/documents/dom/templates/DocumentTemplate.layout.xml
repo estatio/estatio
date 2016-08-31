@@ -22,7 +22,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Application tenancy">
-                                <cpt:property id="atPath"/>
+                                <cpt:property id="atPath"  hidden="ALL_TABLES"/>
                                 <!-- assuming a mixin is present to look this up -->
                                 <cpt:property id="applicationTenancy"/>
                             </cpt:fieldSet>
@@ -63,7 +63,7 @@
         <bs3:col span="4">
             <cpt:fieldSet name="Sort">
                 <cpt:property id="sort"/>
-                <cpt:property id="mimeType" hidden="ALL_TABLES"/>
+                <cpt:property id="mimeType"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Content" id="content">
                 <cpt:property id="blob" hidden="ALL_TABLES">

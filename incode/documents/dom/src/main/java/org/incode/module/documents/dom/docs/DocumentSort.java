@@ -76,4 +76,11 @@ public enum DocumentSort {
     public byte[] asBytes(final DocumentTemplate documentTemplate) {
         throw new IllegalArgumentException("Cannot convert to bytes");
     }
+
+    @Programmatic
+    public DocumentSort asExternal() {
+        if(this == BLOB) { return EXTERNAL_BLOB; }
+        if(this == CLOB || this == TEXT) { return EXTERNAL_CLOB; }
+        return this;
+    }
 }
