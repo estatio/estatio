@@ -110,9 +110,10 @@ import lombok.Setter;
                 name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
-                        + "WHERE (reference.matches(:referenceOrName)"
-                        + "|| name.matches(:referenceOrName))"
-                        + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date)"),
+                        + "WHERE (reference.matches(:referenceOrName) "
+                        + "|| name.matches(:referenceOrName)) "
+                        + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
+                        + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
@@ -120,7 +121,8 @@ import lombok.Setter;
                         + "WHERE occupancies.contains(occ) "
                         + "&& (occ.unit.property == :property) "
                         + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy occ"),
+                        + "org.estatio.dom.lease.Occupancy occ "
+                        + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByBrand", language = "JDOQL",
                 value = "SELECT "
@@ -129,7 +131,8 @@ import lombok.Setter;
                         + "&& (occ.brand == :brand)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
                         + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy occ"),
+                        + "org.estatio.dom.lease.Occupancy occ "
+                        + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndActiveOnDate", language = "JDOQL",
                 value = "SELECT "
@@ -139,7 +142,8 @@ import lombok.Setter;
                         + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
                         + "&& (occ.unit.property == :asset) "
                         + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy occ"),
+                        + "org.estatio.dom.lease.Occupancy occ "
+                        + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findExpireInDateRange", language = "JDOQL",
                 value = "SELECT " +
