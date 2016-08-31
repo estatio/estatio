@@ -6,7 +6,7 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="4">
+        <bs3:col span="6">
             <cpt:fieldSet name="Identifier">
                 <cpt:property id="name"/>
                 <cpt:property id="type"/>
@@ -25,20 +25,20 @@
                 <cpt:property id="datanucleusVersionLong"/>
                 <cpt:property id="datanucleusVersionTimestamp"/>
             </cpt:fieldSet>
+            <cpt:fieldSet name="Other" unreferencedProperties="true">
+            </cpt:fieldSet>
         </bs3:col>
-        <bs3:col span="4">
+        <bs3:col span="6">
             <cpt:fieldSet name="Sort">
                 <cpt:property id="sort"/>
                 <cpt:property id="mimeType"/>
             </cpt:fieldSet>
-            <cpt:fieldSet name="Other" unreferencedProperties="true">
-            </cpt:fieldSet>
-        </bs3:col>
-        <bs3:col span="4">
             <cpt:fieldSet name="Content" id="content">
                 <cpt:property id="blob" hidden="ALL_TABLES">
                 </cpt:property>
                 <cpt:property id="clob" hidden="ALL_TABLES">
+                </cpt:property>
+                <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
                 </cpt:property>
                 <cpt:property id="externalUrl"/>
             </cpt:fieldSet>

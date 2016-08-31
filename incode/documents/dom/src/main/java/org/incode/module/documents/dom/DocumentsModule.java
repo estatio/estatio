@@ -34,6 +34,9 @@ public final class DocumentsModule {
         public static final int EXTERNAL_URL = 2000;
 
         public final static int FQCN = 254;
+
+        public static final int TEXT = 4000; // long varchar
+
     }
 
     public static class Constants {

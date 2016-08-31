@@ -21,6 +21,6 @@ import org.incode.module.documents.dom.templates.DocumentTemplate;
 
 public interface Renderer {
 
-    Document render(final DocumentTemplate documentTemplate, final Object dataModel);
+    Document render(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
 
 }

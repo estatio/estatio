@@ -50,12 +50,15 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.rendering.Renderer;
+import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.types.DocumentType;
 
@@ -232,22 +235,43 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
             final DocumentType type,
             final String atPath,
             final Blob blob,
+            final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         super(type, atPath, blob);
-        setTypeCopy(type);
-        setAtPathCopy(atPath);
-        setDataModelClassName(dataModelClassName);
+        init(type, atPath, renderingStrategy, dataModelClassName);
+    }
+
+    public DocumentTemplate(
+            final DocumentType type,
+            final String atPath,
+            final String name,
+            final String mimeType,
+            final String text,
+            final RenderingStrategy renderingStrategy,
+            final String dataModelClassName) {
+        super(type, atPath, name, mimeType, text);
+        init(type, atPath, renderingStrategy, dataModelClassName);
     }
 
     public DocumentTemplate(
             final DocumentType type,
             final String atPath,
             final Clob clob,
+            final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         super(type, atPath, clob);
-        setTypeCopy(type);
-        setAtPathCopy(atPath);
-        setDataModelClassName(dataModelClassName);
+        init(type, atPath, renderingStrategy, dataModelClassName);
+    }
+
+    private void init(
+            final DocumentType type,
+            final String atPath,
+            final RenderingStrategy renderingStrategy,
+            final String dataModelClassName) {
+        this.typeCopy = type;
+        this.atPathCopy = atPath;
+        this.renderingStrategy = renderingStrategy;
+        this.dataModelClassName = dataModelClassName;
     }
     //endregion
 
@@ -289,13 +313,45 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     private String dataModelClassName;
     //endregion
 
+    //region > renderStrategy (property)
+    public static class RenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
+    @Getter @Setter
+    @Column(allowsNull = "false", name = "renderStrategyId")
+    @Property(
+            domainEvent = RenderingStrategyDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private RenderingStrategy renderingStrategy;
+    //endregion
+
+    //region > asChars, asBytes (programmatic)
+    public String asChars() {
+        return getSort().asChars(this);
+    }
+    public byte[] asBytes() {
+        return getSort().asBytes(this);
+    }
+    //endregion
+
 
     //region > instantiateDataModel (programmatic)
 
     @Programmatic
     public Object instantiateDataModel() {
         final String dataModelClassName = getDataModelClassName();
-        return classService.instantiate(dataModelClassName);
+        final Object dataModel = classService.instantiate(dataModelClassName);
+        serviceRegistry2.injectServicesInto(dataModel);
+        return dataModel;
+    }
+
+    //endregion
+
+    //region > render (programmatic)
+
+    @Programmatic
+    public Document render(final Object dataModel, final String documentName) {
+        final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+        return renderer.render(this, dataModel, documentName);
     }
 
     //endregion
@@ -404,6 +460,8 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     QueryResultsCache queryResultsCache;
     @Inject
     ClassService classService;
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
 
     //endregion
 

@@ -53,7 +53,7 @@ public class Document_moveToExternal {
         document.setExternalUrl(externalUrl);
         document.setBlobBytes(null);
         document.setClobChars(null);
-        document.setSort(DocumentSort.EXTERNAL);
+        document.setSort(DocumentSort.EXTERNAL_BLOB);
 
         if(name != null) {
             document.setName(name);

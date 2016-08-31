@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -67,7 +66,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             )
             @ParameterLayout(named = "Reference")
             final String reference,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME, optionality = Optionality.OPTIONAL)
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name")
             final String name,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME, mustSatisfy = RendererClassNameSpecification.class)

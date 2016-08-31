@@ -181,7 +181,7 @@ public class DocumentType implements Comparable<DocumentType> {
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.NAME)
     @Property(
             domainEvent = NameDomainEvent.class,
             editing = Editing.DISABLED

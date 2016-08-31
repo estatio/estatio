@@ -28,12 +28,12 @@ import org.incode.module.documents.dom.docs.DocumentSort;
 
 // TODO: if there are any documents for this template already, we should probably disable and then create a new template object (with new applicable date range)
 @Mixin
-public class DocumentTemplate_updateClobInSitu {
+public class DocumentTemplate_updateText {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_updateClobInSitu(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_updateText(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
@@ -50,11 +50,11 @@ public class DocumentTemplate_updateClobInSitu {
     }
 
     public String default0$$() {
-        return documentTemplate.getClobChars();
+        return documentTemplate.getText();
     }
 
     public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.CLOB;
+        return documentTemplate.getSort() != DocumentSort.TEXT;
     }
 
 

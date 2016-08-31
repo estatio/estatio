@@ -41,7 +41,8 @@ public class FreeMarkerTemplateLoaderUsingDocTemplateRepository implements FreeM
     public TemplateSource load(final String documentTypeReference, final String atPath) {
         final DocumentType documentType = documentTypeRepository.findByReference(documentTypeReference);
         final DocumentTemplate documentTemplate = documentTemplateRepository.findCurrentByTypeAndAtPath(documentType, atPath);
-        return new TemplateSource(new String(documentTemplate.getClobChars()), (long)JDOHelper.getVersion(documentTemplate));
+        final String templateChars = documentTemplate.asChars();
+        return new TemplateSource(templateChars, (long)JDOHelper.getVersion(documentTemplate));
     }
 
     @Inject

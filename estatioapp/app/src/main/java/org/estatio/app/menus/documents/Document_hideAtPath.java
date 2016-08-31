@@ -20,6 +20,8 @@ package org.estatio.app.menus.documents;
 
 import com.google.common.eventbus.Subscribe;
 
+import org.axonframework.eventhandling.annotation.EventHandler;
+
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -27,8 +29,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.incode.module.documents.dom.docs.Document;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class DocTemplate_hideAtPath extends AbstractSubscriber {
+public class Document_hideAtPath extends AbstractSubscriber {
 
+    @EventHandler
     @Subscribe
     public void on(Document.AtPathDomainEvent ev) {
         ev.hide();

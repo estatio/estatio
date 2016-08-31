@@ -16,8 +16,64 @@
  */
 package org.incode.module.documents.dom.docs;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.incode.module.documents.dom.templates.DocumentTemplate;
+
 public enum DocumentSort {
-    BLOB,
-    CLOB,
-    EXTERNAL;
+    /**
+     * Stored as a BLOB
+     */
+    BLOB {
+        @Override
+        public byte[] asBytes(final DocumentTemplate documentTemplate) {
+            return documentTemplate.getBlobBytes();
+        }
+    },
+    /**
+     * Stored as a CLOB
+     */
+    CLOB {
+        @Override
+        public String asChars(final DocumentTemplate documentTemplate) {
+            return documentTemplate.getClobChars();
+        }
+    },
+    /**
+     * Stored in-situ (as a LONGVARCHAR)
+     */
+    TEXT {
+        @Override
+        public String asChars(final DocumentTemplate documentTemplate) {
+            return documentTemplate.getText();
+        }
+    },
+    /**
+     * Stored externally as blob (holds a hyperlink to access)
+     */
+    EXTERNAL_BLOB {
+        @Override
+        public byte[] asBytes(final DocumentTemplate documentTemplate) {
+            throw new IllegalStateException("Not yet implemented");
+        }
+    },
+    /**
+     * Stored externally as clob (holds a hyperlink to access)
+     */
+    EXTERNAL_CLOB {
+        @Override
+        public String asChars(final DocumentTemplate documentTemplate) {
+            throw new IllegalStateException("Not yet implemented");
+        }
+    };
+
+    @Programmatic
+    public String asChars(final DocumentTemplate documentTemplate) {
+        throw new IllegalArgumentException("Cannot convert to characters");
+    }
+
+    @Programmatic
+    public byte[] asBytes(final DocumentTemplate documentTemplate) {
+        throw new IllegalArgumentException("Cannot convert to bytes");
+    }
 }

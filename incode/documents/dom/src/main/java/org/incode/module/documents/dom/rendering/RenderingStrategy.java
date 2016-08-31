@@ -41,12 +41,15 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
 
 import lombok.Getter;
@@ -72,11 +75,11 @@ import lombok.Setter;
 })
 @Uniques({
         @Unique(
-                name = "DocumentType_reference_IDX",
+                name = "RenderingStrategy_reference_IDX",
                 members = { "reference" }
         ),
         @Unique(
-                name = "DocumentType_name_IDX",
+                name = "RenderingStrategy_name_IDX",
                 members = { "name" }
         )
 })
@@ -92,6 +95,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class RenderingStrategy implements Comparable<RenderingStrategy> {
+
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<RenderingStrategy>{}
@@ -182,7 +186,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.NAME)
     @Property(
             domainEvent = NameDomainEvent.class,
             editing = Editing.DISABLED
@@ -202,10 +206,19 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     //endregion
 
 
+    //region > instantiateRenderer (programmatic)
+    @Programmatic
+    public Renderer instantiateRenderer() {
+        final Renderer renderer = (Renderer) classService.instantiate(getRendererClassName());
+        serviceRegistry2.injectServicesInto(renderer);
+        return renderer;
+    }
+    //endregion
+
     //region > toString, compareTo
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "reference", "name");
+        return ObjectContracts.toString(this, "reference", "name", "rendererClassName");
     }
 
     @Override
@@ -218,6 +231,11 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     //region > injected services
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
+    @Inject
+    ClassService classService;
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
+
     //endregion
 
 }

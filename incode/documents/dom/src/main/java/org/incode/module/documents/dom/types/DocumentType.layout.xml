@@ -37,8 +37,10 @@
                 </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
+        <bs3:col span="8">
+            <cpt:collection id="currentTemplates" defaultView="table"/>
+        </bs3:col>
         <bs3:col span="8" unreferencedCollections="true">
-            <cpt:collection id="currentTemplates"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>

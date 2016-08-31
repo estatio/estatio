@@ -31,6 +31,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.types.DocumentType;
 
 @DomainService(
@@ -44,8 +45,9 @@ public class DocumentTemplateRepository {
             final DocumentType type,
             final String atPath,
             final Blob blob,
-            final String dataModelClassName) {
-        final DocumentTemplate document = new DocumentTemplate(type, atPath, blob, dataModelClassName);
+            final String dataModelClassName,
+            final RenderingStrategy renderingStrategy) {
+        final DocumentTemplate document = new DocumentTemplate(type, atPath, blob, renderingStrategy, dataModelClassName);
         repositoryService.persist(document);
         return document;
     }
@@ -55,8 +57,23 @@ public class DocumentTemplateRepository {
             final DocumentType type,
             final String atPath,
             final Clob clob,
-            final String dataModelClassName) {
-        final DocumentTemplate document = new DocumentTemplate(type, atPath, clob, dataModelClassName);
+            final String dataModelClassName,
+            final RenderingStrategy renderingStrategy) {
+        final DocumentTemplate document = new DocumentTemplate(type, atPath, clob, renderingStrategy, dataModelClassName);
+        repositoryService.persist(document);
+        return document;
+    }
+
+    @Programmatic
+    public DocumentTemplate createText(
+            final DocumentType type,
+            final String atPath,
+            final String name,
+            final String mimeType,
+            final String text,
+            final String dataModelClassName,
+            final RenderingStrategy renderingStrategy) {
+        final DocumentTemplate document = new DocumentTemplate(type, atPath, name, mimeType, text, renderingStrategy, dataModelClassName);
         repositoryService.persist(document);
         return document;
     }

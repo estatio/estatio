@@ -172,6 +172,16 @@ public class Document<T extends Document> implements Comparable<T> {
         this(type, atPath, blob.getName(), blob.getMimeType().toString(), DocumentSort.BLOB);
         this.blobBytes = blob.getBytes();
     }
+
+    public Document(
+            final DocumentType type,
+            final String atPath,
+            final String name,
+            final String mimeType,
+            final String text) {
+        this(type, atPath, name, mimeType, DocumentSort.TEXT);
+        this.text = text;
+    }
     public Document(final DocumentType type, final String atPath, final Clob clob) {
         this(type, atPath, clob.getName(), clob.getMimeType().toString(), DocumentSort.CLOB);
         this.clobChars = clob.getChars().toString();
@@ -193,7 +203,7 @@ public class Document<T extends Document> implements Comparable<T> {
 
 
     //region > type (property)
-    public static class TypeDomainEvent extends PropertyDomainEvent<String> { }
+    public static class TypeDomainEvent extends PropertyDomainEvent<DocumentType> { }
     @Getter @Setter
     @Column(allowsNull = "false", name = "typeId")
     @Property(
@@ -269,7 +279,7 @@ public class Document<T extends Document> implements Comparable<T> {
     private String externalUrl;
 
     public boolean hideExternalUrl() {
-        return getSort() != DocumentSort.EXTERNAL;
+        return getSort() != DocumentSort.EXTERNAL_BLOB;
     }
     //endregion
 
@@ -287,7 +297,7 @@ public class Document<T extends Document> implements Comparable<T> {
 
 
     //region > blob (derived property)
-    public static class BlobDomainEvent extends PropertyDomainEvent<byte[]> { }
+    public static class BlobDomainEvent extends PropertyDomainEvent<Blob> { }
     @javax.jdo.annotations.NotPersistent
     @Property(
             notPersisted = true,
@@ -316,11 +326,29 @@ public class Document<T extends Document> implements Comparable<T> {
     //endregion
 
 
+    //region > text (persisted property)
+    public static class TextDomainEvent extends PropertyDomainEvent<Clob> { }
+    @Getter @Setter
+    @javax.jdo.annotations.Persistent(defaultFetchGroup="false")
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.TEXT)
+    @Property(
+            notPersisted = true, // exclude from auditing
+            domainEvent = TextDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private String text;
+
+    public boolean hideText() {
+        return getSort() != DocumentSort.TEXT;
+    }
+    //endregion
+
+
     //region > clob (derived property)
-    public static class ClobDomainEvent extends PropertyDomainEvent<byte[]> { }
+    public static class ClobDomainEvent extends PropertyDomainEvent<Clob> { }
     @javax.jdo.annotations.NotPersistent
     @Property(
-            notPersisted = true,
+            notPersisted = true, // exclude from auditing
             domainEvent = ClobDomainEvent.class,
             editing = Editing.DISABLED
     )
@@ -332,7 +360,6 @@ public class Document<T extends Document> implements Comparable<T> {
         return getSort() != DocumentSort.CLOB;
     }
     //endregion
-
 
 
     //region > toString, compareTo

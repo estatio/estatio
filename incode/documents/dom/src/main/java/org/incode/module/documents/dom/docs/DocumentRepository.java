@@ -57,6 +57,19 @@ public class DocumentRepository {
 
 
     @Programmatic
+    public Document createText(
+            final DocumentType type,
+            final String atPath,
+            final String name,
+            final String mimeType,
+            final String text) {
+        final Document document = new Document(type, atPath, name, mimeType, text);
+        repositoryService.persist(document);
+        return document;
+    }
+
+
+    @Programmatic
     public List<Document> allDocuments() {
         return repositoryService.allInstances(Document.class);
     }

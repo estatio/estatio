@@ -65,8 +65,7 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
             )
             @ParameterLayout(named = "Reference")
             final String reference,
-            @Parameter(
-                    maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name")
             final String name) {
 

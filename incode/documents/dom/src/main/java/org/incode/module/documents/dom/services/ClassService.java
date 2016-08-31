@@ -17,6 +17,7 @@
 package org.incode.module.documents.dom.services;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.DomainService;
@@ -43,8 +44,7 @@ public class ClassService {
         if(superType != null) {
             if(!superType.isAssignableFrom(cls)) {
                 return TranslatableString.tr(
-                        "Class '{cls}' is not a subtype of '{superType}'",
-                        "cls", cls.getName(),
+                        "Class is not a subtype of '{superType}'",
                         "superType", superType.getName());
             }
         }
@@ -53,13 +53,12 @@ public class ClassService {
             constructor = cls.getConstructor();
         } catch (NoSuchMethodException e) {
             return TranslatableString.tr(
-                    "Class '{cls}' does not have a no-arg constructor",
-                    "cls", cls.getName());
+                    "Class does not have a no-arg constructor");
         }
-        if (!constructor.isAccessible()) {
+        if(!Modifier.isPublic(constructor.getModifiers())) {
             return TranslatableString.tr(
-                    "The no-arg constructor of class '{cls}' is not accessible",
-                    "cls", cls.getName());
+                    "The no-arg constructor is not public");
+
         }
         return null;
     }
