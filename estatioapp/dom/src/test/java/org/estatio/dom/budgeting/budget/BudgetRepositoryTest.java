@@ -34,6 +34,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -138,8 +139,10 @@ public class BudgetRepositoryTest {
 
             //given
             Property property = new PropertyForTesting();
-            LocalDate startDate = new LocalDate(2015, 01, 01);
-            LocalDate endDate = new LocalDate(2015, 12, 31);
+            LocalDate startDate = new LocalDate(2015, 01, 02);
+            LocalDate endDate = new LocalDate(2015, 12, 30);
+            LocalDate startOfYear = new LocalDate(2015,01,01);
+            LocalDate endOfYear = new LocalDate(2015,12,31);
             final Budget budget = new Budget();
 
             // expect
@@ -159,45 +162,7 @@ public class BudgetRepositoryTest {
             assertThat(newBudget.getProperty()).isEqualTo(property);
             assertThat(newBudget.getStartDate()).isEqualTo(startDate);
             assertThat(newBudget.getEndDate()).isEqualTo(endDate);
-
-        }
-
-        @Test
-        public void overlappingDates() {
-
-            assertThat(budgetRepository.validateNewBudget(null, new LocalDate(2011, 1, 1), new LocalDate(2011, 12, 31))).isEqualTo("A budget cannot overlap an existing budget.");
-
-        }
-
-        @Test
-        public void wrongBudgetDates() {
-
-            //given
-            Property property = new PropertyForTesting();
-            LocalDate startDate = new LocalDate(2015, 12, 31);
-            LocalDate endDate = new LocalDate(2015, 01, 01);
-
-            //when
-            String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
-
-            //then
-            assertThat(validateBudget).isEqualTo("End date can not be before start date");
-
-        }
-
-        @Test
-        public void emptyStartDate() {
-
-            //given
-            Property property = new PropertyForTesting();
-            LocalDate startDate = null;
-            LocalDate endDate = new LocalDate(2015, 01, 01);
-
-            //when
-            String validateBudget = budgetRepository.validateNewBudget(property, startDate, endDate);
-
-            //then
-            assertThat(validateBudget).isEqualTo("Start date is mandatory");
+            assertThat(newBudget.getBudgetYear()).isEqualTo(new LocalDateInterval(startOfYear, endOfYear));
 
         }
 

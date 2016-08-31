@@ -6,9 +6,12 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -24,9 +27,6 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by jodo on 19/08/15.
- */
 public class BudgetRepositoryTest extends EstatioIntegrationTest {
 
     @Inject
@@ -155,6 +155,72 @@ public class BudgetRepositoryTest extends EstatioIntegrationTest {
             // then
             assertThat(targetCharges.size()).isEqualTo(1);
             assertThat(targetCharges.get(0).getReference()).isEqualTo(ChargeRefData.GB_SERVICE_CHARGE);
+
+        }
+
+    }
+
+    public static class NewBudgetValidationWorks extends BudgetRepositoryTest {
+
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
+        @Test
+        public void budgetPeriodCannotExceedYear() throws Exception {
+
+            // given
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+            //then
+            expectedException.expect(InvalidException.class);
+            expectedException.expectMessage("Reason: A budget should have an end date in the same year as start date");
+
+            // when
+            wrap(budgetRepository).newBudget(property, new LocalDate(2010,01,01), new LocalDate(2011,01,01));
+
+        }
+
+        @Test
+        public void emptyStartDate() {
+
+            // given
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+            //then
+            expectedException.expect(InvalidException.class);
+
+            // when
+            wrap(budgetRepository).newBudget(property, null, new LocalDate(2010,12,31));
+        }
+
+        @Test
+        public void wrongBudgetDates() {
+
+            // given
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+            //then
+            expectedException.expect(InvalidException.class);
+            expectedException.expectMessage("Reason: End date can not be before start date");
+
+            // when
+            wrap(budgetRepository).newBudget(property, new LocalDate(2010,01,03), new LocalDate(2010,01,01));
+
+        }
+
+        @Test
+        public void overlappingDates() {
+
+            // given
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
+
+            //then
+            expectedException.expect(InvalidException.class);
+            expectedException.expectMessage("Reason: A budget cannot overlap an existing budget");
+
+            //when
+            wrap(budgetRepository).newBudget(property, new LocalDate(2015,12,30), new LocalDate(2015,12,31));
 
         }
 

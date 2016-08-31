@@ -18,13 +18,20 @@
  */
 package org.estatio.dom.budgeting.budget;
 
-import org.apache.isis.applib.annotation.*;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import java.util.List;
 
 @DomainService(repositoryFor = Budget.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -61,6 +68,10 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
 
         if (!new LocalDateInterval(startDate, endDate).isValid()) {
             return "End date can not be before start date";
+        }
+
+        if (endDate!=null && endDate.getYear()!=startDate.getYear()){
+            return "A budget should have an end date in the same year as start date";
         }
 
         for (Budget budget : this.findByProperty(property)) {

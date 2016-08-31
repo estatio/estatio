@@ -146,6 +146,10 @@ public class Budget extends UdoDomainObject2<Budget>
     @Getter @Setter
     private LocalDate endDate;
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public LocalDateInterval getBudgetYear() {
+        return new LocalDateInterval(new LocalDate(getStartDate().getYear(),01,01), new LocalDate(new LocalDate(getStartDate().getYear(),12,31)));
+    }
     // ////////////////////////////////////////
 
     @Programmatic
