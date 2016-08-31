@@ -44,7 +44,6 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
-import org.estatio.dom.document.Document;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventSourceLink;
 import org.estatio.dom.financial.FinancialAccount;
@@ -103,7 +102,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(Numerator.class);
 
-        deleteFrom(Document.class);
+        // deleteFrom(Document.class);
 
         deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);

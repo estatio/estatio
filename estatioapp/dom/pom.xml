@@ -129,6 +129,13 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.incode.module.base</groupId>
+            <artifactId>incode-module-base-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-currency</artifactId>
         </dependency>
@@ -140,12 +147,23 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.incode.module.doctemplates</groupId>
-            <artifactId>incode-module-doctemplates-dom</artifactId>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.doctemplates</groupId>
-            <artifactId>incode-module-doctemplates-dom</artifactId>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.documents</groupId>
+            <artifactId>incode-module-documents-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.documents</groupId>
+            <artifactId>incode-module-documents-dom</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -157,6 +175,17 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.freemarker</groupId>
             <artifactId>isis-module-freemarker-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.xdocreport</groupId>
+            <artifactId>isis-module-xdocreport-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.xdocreport</groupId>
+            <artifactId>isis-module-xdocreport-dom</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

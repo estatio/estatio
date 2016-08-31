@@ -27,8 +27,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.freemarker.dom.spi.FreeMarkerTemplateLoader;
 import org.isisaddons.module.freemarker.dom.spi.TemplateSource;
 
-import org.incode.module.doctemplates.dom.DocTemplate;
-import org.incode.module.doctemplates.dom.DocTemplateRepository;
+import org.incode.module.documents.dom.templates.DocumentTemplate;
+import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -36,12 +38,16 @@ import org.incode.module.doctemplates.dom.DocTemplateRepository;
 public class FreeMarkerTemplateLoaderUsingDocTemplateRepository implements FreeMarkerTemplateLoader {
 
     @Override
-    public TemplateSource load(final String reference, final String atPath) {
-        final DocTemplate docTemplate = docTemplateRepository.findByReferenceAndAtPath(reference, atPath);
-        return new TemplateSource(docTemplate.getTemplateText(), (long)JDOHelper.getVersion(docTemplate));
+    public TemplateSource load(final String documentTypeReference, final String atPath) {
+        final DocumentType documentType = documentTypeRepository.findByReference(documentTypeReference);
+        final DocumentTemplate documentTemplate = documentTemplateRepository.findCurrentByTypeAndAtPath(documentType, atPath);
+        return new TemplateSource(new String(documentTemplate.getClobChars()), (long)JDOHelper.getVersion(documentTemplate));
     }
 
     @Inject
-    private DocTemplateRepository docTemplateRepository;
+    private DocumentTypeRepository documentTypeRepository;
+
+    @Inject
+    private DocumentTemplateRepository documentTemplateRepository;
 
 }

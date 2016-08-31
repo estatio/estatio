@@ -17,7 +17,6 @@
 package org.estatio.dom.document;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.Persistent;
 
 import org.joda.time.LocalDate;
@@ -40,31 +39,31 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(
-        identityType = javax.jdo.annotations.IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY,
-        column = "id")
-@javax.jdo.annotations.Version(
-        strategy = javax.jdo.annotations.VersionStrategy.VERSION_NUMBER,
-        column = "version")
-@javax.jdo.annotations.Inheritance(
-        strategy = javax.jdo.annotations.InheritanceStrategy.NEW_TABLE)
-@Discriminator(
-        strategy = javax.jdo.annotations.DiscriminatorStrategy.CLASS_NAME,
-        column = "discriminator")
-@javax.jdo.annotations.Indices({
-        @javax.jdo.annotations.Index(
-                name = "Document_name_IDX",
-                members = { "name" })
-})
-@javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
-                name = "findByName", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.document.Document "
-                        + "WHERE name.matches(:pattern) ")
-})
+//@javax.jdo.annotations.PersistenceCapable(
+//        identityType = javax.jdo.annotations.IdentityType.DATASTORE)
+//@javax.jdo.annotations.DatastoreIdentity(
+//        strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY,
+//        column = "id")
+//@javax.jdo.annotations.Version(
+//        strategy = javax.jdo.annotations.VersionStrategy.VERSION_NUMBER,
+//        column = "version")
+//@javax.jdo.annotations.Inheritance(
+//        strategy = javax.jdo.annotations.InheritanceStrategy.NEW_TABLE)
+//@Discriminator(
+//        strategy = javax.jdo.annotations.DiscriminatorStrategy.CLASS_NAME,
+//        column = "discriminator")
+//@javax.jdo.annotations.Indices({
+//        @javax.jdo.annotations.Index(
+//                name = "Document_name_IDX",
+//                members = { "name" })
+//})
+//@javax.jdo.annotations.Queries({
+//        @javax.jdo.annotations.Query(
+//                name = "findByName", language = "JDOQL",
+//                value = "SELECT "
+//                        + "FROM org.estatio.dom.document.Document "
+//                        + "WHERE name.matches(:pattern) ")
+//})
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 @DomainObject(editing = Editing.DISABLED)
 public class Document implements Comparable<Document>, WithIntervalMutable<Document> {

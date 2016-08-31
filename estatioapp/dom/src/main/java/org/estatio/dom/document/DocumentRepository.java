@@ -21,14 +21,12 @@ package org.estatio.dom.document;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Document.class)
+//@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Document.class)
 public class DocumentRepository extends UdoDomainRepositoryAndFactory<Document> {
 
     public DocumentRepository() {

@@ -674,13 +674,41 @@ mvn clean install -DskipTests -o
 
 
             <dependency>
-                <groupId>org.incode.module.doctemplates</groupId>
-                <artifactId>incode-module-doctemplates-dom</artifactId>
+                <groupId>org.incode.module.documents</groupId>
+                <artifactId>incode-module-documents-dom</artifactId>
                 <version>1.13.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.incode.module.doctemplates</groupId>
-                <artifactId>incode-module-doctemplates-dom</artifactId>
+                <groupId>org.incode.module.documents</groupId>
+                <artifactId>incode-module-documents-dom</artifactId>
+                <version>1.13.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.incode.module.base</groupId>
+                <artifactId>incode-module-base-dom</artifactId>
+                <version>1.13.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.base</groupId>
+                <artifactId>incode-module-base-dom</artifactId>
+                <version>1.13.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.incode.module.communications</groupId>
+                <artifactId>incode-module-communications-dom</artifactId>
+                <version>1.13.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.communications</groupId>
+                <artifactId>incode-module-communications-dom</artifactId>
                 <version>1.13.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -1024,7 +1052,9 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/doctemplates/dom</module>
+                <module>incode/base/dom</module>
+                <module>incode/communications/dom</module>
+                <module>incode/documents/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
@@ -1048,7 +1078,9 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/doctemplates/dom</module>
+                <module>incode/base/dom</module>
+                <module>incode/communications/dom</module>
+                <module>incode/documents/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
@@ -1071,7 +1103,9 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/doctemplates/dom</module>
+                <module>incode/base/dom</module>
+                <module>incode/communications/dom</module>
+                <module>incode/documents/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>
@@ -1098,7 +1132,9 @@ mvn clean install -DskipTests -o
                 <module>udo/numerator/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/doctemplates/dom</module>
+                <module>incode/base/dom</module>
+                <module>incode/communications/dom</module>
+                <module>incode/documents/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>estatioapp/app</module>

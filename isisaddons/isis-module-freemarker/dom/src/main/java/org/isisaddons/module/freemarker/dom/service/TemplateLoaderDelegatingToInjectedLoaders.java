@@ -5,8 +5,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import org.isisaddons.module.freemarker.dom.spi.TemplateSource;
 import org.isisaddons.module.freemarker.dom.spi.FreeMarkerTemplateLoader;
+import org.isisaddons.module.freemarker.dom.spi.TemplateSource;
 
 class TemplateLoaderDelegatingToInjectedLoaders implements freemarker.cache.TemplateLoader {
 
@@ -37,7 +37,7 @@ class TemplateLoaderDelegatingToInjectedLoaders implements freemarker.cache.Temp
     @Override
     public Reader getReader(final Object templateSourceAsObj, final String encoding) throws IOException {
         final TemplateSource templateSource = (TemplateSource) templateSourceAsObj;
-        return new StringReader(templateSource.getText());
+        return new StringReader(templateSource.getChars());
     }
 
     @Override

@@ -21,8 +21,6 @@ package org.estatio.dom.document.asset;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.value.Blob;
 
@@ -31,7 +29,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.document.Document;
 import org.estatio.dom.document.DocumentType;
 
-@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = DocumentForFixedAsset.class)
+//@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = DocumentForFixedAsset.class)
 public class DocumentForFixedAssetRepository extends UdoDomainRepositoryAndFactory<DocumentForFixedAsset> {
 
     public DocumentForFixedAssetRepository() {

@@ -20,18 +20,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.document.Document;
 import org.estatio.dom.document.DocumentType;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "80.10")
+//@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+//@DomainServiceLayout(named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "80.10")
 public class DocumentForFixedAssetMenu {
 
     public String getId() {

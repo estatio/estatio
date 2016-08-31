@@ -60,13 +60,18 @@ public class FreeMarkerService {
         cfg.setLogTemplateExceptions(false);
     }
 
-    public String process(final String templateReference, String templateAtPath, final Map<String, String> properties)
+    public String process(final String templateReference, String templateAtPath, final Object dataModel)
             throws IOException, TemplateException {
         final String templateName = join(templateReference, templateAtPath);
         final Template template = cfg.getTemplate(templateName);
         final StringWriter sw = new StringWriter();
-        template.process(properties, sw);
+        template.process(dataModel, sw);
         return sw.toString();
+    }
+
+    public String process(final String templateReference, String templateAtPath, final Map<String, String> properties)
+            throws IOException, TemplateException {
+        return process(templateReference, templateAtPath, (Object)properties);
     }
 
     //region > join, split (helpers)

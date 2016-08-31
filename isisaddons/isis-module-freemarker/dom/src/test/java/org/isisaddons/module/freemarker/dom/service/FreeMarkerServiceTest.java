@@ -62,7 +62,7 @@ public class FreeMarkerServiceTest {
 
 
     @Test
-    public void simple() throws Exception {
+    public void usingProperties() throws Exception {
 
         // given
         FreeMarkerService service = init("<h1>Welcome ${user}!</h1>", 0);
@@ -70,6 +70,34 @@ public class FreeMarkerServiceTest {
 
         // when
         String merged = service.process("a", "/", properties);
+
+        // then
+        assertThat(merged, is("<h1>Welcome John Doe!</h1>"));
+    }
+
+
+    public static class UserDataModel {
+        private String user;
+
+        public String getUser() {
+            return user;
+        }
+
+        public void setUser(final String user) {
+            this.user = user;
+        }
+    }
+
+    @Test
+    public void usingDataModel() throws Exception {
+
+        // given
+        FreeMarkerService service = init("<h1>Welcome ${user}!</h1>", 0);
+        final UserDataModel userDataModel = new UserDataModel();
+        userDataModel.setUser("John Doe");
+
+        // when
+        String merged = service.process("a", "/", userDataModel);
 
         // then
         assertThat(merged, is("<h1>Welcome John Doe!</h1>"));
