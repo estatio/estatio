@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016 Dan Haywood
+ *  Copyright 2013~2014 Dan Haywood
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,8 +14,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.freemarker.dom;
+package org.isisaddons.module.xdocreport.dom.example.models;
 
-public final class FreeMarkerModule {
-    private FreeMarkerModule(){}
+import lombok.Data;
+
+@Data
+public class Project {
+
+    private final String name;
+    
 }

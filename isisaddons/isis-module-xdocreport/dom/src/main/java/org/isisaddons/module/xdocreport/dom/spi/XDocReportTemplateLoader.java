@@ -14,39 +14,36 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.freemarker.dom.spi;
+package org.isisaddons.module.xdocreport.dom.spi;
 
 /**
  * Must be implemented by consuming application.
  *
  * <p>
  * Typically implemented by a "glue" domain service that retrieve a template from an appropriate repository.
- * For example, the incode-module-documents module provides the DocumentTemplate and DocumentTemplateRepository
+ * For example, the incode-module-doctemplates module provides the DocTemplate and DocTemplateRepository
  * </p>
  */
-public interface FreeMarkerTemplateLoader {
+public interface XDocReportTemplateLoader {
 
-    TemplateSource templateSourceFor(final String reference, final String atPath);
+    byte[] templateBytesFor(final String reference, final String atPath);
 
     /**
      * For testing purposes.
      */
-    class Simple implements FreeMarkerTemplateLoader {
+    class Simple implements XDocReportTemplateLoader {
 
-        private final String templateText;
-        private final long version;
+        private final byte[] bytes;
 
-        public Simple(final String templateText, final long version) {
-            this.templateText = templateText;
-            this.version = version;
+        public Simple(final byte[] bytes) {
+            this.bytes = bytes;
         }
 
         @Override
-        public TemplateSource templateSourceFor(final String reference, final String atPath) {
-            return new TemplateSource(templateText, version);
+        public byte[] templateBytesFor(final String reference, final String atPath) {
+            return bytes;
         }
     }
-
 
 }
 

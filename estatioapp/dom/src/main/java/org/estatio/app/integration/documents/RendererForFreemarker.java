@@ -43,7 +43,7 @@ public class RendererForFreemarker extends RendererAbstract {
         final String atPath = documentTemplate.getAtPath();
 
         try {
-            return freeMarkerService.process(typeRef, atPath, dataModel);
+            return freeMarkerService.render(typeRef, atPath, dataModel);
         } catch (TemplateException e) {
             throw new IOException(e);
         }

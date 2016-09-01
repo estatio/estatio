@@ -16,6 +16,14 @@
  */
 package org.isisaddons.module.xdocreport.dom.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +32,13 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.services.config.ConfigurationService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.isisaddons.module.xdocreport.dom.example.models.Developer;
+import org.isisaddons.module.xdocreport.dom.example.models.Project;
+import org.isisaddons.module.xdocreport.dom.example.models.ProjectDevelopersModel;
+import org.isisaddons.module.xdocreport.dom.spi.XDocReportTemplateLoader;
+
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class XDocReportServiceTest {
 
@@ -47,10 +62,23 @@ public class XDocReportServiceTest {
     public void simple() throws Exception {
 
         // given
+        InputStream in= new FileInputStream(new File("src/test/java/org/isisaddons/module/xdocreport/dom/example/template/Project-template.docx"));
+        final byte[] bytes = IOUtils.toByteArray(in);
+
+        service.xDocReportTemplateLoaders =
+                Collections.<XDocReportTemplateLoader>singletonList(new XDocReportTemplateLoader.Simple(bytes));
+
+        Project project = new Project("XDocReport");
+        List<Developer> developers = new ArrayList<>();
+        developers.add(new Developer("ZERR", "Angelo", "angelo.zerr@gmail.com"));
+        developers.add(new Developer("Leclercq", "Pascal", "pascal.leclercq@gmail.com"));
+        final ProjectDevelopersModel dataModel = new ProjectDevelopersModel(project, developers);
 
         // when
+        final byte[] docxBytes = service.render(null, null, dataModel, OutputType.DOCX);
 
         // then
+        IOUtils.write(docxBytes,new FileOutputStream(new File("target/Project.docx")));
     }
 
 }

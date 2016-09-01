@@ -40,7 +40,7 @@ import org.incode.module.documents.dom.types.DocumentTypeRepository;
 public class FreeMarkerTemplateLoaderUsingDocTemplateRepository implements FreeMarkerTemplateLoader {
 
     @Override
-    public TemplateSource load(final String documentTypeReference, final String atPath) {
+    public TemplateSource templateSourceFor(final String documentTypeReference, final String atPath) {
         final DocumentType documentType = documentTypeRepository.findByReference(documentTypeReference);
 
         final DocumentTemplate documentTemplate = lookupDocumentTemplate(documentType, atPath);

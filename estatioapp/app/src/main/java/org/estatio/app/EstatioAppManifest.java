@@ -65,7 +65,7 @@ public class EstatioAppManifest implements AppManifest {
                         // don't include the settings module, instead we use EstatioDomainSettingsModule
                         // org.isisaddons.module.settings.SettingsModule.class,
                         org.isisaddons.module.stringinterpolator.StringInterpolatorModule.class,
-                        org.isisaddons.module.freemarker.dom.FreeMarkerModule.class
+                        org.isisaddons.module.freemarker.dom.XDocReportModule.class
                 )
         );
         return modules;

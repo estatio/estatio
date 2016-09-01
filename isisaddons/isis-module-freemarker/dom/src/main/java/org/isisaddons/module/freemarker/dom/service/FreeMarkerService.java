@@ -29,6 +29,7 @@ import com.google.common.base.Splitter;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.config.ConfigurationService;
 
 import org.isisaddons.module.freemarker.dom.spi.FreeMarkerTemplateLoader;
@@ -55,24 +56,27 @@ public class FreeMarkerService {
                         : TemplateExceptionHandler.RETHROW_HANDLER;
         cfg.setTemplateExceptionHandler(handler);
 
-        cfg.setTemplateLoader(new TemplateLoaderDelegatingToInjectedLoaders(freemarkerFreeMarkerTemplateLoaders));
+        cfg.setTemplateLoader(new TemplateLoaderDelegatingToInjectedLoaders(freeMarkerTemplateLoaders));
 
         cfg.setLogTemplateExceptions(false);
     }
 
-    public String process(final String templateReference, String templateAtPath, final Object dataModel)
+    /**
+     * Uses the provided document type (reference) and atPath to lookup the template's text by way of any injected
+     * {@link FreeMarkerTemplateLoader}s (acting as the glue between this service and the consuming domain application).
+     *
+     * @param dataModel - will usually be a strongly-typed DTO, but a {@link Map} can also be used.
+     */
+    @Programmatic
+    public String render(final String documentTypeReference, String atPath, final Object dataModel)
             throws IOException, TemplateException {
-        final String templateName = join(templateReference, templateAtPath);
+        final String templateName = join(documentTypeReference, atPath);
         final Template template = cfg.getTemplate(templateName);
         final StringWriter sw = new StringWriter();
         template.process(dataModel, sw);
         return sw.toString();
     }
 
-    public String process(final String templateReference, String templateAtPath, final Map<String, String> properties)
-            throws IOException, TemplateException {
-        return process(templateReference, templateAtPath, (Object)properties);
-    }
 
     //region > join, split (helpers)
 
@@ -97,7 +101,7 @@ public class FreeMarkerService {
     ConfigurationService configurationService;
 
     @Inject
-    List<FreeMarkerTemplateLoader> freemarkerFreeMarkerTemplateLoaders;
+    List<FreeMarkerTemplateLoader> freeMarkerTemplateLoaders;
     //endregion
 
 }

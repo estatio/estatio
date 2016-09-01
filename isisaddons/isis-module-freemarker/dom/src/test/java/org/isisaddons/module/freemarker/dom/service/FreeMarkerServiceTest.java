@@ -52,7 +52,7 @@ public class FreeMarkerServiceTest {
 
         // simulate the wiring that Isis would normally do by itself
         FreeMarkerTemplateLoader loader = new FreeMarkerTemplateLoader.Simple(templateText, version);
-        service.freemarkerFreeMarkerTemplateLoaders = Collections.singletonList(loader);
+        service.freeMarkerTemplateLoaders = Collections.singletonList(loader);
 
         service.configurationService = mockConfigurationService;
 
@@ -69,7 +69,7 @@ public class FreeMarkerServiceTest {
         Map<String, String> properties = ImmutableMap.of("user", "John Doe");
 
         // when
-        String merged = service.process("a", "/", properties);
+        String merged = service.render("a", "/", properties);
 
         // then
         assertThat(merged, is("<h1>Welcome John Doe!</h1>"));
@@ -97,7 +97,7 @@ public class FreeMarkerServiceTest {
         userDataModel.setUser("John Doe");
 
         // when
-        String merged = service.process("a", "/", userDataModel);
+        String merged = service.render("a", "/", userDataModel);
 
         // then
         assertThat(merged, is("<h1>Welcome John Doe!</h1>"));

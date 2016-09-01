@@ -10,28 +10,29 @@ import org.isisaddons.module.freemarker.dom.spi.TemplateSource;
 
 class TemplateLoaderDelegatingToInjectedLoaders implements freemarker.cache.TemplateLoader {
 
-    private final List<FreeMarkerTemplateLoader> freemarkerFreeMarkerTemplateLoaders;
+    private final List<FreeMarkerTemplateLoader> freeMarkerTemplateLoaders;
 
-    public TemplateLoaderDelegatingToInjectedLoaders(final List<FreeMarkerTemplateLoader> freemarkerFreeMarkerTemplateLoaders) {
-        if (freemarkerFreeMarkerTemplateLoaders == null || freemarkerFreeMarkerTemplateLoaders.isEmpty()) {
+    public TemplateLoaderDelegatingToInjectedLoaders(final List<FreeMarkerTemplateLoader> freeMarkerTemplateLoaders) {
+        if (freeMarkerTemplateLoaders == null || freeMarkerTemplateLoaders.isEmpty()) {
             throw new IllegalStateException("No freemarker template loaders available");
         }
-        this.freemarkerFreeMarkerTemplateLoaders = freemarkerFreeMarkerTemplateLoaders;
+        this.freeMarkerTemplateLoaders = freeMarkerTemplateLoaders;
     }
 
     @Override
     public Object findTemplateSource(final String templateName) throws IOException {
         final String[] split = FreeMarkerService.split(templateName);
-        final String templateReference = split[0];
-        final String templateAtPath = split[1];
-        for (FreeMarkerTemplateLoader freemarkerFreeMarkerTemplateLoader : freemarkerFreeMarkerTemplateLoaders) {
+        final String documentTypeRef = split[0];
+        final String atPath = split[1];
+        for (FreeMarkerTemplateLoader freemarkerFreeMarkerTemplateLoader : freeMarkerTemplateLoaders) {
             final TemplateSource templateSource = freemarkerFreeMarkerTemplateLoader
-                    .load(templateReference, templateAtPath);
+                    .templateSourceFor(documentTypeRef, atPath);
             if (templateSource != null) {
                 return templateSource;
             }
         }
-        return null;
+        throw new IllegalStateException(
+                String.format("Unable to find template for type '%s', atPath '%s'", documentTypeRef, atPath));
     }
 
     @Override
