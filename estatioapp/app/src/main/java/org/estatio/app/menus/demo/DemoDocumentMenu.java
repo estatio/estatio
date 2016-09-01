@@ -53,7 +53,6 @@ import org.estatio.app.menus.documents.DocumentTypeMenu;
 import org.estatio.app.menus.documents.RenderingStrategyMenu;
 
 import freemarker.template.TemplateException;
-import lombok.Data;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -107,11 +106,6 @@ public class DemoDocumentMenu {
 
     // //////////////////////////////////////
 
-    @Data
-    public static class UserDataModel {
-        private String user;
-    }
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public DocumentTemplate demoDocumentCreateTextTemplate(
@@ -164,7 +158,7 @@ public class DemoDocumentMenu {
         return "Hello ${user} !!!";
     }
     public String default5DemoDocumentCreateTextTemplate() {
-        return UserDataModel.class.getName();
+        return HelloDocumentTemplateUserDataModel.class.getName();
     }
 
     public RenderingStrategy default6DemoDocumentCreateTextTemplate() {
@@ -187,7 +181,7 @@ public class DemoDocumentMenu {
             @ParameterLayout(named = "User")
             final String user) throws IOException, TemplateException {
 
-        final UserDataModel dataModel = (UserDataModel) documentTemplate.instantiateDataModel();
+        final HelloDocumentTemplateUserDataModel dataModel = (HelloDocumentTemplateUserDataModel) documentTemplate.instantiateDataModel();
         dataModel.setUser(user);
 
         final Document document = documentTemplate.render(dataModel, name);

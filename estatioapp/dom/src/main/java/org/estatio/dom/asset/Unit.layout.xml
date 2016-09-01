@@ -76,6 +76,9 @@
             <ns2:collection id="roles">
                 <ns2:action id="newRole"/>
             </ns2:collection>
+            <ns2:collection id="paperclips">
+                <ns2:named>Documents</ns2:named>
+            </ns2:collection>
         </col>
     </row>
 </grid>

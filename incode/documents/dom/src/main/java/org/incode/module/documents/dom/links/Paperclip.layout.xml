@@ -10,6 +10,7 @@
         <bs3:col span="6">
             <cpt:fieldSet name="Identifier">
                 <cpt:property id="attachedTo"/>
+                <cpt:property id="roleName"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>

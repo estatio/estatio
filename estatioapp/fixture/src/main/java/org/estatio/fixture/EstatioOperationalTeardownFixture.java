@@ -19,9 +19,18 @@
 package org.estatio.fixture;
 
 import javax.inject.Inject;
+import javax.jdo.metadata.TypeMetadata;
+
+import com.google.common.base.Strings;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+
+import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.links.Paperclip;
+import org.incode.module.documents.dom.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.templates.DocumentTemplate;
+import org.incode.module.documents.dom.types.DocumentType;
 
 import org.estatio.dom.JdoColumnLength.Numerator;
 import org.estatio.dom.agreement.Agreement;
@@ -33,6 +42,7 @@ import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
+import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
@@ -102,7 +112,13 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(Numerator.class);
 
-        // deleteFrom(Document.class);
+        deleteFrom(PaperclipForFixedAsset.class);
+        deleteFrom(Paperclip.class);
+
+        deleteFrom(DocumentTemplate.class);
+        deleteFrom(Document.class);
+        deleteFrom(DocumentType.class);
+        deleteFrom(RenderingStrategy.class);
 
         deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);
@@ -161,12 +177,32 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
     protected void deleteFrom(final Class cls) {
         preDeleteFrom(cls);
-        deleteFrom(cls.getSimpleName());
+        final TypeMetadata metadata = isisJdoSupport.getJdoPersistenceManager().getPersistenceManagerFactory()
+                .getMetadata(cls.getName());
+        if(metadata == null) {
+            // fall-back
+            deleteFrom(cls.getSimpleName());
+        } else {
+            final String schema = metadata.getSchema();
+            String table = metadata.getTable();
+            if(Strings.isNullOrEmpty(table)) {
+                table = cls.getSimpleName();
+            }
+            if(Strings.isNullOrEmpty(schema)) {
+                deleteFrom(table);
+            } else {
+                deleteFrom(schema, table);
+            }
+        }
         postDeleteFrom(cls);
     }
 
+    protected Integer deleteFrom(final String schema, final String table) {
+        return isisJdoSupport.executeUpdate(String.format("DELETE FROM \"%s\".\"%s\"", schema, table));
+    }
+
     protected void deleteFrom(final String table) {
-        isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
+        isisJdoSupport.executeUpdate(String.format("DELETE FROM \"%s\"", table));
     }
 
     protected void preDeleteFrom(final Class cls) {}

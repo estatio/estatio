@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentSort;
 
-// TODO: if there are any documents for this template already, we should probably disable and then create a new template object (with new applicable date range)
 @Mixin
 public class DocumentTemplate_updateText {
 

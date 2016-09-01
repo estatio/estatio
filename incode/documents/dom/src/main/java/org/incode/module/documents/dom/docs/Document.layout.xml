@@ -39,6 +39,7 @@
                 <cpt:property id="clob" hidden="ALL_TABLES">
                 </cpt:property>
                 <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
+                    <cpt:action id="download"/>
                 </cpt:property>
                 <cpt:property id="externalUrl"/>
             </cpt:fieldSet>

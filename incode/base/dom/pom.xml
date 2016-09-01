@@ -34,7 +34,7 @@ Copyright 2014~2015 Dan Haywood
 
     <packaging>jar</packaging>
 
-    <name>Incode Module base DOM</name>
+    <name>Incode Module Base DOM</name>
     <description>
         A module providing Base utilities for domain modules
     </description>

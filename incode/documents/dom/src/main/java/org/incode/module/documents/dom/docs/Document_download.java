@@ -14,43 +14,37 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.templates;
+package org.incode.module.documents.dom.docs;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.docs.DocumentSort;
+import org.incode.module.documents.dom.templates.DocumentTemplate;
 
 @Mixin
-public class DocumentTemplate_uploadBlob {
+public class Document_download {
 
     //region > constructor
-    private final DocumentTemplate documentTemplate;
+    private final Document document;
 
-    public DocumentTemplate_uploadBlob(final DocumentTemplate documentTemplate) {
-        this.documentTemplate = documentTemplate;
+    public Document_download(final Document document) {
+        this.document = document;
     }
     //endregion
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public DocumentTemplate $$(
-            @ParameterLayout(named = "File")
-            final Blob blob
-    ) {
-        documentTemplate.setMimeType(blob.getMimeType().toString());
-        documentTemplate.setBlobBytes(blob.getBytes());
-        return documentTemplate;
+    public Clob $$() {
+        return new Clob(document.getName(), document.getMimeType(), document.getText());
     }
 
     public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.CLOB;
+        return document instanceof DocumentTemplate || document.getSort() != DocumentSort.TEXT;
     }
 
 }

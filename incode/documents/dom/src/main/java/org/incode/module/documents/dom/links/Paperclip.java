@@ -18,6 +18,7 @@
 package org.incode.module.documents.dom.links;
 
 import javax.inject.Inject;
+import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -39,9 +40,11 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.Document;
@@ -50,10 +53,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        identityType=IdentityType.DATASTORE
-//        ,
-//        schema = "incodeDocuments",
-//        table = "Paperclip"
+        identityType=IdentityType.DATASTORE,
+        schema = "incodeDocuments",
+        table = "Paperclip"
 )
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Inheritance(
@@ -95,7 +97,7 @@ import lombok.Setter;
         iconUiEvent = Paperclip.IconUiEvent.class,
         cssClassUiEvent = Paperclip.CssClassUiEvent.class
 )
-public abstract class Paperclip {
+public abstract class Paperclip implements Comparable<Paperclip> {
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<Paperclip>{}
@@ -124,9 +126,14 @@ public abstract class Paperclip {
             ev.setTranslatableTitle(titleOf(ev.getSource()));
         }
         private TranslatableString titleOf(final Paperclip paperclip) {
-            return TranslatableString.tr("{attachedTo} ({roleName}",
+            if(paperclip.getRoleName() != null) {
+            return TranslatableString.tr("{attachedTo} ({roleName})",
                     "attachedTo", titleService.titleOf(paperclip.getAttachedTo()),
                     "roleName", paperclip.getRoleName());
+            } else {
+                return TranslatableString.tr("{attachedTo}",
+                    "attachedTo", titleService.titleOf(paperclip.getAttachedTo()));
+            }
         }
         @Inject
         TitleService titleService;
@@ -163,13 +170,11 @@ public abstract class Paperclip {
     }
     //endregion
 
-    //region > attachedToStr (property)
-    public static class AttachedToStrDomainEvent extends PropertyDomainEvent<String> { }
+    //region > attachedToStr (property, hidden)
     @Getter @Setter
     @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.BOOKMARK)
     @Property(
-            domainEvent = AttachedToStrDomainEvent.class,
-            editing = Editing.DISABLED
+            hidden = Where.EVERYWHERE
     )
     private String attachedToStr;
     //endregion
@@ -217,6 +222,33 @@ public abstract class Paperclip {
     }
     //endregion
 
+    //region > id (derived, programmatic)
+    @Programmatic
+    public String getId() {
+        Object objectId = JDOHelper.getObjectId(this);
+        if (objectId == null) {
+            return "";
+        }
+        String objectIdStr = objectId.toString();
+        final String id = objectIdStr.split("\\[OID\\]")[0];
+        return id;
+    }
+    //endregion
+
+    //region > toString, compareTo
+
+    @Override
+    public String toString() {
+        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName");
+    }
+
+    @Override
+    public int compareTo(final Paperclip other) {
+        // needs id also because there could be >1 document with same roleName, eg "cc" list
+        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "id");
+    }
+
+    //endregion
 
     //region > Functions
     public static class Functions {
@@ -227,13 +259,14 @@ public abstract class Paperclip {
             return input -> (T)input.getDocument();
         }
         public static Function<Paperclip, Object> attachedTo() {
-            return owner(Object.class);
+            return attachedTo(Object.class);
         }
-        public static <T extends Object> Function<Paperclip, T> owner(final Class<T> cls) {
+        public static <T extends Object> Function<Paperclip, T> attachedTo(final Class<T> cls) {
             return input -> (T)input.getAttachedTo();
         }
     }
     //endregion
+
 
     //region > injected services
     @Inject

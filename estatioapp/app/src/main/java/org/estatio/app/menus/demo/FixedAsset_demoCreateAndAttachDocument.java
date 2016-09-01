@@ -62,7 +62,7 @@ public class FixedAsset_demoCreateAndAttachDocument {
         final DocumentType documentType = lookupDocType();
         final DocumentTemplate documentTemplate = lookupTemplate(documentType);
 
-        final DemoDocumentMenu.UserDataModel dataModel = (DemoDocumentMenu.UserDataModel) documentTemplate.instantiateDataModel();
+        final HelloDocumentTemplateUserDataModel dataModel = (HelloDocumentTemplateUserDataModel) documentTemplate.instantiateDataModel();
         dataModel.setUser(fixedAsset.getName());
 
         final String documentName = fixedAsset.getName() + ".txt";

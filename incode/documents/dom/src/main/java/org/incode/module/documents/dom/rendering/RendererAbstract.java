@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.documents.dom.rendering;
 
 import java.io.IOException;
 
@@ -26,12 +26,9 @@ import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
-
 import org.incode.module.documents.dom.docs.Document;
 import org.incode.module.documents.dom.docs.DocumentRepository;
 import org.incode.module.documents.dom.docs.DocumentSort;
-import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.templates.DocumentTemplate;
 import org.incode.module.documents.dom.types.DocumentType;
 

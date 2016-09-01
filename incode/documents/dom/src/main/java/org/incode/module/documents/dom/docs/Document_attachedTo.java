@@ -26,20 +26,22 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.links.Paperclip;
 import org.incode.module.documents.dom.links.PaperclipRepository;
+import org.incode.module.documents.dom.templates.DocumentTemplate;
 
-//@Mixin
+@Mixin
 public class Document_attachedTo<T> {
 
     //region > constructor and mixedIn accessor
     private final Document<?> document;
 
-    protected Document_attachedTo(final Document<?> document) {
+    public Document_attachedTo(final Document<?> document) {
         this.document = document;
     }
 
@@ -63,6 +65,11 @@ public class Document_attachedTo<T> {
     public List<Paperclip> $$() {
         return paperclipRepository.findByDocument(document);
     }
+
+    public boolean hide$$() {
+        return document instanceof DocumentTemplate;
+    }
+
     //endregion
 
     //region > injected services

@@ -169,7 +169,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public List<DocumentTemplate> allTemplates() {
         return documentTemplateRepository.allTemplates();
     }

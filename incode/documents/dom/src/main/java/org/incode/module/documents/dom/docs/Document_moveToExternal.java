@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
@@ -39,7 +40,7 @@ public class Document_moveToExternal {
     //endregion
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Document $$(
             @ParameterLayout(named = "External url")

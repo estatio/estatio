@@ -69,10 +69,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        identityType= IdentityType.DATASTORE
-//        ,
-//        schema = "incodeDocuments",
-//        table = "DocumentTemplate"
+        identityType= IdentityType.DATASTORE,
+        schema = "incodeDocuments",
+        table = "DocumentTemplate"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
@@ -81,7 +80,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
-                        + "   && atPathCopy.startsWith(:atPath) "
+                        + "   && :atPath.startsWith(atPathCopy) "
                         + "ORDER BY atPathCopy DESC, startDate DESC "
         ),
         @javax.jdo.annotations.Query(
@@ -89,7 +88,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
-                        + "   && atPathCopy.startsWith(:atPath) "
+                        + "   && :atPath.startsWith(atPathCopy) "
                         + "   && (startDate == null || startDate <= :now) "
                         + "   && (endDate == null   || endDate   > :now) "
                         + "ORDER BY atPathCopy DESC, startDate DESC "
@@ -107,7 +106,7 @@ import lombok.Setter;
                 name = "findCurrentByAtPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
-                        + "   && atPathCopy.startsWith(:atPath) "
+                        + "   && :atPath.startsWith(atPathCopy) "
                         + "   && (startDate == null || startDate <= :now) "
                         + "   && (endDate == null   || endDate > :now) "
                         + "ORDER BY atPathCopy DESC, typeCopy, startDate DESC "
