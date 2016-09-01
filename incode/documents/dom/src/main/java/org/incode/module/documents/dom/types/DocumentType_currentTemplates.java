@@ -43,7 +43,7 @@ public class DocumentType_currentTemplates {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<DocumentTemplate> $$() {
-        return documentTemplateRepository.findCurrentByType(documentType);
+        return documentTemplateRepository.findByType(documentType);
     }
 
 

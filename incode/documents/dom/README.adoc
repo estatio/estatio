@@ -6,6 +6,6 @@
 
 The following http://yuml.me[] class diagram highlights the main concepts:
 
-image::http://yuml.me/79aebe18[link="http://yuml.me/79aebe18"]
+image::http://yuml.me/8c8e687d[link="http://yuml.me/8c8e687d"]
 
 (The colours used in the diagram are - approximately - from link:https://en.wikipedia.org/wiki/Object_Modeling_in_Color[Object Modeling in Color]).

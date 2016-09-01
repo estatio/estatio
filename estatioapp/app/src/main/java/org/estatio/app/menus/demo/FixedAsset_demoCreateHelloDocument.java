@@ -20,6 +20,7 @@
 package org.estatio.app.menus.demo;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,6 +29,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.docs.Document;
@@ -38,21 +40,22 @@ import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.fixture.documents.DocumentTemplateForHelloGlobal;
 
 import freemarker.template.TemplateException;
 
 @Mixin
-public class FixedAsset_demoCreateAndAttachDocument {
+public class FixedAsset_demoCreateHelloDocument {
 
 
     private final FixedAsset<?> fixedAsset;
 
-    public FixedAsset_demoCreateAndAttachDocument(final FixedAsset<?> fixedAsset) {
+    public FixedAsset_demoCreateHelloDocument(final FixedAsset<?> fixedAsset) {
         this.fixedAsset = fixedAsset;
     }
 
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     public FixedAsset<?> $$(
             @Parameter(optionality = Optionality.OPTIONAL)
             @ParameterLayout(named = "Document role")
@@ -85,11 +88,13 @@ public class FixedAsset_demoCreateAndAttachDocument {
     }
 
     private DocumentType lookupDocType() {
-        return documentTypeRepository.findByReference("HELLO");
+        return documentTypeRepository.findByReference(DocumentTemplateForHelloGlobal.TYPE_REF);
     }
 
     private DocumentTemplate lookupTemplate(final DocumentType documentType) {
-        return documentTemplateRepository.findCurrentByTypeAndAtPath(documentType, fixedAsset.getApplicationTenancy().getPath());
+        final List<DocumentTemplate> existing = documentTemplateRepository
+                .findByTypeAndApplicableToAtPathAndCurrent(documentType, fixedAsset.getApplicationTenancy().getPath());
+        return existing.isEmpty()? null: existing.get(0);
     }
 
 

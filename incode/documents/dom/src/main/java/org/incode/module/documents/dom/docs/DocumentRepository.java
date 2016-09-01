@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -35,12 +37,14 @@ import org.incode.module.documents.dom.types.DocumentType;
 )
 public class DocumentRepository {
 
+    //region > createBlob, createClob, createText
     @Programmatic
     public Document createBlob(
             final DocumentType type,
             final String atPath,
-            final Blob blob) {
-        final Document document = new Document(type, atPath, blob);
+            final Blob blob,
+            final LocalDateTime createdAt) {
+        final Document document = new Document(type, atPath, blob, createdAt);
         repositoryService.persist(document);
         return document;
     }
@@ -49,12 +53,12 @@ public class DocumentRepository {
     public Document createClob(
             final DocumentType type,
             final String atPath,
-            final Clob clob) {
-        final Document document = new Document(type, atPath, clob);
+            final Clob clob,
+            final LocalDateTime createdAt) {
+        final Document document = new Document(type, atPath, clob, createdAt);
         repositoryService.persist(document);
         return document;
     }
-
 
     @Programmatic
     public Document createText(
@@ -62,11 +66,13 @@ public class DocumentRepository {
             final String atPath,
             final String name,
             final String mimeType,
-            final String text) {
-        final Document document = new Document(type, atPath, name, mimeType, text);
+            final String text,
+            final LocalDateTime createdAt) {
+        final Document document = new Document(type, atPath, name, mimeType, text, createdAt);
         repositoryService.persist(document);
         return document;
     }
+    //endregion
 
 
     @Programmatic

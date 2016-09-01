@@ -23,7 +23,9 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.NotPersistent;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -42,6 +44,9 @@ import org.estatio.dom.asset.FixedAsset;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
         objectType = "estatioAssets.PaperclipForFixedAsset"
+)
+@DomainObjectLayout(
+        bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class PaperclipForFixedAsset extends Paperclip {
 

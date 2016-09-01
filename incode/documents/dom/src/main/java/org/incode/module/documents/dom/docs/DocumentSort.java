@@ -67,11 +67,17 @@ public enum DocumentSort {
         }
     };
 
+    /**
+     * Supported only if {@link #isClob()} or {@link #isText()}.
+     */
     @Programmatic
     public String asChars(final DocumentTemplate documentTemplate) {
         throw new IllegalArgumentException("Cannot convert to characters");
     }
 
+    /**
+     * Supported only if {@link #isBinary()}.
+     */
     @Programmatic
     public byte[] asBytes(final DocumentTemplate documentTemplate) {
         throw new IllegalArgumentException("Cannot convert to bytes");
@@ -82,5 +88,20 @@ public enum DocumentSort {
         if(this == BLOB) { return EXTERNAL_BLOB; }
         if(this == CLOB || this == TEXT) { return EXTERNAL_CLOB; }
         return this;
+    }
+
+    @Programmatic
+    public boolean isBinary() {
+        return this == BLOB || this == EXTERNAL_BLOB;
+    }
+
+    @Programmatic
+    public boolean isClob() {
+        return this == CLOB || this == EXTERNAL_CLOB;
+    }
+
+    @Programmatic
+    public boolean isText() {
+        return this == TEXT;
     }
 }

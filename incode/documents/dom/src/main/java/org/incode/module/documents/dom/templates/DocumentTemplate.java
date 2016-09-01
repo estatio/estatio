@@ -16,8 +16,7 @@
  */
 package org.incode.module.documents.dom.templates;
 
-import java.util.SortedSet;
-import java.util.concurrent.Callable;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -28,25 +27,27 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -57,13 +58,13 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.links.Paperclip;
+import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.types.DocumentType;
-
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -80,53 +81,56 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
-                        + "   && :atPath.startsWith(atPathCopy) "
-                        + "ORDER BY atPathCopy DESC, startDate DESC "
+                        + "   && atPathCopy == :atPath "
+                        + "ORDER BY date DESC"
         ),
         @javax.jdo.annotations.Query(
-                name = "findCurrentByTypeAndAtPath", language = "JDOQL",
+                name = "findByTypeAndApplicableToAtPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
                         + "   && :atPath.startsWith(atPathCopy) "
-                        + "   && (startDate == null || startDate <= :now) "
-                        + "   && (endDate == null   || endDate   > :now) "
-                        + "ORDER BY atPathCopy DESC, startDate DESC "
+                        + "ORDER BY atPathCopy DESC, date DESC "
         ),
         @javax.jdo.annotations.Query(
-                name = "findCurrentByType", language = "JDOQL",
+                name = "findByTypeAndApplicableToAtPathAndCurrent", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
-                        + "   && (startDate == null || startDate <= :now) "
-                        + "   && (endDate == null   || endDate   > :now) "
-                        + "ORDER BY atPathCopy DESC, startDate DESC "
+                        + "   && :atPath.startsWith(atPathCopy) "
+                        + "   && (date == null || date <= :now) "
+                        + "ORDER BY atPathCopy DESC, date DESC "
         ),
         @javax.jdo.annotations.Query(
-                name = "findCurrentByAtPath", language = "JDOQL",
+                name = "findByType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
+                        + "WHERE typeCopy   == :type "
+                        + "ORDER BY atPathCopy DESC, date DESC "
+        ),
+        @javax.jdo.annotations.Query(
+                name = "findByApplicableToAtPathAndCurrent", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
                         + "   && :atPath.startsWith(atPathCopy) "
-                        + "   && (startDate == null || startDate <= :now) "
-                        + "   && (endDate == null   || endDate > :now) "
-                        + "ORDER BY atPathCopy DESC, typeCopy, startDate DESC "
+                        + "   && (date == null || date <= :now) "
+                        + "ORDER BY atPathCopy DESC, typeCopy, date DESC "
         )
 })
 @Uniques({
-    // none yet...
+        @Unique(
+                name = "DocumentTemplate_type_atPath_date_IDX",
+                members = { "typeCopy", "atPathCopy", "date" }
+        ),
 })
 @Indices({
         @Index(
-                name = "DocumentTemplate_type_atPath_dates_IDX",
-                members = { "typeCopy", "atPathCopy", "startDate", "endDate" }
+                name = "DocumentTemplate_atPath_date_IDX",
+                members = { "atPathCopy", "date" }
         ),
         @Index(
-                name = "DocumentTemplate_atPath_dates_IDX",
-                members = { "atPathCopy", "startDate", "endDate" }
-        ),
-        @Index(
-                name = "DocumentTemplate_type_dates_IDX",
-                members = { "typeCopy", "startDate", "endDate" }
+                name = "DocumentTemplate_type_date_IDX",
+                members = { "typeCopy", "date" }
         ),
 })
 @DomainObject(
@@ -139,7 +143,8 @@ import lombok.Setter;
         cssClassUiEvent = DocumentTemplate.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class DocumentTemplate extends Document<DocumentTemplate> implements WithIntervalContiguous<DocumentTemplate> {
+public class DocumentTemplate extends Document<DocumentTemplate> {
+
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<DocumentTemplate>{}
@@ -168,30 +173,15 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
             ev.setTranslatableTitle(titleOf(ev.getSource()));
         }
         private TranslatableString titleOf(final DocumentTemplate template) {
-            if(template.getStartDate() != null) {
-                if(template.getEndDate() != null) {
-                    return TranslatableString.tr("{name} ({type}, {startDate -> {endDate})",
-                            "name", template.getName(),
-                            "type", template.getType().getReference(),
-                            "startDate", template.getStartDate(),
-                            "endDate", template.getEndDate());
-                } else {
-                    return TranslatableString.tr("{name} ({type}, {startDate} to date)",
-                            "name", template.getName(),
-                            "type", template.getType().getReference(),
-                            "startDate", template.getEndDate());
-                }
+            if(template.getDate() != null) {
+                return TranslatableString.tr("[{type}] {name}, (from {date})",
+                        "name", template.getName(),
+                        "type", template.getType().getReference(),
+                        "date", template.getDate());
             } else {
-                if(template.getEndDate() != null) {
-                    return TranslatableString.tr("{name} ({type}, to {endDate})",
-                            "name", template.getName(),
-                            "type", template.getType().getReference(),
-                            "endDate", template.getEndDate());
-                } else {
-                    return TranslatableString.tr("{name} ({type})",
-                            "name", template.getName(),
-                            "type", template.getType().getReference());
-                }
+                return TranslatableString.tr("[{type}] {name}",
+                        "name", template.getName(),
+                        "type", template.getType().getReference());
             }
         }
         @Inject
@@ -233,43 +223,51 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     //region > constructor
     public DocumentTemplate(
             final DocumentType type,
+            final LocalDate date,
             final String atPath,
             final Blob blob,
+            final LocalDateTime createdAt,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
-        super(type, atPath, blob);
-        init(type, atPath, renderingStrategy, dataModelClassName);
+        super(type, atPath, blob, createdAt);
+        init(type, date, atPath, renderingStrategy, dataModelClassName);
     }
 
     public DocumentTemplate(
             final DocumentType type,
+            final LocalDate date,
             final String atPath,
             final String name,
             final String mimeType,
             final String text,
+            final LocalDateTime createdAt,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
-        super(type, atPath, name, mimeType, text);
-        init(type, atPath, renderingStrategy, dataModelClassName);
+        super(type, atPath, name, mimeType, text, createdAt);
+        init(type, date, atPath, renderingStrategy, dataModelClassName);
     }
 
     public DocumentTemplate(
             final DocumentType type,
+            final LocalDate date,
             final String atPath,
             final Clob clob,
+            final LocalDateTime createdAt,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
-        super(type, atPath, clob);
-        init(type, atPath, renderingStrategy, dataModelClassName);
+        super(type, atPath, clob, createdAt);
+        init(type, date, atPath, renderingStrategy, dataModelClassName);
     }
 
     private void init(
             final DocumentType type,
+            final LocalDate date,
             final String atPath,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         this.typeCopy = type;
         this.atPathCopy = atPath;
+        this.date = date;
         this.renderingStrategy = renderingStrategy;
         this.dataModelClassName = dataModelClassName;
     }
@@ -289,6 +287,43 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     private DocumentType typeCopy;
     //endregion
 
+    //region > date (property)
+    public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = DateDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private LocalDate date;
+    //endregion
+    //region > changeDate (action)
+    public static class ChangeDateDomainEvent extends DocumentTemplate.ActionDomainEvent { }
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ChangeDateDomainEvent.class
+    )
+    public DocumentTemplate changeDate(
+            @ParameterLayout(named = "New date")
+            final LocalDate date) {
+        setDate(date);
+        return this;
+    }
+
+    public LocalDate default0ChangeDate() {
+        return getDate();
+    }
+
+    public TranslatableString validate0ChangeDate(LocalDate proposedDate) {
+
+        final DocumentTemplate original = this;
+        final String proposedAtPath = getAtPath();
+
+        return documentTemplateRepository.validateApplicationTenancyAndDate(original.getType(), proposedAtPath, proposedDate, original);
+    }
+
+    //endregion
+
     //region > atPathCopy (derived property, persisted)
     /**
      * Copy of {@link #getAtPath()}, for query purposes only.
@@ -302,6 +337,7 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     private String atPathCopy;
     //endregion
 
+
     //region > dataModelClassName (property)
     public static class DataModelClassNameDomainEvent extends DocumentTemplate.PropertyDomainEvent<String> { }
     @Getter @Setter
@@ -311,6 +347,24 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
             editing = Editing.DISABLED
     )
     private String dataModelClassName;
+    //endregion
+    //region > changeDataModel (action)
+    public static class ChangeDataModelDomainEvent extends DocumentTemplate.ActionDomainEvent { }
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ChangeDataModelDomainEvent.class
+    )
+    public DocumentTemplate changeDataModel(
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
+            @ParameterLayout(named = "Data model class name")
+            final String dataModelClassName) {
+        setDataModelClassName(dataModelClassName);
+        return this;
+    }
+
+    public String default0ChangeDataModel() {
+        return getDataModelClassName();
+    }
     //endregion
 
     //region > renderStrategy (property)
@@ -360,102 +414,27 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
 
 
 
-    //region > startDate (property)
-    public static class StartDateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
-    @Getter @Setter
-    @Column(allowsNull = "true")
-    @Property(
-            domainEvent = StartDateDomainEvent.class,
-            editing = Editing.DISABLED
+    //region > delete (action)
+    public static class DeleteDomainEvent extends DocumentTemplate.ActionDomainEvent { }
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
+            domainEvent = DeleteDomainEvent.class
     )
-    private LocalDate startDate;
-    //endregion
-
-    //region > endDate (property)
-    public static class EndDateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
-    @Getter @Setter
-    @Column(allowsNull = "true")
-    @Property(
-            domainEvent = EndDateDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private LocalDate endDate;
-    //endregion
-
-    //region > WithIntervalContiguous impl
-
-    // for some reason (perhaps because this class has no no-arg constructor?) this field is not populated when
-    // object is rehydrated.  Therefore just recreate in #getHelper() each time...
-    // private final WithIntervalContiguous.Helper<DocumentTemplate> intervalHelper = new WithIntervalContiguous.Helper<>(this);
-
-    WithIntervalContiguous.Helper<DocumentTemplate> getHelper() {
-        return new WithIntervalContiguous.Helper<>(this);
+    public DocumentTemplate delete() {
+        documentTemplateRepository.delete(this);
+        return this;
     }
-
-    @Override
-    public LocalDateInterval getInterval() {
-        return new LocalDateInterval(getStartDate(), getEndDate());
-    }
-
-    @Override
-    public LocalDateInterval getEffectiveInterval() {
-        return getInterval();
-    }
-
-    @Override
-    public boolean isCurrent() {
-        return false;
-    }
-
-    @Override
-    public DocumentTemplate changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        return getHelper().changeDates(startDate, endDate);
-    }
-
-    @Override
-    public LocalDate default0ChangeDates() {
-        return getHelper().default0ChangeDates();
-    }
-
-    @Override
-    public LocalDate default1ChangeDates() {
-        return getHelper().default1ChangeDates();
-    }
-
-    @Override
-    public String validateChangeDates(LocalDate startDate, LocalDate endDate) {
-        return getHelper().validateChangeDates(startDate, endDate);
-    }
-
-
-    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    @Override
-    public DocumentTemplate getPredecessor() {
-        return getHelper().getPredecessor(getTimeline(), com.google.common.base.Predicates.alwaysTrue());
-    }
-
-    @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    @Override
-    public DocumentTemplate getSuccessor() {
-        return getHelper().getSuccessor(getTimeline(), com.google.common.base.Predicates.alwaysTrue());
-    }
-
-    @CollectionLayout(defaultView = "table")
-    @Override
-    public SortedSet<DocumentTemplate> getTimeline() {
-        final DocumentType type = getType();
-        final String atPath = getAtPath();
-        return queryResultsCache.execute(
-                (Callable<SortedSet<DocumentTemplate>>) () ->
-                        Sets.newTreeSet(documentTemplateRepository.findByTypeAndAtPath(type, atPath)),
-                DocumentTemplate.class, "getTimeline", type, atPath);
+    public TranslatableString disableDelete() {
+        final List<Paperclip> paperclips = paperclipRepository.findByDocument(this);
+        return !paperclips.isEmpty()
+                    ? TranslatableString.tr("This template is attached to objects")
+                    : null;
     }
     //endregion
-
 
     //region > injected services
+    @Inject
+    PaperclipRepository paperclipRepository;
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
     @Inject
@@ -464,7 +443,6 @@ public class DocumentTemplate extends Document<DocumentTemplate> implements With
     ClassService classService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
-
     //endregion
 
 }

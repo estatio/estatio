@@ -18,7 +18,6 @@
 package org.incode.module.documents.dom.links;
 
 import javax.inject.Inject;
-import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -29,20 +28,20 @@ import com.google.common.base.Function;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
@@ -95,7 +94,8 @@ import lombok.Setter;
 @DomainObjectLayout(
         titleUiEvent = Paperclip.TitleUiEvent.class,
         iconUiEvent = Paperclip.IconUiEvent.class,
-        cssClassUiEvent = Paperclip.CssClassUiEvent.class
+        cssClassUiEvent = Paperclip.CssClassUiEvent.class,
+        bookmarking = BookmarkPolicy.AS_ROOT
 )
 public abstract class Paperclip implements Comparable<Paperclip> {
 
@@ -170,6 +170,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     }
     //endregion
 
+
     //region > attachedToStr (property, hidden)
     @Getter @Setter
     @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.BOOKMARK)
@@ -182,11 +183,12 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     //region > attachedTo (derived property, hooks)
     /**
      * Polymorphic association to the object providing the attachedTo.
+     *
+     * NB: strictly speaking these should be abstract; this is a workaround (see ISIS-582)
      */
-    @Programmatic
     @NotPersistent
-    public abstract Object getAttachedTo();
-    protected abstract void setAttachedTo(Object object);
+    public Object getAttachedTo() { return null; }
+    protected void setAttachedTo(Object object) {}
     //endregion
 
     //region > document (property)
@@ -213,39 +215,43 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     private String roleName;
     //endregion
 
+    //region > documentCreatedAt (property)
+
+    public static class DocumentCreatedAtDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
+
+    /**
+     * Copy of the date/time that the document was created.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = DocumentCreatedAtDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private LocalDateTime documentCreatedAt;
+    //endregion
+
+
     //region > delete (action)
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Document delete() {
         final Document document = getDocument();
-        repositoryService.remove(this);
+        paperclipRepository.delete(this);
         return document;
     }
     //endregion
 
-    //region > id (derived, programmatic)
-    @Programmatic
-    public String getId() {
-        Object objectId = JDOHelper.getObjectId(this);
-        if (objectId == null) {
-            return "";
-        }
-        String objectIdStr = objectId.toString();
-        final String id = objectIdStr.split("\\[OID\\]")[0];
-        return id;
-    }
-    //endregion
 
     //region > toString, compareTo
 
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName");
+        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName", "createdAt");
     }
 
     @Override
     public int compareTo(final Paperclip other) {
-        // needs id also because there could be >1 document with same roleName, eg "cc" list
-        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "id");
+        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "createdAt");
     }
 
     //endregion
@@ -270,7 +276,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
 
     //region > injected services
     @Inject
-    RepositoryService repositoryService;
+    PaperclipRepository paperclipRepository;
     //endregion
 
 }

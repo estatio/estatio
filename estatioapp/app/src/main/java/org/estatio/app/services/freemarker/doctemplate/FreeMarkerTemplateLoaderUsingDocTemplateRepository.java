@@ -18,6 +18,8 @@
  */
 package org.estatio.app.services.freemarker.doctemplate;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 
@@ -40,9 +42,24 @@ public class FreeMarkerTemplateLoaderUsingDocTemplateRepository implements FreeM
     @Override
     public TemplateSource load(final String documentTypeReference, final String atPath) {
         final DocumentType documentType = documentTypeRepository.findByReference(documentTypeReference);
-        final DocumentTemplate documentTemplate = documentTemplateRepository.findCurrentByTypeAndAtPath(documentType, atPath);
+
+        final DocumentTemplate documentTemplate = lookupDocumentTemplate(documentType, atPath);
+
         final String templateChars = documentTemplate.asChars();
         return new TemplateSource(templateChars, (long)JDOHelper.getVersion(documentTemplate));
+    }
+
+    private DocumentTemplate lookupDocumentTemplate(
+            final DocumentType documentType, final String atPath) {
+        final List<DocumentTemplate> templates = documentTemplateRepository
+                .findByTypeAndApplicableToAtPathAndCurrent(documentType, atPath);
+        if(templates.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Could not find any templates for document type ref: %s, atPath: %s",
+                            documentType.getReference(), atPath));
+        }
+        return templates.get(0);
     }
 
     @Inject

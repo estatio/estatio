@@ -2,6 +2,8 @@ package org.estatio.fixture.documents;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.templates.DocumentTemplate;
 import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
@@ -16,7 +18,7 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
 
     protected DocumentTemplate createDocumentTemplate(
             final DocumentType documentType,
-            String name,
+            final LocalDate date, final String name,
             final String mimeType,
             final String atPath,
             final String text, final String dataModelClassName,
@@ -24,7 +26,7 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
             ExecutionContext executionContext) {
 
         final DocumentTemplate documentTemplate = documentTemplateRepository
-                .createText(documentType, atPath, name, mimeType, text, dataModelClassName, renderingStrategy);
+                .createText(documentType, date, atPath, name, mimeType, text, dataModelClassName, renderingStrategy);
         return executionContext.addResult(this, documentTemplate);
     }
 

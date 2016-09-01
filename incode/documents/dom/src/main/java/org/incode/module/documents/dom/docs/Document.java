@@ -33,6 +33,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -127,7 +128,7 @@ public class Document<T extends Document> implements Comparable<T> {
             ev.setTranslatableTitle(titleOf(ev.getSource()));
         }
         private TranslatableString titleOf(final Document document) {
-            return TranslatableString.tr("{name} ({type})",
+            return TranslatableString.tr("[{type}] {name}",
                     "name", document.getName(),
                     "type", document.getType().getReference());
         }
@@ -168,8 +169,12 @@ public class Document<T extends Document> implements Comparable<T> {
 
 
     //region > constructors
-    public Document(final DocumentType type, final String atPath, final Blob blob) {
-        this(type, atPath, blob.getName(), blob.getMimeType().toString(), DocumentSort.BLOB);
+    public Document(
+            final DocumentType type,
+            final String atPath,
+            final Blob blob,
+            final LocalDateTime createdAt) {
+        this(type, atPath, blob.getName(), blob.getMimeType().toString(), DocumentSort.BLOB, createdAt);
         this.blobBytes = blob.getBytes();
     }
 
@@ -178,12 +183,18 @@ public class Document<T extends Document> implements Comparable<T> {
             final String atPath,
             final String name,
             final String mimeType,
-            final String text) {
-        this(type, atPath, name, mimeType, DocumentSort.TEXT);
+            final String text,
+            final LocalDateTime createdAt) {
+        this(type, atPath, name, mimeType, DocumentSort.TEXT, createdAt);
         this.text = text;
     }
-    public Document(final DocumentType type, final String atPath, final Clob clob) {
-        this(type, atPath, clob.getName(), clob.getMimeType().toString(), DocumentSort.CLOB);
+
+    public Document(
+            final DocumentType type,
+            final String atPath,
+            final Clob clob,
+            final LocalDateTime createdAt) {
+        this(type, atPath, clob.getName(), clob.getMimeType().toString(), DocumentSort.CLOB, createdAt);
         this.clobChars = clob.getChars().toString();
     }
 
@@ -192,12 +203,14 @@ public class Document<T extends Document> implements Comparable<T> {
             final String atPath,
             final String name,
             final String mimeType,
-            final DocumentSort sort) {
+            final DocumentSort sort,
+            final LocalDateTime createdAt) {
         this.type = type;
         this.atPath = atPath;
         this.name = name;
         this.mimeType = mimeType;
         this.sort = sort;
+        this.createdAt = createdAt;
     }
     //endregion
 
@@ -213,7 +226,6 @@ public class Document<T extends Document> implements Comparable<T> {
     private DocumentType type;
     //endregion
 
-
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
@@ -224,19 +236,6 @@ public class Document<T extends Document> implements Comparable<T> {
     )
     private String name;
     //endregion
-
-
-    //region > mimeType (property)
-    public static class MimeTypeDomainEvent extends PropertyDomainEvent<String> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.MIME_TYPE)
-    @Property(
-            domainEvent = MimeTypeDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private String mimeType;
-    //endregion
-
 
     //region > atPath (property)
     public static class AtPathDomainEvent extends PropertyDomainEvent<String> { }
@@ -264,6 +263,17 @@ public class Document<T extends Document> implements Comparable<T> {
     private DocumentSort sort;
     //endregion
 
+    //region > mimeType (property)
+    public static class MimeTypeDomainEvent extends PropertyDomainEvent<String> { }
+    @Getter @Setter
+    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.MIME_TYPE)
+    @Property(
+            domainEvent = MimeTypeDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private String mimeType;
+    //endregion
+
 
     //region > externalUrl (property)
     public static class ExternalUrlDomainEvent extends PropertyDomainEvent<String> { }
@@ -283,7 +293,6 @@ public class Document<T extends Document> implements Comparable<T> {
     }
     //endregion
 
-
     //region > blobBytes (persisted property, hidden)
     @Getter @Setter
     @javax.jdo.annotations.Persistent(defaultFetchGroup="false")
@@ -294,7 +303,6 @@ public class Document<T extends Document> implements Comparable<T> {
     )
     private byte[] blobBytes;
     //endregion
-
 
     //region > blob (derived property)
     public static class BlobDomainEvent extends PropertyDomainEvent<Blob> { }
@@ -313,7 +321,6 @@ public class Document<T extends Document> implements Comparable<T> {
     }
     //endregion
 
-
     //region > clobChars (persisted property, hidden)
     @Getter @Setter
     @javax.jdo.annotations.Persistent(defaultFetchGroup="false")
@@ -325,11 +332,9 @@ public class Document<T extends Document> implements Comparable<T> {
     private String clobChars;
     //endregion
 
-
     //region > text (persisted property)
     public static class TextDomainEvent extends PropertyDomainEvent<Clob> { }
     @Getter @Setter
-    @javax.jdo.annotations.Persistent(defaultFetchGroup="false")
     @javax.jdo.annotations.Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.TEXT)
     @Property(
             notPersisted = true, // exclude from auditing
@@ -360,8 +365,19 @@ public class Document<T extends Document> implements Comparable<T> {
     }
     //endregion
 
+    //region > createdAt (property)
 
-    
+    public static class CreatedAtDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = CreatedAtDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private LocalDateTime createdAt;
+
+    //endregion
+
 
 
     //region > toString, compareTo

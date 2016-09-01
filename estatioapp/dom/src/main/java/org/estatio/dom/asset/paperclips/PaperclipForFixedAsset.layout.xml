@@ -8,23 +8,12 @@
     <bs3:row>
         <bs3:col span="6">
             <bs3:tabGroup>
-                <bs3:tab name="General">
+                <bs3:tab name="Document">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Attached To" id="general">
-                                <cpt:property id="fixedAsset"/>
-                                <cpt:property id="attachedTo"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Role">
-                                <cpt:property id="roleName"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Other">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            <cpt:fieldSet name="Document">
+                                <cpt:property id="document"/>
+                                <cpt:property id="documentCreatedAt"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -33,7 +22,8 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:property id="datanucleusIdLong"/>
+                                <!-- workaround for ISIS-1480, issue with documentCreatedAt on tabs, so suppress this metadata tab -->
+                                <cpt:property id="datanucleusIdLong" hidden="EVERYWHERE"/>
                                 <cpt:property id="datanucleusVersionLong"/>
                                 <cpt:property id="datanucleusVersionTimestamp"/>
                             </cpt:fieldSet>
@@ -41,14 +31,20 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
+            <cpt:fieldSet name="Other" unreferencedProperties="true">
+            </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup>
-                <bs3:tab name="Document">
+                <bs3:tab name="Attached to">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Document">
-                                <cpt:property id="document"/>
+                            <cpt:fieldSet name="Attached To" id="general">
+                                <cpt:property id="fixedAsset"/>
+                                <cpt:property id="attachedTo" hidden="EVERYWHERE"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Role">
+                                <cpt:property id="roleName"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

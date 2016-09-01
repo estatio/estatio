@@ -113,6 +113,7 @@ public class PaperclipRepository {
 
         paperclip.setDocument(document);
         paperclip.setRoleName(roleName);
+        paperclip.setDocumentCreatedAt(document.getCreatedAt());
 
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachTo);
         paperclip.setAttachedTo(attachTo);
@@ -149,11 +150,14 @@ public class PaperclipRepository {
     //endregion
 
 
+    //region > delete
     @Programmatic
-    public List<Paperclip> getAttachedToLink(
-            final Document document) {
-        return findByDocument(document);
+    public void delete(final Paperclip paperclip) {
+        repositoryService.remove(paperclip);
     }
+    //endregion
+
+
 
     //region > SubtypeProvider SPI
 

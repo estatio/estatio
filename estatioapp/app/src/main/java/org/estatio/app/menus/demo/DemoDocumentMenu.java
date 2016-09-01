@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -33,6 +35,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -122,8 +125,10 @@ public class DemoDocumentMenu {
             @ParameterLayout(named = "Data model class name")
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
+
+        final LocalDate date = clockService.now();
         return documentTemplateMenu.newTextTemplate(
-                documentType, name, mimeType, applicationTenancy, templateText, dataModelClassName, renderingStrategy);
+                documentType, date, name, mimeType, applicationTenancy, templateText, dataModelClassName, renderingStrategy);
     }
     public String disableDemoDocumentCreateTextTemplate() {
         if (default0DemoDocumentCreateTextTemplate() == null) {
@@ -149,7 +154,7 @@ public class DemoDocumentMenu {
     }
 
     public List<ApplicationTenancy> choices3DemoDocumentCreateTextTemplate() {
-        return documentTemplateMenu.choices3NewTextTemplate();
+        return documentTemplateMenu.choices4NewTextTemplate();
     }
     public ApplicationTenancy default3DemoDocumentCreateTextTemplate() {
         return choices3DemoDocumentCreateTextTemplate().get(0);
@@ -200,7 +205,7 @@ public class DemoDocumentMenu {
     }
 
     public List<DocumentTemplate> choices1DemoDocumentRender(final ApplicationTenancy applicationTenancy) {
-        return documentTemplateRepository.findCurrentByAtPath(applicationTenancy.getPath());
+        return documentTemplateRepository.findByApplicableToAtPathAndCurrent(applicationTenancy.getPath());
     }
     public String default2DemoDocumentRender() {
         return "Hello Joe.txt";
@@ -220,6 +225,9 @@ public class DemoDocumentMenu {
     @Inject
     private DocumentTemplateMenu documentTemplateMenu;
 
+
+    @Inject
+    private ClockService clockService;
 
     @Inject
     private DocumentTypeRepository documentTypeRepository;

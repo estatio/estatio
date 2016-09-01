@@ -8,9 +8,9 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="6">
-            <cpt:fieldSet name="Identifier">
-                <cpt:property id="attachedTo"/>
-                <cpt:property id="roleName"/>
+            <cpt:fieldSet name="Document">
+                <cpt:property id="document"/>
+                <cpt:property id="documentCreatedAt"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
@@ -25,8 +25,9 @@
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:fieldSet name="Details">
-                <cpt:property id="document"/>
+            <cpt:fieldSet name="Attached to">
+                <cpt:property id="attachedTo"/>
+                <cpt:property id="roleName"/>
             </cpt:fieldSet>
         </bs3:col>
     </bs3:row>

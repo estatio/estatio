@@ -22,7 +22,10 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
@@ -44,25 +47,28 @@ public abstract class RendererAbstract implements Renderer {
 
         try {
             final DocumentSort sort = documentTemplate.getSort();
+            final String mimeType = documentTemplate.getMimeType();
+            final String atPath = documentTemplate.getAtPath();
+            final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
+
             switch (sort) {
 
                 case BLOB:
                 case EXTERNAL_BLOB:
                     final byte[] bytes = renderAsBytes(documentTemplate, dataModel, documentType);
-                    final Blob blob = new Blob(documentName, documentTemplate.getMimeType(), bytes);
-                    return documentRepository.createBlob(documentType, documentTemplate.getAtPath(), blob);
+                    final Blob blob = new Blob(documentName, mimeType, bytes);
+                    return documentRepository.createBlob(documentType, atPath, blob, createdAt);
 
                 case CLOB:
                 case EXTERNAL_CLOB:
                     final String clobChars = renderAsChars(documentTemplate, dataModel, documentType);
-                    final Clob clob = new Clob(documentName, documentTemplate.getMimeType(), clobChars);
-                    return documentRepository.createClob(documentType, documentTemplate.getAtPath(), clob);
+                    final Clob clob = new Clob(documentName, mimeType, clobChars);
+                    return documentRepository.createClob(documentType, atPath, clob, createdAt);
 
                 case TEXT:
                     final String textChars = renderAsChars(documentTemplate, dataModel, documentType);
 
-                    return documentRepository.createText(
-                            documentType, documentTemplate.getAtPath(), documentName, documentTemplate.getMimeType(), textChars);
+                    return documentRepository.createText(documentType, atPath, documentName, mimeType, textChars, createdAt);
             }
             return null;
 
@@ -95,5 +101,7 @@ public abstract class RendererAbstract implements Renderer {
 
     @Inject
     private DocumentRepository documentRepository;
+    @Inject
+    private ClockService clockService;
 
 }

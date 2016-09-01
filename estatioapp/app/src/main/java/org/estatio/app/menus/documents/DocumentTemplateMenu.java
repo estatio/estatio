@@ -18,9 +18,12 @@
  */
 package org.estatio.app.menus.documents;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -32,7 +35,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
@@ -67,9 +72,9 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
     @MemberOrder(sequence = "1")
     public DocumentTemplate newTextTemplate(
             final DocumentType type,
-            @Parameter(
-                    optionality = Optionality.OPTIONAL, // will default to the name of the doc type
-                    maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @ParameterLayout(named = "Date", describedAs = "Date that this template comes into effect")
+            final LocalDate date,
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name", describedAs = "Optional, will defaults to the name of selected document type")
             final String name,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
@@ -85,17 +90,34 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
 
         final String documentName = name != null? name : type.getName();
         return documentTemplateRepository.createText(
-                type, applicationTenancy.getPath(), documentName, mimeType, templateText, dataModelClassName, renderingStrategy
+                type, date, applicationTenancy.getPath(), documentName, mimeType, templateText, dataModelClassName, renderingStrategy
         );
     }
 
-    public String default2NewTextTemplate() {
+    public String default3NewTextTemplate() {
         return "text/html";
     }
-    public List<ApplicationTenancy> choices3NewTextTemplate() {
+    public List<ApplicationTenancy> choices4NewTextTemplate() {
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
+    public String default6NewTextTemplate() {
+        return HashMap.class.getName();
+    }
+
+    public TranslatableString validateNewTextTemplate(
+            final DocumentType proposedType,
+            final LocalDate proposedDate,
+            final String name,
+            final String mimeType,
+            final ApplicationTenancy proposedApplicationTenancy,
+            final String templateText,
+            final String dataModelClassName,
+            final RenderingStrategy renderingStrategy) {
+
+        return documentTemplateRepository.validateApplicationTenancyAndDate(
+                proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
+    }
 
 
     // //////////////////////////////////////
@@ -105,9 +127,9 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
     @MemberOrder(sequence = "2")
     public DocumentTemplate newClobTemplate(
             final DocumentType type,
-            @Parameter(
-                    optionality = Optionality.OPTIONAL,
-                    maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @ParameterLayout(named = "Date", describedAs = "Date that this template comes into effect")
+            final LocalDate date,
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Clob")
             final String name,
             final ApplicationTenancy applicationTenancy,
@@ -119,18 +141,33 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final RenderingStrategy renderingStrategy) {
 
         final DocumentTemplate template = documentTemplateRepository.createClob(
-                type, applicationTenancy.getPath(), clob, dataModelClassName, renderingStrategy);
+                type, date, applicationTenancy.getPath(), clob, dataModelClassName, renderingStrategy);
         if(name != null) {
             template.setName(name);
         }
         return template;
     }
 
-    public List<ApplicationTenancy> choices2NewClobTemplate() {
+    public List<ApplicationTenancy> choices3NewClobTemplate() {
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
+    public String default5NewClobTemplate() {
+        return HashMap.class.getName();
+    }
 
+    public TranslatableString validateNewClobTemplate(
+            final DocumentType proposedType,
+            final LocalDate proposedDate,
+            final String name,
+            final ApplicationTenancy proposedApplicationTenancy,
+            final Clob clob,
+            final String dataModelClassName,
+            final RenderingStrategy renderingStrategy) {
+
+        return documentTemplateRepository.validateApplicationTenancyAndDate(
+                proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
+    }
 
     // //////////////////////////////////////
 
@@ -139,9 +176,9 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
     @MemberOrder(sequence = "3")
     public DocumentTemplate newBlobTemplate(
             final DocumentType type,
-            @Parameter(
-                    optionality = Optionality.OPTIONAL, // will default to the name of the doc type
-                    maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @ParameterLayout(named = "Date", describedAs = "Date that this template comes into effect")
+            final LocalDate date,
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Blob")
             final String name,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
@@ -153,22 +190,38 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final RenderingStrategy renderingStrategy) {
 
         final DocumentTemplate template = documentTemplateRepository.createBlob(
-                type, applicationTenancy.getPath(), blob, dataModelClassName, renderingStrategy
-        );
+                type, date, applicationTenancy.getPath(), blob, dataModelClassName,
+                renderingStrategy);
         if(name != null) {
             template.setName(name);
         }
         return template;
     }
 
-    public List<ApplicationTenancy> choices2NewBlobTemplate() {
+    public List<ApplicationTenancy> choices3NewBlobTemplate() {
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
+    public String default5NewBlobTemplate() {
+        return HashMap.class.getName();
+    }
+
+    public TranslatableString validateNewBlobTemplate(
+            final DocumentType proposedType,
+            final LocalDate proposedDate,
+            final String name,
+            final ApplicationTenancy proposedApplicationTenancy,
+            final Blob blob,
+            final String dataModelClassName,
+            final RenderingStrategy renderingStrategy) {
+
+        return documentTemplateRepository.validateApplicationTenancyAndDate(
+                proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
+    }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "4")
     public List<DocumentTemplate> allTemplates() {
         return documentTemplateRepository.allTemplates();
