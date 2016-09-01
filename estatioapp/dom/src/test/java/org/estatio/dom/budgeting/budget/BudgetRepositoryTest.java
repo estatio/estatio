@@ -139,10 +139,10 @@ public class BudgetRepositoryTest {
 
             //given
             Property property = new PropertyForTesting();
-            LocalDate startDate = new LocalDate(2015, 01, 02);
-            LocalDate endDate = new LocalDate(2015, 12, 30);
-            LocalDate startOfYear = new LocalDate(2015,01,01);
-            LocalDate endOfYear = new LocalDate(2015,12,31);
+            LocalDate startDate = new LocalDate(2016, 01, 02);
+            LocalDate endDate = new LocalDate(2016, 12, 30);
+            LocalDate startOfYear = new LocalDate(2016,01,01);
+            LocalDate endOfYear = new LocalDate(2016,12,31);
             final Budget budget = new Budget();
 
             // expect
@@ -163,6 +163,9 @@ public class BudgetRepositoryTest {
             assertThat(newBudget.getStartDate()).isEqualTo(startDate);
             assertThat(newBudget.getEndDate()).isEqualTo(endDate);
             assertThat(newBudget.getBudgetYear()).isEqualTo(new LocalDateInterval(startOfYear, endOfYear));
+            assertThat(newBudget.getBudgetYear().days()).isEqualTo(366);
+            assertThat(newBudget.getBudgetYear().contains(startOfYear)).isEqualTo(true);
+            assertThat(newBudget.getBudgetYear().contains(endOfYear)).isEqualTo(true);
 
         }
 
