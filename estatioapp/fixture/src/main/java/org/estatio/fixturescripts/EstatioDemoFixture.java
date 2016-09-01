@@ -30,6 +30,7 @@ import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
 import org.estatio.fixture.documents.DocumentTemplateForHelloGlobal;
+import org.estatio.fixture.documents.FloorPlanDocumentForGbOxf;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
@@ -94,8 +95,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new ProjectsForGra());
 
         executionContext.executeChild(this, new DocumentTemplateForHelloGlobal());
-
-        // executionContext.executeChild(this, new InteractiveMapDocumentForOxf());
+        executionContext.executeChild(this, new FloorPlanDocumentForGbOxf());
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());

@@ -17,12 +17,21 @@
  */
 package org.estatio.fixture.documents;
 
-public class DocumentTypeForHello extends DocumentTypeAbstract {
+import org.estatio.app.integration.documents.RendererForSvg;
 
-    public static final String REF = "HELLO";
+public class RenderingStrategyForSvg extends RenderingStrategyAbstract {
+
+    public static final String REF = "SVG";
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
-        createType(REF, "Hello world!", executionContext);
+    protected void execute(ExecutionContext executionContext) {
+        createRenderingStrategy(
+                REF,
+                "SVG Rendering Strategy",
+                RendererForSvg.class.getName(),
+                executionContext);
+
     }
+
+
 }
