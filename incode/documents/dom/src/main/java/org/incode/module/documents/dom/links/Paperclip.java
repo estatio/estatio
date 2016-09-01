@@ -127,11 +127,13 @@ public abstract class Paperclip implements Comparable<Paperclip> {
         }
         private TranslatableString titleOf(final Paperclip paperclip) {
             if(paperclip.getRoleName() != null) {
-            return TranslatableString.tr("{attachedTo} ({roleName})",
+            return TranslatableString.tr("{document} attached to {attachedTo} ({roleName})",
+                    "document", titleService.titleOf(paperclip.getDocument()),
                     "attachedTo", titleService.titleOf(paperclip.getAttachedTo()),
                     "roleName", paperclip.getRoleName());
             } else {
-                return TranslatableString.tr("{attachedTo}",
+                return TranslatableString.tr("{document} attached to {attachedTo} ",
+                    "document", titleService.titleOf(paperclip.getDocument()),
                     "attachedTo", titleService.titleOf(paperclip.getAttachedTo()));
             }
         }
