@@ -37,6 +37,7 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.docs.DocumentSort;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.templates.DocumentTemplate;
 import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
@@ -75,7 +76,7 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
     }
 
     public boolean hide$$() {
-        return !documentTemplate.getSort().isText();
+        return documentTemplate.getSort() != DocumentSort.TEXT;
     }
 
     public String default0$$() {

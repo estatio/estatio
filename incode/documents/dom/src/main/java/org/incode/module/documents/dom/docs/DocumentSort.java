@@ -24,7 +24,7 @@ public enum DocumentSort {
     /**
      * Stored as a BLOB
      */
-    BLOB {
+    BLOB(DocumentNature.BYTES, DocumentStorage.INTERNAL) {
         @Override
         public byte[] asBytes(final DocumentTemplate documentTemplate) {
             return documentTemplate.getBlobBytes();
@@ -33,7 +33,7 @@ public enum DocumentSort {
     /**
      * Stored as a CLOB
      */
-    CLOB {
+    CLOB(DocumentNature.CHARACTERS, DocumentStorage.INTERNAL) {
         @Override
         public String asChars(final DocumentTemplate documentTemplate) {
             return documentTemplate.getClobChars();
@@ -42,7 +42,7 @@ public enum DocumentSort {
     /**
      * Stored in-situ (as a LONGVARCHAR)
      */
-    TEXT {
+    TEXT(DocumentNature.CHARACTERS, DocumentStorage.INTERNAL) {
         @Override
         public String asChars(final DocumentTemplate documentTemplate) {
             return documentTemplate.getText();
@@ -51,7 +51,7 @@ public enum DocumentSort {
     /**
      * Stored externally as blob (holds a hyperlink to access)
      */
-    EXTERNAL_BLOB {
+    EXTERNAL_BLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
         public byte[] asBytes(final DocumentTemplate documentTemplate) {
             throw new IllegalStateException("Not yet implemented");
@@ -60,12 +60,20 @@ public enum DocumentSort {
     /**
      * Stored externally as clob (holds a hyperlink to access)
      */
-    EXTERNAL_CLOB {
+    EXTERNAL_CLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
         public String asChars(final DocumentTemplate documentTemplate) {
             throw new IllegalStateException("Not yet implemented");
         }
     };
+
+    private final DocumentNature nature;
+    private final DocumentStorage storage;
+
+    private DocumentSort(DocumentNature nature, DocumentStorage storage) {
+        this.nature = nature;
+        this.storage = storage;
+    }
 
     /**
      * Supported only if {@link #isClob()} or {@link #isText()}.
@@ -92,16 +100,13 @@ public enum DocumentSort {
 
     @Programmatic
     public boolean isBinary() {
-        return this == BLOB || this == EXTERNAL_BLOB;
+        return nature == DocumentNature.BYTES;
     }
 
     @Programmatic
-    public boolean isClob() {
-        return this == CLOB || this == EXTERNAL_CLOB;
+    public boolean isCharacters() {
+        return nature == DocumentNature.CHARACTERS;
     }
 
-    @Programmatic
-    public boolean isText() {
-        return this == TEXT;
-    }
+
 }
