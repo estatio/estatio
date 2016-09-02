@@ -50,7 +50,11 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Rendering">
                                 <cpt:property id="documentNature"/>
-                                <cpt:property id="rendererClassName"/>
+                                <cpt:property id="rendererClassName">
+                                    <cpt:action id="changeRenderer">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Preview support">
                                 <cpt:property id="previewingAsBlob" labelPosition="RIGHT">

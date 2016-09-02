@@ -29,6 +29,7 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.docs.DocumentNature;
 import org.incode.module.documents.dom.docs.DocumentRepository;
 import org.incode.module.documents.dom.docs.DocumentSort;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
@@ -41,6 +42,9 @@ public abstract class RendererAbstract implements Renderer {
             final DocumentTemplate documentTemplate,
             final Object dataModel,
             final String documentName) {
+
+        final DocumentNature documentNature = documentTemplate.getRenderingStrategy().getDocumentNature();
+
 
         final DocumentType documentType = documentTemplate.getType();
 

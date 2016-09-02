@@ -185,6 +185,19 @@ public class DocumentTemplateRepository {
         return null;
     }
 
+    @Programmatic
+    public TranslatableString validateSortAndRenderingStrategy(
+            final DocumentSort sort,
+            final RenderingStrategy renderingStrategy) {
+        final DocumentNature documentNature = renderingStrategy.getDocumentNature();
+        if(sort.isBytes() && documentNature == DocumentNature.CHARACTERS) {
+            return TranslatableString.tr("Must provide text or Clob template with a character-based rendering strategy");
+        }
+        if(sort.isCharacters() && documentNature == DocumentNature.BYTES) {
+            return TranslatableString.tr("Must provide Blob template with a binary-based rendering strategy");
+        }
+        return null;
+    }
 
 
     @Programmatic
@@ -198,6 +211,7 @@ public class DocumentTemplateRepository {
     RepositoryService repositoryService;
     @Inject
     ClockService clockService;
+
 
     //endregion
 

@@ -83,7 +83,7 @@ public enum DocumentSort {
     }
 
     /**
-     * Supported only if {@link #isBinary()}.
+     * Supported only if {@link #isBytes()}.
      */
     @Programmatic
     public byte[] asBytes(final DocumentTemplate documentTemplate) {
@@ -98,7 +98,7 @@ public enum DocumentSort {
     }
 
     @Programmatic
-    public boolean isBinary() {
+    public boolean isBytes() {
         return nature == DocumentNature.BYTES;
     }
 

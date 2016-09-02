@@ -40,7 +40,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 @DomainServiceLayout(
         named = "Documents",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "83.25")
+        menuOrder = "79.25")
 public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     public DocumentMenu() {

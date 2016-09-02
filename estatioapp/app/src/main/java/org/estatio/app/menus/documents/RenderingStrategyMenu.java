@@ -18,14 +18,9 @@
  */
 package org.estatio.app.menus.documents;
 
-import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-
-import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -37,14 +32,11 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.classdiscovery.ClassDiscoveryService2;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentNature;
-import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.valuetypes.RendererClassNameSpecification;
 
 import org.estatio.dom.RegexValidation;
@@ -79,25 +71,19 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             @ParameterLayout(named = "Name")
             final String name,
             final DocumentNature documentNature,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME, mustSatisfy = RendererClassNameSpecification.class)
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = RendererClassNameSpecification.class)
             @ParameterLayout(named = "Renderer class name")
             final String rendererClassName) {
 
-        final String rendererClassName2 = rendererClassName.replace("o.e", "org.estatio");
-        final Class rendererClass = classService.load(rendererClassName2);
+        final Class rendererClass = rendererClassNameService.asRendererClass(rendererClassName);
         return renderingStrategyRepository.create(reference, name, documentNature, rendererClass);
     }
 
-    public List<String> choices3NewStrategy() {
-        final Set<Class<? extends Renderer>> rendererClasses = classDiscoveryService2
-                .findSubTypesOfClasses(Renderer.class, "org.estatio");
 
-        return Lists.newArrayList(rendererClasses.stream()
-                                    .filter(x -> !Modifier.isAbstract(x.getModifiers()))
-                                    .map(x -> x.getName())
-                                    .map(x -> x.replace("org.estatio", "o.e"))
-                                    .collect(Collectors.toList()));
+    public List<String> choices3NewStrategy() {
+        return rendererClassNameService.renderClassNames();
     }
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -116,10 +102,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
     private RenderingStrategyRepository renderingStrategyRepository;
 
     @Inject
-    private ClassDiscoveryService2 classDiscoveryService2;
-
-    @Inject
-    private ClassService classService;
+    private RendererClassNameService rendererClassNameService;
 
 
 }

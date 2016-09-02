@@ -44,6 +44,7 @@ import org.apache.isis.applib.value.Clob;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.docs.DocumentSort;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
@@ -58,7 +59,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 @DomainServiceLayout(
         named = "Documents",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "83.15")
+        menuOrder = "79.15")
 public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu> {
 
     public DocumentTemplateMenu() {
@@ -115,8 +116,18 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
-        return documentTemplateRepository.validateApplicationTenancyAndDate(
+        TranslatableString translatableString = documentTemplateRepository.validateApplicationTenancyAndDate(
                 proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
+        if(translatableString != null) {
+            return translatableString;
+        }
+
+        translatableString = documentTemplateRepository.validateSortAndRenderingStrategy(DocumentSort.TEXT, renderingStrategy);
+        if(translatableString != null) {
+            return translatableString;
+        }
+
+        return null;
     }
 
 

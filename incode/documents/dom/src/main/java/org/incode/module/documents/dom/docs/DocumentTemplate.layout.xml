@@ -100,7 +100,11 @@
                                         <cpt:named>Change</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
-                                <cpt:property id="renderingStrategy" hidden="ALL_TABLES"/>
+                                <cpt:property id="renderingStrategy" hidden="ALL_TABLES">
+                                    <cpt:action id="changeRenderingStrategy">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

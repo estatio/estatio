@@ -23,7 +23,7 @@ import org.estatio.app.integration.documents.RendererForFreemarker;
 
 public class RenderingStrategyForFreemarker extends RenderingStrategyAbstract {
 
-    public static final String REF = "FREEMARKER";
+    public static final String REF = "FMK";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
