@@ -16,6 +16,8 @@
  */
 package org.incode.module.documents.dom.rendering;
 
+import java.net.URL;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -47,8 +49,11 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.docs.DocumentNature;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 
@@ -165,12 +170,21 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
 
 
     //region > constructor
-    public RenderingStrategy(final String reference, final String name, final String rendererClassName) {
+    public RenderingStrategy(
+            final String reference,
+            final String name,
+            final DocumentNature documentNature,
+            final Class<? extends Renderer> rendererClass) {
         this.reference = reference;
         this.name = name;
-        this.rendererClassName = rendererClassName;
+        this.documentNature = documentNature;
+        this.rendererClassName = rendererClass.getName();
+        this.previewingAsBlob = RendererWithPreviewAsBlob.class.isAssignableFrom(rendererClass);
+        this.previewingAsClob = RendererWithPreviewAsClob.class.isAssignableFrom(rendererClass);
+        this.previewingAsUrl = RendererWithPreviewAsUrl.class.isAssignableFrom(rendererClass);
     }
     //endregion
+
 
     //region > reference (property)
     public static class ReferenceDomainEvent extends PropertyDomainEvent<String> { }
@@ -194,8 +208,70 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private String name;
     //endregion
 
+    //region > nature (property)
+    public static class DocumentNatureDomainEvent extends PropertyDomainEvent<DocumentNature> { }
+
+    /**
+     * Whether this rendering strategy acts upon {@link DocumentNature#BYTES bytes} (produces {@link Blob}s) or upon
+     * {@link DocumentNature#CHARACTERS characters} (produces {@link Clob}s).
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = DocumentNatureDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private DocumentNature documentNature;
+    //endregion
+
+    //region > previewingAsBlob (property)
+    public static class PreviewingAsBlobDomainEvent extends PropertyDomainEvent<Boolean> { }
+
+    /**
+     * Whether this rendering strategy supports previewing as a {@link Blob}s.
+     */
+    @Getter() @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = PreviewingAsBlobDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private boolean previewingAsBlob;
+    //endregion
+
+    //region > previewingAsClob (property)
+    public static class PreviewingAsClobDomainEvent extends PropertyDomainEvent<Boolean> { }
+
+    /**
+     * Whether this rendering strategy supports previewing as a {@link Clob}.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = PreviewingAsClobDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private boolean previewingAsClob;
+    //endregion
+
+    //region > previewingAsUrl (property)
+    public static class PreviewingAsUrlDomainEvent extends PropertyDomainEvent<Boolean> { }
+
+    /**
+     * Whether this rendering strategy supports previewing as a {@link URL}.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = PreviewingAsUrlDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private boolean previewingAsUrl;
+    //endregion
+
     //region > rendererClassName (property)
     public static class RendererClassNameDomainEvent extends PropertyDomainEvent<String> { }
+
     @Getter @Setter
     @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FQCN)
     @Property(
@@ -204,7 +280,6 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     )
     private String rendererClassName;
     //endregion
-
 
     //region > instantiateRenderer (programmatic)
     @Programmatic
@@ -235,7 +310,6 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     ClassService classService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
-
     //endregion
 
 }

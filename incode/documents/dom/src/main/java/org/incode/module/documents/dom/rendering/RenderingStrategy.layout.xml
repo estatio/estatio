@@ -15,6 +15,20 @@
                                 <cpt:property id="reference"/>
                                 <cpt:property id="name"/>
                             </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
                                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -27,20 +41,41 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Other">
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="6" unreferencedCollections="true">
+            <bs3:tabGroup>
+                <bs3:tab name="Preview and Rendering">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            <cpt:fieldSet name="Rendering">
+                                <cpt:property id="documentNature"/>
+                                <cpt:property id="rendererClassName"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Preview support">
+                                <cpt:property id="previewingAsBlob" labelPosition="RIGHT">
+                                    <cpt:named>As Blob?</cpt:named>
+                                </cpt:property>
+                                <cpt:property id="previewingAsClob" labelPosition="RIGHT">
+                                    <cpt:named>As Clob?</cpt:named>
+                                </cpt:property>
+                                <cpt:property id="previewingAsUrl" labelPosition="RIGHT">
+                                    <cpt:named>As URL?</cpt:named>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="DummyToForceFirstTab">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="dummy">
+                                <cpt:property id="dummy"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-        </bs3:col>
-        <bs3:col span="6" unreferencedCollections="true">
-            <cpt:fieldSet name="Details">
-                <cpt:property id="rendererClassName"/>
-            </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>

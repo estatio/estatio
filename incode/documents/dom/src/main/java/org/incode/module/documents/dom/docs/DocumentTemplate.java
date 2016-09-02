@@ -16,6 +16,8 @@
  */
 package org.incode.module.documents.dom.docs;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
@@ -29,6 +31,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -53,6 +56,9 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.rendering.Renderer;
+import org.incode.module.documents.dom.rendering.RendererWithPreviewAsBlob;
+import org.incode.module.documents.dom.rendering.RendererWithPreviewAsClob;
+import org.incode.module.documents.dom.rendering.RendererWithPreviewAsUrl;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.types.DocumentType;
@@ -337,6 +343,46 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         final Object dataModel = classService.instantiate(dataModelClassName);
         serviceRegistry2.injectServicesInto(dataModel);
         return dataModel;
+    }
+
+    //endregion
+
+
+    //region > preview (programmatic)
+
+
+
+    @Programmatic
+    public List<PreviewType> getPreviewTypes() {
+        final List<PreviewType> previewTypes = Lists.newArrayList();
+        if(getRenderingStrategy().isPreviewingAsBlob()) {
+            previewTypes.add(PreviewType.AS_BLOB);
+        }
+        if(getRenderingStrategy().isPreviewingAsClob()) {
+            previewTypes.add(PreviewType.AS_CLOB);
+        }
+        if(getRenderingStrategy().isPreviewingAsUrl()) {
+            previewTypes.add(PreviewType.AS_URL);
+        }
+        return previewTypes;
+    }
+    @Programmatic
+    public Object preview(final Object dataModel, final String documentName, final PreviewType previewType) {
+        final List<PreviewType> previewTypes = getPreviewTypes();
+        if(!previewTypes.contains(previewType)) {
+            throw new IllegalArgumentException("Preview type '" + previewType + "' not supported by rendering strategy");
+        }
+        final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+        switch (previewType) {
+            case AS_BLOB:
+                return ((RendererWithPreviewAsBlob)renderer).previewAsBlob(this, dataModel, documentName);
+            case AS_CLOB:
+                return ((RendererWithPreviewAsClob)renderer).previewAsClob(this, dataModel, documentName);
+            case AS_URL:
+                return ((RendererWithPreviewAsUrl)renderer).previewAsUrl(this, dataModel, documentName);
+        }
+        // shouldn't happen, above switch statement is complete
+        throw new IllegalArgumentException("Unknown previewType '" + previewType + "'");
     }
 
     //endregion

@@ -28,7 +28,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.docs.DocumentAbstract;
+import org.incode.module.documents.dom.docs.Document;
 import org.incode.module.documents.dom.docs.DocumentRepository;
 import org.incode.module.documents.dom.docs.DocumentSort;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
@@ -37,7 +37,7 @@ import org.incode.module.documents.dom.types.DocumentType;
 public abstract class RendererAbstract implements Renderer {
 
     @Override
-    public DocumentAbstract render(
+    public Document render(
             final DocumentTemplate documentTemplate,
             final Object dataModel,
             final String documentName) {

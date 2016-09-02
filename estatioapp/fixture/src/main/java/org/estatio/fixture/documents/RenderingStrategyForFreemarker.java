@@ -17,6 +17,8 @@
  */
 package org.estatio.fixture.documents;
 
+import org.incode.module.documents.dom.docs.DocumentNature;
+
 import org.estatio.app.integration.documents.RendererForFreemarker;
 
 public class RenderingStrategyForFreemarker extends RenderingStrategyAbstract {
@@ -28,7 +30,8 @@ public class RenderingStrategyForFreemarker extends RenderingStrategyAbstract {
         createRenderingStrategy(
                 REF,
                 "Freemarker Rendering Strategy",
-                RendererForFreemarker.class.getName(),
+                DocumentNature.CHARACTERS,
+                RendererForFreemarker.class,
                 executionContext);
 
     }

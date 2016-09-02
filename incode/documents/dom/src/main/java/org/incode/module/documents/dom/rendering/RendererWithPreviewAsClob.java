@@ -16,11 +16,12 @@
  */
 package org.incode.module.documents.dom.rendering;
 
-import org.incode.module.documents.dom.docs.Document;
+import org.apache.isis.applib.value.Clob;
+
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 
-public interface Renderer {
+public interface RendererWithPreviewAsClob extends Renderer {
 
-    Document render(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
+    Clob previewAsClob(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
 
 }

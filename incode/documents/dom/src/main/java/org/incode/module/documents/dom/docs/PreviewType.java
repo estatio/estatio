@@ -14,13 +14,10 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.rendering;
+package org.incode.module.documents.dom.docs;
 
-import org.incode.module.documents.dom.docs.Document;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-
-public interface Renderer {
-
-    Document render(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
-
+public enum PreviewType {
+    AS_BLOB,
+    AS_CLOB,
+    AS_URL,
 }

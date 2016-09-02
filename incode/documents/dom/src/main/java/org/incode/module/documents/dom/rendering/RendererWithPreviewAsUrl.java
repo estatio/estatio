@@ -16,11 +16,12 @@
  */
 package org.incode.module.documents.dom.rendering;
 
-import org.incode.module.documents.dom.docs.Document;
+import java.net.URL;
+
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 
-public interface Renderer {
+public interface RendererWithPreviewAsUrl extends Renderer {
 
-    Document render(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
+    URL previewAsUrl(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
 
 }

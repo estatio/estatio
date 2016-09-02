@@ -19,6 +19,8 @@ package org.estatio.fixture.documents;
 
 import javax.inject.Inject;
 
+import org.incode.module.documents.dom.docs.DocumentNature;
+import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
 
@@ -30,11 +32,13 @@ public abstract class RenderingStrategyAbstract extends EstatioFixtureScript {
     protected abstract void execute(ExecutionContext executionContext);
 
     protected RenderingStrategy createRenderingStrategy(
-            String reference,
-            String name,
-            final String rendererClassName, ExecutionContext executionContext) {
+            final String reference,
+            final String name,
+            final DocumentNature documentNature,
+            final Class<? extends Renderer> rendererClass,
+            final ExecutionContext executionContext) {
 
-        final RenderingStrategy renderingStrategy = renderingStrategyRepository.create(reference, name, rendererClassName);
+        final RenderingStrategy renderingStrategy = renderingStrategyRepository.create(reference, name, documentNature, rendererClass);
         return executionContext.addResult(this, renderingStrategy);
     }
 

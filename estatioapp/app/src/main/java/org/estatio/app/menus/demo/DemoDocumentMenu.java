@@ -24,8 +24,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -35,25 +33,14 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentAbstract;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.types.DocumentTypeRepository;
-import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
-import org.incode.module.documents.dom.valuetypes.RendererClassNameSpecification;
 
-import org.estatio.app.integration.documents.RendererForFreemarker;
-import org.estatio.app.menus.documents.DocumentTemplateMenu;
-import org.estatio.app.menus.documents.DocumentTypeMenu;
-import org.estatio.app.menus.documents.RenderingStrategyMenu;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 import freemarker.template.TemplateException;
 
@@ -64,116 +51,6 @@ import freemarker.template.TemplateException;
         menuOrder = "999")
 public class DemoDocumentMenu {
 
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "1")
-    public DocumentType demoDocumentCreateDocumentType(
-            @ParameterLayout(named = "Reference")
-            final String typeReference,
-            @ParameterLayout(named = "Name")
-            final String name) throws IOException, TemplateException {
-        return documentTypeMenu.newType(typeReference, name);
-    }
-
-    public String default0DemoDocumentCreateDocumentType() {
-        return "HELLO";
-    }
-    public String default1DemoDocumentCreateDocumentType() {
-        return "Hello world";
-    }
-
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "1")
-    public RenderingStrategy demoDocumentCreateRenderingStrategy(
-            @ParameterLayout(named = "Reference")
-            final String typeReference,
-            @ParameterLayout(named = "Name")
-            final String name,
-            @Parameter(mustSatisfy = RendererClassNameSpecification.class)
-            @ParameterLayout(named = "Renderer class name")
-            final String rendererClassName) throws IOException, TemplateException {
-        return renderingStrategyMenu.newStrategy(typeReference, name, rendererClassName);
-    }
-
-    public String default0DemoDocumentCreateRenderingStrategy() {
-        return "FREEMARKER";
-    }
-    public String default1DemoDocumentCreateRenderingStrategy() {
-        return "Freemarker rendering strategy";
-    }
-    public String default2DemoDocumentCreateRenderingStrategy() {
-        return RendererForFreemarker.class.getName();
-    }
-
-    // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "3")
-    public DocumentTemplate demoDocumentCreateTextTemplate(
-            final DocumentType documentType,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            @ParameterLayout(named = "Name")
-            final String name,
-            @ParameterLayout(named = "Mime type")
-            final String mimeType,
-            final ApplicationTenancy applicationTenancy,
-            @ParameterLayout(named = "Template text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
-            final String templateText,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
-            @ParameterLayout(named = "Data model class name")
-            final String dataModelClassName,
-            final RenderingStrategy renderingStrategy) {
-
-        final LocalDate date = clockService.now();
-        return documentTemplateMenu.newTextTemplate(
-                documentType, date, name, mimeType, applicationTenancy, templateText, dataModelClassName, renderingStrategy);
-    }
-    public String disableDemoDocumentCreateTextTemplate() {
-        if (default0DemoDocumentCreateTextTemplate() == null) {
-            return "No document types exist";
-        }
-        if (default6DemoDocumentCreateTextTemplate() == null) {
-            return "No rendering strategies exist";
-        }
-        return null;
-    }
-
-    public DocumentType default0DemoDocumentCreateTextTemplate() {
-        final List<DocumentType> documentTypes = documentTypeRepository.allTypes();
-        return documentTypes.isEmpty() ? null : documentTypes.get(0);
-    }
-
-    public String default1DemoDocumentCreateTextTemplate() {
-        return "HelloWorld.txt";
-    }
-
-    public String default2DemoDocumentCreateTextTemplate() {
-        return "text/plain";
-    }
-
-    public List<ApplicationTenancy> choices3DemoDocumentCreateTextTemplate() {
-        return documentTemplateMenu.choices4NewTextTemplate();
-    }
-    public ApplicationTenancy default3DemoDocumentCreateTextTemplate() {
-        return choices3DemoDocumentCreateTextTemplate().get(0);
-    }
-    public String default4DemoDocumentCreateTextTemplate() {
-        return "Hello ${user} !!!";
-    }
-    public String default5DemoDocumentCreateTextTemplate() {
-        return HelloDocumentTemplateUserDataModel.class.getName();
-    }
-
-    public RenderingStrategy default6DemoDocumentCreateTextTemplate() {
-        final List<RenderingStrategy> renderingStrategies = renderingStrategyRepository.allStrategies();
-        return renderingStrategies.isEmpty() ? null : renderingStrategies.get(0);
-    }
-
-
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
@@ -198,10 +75,10 @@ public class DemoDocumentMenu {
     }
 
     public List<ApplicationTenancy> choices0DemoDocumentRender() {
-        return choices3DemoDocumentCreateTextTemplate();
+        return estatioApplicationTenancyRepository.allTenancies();
     }
     public ApplicationTenancy default0DemoDocumentRender() {
-        return default3DemoDocumentCreateTextTemplate();
+        return choices0DemoDocumentRender().get(0);
     }
 
     public List<DocumentTemplate> choices1DemoDocumentRender(final ApplicationTenancy applicationTenancy) {
@@ -217,26 +94,11 @@ public class DemoDocumentMenu {
     // //////////////////////////////////////
 
     @Inject
-    private DocumentTypeMenu documentTypeMenu;
-
-    @Inject
-    private RenderingStrategyMenu renderingStrategyMenu;
-
-    @Inject
-    private DocumentTemplateMenu documentTemplateMenu;
-
-
-    @Inject
-    private ClockService clockService;
-
-    @Inject
-    private DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    private RenderingStrategyRepository renderingStrategyRepository;
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject
     private DocumentTemplateRepository documentTemplateRepository;
+
 
 
 }

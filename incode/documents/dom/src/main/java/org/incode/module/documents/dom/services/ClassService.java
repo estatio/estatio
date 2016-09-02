@@ -73,7 +73,8 @@ public class ClassService {
         }
     }
 
-    private static Class<?> load(final String fqcn) {
+    @Programmatic
+    public Class<?> load(final String fqcn) {
         try {
             return loadClass(fqcn);
         } catch (ClassNotFoundException e) {

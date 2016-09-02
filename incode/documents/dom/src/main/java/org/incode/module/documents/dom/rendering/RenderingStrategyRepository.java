@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.documents.dom.docs.DocumentNature;
+
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = RenderingStrategy.class
@@ -37,8 +39,9 @@ public class RenderingStrategyRepository {
     public RenderingStrategy create(
             final String reference,
             final String name,
-            final String rendererClassName) {
-        final RenderingStrategy renderingStrategy = new RenderingStrategy(reference, name, rendererClassName);
+            final DocumentNature documentNature,
+            final Class<? extends Renderer> rendererClass) {
+        final RenderingStrategy renderingStrategy = new RenderingStrategy(reference, name, documentNature, rendererClass);
         repositoryService.persist(renderingStrategy);
         return renderingStrategy;
     }
