@@ -18,23 +18,18 @@
  */
 package org.estatio.app.integration.documents;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 
+import org.incode.module.documents.dom.docs.Document;
 import org.incode.module.documents.dom.docs.DocumentRepository;
-import org.incode.module.documents.dom.rendering.RendererAbstract;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.rendering.Renderer;
 
-public class RendererForSvg extends RendererAbstract {
+public class RendererForSvg implements Renderer {
 
     @Override
-    protected String renderAsChars(
-            final DocumentTemplate documentTemplate,
-            final Object dataModel,
-            final DocumentType documentType) throws IOException {
-
+    public Document render(
+            final DocumentTemplate documentTemplate, final Object dataModel, final String documentName) {
         throw new RuntimeException("Not yet implemented");
     }
 

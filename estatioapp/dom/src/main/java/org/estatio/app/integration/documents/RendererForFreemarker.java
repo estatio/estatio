@@ -22,23 +22,78 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.joda.time.DateTime;
+
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.value.Clob;
+
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
+import org.incode.module.documents.dom.docs.Document;
 import org.incode.module.documents.dom.docs.DocumentRepository;
-import org.incode.module.documents.dom.rendering.RendererAbstract;
+import org.incode.module.documents.dom.docs.DocumentSort;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.rendering.Renderer;
+import org.incode.module.documents.dom.rendering.RendererWithPreviewAsClob;
 import org.incode.module.documents.dom.types.DocumentType;
 
 import freemarker.template.TemplateException;
 
-public class RendererForFreemarker extends RendererAbstract {
+public class RendererForFreemarker implements Renderer, RendererWithPreviewAsClob {
 
     @Override
-    protected String renderAsChars(
-            final DocumentTemplate documentTemplate,
+    public Document render(
+            final DocumentTemplate template,
             final Object dataModel,
-            final DocumentType documentType) throws IOException {
+            final String documentName) {
 
+        final DocumentType documentType = template.getType();
+
+        try {
+            final DocumentSort sort = template.getSort();
+            final DateTime createdAt = clockService.nowAsDateTime();
+
+            switch (sort) {
+
+            case CLOB:
+                final Clob clob = asClob(template, dataModel, documentName);
+                return documentRepository.createClob(documentType, template.getAtPath(), clob, createdAt);
+
+            case TEXT:
+                final String textChars = asChars(template, dataModel);
+
+                return documentRepository.createText(documentType, template.getAtPath(), documentName, template.getMimeType(), textChars, createdAt);
+
+            case BLOB:
+                throw new IllegalStateException("This renderer cannot render to bytes");
+
+            }
+            return null;
+
+        } catch (IOException e) {
+            throw new ApplicationException(e);
+        }
+    }
+
+    @Override
+    public Clob previewAsClob(
+            final DocumentTemplate documentTemplate, final Object dataModel, final String documentName)
+            throws IOException {
+        return asClob(documentTemplate, dataModel, documentName);
+    }
+
+    private Clob asClob(final DocumentTemplate template, final Object dataModel, final String documentName)
+            throws IOException {
+        final String clobChars = asChars(template, dataModel);
+        return new Clob(documentName, template.getMimeType(), clobChars);
+    }
+
+    private String asChars(
+            final DocumentTemplate documentTemplate,
+            final Object dataModel) throws IOException {
+
+        final DocumentType documentType = documentTemplate.getType();
         final String typeRef = documentType.getReference();
         final String atPath = documentTemplate.getAtPath();
 
@@ -50,9 +105,12 @@ public class RendererForFreemarker extends RendererAbstract {
     }
 
     @Inject
-    private FreeMarkerService freeMarkerService;
+    private DocumentRepository documentRepository;
+    @Inject
+    private ClockService clockService;
+
 
     @Inject
-    private DocumentRepository documentRepository;
+    private FreeMarkerService freeMarkerService;
 
 }
