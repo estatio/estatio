@@ -46,9 +46,6 @@ import org.estatio.dom.asset.FixedAsset;
         objectType = "estatioAssets.PaperclipForFixedAsset"
 )
 @DomainObjectLayout(
-        titleUiEvent = Paperclip.TitleUiEvent.class,
-        iconUiEvent = Paperclip.IconUiEvent.class,
-        cssClassUiEvent = Paperclip.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class PaperclipForFixedAsset extends Paperclip {

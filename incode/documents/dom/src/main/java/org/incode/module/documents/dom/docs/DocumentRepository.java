@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -33,7 +33,7 @@ import org.incode.module.documents.dom.types.DocumentType;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = Document.class
+        repositoryFor = DocumentAbstract.class
 )
 public class DocumentRepository {
 
@@ -43,7 +43,7 @@ public class DocumentRepository {
             final DocumentType type,
             final String atPath,
             final Blob blob,
-            final LocalDateTime createdAt) {
+            final DateTime createdAt) {
         final Document document = new Document(type, atPath, blob, createdAt);
         repositoryService.persist(document);
         return document;
@@ -54,7 +54,7 @@ public class DocumentRepository {
             final DocumentType type,
             final String atPath,
             final Clob clob,
-            final LocalDateTime createdAt) {
+            final DateTime createdAt) {
         final Document document = new Document(type, atPath, clob, createdAt);
         repositoryService.persist(document);
         return document;
@@ -67,7 +67,7 @@ public class DocumentRepository {
             final String name,
             final String mimeType,
             final String text,
-            final LocalDateTime createdAt) {
+            final DateTime createdAt) {
         final Document document = new Document(type, atPath, name, mimeType, text, createdAt);
         repositoryService.persist(document);
         return document;
@@ -76,8 +76,8 @@ public class DocumentRepository {
 
 
     @Programmatic
-    public List<Document> allDocuments() {
-        return repositoryService.allInstances(Document.class);
+    public List<DocumentAbstract> allDocuments() {
+        return repositoryService.allInstances(DocumentAbstract.class);
     }
 
     //region > injected services

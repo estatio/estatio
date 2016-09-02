@@ -44,7 +44,9 @@
                                 <cpt:property id="attachedTo" hidden="EVERYWHERE"/>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Role">
-                                <cpt:property id="roleName"/>
+                                <cpt:property id="roleName">
+                                    <cpt:action id="changeRole"/>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

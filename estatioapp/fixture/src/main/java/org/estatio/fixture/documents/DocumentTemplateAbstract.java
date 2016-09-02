@@ -20,7 +20,6 @@ package org.estatio.fixture.documents;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
 
 import org.apache.wicket.util.io.IOUtils;
@@ -30,8 +29,8 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.types.DocumentType;
 
 import org.estatio.fixture.EstatioFixtureScript;

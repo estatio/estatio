@@ -14,12 +14,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.templates;
-
-import java.util.List;
+package org.incode.module.documents.dom.docs;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
@@ -34,20 +33,15 @@ import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -57,14 +51,11 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.docs.Document;
-import org.incode.module.documents.dom.links.Paperclip;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -75,11 +66,12 @@ import lombok.Setter;
         table = "DocumentTemplate"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@Discriminator("T") // for Template
 @Queries({
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndAtPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
+                        + "FROM org.incode.module.documents.dom.docs.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
                         + "   && atPathCopy == :atPath "
                         + "ORDER BY date DESC"
@@ -87,7 +79,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndApplicableToAtPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
+                        + "FROM org.incode.module.documents.dom.docs.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
                         + "   && :atPath.startsWith(atPathCopy) "
                         + "ORDER BY atPathCopy DESC, date DESC "
@@ -95,7 +87,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndApplicableToAtPathAndCurrent", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
+                        + "FROM org.incode.module.documents.dom.docs.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
                         + "   && :atPath.startsWith(atPathCopy) "
                         + "   && (date == null || date <= :now) "
@@ -104,14 +96,14 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
+                        + "FROM org.incode.module.documents.dom.docs.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
                         + "ORDER BY atPathCopy DESC, date DESC "
         ),
         @javax.jdo.annotations.Query(
                 name = "findByApplicableToAtPathAndCurrent", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.templates.DocumentTemplate "
+                        + "FROM org.incode.module.documents.dom.docs.DocumentTemplate "
                         + "   && :atPath.startsWith(atPathCopy) "
                         + "   && (date == null || date <= :now) "
                         + "ORDER BY atPathCopy DESC, typeCopy, date DESC "
@@ -143,19 +135,13 @@ import lombok.Setter;
         cssClassUiEvent = DocumentTemplate.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class DocumentTemplate extends Document<DocumentTemplate> {
+public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<DocumentTemplate>{}
     public static class IconUiEvent extends DocumentsModule.IconUiEvent<DocumentTemplate>{}
     public static class CssClassUiEvent extends DocumentsModule.CssClassUiEvent<DocumentTemplate>{}
-    //endregion
-
-    //region > domain event classes
-    public static abstract class PropertyDomainEvent<T> extends DocumentsModule.PropertyDomainEvent<DocumentTemplate, T> { }
-    public static abstract class CollectionDomainEvent<T> extends DocumentsModule.CollectionDomainEvent<DocumentTemplate, T> { }
-    public static abstract class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate> { }
     //endregion
 
     //region > title, icon, cssClass
@@ -226,10 +212,9 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final Blob blob,
-            final LocalDateTime createdAt,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
-        super(type, atPath, blob, createdAt);
+        super(type, atPath, blob);
         init(type, date, atPath, renderingStrategy, dataModelClassName);
     }
 
@@ -240,10 +225,9 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
             final String name,
             final String mimeType,
             final String text,
-            final LocalDateTime createdAt,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
-        super(type, atPath, name, mimeType, text, createdAt);
+        super(type, atPath, name, mimeType, text);
         init(type, date, atPath, renderingStrategy, dataModelClassName);
     }
 
@@ -252,10 +236,9 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final Clob clob,
-            final LocalDateTime createdAt,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
-        super(type, atPath, clob, createdAt);
+        super(type, atPath, clob);
         init(type, date, atPath, renderingStrategy, dataModelClassName);
     }
 
@@ -287,43 +270,6 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
     private DocumentType typeCopy;
     //endregion
 
-    //region > date (property)
-    public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    @Property(
-            domainEvent = DateDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private LocalDate date;
-    //endregion
-    //region > changeDate (action)
-    public static class ChangeDateDomainEvent extends DocumentTemplate.ActionDomainEvent { }
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = ChangeDateDomainEvent.class
-    )
-    public DocumentTemplate changeDate(
-            @ParameterLayout(named = "New date")
-            final LocalDate date) {
-        setDate(date);
-        return this;
-    }
-
-    public LocalDate default0ChangeDate() {
-        return getDate();
-    }
-
-    public TranslatableString validate0ChangeDate(LocalDate proposedDate) {
-
-        final DocumentTemplate original = this;
-        final String proposedAtPath = getAtPath();
-
-        return documentTemplateRepository.validateApplicationTenancyAndDate(original.getType(), proposedAtPath, proposedDate, original);
-    }
-
-    //endregion
-
     //region > atPathCopy (derived property, persisted)
     /**
      * Copy of {@link #getAtPath()}, for query purposes only.
@@ -337,6 +283,17 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
     private String atPathCopy;
     //endregion
 
+    //region > date (property)
+    public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = DateDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private LocalDate date;
+    //endregion
+
 
     //region > dataModelClassName (property)
     public static class DataModelClassNameDomainEvent extends DocumentTemplate.PropertyDomainEvent<String> { }
@@ -347,24 +304,6 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
             editing = Editing.DISABLED
     )
     private String dataModelClassName;
-    //endregion
-    //region > changeDataModel (action)
-    public static class ChangeDataModelDomainEvent extends DocumentTemplate.ActionDomainEvent { }
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = ChangeDataModelDomainEvent.class
-    )
-    public DocumentTemplate changeDataModel(
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
-            @ParameterLayout(named = "Data model class name")
-            final String dataModelClassName) {
-        setDataModelClassName(dataModelClassName);
-        return this;
-    }
-
-    public String default0ChangeDataModel() {
-        return getDataModelClassName();
-    }
     //endregion
 
     //region > renderStrategy (property)
@@ -378,6 +317,7 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
     private RenderingStrategy renderingStrategy;
     //endregion
 
+
     //region > asChars, asBytes (programmatic)
     @Programmatic
     public String asChars() {
@@ -388,7 +328,6 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
         return getSort().asBytes(this);
     }
     //endregion
-
 
     //region > instantiateDataModel (programmatic)
 
@@ -405,7 +344,7 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
     //region > render (programmatic)
 
     @Programmatic
-    public Document render(final Object dataModel, final String documentName) {
+    public DocumentAbstract render(final Object dataModel, final String documentName) {
         final Renderer renderer = getRenderingStrategy().instantiateRenderer();
         return renderer.render(this, dataModel, documentName);
     }
@@ -413,24 +352,6 @@ public class DocumentTemplate extends Document<DocumentTemplate> {
     //endregion
 
 
-
-    //region > delete (action)
-    public static class DeleteDomainEvent extends DocumentTemplate.ActionDomainEvent { }
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
-            domainEvent = DeleteDomainEvent.class
-    )
-    public DocumentTemplate delete() {
-        documentTemplateRepository.delete(this);
-        return this;
-    }
-    public TranslatableString disableDelete() {
-        final List<Paperclip> paperclips = paperclipRepository.findByDocument(this);
-        return !paperclips.isEmpty()
-                    ? TranslatableString.tr("This template is attached to objects")
-                    : null;
-    }
-    //endregion
 
     //region > injected services
     @Inject

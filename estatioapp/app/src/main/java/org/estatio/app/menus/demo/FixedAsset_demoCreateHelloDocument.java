@@ -32,10 +32,11 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
 import org.incode.module.documents.dom.links.PaperclipRepository;
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
@@ -57,7 +58,7 @@ public class FixedAsset_demoCreateHelloDocument {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     public FixedAsset<?> $$(
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Document role")
             final String roleName
             ) throws IOException, TemplateException {
@@ -69,7 +70,7 @@ public class FixedAsset_demoCreateHelloDocument {
         dataModel.setUser(fixedAsset.getName());
 
         final String documentName = fixedAsset.getName() + ".txt";
-        final Document document = documentTemplate.render(dataModel, documentName);
+        final DocumentAbstract document = documentTemplate.render(dataModel, documentName);
 
         paperclipRepository.attach(document, roleName, fixedAsset);
 

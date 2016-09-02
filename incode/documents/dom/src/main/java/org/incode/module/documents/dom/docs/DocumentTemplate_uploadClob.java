@@ -20,31 +20,41 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.templates.DocumentTemplate;
+import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class Document_download {
+public class DocumentTemplate_uploadClob {
 
     //region > constructor
-    private final Document document;
+    private final DocumentTemplate documentTemplate;
 
-    public Document_download(final Document document) {
-        this.document = document;
+    public DocumentTemplate_uploadClob(final DocumentTemplate documentTemplate) {
+        this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    @Action(semantics = SemanticsOf.SAFE)
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_uploadClob>  { }
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ActionDomainEvent.class
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Clob $$() {
-        return new Clob(document.getName(), document.getMimeType(), document.getText());
+    public DocumentTemplate $$(
+            @ParameterLayout(named = "File")
+            final Clob clob
+    ) {
+        documentTemplate.setMimeType(clob.getMimeType().toString());
+        documentTemplate.setClobChars(clob.getChars().toString());
+        return documentTemplate;
     }
 
     public boolean hide$$() {
-        return document instanceof DocumentTemplate || document.getSort() != DocumentSort.TEXT;
+        return documentTemplate.getSort() != DocumentSort.CLOB;
     }
 
 }

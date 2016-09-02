@@ -18,8 +18,6 @@ package org.incode.module.documents.dom.docs;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-
 public enum DocumentSort {
     /**
      * Stored as a BLOB
@@ -50,6 +48,8 @@ public enum DocumentSort {
     },
     /**
      * Stored externally as blob (holds a hyperlink to access)
+     *
+     * Only {@link Document}s can be stored externally (not {@link DocumentTemplate}).
      */
     EXTERNAL_BLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
@@ -58,7 +58,9 @@ public enum DocumentSort {
         }
     },
     /**
-     * Stored externally as clob (holds a hyperlink to access)
+     * Stored externally as clob (holds a hyperlink to access).
+     * 
+     * Only {@link Document}s can be stored externally (not {@link DocumentTemplate}).
      */
     EXTERNAL_CLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
@@ -75,9 +77,6 @@ public enum DocumentSort {
         this.storage = storage;
     }
 
-    /**
-     * Supported only if {@link #isClob()} or {@link #isText()}.
-     */
     @Programmatic
     public String asChars(final DocumentTemplate documentTemplate) {
         throw new IllegalArgumentException("Cannot convert to characters");
@@ -108,5 +107,8 @@ public enum DocumentSort {
         return nature == DocumentNature.CHARACTERS;
     }
 
-
+    @Programmatic
+    public boolean isExternal() {
+        return storage == DocumentStorage.EXTERNAL;
+    }
 }

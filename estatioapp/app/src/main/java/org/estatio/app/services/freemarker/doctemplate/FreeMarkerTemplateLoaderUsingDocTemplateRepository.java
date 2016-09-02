@@ -29,8 +29,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.freemarker.dom.spi.FreeMarkerTemplateLoader;
 import org.isisaddons.module.freemarker.dom.spi.TemplateSource;
 
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 

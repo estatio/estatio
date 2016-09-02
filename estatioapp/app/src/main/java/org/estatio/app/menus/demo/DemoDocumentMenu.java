@@ -40,11 +40,11 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
@@ -177,7 +177,7 @@ public class DemoDocumentMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
-    public Document demoDocumentRender(
+    public DocumentAbstract demoDocumentRender(
             final ApplicationTenancy applicationTenancy,
             final DocumentTemplate documentTemplate,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -189,7 +189,7 @@ public class DemoDocumentMenu {
         final HelloDocumentTemplateUserDataModel dataModel = (HelloDocumentTemplateUserDataModel) documentTemplate.instantiateDataModel();
         dataModel.setUser(user);
 
-        final Document document = documentTemplate.render(dataModel, name);
+        final DocumentAbstract document = documentTemplate.render(dataModel, name);
 
         return document;
     }

@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.templates;
+package org.incode.module.documents.dom.docs;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class DocumentTemplateRepository {
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
         final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, createdAt, renderingStrategy,
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, renderingStrategy,
                 dataModelClassName);
         repositoryService.persist(document);
         return document;
@@ -66,7 +66,7 @@ public class DocumentTemplateRepository {
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
         final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, createdAt, renderingStrategy, dataModelClassName);
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, renderingStrategy, dataModelClassName);
         repositoryService.persist(document);
         return document;
     }
@@ -82,7 +82,7 @@ public class DocumentTemplateRepository {
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
         final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, name, mimeType, text, createdAt,
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, name, mimeType, text,
                 renderingStrategy, dataModelClassName);
         repositoryService.persist(document);
         return document;

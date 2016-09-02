@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
 import org.incode.module.documents.dom.docs.DocumentRepository;
 
 import org.estatio.dom.UdoDomainService;
@@ -52,7 +52,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "2")
-    public List<Document> allDocuments() {
+    public List<DocumentAbstract> allDocuments() {
         return documentRepository.allDocuments();
     }
 

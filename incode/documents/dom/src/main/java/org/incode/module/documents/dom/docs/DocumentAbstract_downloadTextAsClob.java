@@ -14,46 +14,39 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.templates;
+package org.incode.module.documents.dom.docs;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.docs.DocumentSort;
 
 @Mixin
-public class DocumentTemplate_updateText {
+public class DocumentAbstract_downloadTextAsClob {
 
     //region > constructor
-    private final DocumentTemplate documentTemplate;
+    private final DocumentAbstract<?> document;
 
-    public DocumentTemplate_updateText(final DocumentTemplate documentTemplate) {
-        this.documentTemplate = documentTemplate;
+    public DocumentAbstract_downloadTextAsClob(final DocumentAbstract<?> document) {
+        this.document = document;
     }
     //endregion
 
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
-    public DocumentTemplate $$(
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
-            final String text
-    ) {
-        documentTemplate.setClobChars(text);
-        return documentTemplate;
-    }
-
-    public String default0$$() {
-        return documentTemplate.getText();
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentAbstract_downloadTextAsClob>  { }
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            domainEvent = ActionDomainEvent.class
+    )
+    @ActionLayout(named = "Download")
+    public Clob $$() {
+        return new Clob(document.getName(), document.getMimeType(), document.getText());
     }
 
     public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.TEXT;
+        return document.getSort() != DocumentSort.TEXT;
     }
 
 

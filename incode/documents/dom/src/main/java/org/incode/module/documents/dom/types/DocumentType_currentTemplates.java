@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 
 @Mixin
 public class DocumentType_currentTemplates {

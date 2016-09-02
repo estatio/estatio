@@ -14,43 +14,50 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.templates;
+package org.incode.module.documents.dom.docs;
+
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.docs.DocumentSort;
+import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class DocumentTemplate_uploadClob {
+public class Document_downloadExternalUrlAsClob {
+
 
     //region > constructor
-    private final DocumentTemplate documentTemplate;
+    private final Document document;
 
-    public DocumentTemplate_uploadClob(final DocumentTemplate documentTemplate) {
-        this.documentTemplate = documentTemplate;
+    public Document_downloadExternalUrlAsClob(final Document document) {
+        this.document = document;
     }
     //endregion
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
-    public DocumentTemplate $$(
-            @ParameterLayout(named = "File")
-            final Clob clob
-    ) {
-        documentTemplate.setMimeType(clob.getMimeType().toString());
-        documentTemplate.setClobChars(clob.getChars().toString());
-        return documentTemplate;
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Document_downloadExternalUrlAsClob> { }
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            domainEvent = ActionDomainEvent.class
+    )
+    @ActionLayout(named = "Download")
+    public Clob $$() {
+        messageService.informUser("Not yet implemented");
+        return null;
     }
 
     public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.CLOB;
+        return document.getSort() != DocumentSort.EXTERNAL_CLOB;
     }
+
+
+
+    @Inject
+    MessageService messageService;
 
 }

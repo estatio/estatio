@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.templates;
+package org.incode.module.documents.dom.docs;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -22,35 +22,42 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.documents.dom.docs.DocumentSort;
+import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class DocumentTemplate_uploadBlob {
+public class DocumentTemplate_updateText {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_uploadBlob(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_updateText(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateText>  { }
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ActionDomainEvent.class
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public DocumentTemplate $$(
-            @ParameterLayout(named = "File")
-            final Blob blob
+            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
+            final String text
     ) {
-        documentTemplate.setMimeType(blob.getMimeType().toString());
-        documentTemplate.setBlobBytes(blob.getBytes());
+        documentTemplate.setClobChars(text);
         return documentTemplate;
     }
 
-    public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.CLOB;
+    public String default0$$() {
+        return documentTemplate.getText();
     }
+
+    public boolean hide$$() {
+        return documentTemplate.getSort() != DocumentSort.TEXT;
+    }
+
 
 }

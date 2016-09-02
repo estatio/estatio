@@ -28,25 +28,24 @@ import com.google.common.base.Function;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -92,7 +91,7 @@ import lombok.Setter;
         objectType = "incodeDocuments.Paperclip"
 )
 @DomainObjectLayout(
-        titleUiEvent = Paperclip.TitleUiEvent.class,
+        // titleUiEvent = Paperclip.TitleUiEvent.class,
         iconUiEvent = Paperclip.IconUiEvent.class,
         cssClassUiEvent = Paperclip.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
@@ -100,7 +99,7 @@ import lombok.Setter;
 public abstract class Paperclip implements Comparable<Paperclip> {
 
     //region > ui event classes
-    public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<Paperclip>{}
+    // public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<Paperclip>{}
     public static class IconUiEvent extends DocumentsModule.IconUiEvent<Paperclip>{}
     public static class CssClassUiEvent extends DocumentsModule.CssClassUiEvent<Paperclip>{}
     //endregion
@@ -112,33 +111,22 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     //endregion
 
     //region > title, icon, cssClass
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TitleSubscriber extends AbstractSubscriber {
-        @EventHandler
-        @Subscribe
-        public void on(Paperclip.TitleUiEvent ev) {
-            if(ev.getTitle() != null) {
-                return;
-            }
-            ev.setTranslatableTitle(titleOf(ev.getSource()));
-        }
-        private TranslatableString titleOf(final Paperclip paperclip) {
-            if(paperclip.getRoleName() != null) {
+
+    // can't implement as a subscriber because guava doesn't support events within events
+    public TranslatableString title() {
+        return titleOf(this);
+    }
+    private TranslatableString titleOf(final Paperclip paperclip) {
+        if(paperclip.getRoleName() != null) {
             return TranslatableString.tr("{document} attached to {attachedTo} ({roleName})",
                     "document", titleService.titleOf(paperclip.getDocument()),
                     "attachedTo", titleService.titleOf(paperclip.getAttachedTo()),
                     "roleName", paperclip.getRoleName());
-            } else {
-                return TranslatableString.tr("{document} attached to {attachedTo} ",
+        } else {
+            return TranslatableString.tr("{document} attached to {attachedTo} ",
                     "document", titleService.titleOf(paperclip.getDocument()),
                     "attachedTo", titleService.titleOf(paperclip.getAttachedTo()));
-            }
         }
-        @Inject
-        TitleService titleService;
     }
 
     /**
@@ -194,7 +182,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     //endregion
 
     //region > document (property)
-    public static class DocumentDomainEvent extends PropertyDomainEvent<Document> { }
+    public static class DocumentDomainEvent extends PropertyDomainEvent<DocumentAbstract> { }
     @Getter @Setter
     @Column(
             allowsNull = "false",
@@ -203,7 +191,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     @Property(
             domainEvent = DocumentDomainEvent.class
     )
-    private Document document;
+    private DocumentAbstract document;
     //endregion
 
     //region > roleName (property, optional)
@@ -222,26 +210,25 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     public static class DocumentCreatedAtDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
 
     /**
-     * Copy of the date/time that the document was created.
+     * Copy of the date/time that the document was created (only populated for Documents, not templates)
      */
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     @Property(
             domainEvent = DocumentCreatedAtDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private LocalDateTime documentCreatedAt;
-    //endregion
+    private DateTime documentCreatedAt;
 
-
-    //region > delete (action)
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public Document delete() {
-        final Document document = getDocument();
-        paperclipRepository.delete(this);
-        return document;
+    public TranslatableString disableDocumentCreatedAt() {
+        if(getDocument() instanceof DocumentTemplate) {
+            return TranslatableString.tr("Document templates do not have a createdAt property.");
+        }
+        return null;
     }
     //endregion
+
+
 
 
     //region > toString, compareTo
@@ -260,10 +247,10 @@ public abstract class Paperclip implements Comparable<Paperclip> {
 
     //region > Functions
     public static class Functions {
-        public static Function<Paperclip, Document> document() {
-            return document(Document.class);
+        public static Function<Paperclip, DocumentAbstract> document() {
+            return document(DocumentAbstract.class);
         }
-        public static <T extends Document> Function<Paperclip, T> document(Class<T> cls) {
+        public static <T extends DocumentAbstract> Function<Paperclip, T> document(Class<T> cls) {
             return input -> (T)input.getDocument();
         }
         public static Function<Paperclip, Object> attachedTo() {
@@ -279,6 +266,9 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     //region > injected services
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    TitleService titleService;
     //endregion
 
 }

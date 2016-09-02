@@ -22,11 +22,9 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
-
 import org.incode.module.documents.dom.docs.DocumentRepository;
 import org.incode.module.documents.dom.rendering.RendererAbstract;
-import org.incode.module.documents.dom.templates.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.types.DocumentType;
 
 public class RendererForSvg extends RendererAbstract {

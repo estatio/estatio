@@ -33,29 +33,28 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.links.Paperclip;
 import org.incode.module.documents.dom.links.PaperclipRepository;
-import org.incode.module.documents.dom.templates.DocumentTemplate;
 
 @Mixin
-public class Document_attachedTo<T> {
+public class DocumentAbstract_attachedTo<T> {
+
 
     //region > constructor and mixedIn accessor
-    private final Document<?> document;
+    private final DocumentAbstract<?> document;
 
-    public Document_attachedTo(final Document<?> document) {
+    public DocumentAbstract_attachedTo(final DocumentAbstract<?> document) {
         this.document = document;
     }
 
     @Programmatic
-    public Document getDocument() {
+    public DocumentAbstract getDocument() {
         return document;
     }
 
     //endregion
 
-    //region > $$
-    public static class DomainEvent extends DocumentsModule.ActionDomainEvent<Document_attachedTo>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentAbstract_attachedTo>  { }
     @Action(
-            domainEvent = DomainEvent.class,
+            domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.SAFE
     )
     @ActionLayout(
@@ -66,11 +65,7 @@ public class Document_attachedTo<T> {
         return paperclipRepository.findByDocument(document);
     }
 
-    public boolean hide$$() {
-        return document instanceof DocumentTemplate;
-    }
 
-    //endregion
 
     //region > injected services
     @Inject

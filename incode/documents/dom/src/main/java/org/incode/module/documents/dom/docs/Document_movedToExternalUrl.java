@@ -16,43 +16,60 @@
  */
 package org.incode.module.documents.dom.docs;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.message.MessageService;
 
 import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class Document_moveToExternal {
+public class Document_movedToExternalUrl {
+
 
     //region > constructor
     private final Document document;
 
-    public Document_moveToExternal(final Document document) {
+    public Document_movedToExternalUrl(final Document document) {
         this.document = document;
     }
     //endregion
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Document_movedToExternalUrl> { }
+    /**
+     * The idea is that this would be called by a background process.  This is a prototyping action, for demo (or to
+     * call programmatically by said background service).
+     *
+     * <p>
+     *     Not yet tackled in this design is how to obtain the content of the service (what if there are credentials
+     *     etc that need to be provided.  However this document object <i>does</i> store is the
+     *     {@link Document#getSort() document sort} and {@link Document#getMimeType() mime type}  which lets us know how to interpret the remotely held data.
+     * </p>
+     */
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ActionDomainEvent.class,
+            restrictTo = RestrictTo.PROTOTYPING
+    )
+    @ActionLayout(named = "Moved to External URL")
     public Document $$(
-            @ParameterLayout(named = "External url")
+            @ParameterLayout(named = "External URL")
             final String externalUrl,
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
-            @ParameterLayout(named = "New name")
+            @ParameterLayout(named = "Name")
             final String name,
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE)
-            @ParameterLayout(named = "New mime type")
+            @ParameterLayout(named = "MIME type")
             final String mimeType
-        ) {
-
+    ) {
         document.setExternalUrl(externalUrl);
         document.setBlobBytes(null);
         document.setClobChars(null);
@@ -70,5 +87,22 @@ public class Document_moveToExternal {
         return document;
     }
 
+    public boolean hide$$() {
+        return document.getSort().isExternal();
+    }
+
+    public String default1$$() {
+        return document.getName();
+    }
+
+    public String default2$$() {
+        return document.getMimeType();
+    }
+
+
+
+
+    @Inject
+    MessageService messageService;
 
 }

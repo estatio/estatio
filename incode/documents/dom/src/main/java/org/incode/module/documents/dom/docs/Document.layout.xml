@@ -65,9 +65,12 @@
                                 <cpt:property id="clob" hidden="ALL_TABLES">
                                 </cpt:property>
                                 <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
-                                    <cpt:action id="download"/>
+                                    <cpt:action id="downloadTextAsClob"/>
                                 </cpt:property>
-                                <cpt:property id="externalUrl" hidden="ALL_TABLES"/>
+                                <cpt:property id="externalUrl" hidden="ALL_TABLES">
+                                    <cpt:action id="downloadExternalUrlAsClob"/>
+                                    <cpt:action id="downloadExternalUrlAsBlob"/>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -86,6 +89,7 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="12" unreferencedCollections="true">
+            <cpt:collection id="attachedTo"/>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

@@ -82,12 +82,11 @@
                                     </cpt:action>
                                 </cpt:property>
                                 <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
-                                    <cpt:action id="download"/>
+                                    <cpt:action id="downloadTextAsClob"/>
                                     <cpt:action id="updateText">
                                         <cpt:named>Update</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
-                                <cpt:property id="externalUrl" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -111,6 +110,7 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="12" unreferencedCollections="true">
+            <cpt:collection id="attachedTo"/>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

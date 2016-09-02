@@ -26,14 +26,14 @@ import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class Document_hideAtPath extends AbstractSubscriber {
 
     @EventHandler
     @Subscribe
-    public void on(Document.AtPathDomainEvent ev) {
+    public void on(DocumentAbstract.AtPathDomainEvent ev) {
         ev.hide();
     }
 

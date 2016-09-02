@@ -45,8 +45,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.templates.DocumentTemplate;
-import org.incode.module.documents.dom.templates.DocumentTemplateRepository;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 import org.incode.module.documents.dom.valuetypes.MimeTypeSpecification;
@@ -78,7 +78,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @ParameterLayout(named = "Name", describedAs = "Optional, will defaults to the name of selected document type")
             final String name,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
-            @ParameterLayout(named = "Mime type")
+            @ParameterLayout(named = "MIME type")
             final String mimeType,
             final ApplicationTenancy applicationTenancy,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)

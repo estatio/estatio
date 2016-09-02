@@ -30,6 +30,7 @@ import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -39,7 +40,7 @@ public class PaperclipRepository {
 
     //region > findByDocument (programmatic)
     @Programmatic
-    public List<Paperclip> findByDocument(final Document document) {
+    public List<Paperclip> findByDocument(final DocumentAbstract document) {
         return repositoryService.allMatches(
                 new QueryDefault<>(Paperclip.class,
                         "findByDocument",
@@ -92,7 +93,7 @@ public class PaperclipRepository {
     //region > attach (programmatic)
     @Programmatic
     public boolean canAttach(
-            final Document document,
+            final DocumentAbstract document,
             final String roleName,
             final Object candidateToAttachTo) {
         final Class<? extends Paperclip> subtype = subtypeClassForElseNull(candidateToAttachTo, roleName);
@@ -103,7 +104,7 @@ public class PaperclipRepository {
     //region > attach (programmatic)
     @Programmatic
     public Paperclip attach(
-            final Document document,
+            final DocumentAbstract document,
             final String roleName,
             final Object attachTo) {
 
@@ -113,7 +114,9 @@ public class PaperclipRepository {
 
         paperclip.setDocument(document);
         paperclip.setRoleName(roleName);
-        paperclip.setDocumentCreatedAt(document.getCreatedAt());
+        if(document instanceof Document) {
+            paperclip.setDocumentCreatedAt(((Document)document).getCreatedAt());
+        }
 
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachTo);
         paperclip.setAttachedTo(attachTo);
