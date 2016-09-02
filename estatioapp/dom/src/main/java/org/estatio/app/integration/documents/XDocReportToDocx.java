@@ -1,5 +1,6 @@
 /*
- *  Copyright 2016 Eurocommercial Properties NV
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
@@ -15,24 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.app.integration.documents;
 
-import org.incode.module.documents.dom.docs.DocumentNature;
+import org.isisaddons.module.xdocreport.dom.service.OutputType;
 
-import org.estatio.app.integration.documents.Svg;
+public class XDocReportToDocx extends RendererForXDocReportAbstract  {
 
-public class RenderingStrategyForSvg extends RenderingStrategyAbstract {
-
-    public static final String REF = "SVG";
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        createRenderingStrategy(
-                REF,
-                "SVG Rendering Strategy",
-                DocumentNature.CHARACTERS,
-                Svg.class,
-                executionContext);
+    public XDocReportToDocx() {
+        super(OutputType.DOCX);
     }
 
 }

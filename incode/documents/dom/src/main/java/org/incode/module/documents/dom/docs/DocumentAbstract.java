@@ -20,8 +20,6 @@ import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.Discriminator;
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
@@ -63,7 +61,6 @@ import lombok.Setter;
         column = "version")
 @Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.VALUE_MAP)
 @Indices({
         @Index(
                 name = "DocumentAbstract_type_atPath_IDX",

@@ -16,11 +16,11 @@
  */
 package org.incode.module.documents.dom.docs;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
@@ -35,9 +35,11 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -46,6 +48,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -56,9 +59,9 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.rendering.Renderer;
-import org.incode.module.documents.dom.rendering.RendererWithPreviewAsBlob;
-import org.incode.module.documents.dom.rendering.RendererWithPreviewAsClob;
-import org.incode.module.documents.dom.rendering.RendererWithPreviewAsUrl;
+import org.incode.module.documents.dom.rendering.RendererToBytes;
+import org.incode.module.documents.dom.rendering.RendererToChars;
+import org.incode.module.documents.dom.rendering.RendererToUrl;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.types.DocumentType;
@@ -72,7 +75,6 @@ import lombok.Setter;
         table = "DocumentTemplate"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator("T") // for Template
 @Queries({
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndAtPath", language = "JDOQL",
@@ -142,7 +144,6 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
-
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<DocumentTemplate>{}
@@ -367,7 +368,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         return previewTypes;
     }
     @Programmatic
-    public Object preview(final Object dataModel, final String documentName, final PreviewType previewType) {
+    public Object preview(final Object dataModel, final String documentName, final PreviewType previewType)
+            throws IOException {
         final List<PreviewType> previewTypes = getPreviewTypes();
         if(!previewTypes.contains(previewType)) {
             throw new IllegalArgumentException("Preview type '" + previewType + "' not supported by rendering strategy");
@@ -375,11 +377,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         final Renderer renderer = getRenderingStrategy().instantiateRenderer();
         switch (previewType) {
             case AS_BLOB:
-                return ((RendererWithPreviewAsBlob)renderer).previewAsBlob(this, dataModel, documentName);
+                return ((RendererToBytes)renderer).renderToBytes(this, dataModel);
             case AS_CLOB:
-                return ((RendererWithPreviewAsClob)renderer).previewAsClob(this, dataModel, documentName);
+                return ((RendererToChars)renderer).renderToChars(this, dataModel);
             case AS_URL:
-                return ((RendererWithPreviewAsUrl)renderer).previewAsUrl(this, dataModel, documentName);
+                return ((RendererToUrl)renderer).renderToUrl(this, dataModel, documentName);
         }
         // shouldn't happen, above switch statement is complete
         throw new IllegalArgumentException("Unknown previewType '" + previewType + "'");
@@ -392,7 +394,43 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public DocumentAbstract render(final Object dataModel, final String documentName) {
         final Renderer renderer = getRenderingStrategy().instantiateRenderer();
-        return renderer.render(this, dataModel, documentName);
+        final DocumentType documentType = this.getType();
+
+        try {
+            final DocumentSort sort = this.getSort();
+            final DateTime createdAt = clockService.nowAsDateTime();
+
+            switch (sort) {
+
+            case CLOB:
+                final Clob clob = new Clob (documentName, getMimeType(), renderToChars(renderer, dataModel));
+                return documentRepository.createClob(documentType, this.getAtPath(), clob, createdAt);
+
+            case TEXT:
+                final String textChars = renderToChars(renderer, dataModel);
+                return documentRepository.createText(documentType, this.getAtPath(), documentName, this.getMimeType(), textChars, createdAt);
+
+            case BLOB:
+                final Blob blob = new Blob (documentName, getMimeType(), renderToBytes(renderer, dataModel));
+                return documentRepository.createBlob(documentType, this.getAtPath(), blob, createdAt);
+
+            }
+            return null;
+
+        } catch (IOException e) {
+            throw new ApplicationException(e);
+        }
+
+    }
+
+    private String renderToChars(final Renderer renderer, final Object dataModel) throws IOException {
+        final RendererToChars rendererToChars = (RendererToChars) renderer;
+        return rendererToChars.renderToChars(this, dataModel);
+    }
+
+    private byte[] renderToBytes(final Renderer renderer, final Object dataModel) throws IOException {
+        final RendererToBytes rendererToBytes = (RendererToBytes) renderer;
+        return rendererToBytes.renderToBytes(this, dataModel);
     }
 
     //endregion
@@ -410,6 +448,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     ClassService classService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+    @Inject
+    private ClockService clockService;
     //endregion
 
 }

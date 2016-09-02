@@ -18,13 +18,11 @@ package org.incode.module.documents.dom.rendering;
 
 import java.io.IOException;
 
-import org.apache.isis.applib.value.Clob;
-
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 
-public interface RendererWithPreviewAsClob extends Renderer {
+public interface RendererToBytes extends Renderer {
 
-    Clob previewAsClob(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName)
+    byte[] renderToBytes(final DocumentTemplate documentTemplate, final Object dataModel)
             throws IOException;
 
 }

@@ -17,13 +17,11 @@
 package org.incode.module.documents.dom.rendering;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 
-public interface RendererWithPreviewAsUrl extends Renderer {
+public interface RendererToChars extends Renderer {
 
-    URL previewAsUrl(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName)
-            throws IOException;
+    String renderToChars(final DocumentTemplate documentTemplate, final Object dataModel) throws IOException;
 
 }

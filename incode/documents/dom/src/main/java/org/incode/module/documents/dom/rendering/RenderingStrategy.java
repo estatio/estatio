@@ -179,9 +179,9 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
         this.name = name;
         this.documentNature = documentNature;
         this.rendererClassName = rendererClass.getName();
-        this.previewingAsBlob = RendererWithPreviewAsBlob.class.isAssignableFrom(rendererClass);
-        this.previewingAsClob = RendererWithPreviewAsClob.class.isAssignableFrom(rendererClass);
-        this.previewingAsUrl = RendererWithPreviewAsUrl.class.isAssignableFrom(rendererClass);
+        this.previewingAsBlob = RendererToBytes.class.isAssignableFrom(rendererClass);
+        this.previewingAsClob = RendererToChars.class.isAssignableFrom(rendererClass);
+        this.previewingAsUrl = RendererToUrl.class.isAssignableFrom(rendererClass);
     }
     //endregion
 

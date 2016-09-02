@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.classdiscovery.ClassDiscoveryService2;
 
+import org.incode.module.documents.dom.docs.DocumentNature;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.services.ClassService;
 
@@ -48,20 +49,27 @@ public class RendererClassNameService  {
 
 
     // cached
-    List<String> rendererClassNames;
+    private List<Class<? extends Renderer>> cachedRendererClasses;
 
     @Programmatic
-    public List<String> renderClassNames() {
-        if(rendererClassNames == null) {
+    public List<String> renderClassNamesFor(DocumentNature documentNature) {
+        if(documentNature == null){
+            return Lists.newArrayList();
+        }
+        if(cachedRendererClasses == null) {
             final Set<Class<? extends Renderer>> rendererClasses = classDiscoveryService2
                     .findSubTypesOfClasses(Renderer.class, PACKAGE_PREFIX);
 
-            rendererClassNames = Lists.newArrayList(rendererClasses.stream()
+            cachedRendererClasses = rendererClasses.stream()
                     .filter(x -> !Modifier.isAbstract(x.getModifiers()))
-                    .map(x -> x.getName())
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList());
+
         }
-        return rendererClassNames;
+        return Lists.newArrayList(
+                cachedRendererClasses.stream()
+                        .filter(x -> documentNature.compatibleWith(x))
+                        .map(x -> x.getName())
+                        .collect(Collectors.toList()));
     }
 
 

@@ -47,7 +47,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 @DomainServiceLayout(
         named = "Documents",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "83.07")
+        menuOrder = "79.07")
 public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMenu> {
 
     public RenderingStrategyMenu() {
@@ -80,9 +80,13 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
     }
 
 
-    public List<String> choices3NewStrategy() {
-        return rendererClassNameService.renderClassNames();
+    public List<String> choices3NewStrategy(
+            final String reference,
+            final String name,
+            final DocumentNature documentNature) {
+        return rendererClassNameService.renderClassNamesFor(documentNature);
     }
+
 
     // //////////////////////////////////////
 

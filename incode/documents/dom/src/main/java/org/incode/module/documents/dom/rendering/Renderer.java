@@ -16,11 +16,7 @@
  */
 package org.incode.module.documents.dom.rendering;
 
-import org.incode.module.documents.dom.docs.Document;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-
 public interface Renderer {
 
-    Document render(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName);
 
 }

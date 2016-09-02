@@ -16,7 +16,24 @@
  */
 package org.incode.module.documents.dom.docs;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.incode.module.documents.dom.rendering.Renderer;
+import org.incode.module.documents.dom.rendering.RendererToBytes;
+import org.incode.module.documents.dom.rendering.RendererToChars;
+
 public enum DocumentNature {
-    CHARACTERS,
-    BYTES;
+    CHARACTERS(RendererToChars.class),
+    BYTES(RendererToBytes.class);
+
+    private final Class<? extends Renderer> rendererClass;
+
+    DocumentNature(final Class<? extends Renderer> rendererClass) {
+        this.rendererClass = rendererClass;
+    }
+
+    @Programmatic
+    public boolean compatibleWith(final Class<? extends Renderer> candidateClass) {
+        return rendererClass.isAssignableFrom(candidateClass);
+    }
 }

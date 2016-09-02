@@ -17,7 +17,6 @@
 package org.incode.module.documents.dom.docs;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
@@ -56,7 +55,6 @@ import lombok.Setter;
         table = "Document"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator("D") // for Document
 @Queries({
     // none yet
 })

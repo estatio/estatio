@@ -1,7 +1,5 @@
 /*
- *
- *  Copyright 2012-2014 Eurocommercial Properties NV
- *
+ *  Copyright 2016 Dan Haywood
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,24 +14,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.documents.dom.rendering;
 
-import javax.inject.Inject;
+import java.io.IOException;
+import java.net.URL;
 
-import org.incode.module.documents.dom.docs.Document;
-import org.incode.module.documents.dom.docs.DocumentRepository;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.rendering.Renderer;
 
-public class RendererForSvg implements Renderer {
+public interface RendererToUrl extends Renderer {
 
-    @Override
-    public Document render(
-            final DocumentTemplate documentTemplate, final Object dataModel, final String documentName) {
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    @Inject
-    private DocumentRepository documentRepository;
+    URL renderToUrl(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName)
+            throws IOException;
 
 }

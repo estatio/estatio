@@ -1,5 +1,7 @@
 /*
- *  Copyright 2016 Dan Haywood
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,17 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.rendering;
+package org.estatio.app.integration.documents;
 
-import java.io.IOException;
+import org.isisaddons.module.xdocreport.dom.service.OutputType;
 
-import org.apache.isis.applib.value.Blob;
+public class XDocReportToPdf extends RendererForXDocReportAbstract  {
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-
-public interface RendererWithPreviewAsBlob extends Renderer {
-
-    Blob previewAsBlob(final DocumentTemplate documentTemplate, final Object dataModel, final String documentName)
-            throws IOException;
+    public XDocReportToPdf() {
+        super(OutputType.PDF);
+    }
 
 }
