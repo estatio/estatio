@@ -55,8 +55,8 @@ public class DocumentTemplate_changeRenderingStrategy {
     }
 
     public TranslatableString validate0$$(final RenderingStrategy proposedRenderingStrategy) {
-        if(currentRenderingStrategy().getDocumentNature() != proposedRenderingStrategy.getDocumentNature()) {
-            return TranslatableString.tr("The nature of the new rendering strategy (binary or characters) must be the same as the one it replaces");
+        if(currentRenderingStrategy().getInputNature() != proposedRenderingStrategy.getInputNature()) {
+            return TranslatableString.tr("The input nature of the new rendering strategy (binary or characters) must be the same as the current");
         }
         return null;
     }

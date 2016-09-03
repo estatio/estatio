@@ -70,21 +70,27 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name")
             final String name,
-            final DocumentNature documentNature,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = RendererClassNameSpecification.class)
+            final DocumentNature inputNature,
+            final DocumentNature outputNature,
+            @Parameter(
+                    maxLength = DocumentsModule.JdoColumnLength.FQCN,
+                    mustSatisfy = RendererClassNameSpecification.class
+            )
             @ParameterLayout(named = "Renderer class name")
             final String rendererClassName) {
 
         final Class rendererClass = rendererClassNameService.asRendererClass(rendererClassName);
-        return renderingStrategyRepository.create(reference, name, documentNature, rendererClass);
+        return renderingStrategyRepository.create(reference, name, inputNature, outputNature , rendererClass);
     }
 
 
     public List<String> choices3NewStrategy(
             final String reference,
             final String name,
-            final DocumentNature documentNature) {
-        return rendererClassNameService.renderClassNamesFor(documentNature);
+            final DocumentNature inputNature,
+            final DocumentNature outputNature
+            ) {
+        return rendererClassNameService.renderClassNamesFor(inputNature);
     }
 
 

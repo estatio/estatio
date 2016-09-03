@@ -52,8 +52,8 @@ public class RendererClassNameService  {
     private List<Class<? extends Renderer>> cachedRendererClasses;
 
     @Programmatic
-    public List<String> renderClassNamesFor(DocumentNature documentNature) {
-        if(documentNature == null){
+    public List<String> renderClassNamesFor(final DocumentNature inputNature) {
+        if(inputNature == null){
             return Lists.newArrayList();
         }
         if(cachedRendererClasses == null) {
@@ -67,7 +67,7 @@ public class RendererClassNameService  {
         }
         return Lists.newArrayList(
                 cachedRendererClasses.stream()
-                        .filter(x -> documentNature.compatibleWith(x))
+                        .filter(x -> inputNature.compatibleWith(x))
                         .map(x -> x.getName())
                         .collect(Collectors.toList()));
     }

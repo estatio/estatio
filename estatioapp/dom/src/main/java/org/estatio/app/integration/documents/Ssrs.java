@@ -21,6 +21,10 @@ package org.estatio.app.integration.documents;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.inject.Inject;
+
+import org.apache.isis.applib.services.config.ConfigurationService;
+
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.rendering.RendererToBytes;
 import org.incode.module.documents.dom.rendering.RendererToUrl;
@@ -43,12 +47,12 @@ public class Ssrs implements RendererToBytes, RendererToUrl {
 
         // TODO: fetch the text out of the documentTemplate, interpolate using StringInterpolator, invoke the URL
 
-        // TOFIX: I've just realized that my assumption that the DocumentNature of both the DocumentTemplate and
-        // the resultant Document generated from it, would be the same is wrong... so need to slacken off those rules
-        // and change the implementation of DocumentTemplate#render(...) to look at the nature of the associated
-        // RenderingStrategy ... if it's a character, then store as clob, else store as blob.
-        //
+        // TODO: extend RenderingStrategy to define what format it wants to read from.
 
         throw new RuntimeException("Not yet implemented");
     }
+
+    @Inject
+    ConfigurationService configurationService;
+
 }

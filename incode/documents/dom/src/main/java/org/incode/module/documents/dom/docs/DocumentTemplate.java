@@ -393,32 +393,37 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     @Programmatic
     public DocumentAbstract render(final Object dataModel, final String documentName) {
-        final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+        final RenderingStrategy renderingStrategy = getRenderingStrategy();
+
+        final DocumentNature outputNature = renderingStrategy.getOutputNature();
+
+        final Renderer renderer = renderingStrategy.instantiateRenderer();
         final DocumentType documentType = this.getType();
 
         try {
-            final DocumentSort sort = this.getSort();
             final DateTime createdAt = clockService.nowAsDateTime();
 
-            switch (sort) {
+            switch (outputNature) {
 
-            case CLOB:
-                final Clob clob = new Clob (documentName, getMimeType(), renderToChars(renderer, dataModel));
-                return documentRepository.createClob(documentType, this.getAtPath(), clob, createdAt);
+            case CHARACTERS:
+                final String chars = renderToChars(renderer, dataModel);
+                if(chars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
+                    return documentRepository.createText(documentType, getAtPath(), documentName, getMimeType(), chars, createdAt);
+                } else {
+                    final Clob clob = new Clob (documentName, getMimeType(), chars);
+                    return documentRepository.createClob(documentType, getAtPath(), clob, createdAt);
+                }
 
-            case TEXT:
-                final String textChars = renderToChars(renderer, dataModel);
-                return documentRepository.createText(documentType, this.getAtPath(), documentName, this.getMimeType(), textChars, createdAt);
-
-            case BLOB:
+            case BYTES:
                 final Blob blob = new Blob (documentName, getMimeType(), renderToBytes(renderer, dataModel));
-                return documentRepository.createBlob(documentType, this.getAtPath(), blob, createdAt);
+                return documentRepository.createBlob(documentType, getAtPath(), blob, createdAt);
 
             }
-            return null;
+            // shouldn't happen, the above switch statement is complete
+            throw new IllegalStateException(String.format("DocumentNature '%s' not recognized", outputNature));
 
         } catch (IOException e) {
-            throw new ApplicationException(e);
+            throw new ApplicationException("Unable to render document template", e);
         }
 
     }

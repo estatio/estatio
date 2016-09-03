@@ -34,11 +34,13 @@ public abstract class RenderingStrategyAbstract extends EstatioFixtureScript {
     protected RenderingStrategy createRenderingStrategy(
             final String reference,
             final String name,
-            final DocumentNature documentNature,
+            final DocumentNature inputNature,
+            final DocumentNature outputNature,
             final Class<? extends Renderer> rendererClass,
             final ExecutionContext executionContext) {
 
-        final RenderingStrategy renderingStrategy = renderingStrategyRepository.create(reference, name, documentNature, rendererClass);
+        final RenderingStrategy renderingStrategy =
+                renderingStrategyRepository.create(reference, name, inputNature, outputNature, rendererClass);
         return executionContext.addResult(this, renderingStrategy);
     }
 

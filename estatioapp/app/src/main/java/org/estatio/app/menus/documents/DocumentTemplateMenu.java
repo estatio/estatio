@@ -45,9 +45,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentSort;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 import org.incode.module.documents.dom.valuetypes.MimeTypeSpecification;
@@ -116,18 +116,10 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
-        TranslatableString translatableString = documentTemplateRepository.validateApplicationTenancyAndDate(
-                proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
-        if(translatableString != null) {
-            return translatableString;
-        }
+        final DocumentSort documentSort = DocumentSort.TEXT;
 
-        translatableString = documentTemplateRepository.validateSortAndRenderingStrategy(DocumentSort.TEXT, renderingStrategy);
-        if(translatableString != null) {
-            return translatableString;
-        }
-
-        return null;
+        return validateNewTemplate(proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy,
+                documentSort);
     }
 
 
@@ -176,8 +168,12 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
-        return documentTemplateRepository.validateApplicationTenancyAndDate(
-                proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
+        final DocumentSort documentSort = DocumentSort.CLOB;
+
+        return validateNewTemplate(
+                proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy,
+                documentSort);
+
     }
 
     // //////////////////////////////////////
@@ -226,8 +222,31 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
-        return documentTemplateRepository.validateApplicationTenancyAndDate(
+        final DocumentSort documentSort = DocumentSort.BLOB;
+
+        return validateNewTemplate(proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy,
+                documentSort);
+    }
+
+    private TranslatableString validateNewTemplate(
+            final DocumentType proposedType,
+            final LocalDate proposedDate,
+            final ApplicationTenancy proposedApplicationTenancy,
+            final RenderingStrategy proposedRenderingStrategy,
+            final DocumentSort documentSort) {
+        TranslatableString translatableString = documentTemplateRepository.validateApplicationTenancyAndDate(
                 proposedType, proposedApplicationTenancy.getPath(), proposedDate, null);
+        if(translatableString != null) {
+            return translatableString;
+        }
+
+        translatableString = documentTemplateRepository.validateSortAndRenderingStrategyInputNature(documentSort,
+                proposedRenderingStrategy);
+        if(translatableString != null) {
+            return translatableString;
+        }
+
+        return null;
     }
 
     // //////////////////////////////////////

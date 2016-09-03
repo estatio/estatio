@@ -186,10 +186,10 @@ public class DocumentTemplateRepository {
     }
 
     @Programmatic
-    public TranslatableString validateSortAndRenderingStrategy(
+    public TranslatableString validateSortAndRenderingStrategyInputNature(
             final DocumentSort sort,
             final RenderingStrategy renderingStrategy) {
-        final DocumentNature documentNature = renderingStrategy.getDocumentNature();
+        final DocumentNature documentNature = renderingStrategy.getInputNature();
         if(sort.isBytes() && documentNature == DocumentNature.CHARACTERS) {
             return TranslatableString.tr("Must provide text or Clob template with a character-based rendering strategy");
         }

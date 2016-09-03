@@ -173,11 +173,13 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     public RenderingStrategy(
             final String reference,
             final String name,
-            final DocumentNature documentNature,
+            final DocumentNature inputNature,
+            final DocumentNature outputNature,
             final Class<? extends Renderer> rendererClass) {
         this.reference = reference;
         this.name = name;
-        this.documentNature = documentNature;
+        this.inputNature = inputNature;
+        this.outputNature = outputNature;
         this.rendererClassName = rendererClass.getName();
         this.previewingAsBlob = RendererToBytes.class.isAssignableFrom(rendererClass);
         this.previewingAsClob = RendererToChars.class.isAssignableFrom(rendererClass);
@@ -208,20 +210,36 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private String name;
     //endregion
 
-    //region > nature (property)
-    public static class DocumentNatureDomainEvent extends PropertyDomainEvent<DocumentNature> { }
+    //region > inputNature (property)
+    public static class InputNatureDomainEvent extends PropertyDomainEvent<DocumentNature> { }
 
     /**
-     * Whether this rendering strategy acts upon {@link DocumentNature#BYTES bytes} (produces {@link Blob}s) or upon
-     * {@link DocumentNature#CHARACTERS characters} (produces {@link Clob}s).
+     * Whether this rendering strategy requires {@link DocumentNature#BYTES bytes} or
+     * {@link DocumentNature#CHARACTERS characters} as its input.
      */
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
-            domainEvent = DocumentNatureDomainEvent.class,
+            domainEvent = InputNatureDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private DocumentNature documentNature;
+    private DocumentNature inputNature;
+    //endregion
+
+    //region > targetNature (property)
+    public static class OutputNatureDomainEvent extends PropertyDomainEvent<DocumentNature> { }
+
+    /**
+     * Whether this rendering strategy generates {@link DocumentNature#BYTES bytes} or
+     * {@link DocumentNature#CHARACTERS characters} as its output.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = OutputNatureDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private DocumentNature outputNature;
     //endregion
 
     //region > previewingAsBlob (property)

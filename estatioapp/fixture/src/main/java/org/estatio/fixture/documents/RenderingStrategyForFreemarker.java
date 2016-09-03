@@ -30,9 +30,8 @@ public class RenderingStrategyForFreemarker extends RenderingStrategyAbstract {
         createRenderingStrategy(
                 REF,
                 "Freemarker Rendering Strategy",
-                DocumentNature.CHARACTERS,
-                Freemarker.class,
-                executionContext);
+                DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
+                Freemarker.class, executionContext);
 
     }
 

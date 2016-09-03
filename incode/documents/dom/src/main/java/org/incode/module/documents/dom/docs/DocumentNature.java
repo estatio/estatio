@@ -32,6 +32,9 @@ public enum DocumentNature {
         this.rendererClass = rendererClass;
     }
 
+    // TODO: this logic is broken; what we actually care about (and isn't visible to us) is what the renderer reads from.
+    // introduce a marker interface, RendererFromChars ? RendererFromBytes ?
+
     @Programmatic
     public boolean compatibleWith(final Class<? extends Renderer> candidateClass) {
         return rendererClass.isAssignableFrom(candidateClass);

@@ -30,9 +30,8 @@ public class RenderingStrategyForSvg extends RenderingStrategyAbstract {
         createRenderingStrategy(
                 REF,
                 "SVG Rendering Strategy",
-                DocumentNature.CHARACTERS,
-                Svg.class,
-                executionContext);
+                DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
+                Svg.class, executionContext);
     }
 
 }
