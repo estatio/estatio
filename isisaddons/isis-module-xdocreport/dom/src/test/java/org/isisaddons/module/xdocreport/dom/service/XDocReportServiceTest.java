@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.jmock.auto.Mock;
@@ -36,7 +35,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.xdocreport.dom.example.models.Developer;
 import org.isisaddons.module.xdocreport.dom.example.models.Project;
 import org.isisaddons.module.xdocreport.dom.example.models.ProjectDevelopersModel;
-import org.isisaddons.module.xdocreport.dom.spi.XDocReportTemplateLoader;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
@@ -63,10 +61,7 @@ public class XDocReportServiceTest {
 
         // given
         InputStream in= new FileInputStream(new File("src/test/java/org/isisaddons/module/xdocreport/dom/example/template/Project-template.docx"));
-        final byte[] bytes = IOUtils.toByteArray(in);
-
-        service.xDocReportTemplateLoaders =
-                Collections.<XDocReportTemplateLoader>singletonList(new XDocReportTemplateLoader.Simple(bytes));
+        final byte[] templateBytes = IOUtils.toByteArray(in);
 
         Project project = new Project("XDocReport");
         List<Developer> developers = new ArrayList<>();
@@ -75,7 +70,7 @@ public class XDocReportServiceTest {
         final ProjectDevelopersModel dataModel = new ProjectDevelopersModel(project, developers);
 
         // when
-        final byte[] docxBytes = service.render(null, null, dataModel, OutputType.DOCX);
+        final byte[] docxBytes = service.render(templateBytes, dataModel, OutputType.DOCX);
 
         // then
         IOUtils.write(docxBytes,new FileOutputStream(new File("target/Project.docx")));

@@ -18,10 +18,16 @@ package org.incode.module.documents.dom.rendering;
 
 import java.io.IOException;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.types.DocumentType;
 
-public interface RendererToChars extends Renderer {
+public interface RendererFromCharsToChars extends Renderer {
 
-    String renderToChars(final DocumentTemplate documentTemplate, final Object dataModel) throws IOException;
+    String renderCharsToChars(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final String templateChars,
+            final Object dataModel,
+            final String documentName) throws IOException;
 
 }

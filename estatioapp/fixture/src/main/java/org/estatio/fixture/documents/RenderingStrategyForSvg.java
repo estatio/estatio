@@ -19,7 +19,7 @@ package org.estatio.fixture.documents;
 
 import org.incode.module.documents.dom.docs.DocumentNature;
 
-import org.estatio.app.integration.documents.Svg;
+import org.estatio.app.integration.documents.RendererForSvg;
 
 public class RenderingStrategyForSvg extends RenderingStrategyAbstract {
 
@@ -31,7 +31,7 @@ public class RenderingStrategyForSvg extends RenderingStrategyAbstract {
                 REF,
                 "SVG Rendering Strategy",
                 DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
-                Svg.class, executionContext);
+                RendererForSvg.class, executionContext);
     }
 
 }

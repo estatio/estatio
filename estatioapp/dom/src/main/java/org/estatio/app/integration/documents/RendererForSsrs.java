@@ -25,34 +25,37 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.services.config.ConfigurationService;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.rendering.RendererToBytes;
-import org.incode.module.documents.dom.rendering.RendererToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToUrl;
+import org.incode.module.documents.dom.types.DocumentType;
 
-public class Ssrs implements RendererToBytes, RendererToUrl {
-
-    @Override
-    public byte[] renderToBytes(
-            final DocumentTemplate documentTemplate, final Object dataModel) throws IOException {
-
-        // TODO: call renderToUrl and then slurp the page down using OpenURLConnection or similar.
-
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    @Override
-    public URL renderToUrl(
-            final DocumentTemplate documentTemplate, final Object dataModel, final String documentName)
-            throws IOException {
-
-        // TODO: fetch the text out of the documentTemplate, interpolate using StringInterpolator, invoke the URL
-
-        // TODO: extend RenderingStrategy to define what format it wants to read from.
-
-        throw new RuntimeException("Not yet implemented");
-    }
+public class RendererForSsrs implements RendererFromBytesToBytes, RendererFromBytesToUrl {
 
     @Inject
     ConfigurationService configurationService;
 
+    @Override public byte[] renderBytesToBytes(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final byte[] templateBytes,
+            final Object dataModel,
+            final String documentName) throws IOException {
+
+        // TODO: call renderToUrl and then slurp the page down using OpenURLConnection or similar.
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public URL renderBytesToUrl(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final byte[] templateBytes,
+            final Object dataModel,
+            final String documentName) throws IOException {
+
+        // TODO: fetch the text out of the documentTemplate, interpolate using StringInterpolator, invoke the URL
+        throw new RuntimeException("Not yet implemented");
+    }
 }

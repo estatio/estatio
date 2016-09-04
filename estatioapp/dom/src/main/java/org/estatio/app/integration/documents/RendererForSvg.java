@@ -22,19 +22,28 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.incode.module.documents.dom.docs.DocumentRepository;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.rendering.RendererToChars;
+import org.apache.isis.applib.services.config.ConfigurationService;
 
-public class Svg implements RendererToChars {
+import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
+import org.incode.module.documents.dom.types.DocumentType;
+
+public class RendererForSvg implements RendererFromCharsToChars {
 
     @Override
-    public String renderToChars(final DocumentTemplate documentTemplate, final Object dataModel)
-            throws IOException {
+    public String renderCharsToChars(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final String templateChars,
+            final Object dataModel,
+            final String documentName) throws IOException {
+
+        // TODO: fetch the text out of the documentTemplate, interpolate using StringInterpolator, invoke the URL
+
         throw new RuntimeException("Not yet implemented");
     }
 
     @Inject
-    private DocumentRepository documentRepository;
+    ConfigurationService configurationService;
 
 }

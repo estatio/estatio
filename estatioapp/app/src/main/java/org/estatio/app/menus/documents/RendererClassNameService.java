@@ -67,7 +67,7 @@ public class RendererClassNameService  {
         }
         return Lists.newArrayList(
                 cachedRendererClasses.stream()
-                        .filter(x -> inputNature.compatibleWith(x))
+                        .filter(x -> inputNature.canActAsInputTo(x))
                         .map(x -> x.getName())
                         .collect(Collectors.toList()));
     }

@@ -40,7 +40,8 @@ public class RenderingStrategyRepository {
             final String reference,
             final String name,
             final DocumentNature inputNature,
-            final DocumentNature outputNature, final Class<? extends Renderer> rendererClass) {
+            final DocumentNature outputNature,
+            final Class<? extends Renderer> rendererClass) {
         final RenderingStrategy renderingStrategy =
                 new RenderingStrategy(reference, name, inputNature, outputNature, rendererClass);
         repositoryService.persist(renderingStrategy);

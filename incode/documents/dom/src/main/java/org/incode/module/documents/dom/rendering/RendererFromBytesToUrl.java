@@ -17,12 +17,18 @@
 package org.incode.module.documents.dom.rendering;
 
 import java.io.IOException;
+import java.net.URL;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.types.DocumentType;
 
-public interface RendererToBytes extends Renderer {
+public interface RendererFromBytesToUrl extends Renderer {
 
-    byte[] renderToBytes(final DocumentTemplate documentTemplate, final Object dataModel)
-            throws IOException;
+    URL renderBytesToUrl(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final byte[] templateBytes,
+            final Object dataModel,
+            final String documentName) throws IOException;
 
 }

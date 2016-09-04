@@ -49,13 +49,11 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentNature;
-import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.services.ClassService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -181,9 +179,22 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
         this.inputNature = inputNature;
         this.outputNature = outputNature;
         this.rendererClassName = rendererClass.getName();
-        this.previewingAsBlob = RendererToBytes.class.isAssignableFrom(rendererClass);
-        this.previewingAsClob = RendererToChars.class.isAssignableFrom(rendererClass);
-        this.previewingAsUrl = RendererToUrl.class.isAssignableFrom(rendererClass);
+        this.rendersToBytes = isSubtypeOfAny(rendererClass,
+                                RendererFromBytesToBytes.class, RendererFromCharsToBytes.class);
+        this.rendersToChars = isSubtypeOfAny(rendererClass,
+                                RendererFromBytesToChars.class, RendererFromCharsToChars.class);
+        this.rendersToUrl = isSubtypeOfAny(rendererClass,
+                                RendererFromBytesToUrl.class, RendererFromCharsToUrl.class);
+    }
+
+    private static boolean isSubtypeOfAny(
+            final Class<? extends Renderer> rendererClass,
+            final Class<? extends Renderer>... rendererClassSupertypes) {
+        for (Class<? extends Renderer> rendererClassSupertype : rendererClassSupertypes) {
+            if(rendererClassSupertype.isAssignableFrom(rendererClass))
+                return true;
+        }
+        return false;
     }
     //endregion
 
@@ -242,49 +253,49 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private DocumentNature outputNature;
     //endregion
 
-    //region > previewingAsBlob (property)
-    public static class PreviewingAsBlobDomainEvent extends PropertyDomainEvent<Boolean> { }
+    //region > RendersToUrl (property)
+    public static class RendersToUrlDomainEvent extends PropertyDomainEvent<Boolean> { }
 
     /**
-     * Whether this rendering strategy supports previewing as a {@link Blob}s.
-     */
-    @Getter() @Setter
-    @Column(allowsNull = "false")
-    @Property(
-            domainEvent = PreviewingAsBlobDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private boolean previewingAsBlob;
-    //endregion
-
-    //region > previewingAsClob (property)
-    public static class PreviewingAsClobDomainEvent extends PropertyDomainEvent<Boolean> { }
-
-    /**
-     * Whether this rendering strategy supports previewing as a {@link Clob}.
+     * Whether this rendering strategy supports rendering to an {@link URL}.
      */
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
-            domainEvent = PreviewingAsClobDomainEvent.class,
+            domainEvent = RendersToUrlDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private boolean previewingAsClob;
+    private boolean rendersToUrl;
     //endregion
 
-    //region > previewingAsUrl (property)
-    public static class PreviewingAsUrlDomainEvent extends PropertyDomainEvent<Boolean> { }
+    //region > RendersToBlob (property)
+    public static class RendersToBytesDomainEvent extends PropertyDomainEvent<Boolean> { }
 
     /**
-     * Whether this rendering strategy supports previewing as a {@link URL}.
+     * Whether this rendering strategy supports rendering to a byte array
      */
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
-            domainEvent = PreviewingAsUrlDomainEvent.class,
+            domainEvent = RendersToBytesDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private boolean previewingAsUrl;
+    private boolean rendersToBytes;
+    //endregion
+
+    //region > rendersToChars (property)
+    public static class RendersToCharsDomainEvent extends PropertyDomainEvent<Boolean> { }
+
+    /**
+     * Whether this rendering strategy supports rendering to a string
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = RendersToCharsDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private boolean rendersToChars;
     //endregion
 
     //region > rendererClassName (property)

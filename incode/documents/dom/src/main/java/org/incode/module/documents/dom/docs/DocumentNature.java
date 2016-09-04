@@ -16,27 +16,42 @@
  */
 package org.incode.module.documents.dom.docs;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.documents.dom.rendering.Renderer;
-import org.incode.module.documents.dom.rendering.RendererToBytes;
-import org.incode.module.documents.dom.rendering.RendererToChars;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToChars;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToUrl;
 
 public enum DocumentNature {
-    CHARACTERS(RendererToChars.class),
-    BYTES(RendererToBytes.class);
+    CHARACTERS(OutputType.TO_CHARS, RendererFromCharsToChars.class, RendererFromCharsToBytes.class, RendererFromCharsToUrl.class),
+    BYTES(OutputType.TO_BYTES, RendererFromBytesToChars.class, RendererFromBytesToBytes.class, RendererFromBytesToUrl.class);
 
-    private final Class<? extends Renderer> rendererClass;
+    private final OutputType outputType;
+    private final List<Class<? extends Renderer>> rendererClasses;
 
-    DocumentNature(final Class<? extends Renderer> rendererClass) {
-        this.rendererClass = rendererClass;
+    DocumentNature(final OutputType outputType, final Class<? extends Renderer>... rendererClasses) {
+        this.outputType = outputType;
+        this.rendererClasses = Arrays.asList(rendererClasses);
     }
 
-    // TODO: this logic is broken; what we actually care about (and isn't visible to us) is what the renderer reads from.
-    // introduce a marker interface, RendererFromChars ? RendererFromBytes ?
-
     @Programmatic
-    public boolean compatibleWith(final Class<? extends Renderer> candidateClass) {
-        return rendererClass.isAssignableFrom(candidateClass);
+    public boolean canActAsInputTo(final Class<? extends Renderer> candidateClass) {
+        for (Class<? extends Renderer> rendererClass : rendererClasses) {
+            if (rendererClass.isAssignableFrom(candidateClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public OutputType getOutputType() {
+        return outputType;
     }
 }

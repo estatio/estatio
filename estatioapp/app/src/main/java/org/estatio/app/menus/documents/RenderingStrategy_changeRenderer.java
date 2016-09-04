@@ -59,7 +59,7 @@ public class RenderingStrategy_changeRenderer {
     }
 
     public List<String> choices0$$() {
-        return rendererClassNameService.renderClassNamesFor(renderingStrategy.getDocumentNature());
+        return rendererClassNameService.renderClassNamesFor(renderingStrategy.getInputNature());
     }
 
     @Inject

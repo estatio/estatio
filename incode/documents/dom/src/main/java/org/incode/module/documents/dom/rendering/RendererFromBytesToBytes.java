@@ -14,10 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.docs;
+package org.incode.module.documents.dom.rendering;
 
-public enum PreviewType {
-    AS_BLOB,
-    AS_CLOB,
-    AS_URL,
+import java.io.IOException;
+
+import org.incode.module.documents.dom.types.DocumentType;
+
+public interface RendererFromBytesToBytes extends Renderer {
+
+    byte[] renderBytesToBytes(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final byte[] templateBytes,
+            final Object dataModel,
+            final String documentName)
+            throws IOException;
+
 }

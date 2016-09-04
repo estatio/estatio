@@ -29,11 +29,10 @@ import org.isisaddons.module.xdocreport.dom.service.XDocReportModel;
 import org.isisaddons.module.xdocreport.dom.service.XDocReportService;
 
 import org.incode.module.documents.dom.docs.DocumentRepository;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.rendering.RendererToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
 import org.incode.module.documents.dom.types.DocumentType;
 
-public abstract class RendererForXDocReportAbstract implements RendererToBytes {
+public abstract class RendererForXDocReportAbstract implements RendererFromBytesToBytes {
 
     private final OutputType outputType;
 
@@ -42,12 +41,10 @@ public abstract class RendererForXDocReportAbstract implements RendererToBytes {
     }
 
     @Override
-    public byte[] renderToBytes(final DocumentTemplate documentTemplate, final Object dataModel)
+    public byte[] renderBytesToBytes(
+            final DocumentType documentType, final String atPath, final long version,
+            final byte[] templateBytes, final Object dataModel, final String documentName)
             throws IOException {
-
-        final DocumentType documentType = documentTemplate.getType();
-        final String typeRef = documentType.getReference();
-        final String atPath = documentTemplate.getAtPath();
 
         if (!(dataModel instanceof XDocReportModel)) {
             throw new IllegalArgumentException("Data model must be an instance of XDocReportModel (was instead: " + dataModel.getClass().getName() + ")");
@@ -55,7 +52,7 @@ public abstract class RendererForXDocReportAbstract implements RendererToBytes {
 
         final XDocReportModel xDocReportModel = (XDocReportModel) dataModel;
 
-        return xDocReportService.render(typeRef, atPath, xDocReportModel, outputType);
+        return xDocReportService.render(templateBytes, xDocReportModel, outputType);
     }
 
     @Inject

@@ -1,7 +1,5 @@
 /*
- *
- *  Copyright 2012-2014 Eurocommercial Properties NV
- *
+ *  Copyright 2016 Dan Haywood
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,42 +14,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.documents.dom.rendering;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
-import org.apache.isis.applib.services.clock.ClockService;
-
-import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
-
-import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
 import org.incode.module.documents.dom.types.DocumentType;
 
-import freemarker.template.TemplateException;
+public interface RendererFromCharsToBytes extends Renderer {
 
-public class Freemarker implements RendererFromCharsToChars {
-
-    public String renderCharsToChars(
+    byte[] renderCharsToBytes(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,
             final String templateChars,
             final Object dataModel,
-            final String documentName) throws IOException {
-
-        try {
-            return freeMarkerService.render(documentType.getName(), atPath, dataModel);
-        } catch (TemplateException e) {
-            throw new IOException(e);
-        }
-    }
-
-
-    @Inject
-    private ClockService clockService;
-    @Inject
-    private FreeMarkerService freeMarkerService;
+            final String documentName) throws IOException;
 
 }
