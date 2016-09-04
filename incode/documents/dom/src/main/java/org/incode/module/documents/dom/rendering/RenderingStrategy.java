@@ -179,12 +179,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
         this.inputNature = inputNature;
         this.outputNature = outputNature;
         this.rendererClassName = rendererClass.getName();
-        this.rendersToBytes = isSubtypeOfAny(rendererClass,
-                                RendererFromBytesToBytes.class, RendererFromCharsToBytes.class);
-        this.rendersToChars = isSubtypeOfAny(rendererClass,
-                                RendererFromBytesToChars.class, RendererFromCharsToChars.class);
-        this.rendersToUrl = isSubtypeOfAny(rendererClass,
-                                RendererFromBytesToUrl.class, RendererFromCharsToUrl.class);
+        this.previewsToUrl =  PreviewToUrl.class.isAssignableFrom(rendererClass);
     }
 
     private static boolean isSubtypeOfAny(
@@ -253,11 +248,11 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private DocumentNature outputNature;
     //endregion
 
-    //region > RendersToUrl (property)
+    //region > PreviewsToUrl (property)
     public static class RendersToUrlDomainEvent extends PropertyDomainEvent<Boolean> { }
 
     /**
-     * Whether this rendering strategy supports rendering to an {@link URL}.
+     * Whether this rendering strategy supports rendering to an {@link URL} (ie can be used for preview)
      */
     @Getter @Setter
     @Column(allowsNull = "false")
@@ -265,37 +260,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
             domainEvent = RendersToUrlDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private boolean rendersToUrl;
-    //endregion
-
-    //region > RendersToBlob (property)
-    public static class RendersToBytesDomainEvent extends PropertyDomainEvent<Boolean> { }
-
-    /**
-     * Whether this rendering strategy supports rendering to a byte array
-     */
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    @Property(
-            domainEvent = RendersToBytesDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private boolean rendersToBytes;
-    //endregion
-
-    //region > rendersToChars (property)
-    public static class RendersToCharsDomainEvent extends PropertyDomainEvent<Boolean> { }
-
-    /**
-     * Whether this rendering strategy supports rendering to a string
-     */
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    @Property(
-            domainEvent = RendersToCharsDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private boolean rendersToChars;
+    private boolean previewsToUrl;
     //endregion
 
     //region > rendererClassName (property)

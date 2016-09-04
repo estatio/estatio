@@ -16,19 +16,10 @@
  */
 package org.incode.module.documents.dom.rendering;
 
-import java.io.IOException;
-import java.net.URL;
+/**
+ * Marker interface indicating that the rendered can be used for previewing.
+ */
+public interface PreviewToUrl {
 
-import org.incode.module.documents.dom.types.DocumentType;
-
-public interface RendererFromCharsToUrl extends Renderer {
-
-    URL renderCharsToUrl(
-            final DocumentType documentType,
-            final String atPath,
-            final long templateVersion,
-            final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException;
 
 }

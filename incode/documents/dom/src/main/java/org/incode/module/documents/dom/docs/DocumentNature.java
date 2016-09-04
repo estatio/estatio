@@ -24,34 +24,47 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
 import org.incode.module.documents.dom.rendering.RendererFromBytesToChars;
-import org.incode.module.documents.dom.rendering.RendererFromBytesToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToCharsWithPreviewToUrl;
 import org.incode.module.documents.dom.rendering.RendererFromCharsToBytes;
 import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
-import org.incode.module.documents.dom.rendering.RendererFromCharsToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToBytesWithPreviewToUrl;
 
 public enum DocumentNature {
-    CHARACTERS(OutputType.TO_CHARS, RendererFromCharsToChars.class, RendererFromCharsToBytes.class, RendererFromCharsToUrl.class),
-    BYTES(OutputType.TO_BYTES, RendererFromBytesToChars.class, RendererFromBytesToBytes.class, RendererFromBytesToUrl.class);
+    CHARACTERS(
+                Arrays.asList(RendererFromCharsToChars.class, RendererFromCharsToBytes.class, RendererFromCharsToBytesWithPreviewToUrl.class),
+                Arrays.asList(RendererFromBytesToChars.class, RendererFromCharsToChars.class)),
+    BYTES(
+                Arrays.asList(RendererFromBytesToChars.class, RendererFromBytesToBytes.class, RendererFromBytesToCharsWithPreviewToUrl.class),
+                Arrays.asList(RendererFromBytesToBytes.class, RendererFromCharsToBytes.class));
 
-    private final OutputType outputType;
-    private final List<Class<? extends Renderer>> rendererClasses;
+    private final List<Class<? extends Renderer>> inputRenderClasses;
+    private final List<Class<? extends Renderer>> outputRenderClasses;
 
-    DocumentNature(final OutputType outputType, final Class<? extends Renderer>... rendererClasses) {
-        this.outputType = outputType;
-        this.rendererClasses = Arrays.asList(rendererClasses);
+    DocumentNature(
+            final List<Class<? extends Renderer>> inputRenderClasses,
+            final List<Class<? extends Renderer>> outputRenderClasses) {
+        this.inputRenderClasses = inputRenderClasses;
+        this.outputRenderClasses = outputRenderClasses;
     }
 
     @Programmatic
     public boolean canActAsInputTo(final Class<? extends Renderer> candidateClass) {
-        for (Class<? extends Renderer> rendererClass : rendererClasses) {
+        return isSubclassOfAny(candidateClass, this.inputRenderClasses);
+    }
+
+    @Programmatic
+    public boolean canActAsOutputTo(final Class<? extends Renderer> candidateClass) {
+        return isSubclassOfAny(candidateClass, this.outputRenderClasses);
+    }
+
+    private boolean isSubclassOfAny(
+            final Class<? extends Renderer> candidateClass,
+            final List<Class<? extends Renderer>> renderClasses) {
+        for (Class<? extends Renderer> rendererClass : renderClasses) {
             if (rendererClass.isAssignableFrom(candidateClass)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public OutputType getOutputType() {
-        return outputType;
     }
 }

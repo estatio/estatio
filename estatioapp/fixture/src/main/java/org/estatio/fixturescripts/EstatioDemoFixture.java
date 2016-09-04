@@ -29,7 +29,9 @@ import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
+import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnProperty;
 import org.estatio.fixture.documents.DocumentTemplateForHelloGlobal;
+import org.estatio.fixture.documents.DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs;
 import org.estatio.fixture.documents.FloorPlanDocumentForGbOxf;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
@@ -96,6 +98,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new DocumentTemplateForHelloGlobal());
         executionContext.executeChild(this, new FloorPlanDocumentForGbOxf());
+        executionContext.executeChild(this, new DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs());
+        executionContext.executeChild(this, new DocumentTypeAndTemplateForDemoSsrsOnProperty());
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());

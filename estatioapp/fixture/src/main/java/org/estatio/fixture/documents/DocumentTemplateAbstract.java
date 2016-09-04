@@ -32,6 +32,7 @@ import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -50,6 +51,23 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * convenience, as templates and types often created together
+     * @param reference
+     * @param name
+     * @param executionContext
+     * @return
+     */
+    protected DocumentType createType(
+            String reference,
+            String name,
+            ExecutionContext executionContext) {
+
+        final DocumentType documentType = documentTypeRepository.create(reference, name);
+        return executionContext.addResult(this, documentType);
+    }
+
 
     protected DocumentTemplate createDocumentTextTemplate(
             final DocumentType documentType,
@@ -96,5 +114,8 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
 
     @Inject
     protected DocumentTemplateRepository documentTemplateRepository;
+
+    @Inject
+    protected DocumentTypeRepository documentTypeRepository;
 
 }

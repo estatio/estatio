@@ -31,11 +31,12 @@ import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
 import org.estatio.app.menus.demo.HelloDocumentTemplateUserDataModel;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
 
     public static final String TYPE_REF = DocumentTypeForHello.REF;
-    public static final String AT_PATH = "/";
+    public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
     public static final String RENDERING_STRATEGY_REF = RenderingStrategyForFreemarker.REF;
     public static final String TEMPLATE_NAME = "Hello template";
@@ -48,6 +49,7 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
         if (isExecutePrereqs()) {
             executionContext.executeChild(this, new EstatioBaseLineFixture());
             executionContext.executeChild(this, new DocumentTypeForHello());
+            executionContext.executeChild(this, new ApplicationTenancyForGlobal());
             executionContext.executeChild(this, new RenderingStrategyForFreemarker());
         }
 

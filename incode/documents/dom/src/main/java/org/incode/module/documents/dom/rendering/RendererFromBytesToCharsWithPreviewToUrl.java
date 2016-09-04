@@ -1,7 +1,5 @@
 /*
- *
- *  Copyright 2012-2014 Eurocommercial Properties NV
- *
+ *  Copyright 2016 Dan Haywood
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,14 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.documents.dom.rendering;
 
-import org.isisaddons.module.xdocreport.dom.service.OutputType;
+import java.io.IOException;
+import java.net.URL;
 
-public class XDocReportToDocx extends RendererForXDocReportAbstract  {
+import org.incode.module.documents.dom.types.DocumentType;
 
-    public XDocReportToDocx() {
-        super(OutputType.DOCX);
-    }
+public interface RendererFromBytesToCharsWithPreviewToUrl extends RendererFromBytesToChars, PreviewToUrl {
+
+    URL previewBytesToChars(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final byte[] templateBytes,
+            final Object dataModel,
+            final String documentName) throws IOException;
 
 }

@@ -17,7 +17,7 @@
 package org.incode.module.documents.dom.docs;
 
 import java.io.IOException;
-import java.util.List;
+import java.net.URL;
 
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
@@ -32,7 +32,6 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -61,18 +60,19 @@ import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToBytesWithPreviewToUrl;
 import org.incode.module.documents.dom.rendering.RendererFromBytesToChars;
-import org.incode.module.documents.dom.rendering.RendererFromBytesToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromBytesToCharsWithPreviewToUrl;
 import org.incode.module.documents.dom.rendering.RendererFromCharsToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToBytesWithPreviewToUrl;
 import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
-import org.incode.module.documents.dom.rendering.RendererFromCharsToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToCharsWithPreviewToUrl;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.types.DocumentType;
 
 import lombok.Getter;
 import lombok.Setter;
-import static org.incode.module.documents.dom.docs.OutputType.TO_URL;
 
 @PersistenceCapable(
         identityType= IdentityType.DATASTORE,
@@ -357,120 +357,133 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //region > preview (programmatic)
 
 
-
     @Programmatic
-    public List<OutputType> getOutputTypes() {
-        final List<OutputType> outputTypes = Lists.newArrayList();
-        if(getRenderingStrategy().isRendersToBytes()) {
-            outputTypes.add(OutputType.TO_BYTES);
-        }
-        if(getRenderingStrategy().isRendersToChars()) {
-            outputTypes.add(OutputType.TO_CHARS);
-        }
-        if(getRenderingStrategy().isRendersToUrl()) {
-            outputTypes.add(TO_URL);
-        }
-        return outputTypes;
-    }
+    public URL preview(final Object dataModel, final String documentName) throws IOException {
 
-    /**
-     * @param outputType - as returned from {@link #getOutputTypes()}.
-     */
-    @Programmatic
-    public Object preview(final Object dataModel, final String documentName, final OutputType outputType)
-            throws IOException {
-        final List<OutputType> outputTypes = getOutputTypes();
-        if(!outputTypes.contains(outputType)) {
-            throw new IllegalArgumentException("output type '" + outputType + "' not supported by rendering strategy");
+        if(!getRenderingStrategy().isPreviewsToUrl()) {
+            throw new IllegalStateException(String.format("RenderingStrategy '%s' does not support previewing to URL",
+                    getRenderingStrategy().getReference()));
         }
-        final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+
         final DocumentNature inputNature = getRenderingStrategy().getInputNature();
-        switch (outputType) {
-        case TO_BYTES:
-            switch (inputNature){
+        final DocumentNature outputNature = getRenderingStrategy().getOutputNature();
+
+        final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+        switch (inputNature){
+        case BYTES:
+            switch (outputNature) {
             case BYTES:
-                return ((RendererFromBytesToBytes) renderer).renderBytesToBytes(
+                return ((RendererFromBytesToBytesWithPreviewToUrl) renderer).previewBytesToBytes(
                         getType(), getAtPath(), getVersion(),
                         asBytes(), dataModel, documentName);
             case CHARACTERS:
-                return ((RendererFromCharsToBytes) renderer).renderCharsToBytes(
+                return ((RendererFromBytesToCharsWithPreviewToUrl) renderer).previewBytesToChars(
+                        getType(), getAtPath(), getVersion(),
+                        asBytes(), dataModel, documentName);
+            default:
+                // shouldn't happen, above switch statement is complete
+                throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
+            }
+        case CHARACTERS:
+            switch (outputNature) {
+            case BYTES:
+                return ((RendererFromCharsToBytesWithPreviewToUrl) renderer).previewCharsToBytes(
+                        getType(), getAtPath(), getVersion(),
+                        asChars(), dataModel, documentName);
+            case CHARACTERS:
+                return ((RendererFromCharsToCharsWithPreviewToUrl) renderer).previewCharsToChars(
                         getType(), getAtPath(), getVersion(),
                         asChars(), dataModel, documentName);
             default:
                 // shouldn't happen, above switch statement is complete
-                throw new IllegalArgumentException("Unknown documentNature '" + inputNature + "'");
+                throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
             }
-        case TO_CHARS:
-            switch (inputNature){
-            case BYTES:
-                return ((RendererFromBytesToChars) renderer).renderBytesToChars(
-                        getType(), getAtPath(), getVersion(),
-                        asBytes(), dataModel, documentName);
-            case CHARACTERS:
-                return ((RendererFromCharsToChars) renderer).renderCharsToChars(
-                        getType(), getAtPath(), getVersion(),
-                        asChars(), dataModel, documentName);
-            default:
-                // shouldn't happen, above switch statement is complete
-                throw new IllegalArgumentException("Unknown documentNature '" + inputNature + "'");
-            }
-        case TO_URL:
-            switch (inputNature){
-            case BYTES:
-                return ((RendererFromBytesToUrl) renderer).renderBytesToUrl(
-                        getType(), getAtPath(), getVersion(),
-                        asBytes(), dataModel, documentName);
-            case CHARACTERS:
-                return ((RendererFromCharsToUrl) renderer).renderCharsToUrl(
-                        getType(), getAtPath(), getVersion(),
-                        asChars(), dataModel, documentName);
-            default:
-                // shouldn't happen, above switch statement is complete
-                throw new IllegalArgumentException("Unknown documentNature '" + inputNature + "'");
-            }
+
         default:
             // shouldn't happen, above switch statement is complete
-            throw new IllegalArgumentException("Unknown outputType '" + outputType + "'");
+            throw new IllegalArgumentException(String.format("Unknown input DocumentNature '%s'", inputNature));
         }
     }
 
     //endregion
 
     //region > render (programmatic)
-
     @Programmatic
     public DocumentAbstract render(final Object dataModel, final String documentName) {
         final RenderingStrategy renderingStrategy = getRenderingStrategy();
 
+        final DocumentNature inputNature = renderingStrategy.getInputNature();
         final DocumentNature outputNature = renderingStrategy.getOutputNature();
 
         try {
             final DateTime createdAt = clockService.nowAsDateTime();
 
-            // reuse the preview logic
             final DocumentType documentType = this.getType();
-            final Object rendered = preview(dataModel, documentName, outputNature.getOutputType());
 
-            switch(outputNature) {
+            final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+            switch (inputNature){
             case BYTES:
-                final byte[] renderedBytes = (byte[]) rendered;
-                final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
-                return documentRepository.createBlob(documentType, getAtPath(), blob, createdAt);
+                switch (outputNature) {
+                case BYTES:
+                    final byte[] renderedBytes = ((RendererFromBytesToBytes) renderer).renderBytesToBytes(
+                            getType(), getAtPath(), getVersion(),
+                            asBytes(), dataModel, documentName);
+                    return createBlob(documentType, documentName, renderedBytes, createdAt);
+                case CHARACTERS:
+                    final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
+                            getType(), getAtPath(), getVersion(),
+                            asBytes(), dataModel, documentName);
+                    return createTextOrClob(documentType, documentName, renderedChars, createdAt);
+                default:
+                    // shouldn't happen, above switch statement is complete
+                    throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
+                }
             case CHARACTERS:
-                String renderedChars = (String) rendered;
-                if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
-                    return documentRepository.createText(
-                            documentType, getAtPath(), documentName, getMimeType(), renderedChars, createdAt);
-                } else {
-                    final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
-                    return documentRepository.createClob(documentType, getAtPath(), clob, createdAt);
+                switch (outputNature) {
+                case BYTES:
+                    final byte[] renderedBytes = ((RendererFromCharsToBytes) renderer).renderCharsToBytes(
+                            getType(), getAtPath(), getVersion(),
+                            asChars(), dataModel, documentName);
+                    return createBlob(documentType, documentName, renderedBytes, createdAt);
+                case CHARACTERS:
+                    final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
+                            getType(), getAtPath(), getVersion(),
+                            asChars(), dataModel, documentName);
+                    return createTextOrClob(documentType, documentName, renderedChars, createdAt);
+                default:
+                    // shouldn't happen, above switch statement is complete
+                    throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
                 }
             default:
-                // shouldn't happen, the above switch statement is complete
-                throw new IllegalStateException(String.format("DocumentNature '%s' not recognized", outputNature));
+                // shouldn't happen, above switch statement is complete
+                throw new IllegalArgumentException(String.format("Unknown input DocumentNature '%s'", inputNature));
             }
+
         } catch (IOException e) {
             throw new ApplicationException("Unable to render document template", e);
+        }
+    }
+
+    private DocumentAbstract createBlob(
+            final DocumentType documentType,
+            final String documentName,
+            final byte[] renderedBytes,
+            final DateTime createdAt) {
+        final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
+        return documentRepository.createBlob(documentType, getAtPath(), blob, createdAt);
+    }
+
+    private DocumentAbstract createTextOrClob(
+            final DocumentType documentType,
+            final String documentName,
+            final String renderedChars,
+            final DateTime createdAt) {
+        if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
+            return documentRepository.createText(
+                    documentType, getAtPath(), documentName, getMimeType(), renderedChars, createdAt);
+        } else {
+            final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
+            return documentRepository.createClob(documentType, getAtPath(), clob, createdAt);
         }
     }
 

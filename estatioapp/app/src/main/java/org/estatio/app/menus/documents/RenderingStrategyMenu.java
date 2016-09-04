@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentNature;
+import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.valuetypes.RendererClassNameSpecification;
@@ -45,9 +46,9 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Documents",
+        named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "79.07")
+        menuOrder = "80.152")
 public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMenu> {
 
     public RenderingStrategyMenu() {
@@ -59,7 +60,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "1")
-    public RenderingStrategy newStrategy(
+    public RenderingStrategy newRenderingStrategy(
             @Parameter(
                     regexPattern = RegexValidation.REFERENCE,
                     regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION,
@@ -70,27 +71,30 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name")
             final String name,
+            @ParameterLayout(named = "Input nature")
             final DocumentNature inputNature,
+            @ParameterLayout(named = "Output nature")
             final DocumentNature outputNature,
             @Parameter(
                     maxLength = DocumentsModule.JdoColumnLength.FQCN,
                     mustSatisfy = RendererClassNameSpecification.class
             )
             @ParameterLayout(named = "Renderer class name")
-            final String rendererClassName) {
+            final RendererClassNameService.RendererClassViewModel rendererClassViewModel) {
 
-        final Class rendererClass = rendererClassNameService.asRendererClass(rendererClassName);
+        final Class<? extends Renderer> rendererClass =
+                rendererClassNameService.asRendererClass(rendererClassViewModel.getFullyQualifiedClassName());
         return renderingStrategyRepository.create(reference, name, inputNature, outputNature , rendererClass);
     }
 
 
-    public List<String> choices3NewStrategy(
+    public List<RendererClassNameService.RendererClassViewModel> choices4NewRenderingStrategy(
             final String reference,
             final String name,
             final DocumentNature inputNature,
             final DocumentNature outputNature
             ) {
-        return rendererClassNameService.renderClassNamesFor(inputNature);
+        return rendererClassNameService.renderClassNamesFor(inputNature, outputNature);
     }
 
 
@@ -98,7 +102,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<RenderingStrategy> allStrategies() {
+    public List<RenderingStrategy> allRenderingStrategies() {
         return renderingStrategyRepository.allStrategies();
     }
 

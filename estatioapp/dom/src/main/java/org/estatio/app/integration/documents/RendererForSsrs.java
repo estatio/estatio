@@ -23,39 +23,50 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
+import com.google.common.io.ByteSource;
+import com.google.common.io.Resources;
+
 import org.apache.isis.applib.services.config.ConfigurationService;
 
-import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
-import org.incode.module.documents.dom.rendering.RendererFromBytesToUrl;
+import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
+
+import org.incode.module.documents.dom.rendering.RendererFromCharsToBytesWithPreviewToUrl;
 import org.incode.module.documents.dom.types.DocumentType;
 
-public class RendererForSsrs implements RendererFromBytesToBytes, RendererFromBytesToUrl {
+public class RendererForSsrs implements RendererFromCharsToBytesWithPreviewToUrl {
+
+    @Override
+    public byte[] renderCharsToBytes(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final String templateChars,
+            final Object dataModel,
+            final String documentName) throws IOException {
+        final URL url =
+                previewCharsToBytes(documentType, atPath, templateVersion, templateChars, dataModel, documentName);
+        final ByteSource byteSource = Resources.asByteSource(url);
+        return byteSource.read();
+    }
+
+    @Override
+    public URL previewCharsToBytes(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final String templateChars,
+            final Object dataModel,
+            final String documentName) throws IOException {
+
+        final StringInterpolatorService.Root root = (StringInterpolatorService.Root) dataModel;
+        final String urlStr = stringInterpolator.interpolate(root, templateChars);
+        return new URL(urlStr);
+    }
+
+    @javax.inject.Inject
+    StringInterpolatorService stringInterpolator;
 
     @Inject
     ConfigurationService configurationService;
 
-    @Override public byte[] renderBytesToBytes(
-            final DocumentType documentType,
-            final String atPath,
-            final long templateVersion,
-            final byte[] templateBytes,
-            final Object dataModel,
-            final String documentName) throws IOException {
-
-        // TODO: call renderToUrl and then slurp the page down using OpenURLConnection or similar.
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    @Override
-    public URL renderBytesToUrl(
-            final DocumentType documentType,
-            final String atPath,
-            final long templateVersion,
-            final byte[] templateBytes,
-            final Object dataModel,
-            final String documentName) throws IOException {
-
-        // TODO: fetch the text out of the documentTemplate, interpolate using StringInterpolator, invoke the URL
-        throw new RuntimeException("Not yet implemented");
-    }
 }

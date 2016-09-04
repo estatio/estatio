@@ -43,9 +43,9 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Documents",
+        named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "79.05")
+        menuOrder = "80.150")
 public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
 
     public DocumentTypeMenu() {
@@ -57,7 +57,7 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "1")
-    public DocumentType newType(
+    public DocumentType newDocumentType(
             @Parameter(
                     regexPattern = RegexValidation.REFERENCE,
                     regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION,
@@ -76,7 +76,7 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<DocumentType> allTypes() {
+    public List<DocumentType> allDocumentTypes() {
         return documentTypeRepository.allTypes();
     }
 

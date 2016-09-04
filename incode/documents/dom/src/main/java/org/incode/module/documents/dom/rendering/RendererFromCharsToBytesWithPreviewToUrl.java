@@ -14,10 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.docs;
+package org.incode.module.documents.dom.rendering;
 
-public enum OutputType {
-    TO_BYTES,
-    TO_CHARS,
-    TO_URL,
+import java.io.IOException;
+import java.net.URL;
+
+import org.incode.module.documents.dom.types.DocumentType;
+
+public interface RendererFromCharsToBytesWithPreviewToUrl extends RendererFromCharsToBytes, PreviewToUrl {
+
+    URL previewCharsToBytes(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final String templateChars,
+            final Object dataModel,
+            final String documentName) throws IOException;
+
 }

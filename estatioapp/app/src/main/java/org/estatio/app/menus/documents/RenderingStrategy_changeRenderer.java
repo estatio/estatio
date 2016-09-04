@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.valuetypes.RendererClassNameSpecification;
 
@@ -51,15 +52,16 @@ public class RenderingStrategy_changeRenderer {
     public RenderingStrategy $$(
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME, mustSatisfy = RendererClassNameSpecification.class)
             @ParameterLayout(named = "Renderer class name")
-            final String rendererClassName) {
+            final RendererClassNameService.RendererClassViewModel rendererClassViewModel) {
 
-        final Class rendererClass = rendererClassNameService.asRendererClass(rendererClassName);
+        final Class<? extends Renderer> rendererClass =
+                rendererClassNameService.asRendererClass(rendererClassViewModel.getFullyQualifiedClassName());
         renderingStrategy.setRendererClassName(rendererClass.getName());
         return renderingStrategy;
     }
 
-    public List<String> choices0$$() {
-        return rendererClassNameService.renderClassNamesFor(renderingStrategy.getInputNature());
+    public List<RendererClassNameService.RendererClassViewModel> choices0$$() {
+        return rendererClassNameService.renderClassNamesFor(renderingStrategy.getInputNature(), renderingStrategy.getOutputNature());
     }
 
     @Inject

@@ -48,23 +48,18 @@
                 <bs3:tab name="Preview and Rendering">
                     <bs3:row>
                         <bs3:col span="12">
+                            <cpt:fieldSet name="Document nature">
+                                <cpt:property id="inputNature"/>
+                                <cpt:property id="outputNature"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Preview support">
+                                <cpt:property id="previewsToUrl" labelPosition="RIGHT"/>
+                            </cpt:fieldSet>
                             <cpt:fieldSet name="Rendering">
-                                <cpt:property id="documentNature"/>
                                 <cpt:property id="rendererClassName">
                                     <cpt:action id="changeRenderer">
                                         <cpt:named>Change</cpt:named>
                                     </cpt:action>
-                                </cpt:property>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Preview support">
-                                <cpt:property id="previewingAsBlob" labelPosition="RIGHT">
-                                    <cpt:named>As Blob?</cpt:named>
-                                </cpt:property>
-                                <cpt:property id="previewingAsClob" labelPosition="RIGHT">
-                                    <cpt:named>As Clob?</cpt:named>
-                                </cpt:property>
-                                <cpt:property id="previewingAsUrl" labelPosition="RIGHT">
-                                    <cpt:named>As URL?</cpt:named>
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
