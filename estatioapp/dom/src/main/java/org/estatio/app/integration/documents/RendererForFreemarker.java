@@ -31,7 +31,7 @@ import org.incode.module.documents.dom.types.DocumentType;
 
 import freemarker.template.TemplateException;
 
-public class Freemarker implements RendererFromCharsToChars {
+public class RendererForFreemarker implements RendererFromCharsToChars {
 
     public String renderCharsToChars(
             final DocumentType documentType,
@@ -42,7 +42,7 @@ public class Freemarker implements RendererFromCharsToChars {
             final String documentName) throws IOException {
 
         try {
-            return freeMarkerService.render(documentType.getName(), atPath, dataModel);
+            return freeMarkerService.render(documentType.getReference(), atPath, templateVersion, templateChars, dataModel);
         } catch (TemplateException e) {
             throw new IOException(e);
         }
