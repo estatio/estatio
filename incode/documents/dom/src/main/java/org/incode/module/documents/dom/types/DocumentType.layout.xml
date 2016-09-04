@@ -15,6 +15,20 @@
                                 <cpt:property id="reference"/>
                                 <cpt:property id="name"/>
                             </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
                                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -27,18 +41,27 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Other">
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="8">
+            <bs3:tabGroup>
+                <bs3:tab name="Templates">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            <cpt:collection id="currentTemplates" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="DummyToForceFirstTabToRenderAsTab">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="dummy">
+                                <cpt:property id="dummy"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-        </bs3:col>
-        <bs3:col span="8">
-            <cpt:collection id="currentTemplates" defaultView="table"/>
         </bs3:col>
         <bs3:col span="8" unreferencedCollections="true">
         </bs3:col>
