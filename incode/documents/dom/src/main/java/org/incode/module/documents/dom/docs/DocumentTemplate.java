@@ -364,7 +364,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         if(getRenderingStrategy().isRendersToBytes()) {
             outputTypes.add(OutputType.TO_BYTES);
         }
-        if(getRenderingStrategy().isRendersToBytes()) {
+        if(getRenderingStrategy().isRendersToChars()) {
             outputTypes.add(OutputType.TO_CHARS);
         }
         if(getRenderingStrategy().isRendersToUrl()) {
