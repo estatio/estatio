@@ -192,11 +192,6 @@ language governing permissions and limitations under the License.
 
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-canonical</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
         </dependency>

@@ -15,7 +15,6 @@ import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.documents.dom.DocumentsModule;
 
-import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
@@ -38,7 +37,6 @@ public class EstatioAppManifest implements AppManifest {
         modules.addAll(
                 Arrays.asList(
                         // TODO: sort out packages for the 'dom' module
-                        EstatioCanonicalModule.class,
                         EstatioDomainModule.class,
                         EstatioDomainLinkModule.class,
                         EstatioDomainSettingsModule.class,
