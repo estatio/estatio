@@ -50,7 +50,7 @@ public abstract class T_previews<T extends WithApplicationTenancy> extends T_doc
     }
 
     public List<DocumentTemplate> choices0$$() {
-        return getDocumentTemplates();
+        return documentTemplatesFor(intent);
     }
 
     @Override

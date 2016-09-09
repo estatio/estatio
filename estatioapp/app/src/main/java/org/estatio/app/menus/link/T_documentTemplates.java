@@ -55,18 +55,20 @@ public abstract class T_documentTemplates<T extends WithApplicationTenancy> {
             };
     }
 
-    protected List<DocumentTemplate> getDocumentTemplates() {
+    protected List<DocumentTemplate> documentTemplatesFor(final CreateDocumentIntent intent) {
         final List<DocumentTemplate> templates = Lists.newArrayList();
 
         // hard-coded list of candidate doc types (equivalent to class names in LinkRefDat entity, see LinkRefData fixture)
         for (String docType : docTypes) {
-            append(docType, templates);
+            append(docType, intent, templates);
         }
-
         return templates;
     }
 
-    private void append(final String docTypeRef, final List<DocumentTemplate> templates) {
+    private void append(
+            final String docTypeRef,
+            final CreateDocumentIntent intent,
+            final List<DocumentTemplate> templates) {
         final String atPath = domainObject.getApplicationTenancy().getPath();
         final DocumentType documentType = documentTypeRepository.findByReference(docTypeRef);
         final List<DocumentTemplate> applicableTemplates =

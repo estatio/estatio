@@ -26,8 +26,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -36,27 +34,24 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentAbstract;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 
-public abstract class T_reports<T extends WithApplicationTenancy>  extends T_documentTemplates<T> {
+public abstract class T_createDocument<T extends WithApplicationTenancy>  extends T_documentTemplates<T> {
 
-    public T_reports(final T domainObject, final String... docTypes) {
+    public T_createDocument(final T domainObject, final String... docTypes) {
         super(domainObject, docTypes);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public DocumentAbstract $$(
-            final DocumentTemplate template,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME, optionality = Optionality.OPTIONAL)
-            @ParameterLayout(named = "Document name")
-            final String documentName,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME, optionality = Optionality.OPTIONAL)
-            @ParameterLayout(named = "Role name")
-            final String roleName) throws IOException {
+            @ParameterLayout(named = "Preview or save?")
+            final CreateDocumentIntent intent,
+            final DocumentTemplate template) throws IOException {
+        final String documentName = null;
+        final String roleName = null;
         final StringInterpolatorService.Root root = newRoot();
         final String documentNameToUse = documentNameOf(domainObject, template, documentName);
         final DocumentAbstract doc = template.render(root, documentNameToUse);
@@ -65,11 +60,11 @@ public abstract class T_reports<T extends WithApplicationTenancy>  extends T_doc
     }
 
     public boolean hide$$() {
-        return choices0$$().isEmpty();
+        return documentTemplatesFor(null).isEmpty();
     }
 
-    public List<DocumentTemplate> choices0$$() {
-        return getDocumentTemplates();
+    public List<DocumentTemplate> choices1$$(final CreateDocumentIntent intent) {
+        return documentTemplatesFor(intent);
     }
 
     protected String documentNameOf(

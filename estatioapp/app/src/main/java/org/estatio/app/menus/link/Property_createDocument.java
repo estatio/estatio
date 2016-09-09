@@ -38,9 +38,9 @@ import org.estatio.dom.asset.Property;
 import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnProperty;
 
 @Mixin
-public class Property_reports extends T_reports<Property> {
+public class Property_createDocument extends T_createDocument<Property> {
 
-    public Property_reports(final Property property) {
+    public Property_createDocument(final Property property) {
         // hard-coded list of candidate doc types (equivalent to class names in LinkRefDat entity, see LinkRefData fixture)
         super(property, DocumentTypeAndTemplateForDemoSsrsOnProperty.DEMO_SSRS_GLOBAL);
     }
