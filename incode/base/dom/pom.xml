@@ -74,7 +74,7 @@ Copyright 2014~2015 Dan Haywood
         <compileSource>1.8</compileSource>
         <compileTarget>1.8</compileTarget>
 
-        <isis.version>1.13.0</isis.version>
+        <isis.version>1.13.0.20160909-0032</isis.version>
         <isis-module-fakedata-dom.version>1.13.0</isis-module-fakedata-dom.version>
 
         <lombok.version>1.16.6</lombok.version>

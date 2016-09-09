@@ -81,7 +81,7 @@ mvn clean install -DskipTests -o
     </developers>
 
     <properties>
-        <isis.version>1.13.0</isis.version>
+        <isis.version>1.13.0.20160909-0032</isis.version>
 
         <isis-module-excel.version>1.13.0</isis-module-excel.version>
         <isis-module-fakedata-dom.version>1.13.0</isis-module-fakedata-dom.version>
@@ -129,14 +129,15 @@ mvn clean install -DskipTests -o
 
         <repository>
             <id>estatio.snapshots</id>
-            <name>Estatio Snapshots</name>
+            <name>Estatio Snapshots (and Interim Releases)</name>
             <releases>
-                <enabled>false</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
             </releases>
             <snapshots>
                 <enabled>true</enabled>
+                <!-- REVIEW: I'd've thought that 'always' makes more sense. http://maven.apache.org/ref/3.3.9/maven-settings/settings.html -->
                 <updatePolicy>never</updatePolicy>
                 <checksumPolicy>fail</checksumPolicy>
             </snapshots>
@@ -152,6 +153,20 @@ mvn clean install -DskipTests -o
             </snapshots>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>estatio.snapshots</id>
+            <name>Estatio Snapshots (and Interim Releases)</name>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
+            <layout>default</layout>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <pluginManagement>
