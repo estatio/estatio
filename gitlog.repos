@@ -4,6 +4,7 @@ estatio-ecp:/c/bitbucket/incodehq/estatio-ecp
 contactapp:/c/github/incodehq/contactapp
 incode-module-commchannel:/c/github/incodehq/incode-module-commchannel
 incode-module-note:/c/github/incodehq/incode-module-note
+incode-module-classification:/c/github/incodehq/incode-module-classification
 incode-module-alias:/c/github/incodehq/incode-module-alias
 isis:/c/apache/isis-git-rw
 isis-app-kitchensink:/c/github/isisaddons/isis-app-kitchensink
@@ -11,7 +12,6 @@ isis-app-neoapp:/c/github/isisaddons/isis-app-neoapp
 isis-app-todoapp:/c/github/isisaddons/isis-app-todoapp
 isis-module-audit:/c/github/isisaddons/isis-module-audit
 isis-module-command:/c/github/isisaddons/isis-module-command
-isis-module-devutils:/c/github/isisaddons/isis-module-devutils
 isis-module-docx:/c/github/isisaddons/isis-module-docx
 isis-module-excel:/c/github/isisaddons/isis-module-excel
 isis-module-fakedata:/c/github/isisaddons/isis-module-fakedata
