@@ -511,11 +511,12 @@ public class Lease
         if (previousAgreement.getNext() != null) {
             return "Not allowed: the agreement chosen already is already linked to a next.";
         }
-        if (this.getInterval().overlaps(previousAgreement.getInterval())) {
+        if (this.getEffectiveInterval().overlaps(previousAgreement.getEffectiveInterval())) {
             return "Not allowed: overlapping date intervals";
         }
         // case: interval previous not overlapping, but before this interval
-        if (previousAgreement.getEndDate() == null || this.getStartDate().isBefore(previousAgreement.getEndDate())) {
+        final LocalDate previousEffectiveEndDate = previousAgreement.getEffectiveInterval().endDate();
+        if (previousEffectiveEndDate == null || this.getEffectiveInterval().startDate().isBefore(previousEffectiveEndDate)) {
             return "Not allowed: previous agreement interval should be before this agreements interval";
         }
         Lease previousLease = (Lease) previousAgreement;

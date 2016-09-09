@@ -801,17 +801,22 @@ public class LeaseTest {
 
             // given
             previousAgreement.setEndDate(new LocalDate("2000-01-01"));
+            previousAgreement.setTenancyEndDate(new LocalDate("2000-01-01"));
             previousAgreement.setApplicationTenancyPath("/SomePath");
             agreement.setApplicationTenancyPath("/SomePath");
 
             // when
             agreement.setStartDate(new LocalDate("2000-01-01"));
+            agreement.setTenancyStartDate(new LocalDate("2000-01-01"));
             // then
             assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: overlapping date intervals");
 
             // when
             agreement.setStartDate(new LocalDate("2000-01-02"));
+            agreement.setTenancyStartDate(new LocalDate("2000-01-02"));
             // then
+            assertThat(previousAgreement.getEffectiveInterval().toString()).isEqualTo("----------/2000-01-02");
+            assertThat(agreement.getEffectiveInterval().toString()).isEqualTo("2000-01-02/----------");
             assertNull(agreement.validateChangePrevious(previousAgreement));
 
         }
@@ -820,12 +825,12 @@ public class LeaseTest {
         public void previousAgreementIntervalNotBeforeStartdate() {
 
             // given
-            previousAgreement.setStartDate(new LocalDate("1999-01-01"));
-            previousAgreement.setEndDate(new LocalDate("1999-12-31"));
+            previousAgreement.setTenancyStartDate(new LocalDate("1999-01-01"));
+            previousAgreement.setTenancyEndDate(new LocalDate("1999-12-31"));
             previousAgreement.setApplicationTenancyPath("/SomePath");
             agreement.setApplicationTenancyPath("/SomePath");
-            agreement.setStartDate(new LocalDate("1998-01-01"));
-            agreement.setEndDate(new LocalDate("1998-12-31"));
+            agreement.setTenancyStartDate(new LocalDate("1998-01-01"));
+            agreement.setTenancyEndDate(new LocalDate("1998-12-31"));
 
             // then
             assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: previous agreement interval should be before this agreements interval");
@@ -836,13 +841,14 @@ public class LeaseTest {
         public void atPathNotTheSame() {
 
             // given
-            previousAgreement.setEndDate(new LocalDate("2000-01-01"));
+            previousAgreement.setTenancyEndDate(new LocalDate("2000-01-01"));
             previousAgreement.setApplicationTenancyPath("/SomePath");
-            agreement.setStartDate(new LocalDate("2000-01-02"));
+            agreement.setTenancyStartDate(new LocalDate("2000-01-02"));
 
             // when
             agreement.setApplicationTenancyPath("/SomeOtherPath");
             // then
+
             assertThat(agreement.validateChangePrevious(previousAgreement)).isEqualTo("Not allowed: application tenancy should be equal");
 
             // when
