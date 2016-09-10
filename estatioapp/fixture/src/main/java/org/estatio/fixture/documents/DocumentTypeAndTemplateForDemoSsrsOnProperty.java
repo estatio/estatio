@@ -78,7 +78,7 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
 
         return createDocumentTextTemplate(
                 docType, now, docType.getName(),
-                "application/pdf",
+                "application/pdf", ".pdf",
                 appTenancy.getPath(),
                 templateText,
                 StringInterpolatorService.Root.class.getName(),

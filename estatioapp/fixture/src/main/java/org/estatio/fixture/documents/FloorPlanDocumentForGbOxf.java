@@ -39,7 +39,8 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
 public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
 
-    public static final String NAME = PropertyForOxfGb.REF + ".svg";
+    public static final String FILE_SUFFIX = "svg";
+    public static final String NAME = PropertyForOxfGb.REF + "." + FILE_SUFFIX;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -65,7 +66,7 @@ public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
 
         final DocumentTemplate documentTemplate = createDocumentClobTemplate(documentType, clockService.now(),
                 ApplicationTenancyForGbOxf.PATH, clob,
-                dataModelClassName, renderingStrategy, executionContext);
+                FILE_SUFFIX, dataModelClassName, renderingStrategy, executionContext);
 
         paperclipRepository.attach(documentTemplate, null, property);
     }

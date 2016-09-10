@@ -224,10 +224,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final Blob blob,
+            final String fileSuffix,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         super(type, atPath, blob);
-        init(type, date, atPath, renderingStrategy, dataModelClassName);
+        init(type, date, atPath, fileSuffix, renderingStrategy, dataModelClassName);
     }
 
     public DocumentTemplate(
@@ -236,11 +237,12 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String atPath,
             final String name,
             final String mimeType,
+            final String fileSuffix,
             final String text,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         super(type, atPath, name, mimeType, text);
-        init(type, date, atPath, renderingStrategy, dataModelClassName);
+        init(type, date, atPath, fileSuffix, renderingStrategy, dataModelClassName);
     }
 
     public DocumentTemplate(
@@ -248,24 +250,34 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final Clob clob,
+            final String fileSuffix,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         super(type, atPath, clob);
-        init(type, date, atPath, renderingStrategy, dataModelClassName);
+        init(type, date, atPath, fileSuffix, renderingStrategy, dataModelClassName);
     }
 
     private void init(
             final DocumentType type,
             final LocalDate date,
             final String atPath,
+            final String fileSuffix,
             final RenderingStrategy renderingStrategy,
             final String dataModelClassName) {
         this.typeCopy = type;
         this.atPathCopy = atPath;
         this.date = date;
+        this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
         this.renderingStrategy = renderingStrategy;
         this.dataModelClassName = dataModelClassName;
     }
+
+    static String stripLeadingDotAndLowerCase(final String fileSuffix) {
+        final int lastDot = fileSuffix.lastIndexOf(".");
+        final String stripLeadingDot = fileSuffix.substring(lastDot+1);
+        return stripLeadingDot.toLowerCase();
+    }
+
     //endregion
 
 
@@ -327,6 +339,17 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             editing = Editing.DISABLED
     )
     private RenderingStrategy renderingStrategy;
+    //endregion
+
+    //region > fileSuffix (property)
+    public static class FileSuffixDomainEvent extends PropertyDomainEvent<String> { }
+    @Getter @Setter
+    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+    @Property(
+            domainEvent = FileSuffixDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private String fileSuffix;
     //endregion
 
 
@@ -488,6 +511,18 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     }
 
     //endregion
+
+    //region > withFileSuffix (programmatic)
+    @Programmatic
+    public String withFileSuffix(final String documentName) {
+        final String suffix = getFileSuffix();
+        final int lastPeriod = suffix.lastIndexOf(".");
+        final String suffixNoDot = suffix.substring(lastPeriod + 1);
+        final String suffixWithDot = "." + suffixNoDot;
+        return documentName.endsWith(suffixWithDot) ? documentName : documentName + suffixWithDot;
+    }
+    //endregion
+
 
 
 

@@ -41,6 +41,7 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
     public static final String RENDERING_STRATEGY_REF = RenderingStrategyForFreemarker.REF;
     public static final String TEMPLATE_NAME = "Hello template";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
+    public static final String FILE_SUFFIX = ".txt";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -58,7 +59,7 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
         final LocalDate date = clockService.now();
 
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
-                documentType, date, TEMPLATE_NAME, TEMPLATE_MIME_TYPE, AT_PATH,
+                documentType, date, TEMPLATE_NAME, TEMPLATE_MIME_TYPE, FILE_SUFFIX, AT_PATH,
                 "Hello ${user}",
                 HelloDocumentTemplateUserDataModel.class.getName(), renderingStrategy, executionContext);
 

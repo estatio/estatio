@@ -134,6 +134,7 @@ public class DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs extends Documen
         return createDocumentTextTemplate(
                 docType, now, docType.getName(),
                 "application/pdf",
+                ".pdf",
                 appTenancy.getPath(),
                 templateText,
                 StringInterpolatorService.Root.class.getName(),

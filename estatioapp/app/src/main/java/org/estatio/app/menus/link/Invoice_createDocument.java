@@ -24,10 +24,9 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs;
 
 @Mixin
-public class Invoice_previews extends T_previews<Invoice> {
+public class Invoice_createDocument extends T2_createDocument<Invoice> {
 
-    public Invoice_previews(final Invoice invoice) {
-        // hard-coded list of candidate doc types (equivalent to class names in LinkRefDat entity, see LinkRefData fixture)
+    public Invoice_createDocument(final Invoice invoice) {
         super(invoice,
                 DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs.DOC_TYPE_REF_INVOICE_PRELIM_ITA,
                 DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs.DOC_TYPE_REF_INVOICE_ITA);

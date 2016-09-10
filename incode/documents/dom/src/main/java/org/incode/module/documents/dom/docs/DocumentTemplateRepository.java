@@ -21,7 +21,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -48,10 +47,10 @@ public class DocumentTemplateRepository {
             final LocalDate date,
             final String atPath,
             final Blob blob,
+            final String fileSuffix,
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
-        final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, renderingStrategy,
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, fileSuffix, renderingStrategy,
                 dataModelClassName);
         repositoryService.persist(document);
         return document;
@@ -63,10 +62,10 @@ public class DocumentTemplateRepository {
             final LocalDate date,
             final String atPath,
             final Clob clob,
+            final String fileSuffix,
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
-        final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, renderingStrategy, dataModelClassName);
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, fileSuffix, renderingStrategy, dataModelClassName);
         repositoryService.persist(document);
         return document;
     }
@@ -78,11 +77,11 @@ public class DocumentTemplateRepository {
             final String atPath,
             final String name,
             final String mimeType,
+            final String fileSuffix,
             final String text,
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
-        final LocalDateTime createdAt = clockService.nowAsLocalDateTime();
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, name, mimeType, text,
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, name, mimeType, fileSuffix, text,
                 renderingStrategy, dataModelClassName);
         repositoryService.persist(document);
         return document;

@@ -63,6 +63,9 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
             final LocalDate date,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
             final String templateText,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+            @ParameterLayout(named = "File Suffix")
+            final String fileSuffix,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Data model class name")
             final String dataModelClassName,
@@ -71,7 +74,7 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
         final DocumentType type = documentTemplate.getType();
         final String mimeType = documentTemplate.getMimeType();
         return documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), name, mimeType, templateText, dataModelClassName, renderingStrategy
+                type, date, applicationTenancy.getPath(), name, mimeType, fileSuffix, templateText, dataModelClassName, renderingStrategy
         );
     }
 
@@ -98,11 +101,11 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
         return documentTemplate.getText();
     }
 
-    public String default4$$() {
+    public String default5$$() {
         return documentTemplate.getDataModelClassName();
     }
 
-    public RenderingStrategy default5$$() {
+    public RenderingStrategy default6$$() {
         return documentTemplate.getRenderingStrategy();
     }
 

@@ -74,13 +74,14 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
             final LocalDate date,
             final String name,
             final String mimeType,
+            final String fileSuffix,
             final String atPath,
             final String text, final String dataModelClassName,
             final RenderingStrategy renderingStrategy,
             ExecutionContext executionContext) {
 
         final DocumentTemplate documentTemplate = documentTemplateRepository
-                .createText(documentType, date, atPath, name, mimeType, text, dataModelClassName, renderingStrategy);
+                .createText(documentType, date, atPath, name, mimeType, fileSuffix, text, dataModelClassName, renderingStrategy);
         return executionContext.addResult(this, documentTemplate);
     }
 
@@ -89,12 +90,13 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
             final LocalDate date,
             final String atPath,
             final Clob clob,
+            final String fileSuffix,
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy,
             ExecutionContext executionContext) {
 
         final DocumentTemplate documentTemplate = documentTemplateRepository
-                .createClob(documentType, date, atPath, clob, dataModelClassName, renderingStrategy);
+                .createClob(documentType, date, atPath, clob, fileSuffix, dataModelClassName, renderingStrategy);
         return executionContext.addResult(this, documentTemplate);
     }
 
@@ -103,12 +105,13 @@ public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
             final LocalDate date,
             final String atPath,
             final Blob blob,
+            final String fileSuffix,
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy,
             ExecutionContext executionContext) {
 
         final DocumentTemplate documentTemplate = documentTemplateRepository
-                .createBlob(documentType, date, atPath, blob, dataModelClassName, renderingStrategy);
+                .createBlob(documentType, date, atPath, blob, fileSuffix, dataModelClassName, renderingStrategy);
         return executionContext.addResult(this, documentTemplate);
     }
 

@@ -32,6 +32,7 @@ public final class DocumentsModule {
         public static final int AT_PATH = 255;  // as per security module's ApplicationTenancy#MAX_LENGTH_PATH
         public static final int USER_NAME = 30; // as per security module's ApplicationUser#USER_NAME
         public static final int MIME_TYPE = 255;
+        public static final int FILE_SUFFIX = 12;
         public static final int EXTERNAL_URL = 2000;
 
         public final static int FQCN = 254;

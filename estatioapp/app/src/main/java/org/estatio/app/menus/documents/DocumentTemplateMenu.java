@@ -81,6 +81,9 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
             @ParameterLayout(named = "MIME type")
             final String mimeType,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+            @ParameterLayout(named = "File Suffix")
+            final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
             final String templateText,
@@ -91,18 +94,21 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
 
         final String documentName = name != null? name : type.getName();
         return documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), documentName, mimeType, templateText, dataModelClassName, renderingStrategy
+                type, date, applicationTenancy.getPath(), documentName, mimeType, fileSuffix, templateText, dataModelClassName, renderingStrategy
         );
     }
 
     public String default3NewTextTemplate() {
         return "text/html";
     }
-    public List<ApplicationTenancy> choices4NewTextTemplate() {
+    public String default4NewTextTemplate() {
+        return "html";
+    }
+    public List<ApplicationTenancy> choices5NewTextTemplate() {
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
-    public String default6NewTextTemplate() {
+    public String default7NewTextTemplate() {
         return HashMap.class.getName();
     }
 
@@ -135,6 +141,9 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Clob")
             final String name,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+            @ParameterLayout(named = "File Suffix")
+            final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Clob clob,
@@ -144,18 +153,18 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final RenderingStrategy renderingStrategy) {
 
         final DocumentTemplate template = documentTemplateRepository.createClob(
-                type, date, applicationTenancy.getPath(), clob, dataModelClassName, renderingStrategy);
+                type, date, applicationTenancy.getPath(), clob, fileSuffix, dataModelClassName, renderingStrategy);
         if(name != null) {
             template.setName(name);
         }
         return template;
     }
 
-    public List<ApplicationTenancy> choices3NewClobTemplate() {
+    public List<ApplicationTenancy> choices4NewClobTemplate() {
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
-    public String default5NewClobTemplate() {
+    public String default6NewClobTemplate() {
         return HashMap.class.getName();
     }
 
@@ -191,13 +200,16 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
             final ApplicationTenancy applicationTenancy,
             final Blob blob,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+            @ParameterLayout(named = "File Suffix")
+            final String fileSuffix,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Data model class name")
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentTemplate template = documentTemplateRepository.createBlob(
-                type, date, applicationTenancy.getPath(), blob, dataModelClassName,
+                type, date, applicationTenancy.getPath(), blob, fileSuffix, dataModelClassName,
                 renderingStrategy);
         if(name != null) {
             template.setName(name);
@@ -205,11 +217,11 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
         return template;
     }
 
-    public List<ApplicationTenancy> choices3NewBlobTemplate() {
+    public List<ApplicationTenancy> choices4NewBlobTemplate() {
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
-    public String default5NewBlobTemplate() {
+    public String default6NewBlobTemplate() {
         return HashMap.class.getName();
     }
 

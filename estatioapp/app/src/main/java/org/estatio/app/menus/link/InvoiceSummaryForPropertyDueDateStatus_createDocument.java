@@ -24,10 +24,10 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs;
 
 @Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_previews extends T_previews<InvoiceSummaryForPropertyDueDateStatus> {
+public class InvoiceSummaryForPropertyDueDateStatus_createDocument
+        extends T2_createDocument<InvoiceSummaryForPropertyDueDateStatus> {
 
-    public InvoiceSummaryForPropertyDueDateStatus_previews(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        // hard-coded list of candidate doc types (equivalent to class names in Link entity, see LinkRefData fixture)
+    public InvoiceSummaryForPropertyDueDateStatus_createDocument(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
         super(invoiceSummary,
             DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs.DOC_TYPE_REF_INVOICES_OVERVIEW_ITA,
             DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs.DOC_TYPE_REF_INVOICES_PRELIM_ITA,
