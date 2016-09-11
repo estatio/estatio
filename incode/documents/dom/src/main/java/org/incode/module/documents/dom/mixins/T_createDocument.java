@@ -30,19 +30,22 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.documents.dom.docs.DocumentAbstract;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.links.PaperclipRepository;
+import org.incode.module.documents.dom.services.DocumentNamingService;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
 public abstract class T_createDocument<T> {
+
+    public static enum Intent {
+        PREVIEW,
+        CREATE_AND_SAVE
+    }
 
     //region > constructor
     protected final T domainObject;
@@ -55,64 +58,63 @@ public abstract class T_createDocument<T> {
     //endregion
 
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Object $$(
             final DocumentTemplate template,
-            @ParameterLayout(named = "Preview?")
-            final Boolean preview
+            @ParameterLayout(named = "Action")
+            final Intent intent
             ) throws IOException {
         final String documentName = null;
         final String roleName = null;
         final Object dataModel = newDataModel(domainObject);
-        if (preview) {
+        if (intent == Intent.PREVIEW) {
             return template.preview(dataModel, null);
         }
-        final String documentNameToUse = documentNameOf(domainObject, template, documentName);
+        final String documentNameToUse = documentNameOf(documentName, domainObject, template);
         final DocumentAbstract doc = template.render(dataModel, documentNameToUse);
         paperclipRepository.attach(doc, roleName, domainObject);
         return doc;
     }
 
     public boolean hide$$() {
-        return getDocumentTemplates().isEmpty();
+        return choices0$$().isEmpty();
     }
 
-    public TranslatableString validate$$(
-            final DocumentTemplate template,
-            final Boolean preview) {
-        return preview && !template.getRenderingStrategy().isPreviewsToUrl()
-                ? TranslatableString.tr("This template does not support previewing")
-                : null;
+    public List<DocumentTemplate> choices0$$() {
+        return getDocumentTemplates();
     }
 
+    public List<Intent> choices1$$(final DocumentTemplate template) {
+        final List<Intent> intents = Lists.newArrayList();
+        if(template != null && template.getRenderingStrategy().isPreviewsToUrl()) {
+            intents.add(Intent.PREVIEW);
+        }
+        intents.add(Intent.CREATE_AND_SAVE);
+        return intents;
+    }
+
+    /**
+     * Delegates to {@link DocumentNamingService} to allow more sophisticated rules to be plugged in (eg substitute
+     * for any invalid characters).
+     */
     private String documentNameOf(
-            final T domainObject,
-            final DocumentTemplate template,
-            final String documentName) {
-        final String name =
-                documentName != null
-                        ? documentName
-                        : titleService.titleOf(domainObject);
-        return template.withFileSuffix(name);
+            final String documentName, final T domainObject, final DocumentTemplate template) {
+        return documentNamingService.nameOf(documentName, domainObject, template);
     }
 
     protected abstract Object newDataModel(final T domainObject);
 
     private List<DocumentTemplate> getDocumentTemplates() {
-        final List<DocumentTemplate> templates = Lists.newArrayList();
 
+        final String atPath = atPathFor(domainObject);
+
+        final List<DocumentTemplate> templates = Lists.newArrayList();
         for (String docType : docTypes) {
-            templates.addAll(applicableTemplatesFor(docType));
+            final DocumentType documentType = documentTypeRepository.findByReference(docType);
+            templates.addAll(documentTemplateRepository.findByTypeAndApplicableToAtPath(documentType, atPath));
         }
         return templates;
-    }
-
-    private List<DocumentTemplate> applicableTemplatesFor(
-            final String docTypeRef) {
-        final String atPath = atPathFor(domainObject);
-        final DocumentType documentType = documentTypeRepository.findByReference(docTypeRef);
-        return documentTemplateRepository.findByTypeAndApplicableToAtPath(documentType, atPath);
     }
 
     protected abstract String atPathFor(final T domainObject);
@@ -122,14 +124,14 @@ public abstract class T_createDocument<T> {
     @Inject
     PaperclipRepository paperclipRepository;
 
-    @Inject
-    TitleService titleService;
-
     @javax.inject.Inject
     private DocumentTypeRepository documentTypeRepository;
     
     @javax.inject.Inject
     private DocumentTemplateRepository documentTemplateRepository;
+
+    @javax.inject.Inject
+    private DocumentNamingService documentNamingService;
 
     //endregion
 

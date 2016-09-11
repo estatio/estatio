@@ -27,7 +27,10 @@ import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnPropert
 public class Property_createDocument extends T2_createDocument<Property> {
 
     public Property_createDocument(final Property property) {
-        super(property, DocumentTypeAndTemplateForDemoSsrsOnProperty.DEMO_SSRS_GLOBAL);
+        super(property,
+                DocumentTypeAndTemplateForDemoSsrsOnProperty.DEMO_SSRS_GLOBAL,
+                DocumentTypeAndTemplateForDemoSsrsOnProperty.DEMO_SSRS_NO_PREVIEW_GLOBAL
+                );
     }
 
 

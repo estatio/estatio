@@ -82,7 +82,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @ParameterLayout(named = "MIME type")
             final String mimeType,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
-            @ParameterLayout(named = "File Suffix")
+            @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
             final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
@@ -117,6 +117,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final LocalDate proposedDate,
             final String name,
             final String mimeType,
+            final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final String templateText,
             final String dataModelClassName,
@@ -142,7 +143,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Clob")
             final String name,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
-            @ParameterLayout(named = "File Suffix")
+            @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
             final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -172,6 +173,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final DocumentType proposedType,
             final LocalDate proposedDate,
             final String name,
+            final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final Clob clob,
             final String dataModelClassName,
@@ -197,12 +199,12 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Blob")
             final String name,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+            @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
+            final String fileSuffix,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
             final ApplicationTenancy applicationTenancy,
             final Blob blob,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
-            @ParameterLayout(named = "File Suffix")
-            final String fileSuffix,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Data model class name")
             final String dataModelClassName,
@@ -229,6 +231,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final DocumentType proposedType,
             final LocalDate proposedDate,
             final String name,
+            final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final Blob blob,
             final String dataModelClassName,

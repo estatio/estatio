@@ -27,16 +27,16 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.docs.DocumentAbstract;
 
 @Mixin
-public class DocTemplate_applicationTenancy {
+public class DocumentAbstract_applicationTenancy {
 
     //region > constructor
-    private final DocumentTemplate documentTemplate;
+    private final DocumentAbstract documentAbstract;
 
-    public DocTemplate_applicationTenancy(final DocumentTemplate documentTemplate) {
-        this.documentTemplate = documentTemplate;
+    public DocumentAbstract_applicationTenancy(final DocumentAbstract documentAbstract) {
+        this.documentAbstract = documentAbstract;
     }
 
     //endregion
@@ -45,7 +45,7 @@ public class DocTemplate_applicationTenancy {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public ApplicationTenancy $$()  {
-        return applicationTenancyRepository.findByPath(documentTemplate.getAtPath());
+        return applicationTenancyRepository.findByPath(documentAbstract.getAtPath());
     }
     
 

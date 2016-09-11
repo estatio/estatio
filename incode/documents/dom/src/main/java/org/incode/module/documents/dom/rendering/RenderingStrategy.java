@@ -249,7 +249,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     //endregion
 
     //region > PreviewsToUrl (property)
-    public static class RendersToUrlDomainEvent extends PropertyDomainEvent<Boolean> { }
+    public static class PreviewsToUrlDomainEvent extends PropertyDomainEvent<Boolean> { }
 
     /**
      * Whether this rendering strategy supports rendering to an {@link URL} (ie can be used for preview)
@@ -257,7 +257,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
-            domainEvent = RendersToUrlDomainEvent.class,
+            domainEvent = PreviewsToUrlDomainEvent.class,
             editing = Editing.DISABLED
     )
     private boolean previewsToUrl;

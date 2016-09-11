@@ -9,7 +9,7 @@
     <bs3:row>
         <bs3:col span="6">
             <cpt:fieldSet name="Document">
-                <cpt:property id="document"/>
+                <cpt:property id="document" hidden="REFERENCES_PARENT"/>
                 <cpt:property id="documentCreatedAt"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
@@ -26,7 +26,7 @@
         </bs3:col>
         <bs3:col span="6">
             <cpt:fieldSet name="Attached to">
-                <cpt:property id="attachedTo"/>
+                <cpt:property id="attachedTo" hidden="REFERENCES_PARENT"/>
                 <cpt:property id="roleName">
                     <cpt:action id="changeRole"/>
                 </cpt:property>

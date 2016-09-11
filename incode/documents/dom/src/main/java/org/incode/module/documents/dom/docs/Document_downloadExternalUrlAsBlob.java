@@ -22,14 +22,13 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.services.UrlDownloadService;
 
 @Mixin
 public class Document_downloadExternalUrlAsBlob {
-
 
     //region > constructor
     private final Document document;
@@ -47,8 +46,7 @@ public class Document_downloadExternalUrlAsBlob {
     )
     @ActionLayout(named = "Download")
     public Blob $$() {
-        messageService.informUser("Not yet implemented");
-        return null;
+        return urlDownloadService.downloadAsBlob(document);
     }
 
     public boolean hide$$() {
@@ -58,6 +56,6 @@ public class Document_downloadExternalUrlAsBlob {
 
 
     @Inject
-    MessageService messageService;
+    UrlDownloadService urlDownloadService;
 
 }

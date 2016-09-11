@@ -40,6 +40,7 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
     public static final String DEMO_SSRS_GLOBAL = "DEMO-SSRS/";
+    public static final String DEMO_SSRS_NO_PREVIEW_GLOBAL = "DEMO-SSRS-NO-PREVIEW/";
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -47,16 +48,29 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
         // prereqs
         if (isExecutePrereqs()) {
             executionContext.executeChild(this, new RenderingStrategyForSsrs());
+            executionContext.executeChild(this, new RenderingStrategyForSsrsNoPreview());
         }
 
-        final RenderingStrategy renderingStrategy =
+        final RenderingStrategy ssrsRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyForSsrs.REF);
 
         createTypeAndTemplate(
                 DEMO_SSRS_GLOBAL,
-                "Demo for SRSS Rendering Strategy (to PDF)",
+                "Demo for SRSS Rendering",
                 AT_PATH,
-                renderingStrategy,
+                ssrsRenderingStrategy,
+                "http://www.pdfpdf.com/samples/Sample5.PDF",
+                executionContext);
+
+
+        final RenderingStrategy ssrsNoPreviewRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategyForSsrsNoPreview.REF);
+
+        createTypeAndTemplate(
+                DEMO_SSRS_NO_PREVIEW_GLOBAL,
+                "Demo for SRSS Rendering, no preview",
+                AT_PATH,
+                ssrsNoPreviewRenderingStrategy,
                 "http://www.pdfpdf.com/samples/Sample5.PDF",
                 executionContext);
 

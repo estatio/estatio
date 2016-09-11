@@ -27,7 +27,9 @@ public final class DocumentsModule {
 
         public static final int ID = 36; // to allow for a UUID
         public static final int REFERENCE = 24;
+
         public static final int NAME = 50;
+        public static final int DOC_NAME = 255;
 
         public static final int AT_PATH = 255;  // as per security module's ApplicationTenancy#MAX_LENGTH_PATH
         public static final int USER_NAME = 30; // as per security module's ApplicationUser#USER_NAME

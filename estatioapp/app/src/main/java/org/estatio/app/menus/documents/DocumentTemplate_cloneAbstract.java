@@ -43,35 +43,4 @@ public abstract class DocumentTemplate_cloneAbstract {
     }
 
 
-    protected String default0$$() {
-        return documentTemplate.getName();
-    }
-
-    protected ApplicationTenancy default1$$() {
-        final String atPath = documentTemplate.getAtPath();
-        return applicationTenancyRepository.findByPath(atPath);
-    }
-    protected List<ApplicationTenancy> choices1$$() {
-        return estatioApplicationTenancyRepository.allTenancies();
-    }
-
-    protected LocalDate default2$$() {
-        return documentTemplate.getDate();
-    }
-
-    protected TranslatableString validateApplicationTenancyAndDate(
-            final ApplicationTenancy proposedApplicationTenancy,
-            final LocalDate proposedDate) {
-
-        return documentTemplateRepository.validateApplicationTenancyAndDate(
-                documentTemplate.getType(), proposedApplicationTenancy.getPath(), proposedDate, null);
-    }
-
-    @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
-    @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
-    @Inject
-    private DocumentTemplateRepository documentTemplateRepository;
-
 }

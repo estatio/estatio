@@ -19,20 +19,20 @@ package org.estatio.fixture.documents;
 
 import org.incode.module.documents.dom.docs.DocumentNature;
 
-import org.estatio.app.integration.documents.RendererUsingStringInterpolatorCaptureUrl;
+import org.estatio.app.integration.documents.RendererUsingStringInterpolatorCaptureUrlNoPreview;
 
-public class RenderingStrategyForSsrs extends RenderingStrategyAbstract {
+public class RenderingStrategyForSsrsNoPreview extends RenderingStrategyAbstract {
 
-    public static final String REF = "SSRS";
+    public static final String REF = "SSRS-NP";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         createRenderingStrategy(
                 REF,
-                "SQL Server Reporting Services",
+                "SQL Server Reporting Services (no preview)",
                 DocumentNature.CHARACTERS,
                 DocumentNature.BYTES,
-                RendererUsingStringInterpolatorCaptureUrl.class, executionContext);
+                RendererUsingStringInterpolatorCaptureUrlNoPreview.class, executionContext);
     }
 
 }

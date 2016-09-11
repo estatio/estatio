@@ -35,20 +35,25 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentSort;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+
 @Mixin
-public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstract {
+public class DocumentTemplate_cloneWhenText {
+
+    protected final DocumentTemplate documentTemplate;
 
     public DocumentTemplate_cloneWhenText(final DocumentTemplate documentTemplate) {
-        super(documentTemplate);
+        this.documentTemplate = documentTemplate;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -63,9 +68,6 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
             final LocalDate date,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
             final String templateText,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
-            @ParameterLayout(named = "File Suffix")
-            final String fileSuffix,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Data model class name")
             final String dataModelClassName,
@@ -73,43 +75,54 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
 
         final DocumentType type = documentTemplate.getType();
         final String mimeType = documentTemplate.getMimeType();
+        final String fileSuffix = documentTemplate.getFileSuffix();
         return documentTemplateRepository.createText(
                 type, date, applicationTenancy.getPath(), name, mimeType, fileSuffix, templateText, dataModelClassName, renderingStrategy
         );
     }
 
+
+    // hide
     public boolean hide$$() {
         return documentTemplate.getSort() != DocumentSort.TEXT;
     }
 
+
+    // defaults
+
     public String default0$$() {
-        return super.default0$$();
+        return documentTemplate.getName();
     }
 
     public ApplicationTenancy default1$$() {
-        return super.default1$$();
-    }
-    public List<ApplicationTenancy> choices1$$() {
-        return super.choices1$$();
+        final String atPath = documentTemplate.getAtPath();
+        return applicationTenancyRepository.findByPath(atPath);
     }
 
     public LocalDate default2$$() {
-        return super.default2$$();
+        return documentTemplate.getDate();
     }
 
     public String default3$$() {
         return documentTemplate.getText();
     }
 
-    public String default5$$() {
+    public String default4$$() {
         return documentTemplate.getDataModelClassName();
     }
 
-    public RenderingStrategy default6$$() {
+    public RenderingStrategy default5$$() {
         return documentTemplate.getRenderingStrategy();
     }
 
 
+    // choices
+    public List<ApplicationTenancy> choices1$$() {
+        return estatioApplicationTenancyRepository.allTenancies();
+    }
+
+
+    // validate
     public TranslatableString validate$$(
             final String name,
             final ApplicationTenancy proposedApplicationTenancy,
@@ -117,11 +130,16 @@ public class DocumentTemplate_cloneWhenText extends DocumentTemplate_cloneAbstra
             final String templateText,
             final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
-        return validateApplicationTenancyAndDate(proposedApplicationTenancy, proposedDate);
+
+        return documentTemplateRepository.validateApplicationTenancyAndDate(
+                documentTemplate.getType(), proposedApplicationTenancy.getPath(), proposedDate, null);
     }
 
 
-
+    @Inject
+    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    @Inject
+    private ApplicationTenancyRepository applicationTenancyRepository;
     @Inject
     private DocumentTemplateRepository documentTemplateRepository;
 

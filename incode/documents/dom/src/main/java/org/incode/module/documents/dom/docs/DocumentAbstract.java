@@ -156,7 +156,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.DOC_NAME)
     @Property(
             domainEvent = NameDomainEvent.class,
             editing = Editing.DISABLED

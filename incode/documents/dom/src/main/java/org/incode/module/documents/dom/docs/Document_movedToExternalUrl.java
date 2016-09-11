@@ -65,10 +65,7 @@ public class Document_movedToExternalUrl {
             final String externalUrl,
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name")
-            final String name,
-            @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE)
-            @ParameterLayout(named = "MIME type")
-            final String mimeType
+            final String name
     ) {
         document.setExternalUrl(externalUrl);
         document.setBlobBytes(null);
@@ -80,9 +77,6 @@ public class Document_movedToExternalUrl {
         if(name != null) {
             document.setName(name);
         }
-        if(mimeType != null) {
-            document.setMimeType(mimeType);
-        }
 
         return document;
     }
@@ -93,10 +87,6 @@ public class Document_movedToExternalUrl {
 
     public String default1$$() {
         return document.getName();
-    }
-
-    public String default2$$() {
-        return document.getMimeType();
     }
 
 

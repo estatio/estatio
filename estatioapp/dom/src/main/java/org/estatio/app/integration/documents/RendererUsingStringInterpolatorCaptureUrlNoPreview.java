@@ -30,10 +30,10 @@ import org.apache.isis.applib.services.config.ConfigurationService;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.documents.dom.rendering.RendererFromCharsToBytesWithPreviewToUrl;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToBytes;
 import org.incode.module.documents.dom.types.DocumentType;
 
-public class RendererForSsrs implements RendererFromCharsToBytesWithPreviewToUrl {
+public class RendererUsingStringInterpolatorCaptureUrlNoPreview implements RendererFromCharsToBytes {
 
     @Override
     public byte[] renderCharsToBytes(
@@ -49,8 +49,7 @@ public class RendererForSsrs implements RendererFromCharsToBytesWithPreviewToUrl
         return byteSource.read();
     }
 
-    @Override
-    public URL previewCharsToBytes(
+    protected URL previewCharsToBytes(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,
@@ -63,7 +62,7 @@ public class RendererForSsrs implements RendererFromCharsToBytesWithPreviewToUrl
         return new URL(urlStr);
     }
 
-    @javax.inject.Inject
+    @Inject
     StringInterpolatorService stringInterpolator;
 
     @Inject

@@ -519,7 +519,16 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         final int lastPeriod = suffix.lastIndexOf(".");
         final String suffixNoDot = suffix.substring(lastPeriod + 1);
         final String suffixWithDot = "." + suffixNoDot;
-        return documentName.endsWith(suffixWithDot) ? documentName : documentName + suffixWithDot;
+        if (documentName.endsWith(suffixWithDot)) {
+            return trim(documentName, DocumentsModule.JdoColumnLength.DOC_NAME);
+        }
+        else {
+            return trim(documentName, DocumentsModule.JdoColumnLength.DOC_NAME - suffixWithDot.length()) + suffixWithDot;
+        }
+    }
+
+    private static String trim(final String name, final int length) {
+        return name.length() > length ? name.substring(0, length) : name;
     }
     //endregion
 

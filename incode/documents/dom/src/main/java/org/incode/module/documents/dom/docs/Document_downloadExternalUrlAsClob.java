@@ -22,14 +22,13 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.services.UrlDownloadService;
 
 @Mixin
 public class Document_downloadExternalUrlAsClob {
-
 
     //region > constructor
     private final Document document;
@@ -47,17 +46,14 @@ public class Document_downloadExternalUrlAsClob {
     )
     @ActionLayout(named = "Download")
     public Clob $$() {
-        messageService.informUser("Not yet implemented");
-        return null;
+        return urlDownloadService.downloadAsClob(document);
     }
 
     public boolean hide$$() {
         return document.getSort() != DocumentSort.EXTERNAL_CLOB;
     }
 
-
-
     @Inject
-    MessageService messageService;
+    UrlDownloadService urlDownloadService;
 
 }
