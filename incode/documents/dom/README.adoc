@@ -4,7 +4,7 @@
 
 == Domain Model
 
-=== ``Document``, ``DocumentTemplate``
+=== Document, DocumentTemplate, Binder & Paperclip
 
 The following class diagram highlights the main concepts:
 
@@ -50,7 +50,7 @@ the resultant `Document` is attached to; there must be at least one such domain 
 subclass of `Paperclip`).
 
 
-=== ``Renderer``
+=== RenderingStrategy & Renderer
 
 The  `Renderer` interface has the following subtypes and (example) implementations:
 
