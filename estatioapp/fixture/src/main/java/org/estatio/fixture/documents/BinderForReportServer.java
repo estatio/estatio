@@ -17,37 +17,32 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.link;
+package org.estatio.fixture.documents;
 
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.documents.dom.mixins.T_createDocument;
+import org.incode.module.documents.dom.applicability.Binder;
+import org.incode.module.documents.dom.docs.DocumentTemplate;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
 /**
  * Uses {@link StringInterpolatorService} to create data model, and requires domain object to implement {@link WithApplicationTenancy}.
  */
-public abstract class T2_createDocument<T extends WithApplicationTenancy> extends T_createDocument<T> {
+public class BinderForReportServer implements Binder {
 
-    public T2_createDocument(final T domainObject, final String... docTypes) {
-        super(domainObject, docTypes);
-    }
-
-    protected Object newDataModel(final T domainObject) {
-        return new StringInterpolatorService.Root(domainObject){
+    public Binder.Binding newBinding(
+            final DocumentTemplate documentTemplate,
+            final Object domainObject) {
+        final StringInterpolatorService.Root dataModel = new StringInterpolatorService.Root(domainObject) {
             @SuppressWarnings("unused")
             public String getReportServerBaseUrl() {
                 return estatioSettingsService.fetchReportServerBaseUrl();
             }
         };
+        return new Binding(dataModel, domainObject);
     }
-
-    protected String atPathFor(final T domainObject) {
-        return this.domainObject.getApplicationTenancy().getPath();
-    }
-
 
     @javax.inject.Inject
     private EstatioSettingsService estatioSettingsService;

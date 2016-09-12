@@ -275,9 +275,9 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private String rendererClassName;
     //endregion
 
-    //region > instantiateRenderer (programmatic)
+    //region > newRenderer (programmatic)
     @Programmatic
-    public Renderer instantiateRenderer() {
+    public Renderer newRenderer() {
         final Renderer renderer = (Renderer) classService.instantiate(getRendererClassName());
         serviceRegistry2.injectServicesInto(renderer);
         return renderer;

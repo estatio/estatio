@@ -16,22 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.link;
+package org.incode.module.documents.dom.spi;
 
-import org.apache.isis.applib.annotation.Mixin;
+import java.util.List;
 
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.fixture.documents.DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs;
+import org.apache.isis.applib.annotation.Programmatic;
 
-@Mixin
-public class Invoice_createDocument extends T2_createDocument<Invoice> {
+import org.incode.module.documents.dom.services.ClassNameViewModel;
 
-    public Invoice_createDocument(final Invoice invoice) {
-        super(invoice,
-                DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs.DOC_TYPE_REF_INVOICE_PRELIM_ITA,
-                DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs.DOC_TYPE_REF_INVOICE_ITA);
-    }
+public interface DataModelFactoryClassNameService {
 
-
+    @Programmatic
+    public List<ClassNameViewModel> binderClassNames();
 
 }

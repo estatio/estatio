@@ -26,13 +26,13 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.types.DocumentType;
 
+import org.estatio.dom.asset.Property;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTemplateAbstract {
@@ -54,7 +54,7 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
         final RenderingStrategy ssrsRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyForSsrs.REF);
 
-        createTypeAndTemplate(
+        final DocumentTemplate demoTemplate = createTypeAndTemplate(
                 DEMO_SSRS_GLOBAL,
                 "Demo for SRSS Rendering",
                 AT_PATH,
@@ -62,17 +62,21 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
                 "http://www.pdfpdf.com/samples/Sample5.PDF",
                 executionContext);
 
+        demoTemplate.applicable(Property.class.getName(), BinderForReportServer.class.getName());
+
 
         final RenderingStrategy ssrsNoPreviewRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyForSsrsNoPreview.REF);
 
-        createTypeAndTemplate(
+        final DocumentTemplate demoNoPreviewTemplate = createTypeAndTemplate(
                 DEMO_SSRS_NO_PREVIEW_GLOBAL,
                 "Demo for SRSS Rendering, no preview",
                 AT_PATH,
                 ssrsNoPreviewRenderingStrategy,
                 "http://www.pdfpdf.com/samples/Sample5.PDF",
                 executionContext);
+
+        demoNoPreviewTemplate.applicable(Property.class.getName(), BinderForReportServer.class.getName());
 
     }
 
@@ -85,9 +89,7 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
             final ExecutionContext executionContext) {
 
         final DocumentType docType = documentTypeRepository.create(docTypeRef, docTypeName);
-
         final LocalDate now = clockService.now();
-
         final ApplicationTenancy appTenancy = applicationTenancyRepository.findByPath(atPath);
 
         return createDocumentTextTemplate(
@@ -95,7 +97,6 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
                 "application/pdf", ".pdf",
                 appTenancy.getPath(),
                 templateText,
-                StringInterpolatorService.Root.class.getName(),
                 renderingStrategy,
                 executionContext);
     }

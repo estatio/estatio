@@ -41,6 +41,7 @@ import org.incode.module.documents.dom.types.DocumentType;
 )
 public class DocumentTemplateRepository {
 
+    //region > createBlob, createClob, createText
     @Programmatic
     public DocumentTemplate createBlob(
             final DocumentType type,
@@ -48,11 +49,10 @@ public class DocumentTemplateRepository {
             final String atPath,
             final Blob blob,
             final String fileSuffix,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, fileSuffix, renderingStrategy,
-                dataModelClassName);
-        repositoryService.persist(document);
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, fileSuffix, renderingStrategy
+        );
+        repositoryService.persistAndFlush(document);
         return document;
     }
 
@@ -63,10 +63,9 @@ public class DocumentTemplateRepository {
             final String atPath,
             final Clob clob,
             final String fileSuffix,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, fileSuffix, renderingStrategy, dataModelClassName);
-        repositoryService.persist(document);
+        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, fileSuffix, renderingStrategy);
+        repositoryService.persistAndFlush(document);
         return document;
     }
 
@@ -79,17 +78,26 @@ public class DocumentTemplateRepository {
             final String mimeType,
             final String fileSuffix,
             final String text,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
         final DocumentTemplate document = new DocumentTemplate(type, date, atPath, name, mimeType, fileSuffix, text,
-                renderingStrategy, dataModelClassName);
-        repositoryService.persist(document);
+                renderingStrategy);
+        repositoryService.persistAndFlush(document);
         return document;
     }
+    //endregion
+
+    //region > delete
+    @Programmatic
+    public void delete(final DocumentTemplate documentTemplate) {
+        repositoryService.removeAndFlush(documentTemplate);
+    }
+    //endregion
+
+    //region > findBy...
 
     /**
-     * Returns all document templates for the specified {@link DocumentType}, ordered by most specific to provided
-     * application tenancy first, and then by date (desc).
+     * Returns all document templates for the specified {@link DocumentType}, ordered by type, then most specific to
+     * provided application tenancy, and then by date (desc).
      */
     @Programmatic
     public List<DocumentTemplate> findByTypeAndApplicableToAtPath(final DocumentType documentType, final String atPath) {
@@ -97,6 +105,16 @@ public class DocumentTemplateRepository {
                 new QueryDefault<>(DocumentTemplate.class,
                         "findByTypeAndApplicableToAtPath",
                         "type", documentType,
+                        "atPath", atPath));
+    }
+
+    /**
+     * Returns all document templates, ordered by most specific to provided application tenancy first, and then by date (desc).
+     */
+    public List<DocumentTemplate> findByApplicableToAtPath(final String atPath) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(DocumentTemplate.class,
+                        "findByApplicableToAtPath",
                         "atPath", atPath));
     }
 
@@ -139,6 +157,7 @@ public class DocumentTemplateRepository {
                         "type", documentType));
     }
 
+
     /**
      * Returns all templates available for a particular application tenancy, ordered by most specific tenancy first and
      * then within that the most recent first.
@@ -152,14 +171,16 @@ public class DocumentTemplateRepository {
                         "atPath", atPath,
                         "now", now));
     }
+    //endregion
 
-
+    //region > allTemplates
     @Programmatic
-    public void delete(final DocumentTemplate documentTemplate) {
-        repositoryService.removeAndFlush(documentTemplate);
+    public List<DocumentTemplate> allTemplates() {
+        return repositoryService.allInstances(DocumentTemplate.class);
     }
+    //endregion
 
-
+    //region > validate...
     @Programmatic
     public TranslatableString validateApplicationTenancyAndDate(
             final DocumentType proposedType,
@@ -197,12 +218,8 @@ public class DocumentTemplateRepository {
         }
         return null;
     }
+    //endregion
 
-
-    @Programmatic
-    public List<DocumentTemplate> allTemplates() {
-        return repositoryService.allInstances(DocumentTemplate.class);
-    }
 
     //region > injected services
 
@@ -210,7 +227,6 @@ public class DocumentTemplateRepository {
     RepositoryService repositoryService;
     @Inject
     ClockService clockService;
-
 
     //endregion
 

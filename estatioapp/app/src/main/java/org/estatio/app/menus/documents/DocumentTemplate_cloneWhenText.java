@@ -38,12 +38,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.applicability.Applicability;
 import org.incode.module.documents.dom.docs.DocumentSort;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
@@ -57,7 +57,10 @@ public class DocumentTemplate_cloneWhenText {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @ActionLayout(
+            named = "Clone",
+            contributed = Contributed.AS_ACTION
+    )
     public DocumentTemplate $$(
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Name")
@@ -68,17 +71,18 @@ public class DocumentTemplate_cloneWhenText {
             final LocalDate date,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
             final String templateText,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
-            @ParameterLayout(named = "Data model class name")
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentType type = documentTemplate.getType();
         final String mimeType = documentTemplate.getMimeType();
         final String fileSuffix = documentTemplate.getFileSuffix();
-        return documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), name, mimeType, fileSuffix, templateText, dataModelClassName, renderingStrategy
+        final DocumentTemplate template = documentTemplateRepository.createText(
+                type, date, applicationTenancy.getPath(), name, mimeType, fileSuffix, templateText, renderingStrategy
         );
+        for (Applicability applicability : documentTemplate.getAppliesTo()) {
+            template.applicable(applicability.getDomainClassName(), applicability.getBinderClassName());
+        }
+        return template;
     }
 
 
@@ -107,11 +111,7 @@ public class DocumentTemplate_cloneWhenText {
         return documentTemplate.getText();
     }
 
-    public String default4$$() {
-        return documentTemplate.getDataModelClassName();
-    }
-
-    public RenderingStrategy default5$$() {
+    public RenderingStrategy default4$$() {
         return documentTemplate.getRenderingStrategy();
     }
 
@@ -128,7 +128,6 @@ public class DocumentTemplate_cloneWhenText {
             final ApplicationTenancy proposedApplicationTenancy,
             final LocalDate proposedDate,
             final String templateText,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         return documentTemplateRepository.validateApplicationTenancyAndDate(

@@ -23,46 +23,30 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
-
 import org.apache.isis.applib.services.config.ConfigurationService;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.documents.dom.rendering.RendererFromCharsToBytes;
+import org.incode.module.documents.dom.rendering.RendererFromCharsToBytesWithPreviewToUrl;
 import org.incode.module.documents.dom.types.DocumentType;
 
-public class RendererUsingStringInterpolatorCaptureUrlNoPreview implements RendererFromCharsToBytes {
+public class RendererUsingStringInterpolatorPreviewAndCaptureUrl extends RendererUsingStringInterpolatorCaptureUrl
+        implements
+        RendererFromCharsToBytesWithPreviewToUrl {
 
     @Override
-    public byte[] renderCharsToBytes(
+    public URL previewCharsToBytes(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,
             final String templateChars,
             final Object dataModel,
             final String documentName) throws IOException {
-        final URL url =
-                previewCharsToBytes(documentType, atPath, templateVersion, templateChars, dataModel, documentName);
-        final ByteSource byteSource = Resources.asByteSource(url);
-        return byteSource.read();
+        return super.previewCharsToBytes(
+                documentType, atPath, templateVersion, templateChars, dataModel, documentName);
     }
 
-    protected URL previewCharsToBytes(
-            final DocumentType documentType,
-            final String atPath,
-            final long templateVersion,
-            final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException {
-
-        final StringInterpolatorService.Root root = (StringInterpolatorService.Root) dataModel;
-        final String urlStr = stringInterpolator.interpolate(root, templateChars);
-        return new URL(urlStr);
-    }
-
-    @Inject
+    @javax.inject.Inject
     StringInterpolatorService stringInterpolator;
 
     @Inject

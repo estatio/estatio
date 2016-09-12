@@ -16,23 +16,29 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.link;
+package org.incode.module.documents.dom.services;
 
-import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.ViewModel;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnProperty;
+import lombok.Getter;
+import lombok.Setter;
 
-@Mixin
-public class Property_createDocument extends T2_createDocument<Property> {
+@ViewModel
+public class ClassNameViewModel {
 
-    public Property_createDocument(final Property property) {
-        super(property,
-                DocumentTypeAndTemplateForDemoSsrsOnProperty.DEMO_SSRS_GLOBAL,
-                DocumentTypeAndTemplateForDemoSsrsOnProperty.DEMO_SSRS_NO_PREVIEW_GLOBAL
-                );
+    public ClassNameViewModel() {
     }
 
+    public ClassNameViewModel(final Class<?> cls) {
+        this.simpleClassName = cls.getSimpleName();
+        this.fullyQualifiedClassName = cls.getName();
+    }
 
+    @Title
+    @Getter @Setter
+    private String simpleClassName;
+    @Getter @Setter
+    private String fullyQualifiedClassName;
 
 }

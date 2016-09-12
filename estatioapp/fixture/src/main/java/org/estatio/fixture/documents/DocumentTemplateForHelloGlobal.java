@@ -29,7 +29,7 @@ import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
-import org.estatio.app.menus.demo.HelloDocumentTemplateUserDataModel;
+import org.estatio.dom.WithNameGetter;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
@@ -61,7 +61,9 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
                 documentType, date, TEMPLATE_NAME, TEMPLATE_MIME_TYPE, FILE_SUFFIX, AT_PATH,
                 "Hello ${user}",
-                HelloDocumentTemplateUserDataModel.class.getName(), renderingStrategy, executionContext);
+                renderingStrategy, executionContext);
+
+        documentTemplate.applicable(WithNameGetter.class, HelloDocumentTemplateUserBinderForWithNameGetter.class);
 
         executionContext.addResult(this, documentTemplate);
     }

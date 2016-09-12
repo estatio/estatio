@@ -58,8 +58,12 @@
                 <cpt:property id="atPath" hidden="ALL_TABLES"/>
                 <!-- assuming a mixin is present to look this up -->
                 <cpt:property id="applicationTenancy"/>
-                <cpt:property id="sort"/>
                 <cpt:property id="createdAt" hidden="EVERYWHERE"/>
+                <cpt:property id="renderingStrategy" hidden="ALL_TABLES">
+                    <cpt:action id="changeRenderingStrategy">
+                        <cpt:named>Change</cpt:named>
+                    </cpt:action>
+                </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
@@ -72,6 +76,7 @@
                                 <cpt:property id="fileSuffix"/>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Content" id="content">
+                                <cpt:property id="sort"/>
                                 <cpt:property id="blob" hidden="ALL_TABLES">
                                     <cpt:action id="uploadBlob">
                                         <cpt:named>Upload</cpt:named>
@@ -92,19 +97,11 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Data model and rendering">
+                <bs3:tab name="DummyForFirstTabToShow">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Data model and rendering">
-                                <cpt:property id="dataModelClassName" hidden="ALL_TABLES">
-                                    <cpt:action id="changeDataModel">
-                                        <cpt:named>Change</cpt:named>
-                                    </cpt:action>
-                                </cpt:property>
-                                <cpt:property id="renderingStrategy" hidden="ALL_TABLES">
-                                    <cpt:action id="changeRenderingStrategy">
-                                        <cpt:named>Change</cpt:named>
-                                    </cpt:action>
+                            <cpt:fieldSet name="Dummy">
+                                <cpt:property id="dummy">
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
@@ -114,8 +111,13 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
+        <bs3:col span="12" unreferencedCollections="false">
+            <cpt:collection id="appliesTo" defaultView="table"/>
+            <cpt:collection id="attachedTo" defaultView="table"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
         <bs3:col span="12" unreferencedCollections="true">
-            <cpt:collection id="attachedTo"/>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

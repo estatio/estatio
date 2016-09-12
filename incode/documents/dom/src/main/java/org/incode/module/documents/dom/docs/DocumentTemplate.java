@@ -18,6 +18,10 @@ package org.incode.module.documents.dom.docs;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
@@ -40,13 +44,20 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
@@ -57,6 +68,9 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.applicability.Applicability;
+import org.incode.module.documents.dom.applicability.ApplicabilityRepository;
+import org.incode.module.documents.dom.applicability.Binder;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RendererFromBytesToBytes;
@@ -68,8 +82,11 @@ import org.incode.module.documents.dom.rendering.RendererFromCharsToBytesWithPre
 import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
 import org.incode.module.documents.dom.rendering.RendererFromCharsToCharsWithPreviewToUrl;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.services.ClassService;
+import org.incode.module.documents.dom.spi.DataModelFactoryClassNameService;
 import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -96,6 +113,13 @@ import lombok.Setter;
                         + "WHERE typeCopy   == :type "
                         + "   && :atPath.startsWith(atPathCopy) "
                         + "ORDER BY atPathCopy DESC, date DESC "
+        ),
+        @javax.jdo.annotations.Query(
+                name = "findByApplicableToAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.documents.dom.docs.DocumentTemplate "
+                        + "WHERE :atPath.startsWith(atPathCopy) "
+                        + "ORDER BY typeCopy ASC, atPathCopy DESC, date DESC "
         ),
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndApplicableToAtPathAndCurrent", language = "JDOQL",
@@ -225,10 +249,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String atPath,
             final Blob blob,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy,
-            final String dataModelClassName) {
+            final RenderingStrategy renderingStrategy) {
         super(type, atPath, blob);
-        init(type, date, atPath, fileSuffix, renderingStrategy, dataModelClassName);
+        init(type, date, atPath, fileSuffix, renderingStrategy);
     }
 
     public DocumentTemplate(
@@ -239,10 +262,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String mimeType,
             final String fileSuffix,
             final String text,
-            final RenderingStrategy renderingStrategy,
-            final String dataModelClassName) {
+            final RenderingStrategy renderingStrategy) {
         super(type, atPath, name, mimeType, text);
-        init(type, date, atPath, fileSuffix, renderingStrategy, dataModelClassName);
+        init(type, date, atPath, fileSuffix, renderingStrategy);
     }
 
     public DocumentTemplate(
@@ -251,10 +273,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String atPath,
             final Clob clob,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy,
-            final String dataModelClassName) {
+            final RenderingStrategy renderingStrategy) {
         super(type, atPath, clob);
-        init(type, date, atPath, fileSuffix, renderingStrategy, dataModelClassName);
+        init(type, date, atPath, fileSuffix, renderingStrategy);
     }
 
     private void init(
@@ -262,14 +283,12 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy,
-            final String dataModelClassName) {
+            final RenderingStrategy renderingStrategy) {
         this.typeCopy = type;
         this.atPathCopy = atPath;
         this.date = date;
         this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
         this.renderingStrategy = renderingStrategy;
-        this.dataModelClassName = dataModelClassName;
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -319,17 +338,6 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
 
-    //region > dataModelClassName (property)
-    public static class DataModelClassNameDomainEvent extends DocumentTemplate.PropertyDomainEvent<String> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FQCN)
-    @Property(
-            domainEvent = DataModelClassNameDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private String dataModelClassName;
-    //endregion
-
     //region > renderStrategy (property)
     public static class RenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
     @Getter @Setter
@@ -353,6 +361,171 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
 
+    //region > applicabilities (collection)
+    public static class ApplicabilitiesDomainEvent extends DocumentType.CollectionDomainEvent<Applicability> {
+    }
+
+    @javax.jdo.annotations.Persistent(mappedBy = "documentTemplate", dependentElement = "true")
+    @Collection(
+            domainEvent = ApplicabilitiesDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @Getter @Setter
+    private SortedSet<Applicability> appliesTo = new TreeSet<>();
+
+    //endregion
+
+    //region > applicable (action)
+    public static class ApplicableToDomainEvent extends DocumentType.ActionDomainEvent {
+    }
+
+    @Action(
+            domainEvent = ApplicableToDomainEvent.class
+    )
+    @ActionLayout(
+            cssClassFa = "fa-plus"
+    )
+    @MemberOrder(name = "appliesTo", sequence = "1")
+    public DocumentTemplate applicable(
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
+            @ParameterLayout(named = "Domain type")
+            final String domainClassName,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
+            @ParameterLayout(named = "Binder")
+            final ClassNameViewModel binderClassNameViewModel) {
+
+        applicable(domainClassName, binderClassNameViewModel.getFullyQualifiedClassName());
+        return this;
+    }
+
+    @Programmatic
+    public Applicability applicable(
+            final Class<?> domainClass,
+            final Class<? extends Binder> binderClass) {
+        return applicable(domainClass.getName(), binderClass);
+    }
+
+    @Programmatic
+    public Applicability applicable(
+            final String domainClassName,
+            final Class<? extends Binder> binderClass) {
+        return applicable(domainClassName, binderClass.getName() );
+    }
+
+    @Programmatic
+    public Applicability applicable(
+            final String domainClassName,
+            final String binderClassName) {
+        return applicabilityRepository.create(this, domainClassName, binderClassName);
+    }
+
+    public TranslatableString disableApplicable() {
+        return dataModelFactoryClassNameService == null
+                ? TranslatableString.tr(
+                        "No DataModelFactoryClassNameService registered to locate implementations of Binder")
+                : null;
+    }
+
+    public List<ClassNameViewModel> choices1Applicable() {
+        return dataModelFactoryClassNameService.binderClassNames();
+    }
+    
+    public TranslatableString validateApplicable(
+            final String domainTypeName,
+            final ClassNameViewModel dataModelFactoryClassName) {
+
+        // REVIEW
+        return isApplicable(domainTypeName) ? null :
+                TranslatableString.tr(
+                        "Already applicable for '{domainTypeName}'",
+                        "domainTypeName", domainTypeName);
+    }
+
+    private boolean isApplicable(final String domainClassName) {
+        SortedSet<Applicability> applicabilities = getAppliesTo();
+        for (Applicability applicability : applicabilities) {
+            if (applicability.getDomainClassName().equals(domainClassName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    //endregion
+
+    //region > notApplicable (action)
+    public static class NotApplicableDomainEvent extends DocumentType.ActionDomainEvent {
+    }
+
+    @Action(
+            domainEvent = NotApplicableDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
+    @ActionLayout(
+            cssClassFa = "fa-minus"
+    )
+    @MemberOrder(name = "appliesTo", sequence = "2")
+    public DocumentTemplate notApplicable(final Applicability applicability) {
+        applicabilityRepository.delete(applicability);
+        return this;
+    }
+
+    public TranslatableString disableNotApplicable() {
+        final TranslatableString tr = disableApplicable();
+        if(tr != null) {
+            return tr;
+        }
+        return choices0NotApplicable().isEmpty() ? TranslatableString.tr("No applicabilities to remove") : null;
+    }
+
+    public SortedSet<Applicability> choices0NotApplicable() {
+        return getAppliesTo();
+    }
+    //endregion
+
+
+    //region > appliesTo, binderFor, newBinding
+
+    /**
+     * Whether this template is able to return (via {@link #binderFor(Object)}) a {@link Binder}.
+     */
+    @Programmatic
+    public boolean appliesTo(final Object domainObject) {
+        return binderFor(domainObject) != null;
+    }
+
+    /**
+     * Whether there is an {@link Applicability}
+     * @param domainObject
+     * @return
+     */
+    @Programmatic
+    public Binder binderFor(final Object domainObject) {
+        final Class<?> domainObjectClass = domainObject.getClass();
+        final Optional<Applicability> applicability = getAppliesTo().stream()
+                .filter(x -> classService.load(x.getDomainClassName()).isAssignableFrom(domainObjectClass))
+                .findFirst();
+        if (!applicability.isPresent()) {
+            return null;
+        }
+        return (Binder) classService.instantiate(applicability.get().getBinderClassName());
+    }
+
+    @Programmatic
+    public Binder.Binding newBinding(final Object domainObject) {
+        final Binder factory = binderFor(domainObject);
+        if(factory == null) {
+            throw new IllegalStateException(String.format(
+                    "For domain template %s, could not locate Applicability for domain object: %s",
+                    getName(), domainObject.getClass().getName()));
+        }
+        final Binder.Binding binding = factory.newBinding(this, domainObject);
+        serviceRegistry2.injectServicesInto(binding);
+        return binding;
+    }
+
+    //endregion
+
+
     //region > asChars, asBytes (programmatic)
     @Programmatic
     public String asChars() {
@@ -362,18 +535,6 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     public byte[] asBytes() {
         return getSort().asBytes(this);
     }
-    //endregion
-
-    //region > instantiateDataModel (programmatic)
-
-    @Programmatic
-    public Object instantiateDataModel() {
-        final String dataModelClassName = getDataModelClassName();
-        final Object dataModel = classService.instantiate(dataModelClassName);
-        serviceRegistry2.injectServicesInto(dataModel);
-        return dataModel;
-    }
-
     //endregion
 
 
@@ -391,7 +552,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         final DocumentNature inputNature = getRenderingStrategy().getInputNature();
         final DocumentNature outputNature = getRenderingStrategy().getOutputNature();
 
-        final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+        final Renderer renderer = getRenderingStrategy().newRenderer();
         switch (inputNature){
         case BYTES:
             switch (outputNature) {
@@ -443,7 +604,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
             final DocumentType documentType = this.getType();
 
-            final Renderer renderer = getRenderingStrategy().instantiateRenderer();
+            final Renderer renderer = getRenderingStrategy().newRenderer();
             switch (inputNature){
             case BYTES:
                 switch (outputNature) {
@@ -543,13 +704,15 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     //endregion
 
-
-
     //region > injected services
     @Inject
     PaperclipRepository paperclipRepository;
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
+    @Inject
+    DataModelFactoryClassNameService dataModelFactoryClassNameService;
+    @Inject
+    ApplicabilityRepository applicabilityRepository;
     @Inject
     QueryResultsCache queryResultsCache;
     @Inject

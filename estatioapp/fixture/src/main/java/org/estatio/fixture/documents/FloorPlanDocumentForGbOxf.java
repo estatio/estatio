@@ -62,11 +62,9 @@ public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
 
         final Clob clob = readSvgResourceAsClob(NAME);
 
-        final String dataModelClassName = HashMap.class.getName();
-
         final DocumentTemplate documentTemplate = createDocumentClobTemplate(documentType, clockService.now(),
                 ApplicationTenancyForGbOxf.PATH, clob,
-                FILE_SUFFIX, dataModelClassName, renderingStrategy, executionContext);
+                FILE_SUFFIX, renderingStrategy, executionContext);
 
         paperclipRepository.attach(documentTemplate, null, property);
     }

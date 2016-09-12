@@ -18,7 +18,6 @@
  */
 package org.estatio.app.menus.documents;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,7 +48,6 @@ import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 import org.incode.module.documents.dom.valuetypes.MimeTypeSpecification;
 
 import org.estatio.dom.UdoDomainService;
@@ -87,14 +85,12 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final ApplicationTenancy applicationTenancy,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
             final String templateText,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
-            @ParameterLayout(named = "Data model class name")
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final String documentName = name != null? name : type.getName();
         return documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), documentName, mimeType, fileSuffix, templateText, dataModelClassName, renderingStrategy
+                type, date, applicationTenancy.getPath(), documentName, mimeType, fileSuffix, templateText,
+                renderingStrategy
         );
     }
 
@@ -108,9 +104,6 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
-    public String default7NewTextTemplate() {
-        return HashMap.class.getName();
-    }
 
     public TranslatableString validateNewTextTemplate(
             final DocumentType proposedType,
@@ -120,7 +113,6 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final String templateText,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentSort documentSort = DocumentSort.TEXT;
@@ -148,13 +140,10 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final ApplicationTenancy applicationTenancy,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Clob clob,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
-            @ParameterLayout(named = "Data model class name")
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentTemplate template = documentTemplateRepository.createClob(
-                type, date, applicationTenancy.getPath(), clob, fileSuffix, dataModelClassName, renderingStrategy);
+                type, date, applicationTenancy.getPath(), clob, fileSuffix, renderingStrategy);
         if(name != null) {
             template.setName(name);
         }
@@ -165,9 +154,6 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
-    public String default6NewClobTemplate() {
-        return HashMap.class.getName();
-    }
 
     public TranslatableString validateNewClobTemplate(
             final DocumentType proposedType,
@@ -176,7 +162,6 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final Clob clob,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentSort documentSort = DocumentSort.CLOB;
@@ -205,13 +190,10 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
             final ApplicationTenancy applicationTenancy,
             final Blob blob,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
-            @ParameterLayout(named = "Data model class name")
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentTemplate template = documentTemplateRepository.createBlob(
-                type, date, applicationTenancy.getPath(), blob, fileSuffix, dataModelClassName,
+                type, date, applicationTenancy.getPath(), blob, fileSuffix,
                 renderingStrategy);
         if(name != null) {
             template.setName(name);
@@ -223,9 +205,6 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
         return estatioApplicationTenancyRepository.allTenancies();
     }
 
-    public String default6NewBlobTemplate() {
-        return HashMap.class.getName();
-    }
 
     public TranslatableString validateNewBlobTemplate(
             final DocumentType proposedType,
@@ -234,13 +213,12 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final Blob blob,
-            final String dataModelClassName,
             final RenderingStrategy renderingStrategy) {
 
         final DocumentSort documentSort = DocumentSort.BLOB;
 
-        return validateNewTemplate(proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy,
-                documentSort);
+        return validateNewTemplate(
+                proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy, documentSort);
     }
 
     private TranslatableString validateNewTemplate(

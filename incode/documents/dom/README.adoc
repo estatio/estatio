@@ -6,6 +6,13 @@
 
 The following http://yuml.me[] class diagram highlights the main concepts:
 
-image::http://yuml.me/cbf22e25[link="http://yuml.me/cbf22e25"]
+image::http://yuml.me/dab6d86f[link="http://yuml.me/dab6d86f"]
+
+where `Renderer` interface has the implementations:
+
+image::http://yuml.me/47806a86[link="http://yuml.me/47806a86"]
+
 
 (The colours used in the diagram are - approximately - from link:https://en.wikipedia.org/wiki/Object_Modeling_in_Color[Object Modeling in Color]).
+
+

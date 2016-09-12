@@ -1,5 +1,7 @@
 /*
- *  Copyright 2016 Dan Haywood
+ *
+ *  Copyright 2015 incode.org
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,57 +16,45 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.types;
-
-import java.util.List;
+package org.incode.module.documents.dom.applicability;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
+
+import org.incode.module.documents.dom.docs.DocumentTemplate;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = DocumentType.class
+        repositoryFor = Applicability.class
 )
-public class DocumentTypeRepository {
+public class ApplicabilityRepository {
 
-    //region > create 
+    //region > create
     @Programmatic
-    public DocumentType create(
-            final String reference,
-            final String name) {
-        final DocumentType documentType = new DocumentType(reference, name);
-        repositoryService.persist(documentType);
-        return documentType;
+    public Applicability create(
+            final DocumentTemplate documentTemplate,
+            final String domainClassName,
+            final String binderClassName) {
+        Applicability applicability = new Applicability(documentTemplate, domainClassName, binderClassName);
+        repositoryService.persistAndFlush(applicability);
+        return applicability;
     }
     //endregion
 
-    //region > findBy...
-    @Programmatic
-    public DocumentType findByReference(
-            final String reference) {
-        return repositoryService.firstMatch(
-                new QueryDefault<>(DocumentType.class,
-                        "findByReference",
-                        "reference", reference));
+    //region > delete (programmatic)
+    public void delete(final Applicability applicability) {
+        repositoryService.removeAndFlush(applicability);
     }
     //endregion
 
-    //region > allTypes
-    @Programmatic
-    public List<DocumentType> allTypes() {
-        return repositoryService.allInstances(DocumentType.class);
-    }
-    //endregion
-
-
-    //region > injected services
+    //region > injected
     @Inject
     RepositoryService repositoryService;
+
     //endregion
 
 }

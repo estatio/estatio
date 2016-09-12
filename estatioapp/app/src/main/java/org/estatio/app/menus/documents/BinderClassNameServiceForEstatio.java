@@ -20,34 +20,26 @@ package org.estatio.app.menus.documents;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.documents.dom.docs.DocumentNature;
-import org.incode.module.documents.dom.rendering.Renderer;
+import org.incode.module.documents.dom.applicability.Binder;
 import org.incode.module.documents.dom.services.ClassNameServiceAbstract;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
+import org.incode.module.documents.dom.spi.DataModelFactoryClassNameService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class RendererClassNameService extends ClassNameServiceAbstract<Renderer> {
+public class BinderClassNameServiceForEstatio extends ClassNameServiceAbstract<Binder> implements
+        DataModelFactoryClassNameService {
 
     private static final String PACKAGE_PREFIX = "org.estatio";
 
-    public RendererClassNameService() {
-        super(Renderer.class, PACKAGE_PREFIX);
+    public BinderClassNameServiceForEstatio() {
+        super(Binder.class, PACKAGE_PREFIX);
     }
 
-    @Programmatic
-    public List<ClassNameViewModel> renderClassNamesFor(
-            final DocumentNature inputNature,
-            final DocumentNature outputNature) {
-        if(inputNature == null || outputNature == null){
-            return Lists.newArrayList();
-        }
-        return classNames(x -> inputNature.canActAsInputTo(x) && outputNature.canActAsOutputTo(x));
+    @Override
+    public List<ClassNameViewModel> binderClassNames() {
+        return this.classNames();
     }
-
 }

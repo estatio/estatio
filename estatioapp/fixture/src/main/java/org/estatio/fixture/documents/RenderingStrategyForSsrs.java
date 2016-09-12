@@ -19,7 +19,7 @@ package org.estatio.fixture.documents;
 
 import org.incode.module.documents.dom.docs.DocumentNature;
 
-import org.estatio.app.integration.documents.RendererUsingStringInterpolatorCaptureUrl;
+import org.estatio.app.integration.documents.RendererUsingStringInterpolatorPreviewAndCaptureUrl;
 
 public class RenderingStrategyForSsrs extends RenderingStrategyAbstract {
 
@@ -32,7 +32,7 @@ public class RenderingStrategyForSsrs extends RenderingStrategyAbstract {
                 "SQL Server Reporting Services",
                 DocumentNature.CHARACTERS,
                 DocumentNature.BYTES,
-                RendererUsingStringInterpolatorCaptureUrl.class, executionContext);
+                RendererUsingStringInterpolatorPreviewAndCaptureUrl.class, executionContext);
     }
 
 }

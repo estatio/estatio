@@ -38,6 +38,7 @@ import org.incode.module.documents.dom.docs.DocumentNature;
 import org.incode.module.documents.dom.rendering.Renderer;
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
+import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.valuetypes.RendererClassNameSpecification;
 
 import org.estatio.dom.RegexValidation;
@@ -80,15 +81,15 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
                     mustSatisfy = RendererClassNameSpecification.class
             )
             @ParameterLayout(named = "Renderer class name")
-            final RendererClassNameService.RendererClassViewModel rendererClassViewModel) {
+            final ClassNameViewModel classViewModel) {
 
         final Class<? extends Renderer> rendererClass =
-                rendererClassNameService.asRendererClass(rendererClassViewModel.getFullyQualifiedClassName());
+                rendererClassNameService.asClass(classViewModel.getFullyQualifiedClassName());
         return renderingStrategyRepository.create(reference, name, inputNature, outputNature , rendererClass);
     }
 
 
-    public List<RendererClassNameService.RendererClassViewModel> choices4NewRenderingStrategy(
+    public List<ClassNameViewModel> choices4NewRenderingStrategy(
             final String reference,
             final String name,
             final DocumentNature inputNature,

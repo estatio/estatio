@@ -190,6 +190,8 @@ public class DocumentType implements Comparable<DocumentType> {
     //endregion
 
 
+
+
     //region > toString, compareTo
     @Override
     public String toString() {

@@ -28,7 +28,7 @@ public class DocumentTemplateTest {
         DocumentTemplate template;
         @Before
         public void setUp() throws Exception {
-            template = new DocumentTemplate(null, null, null, null, null, "pdf", null, null, null);
+            template = new DocumentTemplate(null, null, null, null, null, "pdf", null, null);
         }
 
         @Test

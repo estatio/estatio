@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.paperclips;
+package org.estatio.dom.invoice.paperclips;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -34,7 +34,7 @@ import org.incode.module.documents.dom.links.Paperclip;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.links.T_paperclips;
 
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.invoice.Invoice;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,36 +42,36 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE
 //        ,
-//        schema = "estatioAssets"  // DN doesn't seem to allow this to be in a different schema to FixedAsset...
+//        schema = "estatioInvoice"  // TODO
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "estatioAssets.PaperclipForFixedAsset"
+        objectType = "estatioAssets.PaperclipForInvoice"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class PaperclipForFixedAsset extends Paperclip {
+public class PaperclipForInvoice extends Paperclip {
 
-    //region > fixedAsset (property)
+    //region > invoice (property)
     @Column(
             allowsNull = "false",
-            name = "fixedAssetId"
+            name = "invoiceId"
     )
     @Getter @Setter
-    private FixedAsset<?> fixedAsset;
+    private Invoice invoice;
     //endregion
 
     //region > attachedTo (hook, derived)
     @NotPersistent
     @Override
     public Object getAttachedTo() {
-        return getFixedAsset();
+        return getInvoice();
     }
 
     @Override
     protected void setAttachedTo(final Object object) {
-        setFixedAsset((FixedAsset<?>) object);
+        setInvoice((Invoice) object);
     }
     //endregion
 
@@ -79,7 +79,7 @@ public class PaperclipForFixedAsset extends Paperclip {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
-            super(FixedAsset.class, PaperclipForFixedAsset.class);
+            super(Invoice.class, PaperclipForInvoice.class);
         }
     }
     //endregion
@@ -87,9 +87,9 @@ public class PaperclipForFixedAsset extends Paperclip {
     //region > mixins
 
     @Mixin
-    public static class _paperclips extends T_paperclips<FixedAsset> {
-        public _paperclips(final FixedAsset<?> fixedAsset) {
-            super(fixedAsset);
+    public static class _paperclips extends T_paperclips<Invoice> {
+        public _paperclips(final Invoice invoice) {
+            super(invoice);
         }
     }
 

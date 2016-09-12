@@ -93,10 +93,8 @@ public class PaperclipRepository {
     //region > attach (programmatic)
     @Programmatic
     public boolean canAttach(
-            final DocumentAbstract document,
-            final String roleName,
             final Object candidateToAttachTo) {
-        final Class<? extends Paperclip> subtype = subtypeClassForElseNull(candidateToAttachTo, roleName);
+        final Class<? extends Paperclip> subtype = subtypeClassForElseNull(candidateToAttachTo);
         return subtype != null;
     }
     //endregion
@@ -130,7 +128,7 @@ public class PaperclipRepository {
     private Class<? extends Paperclip> subtypeClassFor(
             final Object classified,
             String type) {
-        Class<? extends Paperclip> subtype = subtypeClassForElseNull(classified, type);
+        Class<? extends Paperclip> subtype = subtypeClassForElseNull(classified);
         if (subtype != null) {
             return subtype;
         }
@@ -139,10 +137,10 @@ public class PaperclipRepository {
                 classified.getClass().getName(), type));
     }
 
-    private Class<? extends Paperclip> subtypeClassForElseNull(final Object classified, final String type) {
+    private Class<? extends Paperclip> subtypeClassForElseNull(final Object classified) {
         Class<?> domainClass = classified.getClass();
         for (SubtypeProvider subtypeProvider : subtypeProviders) {
-            Class<? extends Paperclip> subtype = subtypeProvider.subtypeFor(domainClass, type);
+            Class<? extends Paperclip> subtype = subtypeProvider.subtypeFor(domainClass);
             if(subtype != null) {
                 return subtype;
             }
@@ -170,16 +168,14 @@ public class PaperclipRepository {
      */
     public interface SubtypeProvider {
         /**
-         * @return the subtype of {@link Paperclip} to use to hold the (type-safe) paperclip of the domain object with respect to the provided roleName.
+         * @return the subtype of {@link Paperclip} to use to hold the (type-safe) paperclip of the domain object.
          */
         @Programmatic
-        Class<? extends Paperclip> subtypeFor(
-                Class<?> domainObject,
-                String roleName);
+        Class<? extends Paperclip> subtypeFor(Class<?> domainObject);
     }
     /**
      * Convenience adapter to help implement the {@link SubtypeProvider} SPI; ignores the roleName passed into
-     * {@link #subtypeFor(Class, String)}, simply returns the class pair passed into constructor.
+     * {@link SubtypeProvider#subtypeFor(Class)}, simply returns the class pair passed into constructor.
      */
     public abstract static class SubtypeProviderAbstract implements SubtypeProvider {
         private final Class<?> attachedToDomainType;
@@ -191,7 +187,7 @@ public class PaperclipRepository {
         }
 
         @Override
-        public Class<? extends Paperclip> subtypeFor(final Class<?> domainType, String roleName) {
+        public Class<? extends Paperclip> subtypeFor(final Class<?> domainType) {
             return attachedToDomainType.isAssignableFrom(domainType) ? attachedToSubtype : null;
         }
     }
