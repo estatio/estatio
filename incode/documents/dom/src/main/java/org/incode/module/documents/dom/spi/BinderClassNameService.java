@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 
-public interface DataModelFactoryClassNameService {
+public interface BinderClassNameService {
 
     @Programmatic
     public List<ClassNameViewModel> binderClassNames();

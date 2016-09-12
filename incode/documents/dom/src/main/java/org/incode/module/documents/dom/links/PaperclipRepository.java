@@ -106,7 +106,7 @@ public class PaperclipRepository {
             final String roleName,
             final Object attachTo) {
 
-        final Class<? extends Paperclip> subtype = subtypeClassFor(attachTo, roleName);
+        final Class<? extends Paperclip> subtype = subtypeClassFor(attachTo);
 
         final Paperclip paperclip = repositoryService.instantiate(subtype);
 
@@ -125,20 +125,18 @@ public class PaperclipRepository {
         return paperclip;
     }
 
-    private Class<? extends Paperclip> subtypeClassFor(
-            final Object classified,
-            String type) {
-        Class<? extends Paperclip> subtype = subtypeClassForElseNull(classified);
+    private Class<? extends Paperclip> subtypeClassFor(final Object toAttachTo) {
+        Class<? extends Paperclip> subtype = subtypeClassForElseNull(toAttachTo);
         if (subtype != null) {
             return subtype;
         }
         throw new IllegalStateException(String.format(
-                "No subtype of Paperclip was found for '%s' and type '%s'; implement the PaperclipRepository.SubtypeProvider SPI",
-                classified.getClass().getName(), type));
+                "No subtype of Paperclip was found for '%s'; implement the PaperclipRepository.SubtypeProvider SPI",
+                toAttachTo.getClass().getName()));
     }
 
-    private Class<? extends Paperclip> subtypeClassForElseNull(final Object classified) {
-        Class<?> domainClass = classified.getClass();
+    private Class<? extends Paperclip> subtypeClassForElseNull(final Object toAttachTo) {
+        Class<?> domainClass = toAttachTo.getClass();
         for (SubtypeProvider subtypeProvider : subtypeProviders) {
             Class<? extends Paperclip> subtype = subtypeProvider.subtypeFor(domainClass);
             if(subtype != null) {

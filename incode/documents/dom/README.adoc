@@ -4,15 +4,206 @@
 
 == Domain Model
 
-The following http://yuml.me[] class diagram highlights the main concepts:
+=== ``Document``, ``DocumentTemplate``
 
-image::http://yuml.me/dab6d86f[link="http://yuml.me/dab6d86f"]
+The following class diagram highlights the main concepts:
 
-where `Renderer` interface has the implementations:
-
-image::http://yuml.me/47806a86[link="http://yuml.me/47806a86"]
-
+image::http://yuml.me/911ca435[link="http://yuml.me/911ca435"]
 
 (The colours used in the diagram are - approximately - from link:https://en.wikipedia.org/wiki/Object_Modeling_in_Color[Object Modeling in Color]).
 
+The central concept is, of course, `Document`.  ``Document``s have content that is either a Blob, Clob or is text
+, these attributes being defined in the `DocumentAbstract` supertype (more on this shortly).  Alternatively, the
+``Document``'s content can be stored externally, eg in a CMS or cloud storage service, in which case the ``Document``'s
+own `externalUrl` attribute is used.  The `DocumentSort` determines how the content of the `Document` is physically
+stored (along with the supporting `DocumentNature` and `DocumentStorage` enums).  Conceptually ``Document``s are immutable
+(though if their content is moved to an external URL, the original entity would be update in that case).
 
+Each `Document` also has a corresponding `DocumentType`, eg "Invoice" or perhaps a form id, eg "ABC123".
+
+The `DocumentTemplate` is also a document (ie subclass of `DocumentAbstract`), however its content will have placeholders.  These placeholders are populated with respect to some sort of domain object acting as an input (like a "mail merge"),
+to generate a resultant `Document`.  The `DocumentTemplate` also has a `DocumentType`, and so it is the `DocumentType`
+that acts as the link between the `DocumentTemplate` with the ``Document``s created from those templates.  It is
+possible for there to be multiple ``DocumentTemplate``s over time for a particular `DocumentType` (distinguished by
+date), to allow for minor changes to a template over time.  The domain model deliberately does *not* keep track of
+which particular `DocumentTemplate` was used to create a `Document`, just the type is used.
+
+Each `DocumentTemplate` has an associated set of ``Applicability``s.  Each of these identifies a domain class that can
+be used as an input the rendering of the `DocumentTemplate`, with a corresponding implementation of the `Binder` interface
+being responsible for actually creating an input "data model" used to feed into the template.
+
+Each `DocumentTemplate` also has a `RenderingStrategy`, meaning a mechanism to actually produce its content from the
+template text (once its placeholders have been replaced by "data model" provided by the `Binder`).
+
+Every `Document` is created from a `DocumentTemplate`, but rather than hold a reference to this original template, instead `Document` and `DocumentTemplate` are unified through the `DocumentType` entity.  The document type can be considered as a set of versioned ``DocumentTemplate``s (identified by date), along with all the ``Document``s that were created from (any of) those ``DocumentTemplate``s.
+
+Once a `Document` has been created it is attached to one or more target domain object using `Paperclip`.  This requires
+a custom subclass for the domain object in question; the polymorphic pattern ("table of two halves") is used for this linkage.
+
+
+Based upon the implementation of `RenderingStrategy` and `Renderer`, each `DocumentTemplate` can support either previewing and/or rendering.  Previewing means to return a representation as a URL; the end-user can then navigate to this URL without any change in state to the application.  Rendering on the other hand means the creation and persisting of a `Document` from the `DocumentTemplate`.
+
+The `createDocument()` mixin is contributed to all domain objects where there is a `DocumentTemplate`
+available for the domain object's application tenancy path (`atPath`) that supports either previewing and/or rendering.  However, for rendering there must also be at least one domain objects to which the resultant `Document` can be attached; if
+there are none available, then create/save will be suppressed.  The `Binder` is used to identify which domain objects
+the resultant `Document` is attached to; there must be at least one such domain object available (ie that has its own
+subclass of `Paperclip`).
+
+
+=== ``Renderer``
+
+The  `Renderer` interface has the following subtypes and (example) implementations:
+
+image::http://yuml.me/b63e782f[link="http://yuml.me/b63e782f"]
+
+The owning `RenderingStrategy` for each `Renderer` identifies the nature of the inputs and outputs (bytes or characters) of each `RenderingStrategy`; the associated `Renderer` implementation must meet those constraints.  Note that a `Renderer`
+may produce nature of the inputs vs outputs may vary: a character template might result in byte array output.
+
+
+
+== How to use
+
+=== Input
+
+For each domain object that you want to use as the input data to a `DocumentTemplate`, you need to:
+
+* implement `ApplicationTenancyService` +
++
+To return the application tenancy path of the domain object in order that available ``DocumentTemplate``s can be located
+
+* implement a `Binder` +
++
+These have two similar responsibilities: to construct the "data model" from the input domain object, and to identify the
+ object(s) to which the resultant `Document` is attached. +
++
+[NOTE]
+====
+It could be that a ``Binder``'s two responsibilities are quite separate from each other.  However, in the vast majority
+of cases the input domain object and the object to attach the resultant `Document` to will be same, hence the decision
+to combine these responsibilities into a single interface.
+====
+
+The `ApplicationTenancyService` is defined as:
+
+[source,java]
+----
+public interface ApplicationTenancyService {
+    String atPathFor(final Object domainObject);
+}
+----
+
+while `Binder` is defined as:
+
+[source,java]
+----
+
+----
+
+=== Renderers
+
+For each rendering technology, an implementation of `Renderer` is required.  A number of such ``Rendererer``s have been
+developed, using Freemarker, XDocReport or just capturing the content of arbitrary URLs (eg as exposed by an external reporting server such as SQL Server Reporting Services).
+
+
+
+=== Paperclips (attach output)
+
+For each domain object that you want to attach ``Document``s (that is, add ``Paperclip``s to), you need to
+
+* implement a subclass of `Paperclip` for the domain object's type. +
++
+This link acts as a type-safe tuple linking the domain object to the `Document`.
+
+* implement the `PaperclipRepository.SubtypeProvider` SPI interface: +
++
+[source,java]
+----
+public interface SubtypeProvider {
+    Class<? extends Paperclip> subtypeFor(Class<?> domainObject);
+}
+----
++
+This tells the module which subclass of `Paperclip` to use to attach to the domain object to attach to.  The
+`SubtypeProviderAbstract` adapter can be used to remove some boilerplate.
+
+
+
+
+=== Optional SPI Services
+
+==== `BinderClassNameService`
+
+The `BinderClassNameService`, if implemented, provides UI to allow the binder class name to be changed on an `Applicability`:
+
+[source,java]
+----
+public interface BinderClassNameService {
+    List<ClassNameViewModel> binderClassNames();
+}
+----
+
+This can most conveniently be implemented using the `ClassNameServiceAbstract` convenience class, eg:
+
+[source,java]
+----
+@DomainService(nature = NatureOfService.DOMAIN)
+public class BinderClassNameServiceForEstatio extends ClassNameServiceAbstract<Binder> implements
+        BinderClassNameService {
+
+    private static final String PACKAGE_PREFIX = "org.estatio";
+
+    public BinderClassNameServiceForEstatio() {
+        super(Binder.class, PACKAGE_PREFIX);
+    }
+
+    @Override
+    public List<ClassNameViewModel> binderClassNames() {
+        return this.classNames();
+    }
+}
+----
+
+==== `UrlDownloadService`
+
+The `UrlDownloadService` is used to download any ``Document``s whose content is stored as an external URL, eg in an on-site CMS or on a cloud storage service.
+
+The default implementation of this service simply uses Java's `HttpUrlConnection` to download the URL; in particular the URL must be accessible and require no user credentials/passwords.
+
+The service can be optionally overridden if credentials are required.
+
+The service is defined as:
+
+[source,java]
+----
+public class UrlDownloadService {
+    public Blob downloadAsBlob(final Document document) { ... }
+    public Clob downloadAsClob(final Document document) { ... }
+}
+----
+
+
+==== `DocumentNamingService`
+
+The `DocumentNamingService` provides an optional plug-in point to allow names of documents to be customized/verified.  For example, any characters that might be invalid in a file name (eg ":" if running on Windows) can be ignored.
+
+The default implementation of this service is simply:
+
+[source,java]
+----
+public class DocumentNamingService {
+    public String nameOf(
+            final String documentName,
+            final Object domainObject,
+            final DocumentTemplate template) {
+        String name =
+                documentName != null
+                        ? documentName
+                        : template.getName() + "-" + titleService.titleOf(domainObject);
+        return template.withFileSuffix(name);
+    }
+    @Inject
+    TitleService titleService;
+}
+----
+
+The service is called when creating a `Document` from a provided template and input domain object.

@@ -38,7 +38,7 @@ import org.incode.module.documents.dom.docs.DocumentTemplate;
 import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.links.PaperclipRepository;
 import org.incode.module.documents.dom.services.ClassService;
-import org.incode.module.documents.dom.services.DocumentNamingService;
+import org.incode.module.documents.dom.spi.DocumentNamingService;
 import org.incode.module.documents.dom.spi.ApplicationTenancyService;
 import org.incode.module.documents.dom.types.DocumentTypeRepository;
 
@@ -108,7 +108,7 @@ public class Object_createDocument<T> {
     private List<DocumentTemplate> getDocumentTemplates() {
         final List<DocumentTemplate> templates = Lists.newArrayList();
 
-        final String atPath = getAtPath();
+        final String atPath = atPathFor(domainObject);
         if(atPath == null) {
             return templates;
         }
@@ -156,7 +156,7 @@ public class Object_createDocument<T> {
 
 
 
-    String getAtPath() {
+    String atPathFor(final T domainObject) {
         return applicationTenancyServices.stream()
                 .map(x -> x.atPathFor(domainObject))
                 .filter(x -> x != null)

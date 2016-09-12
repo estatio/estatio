@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.services.UrlDownloadService;
+import org.incode.module.documents.dom.spi.UrlDownloadService;
 
 @Mixin
 public class Document_downloadExternalUrlAsClob {

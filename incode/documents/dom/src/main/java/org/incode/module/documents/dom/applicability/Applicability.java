@@ -1,6 +1,5 @@
 package org.incode.module.documents.dom.applicability;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -21,8 +20,6 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.services.ClassService;
-import org.incode.module.documents.dom.spi.DataModelFactoryClassNameService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -193,10 +190,4 @@ public class Applicability implements Comparable<Applicability> {
 
     //endregion
 
-    //region > injected services
-    @Inject
-    DataModelFactoryClassNameService dataModelFactoryClassNameService;
-    @Inject
-    ClassService classService;
-    //endregion
 }

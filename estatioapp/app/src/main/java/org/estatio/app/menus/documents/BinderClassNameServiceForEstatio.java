@@ -26,11 +26,11 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.incode.module.documents.dom.applicability.Binder;
 import org.incode.module.documents.dom.services.ClassNameServiceAbstract;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
-import org.incode.module.documents.dom.spi.DataModelFactoryClassNameService;
+import org.incode.module.documents.dom.spi.BinderClassNameService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BinderClassNameServiceForEstatio extends ClassNameServiceAbstract<Binder> implements
-        DataModelFactoryClassNameService {
+        BinderClassNameService {
 
     private static final String PACKAGE_PREFIX = "org.estatio";
 

@@ -31,10 +31,6 @@ import org.estatio.dom.appsettings.EstatioSettingsService;
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class ApplicationTenancyServiceForWithApplicationTenancy implements ApplicationTenancyService {
 
-
-    @javax.inject.Inject
-    private EstatioSettingsService estatioSettingsService;
-
     @Override
     public String atPathFor(final Object domainObject) {
         if(domainObject instanceof WithApplicationTenancy) {

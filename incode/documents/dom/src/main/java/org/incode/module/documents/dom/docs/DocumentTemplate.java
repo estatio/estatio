@@ -84,7 +84,7 @@ import org.incode.module.documents.dom.rendering.RendererFromCharsToCharsWithPre
 import org.incode.module.documents.dom.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.services.ClassService;
-import org.incode.module.documents.dom.spi.DataModelFactoryClassNameService;
+import org.incode.module.documents.dom.spi.BinderClassNameService;
 import org.incode.module.documents.dom.types.DocumentType;
 import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
 
@@ -420,14 +420,14 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     }
 
     public TranslatableString disableApplicable() {
-        return dataModelFactoryClassNameService == null
+        return binderClassNameService == null
                 ? TranslatableString.tr(
-                        "No DataModelFactoryClassNameService registered to locate implementations of Binder")
+                        "No BinderClassNameService registered to locate implementations of Binder")
                 : null;
     }
 
     public List<ClassNameViewModel> choices1Applicable() {
-        return dataModelFactoryClassNameService.binderClassNames();
+        return binderClassNameService.binderClassNames();
     }
     
     public TranslatableString validateApplicable(
@@ -717,7 +717,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
     @Inject
-    DataModelFactoryClassNameService dataModelFactoryClassNameService;
+    BinderClassNameService binderClassNameService;
     @Inject
     ApplicabilityRepository applicabilityRepository;
     @Inject

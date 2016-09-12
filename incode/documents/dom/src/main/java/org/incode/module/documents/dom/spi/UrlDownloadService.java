@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.services;
+package org.incode.module.documents.dom.spi;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
