@@ -54,7 +54,7 @@ subclass of `Paperclip`).
 
 The  `Renderer` interface has the following subtypes and (example) implementations:
 
-image::http://yuml.me/b63e782f[link="http://yuml.me/b63e782f"]
+image::http://yuml.me/b63e782f[link="http://yuml.me/b63e782f", width="600px"]
 
 The owning `RenderingStrategy` for each `Renderer` identifies the nature of the inputs and outputs (bytes or characters) of each `RenderingStrategy`; the associated `Renderer` implementation must meet those constraints.  Note that a `Renderer`
 may produce nature of the inputs vs outputs may vary: a character template might result in byte array output.
