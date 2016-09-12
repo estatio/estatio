@@ -19,7 +19,7 @@
  */
 package org.estatio.fixture.documents;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.common.collect.Lists;
 
@@ -44,19 +44,23 @@ public class BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus impl
             throw new IllegalArgumentException("Domain object must be of type: InvoiceSummaryForPropertyDueDateStatus");
         }
         InvoiceSummaryForPropertyDueDateStatus viewModel = (InvoiceSummaryForPropertyDueDateStatus) domainObject;
+        final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
+
         final StringInterpolatorService.Root dataModel = new StringInterpolatorService.Root(domainObject) {
             @SuppressWarnings("unused")
             public String getReportServerBaseUrl() {
-                return estatioSettingsService.fetchReportServerBaseUrl();
+                return baseUrl;
             }
         };
-        final ArrayList<Object> attachTo = Lists.newArrayList();
+
+        final List<Object> attachTo = Lists.newArrayList();
         attachTo.add(viewModel.getSeller());
         attachTo.addAll(viewModel.getInvoices());
         return new Binding(dataModel, attachTo);
     }
 
     @javax.inject.Inject
-    private EstatioSettingsService estatioSettingsService;
+    EstatioSettingsService estatioSettingsService;
+
 
 }

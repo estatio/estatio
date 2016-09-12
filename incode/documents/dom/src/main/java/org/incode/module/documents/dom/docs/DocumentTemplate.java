@@ -483,14 +483,14 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
 
-    //region > appliesTo, binderFor, newBinding
+    //region > appliesTo, newBinder, newBinding
 
     /**
-     * Whether this template is able to return (via {@link #binderFor(Object)}) a {@link Binder}.
+     * Whether this template is able to return (via {@link #newBinder(Object)}) a {@link Binder}.
      */
     @Programmatic
     public boolean appliesTo(final Object domainObject) {
-        return binderFor(domainObject) != null;
+        return newBinder(domainObject) != null;
     }
 
     /**
@@ -499,7 +499,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      * @return
      */
     @Programmatic
-    public Binder binderFor(final Object domainObject) {
+    public Binder newBinder(final Object domainObject) {
         final Class<?> domainObjectClass = domainObject.getClass();
         final Optional<Applicability> applicability = getAppliesTo().stream()
                 .filter(x -> classService.load(x.getDomainClassName()).isAssignableFrom(domainObjectClass))
@@ -507,18 +507,20 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         if (!applicability.isPresent()) {
             return null;
         }
-        return (Binder) classService.instantiate(applicability.get().getBinderClassName());
+        final Binder binder = (Binder) classService.instantiate(applicability.get().getBinderClassName());
+        serviceRegistry2.injectServicesInto(binder);
+        return binder;
     }
 
     @Programmatic
     public Binder.Binding newBinding(final Object domainObject) {
-        final Binder factory = binderFor(domainObject);
-        if(factory == null) {
+        final Binder binder = newBinder(domainObject);
+        if(binder == null) {
             throw new IllegalStateException(String.format(
                     "For domain template %s, could not locate Applicability for domain object: %s",
                     getName(), domainObject.getClass().getName()));
         }
-        final Binder.Binding binding = factory.newBinding(this, domainObject);
+        final Binder.Binding binding = binder.newBinding(this, domainObject);
         serviceRegistry2.injectServicesInto(binding);
         return binding;
     }
@@ -543,6 +545,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     @Programmatic
     public URL preview(final Object dataModel, final String documentName) throws IOException {
+
+        serviceRegistry2.injectServicesInto(dataModel);
 
         if(!getRenderingStrategy().isPreviewsToUrl()) {
             throw new IllegalStateException(String.format("RenderingStrategy '%s' does not support previewing to URL",
@@ -594,6 +598,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //region > render (programmatic)
     @Programmatic
     public DocumentAbstract render(final Object dataModel, final String documentName) {
+
+        serviceRegistry2.injectServicesInto(dataModel);
+
         final RenderingStrategy renderingStrategy = getRenderingStrategy();
 
         final DocumentNature inputNature = renderingStrategy.getInputNature();

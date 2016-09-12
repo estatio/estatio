@@ -29,8 +29,8 @@ import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnProperty;
 import org.estatio.fixture.documents.DocumentTemplateForHelloGlobal;
+import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnProperty;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs;
 import org.estatio.fixture.documents.FloorPlanDocumentForGbOxf;
@@ -63,7 +63,11 @@ import org.estatio.fixture.project.ProjectsForKal;
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     public EstatioDemoFixture() {
-        super(null, "demo");
+        this(null, "demo");
+    }
+
+    public EstatioDemoFixture(final String friendlyName, final String name) {
+        super(friendlyName, name);
     }
 
     @Override

@@ -35,10 +35,13 @@ public class BinderForReportServer implements Binder {
     public Binder.Binding newBinding(
             final DocumentTemplate documentTemplate,
             final Object domainObject) {
+
+        final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
+
         final StringInterpolatorService.Root dataModel = new StringInterpolatorService.Root(domainObject) {
             @SuppressWarnings("unused")
             public String getReportServerBaseUrl() {
-                return estatioSettingsService.fetchReportServerBaseUrl();
+                return baseUrl;
             }
         };
         return new Binding(dataModel, domainObject);

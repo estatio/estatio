@@ -47,7 +47,7 @@ public class Object_createDocument<T> {
 
     public static enum Intent {
         PREVIEW,
-        CREATE_AND_SAVE
+        CREATE_AND_ATTACH
     }
 
     //region > constructor
@@ -118,7 +118,7 @@ public class Object_createDocument<T> {
 
         // REVIEW: this could probably be simplified ...
         for (DocumentTemplate template : templatesForPath) {
-            final Binder binder = template.binderFor(domainObject);
+            final Binder binder = template.newBinder(domainObject);
             if(binder != null) {
                 final Binder.Binding binding = binder.newBinding(template, domainObject);
                 final List<Object> attachTo = binding.getAttachTo();
@@ -140,7 +140,7 @@ public class Object_createDocument<T> {
         }
         // so long as at least one exists...
         if(attachTo.stream().filter(x -> paperclipRepository.canAttach(x)).findFirst().isPresent()) {
-            intents.add(Intent.CREATE_AND_SAVE);
+            intents.add(Intent.CREATE_AND_ATTACH);
         }
         return intents;
     }

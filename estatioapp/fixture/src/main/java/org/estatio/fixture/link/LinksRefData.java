@@ -40,8 +40,7 @@ public class LinksRefData extends EstatioFixtureScript {
 
         ApplicationTenancy italyAppTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForIt.PATH);
 
-        //final String url = "${reportServerBaseUrl}";
-        final String url = "http://www.pdfpdf.com/samples/Sample5.PDF?name=";
+        final String url = "${reportServerBaseUrl}";
 
         newLink(italyAppTenancy,
                 Invoice.class,

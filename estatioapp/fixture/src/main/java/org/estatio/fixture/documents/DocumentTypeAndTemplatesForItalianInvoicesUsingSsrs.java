@@ -57,8 +57,7 @@ public class DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs extends Documen
             executionContext.executeChild(this, new RenderingStrategyForSsrs());
         }
 
-        //final String url = "${reportServerBaseUrl}";
-        final String url = "http://www.pdfpdf.com/samples/Sample5.PDF?name=";
+        final String url = "${reportServerBaseUrl}";
 
         final RenderingStrategy renderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyForSsrs.REF);
