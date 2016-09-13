@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.documents.dom.applicability.Binder;
+import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.services.ClassNameServiceAbstract;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.spi.BinderClassNameService;

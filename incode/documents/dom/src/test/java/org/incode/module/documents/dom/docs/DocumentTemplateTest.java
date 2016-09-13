@@ -19,6 +19,8 @@ package org.incode.module.documents.dom.docs;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DocumentTemplateTest {

@@ -19,10 +19,10 @@ package org.estatio.fixture.documents;
 
 import javax.inject.Inject;
 
-import org.incode.module.documents.dom.docs.DocumentNature;
-import org.incode.module.documents.dom.rendering.Renderer;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
+import org.incode.module.documents.dom.impl.docs.DocumentNature;
+import org.incode.module.documents.dom.impl.rendering.Renderer;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 
 import org.estatio.fixture.EstatioFixtureScript;
 

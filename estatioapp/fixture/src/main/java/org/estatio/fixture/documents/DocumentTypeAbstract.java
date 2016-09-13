@@ -19,8 +19,8 @@ package org.estatio.fixture.documents;
 
 import javax.inject.Inject;
 
-import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.types.DocumentTypeRepository;
+import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.fixture.EstatioFixtureScript;
 

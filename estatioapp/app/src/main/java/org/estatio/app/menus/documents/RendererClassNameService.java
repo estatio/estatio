@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.documents.dom.docs.DocumentNature;
-import org.incode.module.documents.dom.rendering.Renderer;
+import org.incode.module.documents.dom.impl.docs.DocumentNature;
+import org.incode.module.documents.dom.impl.rendering.Renderer;
 import org.incode.module.documents.dom.services.ClassNameServiceAbstract;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 

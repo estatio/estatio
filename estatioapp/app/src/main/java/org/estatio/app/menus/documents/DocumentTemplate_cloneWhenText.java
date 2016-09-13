@@ -38,12 +38,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.applicability.Applicability;
-import org.incode.module.documents.dom.docs.DocumentSort;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.impl.applicability.Applicability;
+import org.incode.module.documents.dom.impl.docs.DocumentSort;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 

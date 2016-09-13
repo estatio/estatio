@@ -17,7 +17,7 @@
  */
 package org.estatio.fixture.documents;
 
-import org.incode.module.documents.dom.docs.DocumentNature;
+import org.incode.module.documents.dom.impl.docs.DocumentNature;
 
 import org.estatio.app.integration.documents.RendererUsingStringInterpolatorCaptureUrl;
 

@@ -26,8 +26,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
-import org.incode.module.documents.dom.rendering.RendererFromCharsToChars;
-import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToChars;
+import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import freemarker.template.TemplateException;
 

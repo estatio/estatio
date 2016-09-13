@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.types.DocumentTypeRepository;
+import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;

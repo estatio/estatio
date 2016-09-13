@@ -23,34 +23,44 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.title.TitleService;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
-/**
- * Default implementation does not handle any invalid character names in either the supplied document name or the
- * fallback title from the domain object.
- */
-@DomainService(nature = NatureOfService.DOMAIN)
-public class DocumentNamingService {
+public interface DocumentNamingService {
 
     /**
      * @param documentName - document name as provided (could be null)
      * @param domainObject - the domain object acting as the context/input of the document (to which the resultant document will be attached)
      * @param template - the template being used to create the document
      */
-    @Programmatic
-    public String nameOf(
+    @Programmatic String nameOf(
             final String documentName,
             final Object domainObject,
-            final DocumentTemplate template) {
-        String name =
-                documentName != null
-                        ? documentName
-                        : template.getName() + "-" + titleService.titleOf(domainObject);
-        return template.withFileSuffix(name);
+            final DocumentTemplate template);
+
+
+    /**
+     * Default implementation does not handle any invalid character names in either the supplied document name or the
+     * fallback title from the domain object.
+     */
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class Default implements DocumentNamingService {
+
+        @Override
+        @Programmatic
+        public String nameOf(
+                final String documentName,
+                final Object domainObject,
+                final DocumentTemplate template) {
+            String name =
+                    documentName != null
+                            ? documentName
+                            : template.getName() + "-" + titleService.titleOf(domainObject);
+            return template.withFileSuffix(name);
+        }
+
+        @Inject
+        TitleService titleService;
+
     }
-
-    @Inject
-    TitleService titleService;
-
 
 }

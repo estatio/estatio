@@ -19,8 +19,8 @@
 
 package org.estatio.fixture.documents;
 
-import org.incode.module.documents.dom.applicability.Binder;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.applicability.Binder;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.app.menus.demo.HelloDocumentTemplateUserDataModel;
 import org.estatio.dom.WithNameGetter;

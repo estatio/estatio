@@ -26,7 +26,7 @@ import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.documents.dom.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class Document_hideAtPath extends AbstractSubscriber {

@@ -26,11 +26,11 @@ import com.google.common.base.Strings;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
-import org.incode.module.documents.dom.docs.DocumentAbstract;
-import org.incode.module.documents.dom.links.Paperclip;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.links.Paperclip;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.JdoColumnLength.Numerator;
 import org.estatio.dom.agreement.Agreement;

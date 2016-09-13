@@ -17,20 +17,18 @@
  */
 package org.estatio.fixture.documents;
 
-import java.util.HashMap;
-
 import javax.inject.Inject;
 
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.links.PaperclipRepository;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.types.DocumentTypeRepository;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;

@@ -26,8 +26,8 @@ import com.google.common.collect.Lists;
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.documents.dom.applicability.Binder;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.applicability.Binder;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;

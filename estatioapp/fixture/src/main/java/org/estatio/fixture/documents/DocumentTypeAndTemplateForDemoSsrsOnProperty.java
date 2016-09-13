@@ -27,10 +27,10 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.types.DocumentType;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;

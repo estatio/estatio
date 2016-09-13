@@ -30,9 +30,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.documents.dom.links.Paperclip;
-import org.incode.module.documents.dom.links.PaperclipRepository;
-import org.incode.module.documents.dom.links.T_paperclips;
+import org.incode.module.documents.dom.impl.links.Paperclip;
+import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.mixins.T_paperclips;
 
 import org.estatio.dom.asset.FixedAsset;
 

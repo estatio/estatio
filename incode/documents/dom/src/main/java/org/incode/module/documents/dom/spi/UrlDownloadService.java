@@ -37,162 +37,172 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.docs.Document;
+import org.incode.module.documents.dom.impl.docs.Document;
 
-@DomainService(nature = NatureOfService.DOMAIN)
-public class UrlDownloadService {
-
-    @Programmatic
-    public Blob downloadAsBlob(final Document document) {
-        try {
-            final URL url = new URL(document.getExternalUrl());
-
-            final HttpURLConnection httpConn = openConnection(url);
-            if (httpConn == null) {
-                return null;
-            }
-
-            final String contentType = httpConn.getContentType();
-
-            final MimeType mimeType = determineMimeType(contentType);
-            if (mimeType == null) {
-                return null;
-            }
-
-            httpConn.disconnect();
-
-            final ByteSource byteSource = Resources.asByteSource(url);
-            final byte[] bytes = byteSource.read();
-
-            return new Blob(document.getName(), mimeType.getBaseType(), bytes);
-
-        } catch (IOException e) {
-            messageService.warnUser(TranslatableString.tr(
-                    "Could not download from URL"),
-                    UrlDownloadService.class, "download");
-            return null;
-        }
-    }
-
+public interface UrlDownloadService {
 
     @Programmatic
-    public Clob downloadAsClob(final Document document) {
-        try {
-            final URL url = new URL(document.getExternalUrl());
+    Blob downloadAsBlob(final Document document);
 
-            final HttpURLConnection httpConn = openConnection(url);
-            if (httpConn == null) {
+    @Programmatic
+    Clob downloadAsClob(final Document document);
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public class Default implements UrlDownloadService {
+
+        @Programmatic
+        public Blob downloadAsBlob(final Document document) {
+            try {
+                final URL url = new URL(document.getExternalUrl());
+
+                final HttpURLConnection httpConn = openConnection(url);
+                if (httpConn == null) {
+                    return null;
+                }
+
+                final String contentType = httpConn.getContentType();
+
+                final MimeType mimeType = determineMimeType(contentType);
+                if (mimeType == null) {
+                    return null;
+                }
+
+                httpConn.disconnect();
+
+                final ByteSource byteSource = Resources.asByteSource(url);
+                final byte[] bytes = byteSource.read();
+
+                return new Blob(document.getName(), mimeType.getBaseType(), bytes);
+
+            } catch (IOException e) {
+                messageService.warnUser(TranslatableString.tr(
+                        "Could not download from URL"),
+                        org.incode.module.documents.dom.spi.UrlDownloadService.class, "download");
+                return null;
+            }
+        }
+
+
+        @Programmatic
+        public Clob downloadAsClob(final Document document) {
+            try {
+                final URL url = new URL(document.getExternalUrl());
+
+                final HttpURLConnection httpConn = openConnection(url);
+                if (httpConn == null) {
+                    return null;
+                }
+
+                final String contentType = httpConn.getContentType();
+
+                final MimeType mimeType = determineMimeType(contentType);
+                if (mimeType == null) {
+                    return null;
+                }
+
+                final Charset charset = determineCharset(contentType);
+                if (charset == null) {
+                    return null;
+                }
+                httpConn.disconnect();
+
+                final CharSource charSource = Resources.asCharSource(url, charset);
+                final String chars = charSource.read();
+
+                return new Clob(document.getName(), mimeType.getBaseType(), chars);
+            } catch (IOException e) {
+                messageService.warnUser(TranslatableString.tr(
+                        "Could not download from URL"),
+                        org.incode.module.documents.dom.spi.UrlDownloadService.class, "downloadExternalUrlAsClob");
+                return null;
+            }
+        }
+
+        private HttpURLConnection openConnection(final URL url) throws IOException {
+            final HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            final int responseCode = httpConn.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                messageService.warnUser(TranslatableString.tr(
+                        "Could not download from URL (responseCode: {responseCode})",
+                        "responseCode", "" + responseCode),
+                        org.incode.module.documents.dom.spi.UrlDownloadService.class, "openConnection");
+                return null;
+            }
+            return httpConn;
+        }
+
+        private MimeType determineMimeType(final String contentType) {
+            final String mimeType = parseMimeType(contentType);
+            if(mimeType == null) {
+                return null;
+            }
+            try {
+                return new MimeType(mimeType);
+            } catch (Exception e) {
+                messageService.warnUser(TranslatableString.tr(
+                        "Could not download from URL (mime type not recognized: {mimeType})",
+                        "mimeType", mimeType),
+                        org.incode.module.documents.dom.spi.UrlDownloadService.class, "determineMimeType");
+                return null;
+            }
+        }
+
+        // text/plain; charset=UTF-8
+        private String parseMimeType(final String contentType) {
+            final Iterable<String> values = Splitter.on(";").split(contentType);
+            for (String value : values) {
+                // is simply the first part
+                return value.trim();
+            }
+
+            messageService.warnUser(TranslatableString.tr(
+                    "Could not download from URL (mime type not recognized within content-type header '{contentType}')",
+                    "contentType", contentType),
+                    org.incode.module.documents.dom.spi.UrlDownloadService.class, "parseMimeType");
+            return null;
+        }
+
+
+        private Charset determineCharset(final String contentType) {
+
+            final String charsetName = parseCharset(contentType);
+            if(charsetName == null) {
                 return null;
             }
 
-            final String contentType = httpConn.getContentType();
-
-            final MimeType mimeType = determineMimeType(contentType);
-            if (mimeType == null) {
+            try {
+                return Charset.forName(charsetName);
+            } catch (Exception e) {
+                messageService.warnUser(TranslatableString.tr(
+                        "Could not download from URL (charset '{charsetName}' not recognized)",
+                        "charsetName", charsetName),
+                        org.incode.module.documents.dom.spi.UrlDownloadService.class, "determineCharset");
                 return null;
             }
+        }
 
-            final Charset charset = determineCharset(contentType);
-            if (charset == null) {
-                return null;
+        // text/plain; charset=UTF-8
+        private String parseCharset(final String contentType) {
+            final Iterable<String> values = Splitter.on(";").split(contentType);
+
+            for (String value : values) {
+                value = value.trim();
+
+                if (value.toLowerCase().startsWith("charset=")) {
+                    return value.substring("charset=".length());
+                }
             }
-            httpConn.disconnect();
 
-            final CharSource charSource = Resources.asCharSource(url, charset);
-            final String chars = charSource.read();
-
-            return new Clob(document.getName(), mimeType.getBaseType(), chars);
-        } catch (IOException e) {
             messageService.warnUser(TranslatableString.tr(
-                    "Could not download from URL"),
-                    UrlDownloadService.class, "downloadExternalUrlAsClob");
-            return null;
-        }
-    }
-
-    private HttpURLConnection openConnection(final URL url) throws IOException {
-        final HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        final int responseCode = httpConn.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            messageService.warnUser(TranslatableString.tr(
-                    "Could not download from URL (responseCode: {responseCode})",
-                    "responseCode", "" + responseCode),
-                    UrlDownloadService.class, "openConnection");
-            return null;
-        }
-        return httpConn;
-    }
-
-    private MimeType determineMimeType(final String contentType) {
-        final String mimeType = parseMimeType(contentType);
-        if(mimeType == null) {
-            return null;
-        }
-        try {
-            return new MimeType(mimeType);
-        } catch (Exception e) {
-            messageService.warnUser(TranslatableString.tr(
-                    "Could not download from URL (mime type not recognized: {mimeType})",
-                    "mimeType", mimeType),
-                    UrlDownloadService.class, "determineMimeType");
-            return null;
-        }
-    }
-
-    // text/plain; charset=UTF-8
-    private String parseMimeType(final String contentType) {
-        final Iterable<String> values = Splitter.on(";").split(contentType);
-        for (String value : values) {
-            // is simply the first part
-            return value.trim();
-        }
-
-        messageService.warnUser(TranslatableString.tr(
-                "Could not download from URL (mime type not recognized within content-type header '{contentType}')",
-                "contentType", contentType),
-                UrlDownloadService.class, "parseMimeType");
-        return null;
-    }
-
-
-    private Charset determineCharset(final String contentType) {
-
-        final String charsetName = parseCharset(contentType);
-        if(charsetName == null) {
+                    "Could not download from URL (charset not recognized within content-type header '{contentType}')",
+                    "contentType", contentType),
+                    org.incode.module.documents.dom.spi.UrlDownloadService.class, "parseCharset");
             return null;
         }
 
-        try {
-            return Charset.forName(charsetName);
-        } catch (Exception e) {
-            messageService.warnUser(TranslatableString.tr(
-                    "Could not download from URL (charset '{charsetName}' not recognized)",
-                    "charsetName", charsetName),
-                    UrlDownloadService.class, "determineCharset");
-            return null;
-        }
+        @Inject
+        MessageService messageService;
+
     }
-
-    // text/plain; charset=UTF-8
-    private String parseCharset(final String contentType) {
-        final Iterable<String> values = Splitter.on(";").split(contentType);
-
-        for (String value : values) {
-            value = value.trim();
-
-            if (value.toLowerCase().startsWith("charset=")) {
-                return value.substring("charset=".length());
-            }
-        }
-
-        messageService.warnUser(TranslatableString.tr(
-                "Could not download from URL (charset not recognized within content-type header '{contentType}')",
-                "contentType", contentType),
-                UrlDownloadService.class, "parseCharset");
-        return null;
-    }
-
-    @Inject
-    MessageService messageService;
 
 }

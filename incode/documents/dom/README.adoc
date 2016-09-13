@@ -127,6 +127,110 @@ This tells the module which subclass of `Paperclip` to use to attach to the doma
 `SubtypeProviderAbstract` adapter can be used to remove some boilerplate.
 
 
+For example:
+
+[source,java]
+----
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@DomainObject(objectType = "estatioAssets.PaperclipForInvoice")
+@DomainObjectLayout( bookmarking = BookmarkPolicy.AS_ROOT)
+public class PaperclipForInvoice extends Paperclip {                    // <1>
+
+    @Column( allowsNull = "false", name = "invoiceId" )
+    @Getter @Setter
+    private Invoice invoice;
+
+    @NotPersistent
+    @Override
+    public Object getAttachedTo() {                                     // <2>
+        return getInvoice();
+    }
+    @Override
+    protected void setAttachedTo(final Object object) {
+        setInvoice((Invoice) object);
+    }
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class SubtypeProvider                                 // <3>
+            extends PaperclipRepository.SubtypeProviderAbstract {
+        public SubtypeProvider() {
+            super(Invoice.class, PaperclipForInvoice.class);
+        }
+    }
+}
+----
+<1> inherit from `Paperclip`
+<2> implement hook methods
+<3> SubtypeProvider SPI implementation
+
+
+[NOTE]
+====
+To view the ``Paperclip``s once created there is also a `T_paperclips` mixin collection, discussed below.
+====
+
+
+=== Mixins
+
+==== T_createDocument
+
+The document module is fully data-driven, in that the ability to be able to create a document for any given domain entity
+is defined by the data held in `DocumentTemplate` (its `atPath`) and `Applicability` (the `domainClassName` and corresponding
+`Binder` implementation).
+
+The `T_createDocument` mixin action exposes this functionality for any domain class, by simply subclassing.  For example:
+
+[source,java]
+----
+@Mixin
+public class Invoice_createDocument extends T_createDocument<Invoice> {
+    public Invoice_createDocument(Invoice invoice) { super(invoice); }
+}
+----
+
+Add similar mixins for all classes where there exists a `DocumentTemplate` and `Applicability` capable of consuming the
+object as an input to the template.
+
+[TIP]
+====
+If you want make this action available for all domain objects, simply use:
+
+[source,java]
+----
+@Mixin
+public class Object_createDocument extends T_createDocument<Object> {
+    public Object_createDocument(Object object) { super(object); }
+}
+----
+
+If there is no `DocumentTemplate`/`Applicability`, then the action will be hidden in the UI.  (The reason that the module
+doesn't just provide this mixin out-of-the-box is (a) for consistency with other modules and (b) for understandability/traceability ("not *too* much magic")
+====
+
+
+==== T_paperclips
+
+The `T_paperclips` mixin collection returns the list of paperclips for the specified domain object.
+
+Since ``Paperclip``s can only be created for domain objects where a subclass of `Paperclip` has been defined (see above), it's typical for this mixin to be defined as a nested static class of that `Paperclip` subclass.
+
+For example:
+
+[source,java]
+----
+...
+public class PaperclipForInvoice extends Paperclip {
+    ...
+    @Mixin
+    public static class _paperclips extends T_paperclips<Invoice> {
+        public _paperclips(final Invoice invoice) {
+            super(invoice);
+        }
+    }
+}
+----
+
 
 
 === Optional SPI Services
@@ -167,7 +271,7 @@ public class BinderClassNameServiceForEstatio extends ClassNameServiceAbstract<B
 
 The `UrlDownloadService` is used to download any ``Document``s whose content is stored as an external URL, eg in an on-site CMS or on a cloud storage service.
 
-The default implementation of this service simply uses Java's `HttpUrlConnection` to download the URL; in particular the URL must be accessible and require no user credentials/passwords.
+A default implementation of this service is provided that simply uses Java's `HttpUrlConnection` to download the URL; in particular the URL must be accessible and require no user credentials/passwords.
 
 The service can be optionally overridden if credentials are required.
 
@@ -175,7 +279,7 @@ The service is defined as:
 
 [source,java]
 ----
-public class UrlDownloadService {
+public interface UrlDownloadService {
     public Blob downloadAsBlob(final Document document) { ... }
     public Clob downloadAsClob(final Document document) { ... }
 }
@@ -186,11 +290,24 @@ public class UrlDownloadService {
 
 The `DocumentNamingService` provides an optional plug-in point to allow names of documents to be customized/verified.  For example, any characters that might be invalid in a file name (eg ":" if running on Windows) can be ignored.
 
-The default implementation of this service is simply:
+The service is called when creating a `Document` from a provided template and input domain object, and is defined as:
 
 [source,java]
 ----
-public class DocumentNamingService {
+public interface DocumentNamingService {
+    public String nameOf(
+            final String documentName,
+            final Object domainObject,
+            final DocumentTemplate template);
+}
+----
+
+The default implementation of this service is provided.  This simply returns the document name if explicitly provided, otherwise uses the title of the domain object concatenated with the name of the template.  In both cases the appropriate
+file suffix is tacked on if required:
+
+[source,java]
+----
+public class DocumentNamingService.Default {
     public String nameOf(
             final String documentName,
             final Object domainObject,
@@ -206,4 +323,3 @@ public class DocumentNamingService {
 }
 ----
 
-The service is called when creating a `Document` from a provided template and input domain object.

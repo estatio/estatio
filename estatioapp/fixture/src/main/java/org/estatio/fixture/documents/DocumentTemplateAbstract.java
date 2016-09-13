@@ -28,11 +28,11 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.docs.DocumentTemplate;
-import org.incode.module.documents.dom.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.types.DocumentType;
-import org.incode.module.documents.dom.types.DocumentTypeRepository;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.fixture.EstatioFixtureScript;
 
