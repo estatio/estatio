@@ -97,6 +97,14 @@ mvn clean install -DskipTests -o
         <isis-wicket-fullcalendar2.version>1.13.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
+        <incode-module-commchannel.version>1.13.0</incode-module-commchannel.version>
+
+        <incode-module-base-dom.version>1.14.0-SNAPSHOT</incode-module-base-dom.version>
+        <incode-module-documents-dom.version>1.14.0-SNAPSHOT</incode-module-documents-dom.version>
+        <incode-module-communications-dom.version>1.14.0-SNAPSHOT</incode-module-communications-dom.version>
+        <isis-module-freemarker-dom.version>1.14.0-SNAPSHOT</isis-module-freemarker-dom.version>
+        <isis-module-xdocreport-dom.version>1.14.0-SNAPSHOT</isis-module-xdocreport-dom.version>
+
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
 
 
@@ -559,6 +567,18 @@ mvn clean install -DskipTests -o
             </dependency>
 
             <dependency>
+                <groupId>org.incode.module.commchannel</groupId>
+                <artifactId>incode-module-commchannel-dom</artifactId>
+                <version>${incode-module-commchannel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.documents</groupId>
+                <artifactId>incode-module-documents-dom</artifactId>
+                <version>${incode-module-documents-dom.version}</version>
+            </dependency>
+
+
+            <dependency>
                 <groupId>org.isisaddons.module.stringinterpolator</groupId>
                 <artifactId>isis-module-stringinterpolator-dom</artifactId>
                 <version>${isis-module-stringinterpolator.version}</version>
@@ -691,12 +711,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-documents-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-documents-dom.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -705,12 +725,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-base-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-base-dom.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -719,12 +739,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-communications-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-communications-dom.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -733,12 +753,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.isisaddons.module.freemarker</groupId>
                 <artifactId>isis-module-freemarker-dom</artifactId>
-                <version>1.14.0-SNAPSHOT</version>
+                <version>${isis-module-freemarker-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.freemarker</groupId>
                 <artifactId>isis-module-freemarker-dom</artifactId>
-                <version>1.14.0-SNAPSHOT</version>
+                <version>${isis-module-freemarker-dom.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -747,12 +767,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.isisaddons.module.xdocreport</groupId>
                 <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>1.14.0-SNAPSHOT</version>
+                <version>${isis-module-xdocreport-dom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.xdocreport</groupId>
                 <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>1.14.0-SNAPSHOT</version>
+                <version>${isis-module-xdocreport-dom.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>

@@ -28,7 +28,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 	
-	
+
 
     <groupId>org.isisaddons.module.freemarker</groupId>
     <artifactId>isis-module-freemarker-dom</artifactId>
