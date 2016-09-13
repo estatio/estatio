@@ -13,6 +13,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.SecurityModule;
 
+import org.incode.module.commchannel.dom.CommChannelModule;
 import org.incode.module.documents.dom.DocumentsModule;
 
 import org.estatio.dom.EstatioDomainModule;
@@ -41,6 +42,8 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioDomainLinkModule.class,
                         EstatioDomainSettingsModule.class,
 
+                        CommChannelModule.class,
+//                        CommunicationsModule.class,
                         DocumentsModule.class,
 
                         // TODO: sort out packages for the 'fixture' module
