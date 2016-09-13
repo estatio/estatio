@@ -74,6 +74,11 @@ public class Applicability implements Comparable<Applicability> {
      */
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class TitleSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Applicability$TitleSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Applicability.TitleUiEvent ev) {
@@ -97,6 +102,11 @@ public class Applicability implements Comparable<Applicability> {
 
     @DomainService
     public static class IconSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Applicability$IconSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Applicability.IconUiEvent ev) {
@@ -112,6 +122,11 @@ public class Applicability implements Comparable<Applicability> {
      */
     @DomainService
     public static class CssClassSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Applicability$CssClassSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Applicability.CssClassUiEvent ev) {

@@ -32,6 +32,10 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 )
 public class DocumentTypeRepository {
 
+    public String getId() {
+        return "incodeDocuments.DocumentTypeRepository";
+    }
+
     //region > create 
     @Programmatic
     public DocumentType create(

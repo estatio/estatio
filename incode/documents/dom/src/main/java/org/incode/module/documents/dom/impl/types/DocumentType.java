@@ -111,6 +111,11 @@ public class DocumentType implements Comparable<DocumentType> {
      */
     @DomainService
     public static class TitleSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.DocumentType$TitleSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(DocumentType.TitleUiEvent ev) {
@@ -133,6 +138,11 @@ public class DocumentType implements Comparable<DocumentType> {
      */
     @DomainService
     public static class IconSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.DocumentType$IconSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(DocumentType.IconUiEvent ev) {
@@ -148,6 +158,11 @@ public class DocumentType implements Comparable<DocumentType> {
      */
     @DomainService
     public static class CssClassSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.DocumentType$CssClassSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(DocumentType.CssClassUiEvent ev) {

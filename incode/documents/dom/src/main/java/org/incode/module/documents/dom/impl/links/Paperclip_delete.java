@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 
 @Mixin
 public class Paperclip_delete {
@@ -56,10 +55,6 @@ public class Paperclip_delete {
 
 
     @Inject
-    private PaperclipRepository paperclipRepository;
-
-    @Inject
-    private DocumentTemplateRepository documentTemplateRepository;
-
+    PaperclipRepository paperclipRepository;
 
 }

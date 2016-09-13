@@ -186,6 +186,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      */
     @DomainService
     public static class TitleSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.DocumentTemplate$TitleSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(DocumentTemplate.TitleUiEvent ev) {
@@ -215,6 +220,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      */
     @DomainService
     public static class IconSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.DocumentTemplate$IconSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(DocumentTemplate.IconUiEvent ev) {
@@ -230,6 +240,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      */
     @DomainService
     public static class CssClassSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.DocumentTemplate$CssClassSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(DocumentTemplate.CssClassUiEvent ev) {

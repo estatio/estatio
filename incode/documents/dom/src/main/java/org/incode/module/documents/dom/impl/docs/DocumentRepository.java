@@ -37,6 +37,10 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 )
 public class DocumentRepository {
 
+    public String getId() {
+        return "incodeDocuments.DocumentRepository";
+    }
+
     //region > createBlob, createClob, createText
     @Programmatic
     public Document createBlob(

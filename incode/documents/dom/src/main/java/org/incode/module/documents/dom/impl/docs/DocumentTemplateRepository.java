@@ -41,6 +41,10 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 )
 public class DocumentTemplateRepository {
 
+    public String getId() {
+        return "incodeDocuments.DocumentTemplateRepository";
+    }
+
     //region > createBlob, createClob, createText
     @Programmatic
     public DocumentTemplate createBlob(

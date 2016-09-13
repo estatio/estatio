@@ -60,11 +60,4 @@ public class Paperclip_changeRole {
 
 
 
-    @Inject
-    private PaperclipRepository paperclipRepository;
-
-    @Inject
-    private DocumentTemplateRepository documentTemplateRepository;
-
-
 }

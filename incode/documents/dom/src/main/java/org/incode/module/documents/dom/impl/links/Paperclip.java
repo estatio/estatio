@@ -134,6 +134,11 @@ public abstract class Paperclip implements Comparable<Paperclip> {
      */
     @DomainService
     public static class IconSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Paperclip$IconSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Paperclip.IconUiEvent ev) {
@@ -149,6 +154,11 @@ public abstract class Paperclip implements Comparable<Paperclip> {
      */
     @DomainService
     public static class CssClassSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Paperclip$CssClassSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Paperclip.CssClassUiEvent ev) {

@@ -45,6 +45,10 @@ public interface DocumentNamingService {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class Default implements DocumentNamingService {
 
+        public String getId() {
+            return "incodeDocuments.DocumentNamingService$Default";
+        }
+
         @Override
         @Programmatic
         public String nameOf(

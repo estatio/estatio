@@ -28,6 +28,10 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class ClassService {
 
+    public String getId() {
+        return "incodeDocuments.ClassService";
+    }
+
     @Programmatic
     public TranslatableString validateClassHasAccessibleNoArgConstructor(final String fqcn) {
         return validateClassHasAccessibleNoArgConstructor(fqcn, null);

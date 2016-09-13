@@ -38,6 +38,10 @@ import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 )
 public class PaperclipRepository {
 
+    public String getId() {
+        return "incodeDocuments.PaperclipRepository";
+    }
+
     //region > findByDocument (programmatic)
     @Programmatic
     public List<Paperclip> findByDocument(final DocumentAbstract document) {

@@ -33,6 +33,10 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 )
 public class ApplicabilityRepository {
 
+    public String getId() {
+        return "incodeDocuments.ApplicabilityRepository";
+    }
+
     //region > create
     @Programmatic
     public Applicability create(

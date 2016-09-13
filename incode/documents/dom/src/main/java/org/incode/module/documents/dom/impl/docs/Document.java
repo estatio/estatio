@@ -76,12 +76,23 @@ import lombok.Setter;
 )
 public class Document extends DocumentAbstract<Document> {
 
+    //region > ui event classes
+    public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<Document> {}
+    public static class IconUiEvent extends DocumentsModule.IconUiEvent<Document>{}
+    public static class CssClassUiEvent extends DocumentsModule.CssClassUiEvent<Document>{}
+    //endregion
+
     //region > title, icon, cssClass
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
     @DomainService
     public static class TitleSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Document$TitleSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Document.TitleUiEvent ev) {
@@ -102,6 +113,11 @@ public class Document extends DocumentAbstract<Document> {
      */
     @DomainService
     public static class IconSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Document$IconSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Document.IconUiEvent ev) {
@@ -117,6 +133,11 @@ public class Document extends DocumentAbstract<Document> {
      */
     @DomainService
     public static class CssClassSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.Document$CssClassSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(Document.CssClassUiEvent ev) {
@@ -128,11 +149,6 @@ public class Document extends DocumentAbstract<Document> {
     }
     //endregion
 
-    //region > ui event classes
-    public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<DocumentAbstract> {}
-    public static class IconUiEvent extends DocumentsModule.IconUiEvent<DocumentAbstract>{}
-    public static class CssClassUiEvent extends DocumentsModule.CssClassUiEvent<DocumentAbstract>{}
-    //endregion
 
     //region > constructors
     public Document(

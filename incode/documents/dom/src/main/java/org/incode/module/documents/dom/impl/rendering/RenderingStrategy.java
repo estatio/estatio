@@ -118,6 +118,11 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
      */
     @DomainService
     public static class TitleSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.RenderingStrategy$TitleSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(RenderingStrategy.TitleUiEvent ev) {
@@ -140,6 +145,11 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
      */
     @DomainService
     public static class IconSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.RenderingStrategy$IconSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(RenderingStrategy.IconUiEvent ev) {
@@ -155,6 +165,11 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
      */
     @DomainService
     public static class CssClassSubscriber extends AbstractSubscriber {
+
+        public String getId() {
+            return "incodeDocuments.RenderingStrategy$CssClassSubscriber";
+        }
+
         @EventHandler
         @Subscribe
         public void on(RenderingStrategy.CssClassUiEvent ev) {

@@ -50,6 +50,10 @@ public interface UrlDownloadService {
     @DomainService(nature = NatureOfService.DOMAIN)
     public class Default implements UrlDownloadService {
 
+        public String getId() {
+            return "incodeDocuments.UrlDownloadService$Default";
+        }
+
         @Programmatic
         public Blob downloadAsBlob(final Document document) {
             try {

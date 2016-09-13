@@ -34,6 +34,10 @@ import org.incode.module.documents.dom.impl.docs.DocumentNature;
 )
 public class RenderingStrategyRepository {
 
+    public String getId() {
+        return "incodeDocuments.RenderingStrategyRepository";
+    }
+
 
     @Programmatic
     public RenderingStrategy create(
