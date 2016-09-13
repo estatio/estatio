@@ -34,6 +34,10 @@ import org.estatio.dom.party.Party;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
+    public String getId() {
+        return "estatio.CommunicationChannelSubscriptions";
+    }
+
     public CommunicationChannelSubscriptions() {
         super(CommunicationChannelSubscriptions.class, CommunicationChannel.class);
     }

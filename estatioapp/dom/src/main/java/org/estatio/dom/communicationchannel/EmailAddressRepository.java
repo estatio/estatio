@@ -34,6 +34,10 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 @DomainService(repositoryFor = EmailAddress.class, nature = NatureOfService.DOMAIN)
 public class EmailAddressRepository extends UdoDomainRepositoryAndFactory<EmailAddress> {
 
+    public String getId() {
+        return "estatio.EmailAddressRepository";
+    }
+
     public EmailAddressRepository() {
         super(EmailAddressRepository.class, EmailAddress.class);
     }

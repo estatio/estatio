@@ -34,6 +34,10 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 @DomainService(repositoryFor = PhoneOrFaxNumber.class, nature = NatureOfService.DOMAIN)
 public class PhoneOrFaxNumberRepository extends UdoDomainRepositoryAndFactory<PhoneOrFaxNumber> {
 
+    public String getId() {
+        return "estatio.PhoneOrFaxNumberRepository";
+    }
+
     public PhoneOrFaxNumberRepository() {
         super(PhoneOrFaxNumberRepository.class, PhoneOrFaxNumber.class);
     }

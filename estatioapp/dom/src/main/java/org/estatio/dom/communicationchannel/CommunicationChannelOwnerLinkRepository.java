@@ -19,8 +19,9 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.List;
+
 import javax.annotation.PostConstruct;
-import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -29,11 +30,17 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
+import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
+
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = CommunicationChannelOwnerLink.class
 )
 public class CommunicationChannelOwnerLinkRepository {
+
+    public String getId() {
+        return "estatio.CommunicationChannelOwnerLinkRepository";
+    }
 
     //region > init
     PolymorphicAssociationLink.Factory<CommunicationChannel,CommunicationChannelOwner,CommunicationChannelOwnerLink,CommunicationChannelOwnerLink.InstantiateEvent> linkFactory;

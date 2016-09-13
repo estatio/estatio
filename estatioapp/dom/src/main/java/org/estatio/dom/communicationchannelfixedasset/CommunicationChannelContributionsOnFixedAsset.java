@@ -26,6 +26,10 @@ import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class CommunicationChannelContributionsOnFixedAsset extends CommunicationChannelContributions {
 
+    public String getId() {
+        return "estatio.CommunicationChannelContributionsOnFixedAsset";
+    }
+
     public CommunicationChannelContributionsOnFixedAsset() {
         super(CommunicationChannelContributionsOnFixedAsset.class);
     }

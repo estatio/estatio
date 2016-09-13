@@ -38,6 +38,10 @@ import org.estatio.dom.geography.Country;
 @DomainService(repositoryFor = PostalAddress.class, nature = NatureOfService.DOMAIN)
 public class PostalAddressRepository extends UdoDomainRepositoryAndFactory<PostalAddress> {
 
+    public String getId() {
+        return "estatio.PostalAddressRepository";
+    }
+
     public PostalAddressRepository() {
         super(PostalAddressRepository.class, PostalAddress.class);
     }
