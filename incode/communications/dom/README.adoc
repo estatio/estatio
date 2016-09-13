@@ -4,9 +4,9 @@
 
 == Domain Model
 
-The following http://yuml.me[] class diagram highlights the main concepts:
+The following class diagram highlights the main concepts:
 
-image::http://yuml.me/d249a44c[link="http://yuml.me/d249a44c"]
+image::http://yuml.me/3960bea1[link="http://yuml.me/3960bea1"]
 
 (The colours used in the diagram are - approximately - from link:https://en.wikipedia.org/wiki/Object_Modeling_in_Color[Object Modeling in Color]).
 
