@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.comms.impl.comms;
+package org.incode.module.communications.dom.impl.comms;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
@@ -34,7 +34,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.joda.time.DateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -44,19 +43,20 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.util.ObjectContracts;
 
-import org.incode.module.commchannel.dom.impl.type.CommunicationChannelType;
-import org.incode.module.comms.CommunicationsModule;
+import org.incode.module.communications.dom.CommunicationsModule;
+
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        identityType=IdentityType.DATASTORE,
-        schema = "incodeCommunications",
-        table = "Communication"
+        identityType=IdentityType.DATASTORE
+        //        ,
+        //        schema = "estatioCommunications"  // DN doesn't seem to allow this to be in a different schema...
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -70,12 +70,20 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Indices({
         @Index(
-                name = "Communication_type_atPath_IDX",
-                members = { "type", "atPath" }
+                name = "CommChannelRole_comm_channel_type_IDX",
+                members = { "communication", "channel", "type" }
         ),
         @Index(
-                name = "Communication_atPath_type_IDX",
-                members = { "atPath", "type" }
+                name = "Communication_channel_comm_type_IDX",
+                members = { "channel", "communication", "type" }
+        ),
+        @Index(
+                name = "CommChannelRole_comm_type_channel_IDX",
+                members = { "communication", "type", "channel" }
+        ),
+        @Index(
+                name = "Communication_channel_type_comm_IDX",
+                members = { "channel", "type", "communication" }
         ),
 })
 @Uniques({
@@ -83,29 +91,28 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "incodeCommunications.Communication"
+        objectType = "estatioCommunications.CommChannelRole"
 )
 @DomainObjectLayout(
-        titleUiEvent = Communication.TitleUiEvent.class,
-        iconUiEvent = Communication.IconUiEvent.class,
-        cssClassUiEvent = Communication.CssClassUiEvent.class,
+        titleUiEvent = CommChannelRole.TitleUiEvent.class,
+        iconUiEvent = CommChannelRole.IconUiEvent.class,
+        cssClassUiEvent = CommChannelRole.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 
-public class Communication implements Comparable<Communication> {
+public class CommChannelRole implements Comparable<CommChannelRole> {
 
     //region > ui event classes
-    public static class TitleUiEvent extends CommunicationsModule.TitleUiEvent<Communication> {}
-    public static class IconUiEvent extends CommunicationsModule.IconUiEvent<Communication>{}
-    public static class CssClassUiEvent extends CommunicationsModule.CssClassUiEvent<Communication>{}
+    public static class TitleUiEvent extends CommunicationsModule.TitleUiEvent<CommChannelRole> {}
+    public static class IconUiEvent extends CommunicationsModule.IconUiEvent<CommChannelRole>{}
+    public static class CssClassUiEvent extends CommunicationsModule.CssClassUiEvent<CommChannelRole>{}
     //endregion
 
     //region > domain event classes
-    public static abstract class PropertyDomainEvent<T> extends CommunicationsModule.PropertyDomainEvent<Communication, T> { }
-    public static abstract class CollectionDomainEvent<T> extends CommunicationsModule.CollectionDomainEvent<Communication, T> { }
-    public static abstract class ActionDomainEvent extends CommunicationsModule.ActionDomainEvent<Communication> { }
+    public static abstract class PropertyDomainEvent<T> extends CommunicationsModule.PropertyDomainEvent<CommChannelRole, T> { }
+    public static abstract class CollectionDomainEvent<T> extends CommunicationsModule.CollectionDomainEvent<CommChannelRole, T> { }
+    public static abstract class ActionDomainEvent extends CommunicationsModule.ActionDomainEvent<CommChannelRole> { }
     //endregion
-
 
     //region > title, icon, cssClass
     /**
@@ -115,14 +122,18 @@ public class Communication implements Comparable<Communication> {
     public static class TitleSubscriber extends AbstractSubscriber {
         @EventHandler
         @Subscribe
-        public void on(Communication.TitleUiEvent ev) {
+        public void on(CommChannelRole.TitleUiEvent ev) {
             if(ev.getTitle() != null) {
                 return;
             }
-            ev.setTitle(titleOf(ev.getSource()));
+            ev.setTranslatableTitle(titleOf(ev.getSource()));
         }
-        private String titleOf(final Communication communication) {
-            return communication.getSubject();
+        private TranslatableString titleOf(final CommChannelRole role) {
+            return TranslatableString.tr(
+                    "{type} {channel}",
+                    "type", role.getType().name(),
+                    "channel", role.getChannel().getName()
+            );
         }
     }
 
@@ -133,7 +144,7 @@ public class Communication implements Comparable<Communication> {
     public static class IconSubscriber extends AbstractSubscriber {
         @EventHandler
         @Subscribe
-        public void on(Communication.IconUiEvent ev) {
+        public void on(CommChannelRole.IconUiEvent ev) {
             if(ev.getIconName() != null) {
                 return;
             }
@@ -148,7 +159,7 @@ public class Communication implements Comparable<Communication> {
     public static class CssClassSubscriber extends AbstractSubscriber {
         @EventHandler
         @Subscribe
-        public void on(Communication.CssClassUiEvent ev) {
+        public void on(CommChannelRole.CssClassUiEvent ev) {
             if(ev.getCssClass() != null) {
                 return;
             }
@@ -158,65 +169,49 @@ public class Communication implements Comparable<Communication> {
     //endregion
 
     //region > constructors
-    public Communication(
-            final CommunicationChannelType type,
-            final String atPath,
-            final String subject,
-            final DateTime sent) {
+    public CommChannelRole(
+            final CommChannelRoleType type,
+            final Communication communication,
+            final CommunicationChannel channel) {
         this.type = type;
-        this.atPath = atPath;
-        this.subject = subject;
-        this.sent = sent;
+        this.communication = communication;
+        this.channel = channel;
     }
     //endregion
 
 
     //region > type (property)
-    public static class TypeDomainEvent extends PropertyDomainEvent<CommunicationChannelType> { }
+    public static class TypeDomainEvent extends PropertyDomainEvent<CommChannelRoleType> { }
     @Getter @Setter
     @Column(allowsNull = "false", name = "typeId")
     @Property(
             domainEvent = TypeDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private CommunicationChannelType type;
-    //endregion
-
-    //region > atPath (property)
-    public static class AtPathDomainEvent extends PropertyDomainEvent<String> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", length = CommunicationsModule.JdoColumnLength.AT_PATH)
-    @Property(
-            domainEvent = AtPathDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(
-            named = "Application tenancy"
-    )
-    private String atPath;
+    private CommChannelRoleType type;
     //endregion
 
 
-    //region > subject (property)
-    public static class SubjectDomainEvent extends PropertyDomainEvent<String> { }
+    //region > communication (property)
+    public static class CommunicationDomainEvent extends PropertyDomainEvent<Communication> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = CommunicationsModule.JdoColumnLength.SUBJECT)
+    @Column(allowsNull = "false", name = "communicationId")
     @Property(
-            domainEvent = SubjectDomainEvent.class,
+            domainEvent = CommunicationDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private String subject;
+    private Communication communication;
     //endregion
 
-    //region > sent (property)
-    public static class SentDomainEvent extends PropertyDomainEvent<DateTime> { }
+    //region > channel (property)
+    public static class ChannelDomainEvent extends PropertyDomainEvent<CommunicationChannel> { }
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "channelId")
     @Property(
-            domainEvent = SentDomainEvent.class,
+            domainEvent = ChannelDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private DateTime sent;
+    private CommunicationChannel channel;
     //endregion
 
 
@@ -237,12 +232,12 @@ public class Communication implements Comparable<Communication> {
     //region > toString, compareTo
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "type", "sent", "subject", "atPath", "id");
+        return ObjectContracts.toString(this, "communication", "type", "channel", "id");
     }
 
     @Override
-    public int compareTo(final Communication other) {
-        return ObjectContracts.compare(this, other, "type", "sent", "subject", "atPath", "id");
+    public int compareTo(final CommChannelRole other) {
+        return ObjectContracts.compare(this, other, "communication", "type", "channel", "id");
     }
     //endregion
 

@@ -16,6 +16,7 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import javax.activation.DataSource;
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
@@ -38,6 +39,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
@@ -260,6 +262,13 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     }
     //endregion
 
+    //region > asDataSource
+    @Programmatic
+    public DataSource asDataSource() {
+        return getSort().asDataSource(this);
+    }
+    //endregion
+
 
     //region > id (programmatic, for comparison)
     @Programmatic
@@ -273,6 +282,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return id;
     }
     //endregion
+
 
 
     //region > toString, compareTo
@@ -290,6 +300,8 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > injected services
     @Inject
     DocumentRepository documentRepository;
+    @Inject
+    FactoryService factoryService;
     //endregion
 
 }

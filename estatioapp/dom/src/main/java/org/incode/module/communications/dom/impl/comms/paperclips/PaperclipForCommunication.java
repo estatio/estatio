@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.paperclips;
+package org.incode.module.communications.dom.impl.comms.paperclips;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -30,11 +30,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.documents.dom.impl.links.Paperclip;
 import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.mixins.T_documents;
-
-import org.estatio.dom.asset.FixedAsset;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,36 +41,36 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE
 //        ,
-//        schema = "estatioAssets"  // DN doesn't seem to allow this to be in a different schema to FixedAsset...
+//        schema = "estatioCommunications"  // DN doesn't seem to allow this to be in a different schema...
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "estatioAssets.PaperclipForFixedAsset"
+        objectType = "estatioCommunications.PaperclipForCommunication"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class PaperclipForFixedAsset extends Paperclip {
+public class PaperclipForCommunication extends Paperclip {
 
-    //region > fixedAsset (property)
+    //region > communication (property)
     @Column(
             allowsNull = "false",
-            name = "fixedAssetId"
+            name = "communicationId"
     )
     @Getter @Setter
-    private FixedAsset<?> fixedAsset;
+    private Communication communication;
     //endregion
 
     //region > attachedTo (hook, derived)
     @NotPersistent
     @Override
     public Object getAttachedTo() {
-        return getFixedAsset();
+        return getCommunication();
     }
 
     @Override
     protected void setAttachedTo(final Object object) {
-        setFixedAsset((FixedAsset<?>) object);
+        setCommunication((Communication) object);
     }
     //endregion
 
@@ -79,7 +78,7 @@ public class PaperclipForFixedAsset extends Paperclip {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
-            super(FixedAsset.class, PaperclipForFixedAsset.class);
+            super(Communication.class, PaperclipForCommunication.class);
         }
     }
     //endregion
@@ -87,9 +86,9 @@ public class PaperclipForFixedAsset extends Paperclip {
     //region > mixins
 
     @Mixin
-    public static class _documents extends T_documents<FixedAsset> {
-        public _documents(final FixedAsset<?> fixedAsset) {
-            super(fixedAsset);
+    public static class _attachments extends T_documents<Communication> {
+        public _attachments(final Communication communication) {
+            super(communication);
         }
     }
 

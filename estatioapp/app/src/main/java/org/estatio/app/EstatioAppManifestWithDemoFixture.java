@@ -23,6 +23,7 @@ public class EstatioAppManifestWithDemoFixture extends EstatioAppManifest {
         final Map<String, String> props = Maps.newHashMap();
         appendProps(props);
         props.put("isis.persistor.datanucleus.install-fixtures", "true");
+
         return props;
 
     }

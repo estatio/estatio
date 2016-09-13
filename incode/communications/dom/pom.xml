@@ -78,7 +78,6 @@ Copyright 2014~2015 Dan Haywood
         <isis.version>1.13.0</isis.version>
         <isis-module-fakedata-dom.version>1.13.0</isis-module-fakedata-dom.version>
 
-        <incode-module-commchannel-dom.version>1.13.0</incode-module-commchannel-dom.version>
         <incode-module-documents-dom.version>1.14.0-SNAPSHOT</incode-module-documents-dom.version>
 
         <lombok.version>1.16.6</lombok.version>
@@ -240,12 +239,6 @@ Copyright 2014~2015 Dan Haywood
             </dependency>
 
             <dependency>
-                <groupId>org.incode.module.commchannel</groupId>
-                <artifactId>incode-module-commchannel-dom</artifactId>
-                <version>${incode-module-commchannel-dom.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
                 <version>${incode-module-documents-dom.version}</version>
@@ -284,11 +277,6 @@ Copyright 2014~2015 Dan Haywood
             <artifactId>danhaywood-java-assertjext</artifactId>
             <version>${danhaywood-java-assertjext.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.commchannel</groupId>
-            <artifactId>incode-module-commchannel-dom</artifactId>
         </dependency>
 
         <dependency>

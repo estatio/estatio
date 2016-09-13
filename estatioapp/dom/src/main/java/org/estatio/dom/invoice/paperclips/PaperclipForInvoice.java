@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.documents.dom.impl.links.Paperclip;
 import org.incode.module.documents.dom.impl.links.PaperclipRepository;
-import org.incode.module.documents.dom.mixins.T_paperclips;
+import org.incode.module.documents.dom.mixins.T_documents;
 
 import org.estatio.dom.invoice.Invoice;
 
@@ -87,8 +87,8 @@ public class PaperclipForInvoice extends Paperclip {
     //region > mixins
 
     @Mixin
-    public static class _paperclips extends T_paperclips<Invoice> {
-        public _paperclips(final Invoice invoice) {
+    public static class _documents extends T_documents<Invoice> {
+        public _documents(final Invoice invoice) {
             super(invoice);
         }
     }

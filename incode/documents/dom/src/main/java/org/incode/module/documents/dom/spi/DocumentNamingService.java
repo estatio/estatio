@@ -39,8 +39,7 @@ public interface DocumentNamingService {
 
 
     /**
-     * Default implementation does not handle any invalid character names in either the supplied document name or the
-     * fallback title from the domain object.
+     * Default implementation replaces any ':' (invalid as a file name).
      */
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class Default implements DocumentNamingService {
@@ -52,6 +51,18 @@ public interface DocumentNamingService {
         @Override
         @Programmatic
         public String nameOf(
+                final String documentName,
+                final Object domainObject,
+                final DocumentTemplate template) {
+            final String rawName = rawNameOf(documentName, domainObject, template);
+            return sanitized(rawName);
+        }
+
+        private String sanitized(final String rawName) {
+            return rawName.replace(":", "-");
+        }
+
+        private String rawNameOf(
                 final String documentName,
                 final Object domainObject,
                 final DocumentTemplate template) {

@@ -168,9 +168,7 @@
                 <tab name="Documents">
                     <row>
                         <col span="12">
-                            <ns2:collection id="paperclips" defaultView="table">
-                                <ns2:named>Documents</ns2:named>
-                            </ns2:collection>
+                            <ns2:collection id="documents" defaultView="table"/>
                         </col>
                     </row>
                 </tab>

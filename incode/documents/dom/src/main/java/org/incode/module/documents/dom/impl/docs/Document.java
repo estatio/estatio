@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.i18n.TranslatableString;
@@ -210,6 +211,18 @@ public class Document extends DocumentAbstract<Document> {
 
     public boolean hideExternalUrl() {
         return !getSort().isExternal();
+    }
+    //endregion
+
+
+    //region > asChars, asBytes (programmatic)
+    @Programmatic
+    public String asChars() {
+        return getSort().asChars(this);
+    }
+    @Programmatic
+    public byte[] asBytes() {
+        return getSort().asBytes(this);
     }
     //endregion
 

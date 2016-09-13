@@ -13,7 +13,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.SecurityModule;
 
-import org.incode.module.commchannel.dom.CommChannelModule;
+import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.documents.dom.DocumentsModule;
 
 import org.estatio.dom.EstatioDomainModule;
@@ -42,8 +42,7 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioDomainLinkModule.class,
                         EstatioDomainSettingsModule.class,
 
-                        CommChannelModule.class,
-//                        CommunicationsModule.class,
+                        CommunicationsModule.class,
                         DocumentsModule.class,
 
                         // TODO: sort out packages for the 'fixture' module
@@ -216,6 +215,20 @@ public class EstatioAppManifest implements AppManifest {
                 Joiner.on(',').join(
                         "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory",
                         "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory"));
+
+
+        // for testing email
+        // (obtain username and password from mailtrap.io's demo inbox)
+
+        // TODO: change as required
+        props.put("isis.service.email.sender.address", "376e415686a6ab@mailtrap.io");
+
+        // TODO: run the app specifying the password:
+        // -D isis.service.email.sender.password=9876543210
+
+        props.put("isis.service.email.sender.hostname", "mailtrap.io");
+        props.put("isis.service.email.port", "2525");
+        props.put("isis.service.email.tls.enabled", "false");
 
         return props;
     }

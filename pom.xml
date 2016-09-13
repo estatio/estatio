@@ -101,7 +101,7 @@ mvn clean install -DskipTests -o
 
         <incode-module-base-dom.version>1.14.0-SNAPSHOT</incode-module-base-dom.version>
         <incode-module-documents-dom.version>1.14.0-SNAPSHOT</incode-module-documents-dom.version>
-        <incode-module-communications-dom.version>1.14.0-SNAPSHOT</incode-module-communications-dom.version>
+
         <isis-module-freemarker-dom.version>1.14.0-SNAPSHOT</isis-module-freemarker-dom.version>
         <isis-module-xdocreport-dom.version>1.14.0-SNAPSHOT</isis-module-xdocreport-dom.version>
 
@@ -567,11 +567,6 @@ mvn clean install -DskipTests -o
             </dependency>
 
             <dependency>
-                <groupId>org.incode.module.commchannel</groupId>
-                <artifactId>incode-module-commchannel-dom</artifactId>
-                <version>${incode-module-commchannel.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
                 <version>${incode-module-documents-dom.version}</version>
@@ -731,20 +726,6 @@ mvn clean install -DskipTests -o
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
                 <version>${incode-module-base-dom.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-
-            <dependency>
-                <groupId>org.incode.module.communications</groupId>
-                <artifactId>incode-module-communications-dom</artifactId>
-                <version>${incode-module-communications-dom.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.communications</groupId>
-                <artifactId>incode-module-communications-dom</artifactId>
-                <version>${incode-module-communications-dom.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>

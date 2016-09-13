@@ -1,5 +1,6 @@
 /*
- *  Copyright 2016 Dan Haywood
+ *  Copyright 2016 Eurocommercial Properties NV
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,11 +15,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.comms.impl.comms;
+package org.estatio.fixture.documents;
 
-public enum CommChannelRoleType {
-    TO,
-    CC,
-    BCC,
-    FROM
+public class DocumentTypeForBlank extends DocumentTypeAbstract {
+
+    public static final String REF = "BLANK";
+
+    @Override
+    protected void execute(final ExecutionContext executionContext) {
+        createType(REF, "Blank (eg email covering note)", executionContext);
+    }
 }

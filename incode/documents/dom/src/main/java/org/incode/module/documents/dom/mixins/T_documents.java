@@ -33,11 +33,11 @@ import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.links.Paperclip;
 import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 
-public abstract class T_paperclips<T> {
+public abstract class T_documents<T> {
 
     //region > constructor and mixedIn accessor
     private final T attachedTo;
-    public T_paperclips(final T attachedTo) {
+    public T_documents(final T attachedTo) {
         this.attachedTo = attachedTo;
     }
 
@@ -49,7 +49,7 @@ public abstract class T_paperclips<T> {
     //endregion
 
     //region > $$
-    public static class DomainEvent extends DocumentsModule.ActionDomainEvent<T_paperclips>  { }
+    public static class DomainEvent extends DocumentsModule.ActionDomainEvent<T_documents>  { }
     @Action(
             domainEvent = DomainEvent.class,
             semantics = SemanticsOf.SAFE

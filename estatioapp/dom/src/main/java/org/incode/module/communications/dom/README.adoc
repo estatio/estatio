@@ -1,0 +1,17 @@
+= incode-module-communications
+:_imagesdir: ./
+
+
+This module is being developed as part of Estatio because otherwise requires moving to use the existing CommChannel module (too much to bite off in one go).
+
+
+
+== Domain Model
+
+The following class diagram highlights the main concepts:
+
+image::http://yuml.me/3960bea1[link="http://yuml.me/3960bea1"]
+
+(The colours used in the diagram are - approximately - from link:https://en.wikipedia.org/wiki/Object_Modeling_in_Color[Object Modeling in Color]).
+
+

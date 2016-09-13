@@ -16,7 +16,21 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+import javax.activation.DataSource;
+
+import org.apache.commons.io.output.NullOutputStream;
+
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 
 public enum DocumentSort {
     /**
@@ -24,8 +38,13 @@ public enum DocumentSort {
      */
     BLOB(DocumentNature.BYTES, DocumentStorage.INTERNAL) {
         @Override
-        public byte[] asBytes(final DocumentTemplate documentTemplate) {
-            return documentTemplate.getBlobBytes();
+        public DataSource asDataSource(final DocumentAbstract<?> document) {
+            return new ByteDataSource(document, asBytes(document));
+        }
+
+        @Override
+        public byte[] asBytes(final DocumentAbstract<?> document) {
+            return document.getBlobBytes();
         }
     },
     /**
@@ -33,8 +52,13 @@ public enum DocumentSort {
      */
     CLOB(DocumentNature.CHARACTERS, DocumentStorage.INTERNAL) {
         @Override
-        public String asChars(final DocumentTemplate documentTemplate) {
-            return documentTemplate.getClobChars();
+        public DataSource asDataSource(final DocumentAbstract<?> document) {
+            return new CharDataSource(document, asChars(document));
+        }
+
+        @Override
+        public String asChars(final DocumentAbstract<?> document) {
+            return document.getClobChars();
         }
     },
     /**
@@ -42,8 +66,13 @@ public enum DocumentSort {
      */
     TEXT(DocumentNature.CHARACTERS, DocumentStorage.INTERNAL) {
         @Override
-        public String asChars(final DocumentTemplate documentTemplate) {
-            return documentTemplate.getText();
+        public DataSource asDataSource(final DocumentAbstract<?> document) {
+            return new CharDataSource(document, asChars(document));
+        }
+
+        @Override
+        public String asChars(final DocumentAbstract<?> document) {
+            return document.getText();
         }
     },
     /**
@@ -53,8 +82,15 @@ public enum DocumentSort {
      */
     EXTERNAL_BLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
-        public byte[] asBytes(final DocumentTemplate documentTemplate) {
-            throw new IllegalStateException("Not yet implemented");
+        public DataSource asDataSource(final DocumentAbstract<?> document) {
+            return new ByteDataSource(document, asBytes(document));
+        }
+
+        @Override
+        public byte[] asBytes(final DocumentAbstract<?> document) {
+            final FactoryService factoryService = document.factoryService;
+            final Blob blob = factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).$$();
+            return blob.getBytes();
         }
     },
     /**
@@ -64,8 +100,16 @@ public enum DocumentSort {
      */
     EXTERNAL_CLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
-        public String asChars(final DocumentTemplate documentTemplate) {
-            throw new IllegalStateException("Not yet implemented");
+        public DataSource asDataSource(final DocumentAbstract<?> document) {
+            return new CharDataSource(document, asChars(document));
+        }
+
+        @Override
+        public String asChars(final DocumentAbstract<?> document) {
+            final FactoryService factoryService = document.factoryService;
+            final Clob clob = factoryService.mixin(Document_downloadExternalUrlAsClob.class, document).$$();
+            final CharSequence chars = clob.getChars();
+            return chars instanceof String ? (String) chars : chars.toString();
         }
     };
 
@@ -78,7 +122,10 @@ public enum DocumentSort {
     }
 
     @Programmatic
-    public String asChars(final DocumentTemplate documentTemplate) {
+    public abstract DataSource asDataSource(final DocumentAbstract<?> document);
+
+    @Programmatic
+    public String asChars(final DocumentAbstract<?> document) {
         throw new IllegalArgumentException("Cannot convert to characters");
     }
 
@@ -86,7 +133,7 @@ public enum DocumentSort {
      * Supported only if {@link #isBytes()}.
      */
     @Programmatic
-    public byte[] asBytes(final DocumentTemplate documentTemplate) {
+    public byte[] asBytes(final DocumentAbstract<?> document) {
         throw new IllegalArgumentException("Cannot convert to bytes");
     }
 
@@ -111,4 +158,63 @@ public enum DocumentSort {
     public boolean isExternal() {
         return storage == DocumentStorage.EXTERNAL;
     }
+
+    private static abstract class DocumentDataSource implements DataSource {
+
+        final DocumentAbstract<?> document;
+        public DocumentDataSource(final DocumentAbstract<?> document) {
+            this.document = document;
+        }
+
+        @Override
+        public OutputStream getOutputStream() throws IOException {
+            return new NullOutputStream();
+        }
+
+        @Override
+        public String getContentType() {
+            return document.getMimeType();
+        }
+
+        @Override
+        public String getName() {
+            return document.getName();
+        }
+    }
+
+    private static class ByteDataSource extends DocumentDataSource {
+
+        private static final Charset CHARSET = StandardCharsets.UTF_8;
+
+        private final byte[] bytes;
+
+        public ByteDataSource(final DocumentAbstract<?> document, final byte[] bytes) {
+            super(document);
+            this.bytes = bytes;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return new ByteArrayInputStream(bytes);
+        }
+    }
+
+    private static class CharDataSource extends DocumentDataSource {
+
+        private static final Charset CHARSET = StandardCharsets.UTF_8;
+
+        private final String chars;
+
+        public CharDataSource(final DocumentAbstract<?> document, final String chars) {
+            super(document);
+            this.chars = chars;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return new ByteArrayInputStream(chars.getBytes(CHARSET));
+        }
+    }
+
+
 }

@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.comms;
+package org.incode.module.communications.dom;
 
 public final class CommunicationsModule {
 
