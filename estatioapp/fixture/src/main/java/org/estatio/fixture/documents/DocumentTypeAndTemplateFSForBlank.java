@@ -32,6 +32,7 @@ import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 import org.incode.module.documents.fixture.RenderingStrategyFSToUseDataModelAsOutput;
 
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.documents.binders.BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
@@ -65,7 +66,7 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
                 "(unused)",
                 renderingStrategy, executionContext);
 
-        documentTemplate.applicable(WithNameGetter.class, HelloDocumentTemplateUserBinderForWithNameGetter.class);
+        documentTemplate.applicable(WithNameGetter.class, BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter.class);
 
         executionContext.addResult(this, documentTemplate);
     }

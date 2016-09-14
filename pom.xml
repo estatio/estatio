@@ -612,6 +612,12 @@ mvn clean install -DskipTests -o
                 <version>${incode-module-docrendering-xdocreport.version}</version>
             </dependency>
 
+            <!-- required for the dataModel implementations used by docrendering-captureurl -->
+            <dependency>
+                <groupId>org.isisaddons.module.stringinterpolator</groupId>
+                <artifactId>isis-module-stringinterpolator-dom</artifactId>
+                <version>${isis-module-stringinterpolator.version}</version>
+            </dependency>
 
 
             <!-- viewer extensions -->
@@ -791,18 +797,6 @@ mvn clean install -DskipTests -o
             </dependency>
 
             <!-- EstatioApp modules -->
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-extras</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-extras</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -1098,7 +1092,6 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/extras</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/webapp</module>
@@ -1126,7 +1119,6 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/extras</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
             </modules>
@@ -1153,7 +1145,6 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/extras</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
@@ -1184,7 +1175,6 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
-                <module>estatioapp/extras</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->

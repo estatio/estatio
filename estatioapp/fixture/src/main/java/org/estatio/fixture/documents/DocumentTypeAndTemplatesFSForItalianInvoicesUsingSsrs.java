@@ -33,6 +33,8 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
+import org.estatio.dom.documents.binders.BinderForReportServer;
+import org.estatio.dom.documents.binders.BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;

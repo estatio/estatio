@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.dom.documents.datamodels;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 

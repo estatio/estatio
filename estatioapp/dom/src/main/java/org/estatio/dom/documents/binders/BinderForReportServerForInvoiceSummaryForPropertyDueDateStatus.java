@@ -17,7 +17,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.dom.documents.binders;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.documents.datamodels.RootForReportServer;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 /**

@@ -34,6 +34,7 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.documents.binders.BinderForReportServer;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemplateFSAbstract {

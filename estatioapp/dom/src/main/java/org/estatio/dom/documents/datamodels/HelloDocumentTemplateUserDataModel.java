@@ -1,4 +1,4 @@
-package org.estatio.app.menus.demo;
+package org.estatio.dom.documents.datamodels;
 
 import lombok.Data;
 

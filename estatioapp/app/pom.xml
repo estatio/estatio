@@ -74,12 +74,6 @@ language governing permissions and limitations under the License.
                 <version>${isis-module-xdocreport.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.isisaddons.module.stringinterpolator</groupId>
-                <artifactId>isis-module-stringinterpolator-dom</artifactId>
-                <version>${isis-module-stringinterpolator.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 

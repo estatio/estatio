@@ -61,10 +61,6 @@ language governing permissions and limitations under the License.
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-dom</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-extras</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.incode.module.docrendering</groupId>

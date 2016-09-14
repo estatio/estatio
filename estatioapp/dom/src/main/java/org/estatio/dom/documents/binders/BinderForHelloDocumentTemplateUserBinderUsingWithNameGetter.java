@@ -17,17 +17,17 @@
  *  under the License.
  */
 
-package org.estatio.fixture.documents;
+package org.estatio.dom.documents.binders;
 
 import java.util.Collections;
 
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.app.menus.demo.HelloDocumentTemplateUserDataModel;
+import org.estatio.dom.documents.datamodels.HelloDocumentTemplateUserDataModel;
 import org.estatio.dom.WithNameGetter;
 
-public class HelloDocumentTemplateUserBinderForWithNameGetter implements Binder {
+public class BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter implements Binder {
 
     @Override
     public Binding newBinding(

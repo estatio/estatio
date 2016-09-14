@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.dom.documents.binders;
 
 import java.util.Collections;
 
@@ -27,6 +27,7 @@ import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.documents.datamodels.RootForReportServer;
 
 /**
  * Uses {@link StringInterpolatorService} to create data model, and requires domain object to implement {@link WithApplicationTenancy}.
