@@ -19,6 +19,8 @@
 
 package org.estatio.fixture.documents;
 
+import java.util.Collections;
+
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
@@ -40,7 +42,7 @@ public class HelloDocumentTemplateUserBinderForWithNameGetter implements Binder 
         final HelloDocumentTemplateUserDataModel dataModel = new HelloDocumentTemplateUserDataModel();
         dataModel.setUser(withNameGetter.getName());
 
-        return new Binding(dataModel, domainObject);
+        return new Binding(dataModel, Collections.singletonList(domainObject));
     }
 
 }

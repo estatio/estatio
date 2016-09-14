@@ -17,7 +17,6 @@
  */
 package org.incode.module.documents.dom.impl.applicability;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
@@ -45,11 +44,6 @@ public interface Binder {
         public Binding(final Object dataModel, final List<Object> attachTo) {
             this.dataModel = dataModel;
             this.attachTo = attachTo;
-        }
-
-        public Binding(final Object dataModel, final Object... attachTo) {
-            this.dataModel = dataModel;
-            this.attachTo = Arrays.asList(attachTo);
         }
     }
 

@@ -96,8 +96,28 @@ while `Binder` is defined as:
 
 [source,java]
 ----
-
+public interface Binder {
+    Binding newBinding(
+            final DocumentTemplate documentTemplate,
+            final Object domainObject);
+}
 ----
+
+and `Binding` is in turn:
+
+[source,java]
+----
+public class Binding {
+    ...
+    private final Object dataModel;
+    private final List<Object> attachTo;
+    public Binding(final Object dataModel, final List<Object> attachTo) {
+        this.dataModel = dataModel;
+        this.attachTo = attachTo;
+    }
+}
+----
+
 
 === Renderers
 
@@ -209,12 +229,13 @@ doesn't just provide this mixin out-of-the-box is (a) for consistency with other
 ====
 
 
-==== T_paperclips
+==== T_documents
 
-The `T_paperclips` mixin collection returns the list of paperclips for the specified domain object.
+The `T_documents` mixin collection returns the list of ``Paperclip``s that each attach a `Document` to the specified
+domain object.
 
-Since ``Paperclip``s can only be created for domain objects where a subclass of `Paperclip` has been defined (see above), it's typical for this mixin to be defined as a nested static class of that `Paperclip` subclass.
-
+Since ``Paperclip``s can only be created for domain objects where a subclass of `Paperclip` has been defined (see
+above), it's typical for this mixin to be defined as a nested static class of that `Paperclip` subclass.
 For example:
 
 [source,java]
@@ -223,8 +244,8 @@ For example:
 public class PaperclipForInvoice extends Paperclip {
     ...
     @Mixin
-    public static class _paperclips extends T_paperclips<Invoice> {
-        public _paperclips(final Invoice invoice) {
+    public static class _documents extends T_paperclips<Invoice> {
+        public _documents(final Invoice invoice) {
             super(invoice);
         }
     }

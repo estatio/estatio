@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -19,6 +18,8 @@
  */
 package org.estatio.fixture.documents;
 
+import java.util.Collections;
+
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
@@ -38,13 +39,14 @@ public class BinderForReportServer implements Binder {
 
         final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
 
-        final StringInterpolatorService.Root dataModel = new StringInterpolatorService.Root(domainObject) {
-            @SuppressWarnings("unused")
-            public String getReportServerBaseUrl() {
-                return baseUrl;
-            }
-        };
-        return new Binding(dataModel, domainObject);
+        // dataModel
+        final StringInterpolatorService.Root dataModel = new RootForReportServer(domainObject, baseUrl);
+
+        // attachTo
+        final Object attachTo = domainObject;
+
+        // binding
+        return new Binding(dataModel, Collections.singletonList(attachTo));
     }
 
     @javax.inject.Inject

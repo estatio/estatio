@@ -40,22 +40,22 @@ public class BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus impl
     public Binding newBinding(
             final DocumentTemplate documentTemplate,
             final Object domainObject) {
+
         if(!(domainObject instanceof InvoiceSummaryForPropertyDueDateStatus)) {
             throw new IllegalArgumentException("Domain object must be of type: InvoiceSummaryForPropertyDueDateStatus");
         }
-        InvoiceSummaryForPropertyDueDateStatus viewModel = (InvoiceSummaryForPropertyDueDateStatus) domainObject;
+
+        // dataModel
         final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
+        final StringInterpolatorService.Root dataModel = new RootForReportServer(domainObject, baseUrl);
 
-        final StringInterpolatorService.Root dataModel = new StringInterpolatorService.Root(domainObject) {
-            @SuppressWarnings("unused")
-            public String getReportServerBaseUrl() {
-                return baseUrl;
-            }
-        };
-
+        // attachTo
+        final InvoiceSummaryForPropertyDueDateStatus viewModel = (InvoiceSummaryForPropertyDueDateStatus) domainObject;
         final List<Object> attachTo = Lists.newArrayList();
         attachTo.add(viewModel.getSeller());
         attachTo.addAll(viewModel.getInvoices());
+
+        // binding
         return new Binding(dataModel, attachTo);
     }
 
