@@ -34,13 +34,14 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
-public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
+public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS extends DocumentTemplateFSAbstract {
 
     public static final String TYPE_REF = "FLOOR_PLAN";
 
@@ -62,7 +63,7 @@ public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf extends Documen
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new RenderingStrategyForSvg());
+        executionContext.executeChild(this, new RenderingStrategyFSForSvg());
         executionContext.executeChild(this, new ApplicationTenancyForGbOxf());
         executionContext.executeChild(this, new PropertyForOxfGb());
 
@@ -72,9 +73,9 @@ public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf extends Documen
                 fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF).get(0);
 
         final DocumentType documentType =
-                documentTypeRepository.findByReference(DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf.TYPE_REF);
+                documentTypeRepository.findByReference(DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS.TYPE_REF);
         final RenderingStrategy renderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyForSvg.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForSvg.REF);
 
         final Clob clob = readSvgResourceAsClob(NAME);
 

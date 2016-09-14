@@ -31,11 +31,12 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
-public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTemplateAbstract {
+public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemplateFSAbstract {
 
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
@@ -46,11 +47,11 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new RenderingStrategyForSsrs());
-        executionContext.executeChild(this, new RenderingStrategyForSsrsNoPreview());
+        executionContext.executeChild(this, new RenderingStrategyFSForSsrs());
+        executionContext.executeChild(this, new RenderingStrategyFSForSsrsNoPreview());
 
         final RenderingStrategy ssrsRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyForSsrs.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForSsrs.REF);
 
         final DocumentTemplate demoTemplate = createTypeAndTemplate(
                 DEMO_SSRS_GLOBAL,
@@ -64,7 +65,7 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
 
 
         final RenderingStrategy ssrsNoPreviewRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyForSsrsNoPreview.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForSsrsNoPreview.REF);
 
         final DocumentTemplate demoNoPreviewTemplate = createTypeAndTemplate(
                 DEMO_SSRS_NO_PREVIEW_GLOBAL,

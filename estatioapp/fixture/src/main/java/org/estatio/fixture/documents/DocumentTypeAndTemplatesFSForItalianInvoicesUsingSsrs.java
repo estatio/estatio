@@ -31,38 +31,39 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-public class DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs extends DocumentTemplateAbstract {
+public class DocumentTypeAndTemplatesFSForItalianInvoicesUsingSsrs extends DocumentTemplateFSAbstract {
 
-    public static final String AT_PATH = ApplicationTenancyForNl.PATH;
+    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
 
     // applicable to Invoice.class
-    public static final String DOC_TYPE_REF_INVOICE_PRELIM_NLD = "INVOICE-PRELIM/NLD";
-    public static final String DOC_TYPE_REF_INVOICE_NLD = "INVOICE/NLD";
+    public static final String DOC_TYPE_REF_INVOICE_PRELIM_ITA = "INVOICE-PRELIM/ITA";
+    public static final String DOC_TYPE_REF_INVOICE_ITA = "INVOICE/ITA";
 
     // applicable to InvoiceSummaryForPropertyDueDateStatus.class
-    public static final String DOC_TYPE_REF_INVOICES_OVERVIEW_NLD = "INVOICES/NLD";
-    public static final String DOC_TYPE_REF_INVOICES_PRELIM_NLD = "INVOICES-PRELIM/NLD";
-    public static final String DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER_NLD = "INVOICES-FOR-SELLER/NLD";
+    public static final String DOC_TYPE_REF_INVOICES_OVERVIEW_ITA = "INVOICES/ITA";
+    public static final String DOC_TYPE_REF_INVOICES_PRELIM_ITA = "INVOICES-PRELIM/ITA";
+    public static final String DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER_ITA = "INVOICES-FOR-SELLER/ITA";
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new RenderingStrategyForSsrs());
+        executionContext.executeChild(this, new RenderingStrategyFSForSsrs());
 
         final String url = "${reportServerBaseUrl}";
 
         final RenderingStrategy renderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyForSsrs.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForSsrs.REF);
 
-        final DocumentTemplate dutchPrelimInvoiceTemplate = createTypeAndTemplate(
-                DOC_TYPE_REF_INVOICE_PRELIM_NLD,
-                "Preliminary letter for Invoice (Netherlands)",
+        final DocumentTemplate prelimInvoiceTemplate = createTypeAndTemplate(
+                DOC_TYPE_REF_INVOICE_PRELIM_ITA,
+                "Preliminary letter for Invoice (Italy)",
                 AT_PATH,
                 renderingStrategy,
                 url
@@ -71,9 +72,9 @@ public class DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs extends DocumentT
                         + "&rs:Command=Render",
                 executionContext);
 
-        final DocumentTemplate dutchInvoiceTemplate = createTypeAndTemplate(
-                DOC_TYPE_REF_INVOICE_NLD,
-                "Invoice (Netherlands)",
+        final DocumentTemplate italyInvoiceTemplate = createTypeAndTemplate(
+                DOC_TYPE_REF_INVOICE_ITA,
+                "Invoice (Italy)",
                 AT_PATH,
                 renderingStrategy,
                 url
@@ -82,15 +83,15 @@ public class DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs extends DocumentT
                         + "&rs:Command=Render",
                 executionContext);
 
-        dutchPrelimInvoiceTemplate.applicable(
+        prelimInvoiceTemplate.applicable(
                 Invoice.class.getName(), BinderForReportServer.class.getName());
-        dutchInvoiceTemplate.applicable(
+        italyInvoiceTemplate.applicable(
                 Invoice.class.getName(), BinderForReportServer.class.getName());
 
 
-        final DocumentTemplate dutchInvoicesOverviewTemplate = createTypeAndTemplate(
-                DOC_TYPE_REF_INVOICES_OVERVIEW_NLD,
-                "Invoices overview (Netherlands)",
+        final DocumentTemplate italyInvoicesOverviewTemplate = createTypeAndTemplate(
+                DOC_TYPE_REF_INVOICES_OVERVIEW_ITA,
+                "Invoices overview (Italy)",
                 AT_PATH,
                 renderingStrategy,
                 url
@@ -99,9 +100,9 @@ public class DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs extends DocumentT
                         + "&rs:Command=Render",
                 executionContext);
 
-        final DocumentTemplate dutchPrelimInvoicesTemplate = createTypeAndTemplate(
-                DOC_TYPE_REF_INVOICES_PRELIM_NLD,
-                "Preliminary letter for Invoices (Netherlands)",
+        final DocumentTemplate italyPrelimInvoicesTemplate = createTypeAndTemplate(
+                DOC_TYPE_REF_INVOICES_PRELIM_ITA,
+                "Preliminary letter for Invoices (Italy)",
                 AT_PATH,
                 renderingStrategy,
                 url
@@ -110,9 +111,9 @@ public class DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs extends DocumentT
                         + "&rs:Command=Render",
                 executionContext);
 
-        final DocumentTemplate dutchInvoicesForSellerTemplate = createTypeAndTemplate(
-                DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER_NLD,
-                "Invoice for Seller (Netherlands)",
+        final DocumentTemplate italyInvoicesForSellerTemplate = createTypeAndTemplate(
+                DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER_ITA,
+                "Invoice for Seller (Italy)",
                 AT_PATH,
                 renderingStrategy,
                 url
@@ -121,13 +122,13 @@ public class DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs extends DocumentT
                         + "&rs:Command=Render",
                 executionContext);
 
-        dutchInvoicesOverviewTemplate.applicable(
+        italyInvoicesOverviewTemplate.applicable(
                 InvoiceSummaryForPropertyDueDateStatus.class.getName(),
                 BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class.getName());
-        dutchPrelimInvoicesTemplate.applicable(
+        italyPrelimInvoicesTemplate.applicable(
                 InvoiceSummaryForPropertyDueDateStatus.class.getName(),
                 BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class.getName());
-        dutchInvoicesForSellerTemplate.applicable(
+        italyInvoicesForSellerTemplate.applicable(
                 InvoiceSummaryForPropertyDueDateStatus.class.getName(),
                 BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class.getName());
     }

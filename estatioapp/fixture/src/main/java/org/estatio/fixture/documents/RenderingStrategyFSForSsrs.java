@@ -18,21 +18,22 @@
 package org.estatio.fixture.documents;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
+import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.app.integration.documents.RendererUsingStringInterpolatorCaptureUrl;
+import org.estatio.app.integration.documents.RendererUsingStringInterpolatorPreviewAndCaptureUrl;
 
-public class RenderingStrategyForSsrsNoPreview extends RenderingStrategyAbstract {
+public class RenderingStrategyFSForSsrs extends RenderingStrategyFSAbstract {
 
-    public static final String REF = "SSRS-NP";
+    public static final String REF = "SSRS";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         createRenderingStrategy(
                 REF,
-                "SQL Server Reporting Services (no preview)",
+                "SQL Server Reporting Services",
                 DocumentNature.CHARACTERS,
                 DocumentNature.BYTES,
-                RendererUsingStringInterpolatorCaptureUrl.class, executionContext);
+                RendererUsingStringInterpolatorPreviewAndCaptureUrl.class, executionContext);
     }
 
 }

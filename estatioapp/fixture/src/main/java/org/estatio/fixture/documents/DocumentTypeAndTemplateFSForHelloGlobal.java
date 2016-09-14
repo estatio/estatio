@@ -28,17 +28,18 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.WithNameGetter;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
-public class DocumentTypeAndTemplateForHelloGlobal extends DocumentTemplateAbstract {
+public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSAbstract {
 
     public static final String TYPE_REF = "HELLO";
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
-    public static final String RENDERING_STRATEGY_REF = RenderingStrategyForFreemarker.REF;
+    public static final String RENDERING_STRATEGY_REF = RenderingStrategyFSForFreemarker.REF;
     public static final String TEMPLATE_NAME = "Hello template";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
     public static final String FILE_SUFFIX = ".txt";
@@ -49,7 +50,7 @@ public class DocumentTypeAndTemplateForHelloGlobal extends DocumentTemplateAbstr
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new RenderingStrategyForFreemarker());
+        executionContext.executeChild(this, new RenderingStrategyFSForFreemarker());
 
 
         createType(TYPE_REF, "Hello world!", executionContext);

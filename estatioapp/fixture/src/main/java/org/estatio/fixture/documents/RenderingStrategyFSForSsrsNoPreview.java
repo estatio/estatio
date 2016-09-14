@@ -18,21 +18,22 @@
 package org.estatio.fixture.documents;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
+import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.app.integration.documents.RendererForUseInputAsOutput;
+import org.estatio.app.integration.documents.RendererUsingStringInterpolatorCaptureUrl;
 
-public class RenderingStrategyForUseInputAsOutput extends RenderingStrategyAbstract {
+public class RenderingStrategyFSForSsrsNoPreview extends RenderingStrategyFSAbstract {
 
-    public static final String REF = "IAO";
+    public static final String REF = "SSRS-NP";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         createRenderingStrategy(
                 REF,
-                "Use input as output",
-                DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
-                RendererForUseInputAsOutput.class, executionContext);
-
+                "SQL Server Reporting Services (no preview)",
+                DocumentNature.CHARACTERS,
+                DocumentNature.BYTES,
+                RendererUsingStringInterpolatorCaptureUrl.class, executionContext);
     }
 
 }

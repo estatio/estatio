@@ -18,20 +18,23 @@
 package org.estatio.fixture.documents;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
+import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.app.integration.documents.RendererForSvg;
+import org.estatio.app.integration.documents.RendererForFreemarker;
 
-public class RenderingStrategyForSvg extends RenderingStrategyAbstract {
+public class RenderingStrategyFSForFreemarker extends RenderingStrategyFSAbstract {
 
-    public static final String REF = "SVG";
+    public static final String REF = "FMK";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         createRenderingStrategy(
                 REF,
-                "SVG Rendering Strategy",
+                "RendererForFreemarker Rendering Strategy",
                 DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
-                RendererForSvg.class, executionContext);
+                RendererForFreemarker.class, executionContext);
+
     }
+
 
 }

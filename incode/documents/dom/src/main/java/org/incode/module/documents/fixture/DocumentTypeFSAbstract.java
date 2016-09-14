@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.incode.module.documents.fixture;
 
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
-public abstract class DocumentTypeAbstract extends FixtureScript {
+public abstract class DocumentTypeFSAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
