@@ -62,7 +62,7 @@ import org.estatio.dom.communicationchannel.EmailAddress;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.documents.DocumentTypeForBlank;
+import org.estatio.fixture.documents.DocumentTypeAndTemplateForBlank;
 
 @Mixin
 public class Document_email  {
@@ -102,7 +102,8 @@ public class Document_email  {
 
         // ... and create and attach cover note
         if(coveringNote != null) {
-            final DocumentType blankDocType = documentTypeRepository.findByReference(DocumentTypeForBlank.REF);
+            final DocumentType blankDocType =
+                    documentTypeRepository.findByReference(DocumentTypeAndTemplateForBlank.TYPE_REF);
 
             final List<DocumentTemplate> docTemplates = documentTemplateRepository
                     .findByTypeAndApplicableToAtPath(blankDocType, document.getAtPath());

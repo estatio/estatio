@@ -29,12 +29,12 @@ import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
-import org.estatio.fixture.documents.DocumentTemplateForBlank;
-import org.estatio.fixture.documents.DocumentTemplateForHelloGlobal;
+import org.estatio.fixture.documents.DocumentTypeAndTemplateForBlank;
+import org.estatio.fixture.documents.DocumentTypeAndTemplateForHelloGlobal;
 import org.estatio.fixture.documents.DocumentTypeAndTemplateForDemoSsrsOnProperty;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs;
-import org.estatio.fixture.documents.FloorPlanDocumentForGbOxf;
+import org.estatio.fixture.documents.DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
@@ -102,9 +102,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectsForGra());
 
-        executionContext.executeChild(this, new DocumentTemplateForHelloGlobal());
-        executionContext.executeChild(this, new DocumentTemplateForBlank());
-        executionContext.executeChild(this, new FloorPlanDocumentForGbOxf());
+        executionContext.executeChild(this, new DocumentTypeAndTemplateForHelloGlobal());
+        executionContext.executeChild(this, new DocumentTypeAndTemplateForBlank());
+        executionContext.executeChild(this, new DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf());
         executionContext.executeChild(this, new DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs());
         executionContext.executeChild(this, new DocumentTypeAndTemplatesForDutchInvoicesUsingSsrs());
         executionContext.executeChild(this, new DocumentTypeAndTemplateForDemoSsrsOnProperty());

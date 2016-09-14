@@ -23,9 +23,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
@@ -33,13 +33,13 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
-public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
+public class DocumentTypeAndTemplateForBlank extends DocumentTemplateAbstract {
 
-    public static final String TYPE_REF = DocumentTypeForHello.REF;
+    public static final String TYPE_REF = "BLANK";
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
-    public static final String RENDERING_STRATEGY_REF = RenderingStrategyForFreemarker.REF;
-    public static final String TEMPLATE_NAME = "Hello template";
+    public static final String RENDERING_STRATEGY_REF = RenderingStrategyForUseInputAsOutput.REF;
+    public static final String TEMPLATE_NAME = "Blank template";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
     public static final String FILE_SUFFIX = ".txt";
 
@@ -48,9 +48,11 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
 
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new DocumentTypeForHello());
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new RenderingStrategyForFreemarker());
+        executionContext.executeChild(this, new RenderingStrategyForUseInputAsOutput());
+
+
+        createType(TYPE_REF, "Blank (eg email covering note)", executionContext);
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
         final RenderingStrategy renderingStrategy = renderingStrategyRepository.findByReference(RENDERING_STRATEGY_REF);
@@ -58,7 +60,7 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
 
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
                 documentType, date, TEMPLATE_NAME, TEMPLATE_MIME_TYPE, FILE_SUFFIX, AT_PATH,
-                "Hello ${user}",
+                "(unused)",
                 renderingStrategy, executionContext);
 
         documentTemplate.applicable(WithNameGetter.class, HelloDocumentTemplateUserBinderForWithNameGetter.class);

@@ -40,7 +40,9 @@ import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
-public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
+public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
+
+    public static final String TYPE_REF = "FLOOR_PLAN";
 
     public static final String FILE_SUFFIX = "svg";
     public static final String NAME = PropertyForOxfGb.REF + "." + FILE_SUFFIX;
@@ -60,16 +62,17 @@ public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new DocumentTypeForFloorPlan());
         executionContext.executeChild(this, new RenderingStrategyForSvg());
         executionContext.executeChild(this, new ApplicationTenancyForGbOxf());
         executionContext.executeChild(this, new PropertyForOxfGb());
+
+        createType(TYPE_REF, "Floor plan", executionContext);
 
         final FixedAsset property =
                 fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF).get(0);
 
         final DocumentType documentType =
-                documentTypeRepository.findByReference(DocumentTypeForFloorPlan.REF);
+                documentTypeRepository.findByReference(DocumentTypeAndTemplateForFloorPlanDocumentForGbOxf.TYPE_REF);
         final RenderingStrategy renderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyForSvg.REF);
 
