@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communicationchannelparty;
+package org.estatio.dom.communications;
 
 import javax.inject.Inject;
 
