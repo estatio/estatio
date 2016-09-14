@@ -217,20 +217,24 @@ public class EstatioAppManifest implements AppManifest {
                         "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory"));
 
 
-        // for testing email
-        // (obtain username and password from mailtrap.io's demo inbox)
+        // for testing email (using debugmail.io)
 
-        // TODO: change as required
-        props.put("isis.service.email.sender.address", "376e415686a6ab@mailtrap.io");
+        // TODO: change username as required
+        final String username = "dan@haywood-associates.co.uk";
+        // TODO: also, run the app specifying the password provided by debugmail.io (a GUID):
+        // -D isis.service.email.sender.password=99999999-9999-9999-9999-999999999999
 
-        // TODO: run the app specifying the password:
-        // -D isis.service.email.sender.password=9876543210
-
-        props.put("isis.service.email.sender.hostname", "mailtrap.io");
-        props.put("isis.service.email.port", "2525");
-        props.put("isis.service.email.tls.enabled", "false");
+        putDebugMailSmtpSettings(username, props);
 
         return props;
+    }
+
+    private void putDebugMailSmtpSettings(final String username, final Map<String, String> props) {
+        props.put("isis.service.email.sender.address", username);
+
+        props.put("isis.service.email.sender.hostname", "debugmail.io");
+        props.put("isis.service.email.port", "25");
+        props.put("isis.service.email.tls.enabled", "false");
     }
 
 }

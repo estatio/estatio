@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -44,6 +45,7 @@ import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.spi.DocumentEmailSupportService;
 import org.incode.module.communications.dom.spi.EmailHeader;
+import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
@@ -71,7 +73,12 @@ public class Document_email  {
         this.document = document;
     }
 
-    @Action()
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Document_email> { }
+
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT,
+            domainEvent = ActionDomainEvent.class
+    )
     public Communication $$(
             @ParameterLayout(named = "to:")
             final EmailAddress to,
