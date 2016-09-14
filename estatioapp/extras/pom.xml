@@ -84,6 +84,12 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
+            <version>${isis-module-stringinterpolator.version}</version>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>

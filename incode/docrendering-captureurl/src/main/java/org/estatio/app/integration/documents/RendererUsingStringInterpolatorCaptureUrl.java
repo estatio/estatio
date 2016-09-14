@@ -30,7 +30,7 @@ import org.apache.isis.applib.services.config.ConfigurationService;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToBytes;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytes;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
 public class RendererUsingStringInterpolatorCaptureUrl implements RendererFromCharsToBytes {

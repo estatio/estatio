@@ -27,10 +27,10 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.rendering.Renderer;
+import org.incode.module.documents.dom.impl.renderers.Renderer;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
-import org.incode.module.documents.dom.impl.rendering.RendererClassNameSpecification;
+import org.incode.module.documents.dom.impl.renderers.RendererClassNameSpecification;
 
 @Mixin
 public class RenderingStrategy_changeRenderer {

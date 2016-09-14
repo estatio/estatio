@@ -29,6 +29,7 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.module.documents.fixture.RenderingStrategyFSToUseDataModelAsOutput;
 
 import org.estatio.dom.WithNameGetter;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -39,7 +40,7 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
     public static final String TYPE_REF = "BLANK";
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
-    public static final String RENDERING_STRATEGY_REF = RenderingStrategyFSForUseInputAsOutput.REF;
+    public static final String RENDERING_STRATEGY_REF = RenderingStrategyFSToUseDataModelAsOutput.REF;
     public static final String TEMPLATE_NAME = "Blank template";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
     public static final String FILE_SUFFIX = ".txt";
@@ -50,7 +51,7 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new RenderingStrategyFSForUseInputAsOutput());
+        executionContext.executeChild(this, new RenderingStrategyFSToUseDataModelAsOutput());
 
 
         createType(TYPE_REF, "Blank (eg email covering note)", executionContext);

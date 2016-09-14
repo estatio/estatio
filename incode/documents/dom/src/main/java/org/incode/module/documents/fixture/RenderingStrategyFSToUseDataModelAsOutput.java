@@ -15,16 +15,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.incode.module.documents.fixture;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.app.integration.documents.RendererForUseInputAsOutput;
+import org.incode.module.documents.dom.impl.renderers.RendererUsesDataModelAsOutput;
 
-public class RenderingStrategyFSForUseInputAsOutput extends RenderingStrategyFSAbstract {
+public class RenderingStrategyFSToUseDataModelAsOutput extends RenderingStrategyFSAbstract {
 
-    public static final String REF = "IAO";
+    public static final String REF = "DIRECT";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -32,7 +32,7 @@ public class RenderingStrategyFSForUseInputAsOutput extends RenderingStrategyFSA
                 REF,
                 "Use input as output",
                 DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
-                RendererForUseInputAsOutput.class, executionContext);
+                RendererUsesDataModelAsOutput.class, executionContext);
 
     }
 

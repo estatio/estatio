@@ -21,13 +21,13 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.documents.dom.impl.rendering.Renderer;
-import org.incode.module.documents.dom.impl.rendering.RendererFromBytesToBytes;
-import org.incode.module.documents.dom.impl.rendering.RendererFromBytesToChars;
-import org.incode.module.documents.dom.impl.rendering.RendererFromBytesToCharsWithPreviewToUrl;
-import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToBytes;
-import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToChars;
-import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToBytesWithPreviewToUrl;
+import org.incode.module.documents.dom.impl.renderers.Renderer;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToBytes;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToChars;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToCharsWithPreviewToUrl;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytes;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToChars;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytesWithPreviewToUrl;
 
 public enum DocumentNature {
     CHARACTERS(

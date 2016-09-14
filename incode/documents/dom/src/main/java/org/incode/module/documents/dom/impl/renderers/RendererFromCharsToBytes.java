@@ -14,19 +14,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.rendering;
+package org.incode.module.documents.dom.impl.renderers;
 
 import java.io.IOException;
 
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-public interface RendererFromBytesToChars extends Renderer {
+public interface RendererFromCharsToBytes extends Renderer {
 
-    String renderBytesToChars(
+    byte[] renderCharsToBytes(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,
-            final byte[] templateBytes,
+            final String templateChars,
             final Object dataModel,
             final String documentName) throws IOException;
 

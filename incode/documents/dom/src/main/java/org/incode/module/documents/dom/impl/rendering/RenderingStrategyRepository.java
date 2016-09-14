@@ -27,6 +27,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
+import org.incode.module.documents.dom.impl.renderers.Renderer;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

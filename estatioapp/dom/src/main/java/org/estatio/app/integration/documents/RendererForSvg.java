@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.services.config.ConfigurationService;
 
-import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToChars;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToChars;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
 public class RendererForSvg implements RendererFromCharsToChars {

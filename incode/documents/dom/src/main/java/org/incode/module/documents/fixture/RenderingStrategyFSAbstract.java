@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
-import org.incode.module.documents.dom.impl.rendering.Renderer;
+import org.incode.module.documents.dom.impl.renderers.Renderer;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 

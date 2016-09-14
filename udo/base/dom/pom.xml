@@ -173,12 +173,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-security-dom</artifactId>
         </dependency>
 
-        <!-- STRING INTERPOLATOR -->
-        <dependency>
-            <groupId>org.isisaddons.module.stringinterpolator</groupId>
-            <artifactId>isis-module-stringinterpolator-dom</artifactId>
-        </dependency>
-        
     </dependencies>
 
     <profiles>

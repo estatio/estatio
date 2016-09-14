@@ -89,7 +89,9 @@ mvn clean install -DskipTests -o
         <isis-module-security.version>1.13.0</isis-module-security.version>
         <isis-module-sessionlogger.version>1.13.0</isis-module-sessionlogger.version>
         <isis-module-settings.version>1.13.0</isis-module-settings.version>
+
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
+        <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
 
         <isis-metamodel-paraname8.version>1.13.0</isis-metamodel-paraname8.version>
 
@@ -102,6 +104,7 @@ mvn clean install -DskipTests -o
         <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
         <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
 
+        <incode-module-docrendering-captureurl.version>1.14.0-SNAPSHOT</incode-module-docrendering-captureurl.version>
         <incode-module-docrendering-freemarker.version>1.14.0-SNAPSHOT</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-xdocreport.version>1.14.0-SNAPSHOT</incode-module-docrendering-xdocreport.version>
 
@@ -581,6 +584,11 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-captureurl</artifactId>
+                <version>${incode-module-docrendering-captureurl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
                 <artifactId>incode-module-docrendering-freemarker</artifactId>
                 <version>${incode-module-docrendering-freemarker.version}</version>
             </dependency>
@@ -591,11 +599,6 @@ mvn clean install -DskipTests -o
             </dependency>
 
 
-            <dependency>
-                <groupId>org.isisaddons.module.stringinterpolator</groupId>
-                <artifactId>isis-module-stringinterpolator-dom</artifactId>
-                <version>${isis-module-stringinterpolator.version}</version>
-            </dependency>
 
             <!-- viewer extensions -->
             <dependency>
@@ -1075,6 +1078,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
+                <module>incode/docrendering-captureurl</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
@@ -1102,6 +1106,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
+                <module>incode/docrendering-captureurl</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
@@ -1128,6 +1133,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
+                <module>incode/docrendering-captureurl</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
@@ -1158,6 +1164,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
+                <module>incode/docrendering-captureurl</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>

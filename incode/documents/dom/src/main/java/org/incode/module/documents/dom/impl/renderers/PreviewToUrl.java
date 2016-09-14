@@ -14,20 +14,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.rendering;
+package org.incode.module.documents.dom.impl.renderers;
 
-import java.io.IOException;
+/**
+ * Marker interface indicating that the rendered can be used for previewing.
+ */
+public interface PreviewToUrl {
 
-import org.incode.module.documents.dom.impl.types.DocumentType;
-
-public interface RendererFromCharsToBytes extends Renderer {
-
-    byte[] renderCharsToBytes(
-            final DocumentType documentType,
-            final String atPath,
-            final long templateVersion,
-            final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException;
 
 }

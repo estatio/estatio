@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.rendering;
+package org.incode.module.documents.dom.impl.renderers;
 
 import javax.inject.Inject;
 

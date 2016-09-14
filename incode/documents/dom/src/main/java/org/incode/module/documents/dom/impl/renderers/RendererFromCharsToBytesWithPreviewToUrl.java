@@ -14,15 +14,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.rendering;
+package org.incode.module.documents.dom.impl.renderers;
 
 import java.io.IOException;
+import java.net.URL;
 
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-public interface RendererFromCharsToChars extends Renderer {
+public interface RendererFromCharsToBytesWithPreviewToUrl extends RendererFromCharsToBytes, PreviewToUrl {
 
-    String renderCharsToChars(
+    URL previewCharsToBytes(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,

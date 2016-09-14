@@ -14,12 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.rendering;
+package org.incode.module.documents.dom.impl.renderers;
 
-/**
- * Marker interface indicating that the rendered can be used for previewing.
- */
-public interface PreviewToUrl {
+import java.io.IOException;
+import java.net.URL;
 
+import org.incode.module.documents.dom.impl.types.DocumentType;
+
+public interface RendererFromBytesToBytesWithPreviewToUrl extends RendererFromBytesToBytes, PreviewToUrl {
+
+    URL previewBytesToBytes(
+            final DocumentType documentType,
+            final String atPath,
+            final long templateVersion,
+            final byte[] templateBytes,
+            final Object dataModel,
+            final String documentName) throws IOException;
 
 }

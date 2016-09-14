@@ -53,6 +53,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.impl.renderers.PreviewToUrl;
+import org.incode.module.documents.dom.impl.renderers.Renderer;
 import org.incode.module.documents.dom.services.ClassService;
 
 import lombok.Getter;

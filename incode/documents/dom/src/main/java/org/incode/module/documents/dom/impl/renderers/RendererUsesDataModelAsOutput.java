@@ -1,5 +1,7 @@
 /*
- *  Copyright 2016 Dan Haywood
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -14,21 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.rendering;
+package org.incode.module.documents.dom.impl.renderers;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-public interface RendererFromBytesToBytesWithPreviewToUrl extends RendererFromBytesToBytes, PreviewToUrl {
+/**
+ * A trivial implementation of {@link RendererFromCharsToChars} that expects the dataModel to be a String,
+ * and simply returns that as the output.
+ */
+public class RendererUsesDataModelAsOutput implements RendererFromCharsToChars {
 
-    URL previewBytesToBytes(
+    public String renderCharsToChars(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,
-            final byte[] templateBytes,
+            final String templateChars,
             final Object dataModel,
-            final String documentName) throws IOException;
-
+            final String documentName) throws IOException {
+        return (String) dataModel;
+    }
 }
