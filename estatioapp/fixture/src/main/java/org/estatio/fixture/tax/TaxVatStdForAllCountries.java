@@ -34,7 +34,7 @@ import org.estatio.dom.tax.TaxRepository;
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class TaxRefData extends FixtureScript {
+public class TaxVatStdForAllCountries extends FixtureScript {
 
     private static final String SUFFIX_VATSTD = "-VATSTD";
     public static final String NL_VATSTD = "NLD-VATSTD";

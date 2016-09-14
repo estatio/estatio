@@ -34,7 +34,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.geography.CountriesRefData;
-import org.estatio.fixture.tax.TaxRefData;
+import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 
 public class ChargeRefData extends FixtureScript {
 
@@ -128,7 +128,7 @@ public class ChargeRefData extends FixtureScript {
             final String country2AlphaCode = countryTenancy.getPath().substring(1).toUpperCase();
             final String countryName = " (" + country2AlphaCode + ")";
 
-            final String taxReference = TaxRefData.vatStdFor(country2AlphaCode);
+            final String taxReference = TaxVatStdForAllCountries.vatStdFor(country2AlphaCode);
 
             createCharge(chargeGroupRent, country2AlphaCode + CHARGE_SUFFIX_RENT,
                     "Rent" + countryName,

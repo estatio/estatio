@@ -35,7 +35,7 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.geography.CountriesRefData;
-import org.estatio.fixture.tax.TaxRefData;
+import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,9 +74,9 @@ public class TaxRepositoryTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // Given, When
-            final Tax tax = taxRepository.findByReference(TaxRefData.NL_VATSTD);
+            final Tax tax = taxRepository.findByReference(TaxVatStdForAllCountries.NL_VATSTD);
             // Then
-            assertThat(tax.getReference()).isEqualTo(TaxRefData.NL_VATSTD);
+            assertThat(tax.getReference()).isEqualTo(TaxVatStdForAllCountries.NL_VATSTD);
         }
     }
 
