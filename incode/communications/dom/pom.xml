@@ -77,6 +77,7 @@ Copyright 2014~2015 Dan Haywood
 
         <isis.version>1.13.0</isis.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
+        <isis-module-poly.version>1.13.0</isis-module-poly.version>
 
         <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
 
@@ -259,6 +260,12 @@ Copyright 2014~2015 Dan Haywood
             </dependency>
 
             <dependency>
+                <groupId>org.isisaddons.module.poly</groupId>
+                <artifactId>isis-module-poly-dom</artifactId>
+                <version>${isis-module-poly.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
                 <version>${incode-module-documents.version}</version>
@@ -272,6 +279,11 @@ Copyright 2014~2015 Dan Haywood
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-applib</artifactId>
             <version>${isis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.poly</groupId>
+            <artifactId>isis-module-poly-dom</artifactId>
         </dependency>
 
         <dependency>

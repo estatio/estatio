@@ -103,6 +103,7 @@ mvn clean install -DskipTests -o
 
         <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
         <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
+        <incode-module-communications.version>1.14.0-SNAPSHOT</incode-module-communications.version>
 
         <incode-module-docrendering-captureurl.version>1.14.0-SNAPSHOT</incode-module-docrendering-captureurl.version>
         <incode-module-docrendering-freemarker.version>1.14.0-SNAPSHOT</incode-module-docrendering-freemarker.version>
