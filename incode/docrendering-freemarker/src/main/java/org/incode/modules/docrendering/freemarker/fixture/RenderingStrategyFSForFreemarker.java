@@ -15,12 +15,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.incode.modules.docrendering.freemarker.fixture;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.app.integration.documents.RendererForFreemarker;
+import org.incode.modules.docrendering.freemarker.dom.RendererForFreemarker;
 
 public class RenderingStrategyFSForFreemarker extends RenderingStrategyFSAbstract {
 

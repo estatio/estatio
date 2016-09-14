@@ -29,6 +29,7 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.WithNameGetter;
 import org.estatio.fixture.EstatioBaseLineFixture;
