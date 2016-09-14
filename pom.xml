@@ -99,11 +99,11 @@ mvn clean install -DskipTests -o
 
         <incode-module-commchannel.version>1.13.0</incode-module-commchannel.version>
 
-        <incode-module-base-dom.version>1.14.0-SNAPSHOT</incode-module-base-dom.version>
-        <incode-module-documents-dom.version>1.14.0-SNAPSHOT</incode-module-documents-dom.version>
+        <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
+        <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
 
-        <isis-module-freemarker-dom.version>1.14.0-SNAPSHOT</isis-module-freemarker-dom.version>
-        <isis-module-xdocreport-dom.version>1.14.0-SNAPSHOT</isis-module-xdocreport-dom.version>
+        <isis-module-freemarker.version>1.14.0-SNAPSHOT</isis-module-freemarker.version>
+        <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
 
@@ -569,7 +569,7 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents-dom.version}</version>
+                <version>${incode-module-documents.version}</version>
             </dependency>
 
 
@@ -706,26 +706,25 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents-dom.version}</version>
+                <version>${incode-module-documents.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents-dom.version}</version>
+                <version>${incode-module-documents.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
 
-
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base-dom.version}</version>
+                <version>${incode-module-base.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base-dom.version}</version>
+                <version>${incode-module-base.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -734,12 +733,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.isisaddons.module.freemarker</groupId>
                 <artifactId>isis-module-freemarker-dom</artifactId>
-                <version>${isis-module-freemarker-dom.version}</version>
+                <version>${isis-module-freemarker.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.freemarker</groupId>
                 <artifactId>isis-module-freemarker-dom</artifactId>
-                <version>${isis-module-freemarker-dom.version}</version>
+                <version>${isis-module-freemarker.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -748,12 +747,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.isisaddons.module.xdocreport</groupId>
                 <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>${isis-module-xdocreport-dom.version}</version>
+                <version>${isis-module-xdocreport.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.xdocreport</groupId>
                 <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>${isis-module-xdocreport-dom.version}</version>
+                <version>${isis-module-xdocreport.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -768,6 +767,20 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <!-- EstatioApp modules -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-extras</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-extras</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -1064,6 +1077,7 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/extras</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/webapp</module>
@@ -1088,6 +1102,7 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/extras</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
             </modules>
@@ -1111,6 +1126,7 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/extras</module>
                 <module>estatioapp/fixture</module>
                 <module>estatioapp/integtests</module>
                 <module>estatioapp/integspecs</module>
@@ -1138,6 +1154,7 @@ mvn clean install -DskipTests -o
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
+                <module>estatioapp/extras</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->
