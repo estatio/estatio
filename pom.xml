@@ -577,6 +577,19 @@ mvn clean install -DskipTests -o
             </dependency>
 
             <dependency>
+                <groupId>org.incode.module.communications</groupId>
+                <artifactId>incode-module-communications-dom</artifactId>
+                <version>${incode-module-communications.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.communications</groupId>
+                <artifactId>incode-module-communications-dom</artifactId>
+                <version>${incode-module-communications.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
                 <version>${incode-module-documents.version}</version>

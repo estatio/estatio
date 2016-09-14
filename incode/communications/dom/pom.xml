@@ -89,6 +89,7 @@ Copyright 2014~2015 Dan Haywood
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <udo-dom-geography.version>1.4.0-SNAPSHOT</udo-dom-geography.version>
     </properties>
 
     <build>
@@ -245,6 +246,19 @@ Copyright 2014~2015 Dan Haywood
             </dependency>
 
             <dependency>
+                <groupId>org.estatio</groupId>
+                <artifactId>udo-dom-geography</artifactId>
+                <version>${udo-dom-geography.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.estatio</groupId>
+                <artifactId>udo-dom-geography</artifactId>
+                <version>${udo-dom-geography.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
                 <version>${incode-module-documents.version}</version>
@@ -259,11 +273,14 @@ Copyright 2014~2015 Dan Haywood
             <artifactId>isis-core-applib</artifactId>
             <version>${isis.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.isisaddons.module.fakedata</groupId>
-            <artifactId>isis-module-fakedata-dom</artifactId>
-            <version>${isis-module-fakedata.version}</version>
-            <scope>test</scope>
+            <groupId>org.incode.module.documents</groupId>
+            <artifactId>incode-module-documents-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-geography</artifactId>
         </dependency>
 
         <dependency>
@@ -286,10 +303,11 @@ Copyright 2014~2015 Dan Haywood
         </dependency>
 
         <dependency>
-            <groupId>org.incode.module.documents</groupId>
-            <artifactId>incode-module-documents-dom</artifactId>
+            <groupId>org.isisaddons.module.fakedata</groupId>
+            <artifactId>isis-module-fakedata-dom</artifactId>
+            <version>${isis-module-fakedata.version}</version>
+            <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.projectlombok</groupId>

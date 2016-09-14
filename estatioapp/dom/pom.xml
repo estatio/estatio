@@ -40,6 +40,7 @@ language governing permissions and limitations under the License.
             <!-- 
         <targetJdk>1.6</targetJdk>
              -->
+        <incode-module-communications.version>1.14.0-SNAPSHOT</incode-module-communications.version>
     </properties>
 
     <build>
@@ -142,6 +143,17 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-currency</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
