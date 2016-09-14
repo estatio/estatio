@@ -19,12 +19,14 @@
 package org.estatio.fixture.geography;
 
 import javax.inject.Inject;
-import org.estatio.dom.geography.CountryRepository;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.StateRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public class CountriesRefData extends EstatioFixtureScript {
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
+import org.estatio.dom.geography.StateRepository;
+
+public class CountriesRefData extends FixtureScript {
 
     public static final String GBR = "GBR";
     public static final String NLD = "NLD";

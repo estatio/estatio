@@ -22,6 +22,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -31,15 +33,14 @@ import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitType;
-import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.StateRepository;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioFakeDataService;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public class PropertyBuilder extends EstatioFixtureScript {
+public class PropertyBuilder extends FixtureScript {
 
     //region > reference
     private String reference;

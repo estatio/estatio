@@ -4,14 +4,15 @@ import java.math.BigInteger;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
-import org.estatio.fixture.EstatioFixtureScript;
 
 
-public abstract class NumeratorForOrganisationAbstract extends EstatioFixtureScript {
+public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

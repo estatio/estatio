@@ -24,14 +24,15 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseMenu;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public abstract class GuaranteeAbstract extends EstatioFixtureScript {
+public abstract class GuaranteeAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

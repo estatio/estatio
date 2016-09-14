@@ -24,15 +24,16 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.dom.party.PartyRepository;
 
-public abstract class FinancialAccountTransactionAbstract extends EstatioFixtureScript {
+public abstract class FinancialAccountTransactionAbstract extends FixtureScript {
 
     protected FinancialAccountTransactionAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);

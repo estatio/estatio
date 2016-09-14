@@ -22,15 +22,16 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOptionContributions;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
+public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

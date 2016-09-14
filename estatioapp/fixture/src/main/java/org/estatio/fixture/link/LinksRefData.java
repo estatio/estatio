@@ -20,17 +20,18 @@ package org.estatio.fixture.link;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.fixture.EstatioFixtureScript;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 import org.estatio.domlink.Link;
 import org.estatio.domlink.LinkRepository;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-public class LinksRefData extends EstatioFixtureScript {
+public class LinksRefData extends FixtureScript {
 
     @Inject
     private ApplicationTenancyRepository applicationTenancyRepository;

@@ -19,12 +19,12 @@ package org.estatio.fixture.documents;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.fixture.EstatioFixtureScript;
-
-public abstract class DocumentTypeAbstract extends EstatioFixtureScript {
+public abstract class DocumentTypeAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

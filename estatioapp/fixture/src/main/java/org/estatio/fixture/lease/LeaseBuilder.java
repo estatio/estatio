@@ -22,6 +22,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -43,11 +45,10 @@ import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioFakeDataService;
-import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class LeaseBuilder extends EstatioFixtureScript {
+public class LeaseBuilder extends FixtureScript {
 
     //region > reference
     private String reference;

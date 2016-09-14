@@ -21,17 +21,18 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.fixture.EstatioFixtureScript;
 
 /**
  * Created by jodo on 22/04/15.
  */
-public abstract class BudgetItemAbstact extends EstatioFixtureScript {
+public abstract class BudgetItemAbstact extends FixtureScript {
 
 
     protected BudgetItem createBudgetItem(

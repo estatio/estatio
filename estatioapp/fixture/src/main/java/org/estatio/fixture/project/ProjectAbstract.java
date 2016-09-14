@@ -18,15 +18,17 @@
  */
 package org.estatio.fixture.project;
 
-import static org.estatio.integtests.VT.ld;
-
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.project.BusinessCase;
 import org.estatio.dom.project.BusinessCaseRepository;
 import org.estatio.dom.project.Program;
@@ -34,15 +36,15 @@ import org.estatio.dom.project.ProgramRepository;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectPhase;
 import org.estatio.dom.project.ProjectRepository;
-import org.estatio.dom.project.ProjectRoleType;
 import org.estatio.dom.project.ProjectRoleRepository;
-import org.estatio.fixture.EstatioFixtureScript;
-import org.joda.time.LocalDate;
+import org.estatio.dom.project.ProjectRoleType;
+
+import static org.estatio.integtests.VT.ld;
 
 /**
  * Sets up the {@link org.estatio.dom.project.Program} 
  */
-public abstract class ProjectAbstract extends EstatioFixtureScript {
+public abstract class ProjectAbstract extends FixtureScript {
 
     protected Project createProject(
             final String reference, 

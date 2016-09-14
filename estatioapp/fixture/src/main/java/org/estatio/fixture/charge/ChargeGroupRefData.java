@@ -20,14 +20,15 @@ package org.estatio.fixture.charge;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.TaxRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public class ChargeGroupRefData extends EstatioFixtureScript {
+public class ChargeGroupRefData extends FixtureScript {
 
     public static final String REF_RENT = "RENT";
     public static final String REF_SERVICE_CHARGE = "SERVICE_CHARGE";

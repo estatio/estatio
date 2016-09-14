@@ -20,23 +20,24 @@ package org.estatio.fixture.project;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.asset.PropertyMenu;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.project.Program;
-import org.estatio.dom.project.ProgramRoleType;
 import org.estatio.dom.project.ProgramRepository;
-import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.dom.project.ProgramRoleType;
 
 import static org.estatio.integtests.VT.ld;
 
 /**
  * Sets up the {@link org.estatio.dom.project.Program} 
  */
-public abstract class ProgramAbstract extends EstatioFixtureScript {
+public abstract class ProgramAbstract extends FixtureScript {
 
     protected Program createProgram(
             final String atPath,

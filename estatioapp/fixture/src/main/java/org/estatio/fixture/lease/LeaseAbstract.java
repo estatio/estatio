@@ -22,6 +22,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.agreement.AgreementRole;
@@ -30,25 +32,24 @@ import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
-import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.dom.party.PartyRepository;
 
 /**
  * Sets up the lease, and the roles, and also the first occupancy.
  */
-public abstract class LeaseAbstract extends EstatioFixtureScript {
+public abstract class LeaseAbstract extends FixtureScript {
 
     protected Lease createLease(
             String reference, String name,

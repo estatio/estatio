@@ -19,14 +19,14 @@ package org.estatio.fixture.documents;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.dom.impl.rendering.Renderer;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 
-import org.estatio.fixture.EstatioFixtureScript;
-
-public abstract class RenderingStrategyAbstract extends EstatioFixtureScript {
+public abstract class RenderingStrategyAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

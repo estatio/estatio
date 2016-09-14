@@ -20,17 +20,18 @@ package org.estatio.fixture.financial;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.asset.PropertyMenu;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.dom.party.PartyRepository;
 
-public abstract class BankAccountAbstract extends EstatioFixtureScript {
+public abstract class BankAccountAbstract extends FixtureScript {
 
     protected BankAccountAbstract(final String friendlyName, final String localName) {
         super(friendlyName, localName);

@@ -21,21 +21,22 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 
 /**
  * Created by jodo on 22/04/15.
  */
-public abstract class BudgetAbstact extends EstatioFixtureScript {
+public abstract class BudgetAbstact extends FixtureScript {
 
 
     protected Budget createBudget(

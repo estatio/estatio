@@ -19,20 +19,23 @@
 package org.estatio.fixture.party;
 
 import javax.inject.Inject;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.StateRepository;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.relationship.PartyRelationshipRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public abstract class PersonAbstract extends EstatioFixtureScript {
+public abstract class PersonAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -37,13 +39,12 @@ import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioFixtureScript;
+import org.estatio.dom.party.PartyRepository;
 
 import static org.estatio.integtests.VT.ld;
 
-public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript {
+public abstract class BankAccountAndMandateAbstract extends FixtureScript {
 
     protected BankAccountAndMandateAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);

@@ -20,11 +20,12 @@ package org.estatio.fixture.currency;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 
-public class CurrenciesRefData extends EstatioFixtureScript {
+public class CurrenciesRefData extends FixtureScript {
 
     public static final String EUR = "EUR";
     public static final String SEK = "SEK";

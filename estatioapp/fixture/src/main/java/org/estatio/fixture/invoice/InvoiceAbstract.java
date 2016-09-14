@@ -24,6 +24,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -40,15 +42,14 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.fixture.EstatioFixtureScript;
 
 /**
  * Creates {@link org.estatio.dom.invoice.Invoice} and associated {@link org.estatio.dom.invoice.InvoiceItem}s.
  */
-public abstract class InvoiceAbstract extends EstatioFixtureScript {
+public abstract class InvoiceAbstract extends FixtureScript {
 
     protected InvoiceAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);

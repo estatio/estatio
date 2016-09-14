@@ -25,6 +25,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -52,10 +54,9 @@ import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
-import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.charge.ChargeRefData;
 
-public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
+public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     protected LeaseItem findOrCreateLeaseItem(
             final String leaseRef,

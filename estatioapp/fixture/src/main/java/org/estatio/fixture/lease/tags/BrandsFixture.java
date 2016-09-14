@@ -2,16 +2,17 @@ package org.estatio.fixture.lease.tags;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.lease.tags.BrandMenu;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.geography.CountriesRefData;
 
-public class BrandsFixture extends EstatioFixtureScript {
+public class BrandsFixture extends FixtureScript {
 
     public static final String YU_S_NOODLE_JOINT = "Yu's Noodle Joint";
     public static final String YU_GROUP = "Yu Group";

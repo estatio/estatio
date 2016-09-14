@@ -25,18 +25,17 @@ import javax.inject.Inject;
 import org.apache.wicket.util.io.IOUtils;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.fixture.EstatioFixtureScript;
-
-public abstract class DocumentTemplateAbstract extends EstatioFixtureScript {
+public abstract class DocumentTemplateAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

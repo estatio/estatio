@@ -22,18 +22,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class TaxRefData extends EstatioFixtureScript {
+public class TaxRefData extends FixtureScript {
 
     private static final String SUFFIX_VATSTD = "-VATSTD";
     public static final String NL_VATSTD = "NLD-VATSTD";

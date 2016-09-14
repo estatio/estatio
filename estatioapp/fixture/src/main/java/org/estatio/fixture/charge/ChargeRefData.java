@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -31,11 +33,10 @@ import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
-import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.tax.TaxRefData;
 
-public class ChargeRefData extends EstatioFixtureScript {
+public class ChargeRefData extends FixtureScript {
 
     private static final String CHARGE_SUFFIX_RENT = "_RENT";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE = "_SERVICE_CHARGE";
