@@ -30,18 +30,19 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
@@ -218,14 +219,15 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
         executionContext.executeChild(this, new LeaseTypeForItalyRefData());
 
-        defaultParam("reference", executionContext, faker().lorem().fixedString(3));
-        defaultParam("name", executionContext, faker().name().lastName() + " Mall");
-        defaultParam("leaseType", executionContext, faker().collections().aBounded(LeaseType.class));
+        defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(3));
+        defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
+        defaultParam("leaseType", executionContext, fakeDataService.collections().aBounded(LeaseType.class));
         defaultParam("atPath", executionContext, ApplicationTenancyForGb.PATH);
 
-        defaultParam("startDate", executionContext, faker().dates().before(faker().periods().daysUpTo(2 * 365)));
+        defaultParam("startDate", executionContext, fakeDataService
+                .dates().before(fakeDataService.periods().daysUpTo(2 * 365)));
         if (getDuration() == null && getEndDate() == null) {
-            defaultParam("endDate", executionContext, getStartDate().plus(faker().periods().years(10, 20)));
+            defaultParam("endDate", executionContext, getStartDate().plus(fakeDataService.periods().years(10, 20)));
         }
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(getAtPath());
 
@@ -259,5 +261,9 @@ public class LeaseBuilder extends EstatioFixtureScript {
 
     @Inject
     CountryRepository countryRepository;
+
+    @Inject
+    EstatioFakeDataService fakeDataService;
+
 
 }

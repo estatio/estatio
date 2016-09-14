@@ -41,6 +41,7 @@ import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.lease.breaks.RollingBreakOption;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseBuilder;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
@@ -91,6 +92,8 @@ public class BreakOptionRepositoryTest extends EstatioIntegrationTest {
         EventRepository eventRepository;
         @Inject
         ClockService clockService;
+        @Inject
+        EstatioFakeDataService fakeDataService;
 
         @Before
         public void setup() {
@@ -126,8 +129,8 @@ public class BreakOptionRepositoryTest extends EstatioIntegrationTest {
             final LocalDate breakDate = VT.ld(2014, 11, 1); // 4 months from now
             final String notificationPeriodStr = "3m";
             final BreakType breakType = BreakType.ROLLING;
-            final BreakExerciseType breakExerciseType = fs.faker().collections().anEnum(BreakExerciseType.class);
-            final String description = fs.faker().lorem().sentence();
+            final BreakExerciseType breakExerciseType = fakeDataService.collections().anEnum(BreakExerciseType.class);
+            final String description = fakeDataService.lorem().sentence();
 
             breakOptionRepository.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description);
             nextTransaction();
@@ -163,5 +166,6 @@ public class BreakOptionRepositoryTest extends EstatioIntegrationTest {
 
         }
     }
+
 
 }

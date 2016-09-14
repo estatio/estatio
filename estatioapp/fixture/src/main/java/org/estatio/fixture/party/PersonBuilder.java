@@ -18,8 +18,11 @@
  */
 package org.estatio.fixture.party;
 
+import javax.inject.Inject;
+
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PersonGenderType;
+import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class PersonBuilder extends PersonAbstract {
@@ -78,13 +81,18 @@ public class PersonBuilder extends PersonAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        defaultParam("reference", executionContext, faker().lorem().fixedString(6));
-        defaultParam("firstName", executionContext, faker().name().firstName());
-        defaultParam("lastName", executionContext, faker().name().fullName());
-        defaultParam("personGenderType", executionContext, faker().collections().anEnum(PersonGenderType.class));
+        defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(6));
+        defaultParam("firstName", executionContext, fakeDataService.name().firstName());
+        defaultParam("lastName", executionContext, fakeDataService.name().fullName());
+        defaultParam("personGenderType", executionContext, fakeDataService.collections().anEnum(PersonGenderType.class));
 
         final String initials = getFirstName().substring(0,1);
 
         person = createPerson(ApplicationTenancyForGlobal.PATH, getReference(), initials, getFirstName(), getLastName(), getPersonGenderType(), executionContext);
     }
+
+    @Inject
+    EstatioFakeDataService fakeDataService;
+
 }
+

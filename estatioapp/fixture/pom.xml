@@ -76,8 +76,8 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
+            <groupId>org.isisaddons.module.fakedata</groupId>
+            <artifactId>isis-module-fakedata-dom</artifactId>
         </dependency>
 
         <!-- GMAP3 -->

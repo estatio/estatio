@@ -36,6 +36,7 @@ import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.asset.PropertyBuilder;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -100,6 +101,8 @@ public class PropertyTest extends EstatioIntegrationTest {
         private PropertyMenu propertyMenu;
         @Inject
         private ClockService clockService;
+        @Inject
+        EstatioFakeDataService fakeDataService;
 
         @Test
         public void happyCase() throws Exception {
@@ -113,7 +116,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // when
             //
-            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
+            final LocalDate disposalDate = clockService.now().plusDays(fakeDataService.values().anInt(10, 20));
             wrap(property).dispose(disposalDate);
 
             //
@@ -133,7 +136,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // and given
             //
-            final LocalDate disposalDate = clockService.now().plusDays(fs.faker().values().anInt(10, 20));
+            final LocalDate disposalDate = clockService.now().plusDays(fakeDataService.values().anInt(10, 20));
             wrap(property).dispose(disposalDate);
 
             Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
@@ -147,7 +150,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // when
             //
-            final LocalDate disposalDate2 = clockService.now().plusDays(fs.faker().values().anInt(30, 40));
+            final LocalDate disposalDate2 = clockService.now().plusDays(fakeDataService.values().anInt(30, 40));
             wrap(property).dispose(disposalDate);
 
             //

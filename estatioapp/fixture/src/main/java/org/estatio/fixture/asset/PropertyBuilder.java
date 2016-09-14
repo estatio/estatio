@@ -36,6 +36,7 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.StateRepository;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.EstatioFixtureScript;
 
 public class PropertyBuilder extends EstatioFixtureScript {
@@ -152,14 +153,14 @@ public class PropertyBuilder extends EstatioFixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        defaultParam("reference", executionContext, faker().values().code(3).toUpperCase());
-        defaultParam("name", executionContext, faker().name().lastName() + " Mall");
-        defaultParam("propertyType", executionContext, faker().collections().anEnum(PropertyType.class));
-        defaultParam("city", executionContext, faker().address().cityPrefix() + " " + faker().name().lastName() + faker().address().citySuffix());
-        defaultParam("country", executionContext, faker().collections().aBounded(Country.class));
-        defaultParam("acquireDate", executionContext, faker().dates().before(faker().periods().days(100, 200)));
+        defaultParam("reference", executionContext, fakeDataService.values().code(3).toUpperCase());
+        defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
+        defaultParam("propertyType", executionContext, fakeDataService.collections().anEnum(PropertyType.class));
+        defaultParam("city", executionContext, fakeDataService.address().cityPrefix() + " " + fakeDataService.name().lastName() + fakeDataService.address().citySuffix());
+        defaultParam("country", executionContext, fakeDataService.collections().aBounded(Country.class));
+        defaultParam("acquireDate", executionContext, fakeDataService.dates().before(fakeDataService.periods().days(100, 200)));
 
-        defaultParam("numberOfUnits", executionContext, faker().values().anInt(10,20));
+        defaultParam("numberOfUnits", executionContext, fakeDataService.values().anInt(10,20));
 
         final ApplicationTenancy countryApplicationTenancy = applicationTenancyRepository.findByPath("/" + getCountry().getReference());
 
@@ -174,11 +175,10 @@ public class PropertyBuilder extends EstatioFixtureScript {
 
         for (int i = 0; i < getNumberOfUnits(); i++) {
             final String unitRef = buildUnitReference(property.getReference(), i);
-            final UnitType unitType = faker().collections().anEnum(UnitType.class);
-            final String unitName = faker().name().firstName();
+            final UnitType unitType = fakeDataService.collections().anEnum(UnitType.class);
+            final String unitName = fakeDataService.name().firstName();
             wrap(property).newUnit(unitRef, unitName, unitType);
         }
-
     }
 
     String buildUnitReference(final String propertyReference, final Integer unitNum) {
@@ -204,5 +204,9 @@ public class PropertyBuilder extends EstatioFixtureScript {
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;
+
+    @Inject
+    EstatioFakeDataService fakeDataService;
+
 
 }

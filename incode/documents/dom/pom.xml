@@ -74,7 +74,7 @@ Copyright 2014~2015 Dan Haywood
         <compileTarget>1.8</compileTarget>
 
         <isis.version>1.13.0</isis.version>
-        <isis-module-fakedata-dom.version>1.13.0</isis-module-fakedata-dom.version>
+        <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
 
         <lombok.version>1.16.6</lombok.version>
         <axon-core.version>2.4.4</axon-core.version>
@@ -244,7 +244,7 @@ Copyright 2014~2015 Dan Haywood
         <dependency>
             <groupId>org.isisaddons.module.fakedata</groupId>
             <artifactId>isis-module-fakedata-dom</artifactId>
-            <version>${isis-module-fakedata-dom.version}</version>
+            <version>${isis-module-fakedata.version}</version>
             <scope>test</scope>
         </dependency>
 
