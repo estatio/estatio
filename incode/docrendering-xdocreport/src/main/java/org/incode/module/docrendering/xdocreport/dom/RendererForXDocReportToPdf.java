@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.docrendering.xdocreport.dom;
 
 import org.isisaddons.module.xdocreport.dom.service.OutputType;
 
-public class RendererForXDocReportToDocx extends RendererForXDocReportAbstract  {
+public class RendererForXDocReportToPdf extends RendererForXDocReportAbstract  {
 
-    public RendererForXDocReportToDocx() {
-        super(OutputType.DOCX);
+    public RendererForXDocReportToPdf() {
+        super(OutputType.PDF);
     }
 
 }

@@ -102,8 +102,8 @@ mvn clean install -DskipTests -o
         <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
         <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
 
-        <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
         <incode-module-docrendering-freemarker.version>1.14.0-SNAPSHOT</incode-module-docrendering-freemarker.version>
+        <incode-module-docrendering-xdocreport.version>1.14.0-SNAPSHOT</incode-module-docrendering-xdocreport.version>
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
 
@@ -584,6 +584,11 @@ mvn clean install -DskipTests -o
                 <artifactId>incode-module-docrendering-freemarker</artifactId>
                 <version>${incode-module-docrendering-freemarker.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-xdocreport</artifactId>
+                <version>${incode-module-docrendering-xdocreport.version}</version>
+            </dependency>
 
 
             <dependency>
@@ -747,19 +752,10 @@ mvn clean install -DskipTests -o
                 <artifactId>incode-module-docrendering-freemarker</artifactId>
                 <version>${incode-module-docrendering-freemarker.version}</version>
             </dependency>
-
-
             <dependency>
-                <groupId>org.isisaddons.module.xdocreport</groupId>
-                <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>${isis-module-xdocreport.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.xdocreport</groupId>
-                <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>${isis-module-xdocreport.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-xdocreport</artifactId>
+                <version>${incode-module-docrendering-xdocreport.version}</version>
             </dependency>
 
 
@@ -1080,6 +1076,7 @@ mvn clean install -DskipTests -o
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-freemarker</module>
+                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
@@ -1106,6 +1103,7 @@ mvn clean install -DskipTests -o
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-freemarker</module>
+                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
@@ -1131,6 +1129,7 @@ mvn clean install -DskipTests -o
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-freemarker</module>
+                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
@@ -1160,6 +1159,7 @@ mvn clean install -DskipTests -o
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-freemarker</module>
+                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>

@@ -157,17 +157,6 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.isisaddons.module.xdocreport</groupId>
-            <artifactId>isis-module-xdocreport-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.xdocreport</groupId>
-            <artifactId>isis-module-xdocreport-dom</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>org.jdom</groupId>

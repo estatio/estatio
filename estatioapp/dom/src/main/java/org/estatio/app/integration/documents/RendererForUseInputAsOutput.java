@@ -20,9 +20,14 @@ package org.estatio.app.integration.documents;
 
 import java.io.IOException;
 
+import org.incode.module.documents.dom.impl.rendering.Renderer;
 import org.incode.module.documents.dom.impl.rendering.RendererFromCharsToChars;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
+/**
+ * A trivial implementation of {@link RendererFromCharsToChars} that expects the dataModel to be a String,
+ * and simply returns that as the output.
+ */
 public class RendererForUseInputAsOutput implements RendererFromCharsToChars {
 
     public String renderCharsToChars(

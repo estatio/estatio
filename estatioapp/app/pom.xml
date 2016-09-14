@@ -40,6 +40,7 @@ language governing permissions and limitations under the License.
             <!-- 
         <targetJdk>1.6</targetJdk>
              -->
+        <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
     </properties>
 
     <build>
@@ -60,6 +61,22 @@ language governing permissions and limitations under the License.
             </resource>
         </resources>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!--
+            required for the AppManifest
+            (modules that have dependencies on other modules, eg docrendering-xdocreport
+            depending on xdocreport, do not advertise the services on which they depend).
+            -->
+            <dependency>
+                <groupId>org.isisaddons.module.xdocreport</groupId>
+                <artifactId>isis-module-xdocreport-dom</artifactId>
+                <version>${isis-module-xdocreport.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -111,6 +128,13 @@ language governing permissions and limitations under the License.
             <groupId>org.isisaddons.wicket.excel</groupId>
             <artifactId>isis-wicket-excel-cpt</artifactId>
         </dependency>
+
+        <!-- required in order to specify XDocReportModule as a module containing services -->
+        <dependency>
+            <groupId>org.isisaddons.module.xdocreport</groupId>
+            <artifactId>isis-module-xdocreport-dom</artifactId>
+        </dependency>
+
 
 
         <!--
