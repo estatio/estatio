@@ -17,12 +17,8 @@
  */
 package org.estatio.fixture.documents;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.inject.Inject;
 
-import org.apache.wicket.util.io.IOUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -39,17 +35,6 @@ public abstract class DocumentTemplateAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
-
-    protected Clob readSvgResourceAsClob(String fileName) {
-        try {
-            InputStream is = getClass().getResourceAsStream("/svg/" + fileName);
-            Clob blob = new Clob(fileName, "image/svg+xml", IOUtils.toCharArray(is));
-            is.close();
-            return blob;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * convenience, as templates and types often created together

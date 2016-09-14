@@ -45,6 +45,17 @@ public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
     public static final String FILE_SUFFIX = "svg";
     public static final String NAME = PropertyForOxfGb.REF + "." + FILE_SUFFIX;
 
+    protected Clob readSvgResourceAsClob(String fileName) {
+        try {
+            InputStream is = getClass().getResourceAsStream("/svg/" + fileName);
+            Clob blob = new Clob(fileName, "image/svg+xml", IOUtils.toCharArray(is));
+            is.close();
+            return blob;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
