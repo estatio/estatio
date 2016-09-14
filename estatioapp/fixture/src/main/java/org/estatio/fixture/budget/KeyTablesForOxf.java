@@ -42,10 +42,8 @@ public class KeyTablesForOxf extends KeyTableAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PropertyForOxfGb());
-            executionContext.executeChild(this, new BudgetsForOxf());
-        }
+        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new BudgetsForOxf());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);

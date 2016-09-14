@@ -39,9 +39,7 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
     private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
 
         // exec
 

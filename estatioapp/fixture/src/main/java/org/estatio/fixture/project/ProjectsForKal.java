@@ -36,12 +36,10 @@ public class ProjectsForKal extends ProjectAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForMediaXNl());
-            executionContext.executeChild(this, new PersonForJohnDoeNl());
-            executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-            executionContext.executeChild(this, new ProgramForKal());
-        }
+        executionContext.executeChild(this, new OrganisationForMediaXNl());
+        executionContext.executeChild(this, new PersonForJohnDoeNl());
+        executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
+        executionContext.executeChild(this, new ProgramForKal());
 
         // exec
         Party executive = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);

@@ -38,9 +38,7 @@ public class BankAccountForMediaXGb extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(

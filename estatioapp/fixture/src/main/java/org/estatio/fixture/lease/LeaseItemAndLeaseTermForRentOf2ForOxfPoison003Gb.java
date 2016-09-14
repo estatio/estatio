@@ -39,9 +39,7 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemA
     private void createLeaseTermsForOxfPoison003(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
 
         // exec
 

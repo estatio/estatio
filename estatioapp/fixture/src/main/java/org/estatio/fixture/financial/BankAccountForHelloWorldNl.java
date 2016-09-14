@@ -19,7 +19,6 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 
 public class BankAccountForHelloWorldNl extends BankAccountAbstract {
@@ -41,10 +40,8 @@ public class BankAccountForHelloWorldNl extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-            executionContext.executeChild(this, new PropertyForKalNl());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+        executionContext.executeChild(this, new PropertyForKalNl());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(

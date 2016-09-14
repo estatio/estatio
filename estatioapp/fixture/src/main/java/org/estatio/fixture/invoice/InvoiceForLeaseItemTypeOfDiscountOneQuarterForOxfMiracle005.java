@@ -64,10 +64,8 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-            executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
 
         // exec
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);

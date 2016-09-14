@@ -34,9 +34,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb extends Lease
     private void createLeaseTermsForOxfPoison003(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

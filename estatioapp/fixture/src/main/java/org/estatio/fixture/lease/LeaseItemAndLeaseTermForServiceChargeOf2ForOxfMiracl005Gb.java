@@ -37,9 +37,7 @@ public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb extends L
     private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

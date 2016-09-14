@@ -36,9 +36,7 @@ public class LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb extends LeaseIt
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
         // exec
 

@@ -45,32 +45,5 @@ public abstract class EstatioFixtureScript extends FixtureScript {
         return container.injectServicesInto(new Faker2(random));
     }
 
-    // //////////////////////////////////////
-
-    private static enum Prereqs {
-        EXEC,
-        SKIP
-    }
-
-    private static ThreadLocal<Prereqs> prereqs = new ThreadLocal<Prereqs>() {
-        @Override
-        protected Prereqs initialValue() {
-            return Prereqs.EXEC;
-        }
-    };
-
-    public static void withSkipPrereqs(final Runnable runnable) {
-        try {
-            prereqs.set(EstatioFixtureScript.Prereqs.SKIP);
-            runnable.run();
-        } finally {
-            prereqs.set(EstatioFixtureScript.Prereqs.EXEC);
-        }
-
-    }
-
-    protected boolean isExecutePrereqs() {
-        return prereqs.get() == Prereqs.EXEC;
-    }
 
 }

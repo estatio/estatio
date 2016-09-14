@@ -43,10 +43,8 @@ public class PropertyForCARTEST extends PropertyAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldIt());
-            executionContext.executeChild(this, new PersonForLucianoPavarottiIt());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldIt());
+        executionContext.executeChild(this, new PersonForLucianoPavarottiIt());
 
         // exec
         final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);

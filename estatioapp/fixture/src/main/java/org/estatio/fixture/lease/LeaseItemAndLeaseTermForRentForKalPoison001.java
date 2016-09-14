@@ -40,9 +40,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-        }
+        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
 
         // exec
 

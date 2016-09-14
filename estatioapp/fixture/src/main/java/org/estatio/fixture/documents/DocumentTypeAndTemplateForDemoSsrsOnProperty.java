@@ -46,10 +46,8 @@ public class DocumentTypeAndTemplateForDemoSsrsOnProperty extends DocumentTempla
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new RenderingStrategyForSsrs());
-            executionContext.executeChild(this, new RenderingStrategyForSsrsNoPreview());
-        }
+        executionContext.executeChild(this, new RenderingStrategyForSsrs());
+        executionContext.executeChild(this, new RenderingStrategyForSsrsNoPreview());
 
         final RenderingStrategy ssrsRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyForSsrs.REF);

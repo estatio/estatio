@@ -66,13 +66,11 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PersonForGinoVannelliGb());
-            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-            executionContext.executeChild(this, new OrganisationForTopModelGb());
-            executionContext.executeChild(this, new PersonForGinoVannelliGb());
-            executionContext.executeChild(this, new PropertyForOxfGb());
-        }
+        executionContext.executeChild(this, new PersonForGinoVannelliGb());
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, new OrganisationForTopModelGb());
+        executionContext.executeChild(this, new PersonForGinoVannelliGb());
+        executionContext.executeChild(this, new PropertyForOxfGb());
 
         // exec
         Party manager = partyRepository.findPartyByReference(PersonForGinoVannelliGb.REF);

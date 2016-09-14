@@ -18,8 +18,6 @@
  */
 package org.estatio.fixture.asset;
 
-import static org.estatio.integtests.VT.ld;
-
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -28,6 +26,8 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+
+import static org.estatio.integtests.VT.ld;
 
 public class PropertyForOxfGb extends PropertyAbstract {
 
@@ -44,11 +44,9 @@ public class PropertyForOxfGb extends PropertyAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-            executionContext.executeChild(this, new OrganisationForTopModelGb());
-            executionContext.executeChild(this, new PersonForGinoVannelliGb());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, new OrganisationForTopModelGb());
+        executionContext.executeChild(this, new PersonForGinoVannelliGb());
 
         // exec
         final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);

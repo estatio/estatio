@@ -48,8 +48,6 @@ import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioFixtureScript;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
@@ -152,15 +150,21 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             public void disabledIfLeaseHasInvoiceForFixedInvoicingFrequencyTerm() throws Exception {
 
                 // given
-                EstatioFixtureScript.withSkipPrereqs(
-                        new Runnable() {
 
-                            @Override
-                            public void run() {
-                                runFixtureScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
-                            }
-                        }
-                        );
+                // TODO: if this test is ever reinstated, then its fixtures will need sorting out.
+                // previously, it had this code:
+                //
+                // EstatioFixtureScript.withSkipPrereqs(
+                //        new Runnable() {
+                //
+                //            @Override
+                //            public void run() {
+                //                runFixtureScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
+                //            }
+                //        }
+                //        );
+                //
+                // however, the withSkipPrereqs has now been removed (this was the only test that used it).
 
                 // have to obtain again because runScript commits and so JDO
                 // clears out all enlisted objects.

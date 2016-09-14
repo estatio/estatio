@@ -18,8 +18,6 @@
  */
 package org.estatio.fixture.asset;
 
-import static org.estatio.integtests.VT.ld;
-
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -27,6 +25,8 @@ import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldIt;
 import org.estatio.fixture.party.PersonForLucianoPavarottiIt;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+
+import static org.estatio.integtests.VT.ld;
 
 public class PropertyForGraIt extends PropertyAbstract {
 
@@ -43,10 +43,8 @@ public class PropertyForGraIt extends PropertyAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForHelloWorldIt());
-            executionContext.executeChild(this, new PersonForLucianoPavarottiIt());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldIt());
+        executionContext.executeChild(this, new PersonForLucianoPavarottiIt());
 
         // exec
         final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);

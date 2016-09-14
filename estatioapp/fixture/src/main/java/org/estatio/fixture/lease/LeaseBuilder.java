@@ -216,9 +216,7 @@ public class LeaseBuilder extends EstatioFixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseTypeForItalyRefData());
-        }
+        executionContext.executeChild(this, new LeaseTypeForItalyRefData());
 
         defaultParam("reference", executionContext, faker().lorem().fixedString(3));
         defaultParam("name", executionContext, faker().name().lastName() + " Mall");

@@ -39,10 +39,8 @@ public class BankAccountForAcmeNl extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForAcmeNl());
-            executionContext.executeChild(this, new PropertyForKalNl());
-        }
+        executionContext.executeChild(this, new OrganisationForAcmeNl());
+        executionContext.executeChild(this, new PropertyForKalNl());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(

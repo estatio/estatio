@@ -33,11 +33,9 @@ public class ProgramForKal extends ProgramAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForMediaXNl());
-            executionContext.executeChild(this, new PersonForJohnDoeNl());
-            executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-        }
+        executionContext.executeChild(this, new OrganisationForMediaXNl());
+        executionContext.executeChild(this, new PersonForJohnDoeNl());
+        executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
 
         // exec
         Party owner = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);

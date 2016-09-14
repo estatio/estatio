@@ -18,10 +18,10 @@
  */
 package org.estatio.fixture.lease;
 
+import java.math.BigDecimal;
+
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
-
-import java.math.BigDecimal;
 
 public class LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
@@ -36,9 +36,7 @@ public class LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb extends Lease
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

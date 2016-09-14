@@ -30,9 +30,7 @@ public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstrac
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
-        }
+        executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

@@ -29,9 +29,7 @@ public class BrandsFixture extends EstatioFixtureScript {
 
     @Override protected void execute(final ExecutionContext executionContext) {
 
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new EstatioBaseLineFixture());
-        }
+        executionContext.executeChild(this, new EstatioBaseLineFixture());
 
         brandMenu.newBrand(YU_S_NOODLE_JOINT, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), YU_GROUP, applicationTenancyRepository.findByPath("/"));
         brandMenu.newBrand(YU_S_CLEANING_SERVICES, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), YU_GROUP, applicationTenancyRepository.findByPath("/"));

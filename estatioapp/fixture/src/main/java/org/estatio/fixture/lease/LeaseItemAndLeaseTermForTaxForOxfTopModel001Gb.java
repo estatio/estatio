@@ -36,9 +36,7 @@ public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAnd
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);

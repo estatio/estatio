@@ -31,9 +31,7 @@ public class PersonForGinoVannelliGb extends PersonAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForTopModelGb());
-        }
+        executionContext.executeChild(this, new OrganisationForTopModelGb());
 
         createPerson(
                 AT_PATH,

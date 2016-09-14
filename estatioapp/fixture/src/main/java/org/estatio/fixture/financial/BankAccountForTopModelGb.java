@@ -38,9 +38,7 @@ public class BankAccountForTopModelGb extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(

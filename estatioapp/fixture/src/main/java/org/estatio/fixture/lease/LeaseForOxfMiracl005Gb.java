@@ -43,13 +43,10 @@ public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-
-            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-            executionContext.executeChild(this, new OrganisationForMiracleGb());
-            executionContext.executeChild(this, new PersonForJohnSmithGb());
-            executionContext.executeChild(this, new PropertyForOxfGb());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, new OrganisationForMiracleGb());
+        executionContext.executeChild(this, new PersonForJohnSmithGb());
+        executionContext.executeChild(this, new PropertyForOxfGb());
 
         // exec
 

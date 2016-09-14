@@ -31,9 +31,7 @@ public class PersonForAgnethaFaltskogSe extends PersonAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForYoukeaSe());
-        }
+        executionContext.executeChild(this, new OrganisationForYoukeaSe());
 
         createPerson(
                 AT_PATH,

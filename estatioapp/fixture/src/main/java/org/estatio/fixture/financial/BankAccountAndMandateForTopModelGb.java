@@ -41,10 +41,8 @@ public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbs
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-            executionContext.executeChild(this, new BankAccountForTopModelGb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+        executionContext.executeChild(this, new BankAccountForTopModelGb());
 
         // exec
         createBankMandate(

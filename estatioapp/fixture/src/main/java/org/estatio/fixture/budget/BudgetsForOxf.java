@@ -36,11 +36,9 @@ public class BudgetsForOxf extends BudgetAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new EstatioBaseLineFixture());
-            executionContext.executeChild(this, new PropertyForOxfGb());
-            executionContext.executeChild(this, new ChargeRefData());
-        }
+        executionContext.executeChild(this, new EstatioBaseLineFixture());
+        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new ChargeRefData());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);

@@ -30,10 +30,9 @@ public class PersonForJeanneDarcFr extends PersonAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForPerdantFr());
-        }
+        executionContext.executeChild(this, new OrganisationForPerdantFr());
 
         createPerson(
                 AT_PATH,

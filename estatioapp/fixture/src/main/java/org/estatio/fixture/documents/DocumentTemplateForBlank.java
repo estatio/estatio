@@ -47,16 +47,14 @@ public class DocumentTemplateForBlank extends DocumentTemplateAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new EstatioBaseLineFixture());
+        executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-            executionContext.executeChild(this, new DocumentTypeForHello());
-            executionContext.executeChild(this, new DocumentTypeForBlank());
+        executionContext.executeChild(this, new DocumentTypeForHello());
+        executionContext.executeChild(this, new DocumentTypeForBlank());
 
-            executionContext.executeChild(this, new ApplicationTenancyForGlobal());
+        executionContext.executeChild(this, new ApplicationTenancyForGlobal());
 
-            executionContext.executeChild(this, new RenderingStrategyForUseInputAsOutput());
-        }
+        executionContext.executeChild(this, new RenderingStrategyForUseInputAsOutput());
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
         final RenderingStrategy renderingStrategy = renderingStrategyRepository.findByReference(RENDERING_STRATEGY_REF);

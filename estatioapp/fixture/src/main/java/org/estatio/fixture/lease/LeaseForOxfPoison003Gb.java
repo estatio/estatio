@@ -45,13 +45,10 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-
-            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-            executionContext.executeChild(this, new OrganisationForPoisonGb());
-            executionContext.executeChild(this, new PersonForJohnSmithGb());
-            executionContext.executeChild(this, new PropertyForOxfGb());
-        }
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, new OrganisationForPoisonGb());
+        executionContext.executeChild(this, new PersonForJohnSmithGb());
+        executionContext.executeChild(this, new PropertyForOxfGb());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

@@ -53,9 +53,7 @@ public class DocumentTypeAndTemplatesForItalianInvoicesUsingSsrs extends Documen
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new RenderingStrategyForSsrs());
-        }
+        executionContext.executeChild(this, new RenderingStrategyForSsrs());
 
         final String url = "${reportServerBaseUrl}";
 

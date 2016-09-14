@@ -47,12 +47,10 @@ public class DocumentTemplateForHelloGlobal extends DocumentTemplateAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new EstatioBaseLineFixture());
-            executionContext.executeChild(this, new DocumentTypeForHello());
-            executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-            executionContext.executeChild(this, new RenderingStrategyForFreemarker());
-        }
+        executionContext.executeChild(this, new EstatioBaseLineFixture());
+        executionContext.executeChild(this, new DocumentTypeForHello());
+        executionContext.executeChild(this, new ApplicationTenancyForGlobal());
+        executionContext.executeChild(this, new RenderingStrategyForFreemarker());
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
         final RenderingStrategy renderingStrategy = renderingStrategyRepository.findByReference(RENDERING_STRATEGY_REF);

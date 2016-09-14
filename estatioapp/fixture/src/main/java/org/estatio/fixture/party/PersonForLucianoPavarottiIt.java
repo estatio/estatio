@@ -32,10 +32,9 @@ public class PersonForLucianoPavarottiIt extends PersonAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new OrganisationForPastaPapaIt());
-        }
+        executionContext.executeChild(this, new OrganisationForPastaPapaIt());
 
         createPerson(
                 AT_PATH,

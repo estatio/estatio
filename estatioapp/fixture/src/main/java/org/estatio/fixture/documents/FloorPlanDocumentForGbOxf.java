@@ -17,7 +17,12 @@
  */
 package org.estatio.fixture.documents;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.inject.Inject;
+
+import org.apache.wicket.util.io.IOUtils;
 
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
@@ -43,12 +48,11 @@ public class FloorPlanDocumentForGbOxf extends DocumentTemplateAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new DocumentTypeForFloorPlan());
-            executionContext.executeChild(this, new RenderingStrategyForSvg());
-            executionContext.executeChild(this, new ApplicationTenancyForGbOxf());
-            executionContext.executeChild(this, new PropertyForOxfGb());
-        }
+        // prereqs
+        executionContext.executeChild(this, new DocumentTypeForFloorPlan());
+        executionContext.executeChild(this, new RenderingStrategyForSvg());
+        executionContext.executeChild(this, new ApplicationTenancyForGbOxf());
+        executionContext.executeChild(this, new PropertyForOxfGb());
 
         final FixedAsset property =
                 fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF).get(0);

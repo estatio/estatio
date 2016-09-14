@@ -38,10 +38,8 @@ public class BankAccountForOxford extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new PropertyForOxfGb());
-            executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-        }
+        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(OrganisationForHelloWorldGb.REF, BANK_ACCOUNT_REF, PropertyForOxfGb.REF, executionContext);

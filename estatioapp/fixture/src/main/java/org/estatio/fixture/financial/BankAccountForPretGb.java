@@ -38,9 +38,7 @@ public class BankAccountForPretGb extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfPret004Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfPret004Gb());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(

@@ -30,9 +30,7 @@ public class LeaseBreakOptionsForOxfPoison003Gb extends LeaseBreakOptionsAbstrac
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
-        }
+        executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

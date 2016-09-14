@@ -18,9 +18,6 @@
  */
 package org.estatio.fixture.guarantee;
 
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
-
 import javax.inject.Inject;
 
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -34,6 +31,9 @@ import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForDagoBankGb;
 
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
 public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
     public static final String LEASE_REFERENCE = LeaseForOxfTopModel001Gb.REF;
@@ -42,11 +42,9 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        if (isExecutePrereqs()) {
-            executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
-            executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-            executionContext.executeChild(this, new OrganisationForDagoBankGb());
-        }
+        executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+        executionContext.executeChild(this, new OrganisationForDagoBankGb());
 
         createGuaranteeForOxfTopModel001(executionContext);
     }

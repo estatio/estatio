@@ -38,9 +38,7 @@ public class BankAccountForMiracleGb extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
-            executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
-        }
+        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
