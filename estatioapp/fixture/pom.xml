@@ -64,7 +64,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-captureurl</artifactId>
+            <artifactId>incode-module-docrendering-stringinterpolator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.incode.module.docrendering</groupId>

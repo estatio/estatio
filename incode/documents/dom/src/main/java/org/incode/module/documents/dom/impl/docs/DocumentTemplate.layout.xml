@@ -71,18 +71,14 @@
                 <bs3:tab name="Content">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Mime type">
-                                <cpt:property id="mimeType"/>
-                                <cpt:property id="fileSuffix"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Rendering">
+                            <cpt:fieldSet name="Rendering" id="contentRendering">
                                 <cpt:property id="contentRenderingStrategy" hidden="ALL_TABLES">
                                     <cpt:action id="changeContentRenderingStrategy">
                                         <cpt:named>Change</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Template" id="content">
+                            <cpt:fieldSet name="Template" id="contentTemplate">
                                 <cpt:property id="sort"/>
                                 <cpt:property id="blob" hidden="ALL_TABLES">
                                     <cpt:action id="uploadBlob">
@@ -101,20 +97,24 @@
                                     </cpt:action>
                                 </cpt:property>
                             </cpt:fieldSet>
+                            <cpt:fieldSet name="Mime type">
+                                <cpt:property id="mimeType"/>
+                                <cpt:property id="fileSuffix"/>
+                            </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
                 <bs3:tab name="Subject">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Rendering">
+                            <cpt:fieldSet name="Rendering" id="subjectRendering">
                                 <cpt:property id="subjectRenderingStrategy" hidden="ALL_TABLES">
                                     <cpt:action id="changeSubjectRenderingStrategy">
                                         <cpt:named>Change</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Template" id="content">
+                            <cpt:fieldSet name="Template" id="subjectTemplate">
                                 <cpt:property id="subjectText" hidden="ALL_TABLES">
                                     <cpt:action id="updateSubjectText">
                                         <cpt:named>Update</cpt:named>

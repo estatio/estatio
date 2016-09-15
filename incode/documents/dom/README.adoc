@@ -315,40 +315,37 @@ public interface UrlDownloadService {
 ----
 
 
-==== `DocumentNamingService`
+==== `DocumentEmailSupportService`
 
-The `DocumentNamingService` provides an optional plug-in point to allow names of documents to be customized/verified.  For example, any characters that might be invalid in a file name (eg ":" if running on Windows) can be ignored.
-
-The service is called when creating a `Document` from a provided template and input domain object, and is defined as:
+The `DocumentEmailSupportService` ...
 
 [source,java]
 ----
-public interface DocumentNamingService {
-    public String nameOf(
-            final String documentName,
-            final Object domainObject,
-            final DocumentTemplate template);
+public interface DocumentEmailSupportService {
+    DocumentType blankDocumentType();                   // <1>
+    void inferHeaderFor(
+        Document document,                              // <2>
+        EmailHeader header);                            // <3>
 }
 ----
+<1> returns a `DocumentType` where the supplied content and subject model is returned unchanged
+<2> the `Document` for which the email is to be created
+<3> the `EmailHeader` to be populated, specifying the to:, cc: etc details.
 
-The default implementation of this service is provided.  This simply returns the document name if explicitly provided, otherwise uses the title of the domain object concatenated with the name of the template.  In both cases the appropriate
-file suffix is tacked on if required:
+where `EmailHeader` is:
 
 [source,java]
 ----
-public class DocumentNamingService.Default {
-    public String nameOf(
-            final String documentName,
-            final Object domainObject,
-            final DocumentTemplate template) {
-        String name =
-                documentName != null
-                        ? documentName
-                        : template.getName() + "-" + titleService.titleOf(domainObject);
-        return template.withFileSuffix(name);
-    }
-    @Inject
-    TitleService titleService;
+public class EmailHeader {
+    @Getter @Setter
+    private String subject;
+    @Getter
+    private final Set<EmailAddress> toSet = Sets.newTreeSet();
+    @Getter
+    private final Set<EmailAddress> ccSet = Sets.newTreeSet();
+    @Getter
+    private final Set<EmailAddress> bccSet = Sets.newTreeSet();
+    @Getter @Setter
+    private EmailAddress from;
 }
 ----
-

@@ -21,10 +21,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
@@ -80,14 +83,42 @@ public class DocumentRepository {
 
 
     @Programmatic
+    public List<Document> findBetween(final LocalDate startDate, final LocalDate endDateIfAny) {
+
+        final DateTime startDateTime = startDate.toDateTimeAtStartOfDay();
+
+        final QueryDefault<Document> query;
+        if (endDateIfAny != null) {
+            final DateTime endDateTime = endDateIfAny.plusDays(1).toDateTimeAtStartOfDay();
+            query = new QueryDefault<>(Document.class,
+                    "findByCreatedAtBetween",
+                    "startDateTime", startDateTime,
+                    "endDateTime", endDateTime);
+        }
+        else {
+            query = new QueryDefault<>(Document.class,
+                    "findByCreatedAtAfter",
+                    "startDateTime", startDateTime);
+        }
+
+        return repositoryService.allMatches(query);
+    }
+
+    @Programmatic
     public List<DocumentAbstract> allDocuments() {
         return repositoryService.allInstances(DocumentAbstract.class);
     }
+
+
+
 
     //region > injected services
 
     @Inject
     RepositoryService repositoryService;
+    @Inject
+    IsisJdoSupport isisJdoSupport;
+
 
     //endregion
 

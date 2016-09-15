@@ -105,7 +105,7 @@ mvn clean install -DskipTests -o
         <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
         <incode-module-communications.version>1.14.0-SNAPSHOT</incode-module-communications.version>
 
-        <incode-module-docrendering-captureurl.version>1.14.0-SNAPSHOT</incode-module-docrendering-captureurl.version>
+        <incode-module-docrendering-stringinterpolator.version>1.14.0-SNAPSHOT</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-freemarker.version>1.14.0-SNAPSHOT</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-xdocreport.version>1.14.0-SNAPSHOT</incode-module-docrendering-xdocreport.version>
 
@@ -598,8 +598,8 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-captureurl</artifactId>
-                <version>${incode-module-docrendering-captureurl.version}</version>
+                <artifactId>incode-module-docrendering-stringinterpolator</artifactId>
+                <version>${incode-module-docrendering-stringinterpolator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
@@ -612,7 +612,7 @@ mvn clean install -DskipTests -o
                 <version>${incode-module-docrendering-xdocreport.version}</version>
             </dependency>
 
-            <!-- required for the dataModel implementations used by docrendering-captureurl -->
+            <!-- required for the dataModel implementations used by docrendering-stringinterpolator -->
             <dependency>
                 <groupId>org.isisaddons.module.stringinterpolator</groupId>
                 <artifactId>isis-module-stringinterpolator-dom</artifactId>
@@ -1086,7 +1086,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
-                <module>incode/docrendering-captureurl</module>
+                <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
@@ -1113,7 +1113,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
-                <module>incode/docrendering-captureurl</module>
+                <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
@@ -1139,7 +1139,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
-                <module>incode/docrendering-captureurl</module>
+                <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
@@ -1169,7 +1169,7 @@ mvn clean install -DskipTests -o
                 <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
-                <module>incode/docrendering-captureurl</module>
+                <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>

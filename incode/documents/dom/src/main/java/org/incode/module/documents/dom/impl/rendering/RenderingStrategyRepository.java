@@ -84,6 +84,13 @@ public class RenderingStrategyRepository {
                 .executeList();
     }
 
+    @Programmatic
+    public List<RenderingStrategy> allStrategies() {
+        return repositoryService.allInstances(RenderingStrategy.class);
+    }
+
+    //region > helpers
+
     private TypesafeQuery<RenderingStrategy> newQuery() {
         return isisJdoSupport.newTypesafeQuery(RenderingStrategy.class);
     }
@@ -92,10 +99,7 @@ public class RenderingStrategyRepository {
         return QRenderingStrategy.candidate();
     }
 
-    @Programmatic
-    public List<RenderingStrategy> allStrategies() {
-        return repositoryService.allInstances(RenderingStrategy.class);
-    }
+    //endregion
 
 
     //region > injected services

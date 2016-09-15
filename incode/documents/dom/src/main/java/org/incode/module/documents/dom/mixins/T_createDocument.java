@@ -39,7 +39,6 @@ import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.spi.ApplicationTenancyService;
-import org.incode.module.documents.dom.spi.DocumentNamingService;
 
 public abstract class T_createDocument<T> {
 
@@ -70,7 +69,6 @@ public abstract class T_createDocument<T> {
         if (intent == Intent.PREVIEW) {
             return template.preview(binding.getContentDataModel(), binding.getSubjectDataModel(), null);
         }
-        final String documentNameToUse = documentNameOf(documentName, domainObject, template);
         final DocumentAbstract doc = template.render(binding.getContentDataModel(), binding.getSubjectDataModel());
         for (Object o : binding.getAttachTo()) {
             if(paperclipRepository.canAttach(o)) {
@@ -143,16 +141,6 @@ public abstract class T_createDocument<T> {
         return intents;
     }
 
-    /**
-     * Delegates to {@link DocumentNamingService} to allow more sophisticated rules to be plugged in (eg substitute
-     * for any invalid characters).
-     */
-    private String documentNameOf(
-            final String documentName, final T domainObject, final DocumentTemplate template) {
-        return documentNamingService.nameOf(documentName, domainObject, template);
-    }
-
-
 
     String atPathFor(final T domainObject) {
         return applicationTenancyServices.stream()
@@ -175,9 +163,6 @@ public abstract class T_createDocument<T> {
     
     @javax.inject.Inject
     DocumentTemplateRepository documentTemplateRepository;
-
-    @javax.inject.Inject
-    DocumentNamingService documentNamingService;
 
     @javax.inject.Inject
     ClassService classService;

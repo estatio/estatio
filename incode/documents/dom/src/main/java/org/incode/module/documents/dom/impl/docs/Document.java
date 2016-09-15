@@ -23,6 +23,7 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Uniques;
 
 import com.google.common.eventbus.Subscribe;
@@ -57,7 +58,19 @@ import lombok.Setter;
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
-    // none yet
+        @Query(
+                name = "findByCreatedAtAfter", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.documents.dom.impl.docs.Document "
+                        + "WHERE :startDateTime <= createdAt  "
+                        + "ORDER BY createdAt DESC "),
+        @Query(
+                name = "findByCreatedAtBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.documents.dom.impl.docs.Document "
+                        + "WHERE :startDateTime <= createdAt  "
+                        + "   && createdAt      <= :endDateTime "
+                        + "ORDER BY createdAt DESC "),
 })
 @Indices({
     // none yet

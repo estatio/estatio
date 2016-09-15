@@ -54,7 +54,7 @@
                 <bs3:tab name="Correspondents">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="correspondents"/>
+                            <cpt:collection id="correspondents" defaultView="table"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

@@ -116,7 +116,7 @@ public class Document_email  {
 
             final DocumentTemplate template = determineBlankDocumentTemplate();
 
-            final DocumentAbstract coverNote = template.render(coveringNote, null);
+            final DocumentAbstract coverNote = template.render(coveringNote, subject);
             paperclipRepository.attach(coverNote, PAPERCLIP_ROLE_COVER, communication);
         }
 

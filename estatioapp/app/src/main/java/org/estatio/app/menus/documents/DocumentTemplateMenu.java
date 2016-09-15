@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.value.Blob;
@@ -46,18 +45,18 @@ import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.DocumentSort;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.impl.docs.MimeTypeSpecification;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.impl.docs.MimeTypeSpecification;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Other",
+        named = "Documents",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.154")
+        menuOrder = "77.4")
 public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu> {
 
     public DocumentTemplateMenu() {
@@ -276,9 +275,9 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "4")
-    public List<DocumentTemplate> allTemplates() {
+    public List<DocumentTemplate> allDocumentTemplates() {
         return documentTemplateRepository.allTemplates();
     }
 

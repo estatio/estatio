@@ -22,45 +22,53 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentRepository;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Prototyping",
-        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
-        menuOrder = "400")
+        named = "Documents",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "77.1")
 public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     public DocumentMenu() {
         super(DocumentMenu.class);
     }
 
-    // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "1")
+    public List<Document> find(
+            final LocalDate startDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final LocalDate endDate
+    ) {
+        return documentRepository.findBetween(startDate, endDate);
+    }
 
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(sequence = "2")
-    public List<DocumentAbstract> allDocuments() {
-        return documentRepository.allDocuments();
+    public LocalDate default0Find() {
+        // one week ago.
+        return clockService.now().plusDays(-7);
     }
 
 
-    // //////////////////////////////////////
-
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private ClockService clockService;
 
     @Inject
     private DocumentRepository documentRepository;

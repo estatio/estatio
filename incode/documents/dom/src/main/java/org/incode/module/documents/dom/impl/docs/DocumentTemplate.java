@@ -682,9 +682,13 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
         try {
             // subject
-            final RendererFromCharsToChars subjectRenderer = (RendererFromCharsToChars) getSubjectRenderingStrategy().newRenderer();
-            final String documentName = subjectRenderer
-                    .renderCharsToChars(getType(), getAtPath(), getVersion(), getSubjectText(), subjectDataModel);
+            final RendererFromCharsToChars subjectRenderer =
+                    (RendererFromCharsToChars) getSubjectRenderingStrategy().newRenderer();
+            final String renderedDocumentName =
+                    subjectRenderer.renderCharsToChars(
+                            getType(), getAtPath(), getVersion(),
+                            getSubjectText(), subjectDataModel);
+            final String documentName = withFileSuffix(renderedDocumentName);
 
             // content
             final DocumentNature inputNature = getContentRenderingStrategy().getInputNature();
