@@ -17,8 +17,6 @@
 package org.incode.module.documents.dom.impl.docs;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -26,38 +24,32 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class DocumentTemplate_updateText {
+public class DocumentTemplate_updatePreviewOnly {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_updateText(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_updatePreviewOnly(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateText>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updatePreviewOnly>  { }
+
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
-    @ActionLayout(contributed = Contributed.AS_ACTION)
     public DocumentTemplate $$(
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
-            final String text
-    ) {
-        documentTemplate.setText(text);
+            @ParameterLayout(named = "Preview only?")
+            final boolean previewOnly) {
+        documentTemplate.setPreviewOnly(previewOnly);
         return documentTemplate;
     }
 
-    public String default0$$() {
-        return documentTemplate.getText();
+    public boolean default0$$() {
+        return documentTemplate.isPreviewOnly();
     }
-
-    public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.TEXT;
-    }
-
 
 }

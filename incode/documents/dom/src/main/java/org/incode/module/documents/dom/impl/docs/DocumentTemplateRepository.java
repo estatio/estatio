@@ -51,11 +51,18 @@ public class DocumentTemplateRepository {
             final DocumentType type,
             final LocalDate date,
             final String atPath,
-            final Blob blob,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy) {
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, blob, fileSuffix, renderingStrategy
-        );
+            final boolean previewOnly,
+            final Blob blob,
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
+        final DocumentTemplate document =
+                new DocumentTemplate(
+                        type, date, atPath,
+                        fileSuffix, previewOnly, blob,
+                        contentRenderingStrategy,
+                        subjectText, subjectRenderingStrategy);
         repositoryService.persistAndFlush(document);
         return document;
     }
@@ -65,10 +72,18 @@ public class DocumentTemplateRepository {
             final DocumentType type,
             final LocalDate date,
             final String atPath,
-            final Clob clob,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy) {
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, clob, fileSuffix, renderingStrategy);
+            final boolean previewOnly,
+            final Clob clob,
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
+        final DocumentTemplate document =
+                new DocumentTemplate(
+                        type, date, atPath,
+                        fileSuffix, previewOnly, clob,
+                        contentRenderingStrategy,
+                        subjectText, subjectRenderingStrategy);
         repositoryService.persistAndFlush(document);
         return document;
     }
@@ -78,13 +93,20 @@ public class DocumentTemplateRepository {
             final DocumentType type,
             final LocalDate date,
             final String atPath,
+            final String fileSuffix,
+            final boolean previewOnly,
             final String name,
             final String mimeType,
-            final String fileSuffix,
             final String text,
-            final RenderingStrategy renderingStrategy) {
-        final DocumentTemplate document = new DocumentTemplate(type, date, atPath, name, mimeType, fileSuffix, text,
-                renderingStrategy);
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
+        final DocumentTemplate document =
+                new DocumentTemplate(
+                        type, date, atPath,
+                        fileSuffix, previewOnly, name, mimeType, text,
+                        contentRenderingStrategy,
+                        subjectText, subjectRenderingStrategy);
         repositoryService.persistAndFlush(document);
         return document;
     }

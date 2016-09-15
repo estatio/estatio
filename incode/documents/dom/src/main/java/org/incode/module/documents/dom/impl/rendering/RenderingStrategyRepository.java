@@ -20,10 +20,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.datanucleus.query.typesafe.TypesafeQuery;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
@@ -53,16 +55,42 @@ public class RenderingStrategyRepository {
         return renderingStrategy;
     }
 
-
     @Programmatic
     public RenderingStrategy findByReference(
             final String reference) {
-        return repositoryService.firstMatch(
-                new QueryDefault<>(RenderingStrategy.class,
-                        "findByReference",
-                        "reference", reference));
+        final QRenderingStrategy cand = newCandidate();
+        return newQuery()
+                .filter(
+                        cand.reference.eq(reference))
+                .executeUnique();
     }
 
+    @Programmatic
+    public List<RenderingStrategy> findForUseWithSubjectText() {
+        return findByInputNatureAndOutputNature(DocumentNature.CHARACTERS, DocumentNature.CHARACTERS);
+    }
+
+    @Programmatic
+    public List<RenderingStrategy> findByInputNatureAndOutputNature(
+            final DocumentNature inputNature, final DocumentNature outputNature) {
+        final QRenderingStrategy cand = newCandidate();
+        return newQuery()
+                .filter(
+                        cand.inputNature.eq(inputNature)
+                .and(
+                        cand.outputNature.eq(outputNature)))
+                .orderBy(
+                        cand.rendererClassName.asc())
+                .executeList();
+    }
+
+    private TypesafeQuery<RenderingStrategy> newQuery() {
+        return isisJdoSupport.newTypesafeQuery(RenderingStrategy.class);
+    }
+
+    private static QRenderingStrategy newCandidate() {
+        return QRenderingStrategy.candidate();
+    }
 
     @Programmatic
     public List<RenderingStrategy> allStrategies() {
@@ -73,6 +101,8 @@ public class RenderingStrategyRepository {
     //region > injected services
     @Inject
     RepositoryService repositoryService;
+    @Inject
+    IsisJdoSupport isisJdoSupport;
     //endregion
 
 }

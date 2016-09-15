@@ -27,18 +27,18 @@ import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 
 @Mixin
-public class DocumentTemplate_changeRenderingStrategy {
+public class DocumentTemplate_changeContentRenderingStrategy {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_changeRenderingStrategy(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_changeContentRenderingStrategy(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_changeRenderingStrategy>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_changeContentRenderingStrategy>  { }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
@@ -46,23 +46,23 @@ public class DocumentTemplate_changeRenderingStrategy {
     )
     public DocumentTemplate $$(
             final RenderingStrategy renderingStrategy) {
-        documentTemplate.setRenderingStrategy(renderingStrategy);
+        documentTemplate.setContentRenderingStrategy(renderingStrategy);
         return documentTemplate;
     }
 
     public RenderingStrategy default0$$() {
-        return currentRenderingStrategy();
+        return currentContentRenderingStrategy();
     }
 
     public TranslatableString validate0$$(final RenderingStrategy proposedRenderingStrategy) {
-        if(currentRenderingStrategy().getInputNature() != proposedRenderingStrategy.getInputNature()) {
+        if(currentContentRenderingStrategy().getInputNature() != proposedRenderingStrategy.getInputNature()) {
             return TranslatableString.tr("The input nature of the new rendering strategy (binary or characters) must be the same as the current");
         }
         return null;
     }
 
-    private RenderingStrategy currentRenderingStrategy() {
-        return documentTemplate.getRenderingStrategy();
+    private RenderingStrategy currentContentRenderingStrategy() {
+        return documentTemplate.getContentRenderingStrategy();
     }
 
 

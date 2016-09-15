@@ -59,23 +59,30 @@
                 <!-- assuming a mixin is present to look this up -->
                 <cpt:property id="applicationTenancy"/>
                 <cpt:property id="createdAt" hidden="EVERYWHERE"/>
-                <cpt:property id="renderingStrategy" hidden="ALL_TABLES">
-                    <cpt:action id="changeRenderingStrategy">
-                        <cpt:named>Change</cpt:named>
+                <cpt:property id="previewOnly">
+                    <cpt:action id="updatePreviewOnly">
+                        <cpt:named>Toggle</cpt:named>
                     </cpt:action>
                 </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup>
-                <bs3:tab name="Document">
+                <bs3:tab name="Content">
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Mime type">
                                 <cpt:property id="mimeType"/>
                                 <cpt:property id="fileSuffix"/>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Content" id="content">
+                            <cpt:fieldSet name="Rendering">
+                                <cpt:property id="contentRenderingStrategy" hidden="ALL_TABLES">
+                                    <cpt:action id="changeContentRenderingStrategy">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Template" id="content">
                                 <cpt:property id="sort"/>
                                 <cpt:property id="blob" hidden="ALL_TABLES">
                                     <cpt:action id="uploadBlob">
@@ -97,7 +104,27 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="DummyForFirstTabToShow">
+                <bs3:tab name="Subject">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Rendering">
+                                <cpt:property id="subjectRenderingStrategy" hidden="ALL_TABLES">
+                                    <cpt:action id="changeSubjectRenderingStrategy">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Template" id="content">
+                                <cpt:property id="subjectText" hidden="ALL_TABLES">
+                                    <cpt:action id="updateSubjectText">
+                                        <cpt:named>Update</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="DummyRequiredIfOnlyOneTabToShow">
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Dummy">

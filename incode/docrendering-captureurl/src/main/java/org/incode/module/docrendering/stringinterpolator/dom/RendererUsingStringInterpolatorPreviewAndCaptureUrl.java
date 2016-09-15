@@ -16,23 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.docrendering.stringinterpolator.dom;
 
 import java.io.IOException;
 import java.net.URL;
-
-import javax.inject.Inject;
-
-import org.apache.isis.applib.services.config.ConfigurationService;
-
-import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytesWithPreviewToUrl;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
 public class RendererUsingStringInterpolatorPreviewAndCaptureUrl extends RendererUsingStringInterpolatorCaptureUrl
-        implements
-        RendererFromCharsToBytesWithPreviewToUrl {
+        implements RendererFromCharsToBytesWithPreviewToUrl {
 
     @Override
     public URL previewCharsToBytes(
@@ -40,16 +33,10 @@ public class RendererUsingStringInterpolatorPreviewAndCaptureUrl extends Rendere
             final String atPath,
             final long templateVersion,
             final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException {
+            final Object dataModel) throws IOException {
         return super.previewCharsToBytes(
-                documentType, atPath, templateVersion, templateChars, dataModel, documentName);
+                documentType, atPath, templateVersion, templateChars, dataModel);
     }
 
-    @javax.inject.Inject
-    StringInterpolatorService stringInterpolator;
-
-    @Inject
-    ConfigurationService configurationService;
 
 }

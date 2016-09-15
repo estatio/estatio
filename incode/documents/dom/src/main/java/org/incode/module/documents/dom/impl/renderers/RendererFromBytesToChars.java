@@ -27,7 +27,6 @@ public interface RendererFromBytesToChars extends Renderer {
             final String atPath,
             final long templateVersion,
             final byte[] templateBytes,
-            final Object dataModel,
-            final String documentName) throws IOException;
+            final Object dataModel) throws IOException;
 
 }

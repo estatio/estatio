@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.integration.documents;
+package org.incode.module.docrendering.stringinterpolator.dom;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,10 +41,9 @@ public class RendererUsingStringInterpolatorCaptureUrl implements RendererFromCh
             final String atPath,
             final long templateVersion,
             final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException {
+            final Object dataModel) throws IOException {
         final URL url =
-                previewCharsToBytes(documentType, atPath, templateVersion, templateChars, dataModel, documentName);
+                previewCharsToBytes(documentType, atPath, templateVersion, templateChars, dataModel);
         final ByteSource byteSource = Resources.asByteSource(url);
         return byteSource.read();
     }
@@ -54,8 +53,7 @@ public class RendererUsingStringInterpolatorCaptureUrl implements RendererFromCh
             final String atPath,
             final long templateVersion,
             final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException {
+            final Object dataModel) throws IOException {
 
         final StringInterpolatorService.Root root = (StringInterpolatorService.Root) dataModel;
         final String urlStr = stringInterpolator.interpolate(root, templateChars);

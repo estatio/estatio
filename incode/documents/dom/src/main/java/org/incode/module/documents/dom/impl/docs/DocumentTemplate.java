@@ -174,6 +174,7 @@ import lombok.Setter;
 )
 public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
+
     //region > ui event classes
     public static class TitleUiEvent extends DocumentsModule.TitleUiEvent<DocumentTemplate>{}
     public static class IconUiEvent extends DocumentsModule.IconUiEvent<DocumentTemplate>{}
@@ -256,41 +257,46 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     }
     //endregion
 
-
     //region > constructor
     public DocumentTemplate(
             final DocumentType type,
             final LocalDate date,
             final String atPath,
-            final Blob blob,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy) {
+            final boolean previewOnly, final Blob blob,
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
         super(type, atPath, blob);
-        init(type, date, atPath, fileSuffix, renderingStrategy);
+        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     public DocumentTemplate(
             final DocumentType type,
             final LocalDate date,
             final String atPath,
-            final String name,
-            final String mimeType,
             final String fileSuffix,
-            final String text,
-            final RenderingStrategy renderingStrategy) {
+            final boolean previewOnly,
+            final String name, final String mimeType, final String text,
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
         super(type, atPath, name, mimeType, text);
-        init(type, date, atPath, fileSuffix, renderingStrategy);
+        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     public DocumentTemplate(
             final DocumentType type,
             final LocalDate date,
             final String atPath,
-            final Clob clob,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy) {
+            final boolean previewOnly,
+            final Clob clob,
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
         super(type, atPath, clob);
-        init(type, date, atPath, fileSuffix, renderingStrategy);
+        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     private void init(
@@ -298,12 +304,18 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final String fileSuffix,
-            final RenderingStrategy renderingStrategy) {
+            final boolean previewOnly,
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy) {
         this.typeCopy = type;
         this.atPathCopy = atPath;
         this.date = date;
         this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
-        this.renderingStrategy = renderingStrategy;
+        this.previewOnly = previewOnly;
+        this.contentRenderingStrategy = contentRenderingStrategy;
+        this.subjectText = subjectText;
+        this.subjectRenderingStrategy = subjectRenderingStrategy;
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -353,15 +365,15 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
 
-    //region > renderStrategy (property)
+    //region > contentRenderingStrategy (property)
     public static class RenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
     @Getter @Setter
-    @Column(allowsNull = "false", name = "renderStrategyId")
+    @Column(allowsNull = "false", name = "contentRenderStrategyId")
     @Property(
             domainEvent = RenderingStrategyDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private RenderingStrategy renderingStrategy;
+    private RenderingStrategy contentRenderingStrategy;
     //endregion
 
     //region > fileSuffix (property)
@@ -373,6 +385,45 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             editing = Editing.DISABLED
     )
     private String fileSuffix;
+    //endregion
+
+
+    //region > subjectText (persisted property)
+    public static class SubjectTextDomainEvent extends PropertyDomainEvent<Clob> { }
+    @Getter @Setter
+    @javax.jdo.annotations.Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+    @Property(
+            notPersisted = true, // exclude from auditing
+            domainEvent = SubjectTextDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private String subjectText;
+    //endregion
+
+    //region > subjectRenderingStrategy (property)
+    public static class SubjectRenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
+    @Getter @Setter
+    @Column(allowsNull = "false", name = "subjectRenderStrategyId")
+    @Property(
+            domainEvent = SubjectRenderingStrategyDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private RenderingStrategy subjectRenderingStrategy;
+    //endregion
+
+    //region > PreviewOnly (property)
+    public static class PreviewOnlyDomainEvent extends RenderingStrategy.PropertyDomainEvent<Boolean> { }
+
+    /**
+     * Whether this template can only be previewed (not used to also create a document).
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = PreviewOnlyDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private boolean previewOnly;
     //endregion
 
 
@@ -559,30 +610,36 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
 
     @Programmatic
-    public URL preview(final Object dataModel, final String documentName) throws IOException {
+    public URL preview(
+            final Object contentDataModel,
+            final Object subjectDataModelIfAny,
+            final String documentName) throws IOException {
 
-        serviceRegistry2.injectServicesInto(dataModel);
+        final Object subjectDataModel = coalesce(subjectDataModelIfAny, contentDataModel);
 
-        if(!getRenderingStrategy().isPreviewsToUrl()) {
+        serviceRegistry2.injectServicesInto(contentDataModel);
+        serviceRegistry2.injectServicesInto(subjectDataModel);
+
+        if(!getContentRenderingStrategy().isPreviewsToUrl()) {
             throw new IllegalStateException(String.format("RenderingStrategy '%s' does not support previewing to URL",
-                    getRenderingStrategy().getReference()));
+                    getContentRenderingStrategy().getReference()));
         }
 
-        final DocumentNature inputNature = getRenderingStrategy().getInputNature();
-        final DocumentNature outputNature = getRenderingStrategy().getOutputNature();
+        final DocumentNature inputNature = getContentRenderingStrategy().getInputNature();
+        final DocumentNature outputNature = getContentRenderingStrategy().getOutputNature();
 
-        final Renderer renderer = getRenderingStrategy().newRenderer();
+        final Renderer renderer = getContentRenderingStrategy().newRenderer();
         switch (inputNature){
         case BYTES:
             switch (outputNature) {
             case BYTES:
                 return ((RendererFromBytesToBytesWithPreviewToUrl) renderer).previewBytesToBytes(
                         getType(), getAtPath(), getVersion(),
-                        asBytes(), dataModel, documentName);
+                        asBytes(), contentDataModel);
             case CHARACTERS:
                 return ((RendererFromBytesToCharsWithPreviewToUrl) renderer).previewBytesToChars(
                         getType(), getAtPath(), getVersion(),
-                        asBytes(), dataModel, documentName);
+                        asBytes(), contentDataModel);
             default:
                 // shouldn't happen, above switch statement is complete
                 throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
@@ -592,11 +649,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             case BYTES:
                 return ((RendererFromCharsToBytesWithPreviewToUrl) renderer).previewCharsToBytes(
                         getType(), getAtPath(), getVersion(),
-                        asChars(), dataModel, documentName);
+                        asChars(), contentDataModel);
             case CHARACTERS:
                 return ((RendererFromCharsToCharsWithPreviewToUrl) renderer).previewCharsToChars(
                         getType(), getAtPath(), getVersion(),
-                        asChars(), dataModel, documentName);
+                        asChars(), contentDataModel);
             default:
                 // shouldn't happen, above switch statement is complete
                 throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
@@ -612,34 +669,41 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     //region > render (programmatic)
     @Programmatic
-    public DocumentAbstract render(final Object dataModel, final String documentName) {
+    public DocumentAbstract render(
+            final Object contentDataModel,
+            final Object subjectDataModelIfAny) {
 
-        serviceRegistry2.injectServicesInto(dataModel);
+        final Object subjectDataModel = coalesce(subjectDataModelIfAny, contentDataModel);
 
-        final RenderingStrategy renderingStrategy = getRenderingStrategy();
+        serviceRegistry2.injectServicesInto(contentDataModel);
+        serviceRegistry2.injectServicesInto(subjectDataModel);
 
-        final DocumentNature inputNature = renderingStrategy.getInputNature();
-        final DocumentNature outputNature = renderingStrategy.getOutputNature();
+        final DateTime createdAt = clockService.nowAsDateTime();
 
         try {
-            final DateTime createdAt = clockService.nowAsDateTime();
+            // subject
+            final RendererFromCharsToChars subjectRenderer = (RendererFromCharsToChars) getSubjectRenderingStrategy().newRenderer();
+            final String documentName = subjectRenderer
+                    .renderCharsToChars(getType(), getAtPath(), getVersion(), getSubjectText(), subjectDataModel);
 
-            final DocumentType documentType = this.getType();
+            // content
+            final DocumentNature inputNature = getContentRenderingStrategy().getInputNature();
+            final DocumentNature outputNature = getContentRenderingStrategy().getOutputNature();
 
-            final Renderer renderer = getRenderingStrategy().newRenderer();
+            final Renderer renderer = getContentRenderingStrategy().newRenderer();
             switch (inputNature){
             case BYTES:
                 switch (outputNature) {
                 case BYTES:
                     final byte[] renderedBytes = ((RendererFromBytesToBytes) renderer).renderBytesToBytes(
                             getType(), getAtPath(), getVersion(),
-                            asBytes(), dataModel, documentName);
-                    return createBlob(documentType, documentName, renderedBytes, createdAt);
+                            asBytes(), contentDataModel);
+                    return createBlob(getType(), documentName, renderedBytes, createdAt);
                 case CHARACTERS:
                     final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
                             getType(), getAtPath(), getVersion(),
-                            asBytes(), dataModel, documentName);
-                    return createTextOrClob(documentType, documentName, renderedChars, createdAt);
+                            asBytes(), contentDataModel);
+                    return createTextOrClob(getType(), documentName, renderedChars, createdAt);
                 default:
                     // shouldn't happen, above switch statement is complete
                     throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
@@ -649,13 +713,13 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                 case BYTES:
                     final byte[] renderedBytes = ((RendererFromCharsToBytes) renderer).renderCharsToBytes(
                             getType(), getAtPath(), getVersion(),
-                            asChars(), dataModel, documentName);
-                    return createBlob(documentType, documentName, renderedBytes, createdAt);
+                            asChars(), contentDataModel);
+                    return createBlob(getType(), documentName, renderedBytes, createdAt);
                 case CHARACTERS:
                     final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
                             getType(), getAtPath(), getVersion(),
-                            asChars(), dataModel, documentName);
-                    return createTextOrClob(documentType, documentName, renderedChars, createdAt);
+                            asChars(), contentDataModel);
+                    return createTextOrClob(getType(), documentName, renderedChars, createdAt);
                 default:
                     // shouldn't happen, above switch statement is complete
                     throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
@@ -668,6 +732,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         } catch (IOException e) {
             throw new ApplicationException("Unable to render document template", e);
         }
+    }
+
+    private static Object coalesce(final Object x, final Object y) {
+        return x != null? x: y;
     }
 
     private DocumentAbstract createBlob(

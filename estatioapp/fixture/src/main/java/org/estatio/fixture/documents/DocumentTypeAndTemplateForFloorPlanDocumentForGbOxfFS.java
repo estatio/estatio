@@ -35,6 +35,7 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -74,14 +75,19 @@ public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS extends Docum
 
         final DocumentType documentType =
                 documentTypeRepository.findByReference(DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS.TYPE_REF);
-        final RenderingStrategy renderingStrategy =
+        final RenderingStrategy svgRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategyFSForSvg.REF);
+        final RenderingStrategy freemarkerRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForFreemarker.REF);
 
         final Clob clob = readSvgResourceAsClob(NAME);
 
         final DocumentTemplate documentTemplate = createDocumentClobTemplate(documentType, clockService.now(),
-                ApplicationTenancyForGbOxf.PATH, clob,
-                FILE_SUFFIX, renderingStrategy, executionContext);
+                ApplicationTenancyForGbOxf.PATH, FILE_SUFFIX,
+                false,
+                clob, svgRenderingStrategy,
+                "Floorplan for ${property.reference}", freemarkerRenderingStrategy,
+                executionContext);
 
         paperclipRepository.attach(documentTemplate, null, property);
     }

@@ -35,8 +35,7 @@ public class RendererForSvg implements RendererFromCharsToChars {
             final String atPath,
             final long templateVersion,
             final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException {
+            final Object dataModel) throws IOException {
 
         // TODO: fetch the text out of the documentTemplate, interpolate using StringInterpolator, invoke the URL
 

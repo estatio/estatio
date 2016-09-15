@@ -15,22 +15,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.incode.module.docrendering.stringinterpolator.fixture;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.app.integration.documents.RendererUsingStringInterpolatorPreviewAndCaptureUrl;
+import org.incode.module.docrendering.stringinterpolator.dom.RendererUsingStringInterpolatorPreviewAndCaptureUrl;
 
-public class RenderingStrategyFSForSsrs extends RenderingStrategyFSAbstract {
+public class RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl extends RenderingStrategyFSAbstract {
 
-    public static final String REF = "SSRS";
+    public static final String REF = "SIPC";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         createRenderingStrategy(
                 REF,
-                "SQL Server Reporting Services",
+                "String interpolate URL for Preview and Capture",
                 DocumentNature.CHARACTERS,
                 DocumentNature.BYTES,
                 RendererUsingStringInterpolatorPreviewAndCaptureUrl.class, executionContext);

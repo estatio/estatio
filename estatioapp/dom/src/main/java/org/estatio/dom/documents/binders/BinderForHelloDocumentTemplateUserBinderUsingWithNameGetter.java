@@ -42,7 +42,7 @@ public class BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter impleme
         final HelloDocumentTemplateUserDataModel dataModel = new HelloDocumentTemplateUserDataModel();
         dataModel.setUser(withNameGetter.getName());
 
-        return new Binding(dataModel, Collections.singletonList(domainObject));
+        return new Binding(dataModel, dataModel, Collections.singletonList(domainObject));
     }
 
 }

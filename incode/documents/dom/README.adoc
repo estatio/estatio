@@ -8,7 +8,7 @@
 
 The following class diagram highlights the main concepts:
 
-image::http://yuml.me/911ca435[link="http://yuml.me/911ca435", width="600px"]
+image::http://yuml.me/844b2b46[link="http://yuml.me/844b2b46", width="600px"]
 
 (The colours used in the diagram are - approximately - from link:https://en.wikipedia.org/wiki/Object_Modeling_in_Color[Object Modeling in Color]).
 
@@ -109,14 +109,22 @@ and `Binding` is in turn:
 ----
 public class Binding {
     ...
-    private final Object dataModel;
+    private final Object contentDataModel;
+    private final Object subjectDataModel;
     private final List<Object> attachTo;
-    public Binding(final Object dataModel, final List<Object> attachTo) {
-        this.dataModel = dataModel;
+    public Binding(
+            final Object contentDataModel,          // <1>
+            final Object subjectDataModel,          // <2>
+            final List<Object> attachTo) {
+        this.contentDataModel = contentDataModel;
+        this.subjectDataModel = subjectDataModel;
         this.attachTo = attachTo;
     }
 }
 ----
+<1> used as input to the content `RenderingStrategy`.
+<2> used as input to the subject `RenderingStrategy`.  If null, then the contentDataModel will be used.
+
 
 
 === Renderers

@@ -27,7 +27,6 @@ public interface RendererFromCharsToChars extends Renderer {
             final String atPath,
             final long templateVersion,
             final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException;
+            final Object dataModel) throws IOException;
 
 }

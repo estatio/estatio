@@ -16,24 +16,30 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.renderers;
+package org.incode.module.docrendering.stringinterpolator.dom;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
+
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToChars;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-/**
- * A trivial implementation of {@link RendererFromCharsToChars} that expects the dataModel to be a String,
- * and simply returns that as the output.
- */
-public class RendererUsesDataModelAsOutput implements RendererFromCharsToChars {
+public class RendererUsingStringInterpolator implements RendererFromCharsToChars {
 
+    @Override
     public String renderCharsToChars(
             final DocumentType documentType,
             final String atPath,
             final long templateVersion,
             final String templateChars,
             final Object dataModel) throws IOException {
-        return (String) dataModel;
+        final StringInterpolatorService.Root root = (StringInterpolatorService.Root) dataModel;
+        return stringInterpolator.interpolate(root, templateChars);
     }
+
+    @Inject
+    StringInterpolatorService stringInterpolator;
 }

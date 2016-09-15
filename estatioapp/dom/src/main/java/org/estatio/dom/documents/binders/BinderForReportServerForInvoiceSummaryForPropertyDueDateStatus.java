@@ -34,7 +34,11 @@ import org.estatio.dom.documents.datamodels.RootForReportServer;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 /**
- * Uses {@link StringInterpolatorService} to create data model, and requires domain object to implement {@link WithApplicationTenancy}.
+ * Creates a dataModel to be used with {@link StringInterpolatorService} for both content and subject;
+ * requires domain object to implement {@link WithApplicationTenancy}.
+ *
+ * The input object must be a {@link InvoiceSummaryForPropertyDueDateStatus}, used to determine what to attach the
+ * resultant document.
  */
 public class BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus implements Binder {
 
@@ -57,7 +61,7 @@ public class BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus impl
         attachTo.addAll(viewModel.getInvoices());
 
         // binding
-        return new Binding(dataModel, attachTo);
+        return new Binding(dataModel, dataModel, attachTo);
     }
 
     @javax.inject.Inject

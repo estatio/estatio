@@ -27,11 +27,15 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;
+import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorCaptureUrl;
+import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.documents.binders.BinderForReportServer;
@@ -48,32 +52,38 @@ public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemp
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new RenderingStrategyFSForSsrs());
-        executionContext.executeChild(this, new RenderingStrategyFSForSsrsNoPreview());
+        executionContext.executeChild(this, new RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl());
+        executionContext.executeChild(this, new RenderingStrategyFSForStringInterpolatorCaptureUrl());
+        executionContext.executeChild(this, new RenderingStrategyFSForStringInterpolator());
 
         final RenderingStrategy ssrsRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyFSForSsrs.REF);
+                renderingStrategyRepository.findByReference(
+                        RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl.REF);
+        final RenderingStrategy ssrsNoPreviewRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForStringInterpolatorCaptureUrl.REF);
+        final RenderingStrategy freemarkerRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForFreemarker.REF);
 
         final DocumentTemplate demoTemplate = createTypeAndTemplate(
                 DEMO_SSRS_GLOBAL,
                 "Demo for SRSS Rendering",
                 AT_PATH,
-                ssrsRenderingStrategy,
-                "http://www.pdfpdf.com/samples/Sample5.PDF",
+                false,
+                "http://www.pdfpdf.com/samples/Sample5.PDF", ssrsRenderingStrategy,
+                "Demo for SRSS Rendering-${title}", freemarkerRenderingStrategy,
                 executionContext);
 
         demoTemplate.applicable(Property.class.getName(), BinderForReportServer.class.getName());
 
 
-        final RenderingStrategy ssrsNoPreviewRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyFSForSsrsNoPreview.REF);
 
         final DocumentTemplate demoNoPreviewTemplate = createTypeAndTemplate(
                 DEMO_SSRS_NO_PREVIEW_GLOBAL,
                 "Demo for SRSS Rendering, no preview",
                 AT_PATH,
-                ssrsNoPreviewRenderingStrategy,
-                "http://www.pdfpdf.com/samples/Sample5.PDF",
+                false,
+                "http://www.pdfpdf.com/samples/Sample5.PDF", ssrsNoPreviewRenderingStrategy,
+                "Demo for SRSS Rendering-${title}", freemarkerRenderingStrategy,
                 executionContext);
 
         demoNoPreviewTemplate.applicable(Property.class.getName(), BinderForReportServer.class.getName());
@@ -84,8 +94,10 @@ public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemp
             final String docTypeRef,
             final String docTypeName,
             final String atPath,
-            final RenderingStrategy renderingStrategy,
-            final String templateText,
+            final boolean previewOnly,
+            final String templateText, final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy,
             final ExecutionContext executionContext) {
 
         final DocumentType docType = documentTypeRepository.create(docTypeRef, docTypeName);
@@ -93,11 +105,12 @@ public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemp
         final ApplicationTenancy appTenancy = applicationTenancyRepository.findByPath(atPath);
 
         return createDocumentTextTemplate(
-                docType, now, docType.getName(),
-                "application/pdf", ".pdf",
-                appTenancy.getPath(),
+                docType, now, appTenancy.getPath(), ".pdf", previewOnly, docType.getName(),
+                "application/pdf",
                 templateText,
-                renderingStrategy,
+                contentRenderingStrategy,
+                subjectText,
+                subjectRenderingStrategy,
                 executionContext);
     }
 

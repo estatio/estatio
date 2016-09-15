@@ -83,15 +83,23 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
             final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
+            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
             final String templateText,
-            final RenderingStrategy renderingStrategy) {
+            @ParameterLayout(named = "Content Rendering Strategy")
+            final RenderingStrategy contentRenderingStrategy,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+            @ParameterLayout(named = "Subject text")
+            final String subjectText,
+            @ParameterLayout(named = "Subject rendering strategy")
+            final RenderingStrategy subjectRenderingStrategy,
+            @ParameterLayout(named = "Preview only?")
+            final boolean previewOnly) {
 
         final String documentName = name != null? name : type.getName();
         return documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), documentName, mimeType, fileSuffix, templateText,
-                renderingStrategy
-        );
+                type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, documentName, mimeType, templateText,
+                contentRenderingStrategy,
+                subjectText, subjectRenderingStrategy);
     }
 
     public String default3NewTextTemplate() {
@@ -113,11 +121,14 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final String templateText,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy,
+            final boolean previewOnly) {
 
         final DocumentSort documentSort = DocumentSort.TEXT;
 
-        return validateNewTemplate(proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy,
+        return validateNewTemplate(proposedType, proposedDate, proposedApplicationTenancy, contentRenderingStrategy,
                 documentSort);
     }
 
@@ -140,10 +151,18 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final ApplicationTenancy applicationTenancy,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Clob clob,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy contentRenderingStrategy,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+            @ParameterLayout(named = "Subject text")
+            final String subjectText,
+            @ParameterLayout(named = "Subject rendering strategy")
+            final RenderingStrategy subjectRenderingStrategy,
+            @ParameterLayout(named = "Preview only?")
+            final boolean previewOnly) {
 
         final DocumentTemplate template = documentTemplateRepository.createClob(
-                type, date, applicationTenancy.getPath(), clob, fileSuffix, renderingStrategy);
+                type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, clob, contentRenderingStrategy, subjectText,
+                subjectRenderingStrategy);
         if(name != null) {
             template.setName(name);
         }
@@ -162,12 +181,15 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final Clob clob,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy,
+            final boolean previewOnly) {
 
         final DocumentSort documentSort = DocumentSort.CLOB;
 
         return validateNewTemplate(
-                proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy,
+                proposedType, proposedDate, proposedApplicationTenancy, contentRenderingStrategy,
                 documentSort);
 
     }
@@ -190,11 +212,18 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.MIME_TYPE, mustSatisfy = MimeTypeSpecification.class)
             final ApplicationTenancy applicationTenancy,
             final Blob blob,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy contentRenderingStrategy,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+            @ParameterLayout(named = "Subject text")
+            final String subjectText,
+            @ParameterLayout(named = "Subject rendering strategy")
+            final RenderingStrategy subjectRenderingStrategy,
+            @ParameterLayout(named = "Preview only?")
+            final boolean previewOnly) {
 
         final DocumentTemplate template = documentTemplateRepository.createBlob(
-                type, date, applicationTenancy.getPath(), blob, fileSuffix,
-                renderingStrategy);
+                type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, blob,
+                contentRenderingStrategy, subjectText, subjectRenderingStrategy);
         if(name != null) {
             template.setName(name);
         }
@@ -213,12 +242,15 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             final String fileSuffix,
             final ApplicationTenancy proposedApplicationTenancy,
             final Blob blob,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy,
+            final boolean previewOnly) {
 
         final DocumentSort documentSort = DocumentSort.BLOB;
 
         return validateNewTemplate(
-                proposedType, proposedDate, proposedApplicationTenancy, renderingStrategy, documentSort);
+                proposedType, proposedDate, proposedApplicationTenancy, contentRenderingStrategy, documentSort);
     }
 
     private TranslatableString validateNewTemplate(

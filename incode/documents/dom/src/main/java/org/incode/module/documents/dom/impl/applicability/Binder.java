@@ -37,12 +37,15 @@ public interface Binder {
 
     public static class Binding {
         @Getter
-        private final Object dataModel;
+        private final Object contentDataModel;
+        @Getter
+        private final Object subjectDataModel;
         @Getter
         private final List<Object> attachTo;
 
-        public Binding(final Object dataModel, final List<Object> attachTo) {
-            this.dataModel = dataModel;
+        public Binding(final Object contentDataModel, final Object subjectDataModel, final List<Object> attachTo) {
+            this.contentDataModel = contentDataModel;
+            this.subjectDataModel = subjectDataModel;
             this.attachTo = attachTo;
         }
     }

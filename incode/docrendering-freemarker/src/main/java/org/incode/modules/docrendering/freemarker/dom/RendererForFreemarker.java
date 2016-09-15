@@ -38,8 +38,7 @@ public class RendererForFreemarker implements RendererFromCharsToChars {
             final String atPath,
             final long templateVersion,
             final String templateChars,
-            final Object dataModel,
-            final String documentName) throws IOException {
+            final Object dataModel) throws IOException {
 
         try {
             return freeMarkerService.render(documentType.getReference(), atPath, templateVersion, templateChars, dataModel);

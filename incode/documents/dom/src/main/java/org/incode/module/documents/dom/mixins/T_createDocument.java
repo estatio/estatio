@@ -68,10 +68,10 @@ public abstract class T_createDocument<T> {
         final String roleName = null;
         final Binder.Binding binding = template.newBinding(domainObject);
         if (intent == Intent.PREVIEW) {
-            return template.preview(binding.getDataModel(), null);
+            return template.preview(binding.getContentDataModel(), binding.getSubjectDataModel(), null);
         }
         final String documentNameToUse = documentNameOf(documentName, domainObject, template);
-        final DocumentAbstract doc = template.render(binding.getDataModel(), documentNameToUse);
+        final DocumentAbstract doc = template.render(binding.getContentDataModel(), binding.getSubjectDataModel());
         for (Object o : binding.getAttachTo()) {
             if(paperclipRepository.canAttach(o)) {
                 paperclipRepository.attach(doc, roleName, o);
@@ -133,11 +133,11 @@ public abstract class T_createDocument<T> {
         if(template == null) {
             return intents;
         }
-        if(template.getRenderingStrategy().isPreviewsToUrl()) {
+        if(template.getContentRenderingStrategy().isPreviewsToUrl()) {
             intents.add(Intent.PREVIEW);
         }
         // so long as at least one exists...
-        if(attachTo.stream().filter(x -> paperclipRepository.canAttach(x)).findFirst().isPresent()) {
+        if(!template.isPreviewOnly() && attachTo.stream().filter(x -> paperclipRepository.canAttach(x)).findFirst().isPresent()) {
             intents.add(Intent.CREATE_AND_ATTACH);
         }
         return intents;

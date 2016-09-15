@@ -41,7 +41,6 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
     public static final String TYPE_REF = "BLANK";
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
-    public static final String RENDERING_STRATEGY_REF = RenderingStrategyFSToUseDataModelAsOutput.REF;
     public static final String TEMPLATE_NAME = "Blank template";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
     public static final String FILE_SUFFIX = ".txt";
@@ -58,13 +57,15 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
         createType(TYPE_REF, "Blank (eg email covering note)", executionContext);
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
-        final RenderingStrategy renderingStrategy = renderingStrategyRepository.findByReference(RENDERING_STRATEGY_REF);
+        final RenderingStrategy direct = renderingStrategyRepository.findByReference(
+                RenderingStrategyFSToUseDataModelAsOutput.REF);
         final LocalDate date = clockService.now();
 
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
-                documentType, date, TEMPLATE_NAME, TEMPLATE_MIME_TYPE, FILE_SUFFIX, AT_PATH,
-                "(unused)",
-                renderingStrategy, executionContext);
+                documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
+                "(unused)", direct,
+                "(unused)", direct,
+                executionContext);
 
         documentTemplate.applicable(WithNameGetter.class, BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter.class);
 

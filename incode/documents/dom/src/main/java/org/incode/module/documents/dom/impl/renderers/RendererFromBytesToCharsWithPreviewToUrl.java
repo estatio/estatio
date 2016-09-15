@@ -28,7 +28,6 @@ public interface RendererFromBytesToCharsWithPreviewToUrl extends RendererFromBy
             final String atPath,
             final long templateVersion,
             final byte[] templateBytes,
-            final Object dataModel,
-            final String documentName) throws IOException;
+            final Object dataModel) throws IOException;
 
 }

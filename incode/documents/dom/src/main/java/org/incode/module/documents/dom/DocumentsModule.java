@@ -40,6 +40,7 @@ public final class DocumentsModule {
         public final static int FQCN = 254;
 
         public static final int TEXT = 4000; // long varchar
+        public static final int SUBJECT_TEXT = 255;
 
         public static final int BOOKMARK = 2000;
 
@@ -49,7 +50,7 @@ public final class DocumentsModule {
 
         private Constants(){}
 
-        public static final int CLOB_MULTILINE = 14;
+        public static final int TEXT_MULTILINE = 14;
     }
 
 

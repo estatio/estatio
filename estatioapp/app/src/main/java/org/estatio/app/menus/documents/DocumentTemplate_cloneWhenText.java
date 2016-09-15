@@ -69,16 +69,23 @@ public class DocumentTemplate_cloneWhenText {
             @Parameter(optionality = Optionality.OPTIONAL)
             @ParameterLayout(named = "Date")
             final LocalDate date,
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.CLOB_MULTILINE)
+            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
             final String templateText,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy contentRenderingStrategy,
+            @Parameter(maxLength = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+            @ParameterLayout(named = "Subject text")
+            final String subjectText,
+            @ParameterLayout(named = "Subject rendering strategy")
+            final RenderingStrategy subjectRenderingStrategy,
+            @ParameterLayout(named = "Preview only?")
+            final boolean previewOnly) {
 
         final DocumentType type = documentTemplate.getType();
         final String mimeType = documentTemplate.getMimeType();
         final String fileSuffix = documentTemplate.getFileSuffix();
         final DocumentTemplate template = documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), name, mimeType, fileSuffix, templateText, renderingStrategy
-        );
+                type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, name, mimeType, templateText, contentRenderingStrategy,
+                subjectText, subjectRenderingStrategy);
         for (Applicability applicability : documentTemplate.getAppliesTo()) {
             template.applicable(applicability.getDomainClassName(), applicability.getBinderClassName());
         }
@@ -112,7 +119,19 @@ public class DocumentTemplate_cloneWhenText {
     }
 
     public RenderingStrategy default4$$() {
-        return documentTemplate.getRenderingStrategy();
+        return documentTemplate.getContentRenderingStrategy();
+    }
+
+    public String default5$$() {
+        return documentTemplate.getSubjectText();
+    }
+
+    public RenderingStrategy default6$$() {
+        return documentTemplate.getSubjectRenderingStrategy();
+    }
+
+    public boolean default7$$() {
+        return documentTemplate.isPreviewOnly();
     }
 
 
@@ -128,7 +147,10 @@ public class DocumentTemplate_cloneWhenText {
             final ApplicationTenancy proposedApplicationTenancy,
             final LocalDate proposedDate,
             final String templateText,
-            final RenderingStrategy renderingStrategy) {
+            final RenderingStrategy customRenderingStrategy,
+            final String subjectText,
+            final RenderingStrategy subjectRenderingStrategy,
+            final boolean previewOnly) {
 
         return documentTemplateRepository.validateApplicationTenancyAndDate(
                 documentTemplate.getType(), proposedApplicationTenancy.getPath(), proposedDate, null);

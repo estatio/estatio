@@ -27,7 +27,6 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
-import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
@@ -72,11 +71,7 @@ import lombok.Setter;
 @Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
-        @Query(
-                name = "findByReference", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.impl.rendering.RenderingStrategy "
-                        + "WHERE reference == :reference ")
+    // experimenting with type-safe queries, see RenderingStrategyRepository
 })
 @Uniques({
         @Unique(
@@ -198,16 +193,6 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
         this.rendererClassName = rendererClass.getName();
         this.previewsToUrl =  PreviewToUrl.class.isAssignableFrom(rendererClass);
     }
-
-    private static boolean isSubtypeOfAny(
-            final Class<? extends Renderer> rendererClass,
-            final Class<? extends Renderer>... rendererClassSupertypes) {
-        for (Class<? extends Renderer> rendererClassSupertype : rendererClassSupertypes) {
-            if(rendererClassSupertype.isAssignableFrom(rendererClass))
-                return true;
-        }
-        return false;
-    }
     //endregion
 
 
@@ -249,7 +234,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private DocumentNature inputNature;
     //endregion
 
-    //region > targetNature (property)
+    //region > outputNature (property)
     public static class OutputNatureDomainEvent extends PropertyDomainEvent<DocumentNature> { }
 
     /**

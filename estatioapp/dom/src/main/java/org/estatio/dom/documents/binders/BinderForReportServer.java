@@ -30,7 +30,10 @@ import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.documents.datamodels.RootForReportServer;
 
 /**
- * Uses {@link StringInterpolatorService} to create data model, and requires domain object to implement {@link WithApplicationTenancy}.
+ * Creates a dataModel to be used with {@link StringInterpolatorService} for both content and subject;
+ * requires domain object to implement {@link WithApplicationTenancy}.
+ *
+ * The input object is used for 'attachTo'.
  */
 public class BinderForReportServer implements Binder {
 
@@ -47,7 +50,7 @@ public class BinderForReportServer implements Binder {
         final Object attachTo = domainObject;
 
         // binding
-        return new Binding(dataModel, Collections.singletonList(attachTo));
+        return new Binding(dataModel, dataModel, Collections.singletonList(attachTo));
     }
 
     @javax.inject.Inject

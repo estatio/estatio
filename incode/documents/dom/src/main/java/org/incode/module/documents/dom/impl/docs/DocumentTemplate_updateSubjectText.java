@@ -26,18 +26,18 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class DocumentTemplate_updateText {
+public class DocumentTemplate_updateSubjectText {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_updateText(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_updateSubjectText(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateText>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateSubjectText>  { }
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
@@ -52,12 +52,9 @@ public class DocumentTemplate_updateText {
     }
 
     public String default0$$() {
-        return documentTemplate.getText();
+        return documentTemplate.getSubjectText();
     }
 
-    public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.TEXT;
-    }
 
 
 }

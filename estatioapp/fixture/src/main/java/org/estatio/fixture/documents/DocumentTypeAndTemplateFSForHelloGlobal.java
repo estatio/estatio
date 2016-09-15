@@ -41,10 +41,12 @@ public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSA
     public static final String TYPE_REF = "HELLO";
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
-    public static final String RENDERING_STRATEGY_REF = RenderingStrategyFSForFreemarker.REF;
     public static final String TEMPLATE_NAME = "Hello template";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
     public static final String FILE_SUFFIX = ".txt";
+
+    public static final String CONTENT_TEXT = "Hello ${user}";
+    public static final String SUBJECT_TEXT = "Hello ${user}";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -58,13 +60,15 @@ public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSA
         createType(TYPE_REF, "Hello world!", executionContext);
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
-        final RenderingStrategy renderingStrategy = renderingStrategyRepository.findByReference(RENDERING_STRATEGY_REF);
+        final RenderingStrategy freemarkerRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategyFSForFreemarker.REF);
         final LocalDate date = clockService.now();
 
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
-                documentType, date, TEMPLATE_NAME, TEMPLATE_MIME_TYPE, FILE_SUFFIX, AT_PATH,
-                "Hello ${user}",
-                renderingStrategy, executionContext);
+                documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
+                CONTENT_TEXT, freemarkerRenderingStrategy,
+                SUBJECT_TEXT, freemarkerRenderingStrategy,
+                executionContext);
 
         documentTemplate.applicable(WithNameGetter.class, BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter.class);
 

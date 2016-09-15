@@ -16,48 +16,59 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 
 @Mixin
-public class DocumentTemplate_updateText {
+public class DocumentTemplate_changeSubjectRenderingStrategy {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_updateText(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_changeSubjectRenderingStrategy(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateText>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_changeSubjectRenderingStrategy>  { }
+
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
-    @ActionLayout(contributed = Contributed.AS_ACTION)
     public DocumentTemplate $$(
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
-            final String text
-    ) {
-        documentTemplate.setText(text);
+            final RenderingStrategy renderingStrategy) {
+        documentTemplate.setSubjectRenderingStrategy(renderingStrategy);
         return documentTemplate;
     }
 
-    public String default0$$() {
-        return documentTemplate.getText();
+    public RenderingStrategy default0$$() {
+        return currentSubjectRenderingStrategy();
     }
 
-    public boolean hide$$() {
-        return documentTemplate.getSort() != DocumentSort.TEXT;
+    public List<RenderingStrategy> choices0$$() {
+        return renderingStrategyRepository.findForUseWithSubjectText();
     }
+
+    private RenderingStrategy currentSubjectRenderingStrategy() {
+        return documentTemplate.getSubjectRenderingStrategy();
+    }
+
+
+    @Inject
+    private DocumentTemplateRepository documentTemplateRepository;
+    @Inject
+    private RenderingStrategyRepository renderingStrategyRepository;
 
 
 }
