@@ -33,9 +33,9 @@ Copyright 2014~2015 Dan Haywood
 
     <packaging>jar</packaging>
 
-    <name>Incode Module Doc Rendering Capture URL</name>
+    <name>Incode Module Doc Rendering String Interpolator</name>
     <description>
-        A rendering strategy implementation that captures the content of a URL.
+        Rendering strategy implementations that uses string interpolator, either to return text or a URL (for capture).
     </description>
 
 	
