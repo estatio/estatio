@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.dom.budgetassignment;
 
 public class BudgetCalculationLinkForTesting extends BudgetCalculationLink {
 }

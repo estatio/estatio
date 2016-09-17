@@ -80,16 +80,18 @@ public class BudgetCalculationRepositoryTest {
 
             BudgetItemAllocation budgetItemAllocation = new BudgetItemAllocation();
             KeyItem keyItem = new KeyItemForTesting();
-            CalculationType calculationType = CalculationType.BUDGETED;
-            budgetCalculationRepository.findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, calculationType);
+            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
+            BudgetCalculationStatus status = BudgetCalculationStatus.TEMPORARY;
+            budgetCalculationRepository.findUnique(budgetItemAllocation, keyItem, status, calculationType);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
             assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItemAllocationAndKeyItemAndCalculationType");
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findUnique");
             assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
             assertThat(finderInteraction.getArgumentsByParameterName().get("keyItem")).isEqualTo((Object) keyItem);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("status")).isEqualTo((Object) status);
             assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(4);
         }
 
     }
@@ -100,7 +102,7 @@ public class BudgetCalculationRepositoryTest {
         public void happyCase() {
 
             BudgetItemAllocation budgetItemAllocation = new BudgetItemAllocation();
-            CalculationType calculationType = CalculationType.BUDGETED;
+            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
             budgetCalculationRepository.findByBudgetItemAllocationAndCalculationType(budgetItemAllocation, calculationType);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
@@ -109,6 +111,46 @@ public class BudgetCalculationRepositoryTest {
             assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
             assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
+        }
+
+    }
+
+    public static class FindByBudgetItemAllocationAndStatus extends BudgetCalculationRepositoryTest {
+
+        @Test
+        public void happyCase() {
+
+            BudgetItemAllocation budgetItemAllocation = new BudgetItemAllocation();
+            BudgetCalculationStatus status = BudgetCalculationStatus.TEMPORARY;
+            budgetCalculationRepository.findByBudgetItemAllocationAndStatus(budgetItemAllocation, status);
+
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItemAllocationAndStatus");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("status")).isEqualTo((Object) status);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
+        }
+
+    }
+
+    public static class FindByBudgetItemAllocationAndStatusAndCalculationType extends BudgetCalculationRepositoryTest {
+
+        @Test
+        public void happyCase() {
+
+            BudgetItemAllocation budgetItemAllocation = new BudgetItemAllocation();
+            BudgetCalculationStatus status = BudgetCalculationStatus.TEMPORARY;
+            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
+            budgetCalculationRepository.findByBudgetItemAllocationAndStatusAndCalculationType(budgetItemAllocation, status, calculationType);
+
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
+            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItemAllocationAndStatusAndCalculationType");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItemAllocation")).isEqualTo((Object) budgetItemAllocation);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("status")).isEqualTo((Object) status);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
 
     }
@@ -143,10 +185,11 @@ public class BudgetCalculationRepositoryTest {
         public void setup() {
             budgetCalculationRepository = new BudgetCalculationRepository() {
                 @Override
-                public BudgetCalculation findByBudgetItemAllocationAndKeyItemAndCalculationType(
+                public BudgetCalculation findUnique(
                         final BudgetItemAllocation budgetItemAllocation,
                         final KeyItem keyItem,
-                        final CalculationType calculationType
+                        final BudgetCalculationStatus calculationStatus,
+                        final BudgetCalculationType calculationType
                 ) {
                     return null;
                 }
@@ -174,7 +217,7 @@ public class BudgetCalculationRepositoryTest {
             });
 
             //when
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateBudgetCalculation(budgetItemAllocation, keyItem, value, sourceValue, null);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(budgetItemAllocation, keyItem, value, sourceValue, null);
 
             //then
             assertThat(newBudgetCalculation.getBudgetItemAllocation()).isEqualTo(budgetItemAllocation);
@@ -203,10 +246,11 @@ public class BudgetCalculationRepositoryTest {
 
             budgetCalculationRepository = new BudgetCalculationRepository() {
                 @Override
-                public BudgetCalculation findByBudgetItemAllocationAndKeyItemAndCalculationType(
+                public BudgetCalculation findUnique(
                         final BudgetItemAllocation budgetItemAllocation,
                         final KeyItem keyItem,
-                        final CalculationType calculationType
+                        final BudgetCalculationStatus calculationStatus,
+                        final BudgetCalculationType calculationType
                 ) {
                     BudgetCalculation newCalculation = new BudgetCalculation();
                     newCalculation.setBudgetItemAllocation(budgetItemAllocation);
@@ -226,19 +270,19 @@ public class BudgetCalculationRepositoryTest {
             //given
             assertThat(
                     budgetCalculationRepository
-                            .findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, null)
+                            .findUnique(budgetItemAllocation, keyItem, null, null)
                             .getValue())
                     .isEqualTo(value);
             assertThat(
                     budgetCalculationRepository
-                            .findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, null)
+                            .findUnique(budgetItemAllocation, keyItem, null, null)
                             .getSourceValue())
                     .isEqualTo(sourceValue);
             BigDecimal updatedValue = new BigDecimal("100");
             BigDecimal updatedSourceValue = new BigDecimal("1000");
 
             //when
-            BudgetCalculation updatedBudgetCalculation = budgetCalculationRepository.updateOrCreateBudgetCalculation(budgetItemAllocation, keyItem, updatedValue, updatedSourceValue, null);
+            BudgetCalculation updatedBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(budgetItemAllocation, keyItem, updatedValue, updatedSourceValue, null);
 
             //then
             assertThat(updatedBudgetCalculation.getBudgetItemAllocation()).isEqualTo(budgetItemAllocation);

@@ -17,7 +17,6 @@
 
 package org.estatio.dom.budgeting.budget;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -38,9 +37,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by jodo on 30/04/15.
- */
 public class BudgetRepositoryTest {
 
     FinderInteraction finderInteraction;
@@ -125,12 +121,7 @@ public class BudgetRepositoryTest {
 
         @Before
         public void setup() {
-            budgetRepository = new BudgetRepository() {
-                @Override
-                public List<Budget> findByProperty(final Property property) {
-                    return Arrays.asList(new Budget(new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1)));
-                }
-            };
+            budgetRepository = new BudgetRepository();
             budgetRepository.setContainer(mockContainer);
         }
 
@@ -162,10 +153,30 @@ public class BudgetRepositoryTest {
             assertThat(newBudget.getProperty()).isEqualTo(property);
             assertThat(newBudget.getStartDate()).isEqualTo(startDate);
             assertThat(newBudget.getEndDate()).isEqualTo(endDate);
-            assertThat(newBudget.getBudgetYear()).isEqualTo(new LocalDateInterval(startOfYear, endOfYear));
-            assertThat(newBudget.getBudgetYear().days()).isEqualTo(366);
-            assertThat(newBudget.getBudgetYear().contains(startOfYear)).isEqualTo(true);
-            assertThat(newBudget.getBudgetYear().contains(endOfYear)).isEqualTo(true);
+            assertThat(newBudget.getBudgetYearInterval()).isEqualTo(new LocalDateInterval(startOfYear, endOfYear));
+            assertThat(newBudget.getBudgetYearInterval().days()).isEqualTo(366);
+            assertThat(newBudget.getBudgetYearInterval().contains(startOfYear)).isEqualTo(true);
+            assertThat(newBudget.getBudgetYearInterval().contains(endOfYear)).isEqualTo(true);
+
+        }
+
+        @Test
+        public void validateNewBudgetTest() {
+
+            int year;
+
+            // given
+            Property property = new Property();
+
+            // when
+            year = 1999;
+            // then
+            assertThat(budgetRepository.validateNewBudget(property, year)).isEqualTo("This is not a valid year");
+
+            // when
+            year = 3001;
+            // then
+            assertThat(budgetRepository.validateNewBudget(property, year)).isEqualTo("This is not a valid year");
 
         }
 

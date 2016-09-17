@@ -10,7 +10,8 @@
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+            <ns2:fieldSet name="KeyTable" id="keytable" unreferencedProperties="true">
+                <ns2:action id="importExportItems"/>
                 <ns2:property id="name">
                     <ns2:action id="changeName" position="BELOW"/>
                 </ns2:property>

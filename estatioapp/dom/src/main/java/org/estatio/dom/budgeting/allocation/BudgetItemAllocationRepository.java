@@ -97,10 +97,21 @@ public class BudgetItemAllocationRepository extends UdoDomainRepositoryAndFactor
     }
 
     @Programmatic
-    public BudgetItemAllocation findOrCreateBudgetItemAllocation(final BudgetItem budgetItem, final Charge allocationCharge, final KeyTable keyTable, final BigDecimal percentage){
-        final BudgetItemAllocation budgetItemAllocation = findByChargeAndBudgetItemAndKeyTable(allocationCharge, budgetItem, keyTable);
+    public BudgetItemAllocation findOrCreateBudgetItemAllocation(final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage){
+        final BudgetItemAllocation budgetItemAllocation = findByChargeAndBudgetItemAndKeyTable(invoiceCharge, budgetItem, keyTable);
         if (budgetItemAllocation == null) {
-            return newBudgetItemAllocation(allocationCharge, keyTable, budgetItem, percentage);
+            return newBudgetItemAllocation(invoiceCharge, keyTable, budgetItem, percentage);
+        }
+        return budgetItemAllocation;
+    }
+
+    @Programmatic
+    public BudgetItemAllocation updateOrCreateBudgetItemAllocation(final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage){
+        final BudgetItemAllocation budgetItemAllocation = findByChargeAndBudgetItemAndKeyTable(invoiceCharge, budgetItem, keyTable);
+        if (budgetItemAllocation == null) {
+            return newBudgetItemAllocation(invoiceCharge, keyTable, budgetItem, percentage);
+        } else {
+            budgetItemAllocation.setPercentage(percentage);
         }
         return budgetItemAllocation;
     }

@@ -13,7 +13,8 @@
                 <ns2:property id="applicationTenancy"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Allocation" id="allocation">
-                <ns2:property id="budgetItem"/>
+                <ns2:property id="budget" hidden="ALL_TABLES"/>
+                <ns2:property id="budgetItem" hidden="ALL_TABLES"/>
                 <ns2:property id="keyTable">
                     <ns2:action id="changeKeyTable" position="BELOW"/>
                     <ns2:action id="deleteBudgetItemAllocation" position="BELOW"/>

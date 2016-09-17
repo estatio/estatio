@@ -18,6 +18,7 @@ package org.estatio.app.services.budget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.annotation.PostConstruct;
 
@@ -49,6 +50,12 @@ public class KeyItemImportExportService {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<KeyItemImportExportLineItem> items(KeyItemImportExportManager manager) {
         return Lists.transform(new ArrayList<KeyItem>(manager.getKeyTable().getItems()), toLineItem());
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<KeyItemImportExportLineItem> items(SortedSet<KeyItem> keyItems) {
+        return Lists.transform(new ArrayList<KeyItem>(keyItems), toLineItem());
     }
 
     private Function<KeyItem, KeyItemImportExportLineItem> toLineItem() {

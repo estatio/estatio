@@ -26,9 +26,6 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by jodo on 19/08/15.
- */
 public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
 
     @Inject

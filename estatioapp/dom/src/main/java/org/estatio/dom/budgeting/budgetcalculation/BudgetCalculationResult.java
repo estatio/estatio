@@ -18,13 +18,14 @@
  */
 package org.estatio.dom.budgeting.budgetcalculation;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
+
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 public class BudgetCalculationResult implements Distributable {
 
@@ -33,7 +34,7 @@ public class BudgetCalculationResult implements Distributable {
             final KeyItem keyItem,
             final BigDecimal value,
             final BigDecimal sourceValue,
-            final CalculationType calculationType) {
+            final BudgetCalculationType calculationType) {
         this.budgetItemAllocation = itemAllocation;
         this.keyItem = keyItem;
         this.value = value;
@@ -54,7 +55,7 @@ public class BudgetCalculationResult implements Distributable {
     private BigDecimal sourceValue;
 
     @Getter @Setter
-    private CalculationType calculationType;
+    private BudgetCalculationType calculationType;
 
 
 }

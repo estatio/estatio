@@ -11,13 +11,16 @@
         <col span="4">
             <ns2:fieldSet name="Budget" id="budget" unreferencedProperties="true">
                 <ns2:action id="importExportBudget" />
+                <ns2:action id="removeBudget" />
+                <ns2:action id="createNextBudget" />
                 <ns2:property id="property"/>
                 <ns2:property id="budgetYear"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate">
                     <ns2:action id="changeDates" position="BELOW"/>
+                    <ns2:action id="changeEndDate" position="BELOW"/>
                     <ns2:action id="calculate" position="BELOW"/>
-                    <ns2:action id="assignCalculationsToLeases" position="BELOW"/>
+                    <ns2:action id="assignCalculations" position="BELOW"/>
                     <ns2:action id="budgetOverview" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="applicationTenancy"/>
@@ -40,8 +43,7 @@
             <ns2:collection id="keyTables">
                 <ns2:action id="createKeyTable"/>
             </ns2:collection>
-            <ns2:collection id="auditedCalculations"/>
-            <ns2:collection id="budgetedCalculations"/>
+            <ns2:collection id="serviceChargeTerms"/>
         </col>
     </row>
 </grid>

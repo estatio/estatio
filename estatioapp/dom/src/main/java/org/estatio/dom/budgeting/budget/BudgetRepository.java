@@ -84,6 +84,16 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
     }
 
     @Programmatic
+    public String validateNewBudget(
+            final Property property,
+            final int year) {
+        if (year < 2000 || year > 3000){
+            return "This is not a valid year";
+        }
+        return validateNewBudget(property, new LocalDate(year, 01, 01), new LocalDate(year, 12, 31));
+    }
+
+    @Programmatic
     public Budget findOrCreateBudget(
             final Property property,
             final LocalDate startDate,

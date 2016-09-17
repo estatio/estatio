@@ -16,41 +16,28 @@
  */
 package org.estatio.dom.budgeting.keyitem;
 
-import org.apache.isis.applib.annotation.*;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.lease.OccupancyRepository;
-import org.estatio.dom.lease.Occupancy;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.OccupancyRepository;
+
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
+@DomainServiceLayout()
 public class KeyItemContributions {
 
     // //////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
-    public KeyItem newItem(
-            final KeyTable keyTable,
-            final Unit unit,
-            final BigDecimal sourceValue,
-            final BigDecimal keyValue) {
-
-        return keyItemRepository.newItem(keyTable, unit, sourceValue, keyValue);
-    }
-
-    public String validateNewItem(
-            final KeyTable keyTable,
-            final Unit unit,
-            final BigDecimal sourceValue,
-            final BigDecimal keyValue) {
-
-        return keyItemRepository.validateNewItem(keyTable, unit, sourceValue, keyValue);
-    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
@@ -63,8 +50,5 @@ public class KeyItemContributions {
 
     @Inject
     private OccupancyRepository occupancyRepository;
-
-    @Inject
-    private KeyItemRepository keyItemRepository;
 
 }

@@ -15,7 +15,9 @@
                 <ns2:property id="budgetedValue"/>
                 <ns2:property id="auditedValue"/>
                 <ns2:property id="keyTableName"/>
-                <ns2:property id="allocationChargeReference"/>
+                <ns2:property id="foundationValueType"/>
+                <ns2:property id="keyValueMethod"/>
+                <ns2:property id="invoiceChargeReference"/>
                 <ns2:property id="percentage"/>
             </ns2:fieldSet>
         </col>

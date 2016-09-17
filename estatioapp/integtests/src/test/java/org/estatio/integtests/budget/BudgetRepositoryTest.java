@@ -150,7 +150,7 @@ public class BudgetRepositoryTest extends EstatioIntegrationTest {
             final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
 
             // when
-            List<Charge> targetCharges = budget.getTargetCharges();
+            List<Charge> targetCharges = budget.getInvoiceCharges();
 
             // then
             assertThat(targetCharges.size()).isEqualTo(1);

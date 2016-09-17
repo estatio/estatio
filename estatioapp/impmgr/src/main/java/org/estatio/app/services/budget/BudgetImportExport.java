@@ -10,13 +10,9 @@ import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
@@ -39,7 +35,6 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL)
 public class BudgetImportExport implements Importable {
 
-    //region > constructors, title
     public String title() {
         return "Budget Import / Export";
     }
@@ -55,7 +50,9 @@ public class BudgetImportExport implements Importable {
             final BigDecimal budgetedValue,
             final BigDecimal auditedValue,
             final String keyTableName,
-            final String allocationChargeReference,
+            final String foundationValueType,
+            final String keyValueMethod,
+            final String invoiceChargeReference,
             final BigDecimal percentage
             ){
         this.propertyReference = propertyReference;
@@ -65,11 +62,11 @@ public class BudgetImportExport implements Importable {
         this.budgetedValue = budgetedValue;
         this.auditedValue = auditedValue;
         this.keyTableName = keyTableName;
-        this.allocationChargeReference = allocationChargeReference;
+        this.foundationValueType = foundationValueType;
+        this.keyValueMethod = keyValueMethod;
+        this.invoiceChargeReference = invoiceChargeReference;
         this.percentage = percentage;
     }
-    //endregion
-
 
     @Getter @Setter
     private String propertyReference;
@@ -86,7 +83,11 @@ public class BudgetImportExport implements Importable {
     @Getter @Setter
     private String keyTableName;
     @Getter @Setter
-    private String allocationChargeReference;
+    private String foundationValueType;
+    @Getter @Setter
+    private String keyValueMethod;
+    @Getter @Setter
+    private String invoiceChargeReference;
     @Getter @Setter
     private BigDecimal percentage;
 
@@ -96,12 +97,6 @@ public class BudgetImportExport implements Importable {
         return Lists.newArrayList();
     }
 
-    // REVIEW: is this view model actually ever surfaced in the UI?
-    @Action(invokeOn= InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
-    public List<Object> importData() {
-        return importData(null);
-    }
-
     @Override
     @Programmatic
     public List<Object> importData(final Object previousRow) {
@@ -109,13 +104,13 @@ public class BudgetImportExport implements Importable {
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         if (property == null) throw  new ApplicationException(String.format("Property with reference [%s] not found.", getPropertyReference()));
         Charge sourceCharge = fetchCharge(getBudgetChargeReference());
-        Charge targetCharge = fetchCharge(getAllocationChargeReference());
+        Charge targetCharge = fetchCharge(getInvoiceChargeReference());
         Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
-        KeyTable keyTable = findOrCreateKeyTable(budget, getKeyTableName());
+        KeyTable keyTable = findOrCreateKeyTable(budget, getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
         BudgetItemAllocation budgetItemAllocation =
                 budget
                         .updateOrCreateBudgetItem(sourceCharge, getBudgetedValue(), getAuditedValue())
-                        .findOrCreateBudgetItemAllocation(targetCharge, keyTable, getPercentage());
+                        .updateOrCreateBudgetItemAllocation(targetCharge, keyTable, getPercentage());
 
         return Lists.newArrayList(budget);
     }
@@ -129,11 +124,10 @@ public class BudgetImportExport implements Importable {
         return charge;
     }
 
-    private KeyTable findOrCreateKeyTable(final Budget budget, final String keyTableName){
-       return keyTableRepository.findOrCreateBudgetKeyTable(budget, keyTableName, FoundationValueType.MANUAL, KeyValueMethod.DEFAULT, 6);
+    private KeyTable findOrCreateKeyTable(final Budget budget, final String keyTableName, final String foundationValueType, final String keyValueMethod){
+       return keyTableRepository.findOrCreateBudgetKeyTable(budget, keyTableName, FoundationValueType.valueOf(foundationValueType), KeyValueMethod.valueOf(keyValueMethod), 6);
     }
 
-    //region > injected services
     @Inject
     private ChargeRepository chargeRepository;
 
@@ -151,6 +145,5 @@ public class BudgetImportExport implements Importable {
 
     @Inject
     private KeyTableRepository keyTableRepository;
-    //endregion
 
 }

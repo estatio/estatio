@@ -73,15 +73,17 @@ public class BudgetImportExportService {
 
         if (item.getBudgetItemAllocations().size()==0){
             // create 1 line
-            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null));
+            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null));
 
         } else {
             // create a line for each allocation
             for (BudgetItemAllocation allocation : item.getBudgetItemAllocations()) {
                 String keyTableName = allocation.getKeyTable().getName();
+                String foundationValueType = allocation.getKeyTable().getFoundationValueType().toString();
+                String keyValueMethod = allocation.getKeyTable().getKeyValueMethod().toString();
                 String allocationChargeReference = allocation.getCharge().getReference();
                 BigDecimal percentage = allocation.getPercentage();
-                lines.add(new BudgetImportExport(propertyReference, budgetStartDate, budgetEndDate, budgetChargeReference, budgetedValue, auditedValue, keyTableName, allocationChargeReference, percentage));
+                lines.add(new BudgetImportExport(propertyReference, budgetStartDate, budgetEndDate, budgetChargeReference, budgetedValue, auditedValue, keyTableName, foundationValueType, keyValueMethod, allocationChargeReference, percentage));
             }
 
         }

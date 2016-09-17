@@ -16,11 +16,12 @@
  */
 package org.estatio.app.services.budget;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -35,11 +36,17 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.ViewModelLayout;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.WorksheetContent;
+import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +58,7 @@ import lombok.Setter;
         named = "Import Export manager for budget",
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-@ViewModelLayout(paged = -1)
+@ViewModelLayout()
 public class BudgetImportExportManager {
 
     public String title() {
@@ -102,21 +109,90 @@ public class BudgetImportExportManager {
         return budgetImportExportService.lines(this);
     }
 
+    public List<KeyItemImportExportLineItem> getKeyItemLines() {
+        List<KeyItemImportExportLineItem> result = new ArrayList<>();
+        if (getBudget()==null){return result;} // for import from menu where budget unknown
+        for (KeyTable keyTable : this.getBudget().getKeyTables()){
+            result.addAll(keyItemImportExportService.items(keyTable.getItems()));
+        }
+        return result;
+    }
+
+
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout()
-    @CollectionLayout(paged = -1)
-    public List<BudgetImportExport> importBudget(
+    @CollectionLayout()
+    public Budget importBudget(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
-        List<BudgetImportExport> lineItems =
-                excelService.fromExcel(spreadsheet, BudgetImportExport.class);
-        return lineItems;
+
+        Budget importedBudget = new Budget();
+        WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
+        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        List<List<?>> objects =
+                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2));
+        List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
+        for (BudgetImportExport lineItem :lineItems){
+            importedBudget = (Budget) lineItem.importData(null).get(0);
+        }
+        setBudget(importedBudget);
+
+        List<KeyTable> keyTablesToImport = keyTablesToImport(lineItems);
+        List<KeyItemImportExportLineItem> keyItemLines = (List<KeyItemImportExportLineItem>) objects.get(1);
+
+        // filter case where no key items are filled in
+        if (keyItemLines.size() == 0) {return getBudget();}
+
+        for (KeyTable keyTable : keyTablesToImport){
+            List<KeyItemImportExportLineItem> itemsToImportForKeyTable = new ArrayList<>();
+            for (KeyItemImportExportLineItem keyItemLine : keyItemLines){
+                if (keyItemLine.getKeyTableName().equals(keyTable.getName())){
+                    itemsToImportForKeyTable.add(new KeyItemImportExportLineItem(keyItemLine));
+                }
+            }
+            for (KeyItem keyItem : keyTable.getItems()) {
+                Boolean keyItemFound = false;
+                for (KeyItemImportExportLineItem lineItem : itemsToImportForKeyTable){
+                    if (lineItem.getUnitReference().equals(keyItem.getUnit().getReference())){
+                        keyItemFound = true;
+                        break;
+                    }
+                }
+                if (!keyItemFound) {
+                    KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem);
+                    deletedItem.setStatus(Status.DELETED);
+                    itemsToImportForKeyTable.add(deletedItem);
+                }
+            }
+            for (KeyItemImportExportLineItem item : itemsToImportForKeyTable){
+                serviceRegistry2.injectServicesInto(item);
+                item.validate();
+                item.apply();
+            }
+        }
+        return getBudget();
+    }
+
+    private List<KeyTable> keyTablesToImport(final List<BudgetImportExport> lineItems){
+        List<KeyTable> result = new ArrayList<>();
+        for (BudgetImportExport lineItem :lineItems) {
+            KeyTable foundKeyTable = keyTableRepository.findByBudgetAndName(getBudget(), lineItem.getKeyTableName());
+            if (!result.contains(foundKeyTable)) {
+                result.add(foundKeyTable);
+            }
+        }
+        return result;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     public Blob exportBudget() {
         final String fileName = withExtension(getFileName(), ".xlsx");
-        return excelService.toExcel(getLines(), BudgetImportExport.class, fileName);
+        WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
+        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetContent worksheetContent = new WorksheetContent(getLines(), spec1);
+        WorksheetContent keyItemsContent = new WorksheetContent(getKeyItemLines(), spec2);
+        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent), fileName);
+
     }
 
     public String disableExportBudget() {
@@ -126,14 +202,20 @@ public class BudgetImportExportManager {
     private static String withExtension(final String fileName, final String fileExtension) {
         return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
-
-    @Inject
-    private DomainObjectContainer container;
-
+    
     @Inject
     private ExcelService excelService;
 
     @Inject
     private BudgetImportExportService budgetImportExportService;
+
+    @Inject
+    private KeyItemImportExportService keyItemImportExportService;
+
+    @Inject
+    private KeyTableRepository keyTableRepository;
+
+    @Inject
+    private ServiceRegistry2 serviceRegistry2;
 
 }

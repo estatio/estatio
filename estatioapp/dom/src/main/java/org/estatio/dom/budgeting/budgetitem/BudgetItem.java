@@ -217,7 +217,15 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return budgetItemAllocationRepository.validateNewBudgetItemAllocation(charge,keyTable, this, percentage);
     }
 
-
+    @Programmatic
+    public void createCopyOn(final Budget budget) {
+        BudgetItem itemCopy = budget.newBudgetItem(getBudgetedValue(), getCharge());
+        for (BudgetItemAllocation allocation : getBudgetItemAllocations()){
+            String keyTableName = allocation.getKeyTable().getName();
+            KeyTable correspondingTableOnbudget = keyTableRepository.findByBudgetAndName(budget, keyTableName);
+            itemCopy.createBudgetItemAllocation(allocation.getCharge(), correspondingTableOnbudget, allocation.getPercentage());
+        }
+    }
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
@@ -231,6 +239,11 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return budgetItemAllocationRepository.findOrCreateBudgetItemAllocation(this, allocationCharge, keyTable, percentage);
     }
 
+    @Programmatic
+    public BudgetItemAllocation updateOrCreateBudgetItemAllocation(final Charge allocationCharge, final KeyTable keyTable, final BigDecimal percentage) {
+        return budgetItemAllocationRepository.updateOrCreateBudgetItemAllocation(this, allocationCharge, keyTable, percentage);
+    }
+
     @Inject
     private BudgetItemRepository budgetItemRepository;
 
@@ -242,6 +255,5 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Inject
     private ChargeRepository chargeRepository;
-
 
 }

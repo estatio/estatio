@@ -34,6 +34,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.WorksheetContent;
+import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
@@ -58,7 +60,7 @@ public class KeyItemImportExportManager {
 
     public KeyItemImportExportManager(final KeyTable keyTable) {
         this.keyTable = keyTable;
-        this.fileName = "export.xlsx";
+        this.fileName = keyTable.getName().concat(" - ").concat("export.xlsx");
     }
 
     public String title() {
@@ -102,7 +104,9 @@ public class KeyItemImportExportManager {
     @MemberOrder(name = "keyItems", sequence = "1")
     public Blob export() {
         final String fileName = withExtension(getFileName(), ".xlsx");
-        return excelService.toExcel(getKeyItems(), KeyItemImportExportLineItem.class, fileName);
+        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetContent worksheetContent = new WorksheetContent(getKeyItems(), spec);
+        return excelService.toExcel(worksheetContent, fileName);
     }
 
     public String disableExport() {
@@ -121,8 +125,9 @@ public class KeyItemImportExportManager {
     @MemberOrder(name = "keyItems", sequence = "2")
     public List<KeyItemImportExportLineItem> importBlob(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
+        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         List<KeyItemImportExportLineItem> lineItems =
-                excelService.fromExcel(spreadsheet, KeyItemImportExportLineItem.class);
+                excelService.fromExcel(spreadsheet, spec);
         container.informUser(lineItems.size() + " items imported");
 
         List<KeyItemImportExportLineItem> newItems = new ArrayList<>();

@@ -1,11 +1,12 @@
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.dom.budgetassignment;
+
+import java.util.List;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
-import java.util.List;
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 
 @DomainService(repositoryFor = BudgetCalculationLink.class, nature = NatureOfService.DOMAIN)
 public class BudgetCalculationLinkRepository extends UdoDomainRepositoryAndFactory<BudgetCalculationLink> {
@@ -16,9 +17,9 @@ public class BudgetCalculationLinkRepository extends UdoDomainRepositoryAndFacto
 
     public BudgetCalculationLink findOrCreateBudgetCalculationLink(
             final BudgetCalculation calculation,
-            final LeaseTermForServiceCharge term) {
+            final ServiceChargeItem term) {
 
-        BudgetCalculationLink budgetCalculationLink = findByBudgetCalculationAndLeaseTerm(calculation, term);
+        BudgetCalculationLink budgetCalculationLink = findByBudgetCalculationAndServiceChargeTerm(calculation, term);
 
         return budgetCalculationLink == null ? createBudgetCalculationLink(calculation,term) : budgetCalculationLink;
 
@@ -26,11 +27,11 @@ public class BudgetCalculationLinkRepository extends UdoDomainRepositoryAndFacto
 
     public BudgetCalculationLink createBudgetCalculationLink(
             final BudgetCalculation budgetCalculation,
-            final LeaseTermForServiceCharge leaseTermForServiceCharge) {
+            final ServiceChargeItem serviceChargeItem) {
 
         BudgetCalculationLink budgetCalculationLink = newTransientInstance(BudgetCalculationLink.class);
         budgetCalculationLink.setBudgetCalculation(budgetCalculation);
-        budgetCalculationLink.setLeaseTerm(leaseTermForServiceCharge);
+        budgetCalculationLink.setServiceChargeItem(serviceChargeItem);
 
         persistIfNotAlready(budgetCalculationLink);
 
@@ -42,13 +43,16 @@ public class BudgetCalculationLinkRepository extends UdoDomainRepositoryAndFacto
         return allInstances();
     }
 
-    public List<BudgetCalculationLink> findByLeaseTerm(final LeaseTermForServiceCharge leaseTerm) {
-        return allMatches("findByLeaseTerm", "leaseTerm", leaseTerm);
+    public BudgetCalculationLink findByBudgetCalculationAndServiceChargeTerm(final BudgetCalculation budgetCalculation, final ServiceChargeItem serviceChargeItem) {
+        return uniqueMatch("findByBudgetCalculationAndServiceChargeItem", "budgetCalculation", budgetCalculation, "serviceChargeItem", serviceChargeItem);
     }
 
-    public BudgetCalculationLink findByBudgetCalculationAndLeaseTerm(final BudgetCalculation budgetCalculation, final LeaseTermForServiceCharge leaseTerm) {
-        return uniqueMatch("findByBudgetCalculationAndLeaseTerm", "budgetCalculation", budgetCalculation, "leaseTerm", leaseTerm);
+    public List<BudgetCalculationLink> findByBudgetCalculation(final BudgetCalculation budgetCalculation) {
+        return allMatches("findByBudgetCalculation", "budgetCalculation", budgetCalculation);
     }
 
+    public List<BudgetCalculationLink> findByServiceChargeTerm(final ServiceChargeItem serviceChargeItem) {
+        return allMatches("findByServiceChargeItem", "serviceChargeItem", serviceChargeItem);
+    }
 
 }

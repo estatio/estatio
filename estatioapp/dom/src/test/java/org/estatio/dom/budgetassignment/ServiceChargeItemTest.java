@@ -15,23 +15,24 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.dom.budgetassignment;
 
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.lease.Occupancy;
 
-public class BudgetCalculationLinkTest {
+public class ServiceChargeItemTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
         @Test
         public void test() {
-            final BudgetCalculationLink pojo = new BudgetCalculationLink();
+            final ServiceChargeItem pojo = new ServiceChargeItem();
             newPojoTester()
-                    .withFixture(pojos(BudgetCalculation.class, BudgetCalculation.class))
-                    .withFixture(pojos(LeaseTermForServiceCharge.class, LeaseTermForServiceCharge.class))
+                    .withFixture(pojos(Occupancy.class, Occupancy.class))
+                    .withFixture(pojos(Charge.class, Charge.class))
                     .exercise(pojo);
         }
 

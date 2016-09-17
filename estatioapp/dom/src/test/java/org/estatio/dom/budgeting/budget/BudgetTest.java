@@ -84,7 +84,7 @@ public class BudgetTest {
             // given
             Budget budget = new Budget();
             // when
-            charges = budget.getTargetCharges();
+            charges = budget.getInvoiceCharges();
 
             // then
             assertThat(charges).hasSize(0);
@@ -100,7 +100,7 @@ public class BudgetTest {
             budget.getItems().add(createItemFor(budget, "2"));
 
             // when
-            charges = budget.getTargetCharges();
+            charges = budget.getInvoiceCharges();
 
             // then
             assertThat(charges).hasSize(2);
@@ -116,7 +116,7 @@ public class BudgetTest {
             budget.getItems().addAll(createTwoItemsWithSameAllocationFor(budget, "1", "2"));
 
             // when
-            charges = budget.getTargetCharges();
+            charges = budget.getInvoiceCharges();
 
             // then
             assertThat(budget.getItems()).hasSize(3);

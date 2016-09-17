@@ -1,18 +1,18 @@
 package org.estatio.dom.budgeting.budgetcalculation;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.charge.Charge;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @DomainService(repositoryFor = BudgetCalculation.class, nature = NatureOfService.DOMAIN)
 public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<BudgetCalculation> {
@@ -21,43 +21,14 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         super(BudgetCalculationRepository.class, BudgetCalculation.class);
     }
 
-    @Programmatic
-    public void resetAndUpdateOrCreateBudgetCalculations(final Budget budget, final List<BudgetCalculationResult> budgetCalculationResults){
-
-        for (BudgetCalculationResult result : budgetCalculationResults){
-            if (result.getBudgetItemAllocation().getBudgetItem().getBudget() != budget){
-                throw new IllegalArgumentException("All budgetCalculations should have same budget");
-            }
-        }
-
-        //set all existing audited calculations to 0
-        for (BudgetCalculation calculation : findByBudgetAndCalculationType(budget, CalculationType.AUDITED)){
-            calculation.setValue(BigDecimal.ZERO);
-            calculation.setSourceValue(BigDecimal.ZERO);
-        }
-
-        // update or create calculations with new results
-        for (BudgetCalculationResult result : budgetCalculationResults){
-
-            updateOrCreateBudgetCalculation(
-                    result.getBudgetItemAllocation(),
-                    result.getKeyItem(),
-                    result.getValue(),
-                    result.getSourceValue(),
-                    result.getCalculationType());
-
-        }
-
-    }
-
-    public BudgetCalculation updateOrCreateBudgetCalculation(
+    public BudgetCalculation updateOrCreateTemporaryBudgetCalculation(
             final BudgetItemAllocation budgetItemAllocation,
             final KeyItem keyItem,
             final BigDecimal value,
             final BigDecimal sourceValue,
-            final CalculationType calculationType){
+            final BudgetCalculationType calculationType){
 
-        BudgetCalculation existingCalculation = findByBudgetItemAllocationAndKeyItemAndCalculationType(budgetItemAllocation, keyItem, calculationType);
+        BudgetCalculation existingCalculation = findUnique(budgetItemAllocation, keyItem, BudgetCalculationStatus.TEMPORARY, calculationType);
 
         if (existingCalculation != null) {
             existingCalculation.setValue(value);
@@ -65,15 +36,16 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
             return existingCalculation;
         }
 
-        return createBudgetCalculation(budgetItemAllocation, keyItem, value, sourceValue, calculationType);
+        return createBudgetCalculation(budgetItemAllocation, keyItem, value, sourceValue, calculationType, BudgetCalculationStatus.TEMPORARY);
     }
 
-    private BudgetCalculation createBudgetCalculation(
+    public BudgetCalculation createBudgetCalculation(
             final BudgetItemAllocation budgetItemAllocation,
             final KeyItem keyItem,
             final BigDecimal value,
             final BigDecimal sourceValue,
-            final CalculationType calculationType){
+            final BudgetCalculationType calculationType,
+            final BudgetCalculationStatus status){
 
         BudgetCalculation budgetCalculation = newTransientInstance(BudgetCalculation.class);
         budgetCalculation.setBudgetItemAllocation(budgetItemAllocation);
@@ -81,25 +53,39 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         budgetCalculation.setValue(value);
         budgetCalculation.setSourceValue(sourceValue);
         budgetCalculation.setCalculationType(calculationType);
+        budgetCalculation.setStatus(status);
 
         persist(budgetCalculation);
 
         return budgetCalculation;
     }
 
-    public BudgetCalculation findByBudgetItemAllocationAndKeyItemAndCalculationType(
+    public BudgetCalculation updateOrCreateAssignedFromTemporary(final BudgetCalculation calculation){
+        BudgetCalculation existingAssignedCalculation = findUnique(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), BudgetCalculationStatus.ASSIGNED, calculation.getCalculationType());
+        if (existingAssignedCalculation == null) {
+            return createBudgetCalculation(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), calculation.getValue(), calculation.getSourceValue(), calculation.getCalculationType(), BudgetCalculationStatus.ASSIGNED);
+        } else {
+            existingAssignedCalculation.setValue(calculation.getValue());
+            existingAssignedCalculation.setSourceValue(calculation.getSourceValue());
+            return existingAssignedCalculation;
+        }
+    }
+
+    public BudgetCalculation findUnique(
             final BudgetItemAllocation budgetItemAllocation,
             final KeyItem keyItem,
-            final CalculationType calculationType
+            final BudgetCalculationStatus calculationStatus,
+            final BudgetCalculationType calculationType
             ){
         return uniqueMatch(
-                "findByBudgetItemAllocationAndKeyItemAndCalculationType",
+                "findUnique",
                 "budgetItemAllocation", budgetItemAllocation,
                 "keyItem", keyItem,
+                "status", calculationStatus,
                 "calculationType", calculationType);
     }
 
-    public List<BudgetCalculation> findByBudgetItemAllocationAndCalculationType(BudgetItemAllocation budgetItemAllocation, CalculationType calculationType) {
+    public List<BudgetCalculation> findByBudgetItemAllocationAndCalculationType(BudgetItemAllocation budgetItemAllocation, BudgetCalculationType calculationType) {
         return allMatches("findByBudgetItemAllocationAndCalculationType", "budgetItemAllocation", budgetItemAllocation, "calculationType", calculationType);
     }
 
@@ -107,6 +93,14 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
             final BudgetItemAllocation budgetItemAllocation
     ){
         return allMatches("findByBudgetItemAllocation", "budgetItemAllocation", budgetItemAllocation);
+    }
+
+    public List<BudgetCalculation> findByBudgetItemAllocationAndStatus(final BudgetItemAllocation budgetItemAllocation, final BudgetCalculationStatus status) {
+        return allMatches("findByBudgetItemAllocationAndStatus", "budgetItemAllocation", budgetItemAllocation, "status", status);
+    }
+
+    public List<BudgetCalculation> findByBudgetItemAllocationAndStatusAndCalculationType(final BudgetItemAllocation budgetItemAllocation, final BudgetCalculationStatus status, final BudgetCalculationType calculationType) {
+        return allMatches("findByBudgetItemAllocationAndStatusAndCalculationType", "budgetItemAllocation", budgetItemAllocation, "status", status, "calculationType", calculationType);
     }
 
     public List<BudgetCalculation> allBudgetCalculations() {
@@ -129,14 +123,14 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         List<BudgetCalculation> result = new ArrayList<>();
         for (BudgetItem item : budget.getItems()){
 
-            result.addAll(findByBudgetItemAndCalculationType(item, CalculationType.AUDITED));
-            result.addAll(findByBudgetItemAndCalculationType(item, CalculationType.BUDGETED));
+            result.addAll(findByBudgetItemAndCalculationType(item, BudgetCalculationType.AUDITED));
+            result.addAll(findByBudgetItemAndCalculationType(item, BudgetCalculationType.BUDGETED));
 
         }
         return result;
     }
 
-    public List<BudgetCalculation> findByBudgetAndCalculationType(final Budget budget, final CalculationType calculationType) {
+    public List<BudgetCalculation> findByBudgetAndCalculationType(final Budget budget, final BudgetCalculationType calculationType) {
         List<BudgetCalculation> result = new ArrayList<>();
         for (BudgetItem item : budget.getItems()){
 
@@ -146,7 +140,7 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         return result;
     }
 
-    public List<BudgetCalculation> findByBudgetItemAndCalculationType(final BudgetItem budgetItem, final CalculationType calculationType) {
+    public List<BudgetCalculation> findByBudgetItemAndCalculationType(final BudgetItem budgetItem, final BudgetCalculationType calculationType) {
 
         List<BudgetCalculation> result = new ArrayList<>();
         for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
@@ -157,4 +151,47 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         return result;
     }
 
+    public List<BudgetCalculation> findByBudgetAndStatus(final Budget budget, final BudgetCalculationStatus status) {
+        List<BudgetCalculation> result = new ArrayList<>();
+        for (BudgetItem item : budget.getItems()){
+
+            result.addAll(findByBudgetItemAndStatus(item, status));
+
+        }
+        return result;
+    }
+
+    public List<BudgetCalculation> findByBudgetItemAndStatus(final BudgetItem budgetItem, final BudgetCalculationStatus status) {
+        List<BudgetCalculation> result = new ArrayList<>();
+        for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
+
+            result.addAll(findByBudgetItemAllocationAndStatus(allocation, status));
+
+        }
+        return result;
+    }
+
+    public List<BudgetCalculation> findByBudgetAndStatusAndCalculationType(final Budget budget, final BudgetCalculationStatus status, final BudgetCalculationType calculationType) {
+        List<BudgetCalculation> result = new ArrayList<>();
+        for (BudgetItem item : budget.getItems()){
+
+            result.addAll(findByBudgetItemAndStatusAndCalculationType(item, status, calculationType));
+
+        }
+        return result;
+    }
+
+    public List<BudgetCalculation> findByBudgetItemAndStatusAndCalculationType(final BudgetItem budgetItem, final BudgetCalculationStatus status, final BudgetCalculationType calculationType) {
+        List<BudgetCalculation> result = new ArrayList<>();
+        for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
+
+            result.addAll(findByBudgetItemAllocationAndStatusAndCalculationType(allocation, status, calculationType));
+
+
+
+        }
+        return result;
+    }
+
 }
+

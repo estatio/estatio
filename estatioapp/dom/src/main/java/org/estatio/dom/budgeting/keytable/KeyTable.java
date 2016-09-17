@@ -39,7 +39,9 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -59,6 +61,7 @@ import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.DistributionService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
@@ -185,11 +188,13 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return null;
     }
 
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Column(allowsNull = "false")
     @Getter @Setter
     private Integer precision;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyTable changePrecision(
             final Integer numberOfDigits) {
         setPrecision(numberOfDigits);
@@ -211,6 +216,24 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
     @Persistent(mappedBy = "keyTable", dependentElement = "true")
     @Getter @Setter
     private SortedSet<KeyItem> items = new TreeSet<>();
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public KeyItem newItem(
+            final Unit unit,
+            final BigDecimal sourceValue,
+            final BigDecimal keyValue) {
+
+        return keyItemRepository.newItem(this, unit, sourceValue, keyValue);
+    }
+
+    public String validateNewItem(
+            final Unit unit,
+            final BigDecimal sourceValue,
+            final BigDecimal keyValue) {
+
+        return keyItemRepository.validateNewItem(this, unit, sourceValue, keyValue);
+    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable generateItems() {
@@ -309,6 +332,14 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return unit.getInterval().contains(getBudget().getInterval());
     }
 
+    @Programmatic
+    public void createCopyOn(final Budget newBudget) {
+        KeyTable copiedTable = newBudget.createKeyTable(getName(), getFoundationValueType(), getKeyValueMethod(), getPrecision());
+        for (KeyItem item : getItems()){
+            copiedTable.newItem(item.getUnit(), item.getSourceValue(), item.getValue());
+        }
+    }
+
     // //////////////////////////////////////
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -327,5 +358,9 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
 
     @Inject
     private KeyTableRepository keyTableRepository;
+
+    @Inject
+    private KeyItemRepository keyItemRepository;
+
 
 }

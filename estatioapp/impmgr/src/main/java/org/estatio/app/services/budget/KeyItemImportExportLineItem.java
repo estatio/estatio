@@ -74,7 +74,6 @@ public class KeyItemImportExportLineItem
         this.keyValue = item.keyValue.setScale(6, BigDecimal.ROUND_HALF_UP);
         this.keyTableName = item.keyTableName;
         this.startDate = item.startDate;
-        this.comments = item.comments;
     }
 
     public String title() {
@@ -82,18 +81,17 @@ public class KeyItemImportExportLineItem
     }
     //endregion
 
+    @Getter @Setter
+    private String propertyReference;
 
     @Getter @Setter
     private String keyTableName;
 
     @Getter @Setter
-    private String unitReference;
-
-    @Getter @Setter
-    private String propertyReference;
-
-    @Getter @Setter
     private LocalDate startDate;
+
+    @Getter @Setter
+    private String unitReference;
 
     @Column(scale = 6)
     @Getter @Setter
@@ -105,9 +103,6 @@ public class KeyItemImportExportLineItem
 
     @Getter @Setter
     private Status status;
-
-    @Getter @Setter
-    private String comments;
 
 
     //region > apply (action)
@@ -170,6 +165,10 @@ public class KeyItemImportExportLineItem
         if (ObjectUtils.notEqual(getKeyItem().getValue().setScale(6, BigDecimal.ROUND_HALF_UP), getKeyValue().setScale(6, BigDecimal.ROUND_HALF_UP)) || ObjectUtils.notEqual(getKeyItem().getSourceValue().setScale(6, BigDecimal.ROUND_HALF_UP), getSourceValue().setScale(6, BigDecimal.ROUND_HALF_UP))) {
             return Status.UPDATED;
         }
+        // added for newly created lines for deleted items
+        if (getStatus() == Status.DELETED) {
+            return Status.DELETED;
+        }
         return Status.UNCHANGED;
     }
 
@@ -223,23 +222,23 @@ public class KeyItemImportExportLineItem
 
 
     //region > injected services
-    @javax.inject.Inject
-    private KeyItemRepository keyItemRepository;
+    @Inject
+    KeyItemRepository keyItemRepository;
 
     @Inject
-    private UnitRepository unitRepository;
+    UnitRepository unitRepository;
 
     @Inject
-    private DomainObjectContainer container;
+    DomainObjectContainer container;
 
     @Inject
-    private KeyTableRepository keyTableRepository;
+    KeyTableRepository keyTableRepository;
 
     @Inject
     PropertyRepository propertyRepository;
 
     @Inject
-    private BudgetRepository budgetRepository;
+    BudgetRepository budgetRepository;
     //endregion
 
 }

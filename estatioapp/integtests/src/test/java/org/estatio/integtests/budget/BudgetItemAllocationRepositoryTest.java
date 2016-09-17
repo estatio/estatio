@@ -1,5 +1,6 @@
 package org.estatio.integtests.budget;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -130,6 +131,40 @@ public class BudgetItemAllocationRepositoryTest extends EstatioIntegrationTest {
             // then
             assertThat(budgetItemAllocation.getBudgetItem()).isEqualTo(budgetItem);
             assertThat(budgetItemAllocation.getKeyTable()).isEqualTo(keyTable);
+        }
+
+    }
+
+    public static class UpdateOrCreateAllocation extends BudgetItemAllocationRepositoryTest {
+
+        BudgetItemAllocation budgetItemAllocation;
+        BigDecimal origPercentage;
+        BigDecimal newPercentage;
+
+
+        @Test
+        public void happyCase() throws Exception {
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            BudgetItem budgetItem = budget.getItems().first();
+            KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+
+            origPercentage = new BigDecimal("100").setScale(6, BigDecimal.ROUND_HALF_UP);
+            newPercentage = new BigDecimal("90").setScale(6, BigDecimal.ROUND_HALF_UP);
+
+            budgetItemAllocation = budgetItemAllocationRepository.findByChargeAndBudgetItemAndKeyTable(charge, budgetItem, keyTable);
+            assertThat(budgetItemAllocation.getPercentage()).isEqualTo(origPercentage);
+
+            // when
+            budgetItemAllocation = budgetItemAllocationRepository.updateOrCreateBudgetItemAllocation(budgetItem, charge, keyTable, newPercentage);
+
+            // then
+            assertThat(budgetItemAllocation.getBudgetItem()).isEqualTo(budgetItem);
+            assertThat(budgetItemAllocation.getKeyTable()).isEqualTo(keyTable);
+            assertThat(budgetItemAllocation.getPercentage()).isEqualTo(newPercentage);
         }
 
     }

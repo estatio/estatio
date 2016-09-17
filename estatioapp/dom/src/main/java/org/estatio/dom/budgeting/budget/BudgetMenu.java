@@ -11,14 +11,11 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -37,16 +34,14 @@ public class BudgetMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Budget newBudget(
             final Property property,
-            final LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        return budgetRepository.newBudget(property, startDate, endDate);
+            final int year) {
+        return budgetRepository.newBudget(property, new LocalDate(year, 01, 01), new LocalDate(year, 12, 31));
     }
 
     public String validateNewBudget(
             final Property property,
-            final LocalDate startDate,
-            final LocalDate endDate) {
-        return budgetRepository.validateNewBudget(property, startDate, endDate);
+            final int year) {
+        return budgetRepository.validateNewBudget(property, year);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -65,8 +60,5 @@ public class BudgetMenu {
 
     @Inject
     BudgetRepository budgetRepository;
-
-    @Inject
-    private KeyTableRepository keyTableRepository;
 
 }

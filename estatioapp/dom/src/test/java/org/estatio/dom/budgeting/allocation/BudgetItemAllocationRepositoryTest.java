@@ -150,7 +150,7 @@ public class BudgetItemAllocationRepositoryTest {
         }
 
         @Test
-        public void findOrCreateXxxCreatingNewAllocation() throws Exception {
+        public void findOrCreateXxx() throws Exception {
 
             final KeyTable keyTable = new KeyTable();
             final Charge charge = new Charge();

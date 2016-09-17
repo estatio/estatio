@@ -35,7 +35,9 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -113,7 +115,6 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
         List<Occupancy> foundOccupancies = new ArrayList<>();
         for (Occupancy occupancy : findByUnit(unit)) {
 
-            // if occupancy overlaps budget period
             if (localDateInterval.overlaps(occupancy.getInterval())) {
                 foundOccupancies.add(occupancy);
             }
@@ -122,6 +123,14 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
         return foundOccupancies;
 
+    }
+
+    public List<Occupancy> occupanciesByPropertyAndInterval(final Property property, final LocalDateInterval localDateInterval) {
+        List<Occupancy> foundOccupancies = new ArrayList<>();
+        for (Unit unit : unitRepository.findByProperty(property)){
+            foundOccupancies.addAll(occupanciesByUnitAndInterval(unit, localDateInterval));
+        }
+        return foundOccupancies;
     }
 
     // //////////////////////////////////////
@@ -204,4 +213,12 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     @Inject
     private ClockService clockService;
+
+    @Inject
+    private LeaseRepository leaseRepository;
+
+    @Inject
+    private UnitRepository unitRepository;
+
+
 }

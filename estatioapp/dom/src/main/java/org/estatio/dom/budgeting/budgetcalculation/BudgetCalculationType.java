@@ -1,7 +1,7 @@
 package org.estatio.dom.budgeting.budgetcalculation;
 
 
-public enum CalculationType {
+public enum BudgetCalculationType {
     BUDGETED,
     AUDITED
 }

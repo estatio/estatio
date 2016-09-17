@@ -14,9 +14,8 @@
                 <ns2:property id="applicationTenancy"/>
                 <ns2:property id="budgetItemAllocation"/>
                 <ns2:property id="keyItem"/>
-                <ns2:property id="sourceValue"/>
-                <ns2:property id="updatedBy"/>
-                <ns2:property id="updatedAt"/>
+                <ns2:property id="budgetItem" hidden="ALL_TABLES"/>
+                <ns2:property id="budget" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Value" id="value">
                 <ns2:property id="value"/>
@@ -26,6 +25,9 @@
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="updatedBy"/>
+                <ns2:property id="updatedAt"/>
                 <ns2:property id="id"/>
                 <ns2:property id="versionSequence"/>
                 <ns2:property id="datanucleusId"/>

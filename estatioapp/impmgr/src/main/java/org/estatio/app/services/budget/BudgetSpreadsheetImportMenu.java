@@ -16,9 +16,10 @@
  */
 package org.estatio.app.services.budget;
 
-
+import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
@@ -29,6 +30,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY
@@ -57,14 +63,28 @@ public class BudgetSpreadsheetImportMenu {
         return new BudgetImportExportManager();
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(sequence = "2")
+    public BudgetImportExportManager updateBudget(final Property property, final Budget budget) {
+        return new BudgetImportExportManager(budget);
+    }
 
+    public List<Budget> choices1UpdateBudget(
+            final Property property,
+            final Budget budget) {
+        return budgetRepository.findByProperty(property);
+    }
 
-    //region > injected services
-    @javax.inject.Inject
+    @Inject
     private ExcelService excelService;
 
-    @javax.inject.Inject
+    @Inject
     private ActionInvocationContext actionInvocationContext;
-    //endregion
+
+    @Inject
+    private PropertyRepository propertyRepository;
+
+    @Inject
+    private BudgetRepository budgetRepository;
 
 }

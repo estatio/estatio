@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="recentChanges"/>
+            <ns2:action id="links"/>
+            <ns2:action id="downloadLayoutXml"/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <ns2:fieldSet name="Budget" id="budget" unreferencedProperties="true">
+                <ns2:property id="budget"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Totals (Annual amounts)" id="Totals">
+                <ns2:property id="budgetedValue"/>
+                <ns2:property id="auditedValue"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Totals (Actual amounts taking budget period into consideration)" id="ActualTotals" unreferencedProperties="true">
+                <ns2:property id="budgetedValueForBudgetPeriod"/>
+                <ns2:property id="auditedValueForBudgetPeriod"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata"/>
+        </col>
+        <col span="4">
+            <ns2:fieldSet name="Analysis" id="Analysis">
+                <ns2:action id="analyze"></ns2:action>
+                <ns2:property id="recoverableBudgetedValue"/>
+                <ns2:property id="shortfallBudgeted"/>
+                <ns2:property id="recoverableAuditedValue"/>
+                <ns2:property id="shortfallAudited"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Assigned to service charge terms" id="Assigned">
+                <ns2:property id="assignedBudgetedValue"/>
+                <ns2:property id="assignedAuditedValue"/>
+            </ns2:fieldSet>
+        </col>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true">
+        </col>
+    </row>
+</grid>

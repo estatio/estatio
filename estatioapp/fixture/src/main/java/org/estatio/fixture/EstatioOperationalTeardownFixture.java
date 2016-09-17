@@ -27,9 +27,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.links.Paperclip;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.JdoColumnLength.Numerator;
@@ -45,10 +45,11 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.budgetassignment.BudgetCalculationLink;
+import org.estatio.dom.budgetassignment.ServiceChargeItem;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationLink;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
@@ -104,6 +105,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
 
         deleteFrom(BudgetCalculationLink.class);
         deleteFrom(BudgetCalculation.class);
+        deleteFrom(ServiceChargeItem.class);
         deleteFrom(BudgetItemAllocation.class);
         deleteFrom(BudgetItem.class);
         deleteFrom(KeyItem.class);

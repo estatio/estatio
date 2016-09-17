@@ -1,11 +1,24 @@
 package org.estatio.dom.budgeting.budget;
 
-import org.apache.isis.applib.annotation.*;
-import org.estatio.dom.asset.Property;
-import org.joda.time.LocalDate;
+import java.util.List;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.asset.Property;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout()
@@ -22,16 +35,14 @@ public class BudgetContributions {
     @MemberOrder(name = "budgets", sequence = "1")
     public Budget newBudget(
             final Property property,
-            final LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-        return budgetRepository.newBudget(property, startDate, endDate);
+            final int year) {
+        return budgetRepository.newBudget(property, new LocalDate(year, 01, 01), new LocalDate(year, 12, 31));
     }
 
     public String validateNewBudget(
             final Property property,
-            final LocalDate startDate,
-            final LocalDate endDate) {
-        return budgetRepository.validateNewBudget(property, startDate, endDate);
+            final int year) {
+        return budgetRepository.validateNewBudget(property, year);
     }
 
     @Inject
