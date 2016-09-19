@@ -34,10 +34,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.timestamp.Timestampable;
@@ -100,7 +102,7 @@ import lombok.Setter;
                         "WHERE budgetItemAllocation == :budgetItemAllocation")
 })
 @Unique(name = "BudgetCalculation_budgetItemAllocation_keyItem_calculationType_status_UNQ", members = {"budgetItemAllocation", "keyItem", "calculationType", "status"})
-@DomainObject()
+@DomainObject(auditing = Auditing.DISABLED, publishing = Publishing.DISABLED)
 public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
         implements Distributable, WithApplicationTenancyProperty, Timestampable {
 

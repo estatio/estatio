@@ -38,6 +38,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -65,6 +66,7 @@ import org.estatio.dom.budgetassignment.ServiceChargeItem;
 import org.estatio.dom.budgetassignment.ServiceChargeItemRepository;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.api.BudgetItemCreator;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -280,23 +282,17 @@ public class Budget extends UdoDomainObject2<Budget>
             final boolean areYouSure
     ){
 
-        /* delete calculation links and service charge terms if needed */
+        /* delete calculation links and service charge items if needed */
         for (Occupancy occupancy : occupancyRepository.occupanciesByPropertyAndInterval(getProperty(),getInterval())) {
             for (ServiceChargeItem item : serviceChargeItemRepository.findByOccupancy(occupancy)){
-//                if (item.getBudgetYear()== getBudgetYearInterval().startDate().getYear()){
-//                    for (BudgetCalculationLink link : item.getBudgetCalculationLinks()){
-//                        if (link.getBudgetCalculation()
-//                                .getBudgetItemAllocation()
-//                                .getBudgetItem()
-//                                .getBudget().equals(this)){
-//                            getContainer().remove(link);
-//                            getContainer().flush();
-//                        }
-//                    }
                     getContainer().remove(item);
                     getContainer().flush();
-
             }
+        }
+
+        // delete calculations
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
+            calculation.remove();
         }
 
         remove(this);

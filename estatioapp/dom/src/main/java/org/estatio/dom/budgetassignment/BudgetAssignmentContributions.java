@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -31,7 +32,7 @@ public class BudgetAssignmentContributions {
         return budget;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, publishing = Publishing.DISABLED)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public BudgetOverview budgetOverview(final Budget budget) {
         final BudgetOverview budgetOverview = new BudgetOverview(budget);

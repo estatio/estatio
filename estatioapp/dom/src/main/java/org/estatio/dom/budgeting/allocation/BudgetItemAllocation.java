@@ -19,25 +19,23 @@
 package org.estatio.dom.budgeting.allocation;
 
 import java.math.BigDecimal;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -48,6 +46,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;
@@ -83,7 +82,7 @@ import lombok.Setter;
                         "WHERE charge == :charge && budgetItem == :budgetItem && keyTable == :keyTable ")
 })
 @Unique(name = "ScheduleItem_charge_budgetItem_keyTable_UNQ", members = {"charge", "budgetItem", "keyTable"})
-@DomainObject()
+@DomainObject(auditing = Auditing.DISABLED)
 public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation> implements WithApplicationTenancyProperty {
 
     public BudgetItemAllocation() {
@@ -159,10 +158,10 @@ public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation>
         return null;
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY)
-    @Persistent(mappedBy = "budgetItemAllocation", dependentElement = "true")
-    @Getter @Setter
-    private SortedSet<BudgetCalculation> calculations = new TreeSet<>();
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<BudgetCalculation> getCalculations(){
+        return budgetCalculationRepository.findByBudgetItemAllocation(this);
+    }
 
     // ////////////////////////////////////////
 
@@ -184,5 +183,9 @@ public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation>
     public ApplicationTenancy getApplicationTenancy() {
         return getBudgetItem().getBudget().getApplicationTenancy();
     }
+
+    @Inject
+    private BudgetCalculationRepository budgetCalculationRepository;
+
 
 }

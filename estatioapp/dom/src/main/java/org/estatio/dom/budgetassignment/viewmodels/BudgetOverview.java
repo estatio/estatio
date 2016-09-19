@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -19,7 +20,7 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
 public class BudgetOverview  {
 
     //region > constructors, title
