@@ -24,8 +24,6 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -35,7 +33,6 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -147,10 +144,6 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
     private BigDecimal grossAmount;
 
     // //////////////////////////////////////
-
-    @Override public Object invoiceAll(final LocalDate invoiceDate) {
-        return super.invoiceAll(invoiceDate);
-    }
 
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Invoice> getInvoices() {
