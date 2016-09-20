@@ -48,14 +48,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.asset.FixedAsset;
@@ -664,9 +664,6 @@ public class Invoice
         return fafrIfAny.isPresent()? fafrIfAny.get().getFinancialAccount(): null;
     }
 
-
-    // //////////////////////////////////////
-
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove() {
         // Can be called as bulk so have a safeguard
@@ -682,10 +679,14 @@ public class Invoice
         return getStatus().invoiceIsChangable() ? null : "Only invoices with status New can be removed.";
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void saveAsHistoric() {
         setStatus(InvoiceStatus.HISTORIC);
         setRunId(null);
+    }
+
+    public boolean hideSaveAsHistoric(){
+        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
     }
 
     @javax.inject.Inject
