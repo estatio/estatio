@@ -28,6 +28,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.estatio.dom.asset.Property;
+
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY
 )
@@ -48,8 +50,8 @@ public class InvoiceImportMenu {
     )
 
     @MemberOrder(sequence = "1")
-    public InvoiceImportManager importInvoicesForLease() {
-        return new InvoiceImportManager();
+    public InvoiceImportManager importInvoicesForLease(final Property property) {
+        return new InvoiceImportManager(property);
     }
 
     @Inject

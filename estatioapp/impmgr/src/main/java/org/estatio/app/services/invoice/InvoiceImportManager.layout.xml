@@ -5,24 +5,19 @@
             <ns2:domainObject bookmarking="AS_ROOT">
                 <ns2:named>Import manager for invoice for lease</ns2:named>
             </ns2:domainObject>
-            <ns2:action id="importInvoices" cssClassFa="fa-upload"/>
         </col>
     </row>
     <row>
         <col span="6">
             <ns2:fieldSet name="File" id="file" unreferencedProperties="true">
+                <ns2:action id="downloadTemplate"/>
+                <ns2:action id="importInvoices" cssClassFa="fa-upload"/>
                 <ns2:property id="name"/>
             </ns2:fieldSet>
         </col>
         <col span="6" unreferencedCollections="true">
-            <ns2:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
-            <ns2:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
-            <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-            <ns2:action id="clearHints" position="PANEL_DROPDOWN"/>
-            <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-            <ns2:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
-            <ns2:action id="importAfter" position="PANEL_DROPDOWN"/>
-            <ns2:action id="links" position="PANEL_DROPDOWN"/>
+            <ns2:collection id="lines">
+            </ns2:collection>
         </col>
     </row>
 </grid>

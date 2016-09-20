@@ -16,18 +16,32 @@
  */
 package org.estatio.app.services.invoice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.WorksheetContent;
+import org.isisaddons.module.excel.dom.WorksheetSpec;
+
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItemRepository;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +59,23 @@ public class InvoiceImportManager {
         this.name = "Invoice Import";
     }
 
+    public InvoiceImportManager(final Property property){
+        this();
+        this.property = property;
+    }
+
+    @Getter @Setter
+    private Property property;
+
+    @Action()
+    @ActionLayout(cssClassFa = "fa-download")
+    public Blob downloadTemplate() {
+        final String fileName = "template.xlsx";
+        WorksheetSpec spec = new WorksheetSpec(InvoiceImportLine.class, "invoiceImportLine");
+        WorksheetContent worksheetContent = new WorksheetContent(getLines(), spec);
+        return excelService.toExcel(worksheetContent, fileName);
+    }
+
     @Action
     @CollectionLayout(paged = -1)
     public List<InvoiceImportLine> importInvoices(
@@ -54,10 +85,33 @@ public class InvoiceImportManager {
         return lineItems;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<InvoiceImportLine> getLines(){
+        List<InvoiceImportLine> result = new ArrayList<>();
+        for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(getProperty(), clockService.now())){
+            PaymentMethod paymentMethod = null;
+            if (leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).size()>0){
+                paymentMethod = leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0).getPaymentMethod();
+            }
+            result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null));
+        }
+        return result;
+    }
+
     @Getter @Setter
     private String name;
 
     @Inject
     private ExcelService excelService;
+
+    @Inject
+    private LeaseRepository leaseRepository;
+
+    @Inject
+    private ClockService clockService;
+
+    @Inject
+    private LeaseItemRepository leaseItemRepository;
 
 }

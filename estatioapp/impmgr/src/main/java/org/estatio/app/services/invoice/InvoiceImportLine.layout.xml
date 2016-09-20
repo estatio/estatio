@@ -9,8 +9,8 @@
         <bs3:col span="4">
             <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
                 <cpt:property id="leaseReference"/>
-                <cpt:property id="dueDate"/>
                 <cpt:property id="paymentMethod"/>
+                <cpt:property id="dueDate"/>
                 <cpt:property id="itemChargeReference"/>
                 <cpt:property id="itemDescription"/>
                 <cpt:property id="itemNetAmount"/>

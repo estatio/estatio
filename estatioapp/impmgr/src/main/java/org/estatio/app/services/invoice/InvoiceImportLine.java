@@ -41,7 +41,7 @@ public class InvoiceImportLine implements Importable {
 
     //region > constructors, title
     public String title() {
-        return "Invoice Import";
+        return "Invoice Import Line";
     }
 
     public InvoiceImportLine() {
