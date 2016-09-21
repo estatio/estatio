@@ -58,13 +58,9 @@ git tag $RELEASE_VERSION || exit 1
 
 
 echo ""
-echo "double-check (mvn clean install -T1C -o)"
+echo "building release locally"
 echo ""
-if [ $NO_SANITY_CHECK == 0 ]; then
-    mvn clean install -T1C -o || exit 1  >/dev/null
-else
-    echo "... skipped"
-fi
+mvn clean install -T1C -o || exit 1  >/dev/null
 
 
 
