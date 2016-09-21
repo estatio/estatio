@@ -45,7 +45,7 @@ fi
 echo ""
 echo "bumping version to $RELEASE_VERSION"
 echo ""
-mvn versions:set -DnewVersion=$RELEASE_VERSION || exit 1  > /dev/null
+mvn versions:set -DnewVersion=$RELEASE_VERSION -DgenerateBackupPoms=false || exit 1  > /dev/null
 
 echo "Committing changes"
 git commit -am "$JIRA: bumping to release $RELEASE_VERSION" || exit 1 
@@ -74,11 +74,9 @@ fi
 echo ""
 echo "bumping version to $SNAPSHOT_VERSION"
 echo ""
-mvn versions:set -DnewVersion=$SNAPSHOT_VERSION || exit 1  > /dev/null
+mvn versions:set -DnewVersion=$SNAPSHOT_VERSION -DgenerateBackupPoms=false || exit 1  > /dev/null
 
 echo "Committing changes"
 git commit -am "$JIRA: bumping to next snapshot $SNAPSHOT_VERSION" || exit 1 
 
-echo "Tagging"
-git tag $SNAPSHOT_VERSION || exit 1 
 
