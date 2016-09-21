@@ -20,7 +20,7 @@ package org.estatio.dom;
 
 public final class RegexValidation {
 
-    public static final String REFERENCE = "[-/_A-Z0-9]+";
+    public static final String REFERENCE = "[ -/_A-Z0-9]+";
     public static final String REFERENCE_DESCRIPTION = "Only capital letters, numbers and 3 symbols being: \"_\" , \"-\" and \"/\" are allowed";
 
     public static final class Currency {
@@ -75,7 +75,7 @@ public final class RegexValidation {
         //(?=(?:.{11,15}|.{17}))([X,Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\&+=_/-]{1,7})
         //public static final String REFERENCE = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\\&+=_/-]{1,7})";
         //public static final String REFERENCE = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{3})-([A-Z,0-9]{3,8})-([A-Z,0-9,\\&+=_/-]{1,7})$";
-        public static final String REFERENCE = "^([X,Z]-)?(?=.{8,15}$)([A-Z]{2,4})-([A-Z,0-9,\\&+=_/-]{1,15})$";
+        public static final String REFERENCE = "^([X,Z]-)?(?=.{8,15}$)([A-Z]{2,4})-([A-Z,0-9,\\&\\ \\+=_/-]{1,15})$";
         public static final String REFERENCE_DESCRIPTION = "Only letters and numbers devided by at least 2 and at most 4 dashes:\"-\" totalling between 8 and 15 characters. ";
     }
 

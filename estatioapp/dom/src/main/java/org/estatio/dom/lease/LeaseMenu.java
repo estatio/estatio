@@ -80,7 +80,7 @@ public class LeaseMenu {
     ) {
 
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
-        return leaseRepository.newLease(applicationTenancy, reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+        return leaseRepository.newLease(applicationTenancy, reference.trim(), name.trim(), leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
     }
 
     public List<ApplicationTenancy> choices0NewLease() {

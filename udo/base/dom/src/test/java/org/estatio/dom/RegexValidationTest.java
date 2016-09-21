@@ -142,7 +142,7 @@ public class RegexValidationTest {
 
         // ECP-130
         tester(RegexValidation.Lease.REFERENCE, "CH-CELIO", true);
-        tester(RegexValidation.Lease.REFERENCE, "CH-CELIO ", false);
+        tester(RegexValidation.Lease.REFERENCE, "CH-CE LIO", true);
     }
 
     private void tester(String regex, String pattern, boolean expected) {
