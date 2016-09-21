@@ -20,6 +20,7 @@ package org.incode.module.docrendering.stringinterpolator.dom;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,7 @@ import org.apache.isis.applib.services.config.ConfigurationService;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
+import org.incode.module.docrendering.stringinterpolator.dom.spi.UrlDownloaderService;
 import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytes;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
@@ -44,8 +46,13 @@ public class RendererUsingStringInterpolatorCaptureUrl implements RendererFromCh
             final Object dataModel) throws IOException {
         final URL url =
                 previewCharsToBytes(documentType, atPath, templateVersion, templateChars, dataModel);
-        final ByteSource byteSource = Resources.asByteSource(url);
-        return byteSource.read();
+
+        for (UrlDownloaderService downloaderService : downloaderServices) {
+            if(downloaderService.canDownload(url)) {
+                return downloaderService.download(url);
+            }
+        }
+        throw new IllegalStateException("No downloader service available to download from " + url);
     }
 
     protected URL previewCharsToBytes(
@@ -59,6 +66,9 @@ public class RendererUsingStringInterpolatorCaptureUrl implements RendererFromCh
         final String urlStr = stringInterpolator.interpolate(root, templateChars);
         return new URL(urlStr);
     }
+
+    @Inject
+    List<UrlDownloaderService> downloaderServices;
 
     @Inject
     StringInterpolatorService stringInterpolator;

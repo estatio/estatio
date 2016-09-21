@@ -18,8 +18,6 @@
  */
 package org.estatio.fixturescripts;
 
-import org.estatio.fixture.ApplicationSettingsForReportServerForDemo;
-
 public class EstatioDemoFixtureWithDummyReportServer extends EstatioDemoFixture {
 
     public EstatioDemoFixtureWithDummyReportServer() {

@@ -220,17 +220,18 @@ public class EstatioAppManifest implements AppManifest {
         // for testing email (using debugmail.io)
 
         // TODO: change username as required
-        final String username = "dan@haywood-associates.co.uk";
-        // TODO: also, run the app specifying the password provided by debugmail.io (a GUID):
-        // -D isis.service.email.sender.password=99999999-9999-9999-9999-999999999999
+//        final String username = "jeroen@stromboli.it";
+//        final String username = "dan@haywood-associates.co.uk";
+        // TODO: run the app specifying the password provided by debugmail.io (a GUID):
+        // -Disis.service.email.sender.address=jeroen@stromboli.it -Disis.service.email.sender.password=99999999-9999-9999-9999-999999999999
 
-        putDebugMailSmtpSettings(username, props);
+        putDebugMailSmtpSettings(props);
 
         return props;
     }
 
-    private void putDebugMailSmtpSettings(final String username, final Map<String, String> props) {
-        props.put("isis.service.email.sender.address", username);
+    private void putDebugMailSmtpSettings(final Map<String, String> props) {
+        //props.put("isis.service.email.sender.address", username);
 
         props.put("isis.service.email.sender.hostname", "debugmail.io");
         props.put("isis.service.email.port", "25");

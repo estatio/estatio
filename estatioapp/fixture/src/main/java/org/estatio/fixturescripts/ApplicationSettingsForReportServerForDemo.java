@@ -1,14 +1,14 @@
-package org.estatio.fixture;
+package org.estatio.fixturescripts;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.settings.dom.ApplicationSettingsService;
 
 import org.estatio.domsettings.ApplicationSettingForEstatio;
 
-public class ApplicationSettingsForReportServerForDemo extends FixtureScript {
+public class ApplicationSettingsForReportServerForDemo extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

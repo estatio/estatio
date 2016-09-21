@@ -33,7 +33,6 @@ import org.incode.module.documents.fixture.RenderingStrategyFSToUseDataModelAsOu
 
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.documents.binders.BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter;
-import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstract {
@@ -49,7 +48,6 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
         executionContext.executeChild(this, new RenderingStrategyFSToUseDataModelAsOutput());
 

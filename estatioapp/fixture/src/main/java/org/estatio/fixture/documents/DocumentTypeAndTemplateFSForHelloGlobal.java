@@ -52,7 +52,6 @@ public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSA
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
         executionContext.executeChild(this, new RenderingStrategyFSForFreemarker());
 

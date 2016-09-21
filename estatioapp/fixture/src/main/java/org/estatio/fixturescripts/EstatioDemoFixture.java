@@ -29,11 +29,6 @@ import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForBlank;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForHelloGlobal;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForDemoSsrsOnProperty;
-import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
@@ -101,11 +96,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectsForGra());
 
-        executionContext.executeChild(this, new DocumentTypeAndTemplateFSForHelloGlobal());
-        executionContext.executeChild(this, new DocumentTypeAndTemplateFSForBlank());
-        executionContext.executeChild(this, new DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS());
-        executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs());
-        executionContext.executeChild(this, new DocumentTypeAndTemplateFSForDemoSsrsOnProperty());
+        executionContext.executeChild(this, new DemoDocumentAndCommsFixture());
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());

@@ -80,7 +80,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 false, url
                 + "Preliminary+Letter"
                 + "&id=${this.id}"
-                + "&rs:Command=Render", stringInterpolatePreviewCapture,
+                + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Preliminary letter for ${invoice.id}", stringInterpolate,
                 Invoice.class, BinderForReportServer.class,
                 executionContext);
@@ -90,7 +90,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 false, url
                 + "Preliminary+Letter"
                 + "&id=${this.id}"
-                + "&rs:Command=Render"
+                + "&rs:Command=Render&rs:Format=PDF"
                 + "&appTenancy=/NLD", stringInterpolatePreviewCapture,
                 "Preliminary letter for ${this.id} (Netherlands)", stringInterpolate,
                 Invoice.class, BinderForReportServer.class,
@@ -103,7 +103,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 url
                 + "Invoice"
                 + "&id=${this.id}"
-                + "&rs:Command=Render", stringInterpolatePreviewCapture,
+                + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Invoice for ${this.id}", stringInterpolate,
                 Invoice.class, BinderForReportServer.class,
                 executionContext);
@@ -117,7 +117,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 url
                 + "Invoices"
                 + "&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}"
-                + "&rs:Command=Render", stringInterpolatePreviewCapture,
+                + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Invoices overview", stringInterpolate,
                 InvoiceSummaryForPropertyDueDateStatus.class,
                 BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class,
@@ -130,7 +130,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 url
                 + "Preliminary+Letter"
                 + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
-                + "&rs:Command=Render", stringInterpolatePreviewCapture,
+                + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Preliminary letter for Invoices", stringInterpolate,
                 InvoiceSummaryForPropertyDueDateStatus.class,
                 BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class,
@@ -143,7 +143,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 url
                 + "Preliminary+Letter"
                 + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
-                + "&rs:Command=Render", stringInterpolatePreviewCapture,
+                + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Preliminary Invoice for Seller", stringInterpolate,
                 InvoiceSummaryForPropertyDueDateStatus.class,
                 BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class,
