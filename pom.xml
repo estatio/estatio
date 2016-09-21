@@ -43,7 +43,7 @@ mvn clean install -DskipTests -o
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Estatio (Open Source)</name>
@@ -642,12 +642,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-base</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-base</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -655,12 +655,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-link</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-link</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -668,12 +668,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-settings</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-settings</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -681,12 +681,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-charge</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-charge</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -694,12 +694,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -707,12 +707,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-geography</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-geography</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -720,12 +720,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-numerator</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-numerator</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -733,12 +733,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-tax</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-tax</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -786,12 +786,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -801,12 +801,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-impmgr</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-impmgr</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -814,12 +814,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-app</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-app</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -827,19 +827,19 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-integtests</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-webapp</artifactId>
-                <version>1.6.0</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
 
 
