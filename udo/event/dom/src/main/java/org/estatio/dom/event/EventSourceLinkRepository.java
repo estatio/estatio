@@ -19,8 +19,9 @@
 package org.estatio.dom.event;
 
 import java.util.List;
+
 import javax.annotation.PostConstruct;
-import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -28,7 +29,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
+
+import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
