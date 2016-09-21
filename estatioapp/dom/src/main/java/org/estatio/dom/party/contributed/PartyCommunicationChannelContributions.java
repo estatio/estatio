@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -19,12 +18,12 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.relationship.contributed.DomainObjectContainerFunctions;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class PartyCommunicationChannelContributions {
@@ -45,13 +44,13 @@ public class PartyCommunicationChannelContributions {
 
     private List<String> channelTitle(Party party, final CommunicationChannelType type, final int index) {
         final SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwnerAndType(party, type);
-        return Lists.newArrayList(Iterables.transform(results, DomainObjectContainerFunctions.titleOfUsing(container)));
+        return Lists.newArrayList(Iterables.transform(results, input -> titleService.titleOf(input)));
     }
 
     @Inject
     private CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
-    private DomainObjectContainer container;
+    private TitleService titleService;
 
 }
