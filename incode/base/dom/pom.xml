@@ -23,7 +23,7 @@ Copyright 2014~2015 Dan Haywood
 	<parent>
         <groupId>org.estatio</groupId>
         <artifactId>estatio</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.6.0</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 	
