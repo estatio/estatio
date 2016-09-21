@@ -76,3 +76,11 @@ echo "Committing changes"
 git commit -am "$JIRA: bumping to next snapshot $SNAPSHOT_VERSION" || exit 1 
 
 
+
+
+echo ""
+echo "building new snapshot locally"
+echo ""
+mvn clean install -T1C -o -DskipTests=true || exit 1  >/dev/null
+
+
