@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.party;
+package org.estatio.app.menus.party;
 
 import java.util.List;
 
@@ -36,52 +36,38 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonGenderType;
+import org.estatio.dom.party.PersonRepository;
 
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.2")
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-public class OrganisationMenu {
+        menuOrder = "20.3")
+public class PersonMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Organisation newOrganisation(
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
-            final boolean useNumereratorForReference,
-            final String name,
+    public Person newPerson(
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
+            final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
+            final String lastName,
+            final PersonGenderType gender,
             final ApplicationTenancy applicationTenancy) {
-        return organisationRepository.newOrganisation(reference, useNumereratorForReference, name, applicationTenancy);
+        return personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
     }
-
-    public List<ApplicationTenancy> choices3NewOrganisation() {
-        return organisationRepository.choices3NewOrganisation();
-    }
-
-    public ApplicationTenancy default3NewOrganisation() {
-        return organisationRepository.default3NewOrganisation();
-    }
-
-    public String validateNewOrganisation(
-            final String reference,
-            final boolean useNumereratorForReference,
-            final String name,
-            final ApplicationTenancy applicationTenancy
-    ) {
-        return organisationRepository.validateNewOrganisation(reference, useNumereratorForReference, name, applicationTenancy);
-    }
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
-    public List<Organisation> allOrganisations() {
-        return organisationRepository.allOrganisations();
+    public List<Person> allPersons() {
+        return personRepository.allPersons();
     }
 
     // //////////////////////////////////////
 
     @Inject
-    OrganisationRepository organisationRepository;
+    PersonRepository personRepository;
 
 }

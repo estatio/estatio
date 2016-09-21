@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.party.relationship;
+package org.estatio.app.menus.party;
 
 import java.util.List;
 import java.util.Set;
@@ -38,6 +38,9 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
+import org.estatio.dom.party.relationship.PartyRelationship;
+import org.estatio.dom.party.relationship.PartyRelationshipRepository;
+import org.estatio.dom.party.relationship.PartyRelationshipType;
 
 @DomainServiceLayout(
         named = "Parties",

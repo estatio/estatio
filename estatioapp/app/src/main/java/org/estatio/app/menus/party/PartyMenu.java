@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.party;
+package org.estatio.app.menus.party;
 
 import java.util.List;
 
@@ -28,43 +28,36 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.dom.RegexValidation;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.3")
-public class PersonMenu {
+        menuOrder = "20.1")
+public class PartyMenu {
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
-    public Person newPerson(
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
-            final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
-            final String lastName,
-            final PersonGenderType gender,
-            final ApplicationTenancy applicationTenancy) {
-        return personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
+    public List<Party> findParties(
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName) {
+        return partyRepository.findParties(referenceOrName);
     }
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
-    public List<Person> allPersons() {
-        return personRepository.allPersons();
+    public List<Party> allParties() {
+        return partyRepository.allParties();
     }
 
     // //////////////////////////////////////
 
     @Inject
-    PersonRepository personRepository;
+    PartyRepository partyRepository;
 
 }
