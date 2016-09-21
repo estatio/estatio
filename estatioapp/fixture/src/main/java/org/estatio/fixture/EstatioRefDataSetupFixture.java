@@ -26,7 +26,6 @@ import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.geography.CountriesRefData;
 import org.estatio.fixture.geography.StatesRefData;
 import org.estatio.fixture.index.IndexRefData;
-import org.estatio.fixture.link.LinksRefData;
 import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
@@ -45,6 +44,5 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
         executionContext.executeChild(this, "charges", new ChargeRefData());
         executionContext.executeChild(this, "indexs", new IndexRefData());
-        executionContext.executeChild(this, "links", new LinksRefData());
     }
 }
