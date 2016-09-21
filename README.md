@@ -130,6 +130,19 @@ The mvn script also generates docbook XML and PDF, but there are some caveats:
 * Using [asciidoctor-fopub](https://github.com/asciidoctor/asciidoctor-fopub) the XML can be converted to PDF; however there are currently some issues with images being scaled correctly.
 
 
+## Release process
+
+To release the open source version, use:
+
+    sh release.sh -j EST-1234 -r 1.7.0 -s 1.8.0-SNAPSHOT
+
+where:
+
+* -j is the JIRA number
+* -r is the release version
+* -s is the next snapshot version
+
+
 ## Thanks
 
 Thanks to
