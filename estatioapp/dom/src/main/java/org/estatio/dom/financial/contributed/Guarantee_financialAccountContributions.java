@@ -18,52 +18,64 @@
  */
 package org.estatio.dom.financial.contributed;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.party.Party;
+import org.estatio.dom.guarantee.Guarantee;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class FinancialAccountContributions extends UdoDomainService<FinancialAccountContributions> {
+public class Guarantee_financialAccountContributions extends UdoDomainService<Guarantee_financialAccountContributions> {
 
-    public FinancialAccountContributions() {
-        super(FinancialAccountContributions.class);
+    public Guarantee_financialAccountContributions() {
+        super(Guarantee_financialAccountContributions.class);
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    @MemberOrder(name = "financialAccounts", sequence = "1")
-    public FinancialAccount addAccount(
-            final Party owner,
-            final FinancialAccountType financialAccountType,
-            final @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
-            final String name) {
-        return financialAccountRepository.newFinancialAccount(financialAccountType, reference, name, owner);
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(defaultView = "table")
+    public List<FinancialAccountTransaction> transactions(Guarantee guarantee) {
+        return financialAccountTransactionRepository.transactions(guarantee.getFinancialAccount());
     }
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Guarantee newTransaction(
+            final Guarantee guarantee,
+            final LocalDate transactionDate,
+            final String description,
+            final BigDecimal amount) {
+
+        financialAccountTransactionRepository.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
+        return guarantee;
+    }
+
+    public boolean hideNewTransaction(final Guarantee guarantee, final LocalDate transactionDate, final String description, final BigDecimal amount) {
+        return guarantee.getFinancialAccount() == null;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<FinancialAccount> financialAccounts(final Party owner) {
-        return financialAccountRepository.findAccountsByOwner(owner);
+    public BigDecimal balance(FinancialAccount financialAccount) {
+        BigDecimal balance = financialAccountTransactionRepository.balance(financialAccount);
+        return balance;
     }
 
     // //////////////////////////////////////
