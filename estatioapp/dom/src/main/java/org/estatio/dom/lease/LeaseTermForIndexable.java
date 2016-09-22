@@ -302,7 +302,6 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // ///////////////////////////////////////////
 
-    @Override
     @Programmatic
     public IndexationCalculationMethod getIndexationCalculation() {
         return getIndexationMethod().indexationCalculation();
