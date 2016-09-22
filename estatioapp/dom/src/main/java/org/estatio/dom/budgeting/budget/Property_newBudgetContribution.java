@@ -22,7 +22,7 @@ import org.estatio.dom.asset.Property;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout()
-public class BudgetContributions {
+public class Property_newBudgetContribution {
 
     @Action(semantics = SemanticsOf.SAFE, invokeOn = InvokeOn.OBJECT_ONLY)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
