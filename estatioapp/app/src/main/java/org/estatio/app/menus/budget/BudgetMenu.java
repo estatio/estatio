@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.budget;
+package org.estatio.app.menus.budget;
 
 import java.util.List;
 
@@ -16,6 +16,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
