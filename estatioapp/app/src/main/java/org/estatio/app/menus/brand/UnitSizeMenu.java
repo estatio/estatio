@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.tags;
+package org.estatio.app.menus.brand;
 
 import java.util.List;
 
@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.lease.tags.UnitSize;
 
 @DomainService(repositoryFor = UnitSize.class)
 @DomainServiceLayout(
