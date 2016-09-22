@@ -32,7 +32,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.app.menus.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;

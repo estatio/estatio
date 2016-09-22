@@ -108,6 +108,13 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     @Inject
     EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepository;
 
+    /**
+     * For testing
+     */
+    public void setEstatioApplicationTenancyRepository(final EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepository) {
+        this.estatioApplicationTenancyRepository = estatioApplicationTenancyRepository;
+    }
+
     @Inject
     PropertyRepository propertyRepository;
 

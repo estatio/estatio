@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.app.menus.asset;
 
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -26,6 +26,10 @@ import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitRepository;
+import org.estatio.dom.asset.UnitType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

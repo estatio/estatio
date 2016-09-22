@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.app.menus.asset;
 
 import java.util.List;
 
@@ -34,6 +34,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.asset.PropertyType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -147,7 +151,7 @@ public class PropertyMenu2Test {
             propertyMenu = new PropertyMenu();
             propertyMenu.propertyRepository = propertyRepository;
 
-            propertyRepository.estatioApplicationTenancyRepository = mockEstatioApplicationTenancyRepository;
+            propertyRepository.setEstatioApplicationTenancyRepository(mockEstatioApplicationTenancyRepository);
         }
 
 

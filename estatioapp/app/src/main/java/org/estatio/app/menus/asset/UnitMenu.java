@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.app.menus.asset;
 
 import java.util.List;
 
@@ -32,6 +32,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY
