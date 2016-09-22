@@ -50,13 +50,14 @@ import org.estatio.dom.geography.StateRepository;
  * {@link #communicationChannels(CommunicationChannelOwner) communication
  * channels} of a particular {@link CommunicationChannelOwner}.
  */
-public abstract class CommunicationChannelContributions extends UdoDomainService<CommunicationChannelContributions> {
+public abstract class CommunicationChannelOwner_newChannelContributions
+        extends UdoDomainService<CommunicationChannelOwner_newChannelContributions> {
 
-    public CommunicationChannelContributions() {
-        super(CommunicationChannelContributions.class);
+    public CommunicationChannelOwner_newChannelContributions() {
+        super(CommunicationChannelOwner_newChannelContributions.class);
     }
 
-    protected CommunicationChannelContributions(Class<? extends UdoDomainService<CommunicationChannelContributions>> serviceType) {
+    protected CommunicationChannelOwner_newChannelContributions(Class<? extends UdoDomainService<CommunicationChannelOwner_newChannelContributions>> serviceType) {
         super(serviceType);
     }
 

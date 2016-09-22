@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner_newChannelContributions;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -50,7 +50,7 @@ public class CommunicationChannelContributionsTest extends EstatioIntegrationTes
         @Inject
         private PartyRepository partyRepository;
         @Inject
-        private CommunicationChannelContributions communicationChannelContributions;
+        private CommunicationChannelOwner_newChannelContributions communicationChannelContributions;
 
         private Party partyHelloWorld;
 

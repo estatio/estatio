@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner_newChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
 import org.estatio.dom.party.PartyRepository;
@@ -43,7 +43,7 @@ public class CommunicationChannelContributionsIntegTest extends EstatioIntegrati
     @Inject
     CommunicationChannels communicationChannels;
     @Inject
-    CommunicationChannelContributions communicationChannelContributions;
+    CommunicationChannelOwner_newChannelContributions communicationChannelContributions;
 
     @Inject
     PartyRepository partyRepository;

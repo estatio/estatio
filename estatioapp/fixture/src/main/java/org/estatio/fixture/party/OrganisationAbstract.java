@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner_newChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
@@ -140,7 +140,7 @@ public abstract class OrganisationAbstract extends FixtureScript {
     protected PersonRepository personRepository;
 
     @Inject
-    protected CommunicationChannelContributions communicationChannelContributedActions;
+    protected CommunicationChannelOwner_newChannelContributions communicationChannelContributedActions;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;
