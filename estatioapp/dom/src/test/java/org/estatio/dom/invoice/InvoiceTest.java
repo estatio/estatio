@@ -358,7 +358,6 @@ public class InvoiceTest {
             inv.setInvoiceNumber(number);
             return inv;
         }
-
     }
 
     public static class ValidInvoiceDate extends InvoiceTest {
@@ -376,11 +375,17 @@ public class InvoiceTest {
             invoice.invoiceRepository = mockInvoiceRepository;
             invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
             invoice.setFixedAsset(invoiceProperty);
+
+            numerator = new Numerator();
+            numerator.setLastIncrement(BigInteger.TEN);
+            numerator.setFormat("XXX-%05d");
+            applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath("/");
         }
 
         @Test
         public void invoiceDateIsAfterDueDate() {
-            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 3))).isFalse();
+            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 3))).isNotNull();
         }
 
         @Test
@@ -391,9 +396,19 @@ public class InvoiceTest {
             assertThat(invoice.getApplicationTenancy()).isNotNull();
 
             // when,then
-            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 1))).isTrue();
+            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 1))).isNull();
         }
 
+        @Test
+        public void invoice_date_cannot_be_after_last_invoice_date() throws Exception {
+            // given
+            allowingMockInvoicesToReturnNumerator(numerator);
+            allowingMockInvoicesToReturnInvoice("XXX-0010", new LocalDate(2012, 1, 2));
+            assertThat(invoice.getApplicationTenancy()).isNotNull();
+
+            // when,then
+            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 1, 1))).isEqualTo("Invoice number XXX-0010 has an invoice date 2012-01-02 which is after 2012-01-01");
+        }
     }
 
     public static class NewItem extends InvoiceTest {
@@ -405,9 +420,7 @@ public class InvoiceTest {
             invoice.setStatus(InvoiceStatus.INVOICED);
             // When, Then
             assertThat(invoice.disableNewItem(null, null, null, null, null)).isNotNull();
-
         }
-
     }
 
     public static class ValidateNewItemWithEmptyDates extends InvoiceTest {
@@ -437,7 +450,6 @@ public class InvoiceTest {
             invoice.validateNewItem(null, null, null, null, null);
 
         }
-
     }
 
     public static class ValidateNewItemWithEmptyStartDate extends InvoiceTest {
@@ -464,10 +476,7 @@ public class InvoiceTest {
 
             //When
             //Then
-            invoice.validateNewItem(null, null, null, null, new LocalDate(2000,01,01));
-
+            invoice.validateNewItem(null, null, null, null, new LocalDate(2000, 01, 01));
         }
-
     }
-
 }

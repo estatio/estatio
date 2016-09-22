@@ -517,18 +517,15 @@ public class Invoice
     }
 
     public String validateInvoice(final LocalDate invoiceDate) {
-        return !validInvoiceDate(invoiceDate)
-                ? String.format("Invoice date %s is invalid for %s because it's before the invoice date of the last invoice or after the due date", invoiceDate.toString(), getContainer().titleOf(this))
-                : null;
-
+        return validInvoiceDate(invoiceDate);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
-    boolean validInvoiceDate(LocalDate invoiceDate) {
+    String validInvoiceDate(LocalDate invoiceDate) {
         if (getDueDate() != null && getDueDate().compareTo(invoiceDate) < 0) {
-            return false;
+            return "Due date cannot be before invoice date";
         }
         final ApplicationTenancy applicationTenancy = getApplicationTenancy();
         final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), applicationTenancy);
@@ -537,11 +534,14 @@ public class Invoice
             if (invoiceNumber != null) {
                 List<Invoice> result = invoiceRepository.findByInvoiceNumber(invoiceNumber);
                 if (result.size() > 0) {
-                    return result.get(0).getInvoiceDate().compareTo(invoiceDate) <= 0;
+                    final Invoice invoice = result.get(0);
+                    if (invoice.getInvoiceDate().isAfter(invoiceDate)){
+                        return String.format("Invoice number %s has an invoice date %s which is after %s", invoice.getInvoiceNumber(), invoice.getInvoiceDate().toString(), invoiceDate.toString());
+                    }
                 }
             }
         }
-        return true;
+        return null;
     }
 
     // //////////////////////////////////////
