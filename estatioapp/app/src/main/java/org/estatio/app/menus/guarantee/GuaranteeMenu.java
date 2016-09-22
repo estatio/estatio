@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee;
+package org.estatio.app.menus.guarantee;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,6 +41,9 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.guarantee.GuaranteeRepository;
+import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.StringUtils;
 

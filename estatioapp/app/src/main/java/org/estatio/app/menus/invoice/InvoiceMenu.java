@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.app.menus.invoice;
 
 import java.util.List;
 
@@ -25,6 +25,10 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

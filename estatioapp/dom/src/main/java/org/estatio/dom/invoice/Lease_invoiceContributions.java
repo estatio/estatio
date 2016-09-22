@@ -12,27 +12,14 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class InvoiceContributions {
+public class Lease_invoiceContributions {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Invoice> invoices(final Lease lease) {
         return invoiceRepository.findByLease(lease);
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> invoicesFrom(final Party seller) {
-        return invoiceRepository.findBySeller(seller);
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> invoicesTo(final Party buyer) {
-        return invoiceRepository.findByBuyer(buyer);
     }
 
     @Inject
