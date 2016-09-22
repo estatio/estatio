@@ -1,4 +1,4 @@
-package org.estatio.dom.budgetassignment.viewmodels;
+package org.estatio.app.mixins.budgetoverview;
 
 import javax.inject.Inject;
 
