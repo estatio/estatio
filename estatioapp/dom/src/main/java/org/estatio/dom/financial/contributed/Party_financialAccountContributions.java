@@ -41,10 +41,10 @@ import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class FinancialAccountContributions extends UdoDomainService<FinancialAccountContributions> {
+public class Party_financialAccountContributions extends UdoDomainService<Party_financialAccountContributions> {
 
-    public FinancialAccountContributions() {
-        super(FinancialAccountContributions.class);
+    public Party_financialAccountContributions() {
+        super(Party_financialAccountContributions.class);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

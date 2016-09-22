@@ -36,7 +36,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.contributed.FinancialAccountContributions;
+import org.estatio.dom.financial.contributed.Party_financialAccountContributions;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -156,7 +156,7 @@ public class FinancialAccountRepositoryTest extends EstatioIntegrationTest {
         WrapperFactory wrapperFactory;
 
         @Inject
-        FinancialAccountContributions financialAccountContributions;
+        Party_financialAccountContributions financialAccountContributions;
 
     }
 
