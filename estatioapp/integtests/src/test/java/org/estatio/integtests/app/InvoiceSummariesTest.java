@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatusMenu;
+import org.estatio.app.menus.invoice.InvoiceSummariesForPropertyDueDateStatusMenu;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;

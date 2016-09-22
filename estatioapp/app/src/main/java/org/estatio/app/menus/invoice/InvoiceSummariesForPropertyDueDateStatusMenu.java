@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.viewmodel;
+package org.estatio.app.menus.invoice;
 
 import java.util.List;
 
@@ -34,6 +34,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
