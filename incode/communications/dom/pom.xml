@@ -90,7 +90,7 @@ Copyright 2014~2015 Dan Haywood
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <udo-dom-geography.version>1.4.0-SNAPSHOT</udo-dom-geography.version>
+        <udo-dom-geography.version>1.7.0-SNAPSHOT</udo-dom-geography.version>
     </properties>
 
     <build>
