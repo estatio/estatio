@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.project;
+package org.estatio.app.mixins.project;
 
 import java.util.Iterator;
 
@@ -34,6 +34,10 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.party.Party;
+import org.estatio.dom.project.Program;
+import org.estatio.dom.project.ProgramRole;
+import org.estatio.dom.project.ProgramRoleRepository;
+import org.estatio.dom.project.ProgramRoleType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)

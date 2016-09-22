@@ -41,7 +41,7 @@ import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRepository;
 import org.estatio.dom.project.ProgramRole;
-import org.estatio.dom.project.ProgramRoleContributionsForParty;
+import org.estatio.app.mixins.project.ProgramRoleContributionsForParty;
 import org.estatio.dom.project.ProgramRoleRepository;
 import org.estatio.dom.project.ProgramRoleType;
 import org.estatio.fixture.EstatioBaseLineFixture;
