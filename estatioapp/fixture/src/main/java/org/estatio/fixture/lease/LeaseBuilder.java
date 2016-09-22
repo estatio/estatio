@@ -30,7 +30,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
@@ -237,8 +236,6 @@ public class LeaseBuilder extends FixtureScript {
 
     // //////////////////////////////////////
 
-    @Inject
-    protected UnitMenu unitMenu;
     @Inject
     protected UnitRepository unitRepository;
 

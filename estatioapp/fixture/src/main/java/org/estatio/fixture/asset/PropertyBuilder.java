@@ -31,7 +31,7 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.asset.UnitMenu;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
@@ -199,7 +199,7 @@ public class PropertyBuilder extends FixtureScript {
     protected PropertyRepository propertyRepository;
 
     @Inject
-    protected UnitMenu unitMenu;
+    protected UnitRepository unitRepository;
 
     @Inject
     protected PartyRepository partyRepository;
