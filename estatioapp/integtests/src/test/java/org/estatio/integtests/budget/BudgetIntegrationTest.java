@@ -17,7 +17,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budgetassignment.BudgetAssignmentContributions;
+import org.estatio.dom.budgetassignment.Budget_assignCalculationsContribution;
 import org.estatio.dom.budgetassignment.BudgetCalculationLinkRepository;
 import org.estatio.dom.budgetassignment.ServiceChargeItemRepository;
 import org.estatio.dom.budgeting.budget.Budget;
@@ -60,7 +60,7 @@ public class BudgetIntegrationTest extends EstatioIntegrationTest {
     BudgetCalculationLinkRepository budgetCalculationLinkRepository;
 
     @Inject
-    BudgetAssignmentContributions budgetAssignmentContributions;
+    Budget_assignCalculationsContribution budgetAssignmentContributions;
 
     @Inject
     ServiceChargeItemRepository serviceChargeItemRepository;
