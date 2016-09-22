@@ -81,7 +81,7 @@ public class EstatioApplicationTenancyRepositoryForPartyPropertyTest {
 
         estatioApplicationTenancyRepositoryForPartyProperty.estatioApplicationTenancyRepositoryForProperty = estatioApplicationTenancyRepositoryForProperty;
         estatioApplicationTenancyRepositoryForProperty.estatioApplicationTenancyRepositoryForCountry = estatioApplicationTenancyRepositoryForCountry;
-        
+
         estatioApplicationTenancyRepositoryForPartyProperty.applicationTenancies = mockApplicationTenancies;
         estatioApplicationTenancyRepositoryForProperty.applicationTenancies = mockApplicationTenancies;
         estatioApplicationTenancyRepositoryForCountry.applicationTenancies = mockApplicationTenancies;

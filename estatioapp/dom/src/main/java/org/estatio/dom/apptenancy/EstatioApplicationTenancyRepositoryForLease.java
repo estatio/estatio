@@ -25,6 +25,7 @@ public class EstatioApplicationTenancyRepositoryForLease {
     }
 
 
+
     @Inject
     EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepositoryForProperty;
 

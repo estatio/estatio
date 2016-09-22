@@ -4,15 +4,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
+import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -33,6 +35,29 @@ public class EstatioApplicationTenancyRepository {
                 allTenancies(), Predicates.isChildOf(tenancy)));
     }
 
+
+    public static class Predicates {
+        private Predicates() {
+        }
+
+        public static Predicate<? super ApplicationTenancy> isSelf(final ApplicationTenancy tenancy) {
+            return candidate -> tenancy == candidate;
+        }
+
+        public static Predicate<? super ApplicationTenancy> isChildOf(final ApplicationTenancy tenancy) {
+            final ApplicationTenancyLevel tenancyLevel = ApplicationTenancyLevel.of(tenancy);
+            return candidate -> {
+                final ApplicationTenancyLevel candidateLevel = ApplicationTenancyLevel.of(candidate);
+                return candidateLevel.childOf(tenancyLevel);
+            };
+        }
+
+        public static Predicate<? super ApplicationTenancy> isSelfOrChildOf(final ApplicationTenancy tenancy) {
+            return com.google.common.base.Predicates.or(isSelf(tenancy), isChildOf(tenancy));
+        }
+
+
+    }
 
 
 

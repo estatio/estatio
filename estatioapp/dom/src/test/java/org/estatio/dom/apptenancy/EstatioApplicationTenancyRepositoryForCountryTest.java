@@ -157,6 +157,13 @@ public class EstatioApplicationTenancyRepositoryForCountryTest {
     }
 
     @Test
+    public void testAllCountryTenancies() throws Exception {
+        List<ApplicationTenancy> applicationTenancies = estatioApplicationTenancyRepository.allCountryTenancies();
+
+        assertThat(applicationTenancies).containsExactly(france, italy);
+    }
+
+    @Test
     public void testPathForCountry() throws Exception {
         //given
         Country country = new Country("ITA", "IT", "ITALY");

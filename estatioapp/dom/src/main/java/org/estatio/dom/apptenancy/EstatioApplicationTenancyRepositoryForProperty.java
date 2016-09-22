@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -16,6 +17,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.geography.Country;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 @DomainService(
@@ -77,6 +79,42 @@ public class EstatioApplicationTenancyRepositoryForProperty {
     }
 
 
+
+    public static class Predicates {
+        private Predicates() {
+        }
+
+        public static Predicate<? super ApplicationTenancy> isLocalOf(final Property property) {
+            final String propertyPath = property.getApplicationTenancyPath();
+            final ApplicationTenancyLevel propertyLevel = ApplicationTenancyLevel.of(propertyPath);
+            return candidate -> {
+                ApplicationTenancyLevel candidateLevel = ApplicationTenancyLevel.of(candidate);
+                return candidateLevel.childOf(propertyLevel);
+            };
+        }
+
+
+        public static Predicate<? super ApplicationTenancy> isPropertyTenancyUnder(final ApplicationTenancy tenancy) {
+            return com.google.common.base.Predicates.and(
+                    isProperty(), org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository.Predicates.isSelfOrChildOf(tenancy));
+        }
+
+        public static Predicate<ApplicationTenancy> isProperty() {
+            return candidate -> ApplicationTenancyLevel.of(candidate).isProperty();
+        }
+
+        public static Predicate<ApplicationTenancy> isPropertyOf(final Country country) {
+            final String countryPath = "/" + country.getReference();
+            final ApplicationTenancyLevel countryLevel = ApplicationTenancyLevel.of(countryPath);
+            return candidate -> {
+                ApplicationTenancyLevel candidateLevel = ApplicationTenancyLevel.of(candidate);
+                return candidateLevel.isProperty() && candidateLevel.childOf(countryLevel);
+            };
+        }
+
+
+
+    }
 
     @Inject
     private MeService meService;

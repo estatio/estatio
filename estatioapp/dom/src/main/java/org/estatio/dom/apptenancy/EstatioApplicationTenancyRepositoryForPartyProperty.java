@@ -34,6 +34,7 @@ public class EstatioApplicationTenancyRepositoryForPartyProperty {
 
 
 
+
     @Inject
     EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepositoryForProperty;
 

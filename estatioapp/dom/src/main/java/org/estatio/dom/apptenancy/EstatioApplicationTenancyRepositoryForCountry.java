@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -22,6 +23,11 @@ import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
         nature = NatureOfService.DOMAIN
 )
 public class EstatioApplicationTenancyRepositoryForCountry {
+
+    public List<ApplicationTenancy> allCountryTenancies() {
+        return Lists.newArrayList(Iterables.filter(allTenancies(), Predicates.isCountry()));
+    }
+
 
     public ApplicationTenancy findOrCreateTenancyFor(final Country country) {
         final String countryPath = pathFor(country);
@@ -94,6 +100,31 @@ public class EstatioApplicationTenancyRepositoryForCountry {
     }
 
 
+
+    public static class Predicates {
+        private Predicates() {
+        }
+
+        public static Predicate<? super ApplicationTenancy> isCountryTenancyFor(final ApplicationTenancy tenancy) {
+            return com.google.common.base.Predicates.and(
+                    isCountry(), org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository.Predicates.isSelfOrChildOf(tenancy));
+        }
+
+        public static Predicate<? super ApplicationTenancy> isGlobalOrCountryTenancyFor(final ApplicationTenancy tenancy) {
+            return com.google.common.base.Predicates.or(
+                    isGlobal(), isCountryTenancyFor(tenancy));
+        }
+
+        public static Predicate<? super ApplicationTenancy> isGlobal() {
+            return input -> ApplicationTenancyLevel.of(input).isRoot();
+        }
+
+        public static Predicate<ApplicationTenancy> isCountry() {
+            return candidate -> ApplicationTenancyLevel.of(candidate).isCountry();
+        }
+
+
+    }
 
     @Inject
     ApplicationTenancyRepository applicationTenancies;
