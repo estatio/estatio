@@ -35,10 +35,10 @@ import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForIndexableRepository;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class LeaseTermForIndexableContributions extends UdoDomainService<LeaseTermForIndexableContributions> {
+public class IndexValue_leaseTermsContribution extends UdoDomainService<IndexValue_leaseTermsContribution> {
 
-    public LeaseTermForIndexableContributions() {
-        super(LeaseTermForIndexableContributions.class);
+    public IndexValue_leaseTermsContribution() {
+        super(IndexValue_leaseTermsContribution.class);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
