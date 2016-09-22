@@ -31,7 +31,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 
-public class GuaranteedFinancialAccountContributions {
+public class FinancialAccount_newAdjustmentContribution {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public void newAdjustment(
