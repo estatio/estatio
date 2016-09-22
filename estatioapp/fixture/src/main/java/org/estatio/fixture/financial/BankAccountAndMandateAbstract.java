@@ -31,7 +31,6 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateMenu;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
@@ -80,8 +79,6 @@ public abstract class BankAccountAndMandateAbstract extends FixtureScript {
     @Inject
     private PartyRepository partyRepository;
 
-    @Inject
-    private BankMandateMenu bankMandateMenu;
     @Inject
     private BankMandateRepository bankMandateRepository;
 
