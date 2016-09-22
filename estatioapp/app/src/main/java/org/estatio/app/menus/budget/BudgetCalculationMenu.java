@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.app.menus.budget;
 
 import java.util.List;
 
@@ -15,6 +15,9 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
