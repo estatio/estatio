@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.invoice;
+package org.estatio.app.menus.invoice;
 
 import java.util.List;
 
@@ -30,6 +30,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceItemRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
