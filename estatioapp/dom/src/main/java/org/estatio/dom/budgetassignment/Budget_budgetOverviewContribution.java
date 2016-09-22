@@ -23,22 +23,16 @@ import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class BudgetAssignmentContributions {
+public class Budget_budgetOverviewContribution {
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.SAFE, publishing = Publishing.DISABLED)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Budget assignCalculations(final Budget budget) throws Exception {
-        budgetAssignmentService.assignBudgetCalculations(budget);
-        return budget;
+    public BudgetOverview budgetOverview(final Budget budget) {
+        final BudgetOverview budgetOverview = new BudgetOverview(budget);
+        serviceRegistry2.injectServicesInto(budgetOverview);
+        return budgetOverview.init();
     }
 
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.LAZILY)
-    public List<ServiceChargeItem> serviceChargeItems(final Occupancy occupancy){
-        return serviceChargeItemRepository.findByOccupancy(occupancy);
-    }
 
     @Inject
     private BudgetCalculationService budgetCalculationService;
