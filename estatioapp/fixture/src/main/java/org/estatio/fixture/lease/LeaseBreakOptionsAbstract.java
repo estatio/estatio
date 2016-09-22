@@ -28,7 +28,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakOptionContributions;
+import org.estatio.dom.lease.breaks.Lease_breakOptionContributions;
 import org.estatio.dom.lease.breaks.BreakType;
 
 public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
@@ -60,6 +60,6 @@ public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
     protected LeaseRepository leaseRepository;
 
     @Inject
-    protected BreakOptionContributions breakOptionContributions;
+    protected Lease_breakOptionContributions breakOptionContributions;
 
 }

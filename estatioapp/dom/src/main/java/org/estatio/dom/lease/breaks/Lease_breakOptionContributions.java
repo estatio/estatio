@@ -40,10 +40,10 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class BreakOptionContributions extends UdoDomainService<BreakOptionContributions> {
+public class Lease_breakOptionContributions extends UdoDomainService<Lease_breakOptionContributions> {
 
-    public BreakOptionContributions() {
-        super(BreakOptionContributions.class);
+    public Lease_breakOptionContributions() {
+        super(Lease_breakOptionContributions.class);
     }
 
     // //////////////////////////////////////
