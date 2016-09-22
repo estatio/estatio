@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.numerator;
+package org.estatio.app.menus.numerator;
 
 import java.util.List;
 
@@ -30,6 +30,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorRepository;
 
 @DomainService(menuOrder = "80", nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
