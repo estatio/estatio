@@ -706,6 +706,19 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-partyagreement</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-partyagreement</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
                 <version>1.7.0-SNAPSHOT</version>
             </dependency>
@@ -1095,6 +1108,7 @@ mvn clean install -DskipTests -o
                 <module>udo/event/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/settings/dom</module>
+                <module>udo/partyagreement/dom</module>
                 <module>incode/base/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
                 <module>isisaddons/isis-module-xdocreport/dom</module>
@@ -1122,6 +1136,7 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/link/dom</module>
+                <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/base/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
@@ -1149,6 +1164,7 @@ mvn clean install -DskipTests -o
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/link/dom</module>
+                <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/base/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
@@ -1180,6 +1196,7 @@ mvn clean install -DskipTests -o
                 <module>udo/numerator/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/link/dom</module>
+                <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/base/dom</module>
                 <module>isisaddons/isis-module-freemarker/dom</module>
