@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing;
+package org.estatio.app.menus.invoice;
 
 import org.joda.time.LocalDate;
 
@@ -18,6 +18,10 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRunMenu;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
 
 @DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(
