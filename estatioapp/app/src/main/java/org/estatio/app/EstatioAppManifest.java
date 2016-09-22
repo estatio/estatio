@@ -14,6 +14,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
 import org.incode.module.documents.dom.DocumentsModule;
 
 import org.estatio.dom.EstatioDomainModule;
@@ -44,6 +45,7 @@ public class EstatioAppManifest implements AppManifest {
 
                         CommunicationsModule.class,
                         DocumentsModule.class,
+                        StringInterpolatorDocRenderingModule.class,
 
                         // TODO: sort out packages for the 'fixture' module
                         EstatioFixtureModule.class,

@@ -6,11 +6,11 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Inject;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
@@ -28,18 +28,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.config.ConfigurationService;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class UrlDownloaderUsingNtlmCredentials implements UrlDownloaderService {
 
     public static final String PREFIX = "incode.module.docrendering.stringinterpolator.UrlDownloaderUsingNtlmCredentials.";
 
-    private String user;
-    private String password;
-    private String ntDomain;
-
-    private String host;
+    String host;
 
     String workstation;
 
@@ -47,27 +42,35 @@ public class UrlDownloaderUsingNtlmCredentials implements UrlDownloaderService {
     CredentialsProvider credsProvider;
 
     @PostConstruct
-    public void init() throws UnknownHostException {
+    public void init(Map<String,String> props) throws UnknownHostException {
 
-        final String fullyQualifiedUser = configurationService.getProperty(PREFIX + "user");
-        final List<String> userParts = Splitter.on(slash()).splitToList(fullyQualifiedUser);
-        this.ntDomain = userParts.get(0);
-        this.user = userParts.get(1);
+        String user = null;
+        String ntDomain = null;
 
-        password = configurationService.getProperty(PREFIX + "password");
-        host = configurationService.getProperty(PREFIX + "host");
+        final String userProp = PREFIX + "user";
+        final String fullyQualifiedUser = props.get(userProp);
+        if(fullyQualifiedUser != null) {
+            final List<String> userParts = Splitter.on(slash()).splitToList(fullyQualifiedUser);
+            ntDomain = userParts.get(0);
+            user = userParts.get(1);
+        }
 
-        workstation = InetAddress.getLocalHost().getHostName();
+        String password = props.get(PREFIX + "password");
+        host = props.get(PREFIX + "host");
 
-        // thread-safe according to HTTP Client
-        httpclient = HttpClientBuilder.create().build();
-        // implementations are required to be thread-safe, apparently
-        credsProvider = new BasicCredentialsProvider();
+        if( user != null && password != null && ntDomain != null && host != null) {
 
-        // immutable, so okay to reuse
-        final NTCredentials credentials = new NTCredentials(user, password, workstation, ntDomain);
+            workstation = InetAddress.getLocalHost().getHostName();
 
-        credsProvider.setCredentials(AuthScope.ANY, credentials);
+            // thread-safe according to HTTP Client
+            httpclient = HttpClientBuilder.create().build();
+            // implementations are required to be thread-safe, apparently
+            credsProvider = new BasicCredentialsProvider();
+
+            // immutable, so okay to reuse
+            final NTCredentials credentials = new NTCredentials(user, password, workstation, ntDomain);
+            credsProvider.setCredentials(AuthScope.ANY, credentials);
+        }
     }
 
     private static CharMatcher slash() {
@@ -90,12 +93,9 @@ public class UrlDownloaderUsingNtlmCredentials implements UrlDownloaderService {
 
     @Override
     public boolean canDownload(final URL url) {
-        return isConfigured() && Objects.equals(host, url.getHost());
+        return credsProvider != null && Objects.equals(host, url.getHost());
     }
 
-    private boolean isConfigured() {
-        return user != null && password != null && ntDomain != null && host != null;
-    }
 
     @Override
     public byte[] download(final URL url) throws IOException {
@@ -115,7 +115,4 @@ public class UrlDownloaderUsingNtlmCredentials implements UrlDownloaderService {
         }
     }
 
-
-    @Inject
-    ConfigurationService configurationService;
 }
