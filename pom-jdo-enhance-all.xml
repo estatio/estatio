@@ -81,6 +81,10 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>../../../github/estatio/estatio/udo/event/dom</module>
+                <module>../../../github/estatio/estatio/udo/partyagreement/dom</module>
+                <module>../../../github/estatio/estatio/udo/project/dom</module>
+                <module>../../../github/estatio/estatio/udo/index/dom</module>
                 <module>../../../github/estatio/estatio/udo/currency/dom</module>
                 <module>../../../github/estatio/estatio/udo/tax/dom</module>
                 <module>../../../github/estatio/estatio/udo/charge/dom</module>
