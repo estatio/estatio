@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -46,6 +47,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)
@@ -66,6 +68,32 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
         agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
     }
+
+    @Programmatic
+    public Lease newLease(
+            final ApplicationTenancy applicationTenancy,
+            final String reference,
+            final String name,
+            final LeaseType leaseType,
+            final LocalDate startDate,
+            final String duration,
+            final LocalDate endDate,
+            final Party landlord,
+            final Party tenant) {
+        LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
+        return newLease(applicationTenancy, reference.trim(), name.trim(), leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+    }
+    private static LocalDate calculateEndDate(
+            final LocalDate startDate, final LocalDate endDate, final String duration) {
+        if (duration != null) {
+            final Period p = JodaPeriodUtils.asPeriod(duration);
+            if (p != null) {
+                return startDate.plus(p).minusDays(1);
+            }
+        }
+        return endDate;
+    }
+
 
     @Programmatic
     public Lease newLease(
@@ -172,6 +200,5 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Inject
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
-
 
 }

@@ -78,9 +78,7 @@ public class LeaseMenu {
             final @Parameter(optionality = Optionality.OPTIONAL) Party tenant
             // CHECKSTYLE:ON
     ) {
-
-        LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
-        return leaseRepository.newLease(applicationTenancy, reference.trim(), name.trim(), leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+        return leaseRepository.newLease(applicationTenancy, reference, name, leaseType, startDate, duration, endDate, landlord, tenant);
     }
 
     public List<ApplicationTenancy> choices0NewLease() {
@@ -157,16 +155,6 @@ public class LeaseMenu {
         return null;
     }
 
-    private static LocalDate calculateEndDate(
-            final LocalDate startDate, final LocalDate endDate, final String duration) {
-        if (duration != null) {
-            final Period p = JodaPeriodUtils.asPeriod(duration);
-            if (p != null) {
-                return startDate.plus(p).minusDays(1);
-            }
-        }
-        return endDate;
-    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")

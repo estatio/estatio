@@ -35,7 +35,6 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
@@ -72,7 +71,7 @@ public abstract class LeaseAbstract extends FixtureScript {
 
         final LeaseType leaseType = leaseTypeRepository.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(
                 ApplicationTenancyConstants.GLOBAL_PATH));
-        Lease lease = leaseMenu.newLease(
+        Lease lease = leaseRepository.newLease(
                 unit.getApplicationTenancy(), reference,
                 name,
                 leaseType,
@@ -111,9 +110,6 @@ public abstract class LeaseAbstract extends FixtureScript {
 
     @Inject
     protected UnitRepository unitRepository;
-
-    @Inject
-    protected LeaseMenu leaseMenu;
 
     @Inject
     protected LeaseRepository leaseRepository;
