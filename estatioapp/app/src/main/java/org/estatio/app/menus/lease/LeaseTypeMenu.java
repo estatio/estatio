@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.lease;
+package org.estatio.app.menus.lease;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.RegexValidation;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.LeaseTypeRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
