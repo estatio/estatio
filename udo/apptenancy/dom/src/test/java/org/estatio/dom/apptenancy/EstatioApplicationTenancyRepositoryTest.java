@@ -15,8 +15,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.Country;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EstatioApplicationTenancyRepositoryTest {
@@ -115,12 +113,6 @@ public class EstatioApplicationTenancyRepositoryTest {
         applicationTenancy.setPath(path);
         applicationTenancy.setName(name);
         return applicationTenancy;
-    }
-
-    private static Country country(final String reference) {
-        Country country = new Country();
-        country.setReference(reference);
-        return country;
     }
 
 

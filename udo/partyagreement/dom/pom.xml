@@ -69,6 +69,17 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-apptenancy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-apptenancy</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
             <artifactId>udo-dom-numerator</artifactId>
         </dependency>
         <dependency>
