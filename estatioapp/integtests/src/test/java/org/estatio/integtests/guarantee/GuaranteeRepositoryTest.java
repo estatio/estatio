@@ -35,7 +35,7 @@ import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.guarantee.contributed.OnLease;
+import org.estatio.dom.guarantee.contributed.Lease_newGuaranteeContribution;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.party.Party;
@@ -71,7 +71,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
     GuaranteeRepository guaranteeRepository;
 
     @Inject
-    OnLease onLease;
+    Lease_newGuaranteeContribution leaseNewGuaranteeContribution;
 
     @Inject
     FinancialAccountRepository financialAccountRepository;
@@ -238,7 +238,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
             Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
-            List<Guarantee> results = onLease.guarantees(lease);
+            List<Guarantee> results = leaseNewGuaranteeContribution.guarantees(lease);
 
             // then
             assertThat(results.size()).isEqualTo(1);
