@@ -43,7 +43,6 @@ public class ApplicationSettingsSeedService extends UdoDomainService<Application
         super(ApplicationSettingsSeedService.class);
     }
 
-    @Programmatic
     @PostConstruct
     public void init(final Map<String,String> props) {
         super.init(props);

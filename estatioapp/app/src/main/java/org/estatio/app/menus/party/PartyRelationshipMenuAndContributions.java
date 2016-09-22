@@ -49,7 +49,7 @@ import org.estatio.dom.party.relationship.PartyRelationshipType;
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.4")
-public class PartyRelationshipMenu {
+public class PartyRelationshipMenuAndContributions {
 
 
 

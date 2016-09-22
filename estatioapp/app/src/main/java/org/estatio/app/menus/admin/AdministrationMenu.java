@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.admin;
+package org.estatio.app.menus.admin;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -40,15 +41,15 @@ import org.estatio.domsettings.ApplicationSettingForEstatio;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
-@DomainService()
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.TERTIARY,
         menuOrder = "10.1"
 )
-public class EstatioAdministrationService extends UdoDomainService<EstatioAdministrationService> {
+public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
 
-    public EstatioAdministrationService() {
-        super(EstatioAdministrationService.class);
+    public AdministrationMenu() {
+        super(AdministrationMenu.class);
     }
 
     //region > updateEpochDate (action)
@@ -68,6 +69,7 @@ public class EstatioAdministrationService extends UdoDomainService<EstatioAdmini
     }
     //endregion
 
+    
     //region > listAllSettings (action)
 
     @Action(

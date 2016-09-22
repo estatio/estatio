@@ -18,22 +18,23 @@
  */
 package org.estatio.app.services.dashboard;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.HomePage;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.dom.UdoDomainService;
 
-@DomainService(menuOrder = "90")
-@Hidden
+@DomainService(menuOrder = "90", nature = NatureOfService.DOMAIN)
 public class EstatioAppHomePageService extends UdoDomainService<EstatioAppHomePageService> {
 
     public EstatioAppHomePageService() {
         super(EstatioAppHomePageService.class);
     }
 
-    @ActionSemantics(Of.SAFE)
+
+    @Action(semantics = SemanticsOf.SAFE)
     @HomePage
     public EstatioAppHomePage lookup() {
         return new EstatioAppHomePage();
