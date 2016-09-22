@@ -47,7 +47,7 @@ public class NumeratorsTest {
 
     FinderInteraction finderInteraction;
 
-    Numerators numerators;
+    NumeratorRepository numeratorRepository;
 
     @Mock
     BookmarkService mockBookmarkService;
@@ -74,7 +74,7 @@ public class NumeratorsTest {
                 will(returnValue(propertyBookmark));
             }
         });
-        numerators = new Numerators() {
+        numeratorRepository = new NumeratorRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -94,7 +94,7 @@ public class NumeratorsTest {
                 return null;
             }
         };
-        numerators.bookmarkService = mockBookmarkService;
+        numeratorRepository.bookmarkService = mockBookmarkService;
     }
 
     public static class FindScopedNumerator extends NumeratorsTest {
@@ -104,7 +104,7 @@ public class NumeratorsTest {
         @Test
         public void findNumeratorByType() {
 
-            numerators.findScopedNumeratorIncludeWildCardMatching(INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, applicationTenancy);
+            numeratorRepository.findScopedNumeratorIncludeWildCardMatching(INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, applicationTenancy);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
             assertThat(finderInteraction.getResultType()).isEqualTo(Numerator.class);
@@ -121,7 +121,7 @@ public class NumeratorsTest {
         @Test
         public void allNumerators() {
 
-            numerators.allNumerators();
+            numeratorRepository.allNumerators();
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }

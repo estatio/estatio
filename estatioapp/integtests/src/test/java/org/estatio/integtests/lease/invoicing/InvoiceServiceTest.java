@@ -32,7 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.invoice.NumeratorMenu;
+import org.estatio.dom.invoice.NumeratorForCollectionMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.app.menus.invoice.InvoiceMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -86,7 +86,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     InvoiceMenu invoiceMenu;
 
     @Inject
-    NumeratorMenu estatioNumeratorRepository;
+    NumeratorForCollectionMenu estatioNumeratorRepository;
 
     @Inject
     IndexRepository indexRepository;

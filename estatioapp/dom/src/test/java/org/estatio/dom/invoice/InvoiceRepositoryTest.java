@@ -42,7 +42,7 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.numerator.NumeratorRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -53,7 +53,7 @@ public class InvoiceRepositoryTest {
     FinderInteraction finderInteraction;
 
     InvoiceRepository invoiceRepository;
-    NumeratorMenu estatioNumeratorRepository;
+    NumeratorForCollectionMenu estatioNumeratorRepository;
 
     Party seller;
     Party buyer;
@@ -98,7 +98,7 @@ public class InvoiceRepositoryTest {
             }
         };
 
-        estatioNumeratorRepository = new NumeratorMenu() {
+        estatioNumeratorRepository = new NumeratorForCollectionMenu() {
         };
     }
 
@@ -178,7 +178,7 @@ public class InvoiceRepositoryTest {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private Numerators mockNumerators;
+        private NumeratorRepository mockNumeratorRepository;
 
         @JUnitRuleMockery2.Ignoring
         @Mock
@@ -194,8 +194,8 @@ public class InvoiceRepositoryTest {
             lastIncrement = BigInteger.TEN;
 
             invoiceRepository = new InvoiceRepository();
-            estatioNumeratorRepository = new NumeratorMenu();
-            estatioNumeratorRepository.numerators = mockNumerators;
+            estatioNumeratorRepository = new NumeratorForCollectionMenu();
+            estatioNumeratorRepository.numeratorRepository = mockNumeratorRepository;
 
             applicationTenancy = new ApplicationTenancy();
             applicationTenancy.setPath("/");
@@ -205,7 +205,7 @@ public class InvoiceRepositoryTest {
         public void findCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
+                    oneOf(mockNumeratorRepository).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
                 }
             });
             estatioNumeratorRepository.findCollectionNumberNumerator();
@@ -215,7 +215,7 @@ public class InvoiceRepositoryTest {
         public void createCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement, applicationTenancy);
@@ -225,7 +225,7 @@ public class InvoiceRepositoryTest {
         public void findInvoiceNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, applicationTenancy);
@@ -239,7 +239,7 @@ public class InvoiceRepositoryTest {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumerators).createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorRepository).createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.createInvoiceNumberNumerator(mockProperty, format, lastIncrement, applicationTenancy);

@@ -9,8 +9,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
-
+import org.estatio.dom.numerator.NumeratorRepository;
 
 public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
 
@@ -23,12 +22,13 @@ public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
             Country country,
             ExecutionContext executionContext) {
 
-        Numerator numerator = numerators.createGlobalNumerator(name, format, BigInteger.ZERO,  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
+        Numerator numerator = numeratorRepository
+                .createGlobalNumerator(name, format, BigInteger.ZERO,  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
         return executionContext.addResult(this, numerator);
     }
 
     @Inject
-    protected Numerators numerators;
+    protected NumeratorRepository numeratorRepository;
 
     @Inject
     protected EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;

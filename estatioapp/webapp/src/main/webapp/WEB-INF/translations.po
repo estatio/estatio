@@ -359,7 +359,7 @@ msgstr ""
 
 
 #: org.estatio.dom.numerator.Numerators#allNumerators()
-msgid "All Numerators"
+msgid "All NumeratorMenu"
 msgstr ""
 
 

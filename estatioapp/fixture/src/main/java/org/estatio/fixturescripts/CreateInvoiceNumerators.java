@@ -32,7 +32,7 @@ import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.NumeratorMenu;
+import org.estatio.dom.invoice.NumeratorForCollectionMenu;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.numerator.Numerator;
 
@@ -57,7 +57,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    NumeratorMenu estatioNumeratorRepository;
+    NumeratorForCollectionMenu estatioNumeratorRepository;
 
     @Inject
     PropertyRepository propertyRepository;

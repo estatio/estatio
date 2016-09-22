@@ -22,39 +22,30 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.isis.applib.RecoverableException;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(menuOrder = "80", repositoryFor = Numerator.class)
-@DomainServiceLayout(
-        named = "Administration",
-        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
-        menuOrder = "120.1"
-)
-public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Numerator.class)
+public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator> {
 
-    public Numerators() {
-        super(Numerators.class, Numerator.class);
+    public NumeratorRepository() {
+        super(NumeratorRepository.class, Numerator.class);
     }
 
-    // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "1")
+
+    @Programmatic
     public List<Numerator> allNumerators() {
         return allInstances();
     }
 
-    // //////////////////////////////////////
+
 
     @Programmatic
     public Numerator findGlobalNumerator(
@@ -71,6 +62,7 @@ public class Numerators extends UdoDomainRepositoryAndFactory<Numerator> {
         Numerator result = findNumerator(numeratorName, scopedTo, applicationTenancy);
         return result == null ? findFirstNumeratorForObjectTypeMatchingAppTenancyPath(numeratorName, scopedTo, applicationTenancy) : result;
     }
+
 
     @Programmatic
     public Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {

@@ -34,7 +34,7 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.numerator.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Organisation.class)
 public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organisation> {
@@ -64,7 +64,8 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
 
     @Programmatic
     private String referenceByNumerator(final ApplicationTenancy applicationTenancy) {
-        return numerators.findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy).nextIncrementStr();
+        return numeratorRepository
+                .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy).nextIncrementStr();
     }
 
     @Programmatic
@@ -84,7 +85,8 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
             final ApplicationTenancy applicationTenancy
     ) {
         if (useNumereratorForReference) {
-            if (numerators.findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
+            if (numeratorRepository
+                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
                 return "No numerator found";
             }
             return null;
@@ -108,6 +110,6 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     private PartyRepository partyRepository;
 
     @Inject
-    private Numerators numerators;
+    private NumeratorRepository numeratorRepository;
 
 }

@@ -36,7 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.numerator.NumeratorRepository;
 import org.estatio.dom.party.PartyConstants;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
@@ -45,16 +45,17 @@ import org.estatio.dom.party.PartyConstants;
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "120.3"
 )
-public class NumeratorMenu extends UdoDomainRepositoryAndFactory<Numerator> {
+public class NumeratorForOrganisationMenu extends UdoDomainRepositoryAndFactory<Numerator> {
 
-    public NumeratorMenu() {
-        super(NumeratorMenu.class, Numerator.class);
+    public NumeratorForOrganisationMenu() {
+        super(NumeratorForOrganisationMenu.class, Numerator.class);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public Numerator findOrganisationReferenceNumerator(final ApplicationTenancy applicationTenancy) {
-        return numerators.findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
+        return numeratorRepository
+                .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
     }
 
     // //////////////////////////////////////
@@ -67,7 +68,8 @@ public class NumeratorMenu extends UdoDomainRepositoryAndFactory<Numerator> {
             final BigInteger lastValue,
             final ApplicationTenancy applicationTenancy) {
 
-        return numerators.createGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, format, lastValue, applicationTenancy);
+        return numeratorRepository
+                .createGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, format, lastValue, applicationTenancy);
     }
 
     public BigInteger default1CreateOrganisationReferenceNumerator() {
@@ -75,6 +77,6 @@ public class NumeratorMenu extends UdoDomainRepositoryAndFactory<Numerator> {
     }
 
     @Inject
-    private Numerators numerators;
+    private NumeratorRepository numeratorRepository;
 
 }

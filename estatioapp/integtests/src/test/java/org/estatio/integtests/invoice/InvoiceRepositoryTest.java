@@ -43,7 +43,7 @@ import org.estatio.app.services.invoice.InvoiceImportLine;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.NumeratorMenu;
+import org.estatio.dom.invoice.NumeratorForCollectionMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -52,7 +52,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.numerator.NumeratorRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -85,10 +85,10 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
     InvoiceRepository invoiceRepository;
 
     @Inject
-    NumeratorMenu estatioNumeratorRepository;
+    NumeratorForCollectionMenu estatioNumeratorRepository;
 
     @Inject
-    Numerators numerators;
+    NumeratorRepository numeratorRepository;
 
     @Inject
     PartyRepository partyRepository;
@@ -282,7 +282,7 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
             applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
             propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
-            numeratorForOxfUsingWildCard = numerators.createScopedNumerator(
+            numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
                     Constants.INVOICE_NUMBER_NUMERATOR_NAME,
                     propertyOxf,
                     propertyOxf.getReference().concat("-%04d"),

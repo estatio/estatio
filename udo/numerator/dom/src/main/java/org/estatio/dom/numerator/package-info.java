@@ -3,7 +3,7 @@
  * a sequence of unique identifiers.
  * 
  * <p>
- * Numerators can either be global, or can be scoped for any entity object.  
+ * NumeratorMenu can either be global, or can be scoped for any entity object.
  * 
  * <p>
  * Within Estatio, a global numerator is used to generate invoice collection numbers, while a scoped numerator, scoped
