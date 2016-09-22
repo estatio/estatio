@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.project.Program;
@@ -63,7 +63,7 @@ public abstract class ProgramAbstract extends FixtureScript {
   	protected PartyRepository partyRepository;
   
   @Inject
-  	protected PropertyMenu propertyMenu;
+  	protected PropertyRepository propertyRepository;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

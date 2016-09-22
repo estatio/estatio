@@ -36,7 +36,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -164,9 +163,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     @Inject
     PropertyRepository propertyRepository;
-
-    @Inject
-    PropertyMenu propertyMenu;
 
     @Inject
     PartyRepository partyRepository;

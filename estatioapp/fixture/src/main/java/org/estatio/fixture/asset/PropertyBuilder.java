@@ -29,7 +29,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.UnitMenu;
 import org.estatio.dom.asset.UnitType;
@@ -165,7 +165,8 @@ public class PropertyBuilder extends FixtureScript {
 
         final ApplicationTenancy countryApplicationTenancy = applicationTenancyRepository.findByPath("/" + getCountry().getReference());
 
-        this.property = propertyMenu.newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
+        this.property = propertyRepository
+                .newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
 
         if(getOwner() != null) {
             wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
@@ -195,7 +196,7 @@ public class PropertyBuilder extends FixtureScript {
     protected CountryRepository countryRepository;
 
     @Inject
-    protected PropertyMenu propertyMenu;
+    protected PropertyRepository propertyRepository;
 
     @Inject
     protected UnitMenu unitMenu;

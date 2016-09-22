@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -64,9 +63,6 @@ public abstract class BankAccountAbstract extends FixtureScript {
 
     @Inject
     PropertyRepository propertyRepository;
-
-    @Inject
-    private PropertyMenu propertyMenu;
 
     @Inject
     private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;

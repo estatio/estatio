@@ -37,7 +37,7 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PropertyMenuTest {
+public class PropertyMenu2Test {
 
     FinderInteraction finderInteraction;
     PropertyMenu propertyMenu;
@@ -67,7 +67,7 @@ public class PropertyMenuTest {
         propertyMenu.propertyRepository = propertyRepository;
     }
 
-    public static class FindPropertyMenu extends PropertyMenuTest {
+    public static class FindPropertyMenu extends PropertyMenu2Test {
 
         @Test
         public void happyCase() {
@@ -83,7 +83,7 @@ public class PropertyMenuTest {
 
     }
 
-    public static class FindPropertyByReference extends PropertyMenuTest {
+    public static class FindPropertyByReference extends PropertyMenu2Test {
 
         @Test
         public void happyCase() {
@@ -99,7 +99,7 @@ public class PropertyMenuTest {
 
     }
 
-    public static class AutoComplete extends PropertyMenuTest {
+    public static class AutoComplete extends PropertyMenu2Test {
 
         @Test
         public void happyCase() {
@@ -114,7 +114,7 @@ public class PropertyMenuTest {
         }
     }
 
-    public static class AllPropertyMenu extends PropertyMenuTest {
+    public static class AllPropertyMenu extends PropertyMenu2Test {
 
         @Test
         public void happyCase() {
@@ -126,7 +126,7 @@ public class PropertyMenuTest {
     }
 
 
-    public static class NewProperty extends PropertyMenuTest {
+    public static class NewProperty extends PropertyMenu2Test {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);

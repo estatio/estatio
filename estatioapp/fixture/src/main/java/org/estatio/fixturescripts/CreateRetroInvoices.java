@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -71,7 +71,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
         createProperties(
-                propertyMenu.allProperties(),
+                propertyRepository.allProperties(),
                 ObjectUtils.firstNonNull(startDate, EPOCH_START_DATE),
                 endDate,
                 executionContext);
@@ -83,7 +83,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final LocalDate endDueDate,
             final ExecutionContext executionContext) {
         createProperties(
-                propertyMenu.allProperties(),
+                propertyRepository.allProperties(),
                 startDueDate,
                 endDueDate,
                 executionContext);
@@ -163,7 +163,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
     public LeaseRepository leaseRepository;
 
     @Inject
-    public PropertyMenu propertyMenu;
+    public PropertyRepository propertyRepository;
 
     @Inject
     public InvoiceCalculationService invoiceCalculationService;

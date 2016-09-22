@@ -32,7 +32,7 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.geography.Country;
@@ -64,8 +64,7 @@ public abstract class PropertyAbstract extends FixtureScript {
             final String locationStr,
             final ExecutionContext fixtureResults) {
 
-        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
-        Property property = propertyMenu.newProperty(reference, name, type, city, country, acquireDate);
+        Property property = propertyRepository.newProperty(reference, name, type, city, country, acquireDate);
         property.setOpeningDate(openingDate);
         property.setLocation(Location.fromString(locationStr));
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
@@ -91,7 +90,7 @@ public abstract class PropertyAbstract extends FixtureScript {
     protected CountryRepository countryRepository;
 
     @Inject
-    protected PropertyMenu propertyMenu;
+    protected PropertyRepository propertyRepository;
 
     @Inject
     protected PartyRepository partyRepository;

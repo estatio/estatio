@@ -26,7 +26,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 
 public class InvoiceSummaryForPropertyDueDateStatusTest {
@@ -49,8 +48,6 @@ public class InvoiceSummaryForPropertyDueDateStatusTest {
 
         @Mock
         PropertyRepository mockPropertyRepository;
-        @Mock
-        private PropertyMenu mockPropertyMenu;
 
         private Property property;
 

@@ -31,7 +31,7 @@ import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.numerator.Numerator;
@@ -44,7 +44,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext fixtureResults) {
         final List<FixedAssetRoleType> roleTypes = Arrays.asList(FixedAssetRoleType.PROPERTY_OWNER, FixedAssetRoleType.TENANTS_ASSOCIATION);
-        for (Property property : propertyMenu.allProperties()) {
+        for (Property property : propertyRepository.allProperties()) {
             for (FixedAssetRole fixedAssetRole : fixedAssetRoleRepository.findAllForProperty(property)){
                 if (roleTypes.contains(fixedAssetRole.getType())) {
                     ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(property, fixedAssetRole.getParty());
@@ -60,7 +60,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     EstatioNumeratorRepository estatioNumeratorRepository;
 
     @Inject
-    PropertyMenu propertyMenu;
+    PropertyRepository propertyRepository;
 
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;

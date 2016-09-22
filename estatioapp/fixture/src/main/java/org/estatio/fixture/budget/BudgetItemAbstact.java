@@ -23,7 +23,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
@@ -51,6 +50,4 @@ public abstract class BudgetItemAbstact extends FixtureScript {
     @Inject
     protected BudgetItemRepository budgetItemRepository;
 
-    @Inject
-    protected PropertyMenu propertyMenu;
 }

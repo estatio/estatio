@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.PropertyMenu;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
@@ -70,7 +70,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
     InvoiceRepository invoiceRepository;
 
     @Inject
-    PropertyMenu propertyMenu;
+    PropertyRepository propertyRepository;
 
     @Inject
     LeaseMenu leaseMenu;
@@ -93,7 +93,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
         creator = new CreateRetroInvoices();
         creator.leaseMenu = leaseMenu;
         creator.invoiceRepository = invoiceRepository;
-        creator.propertyMenu = propertyMenu;
+        creator.propertyRepository = propertyRepository;
         creator.invoiceCalculationService = invoiceCalculationService;
 
         lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
