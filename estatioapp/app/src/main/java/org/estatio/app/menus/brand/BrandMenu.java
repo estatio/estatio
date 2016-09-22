@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.tags;
+package org.estatio.app.menus.brand;
 
 import java.util.List;
 
@@ -39,6 +39,9 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.BrandCoverage;
+import org.estatio.dom.lease.tags.BrandRepository;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
