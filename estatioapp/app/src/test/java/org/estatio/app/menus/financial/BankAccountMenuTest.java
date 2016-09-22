@@ -17,12 +17,11 @@
  *  under the License.
  */
 
-package org.estatio.dom.financial;
+package org.estatio.app.menus.financial;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.financial.bankaccount.BankAccountMenu;
 import org.estatio.dom.party.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;

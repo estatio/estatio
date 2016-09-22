@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial.bankaccount;
+package org.estatio.app.menus.financial;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
