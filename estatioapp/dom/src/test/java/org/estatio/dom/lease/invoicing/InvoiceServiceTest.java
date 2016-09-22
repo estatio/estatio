@@ -29,7 +29,7 @@ public class InvoiceServiceTest {
     @Test
     public void test() {
         // given
-        InvoiceService invoiceService = new InvoiceService();
+        InvoiceServiceMenuAndContributions invoiceService = new InvoiceServiceMenuAndContributions();
         Lease lease = new Lease();
 
         // when

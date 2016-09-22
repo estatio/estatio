@@ -133,7 +133,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class IconSubscriber extends AbstractSubscriber {
 
         public String getId() {
@@ -153,7 +153,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class CssClassSubscriber extends AbstractSubscriber {
 
         public String getId() {

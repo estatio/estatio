@@ -12,13 +12,15 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.dom.UdoDomainService;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.TERTIARY)
-public class EstatioUserProfileService extends UdoDomainService<EstatioUserProfileService> implements UserProfileService {
+public class EstatioUserProfileService extends UdoDomainService<EstatioUserProfileService>
+                implements UserProfileService {
 
     public EstatioUserProfileService() {
         super(EstatioUserProfileService.class);
     }
+
 
     @Programmatic
     @Override
@@ -31,6 +33,7 @@ public class EstatioUserProfileService extends UdoDomainService<EstatioUserProfi
             return String.format("%s", currentUser.getName());
         }
     }
+
 
     // //////////////////////////////////////
 

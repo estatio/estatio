@@ -690,7 +690,7 @@ public class Invoice
     }
 
     @javax.inject.Inject
-    EstatioNumeratorRepository estatioNumeratorRepository;
+    NumeratorMenu estatioNumeratorRepository;
 
     @javax.inject.Inject
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;

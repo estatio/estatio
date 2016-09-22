@@ -45,7 +45,7 @@ import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
  * {@link ApplicationSettingKey defaults for keys} have been installed if
  * required.
  */
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.DOMAIN)
 public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
 
     public EstatioSettingsService() {

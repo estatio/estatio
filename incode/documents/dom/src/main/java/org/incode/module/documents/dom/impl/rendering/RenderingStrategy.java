@@ -114,7 +114,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class TitleSubscriber extends AbstractSubscriber {
 
         public String getId() {
@@ -141,7 +141,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class IconSubscriber extends AbstractSubscriber {
 
         public String getId() {
@@ -161,7 +161,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class CssClassSubscriber extends AbstractSubscriber {
 
         public String getId() {

@@ -73,7 +73,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     private InvoiceCalculationService invoiceCalculationService;
 
     @Inject
-    private InvoiceService invoiceService;
+    private InvoiceServiceMenuAndContributions invoiceService;
 
     private Lease lease;
     private LeaseItem leaseTopModelRentItem;

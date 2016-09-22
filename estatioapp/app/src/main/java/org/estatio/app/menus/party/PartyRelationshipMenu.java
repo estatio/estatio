@@ -42,13 +42,18 @@ import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.relationship.PartyRelationshipRepository;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
 
+@DomainService(
+        nature = NatureOfService.VIEW
+)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "20.4")
-@DomainService(repositoryFor = PartyRelationship.class, nature = NatureOfService.VIEW)
 public class PartyRelationshipMenu {
 
+
+
+    // seemingly also contributed to Party...
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public PartyRelationship newRelationship(
@@ -79,8 +84,13 @@ public class PartyRelationshipMenu {
         return null;
     }
 
+
+
     // //////////////////////////////////////
 
+
+
+    // seemingly also contributed to Party...
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,

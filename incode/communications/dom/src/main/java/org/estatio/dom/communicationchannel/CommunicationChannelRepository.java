@@ -34,7 +34,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
-@DomainService(repositoryFor = CommunicationChannel.class, nature = NatureOfService.VIEW)
+@DomainService(repositoryFor = CommunicationChannel.class, nature = NatureOfService.DOMAIN)
 public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
     public String getId() {

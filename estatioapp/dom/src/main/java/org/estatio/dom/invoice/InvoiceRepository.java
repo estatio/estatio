@@ -23,30 +23,27 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.appsettings.EstatioSettingsService;
 
-@DomainService(nature = NatureOfService.VIEW, repositoryFor = Invoice.class)
-@DomainServiceLayout(
-        named = "Invoices",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "50.4")
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Invoice.class)
 public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
 
     public InvoiceRepository() {
         super(InvoiceRepository.class, Invoice.class);
     }
+
+
 
     @Programmatic
     public List<Invoice> findMatchingInvoices(

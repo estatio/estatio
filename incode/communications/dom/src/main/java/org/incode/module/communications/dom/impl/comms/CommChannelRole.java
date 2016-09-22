@@ -119,7 +119,7 @@ public class CommChannelRole implements Comparable<CommChannelRole> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class TitleSubscriber extends AbstractSubscriber {
         @EventHandler
         @Subscribe
@@ -141,7 +141,7 @@ public class CommChannelRole implements Comparable<CommChannelRole> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class IconSubscriber extends AbstractSubscriber {
         @EventHandler
         @Subscribe
@@ -156,7 +156,7 @@ public class CommChannelRole implements Comparable<CommChannelRole> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService(nature = NatureOfService.VIEW)
+    @DomainService(nature = NatureOfService.DOMAIN)
     public static class CssClassSubscriber extends AbstractSubscriber {
         @EventHandler
         @Subscribe

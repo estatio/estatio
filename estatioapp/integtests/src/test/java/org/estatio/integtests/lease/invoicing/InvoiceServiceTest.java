@@ -32,7 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.invoice.EstatioNumeratorRepository;
+import org.estatio.dom.invoice.NumeratorMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.app.menus.invoice.InvoiceMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -47,7 +47,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.dom.lease.invoicing.InvoiceServiceMenuAndContributions;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -77,7 +77,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    InvoiceService invoiceService;
+    InvoiceServiceMenuAndContributions invoiceService;
 
     @Inject
     InvoiceRepository invoiceRepository;
@@ -86,7 +86,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
     InvoiceMenu invoiceMenu;
 
     @Inject
-    EstatioNumeratorRepository estatioNumeratorRepository;
+    NumeratorMenu estatioNumeratorRepository;
 
     @Inject
     IndexRepository indexRepository;

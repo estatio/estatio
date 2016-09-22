@@ -43,7 +43,7 @@ import org.estatio.app.services.invoice.InvoiceImportLine;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.EstatioNumeratorRepository;
+import org.estatio.dom.invoice.NumeratorMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -85,7 +85,7 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
     InvoiceRepository invoiceRepository;
 
     @Inject
-    EstatioNumeratorRepository estatioNumeratorRepository;
+    NumeratorMenu estatioNumeratorRepository;
 
     @Inject
     Numerators numerators;

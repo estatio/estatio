@@ -36,9 +36,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRepository;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(menuOrder = "35", menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Projects")
 public class ProgramMenu {
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -58,15 +59,21 @@ public class ProgramMenu {
         return programRepository.default3NewProgram();
     }
 
+
+
     @Action(semantics = SemanticsOf.SAFE)
     public List<Program> allPrograms() {
         return programRepository.allPrograms();
     }
 
+
+
     @Action(semantics = SemanticsOf.SAFE)
     public List<Program> findProgram(@ParameterLayout(named = "Name or reference") final String searchStr) {
         return programRepository.findProgram(searchStr);
     }
+
+
 
     @Inject
     ProgramRepository programRepository;

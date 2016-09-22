@@ -35,8 +35,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.utils.StringUtils;
 
-@DomainServiceLayout(menuOrder = "35", menuBar = MenuBar.PRIMARY, named = "Projects")
-@DomainService(repositoryFor = Project.class, nature = NatureOfService.VIEW)
+@DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
 
     public ProjectRepository() {

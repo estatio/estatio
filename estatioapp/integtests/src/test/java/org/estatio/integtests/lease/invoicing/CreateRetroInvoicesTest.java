@@ -40,7 +40,7 @@ import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.dom.lease.invoicing.InvoiceServiceMenuAndContributions;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -78,7 +78,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
     InvoiceCalculationService invoiceCalculationService;
 
     @Inject
-    InvoiceService invoiceService;
+    InvoiceServiceMenuAndContributions invoiceService;
 
     CreateRetroInvoices creator;
 

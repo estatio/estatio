@@ -31,7 +31,7 @@ import org.estatio.dom.UdoDomainService;
 /**
  * Centralizes rules governing the moving of {@link org.isisaddons.module.security.dom.tenancy.ApplicationTenancy}.
  */
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.DOMAIN)
 public class ApplicationTenancyInvariantsService extends UdoDomainService<ApplicationTenancyInvariantsService> {
 
     // //////////////////////////////////////
@@ -44,7 +44,6 @@ public class ApplicationTenancyInvariantsService extends UdoDomainService<Applic
 
     // //////////////////////////////////////
 
-    @Programmatic
     @PostConstruct
     public void init(final Map<String, String> properties) {
         super.init(properties);

@@ -53,7 +53,7 @@ public class InvoiceRepositoryTest {
     FinderInteraction finderInteraction;
 
     InvoiceRepository invoiceRepository;
-    EstatioNumeratorRepository estatioNumeratorRepository;
+    NumeratorMenu estatioNumeratorRepository;
 
     Party seller;
     Party buyer;
@@ -98,7 +98,7 @@ public class InvoiceRepositoryTest {
             }
         };
 
-        estatioNumeratorRepository = new EstatioNumeratorRepository() {
+        estatioNumeratorRepository = new NumeratorMenu() {
         };
     }
 
@@ -194,7 +194,7 @@ public class InvoiceRepositoryTest {
             lastIncrement = BigInteger.TEN;
 
             invoiceRepository = new InvoiceRepository();
-            estatioNumeratorRepository = new EstatioNumeratorRepository();
+            estatioNumeratorRepository = new NumeratorMenu();
             estatioNumeratorRepository.numerators = mockNumerators;
 
             applicationTenancy = new ApplicationTenancy();

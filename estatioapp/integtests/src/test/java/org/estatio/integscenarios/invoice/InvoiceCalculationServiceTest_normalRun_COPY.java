@@ -46,7 +46,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.dom.lease.invoicing.InvoiceServiceMenuAndContributions;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
@@ -72,7 +72,7 @@ import static org.junit.Assert.assertThat;
 public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegrationTest {
 
     @Inject
-    private InvoiceService invoiceService;
+    private InvoiceServiceMenuAndContributions invoiceService;
 
     @Inject
     private LeaseMenu leaseMenu;

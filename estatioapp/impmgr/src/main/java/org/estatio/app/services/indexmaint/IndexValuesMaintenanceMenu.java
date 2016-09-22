@@ -40,17 +40,18 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named="Indices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.1"
 )
-public class IndexValueMaintService extends UdoDomainService<IndexValueMaintService> {
+public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMaintenanceMenu> {
 
-    public IndexValueMaintService() {
-        super(IndexValueMaintService.class);
+    public IndexValuesMaintenanceMenu() {
+        super(IndexValuesMaintenanceMenu.class);
     }
+
 
     // //////////////////////////////////////
 

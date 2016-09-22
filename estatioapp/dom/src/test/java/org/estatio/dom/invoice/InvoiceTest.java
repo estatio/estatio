@@ -60,7 +60,7 @@ public class InvoiceTest {
     InvoiceRepository mockInvoiceRepository;
 
     @Mock
-    EstatioNumeratorRepository mockEstatioNumeratorRepository;
+    NumeratorMenu mockEstatioNumeratorRepository;
 
     @Mock
     ClockService mockClockService;

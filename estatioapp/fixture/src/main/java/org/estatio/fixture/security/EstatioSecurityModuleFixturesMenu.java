@@ -40,13 +40,13 @@ import org.isisaddons.module.security.dom.role.ApplicationRole;
 /**
  * Enables fixtures to be installed from the application.
  */
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Prototyping",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "20.2"
 )
-public class EstatioSecurityModuleFixturesService {
+public class EstatioSecurityModuleFixturesMenu {
 
 
     @Action(
@@ -75,6 +75,7 @@ public class EstatioSecurityModuleFixturesService {
         return fixtureScripts.getFixtureScriptList();
     }
 
+
     // //////////////////////////////////////
 
     @Action(
@@ -96,7 +97,8 @@ public class EstatioSecurityModuleFixturesService {
         container.warnUser("No rules found in fixture; returning all results");
         return fixtureResultList;
     }
-    
+
+
     // //////////////////////////////////////
     
 

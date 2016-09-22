@@ -21,8 +21,6 @@ package org.estatio.dom.invoice;
 import java.math.BigInteger;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -32,21 +30,21 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
-import org.estatio.dom.appsettings.EstatioSettingsService;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Administration",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "120.2")
-public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumeratorRepository> {
+public class NumeratorMenu extends UdoDomainService<NumeratorMenu> {
 
-    public EstatioNumeratorRepository() {
-        super(EstatioNumeratorRepository.class);
+    public NumeratorMenu() {
+        super(NumeratorMenu.class);
     }
 
     // //////////////////////////////////////
@@ -60,7 +58,6 @@ public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumerato
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "2")
     public Numerator createCollectionNumberNumerator(
             final String format,
@@ -81,7 +78,6 @@ public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumerato
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "3")
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
@@ -92,7 +88,6 @@ public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumerato
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @MemberOrder(sequence = "4")
     public Numerator createInvoiceNumberNumerator(
             final Property property,
@@ -110,6 +105,7 @@ public class EstatioNumeratorRepository extends UdoDomainService<EstatioNumerato
     public BigInteger default2CreateInvoiceNumberNumerator() {
         return BigInteger.ZERO;
     }
+
 
     // //////////////////////////////////////
 

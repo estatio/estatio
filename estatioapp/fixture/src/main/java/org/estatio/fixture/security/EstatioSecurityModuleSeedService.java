@@ -27,12 +27,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
 /**
  * Installs security seed data on application startup.
  */
-@DomainService(nature = NatureOfService.VIEW)
-@Hidden
+@DomainService(nature = NatureOfService.DOMAIN)
 public class EstatioSecurityModuleSeedService {
 
     @PostConstruct
-    @Programmatic
     public void init() {
         fixtureScripts.runFixtureScript(new EstatioSecurityModuleSeedFixture(), null);
     }

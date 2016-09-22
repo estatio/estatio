@@ -54,12 +54,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
-@DomainService(menuOrder = "50", nature = NatureOfService.VIEW)
+@DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)
 public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculationService> {
 
     public InvoiceCalculationService() {
         super(InvoiceCalculationService.class);
     }
+
 
     /**
      * class to store the result a calculation

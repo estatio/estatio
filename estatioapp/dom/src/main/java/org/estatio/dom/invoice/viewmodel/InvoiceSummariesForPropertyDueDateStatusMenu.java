@@ -35,21 +35,21 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.invoice.InvoiceStatus;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named="Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.3"
 )
 @DomainObject(editing = Editing.DISABLED)
-public class InvoiceSummariesForPropertyDueDateStatus
+public class InvoiceSummariesForPropertyDueDateStatusMenu
         extends UdoDomainRepositoryAndFactory<InvoiceSummaryForPropertyDueDateStatus> {
 
-    public InvoiceSummariesForPropertyDueDateStatus() {
-        super(InvoiceSummariesForPropertyDueDateStatus.class, InvoiceSummaryForPropertyDueDateStatus.class);
+    public InvoiceSummariesForPropertyDueDateStatusMenu() {
+        super(InvoiceSummariesForPropertyDueDateStatusMenu.class, InvoiceSummaryForPropertyDueDateStatus.class);
     }
 
-    // //////////////////////////////////////
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
@@ -57,11 +57,13 @@ public class InvoiceSummariesForPropertyDueDateStatus
         return findInvoicesByStatus(InvoiceStatus.NEW);
     }
 
+
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<InvoiceSummaryForPropertyDueDateStatus> allApprovedInvoices() {
         return findInvoicesByStatus(InvoiceStatus.APPROVED);
     }
+
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
@@ -69,7 +71,7 @@ public class InvoiceSummariesForPropertyDueDateStatus
         return allInstances();
     }
     
-    // //////////////////////////////////////
+
 
     @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatus(
@@ -77,4 +79,5 @@ public class InvoiceSummariesForPropertyDueDateStatus
         return allMatches("findByStatus",
                 "status", status);
     }
+
 }

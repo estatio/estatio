@@ -38,7 +38,7 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(
-    nature = NatureOfService.VIEW
+    nature = NatureOfService.VIEW_MENU_ONLY
 )
 @DomainServiceLayout(
         named = "Accounts",
@@ -51,16 +51,24 @@ public class BankMandateMenu extends UdoDomainService<BankMandateMenu> {
         super(BankMandateMenu.class);
     }
 
+
+
+    @Action(semantics = SemanticsOf.SAFE)
     public List<Agreement> findBankMandates(final String search){
         return agreementRepository.findByTypeTitleAndReferenceOrName(
                 BankMandateConstants.AT_MANDATE,
                 StringUtils.wildcardToCaseInsensitiveRegex(search));
     }
 
+
+
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<BankMandate> allBankMandates() {
         return bankMandateRepository.allBankMandates();
     }
+
+
+
 
     @Inject
     protected BankMandateRepository bankMandateRepository;

@@ -31,20 +31,21 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named="Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.1"
 )
 @DomainObject(editing = Editing.DISABLED)
-public class InvoiceSummariesForInvoiceRun extends UdoDomainRepositoryAndFactory<InvoiceSummaryForInvoiceRun> {
+public class InvoiceSummariesForInvoiceRunMenu extends UdoDomainRepositoryAndFactory<InvoiceSummaryForInvoiceRun> {
 
-    public InvoiceSummariesForInvoiceRun() {
-        super(InvoiceSummariesForInvoiceRun.class, InvoiceSummaryForInvoiceRun.class);
+    public InvoiceSummariesForInvoiceRunMenu() {
+        super(InvoiceSummariesForInvoiceRunMenu.class, InvoiceSummaryForInvoiceRun.class);
     }
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
@@ -52,7 +53,9 @@ public class InvoiceSummariesForInvoiceRun extends UdoDomainRepositoryAndFactory
         return allInstances();
     }
 
-    // //////////////////////////////////////
+
+
+
 
     @Programmatic
     public InvoiceSummaryForInvoiceRun findByRunId(
@@ -60,5 +63,6 @@ public class InvoiceSummariesForInvoiceRun extends UdoDomainRepositoryAndFactory
         return firstMatch("findByRunId",
                 "runId", runId);
     }
+
 
 }

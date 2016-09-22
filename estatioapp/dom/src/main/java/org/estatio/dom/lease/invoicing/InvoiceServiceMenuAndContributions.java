@@ -14,7 +14,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRunMenu;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
@@ -24,15 +24,16 @@ import org.estatio.dom.lease.LeaseRepository;
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.5")
-public class InvoiceService extends UdoDomainService<InvoiceService> {
+public class InvoiceServiceMenuAndContributions extends UdoDomainService<InvoiceServiceMenuAndContributions> {
 
-    public InvoiceService() {
-        super(InvoiceService.class);
+    public InvoiceServiceMenuAndContributions() {
+        super(InvoiceServiceMenuAndContributions.class);
     }
+
 
     /**
      * Returns the
-     * {@link org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun
+     * {@link InvoiceSummariesForInvoiceRunMenu
      * invoice summaries} that are newly calculated for all
      * of the {@link Lease}s matched by the provided <tt>property</tt> and the
      * other
@@ -207,7 +208,7 @@ public class InvoiceService extends UdoDomainService<InvoiceService> {
     private InvoiceCalculationService invoiceCalculationService;
 
     @javax.inject.Inject
-    private InvoiceSummariesForInvoiceRun invoiceSummaries;
+    private InvoiceSummariesForInvoiceRunMenu invoiceSummaries;
 
 
 
