@@ -48,7 +48,7 @@ public class FixedAssetRegistrationContributionsTest {
         private FixedAsset subject;
         private FixedAssetRegistrationType registrationType;
 
-        private FixedAssetRegistrationContributions target;
+        private FixedAsset_registrationContributions target;
 
         public static class FoobarAssetRegistration extends FixedAssetRegistration {
 
@@ -90,7 +90,7 @@ public class FixedAssetRegistrationContributionsTest {
             registrationType = new FixedAssetRegistrationType();
             registrationType.setFullyQualifiedClassName(FoobarAssetRegistration.class.getName());
 
-            target = new FixedAssetRegistrationContributions();
+            target = new FixedAsset_registrationContributions();
             target.fixedAssetRegistrationRepository = mockFixedAssetRegistrationRepository;
             target.setContainer(mockContainer);
         }

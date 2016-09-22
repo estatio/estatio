@@ -37,10 +37,10 @@ import org.estatio.dom.asset.FixedAsset;
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,
         menuOrder = "10"
 )
-public class FixedAssetRegistrationContributions extends UdoDomainService<FixedAssetRegistrationContributions> {
+public class FixedAsset_registrationContributions extends UdoDomainService<FixedAsset_registrationContributions> {
 
-    public FixedAssetRegistrationContributions() {
-        super(FixedAssetRegistrationContributions.class);
+    public FixedAsset_registrationContributions() {
+        super(FixedAsset_registrationContributions.class);
     }
 
     @Action(
