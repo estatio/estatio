@@ -19,7 +19,6 @@
 package org.estatio.dom.project;
 
 import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,27 +26,19 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class ProgramRoleContributions {
+public class ProgramRoleContributionsForParty {
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<ProgramRole> roles(final Program program) {
-        return programRoleRepository.findByProgram(program);
-    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
