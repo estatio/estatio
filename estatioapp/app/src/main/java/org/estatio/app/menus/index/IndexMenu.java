@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.index;
+package org.estatio.app.menus.index;
 
 import java.util.List;
 
@@ -35,6 +35,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.IndexRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(named = "Indices", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "60.2")

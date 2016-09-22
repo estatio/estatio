@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.project;
+package org.estatio.app.menus.project;
 
 import java.util.List;
 
@@ -32,6 +32,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.project.Program;
+import org.estatio.dom.project.ProgramRepository;
 
 @DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(menuOrder = "35", menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Projects")
