@@ -8,7 +8,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.lease.tags.BrandMenu;
+import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.geography.CountriesRefData;
 
@@ -20,7 +20,7 @@ public class BrandsFixture extends FixtureScript {
     public static final String HAPPY_VALLEY = "Happy Valley";
 
     @Inject
-    BrandMenu brandMenu;
+    BrandRepository brandRepository;
 
     @Inject
     CountryRepository countryRepository;
@@ -32,9 +32,9 @@ public class BrandsFixture extends FixtureScript {
 
         executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-        brandMenu.newBrand(YU_S_NOODLE_JOINT, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), YU_GROUP, applicationTenancyRepository.findByPath("/"));
-        brandMenu.newBrand(YU_S_CLEANING_SERVICES, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), YU_GROUP, applicationTenancyRepository.findByPath("/"));
-        brandMenu.newBrand(HAPPY_VALLEY, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), null, applicationTenancyRepository.findByPath("/"));
+        brandRepository.newBrand(YU_S_NOODLE_JOINT, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), YU_GROUP, applicationTenancyRepository.findByPath("/"));
+        brandRepository.newBrand(YU_S_CLEANING_SERVICES, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), YU_GROUP, applicationTenancyRepository.findByPath("/"));
+        brandRepository.newBrand(HAPPY_VALLEY, BrandCoverage.INTERNATIONAL, countryRepository.findCountry(CountriesRefData.NLD), null, applicationTenancyRepository.findByPath("/"));
 
     }
 }
