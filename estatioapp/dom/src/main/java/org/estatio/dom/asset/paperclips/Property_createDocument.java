@@ -17,11 +17,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.dom.asset.paperclips;
 
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.documents.dom.mixins.T_createDocument;
+
+import org.estatio.dom.asset.Property;
 
 @Mixin
 public class Property_createDocument extends T_createDocument<Property> {
