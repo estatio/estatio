@@ -478,7 +478,7 @@ public class Invoice
     }
 
     private Numerator collectionNumerator() {
-        return estatioNumeratorRepository.findCollectionNumberNumerator();
+        return numeratorRepository.findCollectionNumberNumerator();
     }
 
     @Programmatic
@@ -494,7 +494,8 @@ public class Invoice
             return this; // Safeguard to do nothing when called without a wrapper.
         }
 
-        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
+        final Numerator numerator = numeratorRepository
+                .findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         setInvoiceNumber(numerator.nextIncrementStr());
         setInvoiceDate(invoiceDate);
         this.setStatus(InvoiceStatus.INVOICED);
@@ -506,7 +507,8 @@ public class Invoice
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
-        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
+        final Numerator numerator = numeratorRepository
+                .findInvoiceNumberNumerator(getFixedAsset(), getApplicationTenancy());
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
@@ -528,7 +530,7 @@ public class Invoice
             return "Due date cannot be before invoice date";
         }
         final ApplicationTenancy applicationTenancy = getApplicationTenancy();
-        final Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), applicationTenancy);
+        final Numerator numerator = numeratorRepository.findInvoiceNumberNumerator(getFixedAsset(), applicationTenancy);
         if (numerator != null) {
             final String invoiceNumber = numerator.lastIncrementStr();
             if (invoiceNumber != null) {
@@ -690,7 +692,7 @@ public class Invoice
     }
 
     @javax.inject.Inject
-    NumeratorForCollectionMenu estatioNumeratorRepository;
+    NumeratorForCollectionRepository numeratorRepository;
 
     @javax.inject.Inject
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;

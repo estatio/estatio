@@ -34,7 +34,6 @@ import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -47,15 +46,16 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
         super(NumeratorForCollectionMenu.class);
     }
 
-    // //////////////////////////////////////
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public Numerator findCollectionNumberNumerator() {
-        return numeratorRepository.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
+        return numeratorRepository.findCollectionNumberNumerator();
     }
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "2")
@@ -63,9 +63,7 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
             final String format,
             final BigInteger lastValue,
             final ApplicationTenancy applicationTenancy) {
-
-        return numeratorRepository
-                .createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastValue, applicationTenancy);
+        return numeratorRepository.createCollectionNumberNumerator(format, lastValue, applicationTenancy);
     }
 
     public String default0CreateCollectionNumberNumerator() {
@@ -76,18 +74,19 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
         return BigInteger.ZERO;
     }
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
             final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository
-                .findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset, applicationTenancy);
+        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, applicationTenancy);
     }
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "4")
@@ -96,8 +95,7 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
             final String format,
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.createScopedNumerator(
-                Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement, applicationTenancy);
+        return numeratorRepository.createInvoiceNumberNumerator(property, format, lastIncrement, applicationTenancy);
     }
 
     public String default1CreateInvoiceNumberNumerator() {
@@ -109,10 +107,11 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
     }
 
 
-    // //////////////////////////////////////
+
+
 
     @javax.inject.Inject
-    NumeratorRepository numeratorRepository;
+    NumeratorForCollectionRepository numeratorRepository;
 
     @javax.inject.Inject
     EstatioSettingsService settings;

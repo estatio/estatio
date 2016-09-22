@@ -53,7 +53,7 @@ public class InvoiceRepositoryTest {
     FinderInteraction finderInteraction;
 
     InvoiceRepository invoiceRepository;
-    NumeratorForCollectionMenu estatioNumeratorRepository;
+    NumeratorForCollectionRepository estatioNumeratorRepository;
 
     Party seller;
     Party buyer;
@@ -98,8 +98,7 @@ public class InvoiceRepositoryTest {
             }
         };
 
-        estatioNumeratorRepository = new NumeratorForCollectionMenu() {
-        };
+        estatioNumeratorRepository = new NumeratorForCollectionRepository();
     }
 
     public static class FindMatchingInvoices extends InvoiceRepositoryTest {
@@ -194,7 +193,7 @@ public class InvoiceRepositoryTest {
             lastIncrement = BigInteger.TEN;
 
             invoiceRepository = new InvoiceRepository();
-            estatioNumeratorRepository = new NumeratorForCollectionMenu();
+            estatioNumeratorRepository = new NumeratorForCollectionRepository();
             estatioNumeratorRepository.numeratorRepository = mockNumeratorRepository;
 
             applicationTenancy = new ApplicationTenancy();

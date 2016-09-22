@@ -60,7 +60,7 @@ public class InvoiceTest {
     InvoiceRepository mockInvoiceRepository;
 
     @Mock
-    NumeratorForCollectionMenu mockEstatioNumeratorRepository;
+    NumeratorForCollectionRepository mockEstatioNumeratorRepository;
 
     @Mock
     ClockService mockClockService;
@@ -149,7 +149,7 @@ public class InvoiceTest {
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
         invoice.invoiceRepository = mockInvoiceRepository;
-        invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
+        invoice.numeratorRepository = mockEstatioNumeratorRepository;
         invoice.clockService = mockClockService;
         return invoice;
     }
@@ -228,7 +228,7 @@ public class InvoiceTest {
             };
             invoice.setContainer(mockContainer);
             invoice.invoiceRepository = mockInvoiceRepository;
-            invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
+            invoice.numeratorRepository = mockEstatioNumeratorRepository;
             return invoice;
         }
 
@@ -373,7 +373,7 @@ public class InvoiceTest {
             };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
             invoice.invoiceRepository = mockInvoiceRepository;
-            invoice.estatioNumeratorRepository = mockEstatioNumeratorRepository;
+            invoice.numeratorRepository = mockEstatioNumeratorRepository;
             invoice.setFixedAsset(invoiceProperty);
 
             numerator = new Numerator();
