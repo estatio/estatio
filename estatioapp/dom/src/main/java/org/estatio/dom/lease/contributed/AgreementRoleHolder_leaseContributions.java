@@ -28,9 +28,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.WithInterval;
@@ -53,10 +50,10 @@ import org.estatio.dom.lease.LeaseConstants;
  * from {@link Lease} to {@link AgreementRole} to {@link org.estatio.dom.party.Party}. 
  */
 @DomainService(menuOrder = "40", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class LeaseContributions extends UdoDomainService<LeaseContributions> {
+public class AgreementRoleHolder_leaseContributions extends UdoDomainService<AgreementRoleHolder_leaseContributions> {
 
-    public LeaseContributions() {
-        super(LeaseContributions.class);
+    public AgreementRoleHolder_leaseContributions() {
+        super(AgreementRoleHolder_leaseContributions.class);
     }
 
     /**
