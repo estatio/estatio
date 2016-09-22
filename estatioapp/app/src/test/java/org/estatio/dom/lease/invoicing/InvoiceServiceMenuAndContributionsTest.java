@@ -24,7 +24,7 @@ import org.estatio.dom.lease.Lease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceServiceTest {
+public class InvoiceServiceMenuAndContributionsTest {
 
     @Test
     public void test() {
