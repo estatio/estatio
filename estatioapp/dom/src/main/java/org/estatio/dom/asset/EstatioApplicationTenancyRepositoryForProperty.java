@@ -1,4 +1,4 @@
-package org.estatio.dom.apptenancy;
+package org.estatio.dom.asset;
 
 import java.util.List;
 
@@ -10,13 +10,14 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
@@ -26,7 +27,8 @@ import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 public class EstatioApplicationTenancyRepositoryForProperty {
 
 
-    protected String pathFor(final Property property) {
+    @Programmatic
+    public String pathFor(final Property property) {
         return estatioApplicationTenancyRepositoryForCountry.pathFor(property.getCountry()).concat(String.format("/%s", property.getReference()));
     }
 
@@ -122,8 +124,20 @@ public class EstatioApplicationTenancyRepositoryForProperty {
     @Inject
     ApplicationTenancyRepository applicationTenancies;
 
+    /**
+     * for testing
+     */
+    public void setApplicationTenancies(final ApplicationTenancyRepository applicationTenancies) {
+        this.applicationTenancies = applicationTenancies;
+    }
+
     @Inject
     EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepositoryForCountry;
 
-
+    /**
+     * for testing
+     */
+    public void setEstatioApplicationTenancyRepositoryForCountry(final EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepositoryForCountry) {
+        this.estatioApplicationTenancyRepositoryForCountry = estatioApplicationTenancyRepositoryForCountry;
+    }
 }

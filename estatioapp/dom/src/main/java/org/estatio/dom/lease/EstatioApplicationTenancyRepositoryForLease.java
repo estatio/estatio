@@ -1,4 +1,4 @@
-package org.estatio.dom.apptenancy;
+package org.estatio.dom.lease;
 
 import javax.inject.Inject;
 
@@ -8,14 +8,23 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class EstatioApplicationTenancyRepositoryForPartyProperty {
+public class EstatioApplicationTenancyRepositoryForLease {
 
+
+    public ApplicationTenancy findOrCreateTenancyFor(final Lease lease) {
+        return estatioApplicationTenancyRepositoryForProperty.findOrCreateTenancyFor(lease.getProperty());
+    }
+
+    public ApplicationTenancy findOrCreateTenancyFor(final LeaseItem leaseItem) {
+        return findOrCreateTenancyFor(leaseItem.getLease().getProperty(), leaseItem.getLease().getPrimaryParty());
+    }
 
     public ApplicationTenancy findOrCreateTenancyFor(final Property property, final Party party) {
         ApplicationTenancy propertyPartyTenancy = applicationTenancies.findByPath(pathFor(property, party));
@@ -34,12 +43,12 @@ public class EstatioApplicationTenancyRepositoryForPartyProperty {
 
 
 
+    @Inject
+    ApplicationTenancyRepository applicationTenancies;
 
     @Inject
     EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepositoryForProperty;
 
-    @Inject
-    ApplicationTenancyRepository applicationTenancies;
 
 
 }

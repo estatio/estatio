@@ -36,7 +36,6 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForPartyProperty;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.PaymentMethod;
 
@@ -139,6 +138,6 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
     // //////////////////////////////////////
 
     @Inject
-    EstatioApplicationTenancyRepositoryForPartyProperty estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
 
 }

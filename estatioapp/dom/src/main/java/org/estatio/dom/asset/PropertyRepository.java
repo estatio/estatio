@@ -32,7 +32,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.utils.StringUtils;

@@ -45,7 +45,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
 import org.estatio.dom.lease.tags.Brand;

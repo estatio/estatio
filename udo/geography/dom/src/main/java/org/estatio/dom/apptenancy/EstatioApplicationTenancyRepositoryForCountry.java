@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -91,7 +92,8 @@ public class EstatioApplicationTenancyRepositoryForCountry {
         return applicationTenancies.allTenancies();
     }
 
-    protected String pathFor(final Country country) {
+    @Programmatic
+    public String pathFor(final Country country) {
         return String.format("/%s", country.getReference());
     }
 
@@ -128,6 +130,13 @@ public class EstatioApplicationTenancyRepositoryForCountry {
 
     @Inject
     ApplicationTenancyRepository applicationTenancies;
+
+    /**
+     * For testing
+     */
+    public void setApplicationTenancies(final ApplicationTenancyRepository applicationTenancies) {
+        this.applicationTenancies = applicationTenancies;
+    }
 
     @Inject
     private MeService meService;

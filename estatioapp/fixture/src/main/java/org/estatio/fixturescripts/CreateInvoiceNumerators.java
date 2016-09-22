@@ -27,13 +27,13 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForPartyProperty;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyMenu;
 import org.estatio.dom.invoice.EstatioNumeratorRepository;
+import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.numerator.Numerator;
 
 import static org.estatio.integtests.VT.bi;
@@ -66,5 +66,5 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject
-    EstatioApplicationTenancyRepositoryForPartyProperty estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
 }
