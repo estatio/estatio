@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.registration;
+package org.estatio.app.menus.assetregistration;
 
 import java.util.List;
 
@@ -31,6 +31,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY
