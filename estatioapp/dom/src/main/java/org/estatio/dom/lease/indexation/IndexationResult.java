@@ -2,6 +2,8 @@ package org.estatio.dom.lease.indexation;
 
 import java.math.BigDecimal;
 
+import org.estatio.dom.index.Indexable;
+
 /**
  * Created by jvanderwal on 01/03/16.
  */

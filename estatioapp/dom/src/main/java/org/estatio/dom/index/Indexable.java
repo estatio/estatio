@@ -1,11 +1,10 @@
-package org.estatio.dom.lease.indexation;
+package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
 
 public interface Indexable {
 
@@ -47,7 +46,7 @@ public interface Indexable {
 
     void setIndexedValue(BigDecimal indexedValue);
 
-    LeaseTermFrequency getFrequency();
+//    LeaseTermFrequency getFrequency();
 
     LocalDate getEffectiveDate();
 

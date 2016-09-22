@@ -667,6 +667,19 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-index</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-index</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-project</artifactId>
                 <version>1.7.0-SNAPSHOT</version>
             </dependency>
@@ -1133,6 +1146,7 @@ mvn clean install -DskipTests -o
                 <module>udo/numerator/dom</module>
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
+                <module>udo/index/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/project/dom</module>
                 <module>udo/settings/dom</module>
@@ -1164,6 +1178,7 @@ mvn clean install -DskipTests -o
                 <module>udo/numerator/dom</module>
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
+                <module>udo/index/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/project/dom</module>
                 <module>udo/partyagreement/dom</module>
@@ -1194,6 +1209,7 @@ mvn clean install -DskipTests -o
                 <module>udo/numerator/dom</module>
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
+                <module>udo/index/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/project/dom</module>
                 <module>udo/partyagreement/dom</module>
@@ -1228,6 +1244,7 @@ mvn clean install -DskipTests -o
                 <module>udo/geography/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/event/dom</module>
+                <module>udo/index/dom</module>
                 <module>udo/link/dom</module>
                 <module>udo/project/dom</module>
                 <module>udo/partyagreement/dom</module>

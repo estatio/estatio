@@ -2,6 +2,8 @@ package org.estatio.dom.lease.indexation;
 
 import java.math.BigDecimal;
 
+import org.estatio.dom.index.Indexable;
+import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.utils.MathUtils;
 
@@ -33,7 +35,7 @@ public enum IndexationMethod {
         return indexationCalculationMethod;
     }
 
-    public void doInitialize(Indexable term, Indexable previous) {
+    public void doInitialize(LeaseTermForIndexable term, Indexable previous) {
         if (previous != null) {
             LeaseTermFrequency frequency = term.getFrequency();
             if (fixedBase) {

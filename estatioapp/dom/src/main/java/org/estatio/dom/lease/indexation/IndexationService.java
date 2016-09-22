@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.index.Index;
+import org.estatio.dom.index.Indexable;
 
 @DomainService(menuOrder = "60")
 public class IndexationService extends UdoDomainService<IndexationService> {

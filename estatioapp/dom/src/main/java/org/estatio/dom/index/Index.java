@@ -61,7 +61,6 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.index.api.IndexBaseCreator;
 import org.estatio.dom.index.api.IndexValueCreator;
-import org.estatio.dom.lease.indexation.Indexable;
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;

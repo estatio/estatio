@@ -20,8 +20,6 @@ package org.estatio.dom.index;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -31,10 +29,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.index.api.IndexCreator;
 import org.estatio.dom.index.api.IndexFinder;
 
@@ -56,13 +52,6 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implem
         return index;
     }
 
-    public List<ApplicationTenancy> choices2NewIndex() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
-    }
-
-    public ApplicationTenancy default2NewIndex() {
-        return Dflt.of(choices2NewIndex());
-    }
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Index> all() {
@@ -88,6 +77,4 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implem
         return index;
     }
 
-    @Inject
-    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 }
