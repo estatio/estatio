@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.keytable;
+package org.estatio.app.menus.budget;
 
 import java.util.List;
 
@@ -12,6 +12,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 
 /**
  * Created by jodo on 14/09/15.
