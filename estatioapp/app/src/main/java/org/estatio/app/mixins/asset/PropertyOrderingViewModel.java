@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.ordering;
+package org.estatio.app.mixins.asset;
 
 import java.util.Collections;
 import java.util.List;
