@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -36,7 +37,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
-@DomainService(repositoryFor = Invoice.class)
+@DomainService(nature = NatureOfService.VIEW, repositoryFor = Invoice.class)
 @DomainServiceLayout(
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

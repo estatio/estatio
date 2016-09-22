@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -18,7 +19,7 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 
-@DomainService
+@DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

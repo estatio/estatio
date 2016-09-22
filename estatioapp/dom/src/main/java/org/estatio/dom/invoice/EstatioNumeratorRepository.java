@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -37,7 +38,7 @@ import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
-@DomainService
+@DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(
         named = "Administration",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,

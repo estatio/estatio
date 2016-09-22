@@ -25,12 +25,13 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService
+@DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(
         named="Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
