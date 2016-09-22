@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.financial;
+package org.estatio.app.menus.financial;
 
 import java.util.List;
 
@@ -31,6 +31,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
