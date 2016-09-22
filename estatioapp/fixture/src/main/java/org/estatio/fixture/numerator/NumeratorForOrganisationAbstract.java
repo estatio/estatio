@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
@@ -31,6 +31,6 @@ public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
     protected Numerators numerators;
 
     @Inject
-    protected EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    protected EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }

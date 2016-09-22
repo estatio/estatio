@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
 
@@ -135,6 +135,6 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }

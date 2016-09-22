@@ -19,7 +19,7 @@ import org.estatio.dom.geography.Country;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EstatioApplicationTenancyRepositoryTest {
+public class EstatioApplicationTenancyRepositoryForCountryTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -43,7 +43,7 @@ public class EstatioApplicationTenancyRepositoryTest {
     private ApplicationTenancy grandeDefault;
     private ApplicationTenancy grandeTa;
 
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -70,7 +70,7 @@ public class EstatioApplicationTenancyRepositoryTest {
             will(returnValue(grandeTa));
         }});
 
-        estatioApplicationTenancyRepository = new EstatioApplicationTenancyRepository();
+        estatioApplicationTenancyRepository = new EstatioApplicationTenancyRepositoryForCountry();
         estatioApplicationTenancyRepository.applicationTenancies = mockApplicationTenancies;
     }
 
@@ -125,29 +125,116 @@ public class EstatioApplicationTenancyRepositoryTest {
 
 
     @Test
-    public void testChildrenOf() throws Exception {
+    public void testFindOrCreateCountryTenancy_whenExists() throws Exception {
+        // given
+        Country country = new Country();
+        country.setReference("ITA");
+
+        // when
+        ApplicationTenancy countryTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+
+        // then
+        assertThat(countryTenancy).isEqualTo(italy);
+    }
+
+    @Test
+    public void testFindOrCreateCountryTenancy_whenDoesNotExist() throws Exception {
+        // given
+        final Country country = new Country("GBR", "UK", "United Kingdom");
+
+        // expect
+        final ApplicationTenancy newlyCreatedTenancy = new ApplicationTenancy();
+        context.checking(new Expectations() {{
+            oneOf(mockApplicationTenancies).newTenancy("GBR", "/GBR", global);
+            will(returnValue(newlyCreatedTenancy));
+        }});
+
+        // when
+        ApplicationTenancy countryTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+
+        // then
+        assertThat(countryTenancy).isEqualTo(newlyCreatedTenancy);
+    }
+
+    @Test
+    public void testPathForCountry() throws Exception {
+        //given
+        Country country = new Country("ITA", "IT", "ITALY");
+        //then
+        assertThat(estatioApplicationTenancyRepository.pathFor(country)).isEqualTo("/ITA");
+    }
+
+
+    @Test
+    public void testAllCountryTenanciesFor() throws Exception {
         List<ApplicationTenancy> applicationTenancies;
 
         // when
-        applicationTenancies = estatioApplicationTenancyRepository.childrenOf(france);
+        applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesFor(france);
 
         // then
-        assertThat(applicationTenancies).containsExactly(franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
+        assertThat(applicationTenancies).containsExactly(france);
+
+        // when
+        applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesFor(global);
+
+        // then
+        assertThat(applicationTenancies).containsExactly(france, italy);
 
     }
 
     @Test
-    public void testSelfOrChildrenOf() throws Exception {
+    public void testAllCountryTenanciesIncludeGlobalIfUserIsGlobalFor() throws Exception {
         List<ApplicationTenancy> applicationTenancies;
 
         // when
-        applicationTenancies = estatioApplicationTenancyRepository.selfOrChildrenOf(france);
+        applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(france);
 
         // then
-        assertThat(applicationTenancies).containsExactly(france, franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
+        assertThat(applicationTenancies).containsExactly(france);
+
+        // when
+        applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(global);
+
+        // then
+        assertThat(applicationTenancies).containsExactly(global, france, italy);
 
     }
 
-    ApplicationTenancy applicationTenancyCountry;
+    @Test
+    public void testFindCountryTenancyFor() {
+
+        // given
+        ApplicationTenancy atGlobalLevel = new ApplicationTenancy();
+        atGlobalLevel.setPath("/");
+        ApplicationTenancy atGlobalLevel_ = new ApplicationTenancy();
+        atGlobalLevel_.setPath("/_");
+
+        ApplicationTenancy atCountryLevel = new ApplicationTenancy();
+        atCountryLevel.setPath("/ABC");
+        ApplicationTenancy atCountryLevel_ = new ApplicationTenancy();
+        atCountryLevel_.setPath("/ABC/_");
+
+        ApplicationTenancy atPropertyLevel = new ApplicationTenancy();
+        atPropertyLevel.setPath("/ABC/DEF");
+        atPropertyLevel.setParent(atCountryLevel);
+
+        ApplicationTenancy atLandLordLevel = new ApplicationTenancy();
+        atLandLordLevel.setPath("/ABC/DEF/GHI");
+        atLandLordLevel.setParent(atPropertyLevel);
+
+        // when, then
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel).getPath()).isEqualTo("/");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atGlobalLevel_).getPath()).isEqualTo("/_");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel).getPath()).isEqualTo("/ABC");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atCountryLevel_).getPath()).isEqualTo("/ABC/_");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atPropertyLevel).getPath()).isEqualTo("/ABC");
+        assertThat(estatioApplicationTenancyRepository.findCountryTenancyFor(atLandLordLevel).getPath()).isEqualTo("/ABC");
+
+    }
+
+
+
+
 
 }

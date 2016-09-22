@@ -36,7 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 
@@ -85,7 +85,7 @@ public class TaxMenu extends UdoDomainRepositoryAndFactory<Tax> {
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
     private TaxRepository taxRepository;

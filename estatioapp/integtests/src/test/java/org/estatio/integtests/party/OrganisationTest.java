@@ -35,7 +35,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationPreviousName;
@@ -58,7 +58,7 @@ public class OrganisationTest extends EstatioIntegrationTest {
     PartyRepository partyRepository;
 
     @Inject
-    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
     CountryRepository countryRepository;

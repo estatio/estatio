@@ -19,7 +19,7 @@ import org.estatio.dom.geography.Country;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EstatioApplicationTenancyRepositoryTest {
+public class EstatioApplicationTenancyRepositoryForChargeTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -43,7 +43,7 @@ public class EstatioApplicationTenancyRepositoryTest {
     private ApplicationTenancy grandeDefault;
     private ApplicationTenancy grandeTa;
 
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCharge estatioApplicationTenancyRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -70,7 +70,7 @@ public class EstatioApplicationTenancyRepositoryTest {
             will(returnValue(grandeTa));
         }});
 
-        estatioApplicationTenancyRepository = new EstatioApplicationTenancyRepository();
+        estatioApplicationTenancyRepository = new EstatioApplicationTenancyRepositoryForCharge();
         estatioApplicationTenancyRepository.applicationTenancies = mockApplicationTenancies;
     }
 
@@ -123,31 +123,13 @@ public class EstatioApplicationTenancyRepositoryTest {
         return country;
     }
 
-
     @Test
-    public void testChildrenOf() throws Exception {
-        List<ApplicationTenancy> applicationTenancies;
+    public void testAllCountryTenancies() throws Exception {
+        List<ApplicationTenancy> applicationTenancies = estatioApplicationTenancyRepository.allCountryTenancies();
 
-        // when
-        applicationTenancies = estatioApplicationTenancyRepository.childrenOf(france);
-
-        // then
-        assertThat(applicationTenancies).containsExactly(franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
-
+        assertThat(applicationTenancies).containsExactly(france, italy);
     }
 
-    @Test
-    public void testSelfOrChildrenOf() throws Exception {
-        List<ApplicationTenancy> applicationTenancies;
 
-        // when
-        applicationTenancies = estatioApplicationTenancyRepository.selfOrChildrenOf(france);
-
-        // then
-        assertThat(applicationTenancies).containsExactly(france, franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
-
-    }
-
-    ApplicationTenancy applicationTenancyCountry;
 
 }

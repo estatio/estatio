@@ -37,7 +37,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
@@ -101,7 +101,7 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     public BrandRepository brandRepository;
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
     private MeService meService;

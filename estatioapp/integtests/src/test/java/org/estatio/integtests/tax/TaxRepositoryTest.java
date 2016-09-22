@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.tax.Tax;
@@ -49,7 +49,7 @@ public class TaxRepositoryTest extends EstatioIntegrationTest {
     CountryRepository countryRepository;
 
     @Inject
-    EstatioApplicationTenancyRepository applicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepository;
 
     @Before
     public void setup() {

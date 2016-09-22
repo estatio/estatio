@@ -34,7 +34,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(named = "Indices", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "60.2")
@@ -65,7 +65,7 @@ public class IndexMenu {
     }
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
     private IndexRepository indexRepository;

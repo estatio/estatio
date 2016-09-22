@@ -32,9 +32,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.geography.CountryRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(
@@ -107,7 +107,7 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     // //////////////////////////////////////
 
     @Inject
-    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepository;
 
     @Inject
     PropertyRepository propertyRepository;

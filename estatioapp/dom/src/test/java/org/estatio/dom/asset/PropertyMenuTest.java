@@ -34,7 +34,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForProperty;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -135,7 +135,7 @@ public class PropertyMenuTest {
         @Mock
         private DomainObjectContainer mockContainer;
         @Mock
-        private EstatioApplicationTenancyRepository mockEstatioApplicationTenancyRepository;
+        private EstatioApplicationTenancyRepositoryForProperty mockEstatioApplicationTenancyRepository;
 
         PropertyRepository propertyRepository;
         PropertyMenu propertyMenu;

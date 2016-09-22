@@ -30,7 +30,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Program.class, nature = NatureOfService.DOMAIN)
@@ -81,6 +81,6 @@ public class ProgramRepository extends UdoDomainRepositoryAndFactory<Program> {
     }
 
     @Inject
-    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }

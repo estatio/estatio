@@ -33,7 +33,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.Dflt;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Person.class)
 public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
@@ -90,7 +90,7 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
     private PartyRepository partyRepository;

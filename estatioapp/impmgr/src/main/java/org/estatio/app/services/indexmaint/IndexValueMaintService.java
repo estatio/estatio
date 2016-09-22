@@ -37,7 +37,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService
 @DomainServiceLayout(
@@ -101,6 +101,6 @@ public class IndexValueMaintService extends UdoDomainService<IndexValueMaintServ
     private ExcelService excelService;
 
     @javax.inject.Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }

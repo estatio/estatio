@@ -67,6 +67,28 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-numerator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-numerator</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>

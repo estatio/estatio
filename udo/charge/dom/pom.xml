@@ -71,6 +71,11 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-apptenancy</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
             <artifactId>udo-dom-tax</artifactId>
         </dependency>
 
