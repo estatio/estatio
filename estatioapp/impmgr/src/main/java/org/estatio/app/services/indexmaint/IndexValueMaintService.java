@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -39,7 +40,7 @@ import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 
-@DomainService
+@DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(
         named="Indices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

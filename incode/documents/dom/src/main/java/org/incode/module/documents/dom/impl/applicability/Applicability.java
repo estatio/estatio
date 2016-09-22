@@ -100,7 +100,7 @@ public class Applicability implements Comparable<Applicability> {
         }
     }
 
-    @DomainService
+    @DomainService(nature = NatureOfService.VIEW)
     public static class IconSubscriber extends AbstractSubscriber {
 
         public String getId() {
@@ -120,7 +120,7 @@ public class Applicability implements Comparable<Applicability> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService
+    @DomainService(nature = NatureOfService.VIEW)
     public static class CssClassSubscriber extends AbstractSubscriber {
 
         public String getId() {

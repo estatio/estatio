@@ -20,13 +20,14 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 /**
  * Installs security seed data on application startup.
  */
-@DomainService
+@DomainService(nature = NatureOfService.VIEW)
 @Hidden
 public class EstatioSecurityModuleSeedService {
 

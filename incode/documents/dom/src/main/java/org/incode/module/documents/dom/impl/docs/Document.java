@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -100,7 +101,7 @@ public class Document extends DocumentAbstract<Document> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService
+    @DomainService(nature = NatureOfService.VIEW)
     public static class TitleSubscriber extends AbstractSubscriber {
 
         public String getId() {
@@ -125,7 +126,7 @@ public class Document extends DocumentAbstract<Document> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService
+    @DomainService(nature = NatureOfService.VIEW)
     public static class IconSubscriber extends AbstractSubscriber {
 
         public String getId() {
@@ -145,7 +146,7 @@ public class Document extends DocumentAbstract<Document> {
     /**
      * Implemented as a subscriber so can be overridden by consuming application if required.
      */
-    @DomainService
+    @DomainService(nature = NatureOfService.VIEW)
     public static class CssClassSubscriber extends AbstractSubscriber {
 
         public String getId() {

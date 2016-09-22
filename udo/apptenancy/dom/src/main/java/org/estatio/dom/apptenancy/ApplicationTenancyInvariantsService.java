@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.UdoDomainService;
@@ -30,7 +31,7 @@ import org.estatio.dom.UdoDomainService;
 /**
  * Centralizes rules governing the moving of {@link org.isisaddons.module.security.dom.tenancy.ApplicationTenancy}.
  */
-@DomainService
+@DomainService(nature = NatureOfService.VIEW)
 public class ApplicationTenancyInvariantsService extends UdoDomainService<ApplicationTenancyInvariantsService> {
 
     // //////////////////////////////////////

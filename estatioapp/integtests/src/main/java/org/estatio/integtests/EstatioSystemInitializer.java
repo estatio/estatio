@@ -77,7 +77,7 @@ public class EstatioSystemInitializer {
     }
 
     // REVIEW: may not need anymore since appManifest refactoring...
-    @DomainService
+    @DomainService(nature = NatureOfService.VIEW)
     public static class FakeExcelService extends ExcelService {
         public String getId() {
             return getClass().getName();
