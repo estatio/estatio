@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.app.menus.numerator;
 
 import java.math.BigInteger;
 
@@ -33,6 +33,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.numerator.Numerator;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

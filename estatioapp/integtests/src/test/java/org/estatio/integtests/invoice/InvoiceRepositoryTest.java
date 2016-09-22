@@ -43,7 +43,7 @@ import org.estatio.app.services.invoice.InvoiceImportLine;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.NumeratorForCollectionMenu;
+import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
