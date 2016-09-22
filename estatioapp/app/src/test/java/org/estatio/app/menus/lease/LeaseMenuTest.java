@@ -1,4 +1,4 @@
-package org.estatio.dom.lease;
+package org.estatio.app.menus.lease;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;

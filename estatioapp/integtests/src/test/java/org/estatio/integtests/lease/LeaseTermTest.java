@@ -40,7 +40,7 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseMenu;
+import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;

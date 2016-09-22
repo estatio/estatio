@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.app.menus.lease;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,12 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;

@@ -20,6 +20,8 @@ package org.estatio.integscenarios.invoice;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+
+import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.*;
