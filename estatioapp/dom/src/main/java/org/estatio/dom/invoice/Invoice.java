@@ -511,7 +511,7 @@ public class Invoice
             return "No 'invoice number' numerator found for invoice's property";
         }
         if (getStatus() != InvoiceStatus.APPROVED) {
-            return "Must be in status of 'Invoiced'";
+            return "Must be in status of 'Approved'";
         }
         return null;
     }
