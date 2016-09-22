@@ -28,7 +28,6 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 
 import org.joda.time.LocalDate;
 
@@ -403,7 +402,7 @@ public class AgreementRoleCommunicationChannel
 
     // //////////////////////////////////////
 
-    @Inject
+    @javax.inject.Inject
     private CommunicationChannelContributions communicationChannelContributions;
 
 }

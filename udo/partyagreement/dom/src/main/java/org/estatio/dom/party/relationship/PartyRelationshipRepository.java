@@ -11,7 +11,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.core.runtime.authentication.standard.RandomCodeGenerator10Chars;
 
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -112,6 +111,25 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
         default:
             break;
         }
+    }
+
+    /**
+     * Stolen from org.apache.isis.core.runtime.authentication.standard...
+     */
+    public static class RandomCodeGenerator10Chars {
+
+        private static final int NUMBER_CHARACTERS = 10;
+        private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+        public String generateRandomCode() {
+            final StringBuilder buf = new StringBuilder(NUMBER_CHARACTERS);
+            for (int i = 0; i < NUMBER_CHARACTERS; i++) {
+                final int pos = (int) ((Math.random() * CHARACTERS.length()));
+                buf.append(CHARACTERS.charAt(pos));
+            }
+            return buf.toString();
+        }
+
     }
 
     // //////////////////////////////////////
