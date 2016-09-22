@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.dom.asset.registration.contributed;
+package org.estatio.dom.asset.registration;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -29,9 +29,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;

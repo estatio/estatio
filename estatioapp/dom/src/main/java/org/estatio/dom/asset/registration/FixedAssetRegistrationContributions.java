@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.registration.contributed;
+package org.estatio.dom.asset.registration;
 
 import java.util.List;
 
@@ -32,9 +32,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,

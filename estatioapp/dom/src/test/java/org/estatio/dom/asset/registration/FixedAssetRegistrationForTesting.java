@@ -1,4 +1,4 @@
-package org.estatio.dom.asset.registration.contributed;
+package org.estatio.dom.asset.registration;
 
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 
