@@ -1,9 +1,17 @@
 package org.estatio.dom.budgeting.keytable;
 
-import org.apache.isis.applib.annotation.*;
+import java.util.List;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 /**
  * Created by jodo on 14/09/15.
