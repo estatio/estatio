@@ -29,7 +29,11 @@ Copyright 2014~2015 Dan Haywood
 
     <groupId>org.incode.module.docrendering</groupId>
     <artifactId>incode-module-docrendering-freemarker</artifactId>
-    <version>1.14.0-SNAPSHOT</version>
+    <!--
+        REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO.  FOR NOW, USE estatio.version
+
+        <version>1.14.0-SNAPSHOT</version>
+    -->
 
     <packaging>jar</packaging>
 
@@ -75,6 +79,9 @@ Copyright 2014~2015 Dan Haywood
 
         <isis.version>1.13.0</isis.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
+
+        <incode-module-base.version>1.7.0-SNAPSHOT</incode-module-base.version>
+        <incode-module-documents.version>1.7.0-SNAPSHOT</incode-module-documents.version>
         <isis-module-freemarker.version>1.14.0-SNAPSHOT</isis-module-freemarker.version>
 
         <lombok.version>1.16.6</lombok.version>

@@ -87,7 +87,7 @@ mvn clean install -DskipTests -o
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.1</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.13.0</isis-module-sessionlogger.version>
+        <isis-module-sessionlogger.version>1.13.1</isis-module-sessionlogger.version>
         <isis-module-settings.version>1.13.0</isis-module-settings.version>
 
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
@@ -101,16 +101,7 @@ mvn clean install -DskipTests -o
 
         <incode-module-commchannel.version>1.13.0</incode-module-commchannel.version>
 
-        <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
-        <incode-module-documents.version>1.14.0-SNAPSHOT</incode-module-documents.version>
-        <incode-module-communications.version>1.14.0-SNAPSHOT</incode-module-communications.version>
-
-        <incode-module-docrendering-stringinterpolator.version>1.14.0-SNAPSHOT</incode-module-docrendering-stringinterpolator.version>
-        <incode-module-docrendering-freemarker.version>1.14.0-SNAPSHOT</incode-module-docrendering-freemarker.version>
-        <incode-module-docrendering-xdocreport.version>1.14.0-SNAPSHOT</incode-module-docrendering-xdocreport.version>
-
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
-
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -577,40 +568,117 @@ mvn clean install -DskipTests -o
                 <version>${isis-metamodel-paraname8.version}</version>
             </dependency>
 
+            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
-                <version>${incode-module-communications.version}</version>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
-                <version>${incode-module-communications.version}</version>
+                <version>1.7.0-SNAPSHOT</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
 
+            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents.version}</version>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.documents</groupId>
+                <artifactId>incode-module-documents-dom</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
 
+            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
                 <artifactId>incode-module-docrendering-stringinterpolator</artifactId>
-                <version>${incode-module-docrendering-stringinterpolator.version}</version>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-stringinterpolator</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <!-- TODO: update version when move out to separate module -->
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-freemarker</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
                 <artifactId>incode-module-docrendering-freemarker</artifactId>
-                <version>${incode-module-docrendering-freemarker.version}</version>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <!-- TODO: update version when move out to separate module -->
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-xdocreport</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
                 <artifactId>incode-module-docrendering-xdocreport</artifactId>
-                <version>${incode-module-docrendering-xdocreport.version}</version>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
             </dependency>
+
+            <!-- TODO: update version when move out to separate module -->
+            <dependency>
+                <groupId>org.incode.module.documents</groupId>
+                <artifactId>incode-module-documents-dom</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.documents</groupId>
+                <artifactId>incode-module-documents-dom</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <!-- TODO: update version when move out to separate module -->
+            <dependency>
+                <groupId>org.incode.module.base</groupId>
+                <artifactId>incode-module-base-dom</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.base</groupId>
+                <artifactId>incode-module-base-dom</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <!-- TODO: update version when move out to separate module -->
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-freemarker</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.docrendering</groupId>
+                <artifactId>incode-module-docrendering-xdocreport</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
+            </dependency>
+
+
 
             <!-- required for the dataModel implementations used by docrendering-stringinterpolator -->
             <dependency>
@@ -618,6 +686,8 @@ mvn clean install -DskipTests -o
                 <artifactId>isis-module-stringinterpolator-dom</artifactId>
                 <version>${isis-module-stringinterpolator.version}</version>
             </dependency>
+
+
 
 
             <!-- viewer extensions -->
@@ -808,43 +878,6 @@ mvn clean install -DskipTests -o
                 <type>test-jar</type>
             </dependency>
 
-
-            <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.base</groupId>
-                <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.base</groupId>
-                <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-freemarker</artifactId>
-                <version>${incode-module-docrendering-freemarker.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-xdocreport</artifactId>
-                <version>${incode-module-docrendering-xdocreport.version}</version>
-            </dependency>
 
 
             <!-- EstatioApp modules -->
