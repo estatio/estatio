@@ -91,7 +91,7 @@ mvn clean install -DskipTests -o
         <isis-module-settings.version>1.13.0</isis-module-settings.version>
 
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
-        <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
+        <isis-module-xdocreport.version>1.13.0</isis-module-xdocreport.version>
 
         <isis-metamodel-paraname8.version>1.13.0</isis-metamodel-paraname8.version>
 
@@ -1185,8 +1185,6 @@ mvn clean install -DskipTests -o
                 <module>udo/settings/dom</module>
                 <module>udo/partyagreement/dom</module>
                 <module>incode/base/dom</module>
-                <module>isisaddons/isis-module-freemarker/dom</module>
-                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
@@ -1217,8 +1215,6 @@ mvn clean install -DskipTests -o
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/base/dom</module>
-                <module>isisaddons/isis-module-freemarker/dom</module>
-                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
@@ -1248,8 +1244,6 @@ mvn clean install -DskipTests -o
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/base/dom</module>
-                <module>isisaddons/isis-module-freemarker/dom</module>
-                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
@@ -1283,8 +1277,6 @@ mvn clean install -DskipTests -o
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/base/dom</module>
-                <module>isisaddons/isis-module-freemarker/dom</module>
-                <module>isisaddons/isis-module-xdocreport/dom</module>
                 <module>incode/communications/dom</module>
                 <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
