@@ -467,6 +467,10 @@ public class Lease
         return chargeRepository.chargesForCountry(this.getApplicationTenancy());
     }
 
+    public PaymentMethod default3NewItem() {
+        return getItems().size() > 0 ? getItems().last().getPaymentMethod() : null;
+    }
+
     public LocalDate default4NewItem() {
         return this.getStartDate();
     }

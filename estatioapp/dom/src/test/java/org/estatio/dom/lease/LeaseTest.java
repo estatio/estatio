@@ -20,8 +20,10 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import com.google.common.collect.Lists;
 
@@ -218,6 +220,40 @@ public class LeaseTest {
 
             // then
             assertThat(lease.disableNewItem()).isEqualTo("Please set occupancy first");
+
+        }
+
+    }
+
+    public static class DefaultPaymentMehodForNewItem extends LeaseTest {
+
+        @Test
+        public void test() {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItem itemFirst = new LeaseItem();
+            itemFirst.setPaymentMethod(PaymentMethod.CHEQUE);
+            LeaseItem itemLast = new LeaseItem();
+            itemLast.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+            lease.setItems(new TreeSet<>(Arrays.asList(itemLast, itemFirst)));
+
+            // when
+            // then
+            assertThat(lease.default3NewItem()).isEqualTo(itemLast.getPaymentMethod());
+
+        }
+
+        @Test
+        public void testNoItems() {
+
+            // given
+            Lease lease = new Lease();
+            lease.setItems(new TreeSet<>(Arrays.asList()));
+
+            // when
+            // then
+            assertThat(lease.default3NewItem()).isEqualTo(null);
 
         }
 
