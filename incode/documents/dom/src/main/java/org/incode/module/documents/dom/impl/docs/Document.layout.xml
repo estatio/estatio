@@ -43,6 +43,7 @@
             </bs3:tabGroup>
             <cpt:fieldSet name="Details">
                 <cpt:property id="type"/>
+                <cpt:property id="state"/>
                 <cpt:property id="atPath" hidden="ALL_TABLES"/>
                 <!-- assuming a mixin is present to look this up -->
                 <cpt:property id="applicationTenancy"/>

@@ -16,39 +16,20 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
-import javax.activation.DataSource;
-import javax.inject.Inject;
-import javax.jdo.JDOHelper;
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Index;
-import javax.jdo.annotations.Indices;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Version;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
-
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.activation.DataSource;
+import javax.inject.Inject;
+import javax.jdo.JDOHelper;
+import javax.jdo.annotations.*;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
@@ -90,44 +71,12 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > constructors
     public DocumentAbstract(
             final DocumentType type,
-            final String atPath,
-            final Blob blob) {
-        this(type, atPath, blob.getName(), blob.getMimeType().toString(), DocumentSort.BLOB);
-        this.blobBytes = blob.getBytes();
-    }
-
-    public DocumentAbstract(
-            final DocumentType type,
-            final String atPath,
-            final String name,
-            final String mimeType,
-            final String text) {
-        this(type, atPath, name, mimeType, DocumentSort.TEXT);
-        this.text = text;
-    }
-
-    public DocumentAbstract(
-            final DocumentType type,
-            final String atPath,
-            final Clob clob) {
-        this(type, atPath, clob.getName(), clob.getMimeType().toString(), DocumentSort.CLOB);
-        this.clobChars = clob.getChars().toString();
-    }
-
-    private DocumentAbstract(
-            final DocumentType type,
-            final String atPath,
-            final String name,
-            final String mimeType,
-            final DocumentSort sort) {
+            final String atPath) {
         this.type = type;
         this.atPath = atPath;
-        this.name = name;
-        this.mimeType = mimeType;
-        this.sort = sort;
+        this.sort = DocumentSort.EMPTY;
     }
     //endregion
-
 
     //region > type (property)
     public static class TypeDomainEvent extends PropertyDomainEvent<DocumentType> { }
@@ -164,6 +113,9 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     private String name;
+    public void setName(String name) {
+        this.name = name;
+    }
     //endregion
 
     //region > mimeType (property)
@@ -176,7 +128,6 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     )
     private String mimeType;
     //endregion
-
 
     //region > sort (property)
     public static class SortDomainEvent extends PropertyDomainEvent<DocumentSort> { }
@@ -213,6 +164,12 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return new Blob(getName(), getMimeType(), getBlobBytes());
 
     }
+    void setBlob(Blob blob) {
+        setName(blob.getName());
+        setMimeType(blob.getMimeType().toString());
+        setBlobBytes(blob.getBytes());
+        setSort(DocumentSort.BLOB);
+    }
     public boolean hideBlob() {
         return getSort() != DocumentSort.BLOB;
     }
@@ -241,6 +198,13 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return new Clob(getName(), getMimeType(), getClobChars());
 
     }
+    void setClob(Clob clob) {
+        setName(clob.getName());
+        setMimeType(clob.getMimeType().toString());
+        setClobChars(clob.getChars().toString());
+        setSort(DocumentSort.CLOB);
+    }
+
     public boolean hideClob() {
         return getSort() != DocumentSort.CLOB;
     }
@@ -256,6 +220,13 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     private String text;
+
+    void setTextData(String name, String mimeType, String text) {
+        setName(name);
+        setMimeType(mimeType);
+        setText(text);
+        setSort(DocumentSort.TEXT);
+    }
 
     public boolean hideText() {
         return getSort() != DocumentSort.TEXT;

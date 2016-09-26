@@ -16,6 +16,13 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import org.apache.commons.io.output.NullOutputStream;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
+
+import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,16 +30,16 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import javax.activation.DataSource;
-
-import org.apache.commons.io.output.NullOutputStream;
-
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
-
 public enum DocumentSort {
+    /**
+     * Stored as a BLOB
+     */
+    EMPTY(DocumentNature.BYTES, DocumentStorage.INTERNAL) {
+        @Override
+        public DataSource asDataSource(DocumentAbstract<?> document) {
+            throw new IllegalStateException("Document not yet rendered");
+        }
+    },
     /**
      * Stored as a BLOB
      */

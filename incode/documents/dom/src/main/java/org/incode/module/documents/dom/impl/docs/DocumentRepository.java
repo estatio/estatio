@@ -16,23 +16,18 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
-
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -44,38 +39,15 @@ public class DocumentRepository {
         return "incodeDocuments.DocumentRepository";
     }
 
-    //region > createBlob, createClob, createText
+    //region > create
     @Programmatic
-    public Document createBlob(
+    public Document create(
             final DocumentType type,
             final String atPath,
-            final Blob blob,
-            final DateTime createdAt) {
-        final Document document = new Document(type, atPath, blob, createdAt);
-        repositoryService.persist(document);
-        return document;
-    }
-
-    @Programmatic
-    public Document createClob(
-            final DocumentType type,
-            final String atPath,
-            final Clob clob,
-            final DateTime createdAt) {
-        final Document document = new Document(type, atPath, clob, createdAt);
-        repositoryService.persist(document);
-        return document;
-    }
-
-    @Programmatic
-    public Document createText(
-            final DocumentType type,
-            final String atPath,
-            final String name,
-            final String mimeType,
-            final String text,
-            final DateTime createdAt) {
-        final Document document = new Document(type, atPath, name, mimeType, text, createdAt);
+            final String documentName,
+            final String mimeType) {
+        final DateTime createdAt = clockService.nowAsDateTime();
+        final Document document = new Document(type, atPath, documentName, mimeType, createdAt);
         repositoryService.persist(document);
         return document;
     }
@@ -117,8 +89,7 @@ public class DocumentRepository {
     @Inject
     RepositoryService repositoryService;
     @Inject
-    IsisJdoSupport isisJdoSupport;
-
+    private ClockService clockService;
 
     //endregion
 

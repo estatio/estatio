@@ -16,81 +16,44 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import com.google.common.eventbus.Subscribe;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.background.BackgroundService2;
+import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.services.xactn.TransactionService;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.impl.applicability.Applicability;
+import org.incode.module.documents.dom.impl.applicability.ApplicabilityRepository;
+import org.incode.module.documents.dom.impl.applicability.Binder;
+import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.impl.renderers.*;
+import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.services.ClassNameViewModel;
+import org.incode.module.documents.dom.services.ClassService;
+import org.incode.module.documents.dom.spi.BinderClassNameService;
+import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import javax.jdo.JDOHelper;
+import javax.jdo.annotations.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.inject.Inject;
-import javax.jdo.JDOHelper;
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Index;
-import javax.jdo.annotations.Indices;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Queries;
-import javax.jdo.annotations.Unique;
-import javax.jdo.annotations.Uniques;
-
-import com.google.common.eventbus.Subscribe;
-
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractSubscriber;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
-
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.applicability.Applicability;
-import org.incode.module.documents.dom.impl.applicability.ApplicabilityRepository;
-import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.impl.links.PaperclipRepository;
-import org.incode.module.documents.dom.impl.renderers.Renderer;
-import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToBytes;
-import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToBytesWithPreviewToUrl;
-import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToChars;
-import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToCharsWithPreviewToUrl;
-import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytes;
-import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytesWithPreviewToUrl;
-import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToChars;
-import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToCharsWithPreviewToUrl;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.services.ClassNameViewModel;
-import org.incode.module.documents.dom.services.ClassService;
-import org.incode.module.documents.dom.spi.BinderClassNameService;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @PersistenceCapable(
         identityType= IdentityType.DATASTORE,
@@ -264,11 +227,13 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final LocalDate date,
             final String atPath,
             final String fileSuffix,
-            final boolean previewOnly, final Blob blob,
+            final boolean previewOnly,
+            final Blob blob,
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath, blob);
+        super(type, atPath);
+        setBlob(blob);
         init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
@@ -282,7 +247,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath, name, mimeType, text);
+        super(type, atPath);
+        setTextData(name, mimeType, text);
         init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
@@ -296,7 +262,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath, clob);
+        super(type, atPath);
+        setClob(clob);
         init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
@@ -613,8 +580,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public URL preview(
             final Object contentDataModel,
-            final Object subjectDataModelIfAny,
-            final String documentName) throws IOException {
+            final Object subjectDataModelIfAny) throws IOException {
 
         final Object subjectDataModel = coalesce(subjectDataModelIfAny, contentDataModel);
 
@@ -668,70 +634,125 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     //endregion
 
-    //region > render (programmatic)
+    //region > createAndScheduleRendering (programmatic)
     @Programmatic
-    public DocumentAbstract render(
-            final Object contentDataModel,
-            final Object subjectDataModelIfAny) {
+    public DocumentAbstract createAndScheduleRendering(final Object domainObject) {
+        final Document document = createDocument(domainObject);
+        transactionService.flushTransaction(); // ensure document is persistent so can schedule action against it.
+        backgroundService2.execute(document).render(this, domainObject);
+        return document;
+    }
 
+    //endregion
+
+    //region > createDocument (programmatic)
+    private Document createDocument(Object domainObject) {
+
+        final Binder.Binding binding = newBinding(domainObject);
+        final Object contentDataModel = binding.getContentDataModel();
+        final Object subjectDataModelIfAny = binding.getSubjectDataModel();
+        final String documentName = determineDocumentName(subjectDataModelIfAny, contentDataModel);
+
+        return createDocument(documentName);
+    }
+
+    @Programmatic
+    public Document createDocument(Object contentDataModel, Object subjectDataModelIfAny) {
+        final String documentName = determineDocumentName(contentDataModel, subjectDataModelIfAny);
+        return createDocument(documentName);
+    }
+
+    private String determineDocumentName(Object subjectDataModelIfAny, Object contentDataModel) {
         final Object subjectDataModel = coalesce(subjectDataModelIfAny, contentDataModel);
 
         serviceRegistry2.injectServicesInto(contentDataModel);
         serviceRegistry2.injectServicesInto(subjectDataModel);
 
-        final DateTime createdAt = clockService.nowAsDateTime();
-
+        // subject
+        final RendererFromCharsToChars subjectRenderer =
+                (RendererFromCharsToChars) getSubjectRenderingStrategy().newRenderer();
+        String renderedDocumentName;
         try {
-            // subject
-            final RendererFromCharsToChars subjectRenderer =
-                    (RendererFromCharsToChars) getSubjectRenderingStrategy().newRenderer();
-            final String renderedDocumentName =
-                    subjectRenderer.renderCharsToChars(
-                            getType(), getAtPath(), getVersion(),
-                            getSubjectText(), subjectDataModel);
-            final String documentName = withFileSuffix(renderedDocumentName);
+            renderedDocumentName = subjectRenderer.renderCharsToChars(
+                    getType(), getAtPath(), getVersion(),
+                    getSubjectText(), subjectDataModel);
+        } catch (IOException e) {
+            renderedDocumentName = getName();
+        }
+        return withFileSuffix(renderedDocumentName);
+    }
 
-            // content
+    private Document createDocument(String documentName) {
+        return documentRepository.create(getType(), getAtPath(), documentName, getMimeType());
+    }
+    //endregion
+
+
+    @Programmatic
+    public void renderContentFromContentDataModel(
+            final Document document,
+            final Object contentDataModel) {
+
+        final String documentName = document.getName();
+        try {
+
             final DocumentNature inputNature = getContentRenderingStrategy().getInputNature();
             final DocumentNature outputNature = getContentRenderingStrategy().getOutputNature();
 
             final Renderer renderer = getContentRenderingStrategy().newRenderer();
+
             switch (inputNature){
-            case BYTES:
-                switch (outputNature) {
                 case BYTES:
-                    final byte[] renderedBytes = ((RendererFromBytesToBytes) renderer).renderBytesToBytes(
-                            getType(), getAtPath(), getVersion(),
-                            asBytes(), contentDataModel);
-                    return createBlob(getType(), documentName, renderedBytes, createdAt);
-                case CHARACTERS:
+                    switch (outputNature) {
+                    case BYTES:
+                        final byte[] renderedBytes = ((RendererFromBytesToBytes) renderer).renderBytesToBytes(
+                                getType(), getAtPath(), getVersion(),
+                                asBytes(), contentDataModel);
+                        final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
+                        document.setBlob(blob);
+                        return;
+                    case CHARACTERS:
                     final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
                             getType(), getAtPath(), getVersion(),
                             asBytes(), contentDataModel);
-                    return createTextOrClob(getType(), documentName, renderedChars, createdAt);
-                default:
+                        if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
+                            document.setTextData(getName(), getMimeType(), renderedChars);
+                        } else {
+                            final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
+                            document.setClob(clob);
+                        }
+                        return;
+                    default:
                     // shouldn't happen, above switch statement is complete
                     throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
-                }
-            case CHARACTERS:
-                switch (outputNature) {
-                case BYTES:
-                    final byte[] renderedBytes = ((RendererFromCharsToBytes) renderer).renderCharsToBytes(
-                            getType(), getAtPath(), getVersion(),
-                            asChars(), contentDataModel);
-                    return createBlob(getType(), documentName, renderedBytes, createdAt);
+                    }
                 case CHARACTERS:
+                    switch (outputNature) {
+                    case BYTES:
+                        final byte[] renderedBytes = ((RendererFromCharsToBytes) renderer).renderCharsToBytes(
+                                getType(), getAtPath(), getVersion(),
+                                asChars(), contentDataModel);
+                        final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
+                        document.setBlob(blob);
+                        return;
+                    case CHARACTERS:
                     final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
                             getType(), getAtPath(), getVersion(),
                             asChars(), contentDataModel);
-                    return createTextOrClob(getType(), documentName, renderedChars, createdAt);
-                default:
+                        if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
+                            document.setTextData(getName(), getMimeType(), renderedChars);
+                        } else {
+                            final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
+                            document.setClob(clob);
+                        }
+                        return;
+                    default:
                     // shouldn't happen, above switch statement is complete
                     throw new IllegalArgumentException(String.format("Unknown output DocumentNature '%s'", outputNature));
-                }
-            default:
-                // shouldn't happen, above switch statement is complete
-                throw new IllegalArgumentException(String.format("Unknown input DocumentNature '%s'", inputNature));
+                    }
+                default:
+                    // shouldn't happen, above switch statement is complete
+                    throw new IllegalArgumentException(String.format("Unknown input DocumentNature '%s'", inputNature));
             }
 
         } catch (IOException e) {
@@ -741,29 +762,6 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     private static Object coalesce(final Object x, final Object y) {
         return x != null? x: y;
-    }
-
-    private DocumentAbstract createBlob(
-            final DocumentType documentType,
-            final String documentName,
-            final byte[] renderedBytes,
-            final DateTime createdAt) {
-        final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
-        return documentRepository.createBlob(documentType, getAtPath(), blob, createdAt);
-    }
-
-    private DocumentAbstract createTextOrClob(
-            final DocumentType documentType,
-            final String documentName,
-            final String renderedChars,
-            final DateTime createdAt) {
-        if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
-            return documentRepository.createText(
-                    documentType, getAtPath(), documentName, getMimeType(), renderedChars, createdAt);
-        } else {
-            final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
-            return documentRepository.createClob(documentType, getAtPath(), clob, createdAt);
-        }
     }
 
     //endregion
@@ -815,7 +813,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Inject
     ServiceRegistry2 serviceRegistry2;
     @Inject
-    private ClockService clockService;
+    TransactionService transactionService;
+    @Inject
+    BackgroundService2 backgroundService2;
+
     //endregion
 
 }

@@ -16,41 +16,20 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Indices;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Queries;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Uniques;
-
 import com.google.common.eventbus.Subscribe;
-
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.impl.applicability.Binder;
+import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
-import org.apache.isis.applib.AbstractSubscriber;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
-
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-
-import lombok.Getter;
-import lombok.Setter;
+import javax.jdo.annotations.*;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
@@ -165,36 +144,33 @@ public class Document extends DocumentAbstract<Document> {
     //endregion
 
 
-    //region > constructors
+    //region > constructor
     public Document(
             final DocumentType type,
             final String atPath,
-            final Blob blob,
+            final String documentName,
+            final String mimeType,
             final DateTime createdAt) {
-        super(type, atPath, blob);
-        init(createdAt);
-    }
-
-    public Document(
-            final DocumentType type,
-            final String atPath,
-            final String name,
-            final String mimeType, final String text, final DateTime createdAt) {
-        super(type, atPath, name, mimeType, text);
-        init(createdAt);
-    }
-
-    public Document(
-            final DocumentType type,
-            final String atPath,
-            final Clob clob,
-            final DateTime createdAt) {
-        super(type, atPath, clob);
-        init(createdAt);
-    }
-
-    private void init(final DateTime createdAt) {
+        super(type, atPath);
+        setName(documentName);
+        setMimeType(mimeType);
         this.createdAt = createdAt;
+        this.state = DocumentState.CREATED;
+    }
+    //endregion
+
+
+    //region > render (programmatic)
+    @Action(hidden = Where.EVERYWHERE) // so can invoke via BackgroundService
+    public void render(
+            final DocumentTemplate documentTemplate,
+            final Object domainObject) {
+
+        final Binder.Binding binding = documentTemplate.newBinding(domainObject);
+        final Object contentDataModel = binding.getContentDataModel();
+
+
+        documentTemplate.renderContentFromContentDataModel(this, contentDataModel);
     }
     //endregion
 
@@ -208,6 +184,17 @@ public class Document extends DocumentAbstract<Document> {
             editing = Editing.DISABLED
     )
     private DateTime createdAt;
+    //endregion
+
+    //region > state (property)
+    public static class StateDomainEvent extends PropertyDomainEvent<DocumentState> { }
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @Property(
+            domainEvent = Document.StateDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private DocumentState state;
     //endregion
 
     //region > externalUrl (property)
@@ -239,7 +226,6 @@ public class Document extends DocumentAbstract<Document> {
         return getSort().asBytes(this);
     }
     //endregion
-
 
 
 }

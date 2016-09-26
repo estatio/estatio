@@ -18,19 +18,8 @@
  */
 package org.incode.module.documents.dom.mixins;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
+import org.apache.isis.applib.annotation.*;
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
@@ -39,6 +28,10 @@ import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.spi.ApplicationTenancyService;
+
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.List;
 
 public abstract class T_createDocument<T> {
 
@@ -63,13 +56,13 @@ public abstract class T_createDocument<T> {
             @ParameterLayout(named = "Action")
             final Intent intent
             ) throws IOException {
-        final String documentName = null;
         final String roleName = null;
         final Binder.Binding binding = template.newBinding(domainObject);
         if (intent == Intent.PREVIEW) {
-            return template.preview(binding.getContentDataModel(), binding.getSubjectDataModel(), null);
+            return template.preview(binding.getContentDataModel(), binding.getSubjectDataModel());
         }
-        final DocumentAbstract doc = template.render(binding.getContentDataModel(), binding.getSubjectDataModel());
+
+        final DocumentAbstract doc = template.createAndScheduleRendering(domainObject);
         for (Object o : binding.getAttachTo()) {
             if(paperclipRepository.canAttach(o)) {
                 paperclipRepository.attach(doc, roleName, o);

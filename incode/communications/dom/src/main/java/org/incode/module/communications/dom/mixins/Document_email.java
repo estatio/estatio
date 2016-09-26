@@ -18,27 +18,14 @@
  */
 package org.incode.module.communications.dom.mixins;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import org.joda.time.DateTime;
-
 import org.apache.isis.applib.NonRecoverableException;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
-
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.EmailAddress;
 import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.impl.comms.CommChannelRole;
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
@@ -47,14 +34,17 @@ import org.incode.module.communications.dom.spi.DocumentEmailSupportService;
 import org.incode.module.communications.dom.spi.EmailHeader;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.joda.time.DateTime;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.EmailAddress;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Provides the ability to send an email.
@@ -93,7 +83,7 @@ public class Document_email  {
             final String subject,
             @Parameter(optionality = Optionality.OPTIONAL)
             @ParameterLayout(named = "Covering note", multiLine = EMAIL_COVERING_NOTE_MULTILINE)
-            final String coveringNote) throws IOException {
+            final String coveringNoteText) throws IOException {
 
 
         // create comm and correspondent.
@@ -112,18 +102,21 @@ public class Document_email  {
         paperclipRepository.attach(document, PAPERCLIP_ROLE_ATTACHMENT, communication);
 
         // ... and create and attach cover note
-        if(coveringNote != null) {
+        if(coveringNoteText != null) {
 
             final DocumentTemplate template = determineBlankDocumentTemplate();
 
-            final DocumentAbstract coverNote = template.render(coveringNote, subject);
-            paperclipRepository.attach(coverNote, PAPERCLIP_ROLE_COVER, communication);
+            final Document coverNoteDoc = template.createDocument(coveringNoteText, subject);
+
+            template.renderContentFromContentDataModel(coverNoteDoc, coveringNoteText);
+
+            paperclipRepository.attach(coverNoteDoc, PAPERCLIP_ROLE_COVER, communication);
         }
 
         // send the email
         final boolean send = emailService.send(
                                     asList(to), asList(cc), asList(bcc),
-                                    subject, coveringNote,
+                                    subject, coveringNoteText,
                                     document.asDataSource());
 
         // fail-fast if there was a problem (don't persist anything).

@@ -16,12 +16,6 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -31,9 +25,12 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
-
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -104,7 +101,8 @@ public class DocumentTemplateRepository {
         final DocumentTemplate document =
                 new DocumentTemplate(
                         type, date, atPath,
-                        fileSuffix, previewOnly, name, mimeType, text,
+                        fileSuffix, previewOnly,
+                        name, mimeType, text,
                         contentRenderingStrategy,
                         subjectText, subjectRenderingStrategy);
         repositoryService.persistAndFlush(document);

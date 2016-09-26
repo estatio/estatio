@@ -16,19 +16,11 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
-import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.message.MessageService;
-
 import org.incode.module.documents.dom.DocumentsModule;
+
+import javax.inject.Inject;
 
 @Mixin
 public class Document_movedToExternalUrl {
@@ -82,7 +74,7 @@ public class Document_movedToExternalUrl {
     }
 
     public boolean hide$$() {
-        return document.getSort().isExternal();
+        return document.getSort() == DocumentSort.EMPTY || document.getSort().isExternal();
     }
 
     public String default1$$() {
