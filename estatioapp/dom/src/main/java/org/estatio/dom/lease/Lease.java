@@ -495,6 +495,14 @@ public class Lease
         return getProperty() == null ? "Please set occupancy first" : null;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public Lease changePaymentMethodForAll(final PaymentMethod paymentMethod){
+        for (LeaseItem item : getItems()){
+            item.setPaymentMethod(paymentMethod);
+        }
+        return this;
+    }
+
     public Agreement changePrevious(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Agreement previousAgreement) {

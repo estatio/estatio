@@ -80,6 +80,7 @@
         </col>
         <col span="6" unreferencedCollections="true">
             <ns2:collection id="items">
+                <ns2:action id="changePaymentMethodForAll" />
                 <ns2:action id="newItem"/>
             </ns2:collection>
             <ns2:collection id="roles">

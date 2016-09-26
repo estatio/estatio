@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.google.common.collect.Lists;
@@ -256,6 +257,41 @@ public class LeaseTest {
             assertThat(lease.default3NewItem()).isEqualTo(null);
 
         }
+
+    }
+
+    public static class ChangePaymentMethodForAll extends LeaseTest {
+
+        PaymentMethod newPaymentMethodForAll;
+
+        @Test
+        public void test() {
+
+            // given
+            newPaymentMethodForAll = PaymentMethod.DIRECT_DEBIT;
+
+            LeaseItem item1 = new LeaseItem();
+            LeaseItem item2 = new LeaseItem();
+            LeaseItem item3 = new LeaseItem();
+            item1.setPaymentMethod(PaymentMethod.CHEQUE);
+            item2.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+            Lease lease = new Lease() {
+                @Override
+                public SortedSet<LeaseItem> getItems() {
+                    return new TreeSet<>(Arrays.asList(item3, item2, item1));
+                }
+            };
+
+            // when
+            lease.changePaymentMethodForAll(newPaymentMethodForAll);
+
+            // then
+            for (LeaseItem item : lease.getItems()) {
+                assertThat(item.getPaymentMethod()).isEqualTo(newPaymentMethodForAll);
+            }
+
+        }
+
 
     }
 
