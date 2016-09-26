@@ -33,9 +33,6 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 
-/**
- * Created by jodo on 22/04/15.
- */
 public abstract class BudgetAbstact extends FixtureScript {
 
 

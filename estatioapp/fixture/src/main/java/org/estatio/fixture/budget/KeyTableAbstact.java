@@ -29,9 +29,6 @@ import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 
-/**
- * Created by jodo on 22/04/15.
- */
 public abstract class KeyTableAbstact extends FixtureScript {
 
     protected KeyTable createKeyTable(

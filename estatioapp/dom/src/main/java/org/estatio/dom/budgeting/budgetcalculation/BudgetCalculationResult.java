@@ -20,6 +20,10 @@ package org.estatio.dom.budgeting.budgetcalculation;
 
 import java.math.BigDecimal;
 
+import org.apache.isis.applib.annotation.Auditing;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
+
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
@@ -27,6 +31,7 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import lombok.Getter;
 import lombok.Setter;
 
+@DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
 public class BudgetCalculationResult implements Distributable {
 
     public BudgetCalculationResult(

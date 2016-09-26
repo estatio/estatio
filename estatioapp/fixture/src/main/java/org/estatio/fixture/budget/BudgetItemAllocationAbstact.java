@@ -28,14 +28,12 @@ import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 
-/**
- * Created by jodo on 22/04/15.
- */
 public abstract class BudgetItemAllocationAbstact extends FixtureScript {
 
     protected BudgetItemAllocation createBudgetItemAllocation(
@@ -58,6 +56,9 @@ public abstract class BudgetItemAllocationAbstact extends FixtureScript {
 
     @Inject
     protected BudgetRepository budgetRepository;
+
+    @Inject
+    protected BudgetItemRepository budgetItemRepository;
 
     @Inject
     protected ChargeRepository chargeRepository;

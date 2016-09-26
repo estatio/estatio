@@ -4,25 +4,79 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.budgetassignment.viewmodels.BudgetAssignmentResult;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationResult;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationStatus;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetAssignmentService {
+
+
+    public List<BudgetAssignmentResult> getAssignmentResults(final Budget budget){
+        List<BudgetAssignmentResult> results = new ArrayList<>();
+        for (Lease lease : leaseRepository.findLeasesByProperty(budget.getProperty())){
+            // TODO: this is an extra filter because currently occupancies can outrun terminated leases
+            if (lease.getStatus() != LeaseStatus.TERMINATED) {
+
+                List<BudgetCalculationResult> calculationResultsForLease = new ArrayList<>();
+                for (Occupancy occupancy : lease.getOccupancies()) {
+                    if (occupancy.getInterval().overlaps(budget.getInterval())) {
+                        calculationResultsForLease.addAll(calculationResults(budget, occupancy.getUnit()));
+                    }
+                    results.addAll(createFromCalculationResults(lease, occupancy.getUnit(), calculationResultsForLease));
+                }
+
+            }
+        }
+        return results;
+    }
+
+    private List<BudgetCalculationResult> calculationResults(final Budget budget, final Unit u){
+        return Lists.newArrayList(
+                budgetCalculationService.getCalculatedResults(budget).stream().filter(x -> x.getKeyItem().getUnit().equals(u)).collect(Collectors.toList())
+        );
+    }
+
+    private List<BudgetAssignmentResult> createFromCalculationResults(final Lease lease, final Unit unit, final List<BudgetCalculationResult> calculationResultsForLease){
+        List<BudgetAssignmentResult> assignmentResults = new ArrayList<>();
+        for (BudgetCalculationResult calculationResult : calculationResultsForLease){
+            List<BudgetAssignmentResult> filteredByCharge = assignmentResults.stream().filter(x -> x.getInvoiceCharge().equals(calculationResult.getBudgetItemAllocation().getCharge().getReference())).collect(Collectors.toList());
+            if (filteredByCharge.size()>0){
+                filteredByCharge.get(0).add(calculationResult);
+            } else {
+                assignmentResults.add(new BudgetAssignmentResult(
+                    lease,
+                    unit,
+                    calculationResult.getBudgetItemAllocation().getCharge(),
+                    calculationResult.getValue()
+                ));
+            }
+        }
+        return assignmentResults;
+    }
 
 
     public List<BudgetCalculationLink> assignBudgetCalculations(final Budget budget) {
@@ -157,6 +211,9 @@ public class BudgetAssignmentService {
     BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
+    private BudgetCalculationService budgetCalculationService;
+
+    @Inject
     private BudgetCalculationLinkRepository budgetCalculationLinkRepository;
 
     @Inject
@@ -165,5 +222,7 @@ public class BudgetAssignmentService {
     @Inject
     private ServiceChargeItemRepository serviceChargeItemRepository;
 
+    @Inject
+    private LeaseRepository leaseRepository;
 
 }

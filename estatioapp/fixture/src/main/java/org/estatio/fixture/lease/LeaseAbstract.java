@@ -50,6 +50,31 @@ import org.estatio.dom.party.PartyRepository;
 public abstract class LeaseAbstract extends FixtureScript {
 
     protected Lease createLease(
+            String reference,
+            String name,
+            String unitReference,
+            String brand,
+            BrandCoverage brandCoverage,
+            String countryOfOriginRef,
+            String sector,
+            String activity,
+            String landlordReference,
+            String tenantReference,
+            LocalDate startDate,
+            LocalDate endDate,
+            boolean createManagerRole,
+            boolean createLeaseUnitAndTags,
+            Party manager, ExecutionContext fixtureResults) {
+        return createLeaseWithOccupancyEndDate(
+                reference, name, unitReference,
+                brand, brandCoverage, countryOfOriginRef,
+                sector, activity, landlordReference, tenantReference,
+                startDate, endDate, null,
+                createManagerRole, createLeaseUnitAndTags, manager, fixtureResults
+        );
+    }
+
+    protected Lease createLeaseWithOccupancyEndDate(
             String reference, String name,
             String unitReference,
             String brand,
@@ -61,6 +86,7 @@ public abstract class LeaseAbstract extends FixtureScript {
             String tenantReference,
             LocalDate startDate,
             LocalDate endDate,
+            LocalDate occupancyEndDate,
             boolean createManagerRole,
             boolean createLeaseUnitAndTags,
             Party manager, ExecutionContext fixtureResults) {
@@ -90,6 +116,7 @@ public abstract class LeaseAbstract extends FixtureScript {
         if (createLeaseUnitAndTags) {
             Country countryOfOrigin = countryRepository.findCountry(countryOfOriginRef);
             Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
+            occupancy.setEndDate(occupancyEndDate);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);

@@ -24,38 +24,37 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.lease.LeasesForBudNl;
 
-public class BudgetsForOxf extends BudgetAbstact {
+public class BudgetForBud extends BudgetAbstact {
 
     public static final LocalDate BUDGET_2015_START_DATE = new LocalDate(2015, 01, 01);
-    public static final LocalDate BUDGET_2016_START_DATE = new LocalDate(2016, 01, 01);
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new PropertyForOxfGb());
-        executionContext.executeChild(this, new ChargeRefData());
+        executionContext.executeChild(this, new LeasesForBudNl());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
 
-        createBudget(executionContext, property, BigDecimal.valueOf(30000.55), BigDecimal.valueOf(40000.35), BUDGET_2015_START_DATE);
-       createBudget(executionContext, property, BigDecimal.valueOf(30500.99), BigDecimal.valueOf(40600.01), BUDGET_2016_START_DATE);
+        createBudget(executionContext, property, BigDecimal.valueOf(10000.00), BigDecimal.valueOf(20000.00), BigDecimal.valueOf(30000.00), BUDGET_2015_START_DATE);
     }
 
-    private void createBudget(final ExecutionContext executionContext, final Property property, final BigDecimal value1, final BigDecimal value2, final LocalDate budgetStartDate) {
-        Budget newBudget1 = createBudget(
+    private void createBudget(final ExecutionContext executionContext, final Property property, final BigDecimal value1, final BigDecimal value2, final BigDecimal value3, final LocalDate budgetStartDate) {
+        Budget newBudget = createBudget(
                 property,
                 budgetStartDate,
                 budgetStartDate.plusYears(1).minusDays(1),
                 executionContext);
 
-        createBudgetItem(newBudget1,value1, chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1));
-        createBudgetItem(newBudget1,value2, chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2));
+        createBudgetItem(newBudget,value1, chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1));
+        createBudgetItem(newBudget,value2, chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_2));
+        createBudgetItem(newBudget,value3, chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_3));
     }
 
 }

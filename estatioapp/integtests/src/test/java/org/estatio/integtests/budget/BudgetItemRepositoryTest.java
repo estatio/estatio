@@ -75,7 +75,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             LocalDate startDate = new LocalDate(2016, 01, 01);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
             // when
             final BudgetItem item = budgetItemRepository.findByBudgetAndCharge(budget, charge);
             // then
@@ -92,7 +92,7 @@ public class BudgetItemRepositoryTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
             LocalDate startDate = new LocalDate(2016, 01, 01);
             // when
             final BudgetItem item = budgetItemRepository.findByPropertyAndChargeAndStartDate(property, charge, startDate);

@@ -40,8 +40,10 @@ public class ChargeRefData extends FixtureScript {
 
     private static final String CHARGE_SUFFIX_RENT = "_RENT";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE = "_SERVICE_CHARGE";
-    private static final String CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1 = "_SERVICE_CHARGE_BGT1";
-    private static final String CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2 = "_SERVICE_CHARGE_BGT2";
+    private static final String CHARGE_SUFFIX_SERVICE_CHARGE2 = "_SERVICE_CHARGE2";
+    private static final String CHARGE_SUFFIX_INCOMING_CHARGE_1 = "_INCOMING_CHARGE_1";
+    private static final String CHARGE_SUFFIX_INCOMING_CHARGE_2 = "_INCOMING_CHARGE_2";
+    private static final String CHARGE_SUFFIX_INCOMING_CHARGE_3 = "_INCOMING_CHARGE_3";
     private static final String CHARGE_SUFFIX_TURNOVER_RENT = "_TURNOVER_RENT";
     private static final String CHARGE_SUFFIX_PERCENTAGE = "_PERCENTAGE";
     private static final String CHARGE_SUFFIX_DEPOSIT = "_DEPOSIT";
@@ -62,6 +64,10 @@ public class ChargeRefData extends FixtureScript {
 
     public static final String NL_RENT = CountriesRefData.NLD + CHARGE_SUFFIX_RENT;
     public static final String NL_SERVICE_CHARGE = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String NL_SERVICE_CHARGE2 = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE2;
+    public static final String NL_INCOMING_CHARGE_1 = CountriesRefData.NLD + CHARGE_SUFFIX_INCOMING_CHARGE_1;
+    public static final String NL_INCOMING_CHARGE_2 = CountriesRefData.NLD + CHARGE_SUFFIX_INCOMING_CHARGE_2;
+    public static final String NL_INCOMING_CHARGE_3 = CountriesRefData.NLD + CHARGE_SUFFIX_INCOMING_CHARGE_3;
     public static final String NL_TURNOVER_RENT = CountriesRefData.NLD + CHARGE_SUFFIX_TURNOVER_RENT;
     public static final String NL_PERCENTAGE = CountriesRefData.NLD + CHARGE_SUFFIX_PERCENTAGE;
     public static final String NL_DEPOSIT = CountriesRefData.NLD + CHARGE_SUFFIX_DEPOSIT;
@@ -82,8 +88,8 @@ public class ChargeRefData extends FixtureScript {
 
     public static final String FR_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_RENT;
     public static final String FR_SERVICE_CHARGE = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String FR_SERVICE_CHARGE_ONBUDGET1 = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1;
-    public static final String FR_SERVICE_CHARGE_ONBUDGET2 = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2;
+    public static final String FR_SERVICE_CHARGE_ONBUDGET1 = CountriesRefData.FRA + CHARGE_SUFFIX_INCOMING_CHARGE_1;
+    public static final String FR_SERVICE_CHARGE_ONBUDGET2 = CountriesRefData.FRA + CHARGE_SUFFIX_INCOMING_CHARGE_2;
     public static final String FR_TURNOVER_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_TURNOVER_RENT;
     public static final String FR_PERCENTAGE = CountriesRefData.FRA + CHARGE_SUFFIX_PERCENTAGE;
     public static final String FR_DEPOSIT = CountriesRefData.FRA + CHARGE_SUFFIX_DEPOSIT;
@@ -94,8 +100,10 @@ public class ChargeRefData extends FixtureScript {
 
     public static final String GB_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_RENT;
     public static final String GB_SERVICE_CHARGE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String GB_SERVICE_CHARGE_ONBUDGET1 = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1;
-    public static final String GB_SERVICE_CHARGE_ONBUDGET2 = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2;
+    public static final String GB_SERVICE_CHARGE2 = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE2;
+    public static final String GB_INCOMING_CHARGE_1 = CountriesRefData.GBR + CHARGE_SUFFIX_INCOMING_CHARGE_1;
+    public static final String GB_INCOMING_CHARGE_2 = CountriesRefData.GBR + CHARGE_SUFFIX_INCOMING_CHARGE_2;
+    public static final String GB_INCOMING_CHARGE_3 = CountriesRefData.GBR + CHARGE_SUFFIX_INCOMING_CHARGE_3;
     public static final String GB_TURNOVER_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_TURNOVER_RENT;
     public static final String GB_PERCENTAGE = CountriesRefData.GBR + CHARGE_SUFFIX_PERCENTAGE;
     public static final String GB_DEPOSIT = CountriesRefData.GBR + CHARGE_SUFFIX_DEPOSIT;
@@ -134,13 +142,19 @@ public class ChargeRefData extends FixtureScript {
                     "Rent" + countryName,
                     taxReference, executionContext);
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE,
-                    "Service Charge" + countryName,
+                    "Service Charge 1" + countryName,
                     taxReference, executionContext);
-            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET1,
-                    "Service Charge On Budget1" + countryName,
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE2,
+                    "Service Charge 2" + countryName,
                     taxReference, executionContext);
-            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_ONBUDGET2,
-                    "Service Charge On Budget2" + countryName,
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_INCOMING_CHARGE_1,
+                    "Incoming Charge 1" + countryName,
+                    taxReference, executionContext);
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_INCOMING_CHARGE_2,
+                    "Incoming Charge 2" + countryName,
+                    taxReference, executionContext);
+            createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_INCOMING_CHARGE_3,
+                    "Incoming Charge 3" + countryName,
                     taxReference, executionContext);
             createCharge(chargeGroupTurnoverRent, country2AlphaCode + CHARGE_SUFFIX_TURNOVER_RENT,
                     "Turnover Rent" + countryName,

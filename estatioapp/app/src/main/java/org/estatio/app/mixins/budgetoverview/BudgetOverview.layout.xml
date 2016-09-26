@@ -3,21 +3,26 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="links"/>
-            <ns2:action id="downloadLayoutXml"/>
         </col>
     </row>
     <row>
         <col span="4">
             <ns2:fieldSet name="Budget" id="budget" unreferencedProperties="true">
+                <ns2:action id = "downloadCalculations" />
+                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <ns2:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                <ns2:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
+                <ns2:action id="clearHints" position="PANEL_DROPDOWN"/>
+                <ns2:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                <ns2:action id="links" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                 <ns2:property id="budget"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Totals (Annual amounts)" id="Totals">
                 <ns2:property id="budgetedValue"/>
                 <ns2:property id="auditedValue"/>
             </ns2:fieldSet>
-            <ns2:fieldSet name="Totals (Actual amounts taking budget period into consideration)" id="ActualTotals" unreferencedProperties="true">
+            <ns2:fieldSet name="Totals (Pro rata)" id="ActualTotals" unreferencedProperties="true">
                 <ns2:property id="budgetedValueForBudgetPeriod"/>
                 <ns2:property id="auditedValueForBudgetPeriod"/>
             </ns2:fieldSet>

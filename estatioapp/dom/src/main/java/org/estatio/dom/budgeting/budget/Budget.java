@@ -38,7 +38,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -57,6 +56,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -370,8 +370,12 @@ public class Budget extends UdoDomainObject2<Budget>
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout()
     public Budget calculate(){
-        budgetCalculationService.calculate(this);
+        budgetCalculationService.calculatePersistedCalculations(this);
         return this;
+    }
+
+    public String disableCalculate(){
+        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Disabled temporary; use overview";
     }
 
     @Programmatic

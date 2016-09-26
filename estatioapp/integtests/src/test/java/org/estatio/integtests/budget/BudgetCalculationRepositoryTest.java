@@ -112,7 +112,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-            Charge chargeNotToBeFound = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_ONBUDGET1);
+            Charge chargeNotToBeFound = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
             budget.calculate();
 
             // when

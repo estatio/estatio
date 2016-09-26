@@ -21,12 +21,12 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetCalculationService {
 
-    public List<BudgetCalculation> calculate(final Budget budget) {
+    public List<BudgetCalculation> calculatePersistedCalculations(final Budget budget) {
 
         removeTemporaryCalculations(budget);
 
         List<BudgetCalculation> budgetCalculations = new ArrayList<>();
-        for (BudgetCalculationResult result : calculationResults(budget)){
+        for (BudgetCalculationResult result : getCalculatedResults(budget)){
             budgetCalculations.add(
                     budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(
                     result.getBudgetItemAllocation(),
@@ -39,7 +39,13 @@ public class BudgetCalculationService {
         return budgetCalculations;
     }
 
-    List<BudgetCalculationResult> calculationResults(final Budget budget){
+    public void removeTemporaryCalculations(final Budget budget) {
+        for (BudgetCalculation calc : budgetCalculationRepository.findByBudgetAndStatus(budget, BudgetCalculationStatus.TEMPORARY)){
+            calc.remove();
+        }
+    }
+
+    public List<BudgetCalculationResult> getCalculatedResults(final Budget budget){
         List<BudgetCalculationResult> budgetCalculationResults = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()) {
 
@@ -47,12 +53,6 @@ public class BudgetCalculationService {
 
         }
         return budgetCalculationResults;
-    }
-
-    public void removeTemporaryCalculations(final Budget budget) {
-        for (BudgetCalculation calc : budgetCalculationRepository.findByBudgetAndStatus(budget, BudgetCalculationStatus.TEMPORARY)){
-            calc.remove();
-        }
     }
 
     private List<BudgetCalculationResult> calculate(final BudgetItem budgetItem) {
@@ -115,7 +115,7 @@ public class BudgetCalculationService {
         }
 
         DistributionService distributionService = new DistributionService();
-        distributionService.distribute(results, total, 2);
+        distributionService.distribute(results, total, 6);
 
         return (List<BudgetCalculationResult>) (Object) results;
 
