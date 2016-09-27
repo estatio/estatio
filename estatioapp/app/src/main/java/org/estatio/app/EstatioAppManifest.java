@@ -133,11 +133,26 @@ public class EstatioAppManifest implements AppManifest {
     @Override
     public Map<String, String> getConfigurationProperties() {
         final Map<String, String> props = Maps.newHashMap();
-        appendProps(props);
+        withStandardProps(props);
+
+        // uncomment to use log4jdbc instead
+        // withLog4jdbc(props);
+
+        // withHsqldbLogging(props);
+        // withSqlServerUrl(props);
+
+        withCssClassFaPatterns(props);
+        withCssClassPatterns(props);
+
+        withFacetFactory(props, "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory");
+        withFacetFactory(props, "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory");
+
+        withDebugMailSmtpSettings(props);
+
         return props;
     }
 
-    protected Map<String, String> appendProps(final Map<String, String> props) {
+    private static Map<String, String> withStandardProps(Map<String, String> props) {
         // Fundamental principle is that we don't allow editing data.
         props.put("isis.objects.editing","false");
         props.put("isis.services.eventbus.implementation", "guava");
@@ -145,23 +160,37 @@ public class EstatioAppManifest implements AppManifest {
         props.put("isis.services.eventbus.allowLateRegistration", "true");
         props.put("isis.services.injector.injectPrefix", "true");
 
-        // uncomment to use log4jdbc instead
-        // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-        // "net.sf.log4jdbc.DriverSpy");
+        return props;
+    }
 
-        // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-        // "jdbc:hsqldb:mem:test;sqllog=3");
+    private static Map<String, String> withLog4jdbc(Map<String, String> props) {
+        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+                "net.sf.log4jdbc.DriverSpy");
 
-        //
-        // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-        // "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
-        // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-        // "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
-        // "estatio");
-        // props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
-        // "estatio");
+        return props;
+    }
 
+    private static Map<String, String> withHsqldbLogging(Map<String, String> props) {
+        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
+                "jdbc:hsqldb:mem:test;sqllog=3");
+
+        return props;
+    }
+
+    private static Map<String, String> withSqlServerUrl(Map<String, String> props) {
+        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
+                "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
+        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+                "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
+                "estatio");
+        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
+                "estatio");
+
+        return props;
+    }
+
+    private static Map<String, String> withCssClassFaPatterns(Map<String, String> props) {
         props.put("isis.reflector.facet.cssClassFa.patterns",
                 Joiner.on(',').join(
                         "new.*:fa-plus",
@@ -201,7 +230,10 @@ public class EstatioAppManifest implements AppManifest {
                         "assign.*:fa-hand-o-right",
                         "approve.*:fa-thumbs-o-up",
                         "decline.*:fa-thumbs-o-down"));
+        return props;
+    }
 
+    private static Map<String, String> withCssClassPatterns(Map<String, String> props) {
         props.put("isis.reflector.facet.cssClass.patterns",
                 Joiner.on(',').join(
                         "update.*:btn-default",
@@ -213,31 +245,35 @@ public class EstatioAppManifest implements AppManifest {
                         ".*:btn-primary" // this messes up the drop-downs
                         */));
 
-        props.put("isis.reflector.facets.include",
-                Joiner.on(',').join(
-                        "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory",
-                        "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory"));
+        return props;
+    }
 
-
-        // for testing email (using debugmail.io)
-
-        // TODO: change username as required
-//        final String username = "jeroen@stromboli.it";
-//        final String username = "dan@haywood-associates.co.uk";
-        // TODO: run the app specifying the password provided by debugmail.io (a GUID):
-        // -Disis.service.email.sender.address=jeroen@stromboli.it -Disis.service.email.sender.password=99999999-9999-9999-9999-999999999999
-
-        putDebugMailSmtpSettings(props);
+    private static Map<String, String> withFacetFactory(Map<String, String> props, String facetFactory) {
+        String facetFactoryList = props.get("isis.reflector.facets.include");
+        facetFactoryList = (facetFactoryList != null ? facetFactoryList + "," : "") + facetFactory;
+        props.put("isis.reflector.facets.include", facetFactoryList);
 
         return props;
     }
 
-    private void putDebugMailSmtpSettings(final Map<String, String> props) {
-        //props.put("isis.service.email.sender.address", username);
+    private static Map<String, String> withDebugMailSmtpSettings(final Map<String, String> props) {
+
+        // for testing email (using debugmail.io)
+        // TODO: run the app specifying the password provided by debugmail.io (a GUID):
+        // -Disis.service.email.sender.address=jeroen@stromboli.it -Disis.service.email.sender.password=99999999-9999-9999-9999-999999999999
+        // -Disis.service.email.sender.address=dan@haywood-associates.co.uk -Disis.service.email.sender.password=99999999-9999-9999-9999-999999999999
 
         props.put("isis.service.email.sender.hostname", "debugmail.io");
         props.put("isis.service.email.port", "25");
         props.put("isis.service.email.tls.enabled", "false");
+
+        return props;
     }
+
+    protected static Map<String, String> withInstallFixtures(Map<String, String> props) {
+        props.put("isis.persistor.datanucleus.install-fixtures", "true");
+        return props;
+    }
+
 
 }

@@ -17,7 +17,6 @@
 package org.incode.module.documents.dom.impl.docs;
 
 public enum DocumentState {
-    CREATED,
-    RENDERED,
-    FAILED_TO_RENDER
+    NOT_RENDERED,
+    RENDERED
 }

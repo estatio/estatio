@@ -18,14 +18,27 @@
  */
 package org.incode.module.communications.dom.mixins;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import org.joda.time.DateTime;
+
 import org.apache.isis.applib.NonRecoverableException;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.EmailAddress;
+
 import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.impl.comms.CommChannelRole;
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
@@ -34,17 +47,16 @@ import org.incode.module.communications.dom.spi.DocumentEmailSupportService;
 import org.incode.module.communications.dom.spi.EmailHeader;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.Document;
+import org.incode.module.documents.dom.impl.docs.DocumentState;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.joda.time.DateTime;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.EmailAddress;
 
 /**
  * Provides the ability to send an email.
@@ -72,12 +84,20 @@ public class Document_email  {
     public Communication $$(
             @ParameterLayout(named = "to:")
             final EmailAddress to,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
+                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
+                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION)
             @ParameterLayout(named = "cc:")
-            final EmailAddress cc,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            final String cc,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
+                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
+                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION)
             @ParameterLayout(named = "bcc:")
-            final EmailAddress bcc,
+            final String bcc,
             @Parameter(maxLength = CommunicationsModule.JdoColumnLength.SUBJECT)
             @ParameterLayout(named = "Subject")
             final String subject,
@@ -128,11 +148,20 @@ public class Document_email  {
     }
 
     public String disable$$() {
+        if (document.getState() != DocumentState.RENDERED) {
+            return "Document not yet rendered";
+        }
         if (emailService == null || !emailService.isConfigured()) {
             return "Email service not configured";
         }
         if(determineBlankDocumentTemplate() == null) {
             return "Blank document type/template not provided";
+        }
+        if(determineEmailHeader().getDisabledReason() != null) {
+            return determineEmailHeader().getDisabledReason();
+        }
+        if(choices0$$().isEmpty()) {
+            return "Could not locate any email address(es) to sent to";
         }
         return null;
     }
@@ -145,12 +174,12 @@ public class Document_email  {
         return determineEmailHeader().getToSet();
     }
 
-    public Set<EmailAddress> choices1$$() {
-        return determineEmailHeader().getCcSet();
+    public String default1$$() {
+        return determineEmailHeader().getCc();
     }
 
-    public Set<EmailAddress> choices2$$() {
-        return determineEmailHeader().getBccSet();
+    public String default2$$() {
+        return determineEmailHeader().getBcc();
     }
 
     public String default3$$() {
@@ -197,6 +226,12 @@ public class Document_email  {
     private static List<String> asList(EmailAddress emailAddress) {
         return emailAddress != null
                 ? Collections.singletonList(emailAddress.getEmailAddress())
+                : Collections.emptyList();
+    }
+
+    private static List<String> asList(String emailAddress) {
+        return emailAddress != null
+                ? Collections.singletonList(emailAddress)
                 : Collections.emptyList();
     }
 

@@ -47,6 +47,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 public class EmailAddress extends CommunicationChannel {
 
+
     public String title() {
         return getEmailAddress();
     }
@@ -57,7 +58,12 @@ public class EmailAddress extends CommunicationChannel {
     private String emailAddress;
 
     public EmailAddress changeEmailAddress(
-            final @Parameter(regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress) {
+            @Parameter(
+                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
+                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
+                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION
+            )
+            final String emailAddress) {
         setEmailAddress(emailAddress);
 
         return this;

@@ -24,7 +24,6 @@ import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.xactn.TransactionService;
@@ -35,7 +34,6 @@ import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.applicability.Applicability;
 import org.incode.module.documents.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.renderers.*;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
@@ -799,15 +797,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     //region > injected services
     @Inject
-    PaperclipRepository paperclipRepository;
-    @Inject
-    DocumentTemplateRepository documentTemplateRepository;
-    @Inject
     BinderClassNameService binderClassNameService;
     @Inject
     ApplicabilityRepository applicabilityRepository;
-    @Inject
-    QueryResultsCache queryResultsCache;
     @Inject
     ClassService classService;
     @Inject

@@ -34,6 +34,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
@@ -102,7 +103,13 @@ public class PartyRelationshipMenuAndContributions {
             final String relationshipType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description,
             final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
+                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
+                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION
+            )
+            final String emailAddress
     ) {
         return partyRelationshipRepository.newRelatedPerson(party, reference, initials, firstName, lastName, gender, relationshipType, description, phoneNumber, emailAddress);
     }

@@ -19,10 +19,13 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -38,15 +41,30 @@ public class AgreementRoleCommunicationChannelTypeRepository
     }
 
     public AgreementRoleCommunicationChannelType findByTitle(final String title) {
-        return firstMatch("findByTitle", "title", title);
+        return queryResultsCache.execute(new Callable<AgreementRoleCommunicationChannelType>() {
+            @Override
+            public AgreementRoleCommunicationChannelType call() throws Exception {
+                return firstMatch("findByTitle", "title", title);
+            }
+        }, AgreementRoleCommunicationChannelTypeRepository.class, "findByTitle", title);
     }
 
     public AgreementRoleCommunicationChannelType findByAgreementTypeAndTitle(final AgreementType agreementType, final String title) {
-        return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+        return queryResultsCache.execute(new Callable<AgreementRoleCommunicationChannelType>() {
+            @Override
+            public AgreementRoleCommunicationChannelType call() throws Exception {
+                return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+            }
+        }, AgreementRoleCommunicationChannelTypeRepository.class, "findByAgreementTypeAndTitle", agreementType, title);
     }
 
     public List<AgreementRoleCommunicationChannelType> findApplicableTo(final AgreementType agreementType) {
-        return allMatches("findByAgreementType", "agreementType", agreementType);
+        return queryResultsCache.execute(new Callable<List<AgreementRoleCommunicationChannelType>>() {
+            @Override
+            public List<AgreementRoleCommunicationChannelType> call() throws Exception {
+                return allMatches("findByAgreementType", "agreementType", agreementType);
+            }
+        }, AgreementRoleCommunicationChannelTypeRepository.class, "findApplicableTo", agreementType);
     }
 
     public AgreementRoleCommunicationChannelType findOrCreate(final String title, final AgreementType agreementType) {
@@ -59,4 +77,8 @@ public class AgreementRoleCommunicationChannelTypeRepository
         }
         return arcct;
     }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
+
 }

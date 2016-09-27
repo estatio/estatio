@@ -36,11 +36,17 @@ public class EmailHeader {
     private final Set<EmailAddress> toSet = Sets.newTreeSet();
 
     @Getter
-    private final Set<EmailAddress> ccSet = Sets.newTreeSet();
+    private String cc ;
 
     @Getter
-    private final Set<EmailAddress> bccSet = Sets.newTreeSet();
+    private String bcc;
 
     @Getter @Setter
     private EmailAddress from;
+
+    /**
+     * Reason, if any, why the email could not be sent.
+     */
+    @Getter @Setter
+    private String disabledReason;
 }

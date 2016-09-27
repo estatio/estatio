@@ -35,16 +35,23 @@ import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForBlank;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class DocumentEmailSupportServiceForEstatio implements DocumentEmailSupportService {
+public class DocumentEmailSupportServiceForDocumentsAttachedToInvoice implements DocumentEmailSupportService {
 
     @Override
     public DocumentType blankDocumentType() {
@@ -63,42 +70,43 @@ public class DocumentEmailSupportServiceForEstatio implements DocumentEmailSuppo
         header.setSubject(document.getName());
 
         final Set<EmailAddress> toSet = header.getToSet();
-        final Set<EmailAddress> ccSet = header.getCcSet();
-        final Set<EmailAddress> bccSet = header.getBccSet();
 
         final List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
         for (final Paperclip paperclip : paperclips) {
             final Object attachedTo = paperclip.getAttachedTo();
-            if(attachedTo instanceof Party) {
-                final Party party = (Party) attachedTo;
-                appendEmailAddressesFor(party, toSet, ccSet, bccSet);
-            } else if(attachedTo instanceof Invoice) {
+            if(attachedTo instanceof Invoice) {
                 final Invoice invoice = (Invoice) attachedTo;
-                final Party buyer = invoice.getBuyer();
-                appendEmailAddressesFor(buyer, toSet, ccSet, toSet);
-            } else if(attachedTo instanceof Lease) {
-                final Lease lease = (Lease) attachedTo;
-                final Party party = lease.getSecondaryParty();
-                appendEmailAddressesFor(party, toSet, ccSet, toSet);
+                final Lease lease = invoice.getLease();
+                appendEmailAddressesFor(lease, header);
             }
         }
     }
 
-    private void appendEmailAddressesFor(
-            final Party party,
-            final Set<EmailAddress> toSet, final Set<EmailAddress> ccSet, final Set<EmailAddress> bccSet) {
-        appendEmailAddressesFor(party, toSet);
-        appendEmailAddressesFor(party, ccSet);
-        appendEmailAddressesFor(party, bccSet);
-    }
+    private void appendEmailAddressesFor(final Lease lease, final EmailHeader header) {
 
-    private void appendEmailAddressesFor(
-            final Party party, final Set<EmailAddress> emailAddresses) {
-        final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwner(party);
-        for (CommunicationChannel channel : channels) {
-            if(channel instanceof EmailAddress) {
-                emailAddresses.add((EmailAddress) channel);
+        // ref data lookup
+        final AgreementRoleType inRoleOfTenant =
+                agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRoleCommunicationChannelType inRoleOfinvoiceAddress =
+                agreementRoleCommunicationChannelTypeRepository.findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
+
+        final SortedSet<AgreementRole> leaseRoles = lease.getRoles();
+        for (final AgreementRole role : leaseRoles) {
+            if(role.getType() == inRoleOfTenant) {
+                final SortedSet<AgreementRoleCommunicationChannel> rolesOfChannels = role.getCommunicationChannels();
+                for (AgreementRoleCommunicationChannel roleOfChannel : rolesOfChannels) {
+                    if(roleOfChannel.getType() == inRoleOfinvoiceAddress) {
+                        final CommunicationChannel communicationChannel = roleOfChannel.getCommunicationChannel();
+                        if(roleOfChannel.isCurrent() &&
+                           communicationChannel.getType() == CommunicationChannelType.EMAIL_ADDRESS) {
+                            header.getToSet().add((EmailAddress) communicationChannel);
+                        }
+                    }
+                }
             }
+        }
+        if(header.getToSet().isEmpty()) {
+            header.setDisabledReason("Could not locate any email addresses for buyer of lease that are marked as the current invoice address.");
         }
     }
 
@@ -110,5 +118,11 @@ public class DocumentEmailSupportServiceForEstatio implements DocumentEmailSuppo
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
+
+    @Inject
+    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
 }

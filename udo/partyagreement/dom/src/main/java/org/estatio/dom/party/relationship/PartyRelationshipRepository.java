@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
@@ -52,15 +53,15 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
     @Programmatic
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
-            final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
+            final String reference,
+            final String initials,
+            final String firstName,
             final String lastName,
             final PersonGenderType gender,
             final String relationshipType,
-            final @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.EMAIL, regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION) String emailAddress
+            final String description,
+            final String phoneNumber,
+            final String emailAddress
     ) {
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();

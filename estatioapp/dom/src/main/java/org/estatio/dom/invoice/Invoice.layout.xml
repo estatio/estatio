@@ -85,10 +85,27 @@
                 </tab>
             </tabGroup>
         </col>
+        <col span="12">
+            <tabGroup>
+                <tab name="Items">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="items">
+                                <ns2:action id="newItem"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Documents">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="documents"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
         <col span="12" unreferencedCollections="true">
-            <ns2:collection id="items">
-                <ns2:action id="newItem"/>
-            </ns2:collection>
         </col>
     </row>
 </grid>

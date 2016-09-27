@@ -22,6 +22,8 @@ import lombok.Setter;
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.applicability.Binder;
@@ -155,7 +157,7 @@ public class Document extends DocumentAbstract<Document> {
         setName(documentName);
         setMimeType(mimeType);
         this.createdAt = createdAt;
-        this.state = DocumentState.CREATED;
+        this.state = DocumentState.NOT_RENDERED;
     }
     //endregion
 
@@ -174,6 +176,27 @@ public class Document extends DocumentAbstract<Document> {
     }
     //endregion
 
+
+    //region > setBlob, setClob, setTextData
+    @Override
+    void setBlob(Blob blob) {
+        super.setBlob(blob);
+        setState(DocumentState.RENDERED);
+    }
+
+    @Override
+    void setClob(Clob clob) {
+        super.setClob(clob);
+        setState(DocumentState.RENDERED);
+    }
+
+    @Override
+    void setTextData(String name, String mimeType, String text) {
+        super.setTextData(name, mimeType, text);
+        setState(DocumentState.RENDERED);
+    }
+
+    //endregion
 
     //region > createdAt (property)
     public static class CreatedAtDomainEvent extends PropertyDomainEvent<LocalDateTime> { }

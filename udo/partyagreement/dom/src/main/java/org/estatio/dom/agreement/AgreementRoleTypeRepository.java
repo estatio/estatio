@@ -19,12 +19,13 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -41,15 +42,30 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
     // //////////////////////////////////////
 
     public AgreementRoleType findByTitle(final String title) {
-        return firstMatch("findByTitle", "title", title);
+        return queryResultsCache.execute(new Callable<AgreementRoleType>() {
+            @Override
+            public AgreementRoleType call() throws Exception {
+                return firstMatch("findByTitle", "title", title);
+            }
+        }, AgreementRoleTypeRepository.class, "findByTitle", title);
     }
 
     public List<AgreementRoleType> findApplicableTo(final AgreementType agreementType) {
-        return allMatches("findByAgreementType", "agreementType", agreementType);
+        return queryResultsCache.execute(new Callable<List<AgreementRoleType>>() {
+            @Override
+            public List<AgreementRoleType> call() throws Exception {
+                return allMatches("findByAgreementType", "agreementType", agreementType);
+            }
+        }, AgreementRoleTypeRepository.class, "findApplicableTo", agreementType);
     }
 
     public AgreementRoleType findByAgreementTypeAndTitle(final AgreementType agreementType, final String title) {
-        return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+        return queryResultsCache.execute(new Callable<AgreementRoleType>() {
+            @Override
+            public AgreementRoleType call() throws Exception {
+                return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+            }
+        }, AgreementRoleTypeRepository.class, "findByAgreementTypeAndTitle", agreementType, title);
     }
 
     public AgreementRoleType findOrCreate(final String title, final AgreementType appliesTo) {
@@ -63,4 +79,6 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         return agreementRoleType;
     }
 
+    @Inject
+    QueryResultsCache queryResultsCache;
 }
