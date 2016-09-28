@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForKalNl;
@@ -52,7 +54,8 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
-        createLease(
+
+        final Lease lease = createLease(
                 REF,
                 "Poison Amsterdam",
                 UNIT_REF,
@@ -69,6 +72,14 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
                 true,
                 manager,
                 executionContext);
+
+
+        final String partyRefTenant = PARTY_REF_TENANT;
+        final CommunicationChannelType channelType = CommunicationChannelType.EMAIL_ADDRESS;
+
+        addInvoiceAddressForTenant(lease, partyRefTenant, channelType);
+
     }
+
 
 }

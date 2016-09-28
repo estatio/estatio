@@ -18,7 +18,14 @@
  */
 package org.estatio.fixture.lease;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+
 import javax.inject.Inject;
+
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
@@ -27,10 +34,17 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwnerLinkRepository;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.lease.Lease;
@@ -133,6 +147,44 @@ public abstract class LeaseAbstract extends FixtureScript {
         return partyReference != null ? partyRepository.findPartyByReference(partyReference) : null;
     }
 
+    protected void addInvoiceAddressForTenant(
+            final Lease lease,
+            final String partyRefTenant,
+            final CommunicationChannelType channelType) {
+
+        final AgreementRoleType inRoleOfTenant =
+                agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRoleCommunicationChannelType inRoleOfInvoiceAddress =
+                agreementRoleCommunicationChannelTypeRepository.findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
+
+        final Party tenant = partyRepository.findPartyByReference(partyRefTenant);
+
+        final List<CommunicationChannelOwnerLink> addressLinks = communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(tenant,
+                channelType);
+
+        final Optional<CommunicationChannel> communicationChannelIfAny = addressLinks.stream()
+                .map(x -> x.getCommunicationChannel()).findFirst();
+        final SortedSet<AgreementRole> roles = lease.getRoles();
+
+        // huh? why not working when guaa version does?
+        // final Optional<AgreementRole> agreementRoleIfAny = roles.stream().filter(x -> x.getType() == inRoleOfTenant).findFirst();
+        final com.google.common.base.Optional<AgreementRole> agreementRoleIfAny =
+                FluentIterable.from(roles).firstMatch(x -> x.getType() == inRoleOfTenant);
+
+        if(agreementRoleIfAny.isPresent() && communicationChannelIfAny.isPresent()) {
+
+            final AgreementRole agreementRole = agreementRoleIfAny.get();
+            if (!Sets.filter(agreementRole.getCommunicationChannels(), inRoleOfInvoiceAddress.matchingCommunicationChannel()).isEmpty()) {
+                // already one set up
+                return;
+            }
+
+            final CommunicationChannel communicationChannel = communicationChannelIfAny.get();
+            agreementRole.addCommunicationChannel(inRoleOfInvoiceAddress, communicationChannel, null, null);
+        }
+    }
+
+
     // //////////////////////////////////////
 
     @Inject
@@ -158,4 +210,11 @@ public abstract class LeaseAbstract extends FixtureScript {
 
     @Inject
     protected ApplicationTenancyRepository applicationTenancyRepository;
+
+    @Inject
+    protected AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+
+    @Inject
+    protected CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+
 }
