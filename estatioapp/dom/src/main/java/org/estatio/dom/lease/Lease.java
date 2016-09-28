@@ -430,6 +430,7 @@ public class Lease
         }
     }
 
+    @Programmatic
     public Optional<Occupancy> primaryOccupancy() {
         Comparator<Occupancy> byStartDateDescendingNullsFirst = (e1, e2) -> ObjectUtils.compare(e2.getStartDate(), e1.getStartDate(), true);
         Comparator<Occupancy> byUnitAreaDescendingNullsLast = (e1, e2) -> ObjectUtils.compare(e2.getUnit().getArea(), e1.getUnit().getArea(), false);

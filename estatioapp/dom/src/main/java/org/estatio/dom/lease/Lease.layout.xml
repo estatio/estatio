@@ -7,32 +7,66 @@
             <ns2:action id="createRetroInvoicesForLease"/>
             <ns2:action id="verify"/>
             <ns2:action id="verifyUntil"/>
-            <ns2:action id="remove"/>
             <ns2:action id="calculate"/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="findByLeaseAndInvoiceStatus"/>
             <ns2:action id="links"/>
+            <ns2:action id="sync"/>
+            <ns2:action id="primaryOccupancy" hidden="EVERYWHERE"/>
+            <ns2:action id="remove"/>
         </col>
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="type"/>
-                <ns2:property id="reference"/>
-                <ns2:property id="name"/>
-                <ns2:property id="leaseType">
-                    <ns2:action id="change" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="property"/>
-                <ns2:property id="paidBy">
-                    <ns2:action id="newMandate" position="BELOW"/>
-                    <ns2:action id="paidBy" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="applicationTenancyPath"/>
-                <ns2:property id="secondaryParty"/>
-                <ns2:property id="primaryParty"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="StatusInfo" id="statusInfo">
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <ns2:property id="type"/>
+                                <ns2:property id="reference"/>
+                                <ns2:property id="name"/>
+                                <ns2:property id="leaseType">
+                                    <ns2:action id="change" position="BELOW"/>
+                                </ns2:property>
+                                <ns2:property id="property"/>
+                                <ns2:property id="paidBy">
+                                    <ns2:action id="newMandate" position="BELOW"/>
+                                    <ns2:action id="paidBy" position="BELOW"/>
+                                </ns2:property>
+                                <ns2:property id="secondaryParty"/>
+                                <ns2:property id="primaryParty"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application Level">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationTenancy">
+                                <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="applicationTenancyPath"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+            <ns2:fieldSet name="Status Info" id="statusInfo">
                 <ns2:property id="status">
                     <ns2:action id="renew" position="BELOW"/>
                     <ns2:action id="terminate" position="BELOW"/>
@@ -41,28 +75,10 @@
                     <ns2:action id="resumeAll" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
-            <ns2:fieldSet name="comments" id="comments">
+            <ns2:fieldSet name="Comments" id="comments">
                 <ns2:property id="comments">
                     <ns2:action id="changeComments" position="BELOW"/>
                 </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="applicationTenancy" id="applicationTenancy">
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Related" id="related">
-                <ns2:property id="previous"/>
-                <ns2:property id="next">
-                    <ns2:action id="changePrevious" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
             </ns2:fieldSet>
         </col>
         <col span="2">
@@ -75,6 +91,12 @@
                 <ns2:property id="tenancyEndDate"/>
                 <ns2:property id="tenancyDuration">
                     <ns2:action id="changeTenancyDates" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Related" id="related">
+                <ns2:property id="previous"/>
+                <ns2:property id="next">
+                    <ns2:action id="changePrevious" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
         </col>

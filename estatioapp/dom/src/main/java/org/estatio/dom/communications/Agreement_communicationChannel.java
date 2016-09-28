@@ -1,0 +1,69 @@
+/*
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.estatio.dom.communications;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+
+public abstract class Agreement_communicationChannel {
+
+    private final Agreement agreement;
+    private final String art;
+    private final String arcct;
+    private final CommunicationChannelType cct;
+
+    public Agreement_communicationChannel(
+            final Agreement agreement,
+            final String agreementRoleTypeTitle,
+            final String agreementRoleCommunicationChannelTypeTitle) {
+        this(agreement, agreementRoleTypeTitle, agreementRoleCommunicationChannelTypeTitle, null);
+    }
+
+    public Agreement_communicationChannel(
+            final Agreement agreement,
+            final String agreementRoleTypeTitle,
+            final String agreementRoleCommunicationChannelTypeTitle,
+            final CommunicationChannelType cct) {
+        this.agreement = agreement;
+        art = agreementRoleTypeTitle;
+        arcct = agreementRoleCommunicationChannelTypeTitle;
+        this.cct = cct;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public CommunicationChannel $$() {
+        final List<CommunicationChannel> channels = locator.locate(agreement, art, arcct, cct);
+        return channels.isEmpty() ? null : channels.get(0);
+    }
+
+    @Inject
+    AgreementRoleCommunicationChannelLocator locator;
+
+}

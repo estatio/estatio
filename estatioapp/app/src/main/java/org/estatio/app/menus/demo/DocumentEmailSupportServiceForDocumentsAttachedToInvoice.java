@@ -20,12 +20,12 @@ package org.estatio.app.menus.demo;
 
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.communications.dom.spi.DocumentEmailSupportService;
 import org.incode.module.communications.dom.spi.EmailHeader;
@@ -35,8 +35,6 @@ import org.incode.module.documents.dom.impl.links.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -45,9 +43,11 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
+import org.estatio.dom.communications.AgreementRoleCommunicationChannelLocator;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.Lease_tenantInvoiceAddress;
 import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForBlank;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -90,21 +90,14 @@ public class DocumentEmailSupportServiceForDocumentsAttachedToInvoice implements
         final AgreementRoleCommunicationChannelType inRoleOfinvoiceAddress =
                 agreementRoleCommunicationChannelTypeRepository.findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
 
-        final SortedSet<AgreementRole> leaseRoles = lease.getRoles();
-        for (final AgreementRole role : leaseRoles) {
-            if(role.getType() == inRoleOfTenant) {
-                final SortedSet<AgreementRoleCommunicationChannel> rolesOfChannels = role.getCommunicationChannels();
-                for (AgreementRoleCommunicationChannel roleOfChannel : rolesOfChannels) {
-                    if(roleOfChannel.getType() == inRoleOfinvoiceAddress) {
-                        final CommunicationChannel communicationChannel = roleOfChannel.getCommunicationChannel();
-                        if(roleOfChannel.isCurrent() &&
-                           communicationChannel.getType() == CommunicationChannelType.EMAIL_ADDRESS) {
-                            header.getToSet().add((EmailAddress) communicationChannel);
-                        }
-                    }
-                }
-            }
-        }
+        final CommunicationChannel $$ = factoryService.mixin(Lease_tenantInvoiceAddress.class, lease).$$();
+
+        final List emailAddresses =
+                locator.locate(
+                        lease, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS,
+                        CommunicationChannelType.EMAIL_ADDRESS);
+        header.getToSet().addAll(emailAddresses);
+
         if(header.getToSet().isEmpty()) {
             header.setDisabledReason("Could not locate any email addresses for buyer of lease that are marked as the current invoice address.");
         }
@@ -124,5 +117,11 @@ public class DocumentEmailSupportServiceForDocumentsAttachedToInvoice implements
 
     @Inject
     AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+
+    @Inject
+    AgreementRoleCommunicationChannelLocator locator;
+
+    @Inject
+    FactoryService factoryService;
 
 }
