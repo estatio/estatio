@@ -71,8 +71,14 @@ public abstract class PersonAbstract extends FixtureScript {
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
         // new person
         Party party = personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
-        communicationChannelContributedActions.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
-        communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
+        if(emailAddress != null) {
+            communicationChannelContributedActions
+                    .newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
+        }
+        if(phoneNumber != null) {
+            communicationChannelContributedActions
+                    .newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
+        }
         // associate person
         Party from = partyRepository.findPartyByReference(fromPartyStr);
         partyRelationshipRepository.newRelationship(from, party, relationshipType, null);
