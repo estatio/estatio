@@ -27,12 +27,12 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.mixins.T_createDocumentAndScheduleRendering;
+import org.incode.module.documents.dom.mixins.T_createDocumentAndScheduleRender;
 
 @Mixin
-public class Invoice_createDocumentAndScheduleRendering extends T_createDocumentAndScheduleRendering<Invoice> {
+public class Invoice_createDocumentAndScheduleRender extends T_createDocumentAndScheduleRender<Invoice> {
 
-    public Invoice_createDocumentAndScheduleRendering(final Invoice domainObject) {
+    public Invoice_createDocumentAndScheduleRender(final Invoice domainObject) {
         super(domainObject);
     }
 

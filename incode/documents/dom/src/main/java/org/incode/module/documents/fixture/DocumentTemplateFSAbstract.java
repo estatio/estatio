@@ -61,16 +61,14 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final boolean previewOnly,
             final String name,
             final String mimeType,
-            final String text,
+            final String subjectText, final RenderingStrategy subjectRenderingStrategy, final String contentText,
             final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy,
             ExecutionContext executionContext) {
 
         final DocumentTemplate documentTemplate =
                 documentTemplateRepository.createText(
                         documentType, date, atPath,
-                        fileSuffix, previewOnly, name, mimeType, text,
+                        fileSuffix, previewOnly, name, mimeType, contentText,
                         contentRenderingStrategy,
                         subjectText, subjectRenderingStrategy);
         return executionContext.addResult(this, documentTemplate);

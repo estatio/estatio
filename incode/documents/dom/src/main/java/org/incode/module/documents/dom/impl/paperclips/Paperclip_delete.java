@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.links;
+package org.incode.module.documents.dom.impl.paperclips;
 
 import javax.inject.Inject;
 
@@ -26,38 +26,35 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 
 @Mixin
-public class Paperclip_changeRole {
+public class Paperclip_delete {
 
     //region > constructor
     private final Paperclip paperclip;
 
-    public Paperclip_changeRole(final Paperclip paperclip) {
+    public Paperclip_delete(final Paperclip paperclip) {
         this.paperclip = paperclip;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Paperclip_changeRole>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Paperclip_delete>  { }
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
             domainEvent = ActionDomainEvent.class
     )
-    public Paperclip $$(
+    public void $$(
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
             @ParameterLayout(named = "Document role")
             final String roleName
     ) {
-        paperclip.setRoleName(roleName);
-        return paperclip;
-    }
-
-    public String default0$$() {
-        return paperclip.getRoleName();
+        paperclipRepository.delete(paperclip);
+        return;
     }
 
 
+    @Inject
+    PaperclipRepository paperclipRepository;
 
 }

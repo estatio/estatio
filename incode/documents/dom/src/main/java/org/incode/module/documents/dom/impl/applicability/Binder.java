@@ -37,22 +37,27 @@ public interface Binder {
 
     public static class Binding {
         @Getter
-        private final Object contentDataModel;
-        @Getter
-        private final Object subjectDataModel;
+        private final Object dataModel;
+
         @Getter
         private final List<Object> attachTo;
 
-        public Binding(final Object contentDataModel, final Object subjectDataModel, final List<Object> attachTo) {
-            this.contentDataModel = contentDataModel;
-            this.subjectDataModel = subjectDataModel;
+        public Binding(final Object dataModel, final List<Object> attachTo) {
+            this.dataModel = dataModel;
             this.attachTo = attachTo;
         }
     }
 
+    /**
+     *
+     * @param documentTemplate - to which this binder implementation applies, as per {@link DocumentTemplate#getAppliesTo()} and {@link Applicability#getBinderClassName()}
+     * @param domainObject - acting as the context for the binding, from which both the input {@link Binding#getDataModel() data model } and the objects {@link Binding#getAttachTo() to attach to} are inferred
+     * @param additionalTextIfAny - optional text (eg for an email cover note) that may also be available to create the input data model
+     */
     @Programmatic
     Binding newBinding(
             final DocumentTemplate documentTemplate,
-            final Object domainObject);
+            final Object domainObject,
+            final String additionalTextIfAny);
 
 }

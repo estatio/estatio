@@ -29,7 +29,7 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;

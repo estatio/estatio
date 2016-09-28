@@ -28,7 +28,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.links.Paperclip;
+import org.incode.module.documents.dom.impl.paperclips.Paperclip;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 

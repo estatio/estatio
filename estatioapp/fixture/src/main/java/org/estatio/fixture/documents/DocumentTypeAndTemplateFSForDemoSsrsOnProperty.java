@@ -38,7 +38,7 @@ import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.documents.binders.BinderForReportServer;
+import org.estatio.dom.documents.binders.BinderForReportServerAttachToInput;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemplateFSAbstract {
@@ -73,7 +73,7 @@ public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemp
                 "Demo for SRSS Rendering-${title}", freemarkerRenderingStrategy,
                 executionContext);
 
-        demoTemplate.applicable(Property.class.getName(), BinderForReportServer.class.getName());
+        demoTemplate.applicable(Property.class.getName(), BinderForReportServerAttachToInput.class.getName());
 
 
 
@@ -86,7 +86,7 @@ public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemp
                 "Demo for SRSS Rendering-${title}", freemarkerRenderingStrategy,
                 executionContext);
 
-        demoNoPreviewTemplate.applicable(Property.class.getName(), BinderForReportServer.class.getName());
+        demoNoPreviewTemplate.applicable(Property.class.getName(), BinderForReportServerAttachToInput.class.getName());
 
     }
 
@@ -107,10 +107,8 @@ public class DocumentTypeAndTemplateFSForDemoSsrsOnProperty extends DocumentTemp
         return createDocumentTextTemplate(
                 docType, now, appTenancy.getPath(), ".pdf", previewOnly, docType.getName(),
                 "application/pdf",
-                templateText,
+                subjectText, subjectRenderingStrategy, templateText,
                 contentRenderingStrategy,
-                subjectText,
-                subjectRenderingStrategy,
                 executionContext);
     }
 

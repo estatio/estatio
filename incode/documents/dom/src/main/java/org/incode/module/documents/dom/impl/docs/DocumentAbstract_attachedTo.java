@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.links.Paperclip;
-import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.impl.paperclips.Paperclip;
+import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
 @Mixin
 public class DocumentAbstract_attachedTo<T> {

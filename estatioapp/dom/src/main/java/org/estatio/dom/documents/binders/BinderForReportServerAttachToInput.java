@@ -16,24 +16,23 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.documents.datamodels;
+package org.estatio.dom.documents.binders;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 /**
- * Intended to be used as a dataModel to pass into render strategies that use the {@link StringInterpolatorService} with
- * the <code>${reportServerBaseUrl}</code> property to be interpolated.
+ * Creates a dataModel to be used with {@link StringInterpolatorService} for both content and subject;
+ * requires domain object to implement {@link WithApplicationTenancy}.
+ *
+ * The input object is used for 'attachTo'.
  */
-public class RootForReportServer extends StringInterpolatorService.Root {
+public class BinderForReportServerAttachToInput extends BinderForReportServerAbstract {
 
-    private final String reportServerBaseUrl;
-
-    public RootForReportServer(final Object domainObject, final String reportServerBaseUrl) {
-        super(domainObject);
-        this.reportServerBaseUrl = reportServerBaseUrl;
-    }
-
-    public String getReportServerBaseUrl() {
-        return reportServerBaseUrl;
+    protected List<Object> determineAttachTo(final Object domainObject) {
+        return Collections.singletonList(domainObject);
     }
 }

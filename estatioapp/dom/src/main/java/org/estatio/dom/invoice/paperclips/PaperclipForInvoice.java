@@ -30,8 +30,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.documents.dom.impl.links.Paperclip;
-import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.impl.paperclips.Paperclip;
+import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.mixins.T_documents;
 
 import org.estatio.dom.invoice.Invoice;

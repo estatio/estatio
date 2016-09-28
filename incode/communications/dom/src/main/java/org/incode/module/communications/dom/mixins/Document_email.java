@@ -37,20 +37,23 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
+
 import org.incode.module.communications.dom.CommunicationsModule;
-import org.incode.module.communications.dom.impl.comms.CommChannelRole;
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.spi.DocumentEmailSupportService;
+import org.incode.module.communications.dom.spi.DocumentEmailSupport;
 import org.incode.module.communications.dom.spi.EmailHeader;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentState;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.links.PaperclipRepository;
+import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.JdoColumnLength;
@@ -83,7 +86,7 @@ public class Document_email  {
     )
     public Communication $$(
             @ParameterLayout(named = "to:")
-            final EmailAddress to,
+            final EmailAddress toChannel,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
                     maxLength = JdoColumnLength.EMAIL_ADDRESS,
@@ -105,36 +108,42 @@ public class Document_email  {
             @ParameterLayout(named = "Covering note", multiLine = EMAIL_COVERING_NOTE_MULTILINE)
             final String coveringNoteText) throws IOException {
 
-
-        // create comm and correspondent.
+        // create comm and correspondents
         final DateTime commSent = clockService.nowAsDateTime();
 
         final Communication communication = new Communication(
                 CommunicationChannelType.EMAIL_ADDRESS, document.getAtPath(), subject, commSent);
+        serviceRegistry2.injectServicesInto(communication);
 
-        final CommChannelRole toRole = new CommChannelRole(CommChannelRoleType.TO, communication, to);
+        communication.addCorrespondent(CommChannelRoleType.TO, toChannel);
+        communication.addCorrespondentIfAny(CommChannelRoleType.CC, cc);
+        communication.addCorrespondentIfAny(CommChannelRoleType.BCC, bcc);
 
-        communication.getCorrespondents().add(toRole);
+        final ApplicationUser currentUser = meService.me();
+        final String currentUserEmailAddress = currentUser.getEmailAddress();
+        communication.addCorrespondentIfAny(CommChannelRoleType.PREPARED_BY, currentUserEmailAddress);
+
         repositoryService.persistAndFlush(communication);
 
 
         // attach this doc to email ...
         paperclipRepository.attach(document, PAPERCLIP_ROLE_ATTACHMENT, communication);
 
+
         // create and attach cover note
         if(coveringNoteText != null) {
 
-            final DocumentTemplate template = determineBlankDocumentTemplate();
-            final Document coverNoteDoc = template.createDocument(coveringNoteText, subject);
+            final DocumentTemplate coverNoteTemplate = determineEmailCoverNoteTemplate();
+            final Document coverNoteDoc = coverNoteTemplate.createDocumentUsingBinding(this.document, coveringNoteText);
 
-            template.renderContentFromContentDataModel(coverNoteDoc, coveringNoteText);
+            coverNoteDoc.render(coverNoteTemplate, this.document, coveringNoteText);
 
             paperclipRepository.attach(coverNoteDoc, PAPERCLIP_ROLE_COVER, communication);
         }
 
         // send the email
         final boolean send = emailService.send(
-                                    asList(to), asList(cc), asList(bcc),
+                                    asList(toChannel), asList(cc), asList(bcc),
                                     subject, coveringNoteText,
                                     document.asDataSource());
 
@@ -147,14 +156,14 @@ public class Document_email  {
     }
 
     public String disable$$() {
-        if (document.getState() != DocumentState.RENDERED) {
-            return "Document not yet rendered";
-        }
         if (emailService == null || !emailService.isConfigured()) {
             return "Email service not configured";
         }
-        if(determineBlankDocumentTemplate() == null) {
-            return "Blank document type/template not provided";
+        if (document.getState() != DocumentState.RENDERED) {
+            return "Document not yet rendered";
+        }
+        if(determineEmailCoverNoteTemplate() == null) {
+            return "Email cover note type/template not provided";
         }
         if(determineEmailHeader().getDisabledReason() != null) {
             return determineEmailHeader().getDisabledReason();
@@ -189,33 +198,36 @@ public class Document_email  {
         return "Please find attached";
     }
 
-    private DocumentTemplate determineBlankDocumentTemplate() {
-        final DocumentType blankDocType = determineBlankDocumentType();
+    private DocumentTemplate determineEmailCoverNoteTemplate() {
+        final DocumentType blankDocType = determineEmailCoverNoteDocumentType();
         if(blankDocType == null) {
             return null;
         }
         final List<DocumentTemplate> docTemplates = documentTemplateRepository
-                .findByTypeAndApplicableToAtPath(blankDocType, document.getAtPath());
+                .findByTypeAndApplicableToAtPath(blankDocType, this.document.getAtPath());
         return docTemplates.isEmpty() ? null : docTemplates.get(0);
     }
 
-    private DocumentType determineBlankDocumentType() {
+    private DocumentType determineEmailCoverNoteDocumentType() {
         return queryResultsCache.execute(() -> {
-            if(documentEmailSupportServices != null) {
-                for (DocumentEmailSupportService supportService : documentEmailSupportServices) {
-                    return supportService.blankDocumentType();
+            if(documentEmailSupports != null) {
+                for (DocumentEmailSupport supportService : documentEmailSupports) {
+                    final DocumentType documentType = supportService.emailCoverNoteDocumentTypeFor(document);
+                    if(documentType != null) {
+                        return documentType;
+                    }
                 }
             }
             return null;
-        }, Document_email.class, "determineBlankDocumentType", document);
+        }, Document_email.class, "determineEmailCoverNoteDocumentType", document);
     }
 
     private EmailHeader determineEmailHeader() {
         return queryResultsCache.execute(() -> {
             final EmailHeader emailHeader = new EmailHeader();
-            if(documentEmailSupportServices != null) {
-                for (DocumentEmailSupportService supportService : documentEmailSupportServices) {
-                    supportService.inferHeaderFor(document, emailHeader);;
+            if(documentEmailSupports != null) {
+                for (DocumentEmailSupport emailSupport : documentEmailSupports) {
+                    emailSupport.inferHeaderFor(document, emailHeader);;
                 }
             }
             return emailHeader;
@@ -246,7 +258,7 @@ public class Document_email  {
     RepositoryService repositoryService;
 
     @Inject
-    List<DocumentEmailSupportService> documentEmailSupportServices;
+    List<DocumentEmailSupport> documentEmailSupports;
 
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
@@ -259,5 +271,11 @@ public class Document_email  {
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    MeService meService;
+
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
 
 }

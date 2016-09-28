@@ -16,22 +16,44 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Uniques;
+
 import com.google.common.eventbus.Subscribe;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.AbstractSubscriber;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
+
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
-import javax.jdo.annotations.*;
+import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
+
+import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.impl.applicability.Binder;
+import org.incode.module.documents.dom.impl.types.DocumentType;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
@@ -166,13 +188,13 @@ public class Document extends DocumentAbstract<Document> {
     @Action(hidden = Where.EVERYWHERE) // so can invoke via BackgroundService
     public void render(
             final DocumentTemplate documentTemplate,
-            final Object domainObject) {
+            final Object domainObject,
+            final String additionalTextIfAny) {
 
-        final Binder.Binding binding = documentTemplate.newBinding(domainObject);
-        final Object contentDataModel = binding.getContentDataModel();
+        final Binder.Binding binding = documentTemplate.newBinding(domainObject, additionalTextIfAny);
+        final Object contentDataModel = binding.getDataModel();
 
-
-        documentTemplate.renderContentFromContentDataModel(this, contentDataModel);
+        documentTemplate.renderContent(this, contentDataModel);
     }
     //endregion
 

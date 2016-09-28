@@ -562,34 +562,29 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         return newBinder(domainObject) != null;
     }
 
-    /**
-     * Whether there is an {@link Applicability}
-     * @param domainObject
-     * @return
-     */
     @Programmatic
     public Binder newBinder(final Object domainObject) {
         final Class<?> domainObjectClass = domainObject.getClass();
-        final Optional<Applicability> applicability = getAppliesTo().stream()
+        final Optional<Applicability> applicabilityIfAny = getAppliesTo().stream()
                 .filter(x -> classService.load(x.getDomainClassName()).isAssignableFrom(domainObjectClass))
                 .findFirst();
-        if (!applicability.isPresent()) {
+        if (!applicabilityIfAny.isPresent()) {
             return null;
         }
-        final Binder binder = (Binder) classService.instantiate(applicability.get().getBinderClassName());
+        final Binder binder = (Binder) classService.instantiate(applicabilityIfAny.get().getBinderClassName());
         serviceRegistry2.injectServicesInto(binder);
         return binder;
     }
 
     @Programmatic
-    public Binder.Binding newBinding(final Object domainObject) {
+    public Binder.Binding newBinding(final Object domainObject, final String additionalTextIfAny) {
         final Binder binder = newBinder(domainObject);
         if(binder == null) {
             throw new IllegalStateException(String.format(
                     "For domain template %s, could not locate Applicability for domain object: %s",
                     getName(), domainObject.getClass().getName()));
         }
-        final Binder.Binding binding = binder.newBinding(this, domainObject);
+        final Binder.Binding binding = binder.newBinding(this, domainObject, additionalTextIfAny);
         serviceRegistry2.injectServicesInto(binding);
         return binding;
     }
@@ -613,14 +608,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
 
     @Programmatic
-    public URL preview(
-            final Object contentDataModel,
-            final Object subjectDataModelIfAny) throws IOException {
-
-        final Object subjectDataModel = coalesce(subjectDataModelIfAny, contentDataModel);
+    public URL preview(final Object contentDataModel) throws IOException {
 
         serviceRegistry2.injectServicesInto(contentDataModel);
-        serviceRegistry2.injectServicesInto(subjectDataModel);
 
         if(!getContentRenderingStrategy().isPreviewsToUrl()) {
             throw new IllegalStateException(String.format("RenderingStrategy '%s' does not support previewing to URL",
@@ -671,46 +661,41 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     //region > createAndScheduleRendering (programmatic)
     @Programmatic
-    public DocumentAbstract createAndScheduleRendering(final Object domainObject) {
-        final Document document = createDocument(domainObject);
+    public DocumentAbstract createAndScheduleRender(final Object domainObject, final String additionalTextIfAny) {
+        final Document document = createDocumentUsingBinding(domainObject, additionalTextIfAny);
         transactionService.flushTransaction(); // ensure document is persistent so can schedule action against it.
-        backgroundService2.execute(document).render(this, domainObject);
+        backgroundService2.execute(document).render(this, domainObject, additionalTextIfAny);
         return document;
     }
     //endregion
 
     //region > createAndRender (programmatic)
     @Programmatic
-    public DocumentAbstract createAndRender(final Object domainObject) {
-        final Document document = createDocument(domainObject);
+    public DocumentAbstract createAndRender(final Object domainObject, final String additionalTextIfAny) {
+        final Document document = createDocumentUsingBinding(domainObject, additionalTextIfAny);
         transactionService.flushTransaction(); // ensure document is persistent so can schedule action against it.
-        document.render(this, domainObject);
+        document.render(this, domainObject, additionalTextIfAny);
         return document;
     }
     //endregion
 
     //region > createDocument (programmatic)
-    private Document createDocument(Object domainObject) {
-
-        final Binder.Binding binding = newBinding(domainObject);
-        final Object contentDataModel = binding.getContentDataModel();
-        final Object subjectDataModelIfAny = binding.getSubjectDataModel();
-        final String documentName = determineDocumentName(subjectDataModelIfAny, contentDataModel);
-
-        return createDocument(documentName);
+    @Programmatic
+    public Document createDocumentUsingBinding(Object domainObject, final String additionalTextIfAny) {
+        final Binder.Binding binding = newBinding(domainObject, additionalTextIfAny);
+        final Object contentDataModel = binding.getDataModel();
+        return createDocumentFromDataModel(contentDataModel);
     }
 
     @Programmatic
-    public Document createDocument(Object contentDataModel, Object subjectDataModelIfAny) {
-        final String documentName = determineDocumentName(contentDataModel, subjectDataModelIfAny);
+    public Document createDocumentFromDataModel(final Object contentDataModel) {
+        final String documentName = determineDocumentName(contentDataModel);
         return createDocument(documentName);
     }
 
-    private String determineDocumentName(Object subjectDataModelIfAny, Object contentDataModel) {
-        final Object subjectDataModel = coalesce(subjectDataModelIfAny, contentDataModel);
+    private String determineDocumentName(final Object contentDataModel) {
 
         serviceRegistry2.injectServicesInto(contentDataModel);
-        serviceRegistry2.injectServicesInto(subjectDataModel);
 
         // subject
         final RendererFromCharsToChars subjectRenderer =
@@ -719,7 +704,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         try {
             renderedDocumentName = subjectRenderer.renderCharsToChars(
                     getType(), getAtPath(), getVersion(),
-                    getSubjectText(), subjectDataModel);
+                    getSubjectText(), contentDataModel);
         } catch (IOException e) {
             renderedDocumentName = getName();
         }
@@ -733,7 +718,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
 
     @Programmatic
-    public void renderContentFromContentDataModel(
+    public void renderContent(
             final Document document,
             final Object contentDataModel) {
 

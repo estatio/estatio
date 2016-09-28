@@ -173,10 +173,12 @@ public class CommChannelRole implements Comparable<CommChannelRole> {
     public CommChannelRole(
             final CommChannelRoleType type,
             final Communication communication,
-            final CommunicationChannel channel) {
+            final CommunicationChannel channel,
+            final String description) {
         this.type = type;
         this.communication = communication;
         this.channel = channel;
+        this.description = description;
     }
     //endregion
 
@@ -207,12 +209,23 @@ public class CommChannelRole implements Comparable<CommChannelRole> {
     //region > channel (property)
     public static class ChannelDomainEvent extends PropertyDomainEvent<CommunicationChannel> { }
     @Getter @Setter
-    @Column(allowsNull = "false", name = "channelId")
+    @Column(allowsNull = "true", name = "channelId")
     @Property(
             domainEvent = ChannelDomainEvent.class,
             editing = Editing.DISABLED
     )
     private CommunicationChannel channel;
+    //endregion
+
+    //region > description (property)
+    public static class DescriptionDomainEvent extends PropertyDomainEvent<String> { }
+    @Getter @Setter
+    @Column(allowsNull = "true", length = CommunicationsModule.JdoColumnLength.DESCRIPTION)
+    @Property(
+            domainEvent = DescriptionDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private String description;
     //endregion
 
 

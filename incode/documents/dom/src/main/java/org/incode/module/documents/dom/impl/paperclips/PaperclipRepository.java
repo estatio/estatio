@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.links;
+package org.incode.module.documents.dom.impl.paperclips;
 
 import java.util.List;
 
@@ -94,7 +94,7 @@ public class PaperclipRepository {
     }
     //endregion
 
-    //region > attach (programmatic)
+    //region > canAttach (programmatic)
     @Programmatic
     public boolean canAttach(
             final Object candidateToAttachTo) {
@@ -145,6 +145,22 @@ public class PaperclipRepository {
             Class<? extends Paperclip> subtype = subtypeProvider.subtypeFor(domainClass);
             if(subtype != null) {
                 return subtype;
+            }
+        }
+        return null;
+    }
+
+    //endregion
+
+    //region > attach (programmatic)
+
+    @Programmatic
+    public <T> T paperclipAttaches(final Document document, Class<T> typeAttachedTo) {
+        final List<Paperclip> paperclips = findByDocument(document);
+        for (Paperclip paperclip : paperclips) {
+            final Object attachedTo = paperclip.getAttachedTo();
+            if(typeAttachedTo.isAssignableFrom(attachedTo.getClass())) {
+                return (T) attachedTo;
             }
         }
         return null;

@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -16,19 +17,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.mixins;
+package org.estatio.dom.documents.binders;
 
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import java.util.Collections;
+import java.util.List;
 
-public class T_createDocumentAndRender<T> extends T_createDocumentAbstract<T> {
+public class BinderForReportServerAttachNone extends BinderForReportServerAbstract {
 
-    public T_createDocumentAndRender(final T domainObject) {
-        super(domainObject);
-    }
-
+    /**
+     * Never bound to the input object at all.
+     */
     @Override
-    protected DocumentAbstract doCreate(final DocumentTemplate template, final String additionalTextIfAny) {
-        return template.createAndRender(domainObject, additionalTextIfAny);
+    protected List<Object> determineAttachTo(final Object domainObject) {
+        return Collections.emptyList();
     }
 }

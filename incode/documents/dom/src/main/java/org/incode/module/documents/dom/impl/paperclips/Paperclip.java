@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.impl.links;
+package org.incode.module.documents.dom.impl.paperclips;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -63,17 +63,17 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByDocument", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.impl.links.Paperclip "
+                        + "FROM org.incode.module.documents.dom.impl.paperclips.Paperclip "
                         + "WHERE document == :document "),
         @javax.jdo.annotations.Query(
                 name = "findByAttachedTo", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.impl.links.Paperclip "
+                        + "FROM org.incode.module.documents.dom.impl.paperclips.Paperclip "
                         + "WHERE attachedToStr == :attachedToStr "),
         @javax.jdo.annotations.Query(
                 name = "findByAttachedToAndRoleName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.module.documents.dom.impl.links.Paperclip "
+                        + "FROM org.incode.module.documents.dom.impl.paperclips.Paperclip "
                         + "WHERE attachedToStr == :attachedToStr "
                         + "   && roleName == :roleName ")
 })
@@ -183,7 +183,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
 
     //region > attachedTo (derived property, hooks)
     /**
-     * Polymorphic association to the object providing the attachedTo.
+     * Polymorphic association to the object providing the paperclipAttachedTo.
      *
      * NB: strictly speaking these should be abstract; this is a workaround (see ISIS-582)
      */

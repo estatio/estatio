@@ -23,4 +23,7 @@ public final class Constants {
     public static final String INVOICE_NUMBER_NUMERATOR_NAME = "Invoice number";
     public static final String COLLECTION_NUMBER_NUMERATOR_NAME = "Collection number";
 
+    public static final String EMAIL_COVER_NOTE_DOCUMENT_TYPE = "INV-EML-CN";
+
+
 }

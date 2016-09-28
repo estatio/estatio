@@ -19,6 +19,7 @@ package org.incode.module.communications.dom.impl.comms;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -51,10 +52,12 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.communications.dom.CommunicationsModule;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import lombok.Getter;
@@ -144,7 +147,18 @@ public class Communication implements Comparable<Communication> {
             if(ev.getIconName() != null) {
                 return;
             }
-            ev.setIconName("email");
+            switch (ev.getSource().getType()) {
+            case POSTAL_ADDRESS:
+                ev.setIconName("postal");
+                break;
+            case EMAIL_ADDRESS:
+                ev.setIconName("email");
+                break;
+            case PHONE_NUMBER:
+                break;
+            case FAX_NUMBER:
+                break;
+            }
         }
     }
 
@@ -174,6 +188,7 @@ public class Communication implements Comparable<Communication> {
         this.atPath = atPath;
         this.subject = subject;
         this.sent = sent;
+        this.state = CommunicationState.NOT_SENT;
     }
     //endregion
 
@@ -233,6 +248,43 @@ public class Communication implements Comparable<Communication> {
     private SortedSet<CommChannelRole> correspondents = new TreeSet<CommChannelRole>();
     //endregion
 
+
+    //region > addCorrespondentIfAny (programmatic)
+
+    @Programmatic
+    public void addCorrespondent(
+            final CommChannelRoleType roleType,
+            final CommunicationChannel communicationChannel) {
+        final CommChannelRole role = new CommChannelRole(roleType, this, communicationChannel, titleService.titleOf(communicationChannel));
+        getCorrespondents().add(role);
+    }
+
+    @Programmatic
+    public void addCorrespondentIfAny(
+            final CommChannelRoleType roleType,
+            final String description) {
+        if(description == null) {
+            // just ignore
+            return;
+        }
+        final CommChannelRole role = new CommChannelRole(roleType, this, null, description);
+        getCorrespondents().add(role);
+    }
+    //endregion
+
+
+    //region > state (property)
+    public static class StateDomainEvent extends PropertyDomainEvent<CommunicationState> { }
+    @Getter @Setter
+    @Column(allowsNull = "false", name = "stateId")
+    @Property(
+            domainEvent = StateDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private CommunicationState state;
+    //endregion
+
+
     //region > id (programmatic, for comparison)
     @Programmatic
     public String getId() {
@@ -260,6 +312,8 @@ public class Communication implements Comparable<Communication> {
     //endregion
 
     //region > injected services
+    @Inject
+    TitleService titleService;
     //endregion
 
 }

@@ -16,23 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.communications.dom.spi;
+package org.incode.module.documents.dom.mixins;
 
-import org.apache.isis.applib.annotation.Programmatic;
+import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
-import org.incode.module.communications.dom.mixins.Document_email;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.types.DocumentType;
+public abstract class T_createDocumentAndScheduleRender<T> extends T_createDocumentAbstract<T> {
 
-/**
- * As used by the {@link Document_email} mixin.
- */
-public interface DocumentEmailSupportService {
+    public T_createDocumentAndScheduleRender(final T domainObject) {
+        super(domainObject);
+    }
 
-    @Programmatic
-    DocumentType blankDocumentType();
-
-    @Programmatic
-    void inferHeaderFor(final Document document, final EmailHeader header);
+    @Override
+    protected DocumentAbstract doCreate(final DocumentTemplate template, final String additionalTextIfAny) {
+        return template.createAndScheduleRender(domainObject, additionalTextIfAny);
+    }
 
 }

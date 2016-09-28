@@ -21,10 +21,10 @@ package org.estatio.dom.invoice;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.incode.module.documents.dom.mixins.T_createDocumentAndScheduleRendering;
+import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
 
 @Mixin
-public class Invoice_createDocument extends T_createDocumentAndScheduleRendering<Invoice> {
+public class Invoice_createDocument extends T_createDocumentAndRender<Invoice> {
 
     public Invoice_createDocument(final Invoice domainObject) {
         super(domainObject);

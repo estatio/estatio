@@ -24,25 +24,31 @@ import java.util.Collections;
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.documents.datamodels.HelloDocumentTemplateUserDataModel;
 import org.estatio.dom.WithNameGetter;
 
-public class BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter implements Binder {
+import lombok.Data;
+
+public class BinderForWithNameGetterAttachToInput implements Binder {
 
     @Override
     public Binding newBinding(
             final DocumentTemplate documentTemplate,
-            final Object domainObject) {
+            final Object domainObject, final String additionalTextIfAny) {
 
         if(!(domainObject instanceof WithNameGetter)) {
             throw new IllegalArgumentException("Domain object must be of type WithNameGetter");
         }
         WithNameGetter withNameGetter = (WithNameGetter) domainObject;
 
-        final HelloDocumentTemplateUserDataModel dataModel = new HelloDocumentTemplateUserDataModel();
-        dataModel.setUser(withNameGetter.getName());
+        final DataModel dataModel = new DataModel();
+        dataModel.setName(withNameGetter.getName());
 
-        return new Binding(dataModel, dataModel, Collections.singletonList(domainObject));
+        return new Binding(dataModel, Collections.singletonList(domainObject));
+    }
+
+    @Data
+    public static class DataModel {
+        private String name;
     }
 
 }

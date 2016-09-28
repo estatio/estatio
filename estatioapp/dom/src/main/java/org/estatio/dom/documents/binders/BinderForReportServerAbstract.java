@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -21,8 +20,6 @@ package org.estatio.dom.documents.binders;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
@@ -30,42 +27,46 @@ import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
-import org.estatio.dom.documents.datamodels.RootForReportServer;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 /**
  * Creates a dataModel to be used with {@link StringInterpolatorService} for both content and subject;
  * requires domain object to implement {@link WithApplicationTenancy}.
- *
- * The input object must be a {@link InvoiceSummaryForPropertyDueDateStatus}, used to determine what to attach the
- * resultant document.
  */
-public class BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus implements Binder {
+public abstract class BinderForReportServerAbstract implements Binder {
 
     public Binding newBinding(
             final DocumentTemplate documentTemplate,
-            final Object domainObject) {
+            final Object domainObject, final String additionalTextIfAny) {
 
-        if(!(domainObject instanceof InvoiceSummaryForPropertyDueDateStatus)) {
-            throw new IllegalArgumentException("Domain object must be of type: InvoiceSummaryForPropertyDueDateStatus");
-        }
+        final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
 
         // dataModel
-        final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
-        final StringInterpolatorService.Root dataModel = new RootForReportServer(domainObject, baseUrl);
-
-        // attachTo
-        final InvoiceSummaryForPropertyDueDateStatus viewModel = (InvoiceSummaryForPropertyDueDateStatus) domainObject;
-        final List<Object> attachTo = Lists.newArrayList();
-        attachTo.add(viewModel.getSeller());
-        attachTo.addAll(viewModel.getInvoices());
+        final DataModel dataModel = new DataModel(domainObject, baseUrl);
 
         // binding
-        return new Binding(dataModel, dataModel, attachTo);
+        return new Binding(dataModel, determineAttachTo(domainObject));
     }
+
+    protected abstract List<Object> determineAttachTo(final Object domainObject);
 
     @javax.inject.Inject
     EstatioSettingsService estatioSettingsService;
 
+    /**
+     * Intended to be used as a dataModel to pass into render strategies that use the
+     * {@link StringInterpolatorService} with the <code>${reportServerBaseUrl}</code> property to be interpolated.
+     */
+    public static class DataModel extends StringInterpolatorService.Root {
 
+        private final String reportServerBaseUrl;
+
+        public DataModel(final Object domainObject, final String reportServerBaseUrl) {
+            super(domainObject);
+            this.reportServerBaseUrl = reportServerBaseUrl;
+        }
+
+        public String getReportServerBaseUrl() {
+            return reportServerBaseUrl;
+        }
+    }
 }

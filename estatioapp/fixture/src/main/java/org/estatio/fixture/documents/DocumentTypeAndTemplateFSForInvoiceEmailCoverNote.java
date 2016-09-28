@@ -23,6 +23,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
@@ -30,17 +31,19 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 import org.incode.module.documents.fixture.RenderingStrategyFSToUseDataModelAsOutput;
+import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.documents.binders.BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter;
+import org.estatio.dom.documents.binders.BinderForDocumentAttachedToInvoice;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
-public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstract {
+public class DocumentTypeAndTemplateFSForInvoiceEmailCoverNote extends DocumentTemplateFSAbstract {
 
-    public static final String TYPE_REF = "BLANK";
+    public static final String TYPE_REF = Constants.EMAIL_COVER_NOTE_DOCUMENT_TYPE;
+
     public static final String AT_PATH = ApplicationTenancyForGlobal.PATH;
 
-    public static final String TEMPLATE_NAME = "Blank template";
+    public static final String TEMPLATE_NAME = "Invoice Email Cover Note";
     public static final String TEMPLATE_MIME_TYPE = "text/plain";
     public static final String FILE_SUFFIX = ".txt";
 
@@ -51,21 +54,25 @@ public class DocumentTypeAndTemplateFSForBlank extends DocumentTemplateFSAbstrac
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
         executionContext.executeChild(this, new RenderingStrategyFSToUseDataModelAsOutput());
 
-
-        createType(TYPE_REF, "Blank (eg email covering note)", executionContext);
+        createType(TYPE_REF, "Invoice Email Cover Note", executionContext);
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
-        final RenderingStrategy direct = renderingStrategyRepository.findByReference(
-                RenderingStrategyFSToUseDataModelAsOutput.REF);
+        final RenderingStrategy freemarkerRenderingStrategy = renderingStrategyRepository.findByReference(
+                RenderingStrategyFSForFreemarker.REF);
         final LocalDate date = clockService.now();
 
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
                 documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
-                "(unused)", direct,
-                "(unused)", direct,
+                "${invoice.lease.reference}: invoice ${invoice.number} cover note",
+                freemarkerRenderingStrategy,
+                "Dear Sir/Madam\n"
+                + "With respect to your lease ${invoice.lease.reference}, please find enclosed invoice ${invoice.number}, dated ${invoice.invoiceDate}.\n"
+                + "${additionalText}\n"
+                + "Best Regards",
+                freemarkerRenderingStrategy,
                 executionContext);
 
-        documentTemplate.applicable(WithNameGetter.class, BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter.class);
+        documentTemplate.applicable(Document.class, BinderForDocumentAttachedToInvoice.class);
 
         executionContext.addResult(this, documentTemplate);
     }

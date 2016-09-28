@@ -30,6 +30,8 @@ public final class CommunicationsModule {
 //
         public static final int NAME = 50;
         public static final int SUBJECT = 255;
+
+        public static final int DESCRIPTION = 255;
 //
         public static final int AT_PATH = 255;  // as per security module's ApplicationTenancy#MAX_LENGTH_PATH
 //        public static final int USER_NAME = 30; // as per security module's ApplicationUser#USER_NAME

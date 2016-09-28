@@ -13,6 +13,7 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Identifier">
                                 <cpt:property id="subject"/>
+                                <cpt:property id="state"/>
                                 <cpt:property id="sent"/>
                             </cpt:fieldSet>
                         </bs3:col>

@@ -32,8 +32,7 @@ import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.documents.binders.BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.dom.documents.binders.BinderForWithNameGetterAttachToInput;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSAbstract {
@@ -65,11 +64,10 @@ public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSA
 
         final DocumentTemplate documentTemplate = createDocumentTextTemplate(
                 documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
-                CONTENT_TEXT, freemarkerRenderingStrategy,
-                SUBJECT_TEXT, freemarkerRenderingStrategy,
+                SUBJECT_TEXT, freemarkerRenderingStrategy, CONTENT_TEXT, freemarkerRenderingStrategy,
                 executionContext);
 
-        documentTemplate.applicable(WithNameGetter.class, BinderForHelloDocumentTemplateUserBinderUsingWithNameGetter.class);
+        documentTemplate.applicable(WithNameGetter.class, BinderForWithNameGetterAttachToInput.class);
 
         executionContext.addResult(this, documentTemplate);
     }

@@ -34,7 +34,7 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoice_createDocumentAndScheduleRendering;
+import org.estatio.dom.invoice.Invoice_createDocumentAndScheduleRender;
 
 @Mixin
 public class InvoiceSummaryForPropertyDueDateStatus_createDocuments  {
@@ -72,8 +72,8 @@ public class InvoiceSummaryForPropertyDueDateStatus_createDocuments  {
                         .collect(Collectors.toList()));
     }
 
-    Invoice_createDocumentAndScheduleRendering createDocumentMixin(final Invoice anyInvoice) {
-        return factoryService.mixin(Invoice_createDocumentAndScheduleRendering.class, anyInvoice);
+    Invoice_createDocumentAndScheduleRender createDocumentMixin(final Invoice anyInvoice) {
+        return factoryService.mixin(Invoice_createDocumentAndScheduleRender.class, anyInvoice);
     }
 
     @Inject

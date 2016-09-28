@@ -98,10 +98,14 @@ while `Binder` is defined as:
 ----
 public interface Binder {
     Binding newBinding(
-            final DocumentTemplate documentTemplate,
-            final Object domainObject);
+            final DocumentTemplate documentTemplate,        // <1>
+            final Object domainObject,                      // <2>
+            final String additionalTextIfAny);              // <3>
 }
 ----
+<1> the template to which this binder implementation applies, as per `DocumentTemplate#getAppliesTo()` and `Applicability#getBinderClassName()`
+<2> the domain object acting as the context for the binding, from which both the input data model and the objects to attach to (see `Binding`, below) are inferred
+<3> optional text (eg for an email cover note) that may also be available to create the input data model
 
 and `Binding` is in turn:
 
@@ -109,21 +113,18 @@ and `Binding` is in turn:
 ----
 public class Binding {
     ...
-    private final Object contentDataModel;
-    private final Object subjectDataModel;
+    private final Object dataModel;
     private final List<Object> attachTo;
     public Binding(
-            final Object contentDataModel,          // <1>
-            final Object subjectDataModel,          // <2>
-            final List<Object> attachTo) {
-        this.contentDataModel = contentDataModel;
-        this.subjectDataModel = subjectDataModel;
+            final Object dataModel,          // <1>
+            final List<Object> attachTo) {   // <2>
+        this.dataModel = dataModel;
         this.attachTo = attachTo;
     }
 }
 ----
-<1> used as input to the content `RenderingStrategy`.
-<2> used as input to the subject `RenderingStrategy`.  If null, then the contentDataModel will be used.
+<1> used as input to the `RenderingStrategy`.
+<2> specifies where to attach the domain object
 
 
 
@@ -201,18 +202,22 @@ To view the ``Paperclip``s once created there is also a `T_paperclips` mixin col
 
 === Mixins
 
-==== T_createDocument
+==== T_createDocumentAndRender, T_createDocumentAndScheduleRender
 
 The document module is fully data-driven, in that the ability to be able to create a document for any given domain entity
 is defined by the data held in `DocumentTemplate` (its `atPath`) and `Applicability` (the `domainClassName` and corresponding
 `Binder` implementation).
 
-The `T_createDocument` mixin action exposes this functionality for any domain class, by simply subclassing.  For example:
+The `T_createDocumentAndRender` and `T_createDocumentAndScheduleRender` mixin actions exposes this functionality for
+any domain class, by simply subclassing.  The former renders in the foreground, while the latter creates a background
+command so that the rendering can be performed asynchronously.
+
+For example:
 
 [source,java]
 ----
 @Mixin
-public class Invoice_createDocument extends T_createDocument<Invoice> {
+public class Invoice_createDocument extends T_createDocumentAndRender<Invoice> {
     public Invoice_createDocument(Invoice invoice) { super(invoice); }
 }
 ----
@@ -227,13 +232,14 @@ If you want make this action available for all domain objects, simply use:
 [source,java]
 ----
 @Mixin
-public class Object_createDocument extends T_createDocument<Object> {
+public class Object_createDocument extends T_createDocumentAndRender<Object> {
     public Object_createDocument(Object object) { super(object); }
 }
 ----
 
-If there is no `DocumentTemplate`/`Applicability`, then the action will be hidden in the UI.  (The reason that the module
-doesn't just provide this mixin out-of-the-box is (a) for consistency with other modules and (b) for understandability/traceability ("not *too* much magic")
+If there is no `DocumentTemplate`/`Applicability`, then the action will be hidden in the UI.  The reason that the
+module doesn't just provide this mixin out-of-the-box is (a) for consistency with other modules and (b) for
+understandability/traceability ("not *too* much magic").
 ====
 
 

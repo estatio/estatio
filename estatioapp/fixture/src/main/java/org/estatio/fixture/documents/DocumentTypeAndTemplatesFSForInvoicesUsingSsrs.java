@@ -36,8 +36,8 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.dom.documents.binders.BinderForReportServer;
-import org.estatio.dom.documents.binders.BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.documents.binders.BinderForReportServerAttachToInput;
+import org.estatio.dom.documents.binders.BinderForReportServerAttachNone;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
@@ -82,7 +82,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Preliminary letter for ${invoice.id}", stringInterpolate,
-                Invoice.class, BinderForReportServer.class,
+                Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
         createTemplateWithApplicability(
                 invoicePrelim,
@@ -93,7 +93,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&rs:Command=Render&rs:Format=PDF"
                 + "&appTenancy=/NLD", stringInterpolatePreviewCapture,
                 "Preliminary letter for ${this.id} (Netherlands)", stringInterpolate,
-                Invoice.class, BinderForReportServer.class,
+                Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
 
         createTemplateWithApplicability(
@@ -105,7 +105,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Invoice for ${this.id}", stringInterpolate,
-                Invoice.class, BinderForReportServer.class,
+                Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
 
 
@@ -120,7 +120,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Invoices overview", stringInterpolate,
                 InvoiceSummaryForPropertyDueDateStatus.class,
-                BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class,
+                BinderForReportServerAttachNone.class,
                 executionContext);
 
         createTemplateWithApplicability(
@@ -133,7 +133,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Preliminary letter for Invoices", stringInterpolate,
                 InvoiceSummaryForPropertyDueDateStatus.class,
-                BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class,
+                BinderForReportServerAttachNone.class,
                 executionContext);
 
         createTemplateWithApplicability(
@@ -146,7 +146,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
                 "Preliminary Invoice for Seller", stringInterpolate,
                 InvoiceSummaryForPropertyDueDateStatus.class,
-                BinderForReportServerForInvoiceSummaryForPropertyDueDateStatus.class,
+                BinderForReportServerAttachNone.class,
                 executionContext);
     }
 
@@ -188,9 +188,9 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 docType, now, appTenancy.getPath(), ".pdf", previewOnly,
                 docType.getName() + (nameSuffixIfAny != null? nameSuffixIfAny : ""),
                 "application/pdf",
-                text,
+                subjectText, subjectRenderingStrategy, text,
                 contentRenderingStrategy,
-                subjectText, subjectRenderingStrategy, executionContext);
+                executionContext);
     }
 
     @Inject
