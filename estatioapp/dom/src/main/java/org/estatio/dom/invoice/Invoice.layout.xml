@@ -4,17 +4,18 @@
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
             <ns2:action id="approve"/>
-            <ns2:action id="remove"/>
             <ns2:action id="saveAsHistoric"/>
             <ns2:action id="links"/>
             <ns2:action id="invoice"/>
             <ns2:action id="collect"/>
+            <ns2:action id="sync"/>
+            <ns2:action id="remove"/>
         </col>
     </row>
     <row>
         <col span="12">
             <tabGroup>
-                <tab name="invoice">
+                <tab name="Invoice">
                     <row>
                         <col span="4">
                             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
@@ -67,7 +68,7 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="metadata">
+                <tab name="Metadata">
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Metadata" id="metadata">
@@ -99,7 +100,11 @@
                 <tab name="Documents">
                     <row>
                         <col span="12">
-                            <ns2:collection id="documents"/>
+                            <ns2:collection id="documents">
+                                <ns2:action id="createDocument">
+                                    <ns2:named>Create</ns2:named>
+                                </ns2:action>
+                            </ns2:collection>
                         </col>
                     </row>
                 </tab>

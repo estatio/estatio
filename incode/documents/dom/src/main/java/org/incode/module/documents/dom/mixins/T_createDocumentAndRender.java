@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,18 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.paperclips;
+package org.incode.module.documents.dom.mixins;
 
-import org.apache.isis.applib.annotation.Mixin;
+import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
-import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
+public class T_createDocumentAndRender<T> extends T_createDocumentAbstract<T> {
 
-import org.estatio.dom.asset.Property;
-
-@Mixin
-public class Property_createDocument extends T_createDocumentAndRender<Property> {
-
-    public Property_createDocument(final Property domainObject) {
+    public T_createDocumentAndRender(final T domainObject) {
         super(domainObject);
+    }
+
+    @Override
+    protected DocumentAbstract doCreate(final DocumentTemplate template) {
+        return template.createAndRender(domainObject);
     }
 }

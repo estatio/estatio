@@ -21,10 +21,11 @@ package org.estatio.dom.invoice.viewmodel;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.incode.module.documents.dom.mixins.T_createDocument;
+import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
 
 @Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_createDocument extends T_createDocument<InvoiceSummaryForPropertyDueDateStatus> {
+public class InvoiceSummaryForPropertyDueDateStatus_createDocument extends
+        T_createDocumentAndRender<InvoiceSummaryForPropertyDueDateStatus> {
 
     public InvoiceSummaryForPropertyDueDateStatus_createDocument(final InvoiceSummaryForPropertyDueDateStatus domainObject) {
         super(domainObject);

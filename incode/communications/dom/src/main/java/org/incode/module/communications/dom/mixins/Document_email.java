@@ -121,11 +121,10 @@ public class Document_email  {
         // attach this doc to email ...
         paperclipRepository.attach(document, PAPERCLIP_ROLE_ATTACHMENT, communication);
 
-        // ... and create and attach cover note
+        // create and attach cover note
         if(coveringNoteText != null) {
 
             final DocumentTemplate template = determineBlankDocumentTemplate();
-
             final Document coverNoteDoc = template.createDocument(coveringNoteText, subject);
 
             template.renderContentFromContentDataModel(coverNoteDoc, coveringNoteText);
@@ -202,8 +201,8 @@ public class Document_email  {
 
     private DocumentType determineBlankDocumentType() {
         return queryResultsCache.execute(() -> {
-            if(documentDocumentEmailSupportServices != null) {
-                for (DocumentEmailSupportService supportService : documentDocumentEmailSupportServices) {
+            if(documentEmailSupportServices != null) {
+                for (DocumentEmailSupportService supportService : documentEmailSupportServices) {
                     return supportService.blankDocumentType();
                 }
             }
@@ -214,8 +213,8 @@ public class Document_email  {
     private EmailHeader determineEmailHeader() {
         return queryResultsCache.execute(() -> {
             final EmailHeader emailHeader = new EmailHeader();
-            if(documentDocumentEmailSupportServices != null) {
-                for (DocumentEmailSupportService supportService : documentDocumentEmailSupportServices) {
+            if(documentEmailSupportServices != null) {
+                for (DocumentEmailSupportService supportService : documentEmailSupportServices) {
                     supportService.inferHeaderFor(document, emailHeader);;
                 }
             }
@@ -247,7 +246,7 @@ public class Document_email  {
     RepositoryService repositoryService;
 
     @Inject
-    List<DocumentEmailSupportService> documentDocumentEmailSupportServices;
+    List<DocumentEmailSupportService> documentEmailSupportServices;
 
     @Inject
     DocumentTemplateRepository documentTemplateRepository;

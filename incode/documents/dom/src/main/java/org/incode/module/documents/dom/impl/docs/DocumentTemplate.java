@@ -16,12 +16,49 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.inject.Inject;
+import javax.jdo.JDOHelper;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
+
 import com.google.common.eventbus.Subscribe;
-import lombok.Getter;
-import lombok.Setter;
+
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -29,29 +66,29 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
-import org.axonframework.eventhandling.annotation.EventHandler;
+
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.applicability.Applicability;
 import org.incode.module.documents.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.impl.renderers.*;
+import org.incode.module.documents.dom.impl.renderers.Renderer;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToBytes;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToBytesWithPreviewToUrl;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToChars;
+import org.incode.module.documents.dom.impl.renderers.RendererFromBytesToCharsWithPreviewToUrl;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytes;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToBytesWithPreviewToUrl;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToChars;
+import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToCharsWithPreviewToUrl;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.spi.BinderClassNameService;
 import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
-import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
-import javax.jdo.JDOHelper;
-import javax.jdo.annotations.*;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType= IdentityType.DATASTORE,
@@ -640,7 +677,16 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         backgroundService2.execute(document).render(this, domainObject);
         return document;
     }
+    //endregion
 
+    //region > createAndRender (programmatic)
+    @Programmatic
+    public DocumentAbstract createAndRender(final Object domainObject) {
+        final Document document = createDocument(domainObject);
+        transactionService.flushTransaction(); // ensure document is persistent so can schedule action against it.
+        document.render(this, domainObject);
+        return document;
+    }
     //endregion
 
     //region > createDocument (programmatic)

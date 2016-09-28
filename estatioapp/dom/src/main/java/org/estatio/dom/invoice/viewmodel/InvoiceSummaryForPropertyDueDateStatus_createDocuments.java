@@ -31,10 +31,10 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.mixins.T_createDocument;
+import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoice_createDocument;
+import org.estatio.dom.invoice.Invoice_createDocumentAndScheduleRendering;
 
 @Mixin
 public class InvoiceSummaryForPropertyDueDateStatus_createDocuments  {
@@ -50,7 +50,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_createDocuments  {
 
         final List<Invoice> invoices = invoiceSummary.getInvoices();
         for (Invoice invoice : invoices) {
-            createDocumentMixin(invoice).$$(documentTemplate, T_createDocument.Intent.CREATE_AND_ATTACH);
+            createDocumentMixin(invoice).$$(documentTemplate, T_createDocumentAndRender.Intent.CREATE_AND_ATTACH);
         }
 
         return this.invoiceSummary;
@@ -72,8 +72,8 @@ public class InvoiceSummaryForPropertyDueDateStatus_createDocuments  {
                         .collect(Collectors.toList()));
     }
 
-    Invoice_createDocument createDocumentMixin(final Invoice anyInvoice) {
-        return factoryService.mixin(Invoice_createDocument.class, anyInvoice);
+    Invoice_createDocumentAndScheduleRendering createDocumentMixin(final Invoice anyInvoice) {
+        return factoryService.mixin(Invoice_createDocumentAndScheduleRendering.class, anyInvoice);
     }
 
     @Inject
