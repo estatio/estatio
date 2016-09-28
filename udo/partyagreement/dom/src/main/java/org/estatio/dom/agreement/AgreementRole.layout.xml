@@ -1,53 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-            <ns2:action id="links"/>
+            <cpt:domainObject/>
+            <cpt:action id="links"/>
         </col>
     </row>
     <row>
         <col span="5">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="type"/>
-                <ns2:property id="party"/>
-                <ns2:property id="agreement"/>
-                <ns2:property id="externalReference">
-                    <ns2:action id="changeExternalReference" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Dates" id="dates">
-                <ns2:property id="startDate"/>
-                <ns2:property id="endDate">
-                    <ns2:action id="changeDates" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Related" id="related">
-                <ns2:property id="predecessor"/>
-                <ns2:property id="successor">
-                    <ns2:action id="succeededBy" position="BELOW"/>
-                    <ns2:action id="precededBy" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <cpt:property id="type"/>
+                                <cpt:property id="party"/>
+                                <cpt:property id="agreement"/>
+                                <cpt:property id="externalReference">
+                                    <cpt:action id="changeExternalReference" position="BELOW"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application Level">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="Application Level" id="applicationLevel">
+                                <cpt:property id="applicationTenancy"/>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="id"/>
+                                <cpt:property id="versionSequence"/>
+                                <cpt:property id="datanucleusId"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+            <cpt:fieldSet name="Dates" id="dates">
+                <cpt:property id="startDate"/>
+                <cpt:property id="endDate">
+                    <cpt:action id="changeDates" position="BELOW"/>
+                </cpt:property>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Related" id="related">
+                <cpt:property id="predecessor"/>
+                <cpt:property id="successor">
+                    <cpt:action id="succeededBy" position="BELOW"/>
+                    <cpt:action id="precededBy" position="BELOW"/>
+                </cpt:property>
+            </cpt:fieldSet>
+        </col>
+        <col span="7" unreferencedCollections="false">
+            <tabGroup>
+                <tab name="Communication Channels and Timeline">
+                    <row>
+                        <col span="12">
+                            <cpt:collection id="communicationChannels">
+                                <cpt:action id="addCommunicationChannel">
+                                    <cpt:named>Add</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                            <cpt:collection id="timeline"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Dummy">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="dummy">
+                                <cpt:property id="dummy"/>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
         <col span="7" unreferencedCollections="true">
-            <ns2:collection id="communicationChannels">
-                <ns2:action id="addCommunicationChannel"/>
-            </ns2:collection>
-            <ns2:collection id="timeline"/>
         </col>
     </row>
 </grid>
