@@ -640,20 +640,6 @@ mvn clean install -DskipTests -o
 
             <!-- TODO: update version when move out to separate module -->
             <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <!-- TODO: update version when move out to separate module -->
-            <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
                 <version>1.7.0-SNAPSHOT</version>
@@ -665,19 +651,6 @@ mvn clean install -DskipTests -o
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
-
-            <!-- TODO: update version when move out to separate module -->
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-freemarker</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-xdocreport</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
-            </dependency>
-
 
 
             <!-- required for the dataModel implementations used by docrendering-stringinterpolator -->
