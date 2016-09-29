@@ -81,7 +81,8 @@ mvn clean install -DskipTests -o
     </developers>
 
     <properties>
-        <isis.version>1.13.0.20160927-1509</isis.version>
+        <isis.version>1.13.1-SNAPSHOT</isis.version>
+        <!--<isis.version>1.13.0.20160927-1509</isis.version>-->
 
         <isis-module-excel.version>1.13.1</isis-module-excel.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>

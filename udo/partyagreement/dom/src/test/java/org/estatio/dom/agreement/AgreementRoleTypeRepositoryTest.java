@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
@@ -62,6 +63,8 @@ public class AgreementRoleTypeRepositoryTest {
                 return null;
             }
         };
+
+        agreementRoleTypeRepository.queryResultsCache = new QueryResultsCache();
     }
 
     public static class FindApplicableTo extends AgreementRoleTypeRepositoryTest {

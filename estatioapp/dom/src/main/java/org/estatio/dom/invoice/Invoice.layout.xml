@@ -102,7 +102,7 @@
                         <col span="12">
                             <ns2:collection id="documents">
                                 <ns2:action id="createDocument">
-                                    <ns2:named>Create</ns2:named>
+                                    <ns2:named>Preview/Create</ns2:named>
                                 </ns2:action>
                             </ns2:collection>
                         </col>

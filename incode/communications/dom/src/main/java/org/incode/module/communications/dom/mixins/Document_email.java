@@ -105,8 +105,8 @@ public class Document_email  {
             @ParameterLayout(named = "Subject")
             final String subject,
             @Parameter(optionality = Optionality.OPTIONAL)
-            @ParameterLayout(named = "Covering note", multiLine = EMAIL_COVERING_NOTE_MULTILINE)
-            final String coveringNoteText) throws IOException {
+            @ParameterLayout(named = "Covering note message", multiLine = EMAIL_COVERING_NOTE_MULTILINE)
+            final String message) throws IOException {
 
         // create comm and correspondents
         final DateTime commSent = clockService.nowAsDateTime();
@@ -129,23 +129,24 @@ public class Document_email  {
         // attach this doc to email ...
         paperclipRepository.attach(document, PAPERCLIP_ROLE_ATTACHMENT, communication);
 
-
         // create and attach cover note
-        if(coveringNoteText != null) {
+        final DocumentTemplate coverNoteTemplate = determineEmailCoverNoteTemplate();
+        final Document coverNoteDoc = coverNoteTemplate.createDocumentUsingBinding(this.document, message);
 
-            final DocumentTemplate coverNoteTemplate = determineEmailCoverNoteTemplate();
-            final Document coverNoteDoc = coverNoteTemplate.createDocumentUsingBinding(this.document, coveringNoteText);
+        coverNoteDoc.render(coverNoteTemplate, this.document, message);
 
-            coverNoteDoc.render(coverNoteTemplate, this.document, coveringNoteText);
+        final String emailBody = coverNoteDoc.asChars();
 
-            paperclipRepository.attach(coverNoteDoc, PAPERCLIP_ROLE_COVER, communication);
-        }
+        paperclipRepository.attach(coverNoteDoc, PAPERCLIP_ROLE_COVER, communication);
 
         // send the email
         final boolean send = emailService.send(
                                     asList(toChannel), asList(cc), asList(bcc),
-                                    subject, coveringNoteText,
+                                    subject, emailBody,
                                     document.asDataSource());
+
+        communication.sent(clockService.nowAsDateTime());
+
 
         // fail-fast if there was a problem (don't persist anything).
         if(!send) {
@@ -195,7 +196,7 @@ public class Document_email  {
     }
 
     public String default4$$() {
-        return "Please find attached";
+        return "";
     }
 
     private DocumentTemplate determineEmailCoverNoteTemplate() {

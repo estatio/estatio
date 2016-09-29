@@ -183,12 +183,12 @@ public class Communication implements Comparable<Communication> {
             final CommunicationChannelType type,
             final String atPath,
             final String subject,
-            final DateTime sent) {
+            final DateTime queuedAt) {
         this.type = type;
         this.atPath = atPath;
         this.subject = subject;
-        this.sent = sent;
-        this.state = CommunicationState.NOT_SENT;
+        this.queuedAt = queuedAt;
+        this.state = CommunicationState.QUEUED;
     }
     //endregion
 
@@ -230,15 +230,34 @@ public class Communication implements Comparable<Communication> {
     private String subject;
     //endregion
 
-    //region > sent (property)
-    public static class SentDomainEvent extends PropertyDomainEvent<DateTime> { }
+    //region > queuedAt (property)
+    public static class QueuedAtDomainEvent extends PropertyDomainEvent<DateTime> { }
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
-            domainEvent = SentDomainEvent.class,
+            domainEvent = QueuedAtDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private DateTime sent;
+    private DateTime queuedAt;
+    //endregion
+
+    //region > sentAt (property)
+    public static class SentAtDomainEvent extends PropertyDomainEvent<DateTime> { }
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @Property(
+            domainEvent = SentAtDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private DateTime sentAt;
+    //endregion
+
+    //region > sent (programmatic)
+    @Programmatic
+    public void sent(DateTime dateTime) {
+        setSentAt(dateTime);
+        setState(CommunicationState.SENT);
+    }
     //endregion
 
     //region > correspondents
@@ -302,12 +321,12 @@ public class Communication implements Comparable<Communication> {
     //region > toString, compareTo
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "type", "sent", "subject", "atPath", "id");
+        return ObjectContracts.toString(this, "type", "queuedAt", "sentAt", "state", "subject", "atPath", "id");
     }
 
     @Override
     public int compareTo(final Communication other) {
-        return ObjectContracts.compare(this, other, "type", "sent", "subject", "atPath", "id");
+        return ObjectContracts.compare(this, other, "type", "queuedAt", "sentAt", "state", "subject", "atPath", "id");
     }
     //endregion
 
