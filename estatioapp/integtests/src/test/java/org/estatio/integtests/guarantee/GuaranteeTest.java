@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.financial.FinancialAccount;
@@ -54,6 +55,9 @@ public class GuaranteeTest extends EstatioIntegrationTest {
     @Inject
     GuaranteeRepository guaranteeRepository;
 
+    @Inject
+    TransactionService transactionService;
+
     Lease lease;
 
     Guarantee guaranteeWithFinancialAccount;
@@ -79,6 +83,7 @@ public class GuaranteeTest extends EstatioIntegrationTest {
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
         guaranteeWithoutFinancialAccount = guaranteeRepository.newGuarantee(
                 lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld("20120101"), null, "", VT.bd(1000), null);
+        transactionService.flushTransaction();
     }
 
     public static class ChangeGuaranteeType extends GuaranteeTest {
@@ -96,6 +101,8 @@ public class GuaranteeTest extends EstatioIntegrationTest {
         public void happyCase2() throws Exception {
             // when
             guaranteeWithoutFinancialAccount.changeGuaranteeType(GuaranteeType.BANK_GUARANTEE);
+            transactionService.flushTransaction();
+
             FinancialAccount financialAccount = guaranteeWithoutFinancialAccount.getFinancialAccount();
             Party secondaryParty = lease.getSecondaryParty();
 

@@ -33,6 +33,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -74,6 +75,9 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
 
     @Inject
     PartyRepository partyRepository;
+
+    @Inject
+    TransactionService transactionService;
 
     public static class Assign extends LeaseIntegTest {
 
@@ -478,6 +482,7 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
                     leaseTopModel2a.getPrimaryParty(),
                     leaseTopModel2a.getSecondaryParty()
             );
+            transactionService.flushTransaction();
         }
 
         @Test
@@ -499,6 +504,8 @@ public class LeaseIntegTest extends EstatioIntegrationTest {
 
             // when
             leaseTopModel3.changePrevious(leaseTopModel2b);
+            transactionService.flushTransaction();
+
 
             // then
             assertThat(leaseTopModel2b.getNext()).isEqualTo(leaseTopModel3);

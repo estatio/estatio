@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateRepository;
@@ -72,6 +73,9 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
     @Inject
     PartyRepository partyRepository;
 
+    @Inject
+    TransactionService transactionService;
+
     Lease lease;
 
     public static class NewBankMandate extends BankMandateRepositoryTest {
@@ -95,6 +99,7 @@ public class BankMandateRepositoryTest extends EstatioIntegrationTest {
 
             // When
             BankMandate bankMandate = bankMandateRepository.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount, sequenceType, scheme, signatureDate);
+            transactionService.flushTransaction();
 
             // Then
             assertThat(bankMandate.getReference()).isEqualTo(reference);

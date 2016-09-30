@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
@@ -79,6 +80,9 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
     @Inject
     PartyRepository partyRepository;
 
+    @Inject
+    TransactionService transactionService;
+
     public static class NewGuarantee extends GuaranteeRepositoryTest {
 
         private Lease lease;
@@ -110,6 +114,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
 
             // when
             guarantee = guaranteeRepository.newGuarantee(lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, startDate, endDate, description, maximumAmount, null);
+            transactionService.flushTransaction();
 
             // then
             assertThat(guarantee.getLease()).isEqualTo(lease);
