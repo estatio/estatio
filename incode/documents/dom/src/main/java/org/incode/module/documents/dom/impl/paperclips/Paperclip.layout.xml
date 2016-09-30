@@ -11,6 +11,7 @@
             <cpt:fieldSet name="Document">
                 <cpt:property id="document" hidden="REFERENCES_PARENT"/>
                 <cpt:property id="documentCreatedAt"/>
+                <cpt:property id="documentState"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>

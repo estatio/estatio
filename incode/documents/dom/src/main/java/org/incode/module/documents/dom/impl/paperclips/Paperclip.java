@@ -45,7 +45,9 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.DocumentState;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
 import lombok.Getter;
@@ -216,42 +218,64 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     private String roleName;
     //endregion
 
-    //region > documentCreatedAt (property)
+    //region > documentDate (derived property)
 
-    public static class DocumentCreatedAtDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
+    public static class DocumentDateDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
 
     /**
-     * Copy of the date/time that the document was created (only populated for Documents, not templates)
+     * Either the {@link Document#getCreatedAt()} or {@link Document#getRenderedAt()}, depending upon the
+     * {@link Document#getState()} of the {@link Document}.  Returns <tt>null</tt> for {@link DocumentTemplate}s.
+     */
+    @NotPersistent
+    @Property(
+            domainEvent = DocumentDateDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    public DateTime getDocumentDate() {
+        final DocumentAbstract documentAbstract = getDocument();
+        if(documentAbstract instanceof Document) {
+            final Document document = (Document) documentAbstract;
+            DocumentState state = document.getState();
+            return state.dateOf(document);
+        }
+        return null;
+    }
+    //endregion
+
+    //region > documentState (property)
+
+    public static class DocumentStateDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
+
+    /**
+     * Copy of the state of the document (only populated for Documents, not templates)
      */
     @Getter @Setter
     @Column(allowsNull = "true")
     @Property(
-            domainEvent = DocumentCreatedAtDomainEvent.class,
+            domainEvent = DocumentStateDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private DateTime documentCreatedAt;
+    private DocumentState documentState;
 
-    public TranslatableString disableDocumentCreatedAt() {
+    public TranslatableString disableDocumentState() {
         if(getDocument() instanceof DocumentTemplate) {
-            return TranslatableString.tr("Document templates do not have a createdAt property.");
+            return TranslatableString.tr("Document templates do not have a state property.");
         }
         return null;
     }
     //endregion
 
 
-
-
     //region > toString, compareTo
 
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName", "createdAt");
+        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName", "documentDate", "documentState");
     }
 
     @Override
     public int compareTo(final Paperclip other) {
-        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "createdAt");
+        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "documentDate", "documentState");
     }
 
     //endregion

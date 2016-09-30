@@ -106,7 +106,7 @@ public class PaperclipRepository {
     //region > attach (programmatic)
     @Programmatic
     public Paperclip attach(
-            final DocumentAbstract document,
+            final DocumentAbstract documentAbstract,
             final String roleName,
             final Object attachTo) {
 
@@ -114,10 +114,11 @@ public class PaperclipRepository {
 
         final Paperclip paperclip = repositoryService.instantiate(subtype);
 
-        paperclip.setDocument(document);
+        paperclip.setDocument(documentAbstract);
         paperclip.setRoleName(roleName);
-        if(document instanceof Document) {
-            paperclip.setDocumentCreatedAt(((Document)document).getCreatedAt());
+        if(documentAbstract instanceof Document) {
+            final Document document = (Document) documentAbstract;
+            paperclip.setDocumentState(document.getState());
         }
 
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachTo);

@@ -16,6 +16,7 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Indices;
@@ -44,6 +45,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
@@ -204,18 +206,21 @@ public class Document extends DocumentAbstract<Document> {
     void setBlob(Blob blob) {
         super.setBlob(blob);
         setState(DocumentState.RENDERED);
+        setRenderedAt(clockService.nowAsDateTime());
     }
 
     @Override
     void setClob(Clob clob) {
         super.setClob(clob);
         setState(DocumentState.RENDERED);
+        setRenderedAt(clockService.nowAsDateTime());
     }
 
     @Override
     void setTextData(String name, String mimeType, String text) {
         super.setTextData(name, mimeType, text);
         setState(DocumentState.RENDERED);
+        setRenderedAt(clockService.nowAsDateTime());
     }
 
     //endregion
@@ -229,6 +234,17 @@ public class Document extends DocumentAbstract<Document> {
             editing = Editing.DISABLED
     )
     private DateTime createdAt;
+    //endregion
+
+    //region > renderedAt (property)
+    public static class RenderedAtDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @Property(
+            domainEvent = CreatedAtDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    private DateTime renderedAt;
     //endregion
 
     //region > state (property)
@@ -273,4 +289,7 @@ public class Document extends DocumentAbstract<Document> {
     //endregion
 
 
+
+    @Inject
+    ClockService clockService;
 }

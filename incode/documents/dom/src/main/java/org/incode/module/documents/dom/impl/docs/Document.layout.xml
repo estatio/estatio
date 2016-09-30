@@ -49,6 +49,7 @@
                 <cpt:property id="applicationTenancy"/>
                 <!-- can't put in tab because of ISIS-1480 -->
                 <cpt:property id="createdAt"/>
+                <cpt:property id="renderedAt"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
