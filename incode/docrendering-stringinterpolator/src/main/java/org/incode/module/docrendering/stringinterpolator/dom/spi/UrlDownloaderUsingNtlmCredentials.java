@@ -85,7 +85,9 @@ public class UrlDownloaderUsingNtlmCredentials implements UrlDownloaderService {
     @PreDestroy
     public void destroy() {
         try {
-            httpclient.close();
+            if(httpclient != null) {
+                httpclient.close();
+            }
         } catch (IOException e) {
             // ignore
         }
