@@ -19,7 +19,6 @@
 package org.estatio.domlink;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import com.google.common.collect.Lists;
 
@@ -28,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.events.system.FixturesInstallingEvent;
+import org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,14 +54,12 @@ public class LinkRepositoryTest {
 
         @Before
         public void setUp() throws Exception {
-            queryResultsCache = new QueryResultsCache() {
-                @Override
-                public <T> T execute(Callable<T> callable, Key cacheKey) {
-                    try {
-                        return callable.call();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+
+            QueryResultsCache.Control control = new QueryResultsCache.Control();
+            control.on(new FixturesInstallingEvent(new FixtureScriptsDefault()));
+
+            queryResultsCache = new QueryResultsCache(){{
+                    control = new QueryResultsCache.Control();
                 }
             };
 

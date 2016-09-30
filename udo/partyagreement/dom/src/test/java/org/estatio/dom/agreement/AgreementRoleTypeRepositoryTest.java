@@ -23,7 +23,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.events.system.FixturesInstallingEvent;
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.FinderInteraction;
@@ -64,7 +66,15 @@ public class AgreementRoleTypeRepositoryTest {
             }
         };
 
-        agreementRoleTypeRepository.queryResultsCache = new QueryResultsCache();
+        QueryResultsCache.Control control = new QueryResultsCache.Control();
+        control.on(new FixturesInstallingEvent(new FixtureScriptsDefault()));
+
+        final QueryResultsCache queryResultsCache = new QueryResultsCache() {
+            {
+                control = new Control();
+            }
+        };
+        agreementRoleTypeRepository.queryResultsCache = queryResultsCache;
     }
 
     public static class FindApplicableTo extends AgreementRoleTypeRepositoryTest {
