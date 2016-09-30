@@ -19,17 +19,21 @@
 package org.estatio.integtests.guarantee;
 
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
+
+import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.GuaranteeRepository;
+import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
@@ -37,9 +41,7 @@ import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GuaranteeTest extends EstatioIntegrationTest {
 
@@ -87,7 +89,7 @@ public class GuaranteeTest extends EstatioIntegrationTest {
             guaranteeWithoutFinancialAccount.changeGuaranteeType(GuaranteeType.COMPANY_GUARANTEE);
 
             // then
-            assertThat(guaranteeWithoutFinancialAccount.getGuaranteeType(), is(GuaranteeType.COMPANY_GUARANTEE));
+            assertThat(guaranteeWithoutFinancialAccount.getGuaranteeType()).isEqualTo(GuaranteeType.COMPANY_GUARANTEE);
         }
 
         @Test
@@ -98,10 +100,10 @@ public class GuaranteeTest extends EstatioIntegrationTest {
             Party secondaryParty = lease.getSecondaryParty();
 
             // then
-            assertThat(guaranteeWithoutFinancialAccount.getGuaranteeType(), is(GuaranteeType.BANK_GUARANTEE));
-            assertNotNull(financialAccount);
-            assertThat(financialAccount.getReference(), is(guaranteeWithoutFinancialAccount.getReference()));
-            assertThat(financialAccount.getOwner(), is(secondaryParty));
+            assertThat(guaranteeWithoutFinancialAccount.getGuaranteeType()).isEqualTo(GuaranteeType.BANK_GUARANTEE);
+            assertThat(financialAccount).isNotNull();
+            assertThat(financialAccount.getReference()).isEqualTo(guaranteeWithoutFinancialAccount.getReference());
+            assertThat(financialAccount.getOwner()).isEqualTo(secondaryParty);
         }
 
         @Test
@@ -114,7 +116,35 @@ public class GuaranteeTest extends EstatioIntegrationTest {
             }
 
             // then
-            assertThat(guaranteeWithFinancialAccount.getGuaranteeType(), is(GuaranteeType.BANK_GUARANTEE));
+            assertThat(guaranteeWithFinancialAccount.getGuaranteeType()).isEqualTo(GuaranteeType.BANK_GUARANTEE);
+        }
+    }
+
+    public static class Terminate extends GuaranteeTest {
+
+        @Test
+        public void happyCaseWithFinancialAccount() throws Exception {
+            // given
+            assertThat(guaranteeWithFinancialAccount.getTerminationDate()).isNull();
+
+            // when
+            wrap(guaranteeWithFinancialAccount).terminate(new LocalDate(2016, 1, 1), "Test");
+
+            // then
+            assertThat(guaranteeWithFinancialAccount.getTerminationDate()).isEqualTo(new LocalDate(2016, 1, 1));
+        }
+
+        @Test
+        public void happyCaseWithoutFinancialAccount() throws Exception {
+            // given
+            assertThat(guaranteeWithoutFinancialAccount.getTerminationDate()).isNull();
+            assertThat(guaranteeWithoutFinancialAccount.getFinancialAccount()).isNull();
+
+            // when
+            wrap(guaranteeWithoutFinancialAccount).terminate(new LocalDate(2016, 1, 1), "Test");
+
+            // then
+            assertThat(guaranteeWithoutFinancialAccount.getTerminationDate()).isEqualTo(new LocalDate(2016, 1, 1));
         }
     }
 }

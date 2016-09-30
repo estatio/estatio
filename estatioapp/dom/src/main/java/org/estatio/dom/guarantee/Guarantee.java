@@ -45,8 +45,8 @@ import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.lease.Lease;
 
 import lombok.Getter;
@@ -95,8 +95,8 @@ public class Guarantee
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
-            )
-            public ApplicationTenancy getApplicationTenancy() {
+    )
+    public ApplicationTenancy getApplicationTenancy() {
         return getLease().getApplicationTenancy();
     }
 
@@ -169,9 +169,8 @@ public class Guarantee
             final LocalDate terminationDate,
             final String description) {
         setTerminationDate(terminationDate);
-        BigDecimal balance = financialAccount.getBalance();
-        if (balance.compareTo(BigDecimal.ZERO) != 0) {
-            financialAccount.newTransaction(terminationDate, description, balance.negate());
+        if (financialAccount != null && financialAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+            financialAccount.newTransaction(terminationDate, description, financialAccount.getBalance().negate());
         }
         return this;
     }

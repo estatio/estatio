@@ -10,7 +10,7 @@ logs/
 .settings/
 .project
 .classpath
-datanucleus.log
+datanucleus.log*
 *.iml
 .idea
 *.log
