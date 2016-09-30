@@ -16,8 +16,11 @@
  */
 package org.incode.module.communications.dom.impl.comms;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
@@ -36,12 +39,14 @@ import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.DateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -52,16 +57,26 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.services.background.BackgroundService;
+import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.documents.dom.impl.docs.Document;
+import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.paperclips.Paperclip;
+import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.EmailAddress;
 
 import lombok.Getter;
 import lombok.Setter;
+import static org.incode.module.communications.dom.mixins.Document_email.PAPERCLIP_ROLE_ATTACHMENT;
+import static org.incode.module.communications.dom.mixins.Document_email.PAPERCLIP_ROLE_COVER;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE
@@ -267,7 +282,6 @@ public class Communication implements Comparable<Communication> {
     private SortedSet<CommChannelRole> correspondents = new TreeSet<CommChannelRole>();
     //endregion
 
-
     //region > addCorrespondentIfAny (programmatic)
 
     @Programmatic
@@ -291,7 +305,6 @@ public class Communication implements Comparable<Communication> {
     }
     //endregion
 
-
     //region > state (property)
     public static class StateDomainEvent extends PropertyDomainEvent<CommunicationState> { }
     @Getter @Setter
@@ -303,6 +316,79 @@ public class Communication implements Comparable<Communication> {
     private CommunicationState state;
     //endregion
 
+    @Programmatic
+    public void scheduleSend(final String subject) {
+        backgroundService.execute(this).send(subject);
+    }
+
+    @Programmatic
+    public Communication send(final String subject) {
+
+        Document attachment = findDocument(PAPERCLIP_ROLE_ATTACHMENT);
+        Document coverNoteDoc = findDocument(PAPERCLIP_ROLE_COVER);
+
+        List<String> toList = findCorrespondents(CommChannelRoleType.TO);
+        List<String> ccList = findCorrespondents(CommChannelRoleType.CC);
+        List<String> bccList = findCorrespondents(CommChannelRoleType.BCC);
+
+        final String emailBody = coverNoteDoc.asChars();
+
+        final boolean send = emailService.send(
+                toList, ccList, bccList,
+                subject, emailBody,
+                attachment.asDataSource());
+
+        if(!send) {
+            throw new ApplicationException("Failed to send email; see system logs for details.");
+        }
+
+        sent(clockService.nowAsDateTime());
+
+        return this;
+    }
+
+    public List<String> findCorrespondents(final CommChannelRoleType roleType) {
+        SortedSet<CommChannelRole> correspondents = getCorrespondents();
+        return correspondents.stream()
+                             .filter(x -> x.getType() == roleType)
+                             .map(x -> {
+                                 CommunicationChannel channel = x.getChannel();
+                                 if(channel != null) {
+                                     if (channel.getType() == CommunicationChannelType.EMAIL_ADDRESS) {
+                                         EmailAddress emailAddress = (EmailAddress) channel;
+                                         return emailAddress.getEmailAddress();
+                                     } else {
+                                         return null;
+                                     }
+                                 } else {
+                                     return x.getDescription();
+                                 }
+                             })
+                             .filter(x -> x != null)
+                             .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public Document findDocument(final String roleName) {
+        DocumentAbstract documentAbstract = findDocumentIfAny(roleName);
+        if(documentAbstract == null) {
+            throw new ApplicationException(
+                    String.format("Could not find document via paperclip, role '%s'", roleName));
+        }
+        if(documentAbstract instanceof Document) {
+            return (Document) documentAbstract;
+        }
+        throw new ApplicationException(
+                String.format("Found document via paperclip, role '%s', but was DocumentTemplate (not an instance of Document)", roleName));
+    }
+
+    private DocumentAbstract findDocumentIfAny(final String roleName) {
+        List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(this);
+        Optional<Paperclip> paperclipForAttachment = paperclips.stream()
+                .filter(x -> Objects.equal(x.getRoleName(), roleName)).findFirst();
+        return paperclipForAttachment.isPresent() ?
+                paperclipForAttachment.get().getDocument() : null;
+    }
 
     //region > id (programmatic, for comparison)
     @Programmatic
@@ -333,6 +419,18 @@ public class Communication implements Comparable<Communication> {
     //region > injected services
     @Inject
     TitleService titleService;
+
+    @Inject
+    BackgroundService backgroundService;
+
+    @Inject
+    EmailService emailService;
+
+    @Inject
+    ClockService clockService;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
     //endregion
 
 }

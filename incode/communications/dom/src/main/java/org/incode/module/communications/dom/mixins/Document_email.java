@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import org.joda.time.DateTime;
 
-import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
@@ -125,8 +124,7 @@ public class Document_email  {
 
         repositoryService.persistAndFlush(communication);
 
-
-        // attach this doc to email ...
+        // attach this doc to communication
         paperclipRepository.attach(document, PAPERCLIP_ROLE_ATTACHMENT, communication);
 
         // create and attach cover note
@@ -135,23 +133,10 @@ public class Document_email  {
 
         coverNoteDoc.render(coverNoteTemplate, this.document, message);
 
-        final String emailBody = coverNoteDoc.asChars();
-
         paperclipRepository.attach(coverNoteDoc, PAPERCLIP_ROLE_COVER, communication);
 
-        // send the email
-        final boolean send = emailService.send(
-                                    asList(toChannel), asList(cc), asList(bcc),
-                                    subject, emailBody,
-                                    document.asDataSource());
-
-        communication.sent(clockService.nowAsDateTime());
-
-
-        // fail-fast if there was a problem (don't persist anything).
-        if(!send) {
-            throw new NonRecoverableException("Failed to send email");
-        }
+        // schedule the email to be sent
+        communication.scheduleSend(subject);
 
         return communication;
     }
@@ -268,9 +253,6 @@ public class Document_email  {
     ClockService clockService;
 
     @Inject
-    EmailService emailService;
-
-    @Inject
     PaperclipRepository paperclipRepository;
 
     @Inject
@@ -278,5 +260,8 @@ public class Document_email  {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    EmailService emailService;
 
 }
