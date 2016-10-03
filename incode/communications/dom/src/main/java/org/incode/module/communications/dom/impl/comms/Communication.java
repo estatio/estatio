@@ -47,6 +47,7 @@ import org.joda.time.DateTime;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -57,6 +58,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
@@ -321,7 +323,7 @@ public class Communication implements Comparable<Communication> {
         backgroundService.execute(this).send(subject);
     }
 
-    @Programmatic
+    @Action(hidden = Where.EVERYWHERE) // so can invoke via BackgroundService
     public Communication send(final String subject) {
 
         Document attachment = findDocument(PAPERCLIP_ROLE_ATTACHMENT);
