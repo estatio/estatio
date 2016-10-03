@@ -30,7 +30,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
@@ -39,8 +38,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
@@ -154,7 +153,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     // //////////////////////////////////////
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public List<Invoice> getInvoices() {
         return invoiceRepository.findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
     }

@@ -9,7 +9,12 @@
             <ns2:action id="collectAll"/>
             <ns2:action id="removeAll"/>
             <ns2:action id="saveAllAsHistoric"/>
+            <ns2:action id="syncAll"/>
             <ns2:action id="links"/>
+            <ns2:action id="createDocument"/>
+            <ns2:action id="createDocuments"/>
+            <ns2:action id="sendCommunications"/>
+            <ns2:action id="documentsAndCommunications"/>
         </col>
     </row>
     <row>
@@ -43,8 +48,27 @@
                 <ns2:property id="grossAmount"/>
             </ns2:fieldSet>
         </col>
+        <col span="12" unreferencedCollections="false">
+            <tabGroup>
+                <tab name="Invoices">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="invoices"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Prelim &amp; Invoice Comms">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="documentsAndCommunications">
+                                <ns2:named>Prelim &amp; Invoice Comms</ns2:named>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
         <col span="12" unreferencedCollections="true">
-            <ns2:collection id="invoices"/>
         </col>
     </row>
 </grid>

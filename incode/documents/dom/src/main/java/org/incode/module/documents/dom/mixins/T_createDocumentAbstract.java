@@ -34,11 +34,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.dom.services.ClassService;
-import org.incode.module.documents.dom.spi.ApplicationTenancyService;
 
 public abstract class T_createDocumentAbstract<T> {
 
@@ -102,57 +100,13 @@ public abstract class T_createDocumentAbstract<T> {
             return Lists.newArrayList();
         }
         final Binder.Binding binding = template.newBinding(domainObject, null);
-        return intentsFor(template, binding.getAttachTo());
+        return documentTemplateService.intentsFor(template, binding.getAttachTo());
     }
 
     private List<DocumentTemplate> getDocumentTemplates() {
-        final List<DocumentTemplate> templates = Lists.newArrayList();
-
-        final String atPath = atPathFor(domainObject);
-        if(atPath == null) {
-            return templates;
-        }
-
-        final List<DocumentTemplate> templatesForPath =
-                documentTemplateRepository.findByApplicableToAtPath(atPath);
-
-        // REVIEW: this could probably be simplified ...
-        for (DocumentTemplate template : templatesForPath) {
-            final Binder binder = template.newBinder(domainObject);
-            if(binder != null) {
-                final Binder.Binding binding = binder.newBinding(template, domainObject, null);
-                final List<Object> attachTo = binding.getAttachTo();
-                if(!intentsFor(template, attachTo).isEmpty()) {
-                    templates.add(template);
-                }
-            }
-        }
-        return templates;
+        return documentTemplateService.documentTemplates(domainObject);
     }
 
-    private List<Intent> intentsFor(final DocumentTemplate template, final List<Object> attachTo) {
-        final List<Intent> intents = Lists.newArrayList();
-        if(template == null) {
-            return intents;
-        }
-        if(template.getContentRenderingStrategy().isPreviewsToUrl()) {
-            intents.add(Intent.PREVIEW);
-        }
-        // so long as at least one exists...
-        if(!template.isPreviewOnly() && attachTo.stream().filter(x -> paperclipRepository.canAttach(x)).findFirst().isPresent()) {
-            intents.add(Intent.CREATE_AND_ATTACH);
-        }
-        return intents;
-    }
-
-
-    String atPathFor(final T domainObject) {
-        return applicationTenancyServices.stream()
-                .map(x -> x.atPathFor(domainObject))
-                .filter(x -> x != null)
-                .findFirst()
-                .orElse(null);
-    }
 
     /**
      * Mandatory hook method
@@ -162,16 +116,13 @@ public abstract class T_createDocumentAbstract<T> {
     //region > injected services
 
     @Inject
-    List<ApplicationTenancyService> applicationTenancyServices;
+    DocumentTemplateForAtPathService documentTemplateService;
 
     @Inject
     PaperclipRepository paperclipRepository;
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    DocumentTemplateRepository documentTemplateRepository;
 
     @Inject
     ClassService classService;

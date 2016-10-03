@@ -25,7 +25,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.user.UserService;
@@ -88,7 +87,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
         return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(userService.getUser());
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public abstract List<Invoice> getInvoices();
 
     @Inject

@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,17 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.viewmodel;
+package org.estatio.dom.invoice.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
-
 @Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_createDocument extends
-        T_createDocumentAndRender<InvoiceSummaryForPropertyDueDateStatus> {
+public class InvoiceDocAndComm_invoiceCommunicationState extends InvoiceDocAndComm_communicationStateAbstract {
 
-    public InvoiceSummaryForPropertyDueDateStatus_createDocument(final InvoiceSummaryForPropertyDueDateStatus domainObject) {
-        super(domainObject);
+    public InvoiceDocAndComm_invoiceCommunicationState(final InvoiceDocAndComm invoiceDocAndComm) {
+        super(invoiceDocAndComm, Constants.DOC_TYPE_REF_INVOICE);
     }
+
 }

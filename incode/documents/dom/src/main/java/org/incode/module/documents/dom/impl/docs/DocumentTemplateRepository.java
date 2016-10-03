@@ -16,6 +16,16 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import com.google.common.collect.Sets;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -25,12 +35,9 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
+
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -136,10 +143,25 @@ public class DocumentTemplateRepository {
      * Returns all document templates, ordered by most specific to provided application tenancy first, and then by date (desc).
      */
     public List<DocumentTemplate> findByApplicableToAtPath(final String atPath) {
-        return repositoryService.allMatches(
+        final List<DocumentTemplate> templates = repositoryService.allMatches(
                 new QueryDefault<>(DocumentTemplate.class,
                         "findByApplicableToAtPath",
                         "atPath", atPath));
+        removeTemplatesWithSameDocumentType(templates);
+        return templates;
+    }
+
+    protected void removeTemplatesWithSameDocumentType(final List<DocumentTemplate> templates) {
+        final Set<DocumentType> documentTypes = Sets.newHashSet();
+        for (Iterator<DocumentTemplate> iterator = templates.iterator(); iterator.hasNext(); ) {
+            final DocumentTemplate template = iterator.next();
+            final DocumentType documentType = template.getType();
+            if(documentTypes.contains(documentType)) {
+                iterator.remove();
+            } else {
+                documentTypes.add(documentType);
+            }
+        }
     }
 
     /**

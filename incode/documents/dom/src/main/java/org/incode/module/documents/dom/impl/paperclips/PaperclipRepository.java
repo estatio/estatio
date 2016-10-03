@@ -118,7 +118,7 @@ public class PaperclipRepository {
         paperclip.setRoleName(roleName);
         if(documentAbstract instanceof Document) {
             final Document document = (Document) documentAbstract;
-            paperclip.setDocumentState(document.getState());
+            paperclip.setDocumentCreatedAt(document.getCreatedAt());
         }
 
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachTo);

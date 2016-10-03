@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.viewmodel;
+package org.estatio.dom.invoice.viewmodel.dnc;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,55 +26,42 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.factory.FactoryService;
 
+import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.mixins.T_createDocumentAndRender;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoice_createDocumentAndScheduleRender;
 
-@Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_createDocuments  {
+@DomainService(nature = NatureOfService.DOMAIN)
+public class InvoiceDocumentTemplateService {
 
-    private final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
-
-    public InvoiceSummaryForPropertyDueDateStatus_createDocuments(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        this.invoiceSummary = invoiceSummary;
-    }
-
-
-    public InvoiceSummaryForPropertyDueDateStatus $$(final DocumentTemplate documentTemplate) throws IOException {
-
-        final List<Invoice> invoices = invoiceSummary.getInvoices();
-        for (Invoice invoice : invoices) {
-            createDocumentMixin(invoice).$$(documentTemplate, T_createDocumentAndRender.Intent.CREATE_AND_ATTACH);
-        }
-
-        return this.invoiceSummary;
-    }
-
-    public String disable$$() {
-        return invoiceSummary.getInvoices().isEmpty()? "No invoices": null;
-    }
-
-    public List<DocumentTemplate> choices0$$() {
-        final List<Invoice> invoices = invoiceSummary.getInvoices();
-        final Invoice anyInvoice = invoices.get(0);
-
+    List<DocumentTemplate> templatesFor(final Invoice invoice) {
         return Lists.newArrayList(
-                createDocumentMixin(anyInvoice)
+                createDocumentMixin(invoice)
                         .choices0$$()
                         .stream()
                         .filter(x -> !x.isPreviewOnly())
                         .collect(Collectors.toList()));
     }
 
-    Invoice_createDocumentAndScheduleRender createDocumentMixin(final Invoice anyInvoice) {
+    Document createAndAttach(final Invoice invoice, final DocumentTemplate documentTemplate1) throws
+            IOException {
+        final Invoice_createDocumentAndScheduleRender mixin = createDocumentMixin(invoice);
+        return (Document) mixin.$$(documentTemplate1, T_createDocumentAndRender.Intent.CREATE_AND_ATTACH);
+    }
+
+    private Invoice_createDocumentAndScheduleRender createDocumentMixin(final Invoice anyInvoice) {
         return factoryService.mixin(Invoice_createDocumentAndScheduleRender.class, anyInvoice);
     }
 
+
+
     @Inject
     FactoryService factoryService;
+
 }

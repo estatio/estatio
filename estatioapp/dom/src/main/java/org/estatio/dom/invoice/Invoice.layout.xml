@@ -108,6 +108,15 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Prelim &amp; Invoice Comms">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="documentsAndCommunications">
+                                <ns2:named>Prelim &amp; Invoice Comms</ns2:named>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
             </tabGroup>
         </col>
         <col span="12" unreferencedCollections="true">

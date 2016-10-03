@@ -66,18 +66,21 @@ import lombok.Setter;
                 name = "findByDocument", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.impl.paperclips.Paperclip "
-                        + "WHERE document == :document "),
+                        + "WHERE document == :document "
+                        + "ORDER BY documentCreatedAt DESC "),
         @javax.jdo.annotations.Query(
                 name = "findByAttachedTo", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.impl.paperclips.Paperclip "
-                        + "WHERE attachedToStr == :attachedToStr "),
+                        + "WHERE attachedToStr == :attachedToStr "
+                        + "ORDER BY documentCreatedAt DESC "),
         @javax.jdo.annotations.Query(
                 name = "findByAttachedToAndRoleName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.impl.paperclips.Paperclip "
                         + "WHERE attachedToStr == :attachedToStr "
-                        + "   && roleName == :roleName ")
+                        + "   && roleName == :roleName "
+                        + "ORDER BY documentCreatedAt DESC ")
 })
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
@@ -218,6 +221,24 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     private String roleName;
     //endregion
 
+
+    //region > documentCreatedAt (hidden property)
+
+    /**
+     * Copy of the date/time that the document was created (only populated for Documents, not templates)
+     *
+     * <p>
+     *     Used simply for ordering of {@link Paperclip}s, to locate the &quot;most recent&quot;.
+     * </p>
+     */
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @Property(
+            hidden = Where.EVERYWHERE
+    )
+    private DateTime documentCreatedAt;
+    //endregion
+
     //region > documentDate (derived property)
 
     public static class DocumentDateDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
@@ -242,27 +263,24 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     }
     //endregion
 
-    //region > documentState (property)
+    //region > documentState (derived property)
 
     public static class DocumentStateDomainEvent extends PropertyDomainEvent<LocalDateTime> { }
 
-    /**
-     * Copy of the state of the document (only populated for Documents, not templates)
-     */
-    @Getter @Setter
-    @Column(allowsNull = "true")
+    @NotPersistent
     @Property(
             domainEvent = DocumentStateDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private DocumentState documentState;
-
-    public TranslatableString disableDocumentState() {
-        if(getDocument() instanceof DocumentTemplate) {
-            return TranslatableString.tr("Document templates do not have a state property.");
+    public DocumentState getDocumentState() {
+        final DocumentAbstract documentAbstract = getDocument();
+        if(documentAbstract instanceof Document) {
+            final Document document = (Document) documentAbstract;
+            return document.getState();
         }
         return null;
     }
+
     //endregion
 
 
@@ -270,12 +288,12 @@ public abstract class Paperclip implements Comparable<Paperclip> {
 
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName", "documentDate", "documentState");
+        return ObjectContracts.toString(this, "attachedToStr", "document", "roleName", "documentCreatedAt", "documentDate", "documentState");
     }
 
     @Override
     public int compareTo(final Paperclip other) {
-        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "documentDate", "documentState");
+        return ObjectContracts.compare(this, other, "attachedToStr", "document", "roleName", "documentCreatedAt", "documentDate", "documentState");
     }
 
     //endregion
