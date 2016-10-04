@@ -20,22 +20,17 @@ package org.estatio.fixturescripts;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForInvoiceEmailCoverNote;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForDemoSsrsOnProperty;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForHelloGlobal;
-import org.estatio.fixture.documents.DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
+import org.estatio.fixture.documents.RenderingStrategies;
 
-public class DemoDocumentAndCommsFixture extends DiscoverableFixtureScript {
+public class SeedDocumentAndCommsFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new DocumentTypeAndTemplateFSForHelloGlobal());
+        executionContext.executeChild(this, new RenderingStrategies());
         executionContext.executeChild(this, new DocumentTypeAndTemplateFSForInvoiceEmailCoverNote());
-        executionContext.executeChild(this, new DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS());
         executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs());
-        executionContext.executeChild(this, new DocumentTypeAndTemplateFSForDemoSsrsOnProperty());
-
 
     }
 

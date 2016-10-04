@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.fixture.documents.demo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +68,7 @@ public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS extends Docum
         executionContext.executeChild(this, new ApplicationTenancyForGbOxf());
         executionContext.executeChild(this, new PropertyForOxfGb());
 
-        createType(TYPE_REF, "Floor plan", executionContext);
+        upsertType(TYPE_REF, "Floor plan", executionContext);
 
         final FixedAsset property =
                 fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF).get(0);

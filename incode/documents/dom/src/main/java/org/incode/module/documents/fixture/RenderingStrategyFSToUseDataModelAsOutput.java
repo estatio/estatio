@@ -18,7 +18,6 @@
 package org.incode.module.documents.fixture;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
-import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
 import org.incode.module.documents.dom.impl.renderers.RendererUsesDataModelAsOutput;
 
@@ -28,7 +27,7 @@ public class RenderingStrategyFSToUseDataModelAsOutput extends RenderingStrategy
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createRenderingStrategy(
+        upsertRenderingStrategy(
                 REF,
                 "Use input as output",
                 DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,

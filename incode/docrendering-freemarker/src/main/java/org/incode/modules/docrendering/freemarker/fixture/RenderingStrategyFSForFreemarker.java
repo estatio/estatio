@@ -28,7 +28,7 @@ public class RenderingStrategyFSForFreemarker extends RenderingStrategyFSAbstrac
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createRenderingStrategy(
+        upsertRenderingStrategy(
                 REF,
                 "RendererForFreemarker Rendering Strategy",
                 DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,

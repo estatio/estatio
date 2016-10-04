@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.fixture.documents.demo;
 
 import javax.inject.Inject;
 
@@ -23,16 +23,16 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
-import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.documents.binders.BinderForWithNameGetterAttachToInput;
+import org.estatio.fixture.documents.RenderingStrategies;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 
 public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSAbstract {
@@ -52,17 +52,16 @@ public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSA
 
         // prereqs
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new RenderingStrategyFSForFreemarker());
+        executionContext.executeChild(this, new RenderingStrategies());
 
-
-        createType(TYPE_REF, "Hello world!", executionContext);
+        upsertType(TYPE_REF, "Hello world!", executionContext);
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
         final RenderingStrategy freemarkerRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategyFSForFreemarker.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
         final LocalDate date = clockService.now();
 
-        final DocumentTemplate documentTemplate = createDocumentTextTemplate(
+        final DocumentTemplate documentTemplate = upsertDocumentTextTemplate(
                 documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
                 SUBJECT_TEXT, freemarkerRenderingStrategy, CONTENT_TEXT, freemarkerRenderingStrategy,
                 executionContext);

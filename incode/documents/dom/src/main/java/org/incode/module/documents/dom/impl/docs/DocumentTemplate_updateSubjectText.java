@@ -47,7 +47,7 @@ public class DocumentTemplate_updateSubjectText {
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
             final String text
     ) {
-        documentTemplate.setText(text);
+        documentTemplate.setSubjectText(text);
         return documentTemplate;
     }
 

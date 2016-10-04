@@ -106,6 +106,14 @@ import lombok.Setter;
                         + "ORDER BY date DESC"
         ),
         @javax.jdo.annotations.Query(
+                name = "findByTypeAndAtPathAndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.documents.dom.impl.docs.DocumentTemplate "
+                        + "WHERE typeCopy   == :type "
+                        + "   && atPathCopy == :atPath "
+                        + "   && date       == :date "
+        ),
+        @javax.jdo.annotations.Query(
                 name = "findByTypeAndApplicableToAtPath", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.documents.dom.impl.docs.DocumentTemplate "
@@ -485,7 +493,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     public Applicability applicable(
             final String domainClassName,
             final String binderClassName) {
-        return applicabilityRepository.create(this, domainClassName, binderClassName);
+        Applicability applicability = existingApplicability(domainClassName);
+        if(applicability == null) {
+            applicability = applicabilityRepository.create(this, domainClassName, binderClassName);
+        }
+        return applicability;
     }
 
     public TranslatableString disableApplicable() {
@@ -511,13 +523,16 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     }
 
     private boolean isApplicable(final String domainClassName) {
+        return existingApplicability(domainClassName) != null;
+    }
+    private Applicability existingApplicability(final String domainClassName) {
         SortedSet<Applicability> applicabilities = getAppliesTo();
         for (Applicability applicability : applicabilities) {
             if (applicability.getDomainClassName().equals(domainClassName)) {
-                return false;
+                return applicability;
             }
         }
-        return true;
+        return null;
     }
     //endregion
 

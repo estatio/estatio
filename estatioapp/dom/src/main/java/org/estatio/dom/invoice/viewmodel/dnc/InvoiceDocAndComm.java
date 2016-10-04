@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.invoice.Invoice;
 
 import lombok.Getter;
@@ -43,11 +44,16 @@ public class InvoiceDocAndComm {
     @Getter @Setter
     private Invoice invoice;
 
+    @Property()
+    @Getter @Setter
+    private CommunicationChannel sendTo;
+
     public InvoiceDocAndComm() {
     }
 
     public InvoiceDocAndComm(final Invoice invoice) {
         this.invoice = invoice;
+        this.sendTo = invoice.getSendTo();
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)

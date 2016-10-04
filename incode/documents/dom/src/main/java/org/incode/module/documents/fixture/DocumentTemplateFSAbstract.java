@@ -43,17 +43,22 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
      * @param executionContext
      * @return
      */
-    protected DocumentType createType(
+    protected DocumentType upsertType(
             String reference,
             String name,
             ExecutionContext executionContext) {
 
-        final DocumentType documentType = documentTypeRepository.create(reference, name);
+        DocumentType documentType = documentTypeRepository.findByReference(reference);
+        if(documentType != null) {
+            documentType.setName(name);
+        } else {
+            documentType = documentTypeRepository.create(reference, name);
+        }
         return executionContext.addResult(this, documentType);
     }
 
 
-    protected DocumentTemplate createDocumentTextTemplate(
+    protected DocumentTemplate upsertDocumentTextTemplate(
             final DocumentType documentType,
             final LocalDate date,
             final String atPath,
@@ -61,16 +66,30 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final boolean previewOnly,
             final String name,
             final String mimeType,
-            final String subjectText, final RenderingStrategy subjectRenderingStrategy, final String contentText,
-            final RenderingStrategy contentRenderingStrategy,
+            final String subjectText, final RenderingStrategy subjectRenderingStrategy,
+            final String contentText, final RenderingStrategy contentRenderingStrategy,
             ExecutionContext executionContext) {
 
-        final DocumentTemplate documentTemplate =
-                documentTemplateRepository.createText(
-                        documentType, date, atPath,
-                        fileSuffix, previewOnly, name, mimeType, contentText,
-                        contentRenderingStrategy,
-                        subjectText, subjectRenderingStrategy);
+        DocumentTemplate documentTemplate = documentTemplateRepository
+                                                    .findByTypeAndAtPathAndDate(documentType, atPath, date);
+        if(documentTemplate != null) {
+            documentTemplate.setFileSuffix(fileSuffix);
+            documentTemplate.setPreviewOnly(previewOnly);
+            documentTemplate.setName(name);
+            documentTemplate.setMimeType(mimeType);
+            documentTemplate.setText(contentText);
+            documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
+            documentTemplate.setSubjectText(subjectText);
+            documentTemplate.setSubjectRenderingStrategy(subjectRenderingStrategy);
+        } else {
+            documentTemplate =
+                    documentTemplateRepository.createText(
+                            documentType, date, atPath,
+                            fileSuffix, previewOnly,
+                            name, mimeType,
+                            contentText, contentRenderingStrategy,
+                            subjectText, subjectRenderingStrategy);
+        }
         return executionContext.addResult(this, documentTemplate);
     }
 

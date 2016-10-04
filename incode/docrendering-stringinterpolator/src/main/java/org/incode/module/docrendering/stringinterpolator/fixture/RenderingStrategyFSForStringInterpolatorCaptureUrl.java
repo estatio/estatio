@@ -28,7 +28,7 @@ public class RenderingStrategyFSForStringInterpolatorCaptureUrl extends Renderin
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createRenderingStrategy(
+        upsertRenderingStrategy(
                 REF,
                 "String interpolate URL for Capture (no preview)",
                 DocumentNature.CHARACTERS,

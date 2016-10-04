@@ -28,7 +28,7 @@ public class RenderingStrategyFSForStringInterpolator extends RenderingStrategyF
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createRenderingStrategy(
+        upsertRenderingStrategy(
                 REF,
                 "String interpolate",
                 DocumentNature.CHARACTERS,

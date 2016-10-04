@@ -33,7 +33,9 @@ import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.EmailAddress;
 import org.estatio.dom.communications.AgreementRoleCommunicationChannelLocator;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
@@ -66,19 +68,13 @@ public class DocumentEmailSupportForDocumentsAttachedToInvoice implements Docume
             final Object attachedTo = paperclip.getAttachedTo();
             if(attachedTo instanceof Invoice) {
                 final Invoice invoice = (Invoice) attachedTo;
-                final Lease lease = invoice.getLease();
-                appendEmailAddressesFor(lease, header);
+                final CommunicationChannel sendTo = invoice.getSendTo();
+                if(sendTo instanceof EmailAddress) {
+                    final EmailAddress emailAddress = (EmailAddress) sendTo;
+                    header.getToSet().add(emailAddress);
+                }
             }
         }
-    }
-
-    private void appendEmailAddressesFor(final Lease lease, final EmailHeader header) {
-        final List emailAddresses =
-                locator.locate(
-                        lease, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS,
-                        CommunicationChannelType.EMAIL_ADDRESS);
-        header.getToSet().addAll(emailAddresses);
-
         if(header.getToSet().isEmpty()) {
             header.setDisabledReason("Could not find any email invoice address for tenant");
         }

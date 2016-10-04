@@ -42,7 +42,7 @@ public class DocumentTypeRepository {
             final String reference,
             final String name) {
         final DocumentType documentType = new DocumentType(reference, name);
-        repositoryService.persist(documentType);
+        repositoryService.persistAndFlush(documentType);
         return documentType;
     }
     //endregion

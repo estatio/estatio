@@ -177,6 +177,19 @@ public class DocumentTemplateRepository {
     }
 
     /**
+     * Returns the document template, if any for the specified {@link DocumentType} and exact application tenancy, and exact date.
+     */
+    @Programmatic
+    public DocumentTemplate findByTypeAndAtPathAndDate(final DocumentType documentType, final String atPath, final LocalDate date) {
+        return repositoryService.firstMatch(
+                new QueryDefault<>(DocumentTemplate.class,
+                        "findByTypeAndAtPathAndDate",
+                        "type", documentType,
+                        "atPath", atPath,
+                        "date", date));
+    }
+
+    /**
      * As {@link #findByTypeAndApplicableToAtPath(DocumentType, String)}, but excludes any templates in the future.  Those returned
      * are ordered by most specific application tenancy first, and then by most recent first; so the first template returned
      * is usually the one to be used.

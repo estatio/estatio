@@ -27,8 +27,6 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;
-import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
@@ -36,8 +34,8 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.dom.documents.binders.BinderForReportServerAttachToInput;
 import org.estatio.dom.documents.binders.BinderForReportServerAttachNone;
+import org.estatio.dom.documents.binders.BinderForReportServerAttachToInput;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
@@ -60,31 +58,28 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl());
-        executionContext.executeChild(this, new RenderingStrategyFSForStringInterpolator());
+        executionContext.executeChild(this, new RenderingStrategies());
 
         final String url = "${reportServerBaseUrl}";
 
         final RenderingStrategy stringInterpolatePreviewCapture =
-                renderingStrategyRepository.findByReference(
-                        RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SIPC);
         final RenderingStrategy stringInterpolate =
-                renderingStrategyRepository.findByReference(
-                        RenderingStrategyFSForStringInterpolator.REF);
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SI);
 
         // Invoice (two templates, one global and one for the NL)
-        final DocumentType invoicePrelim = createType(DOC_TYPE_REF_INVOICE_PRELIM, "Preliminary letter for Invoice");
-        createTemplateWithApplicability(
+        final DocumentType invoicePrelim = upsertType(DOC_TYPE_REF_INVOICE_PRELIM, "Preliminary letter for Invoice", executionContext);
+        upsertTemplateWithApplicability(
                 invoicePrelim,
                 ApplicationTenancyForGlobal.PATH, null,
                 false, url
                 + "Preliminary+Letter"
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
-                "Preliminary letter for ${invoice.id}", stringInterpolate,
+                "Preliminary letter for Invoice ${this.number}", stringInterpolate,
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
-        createTemplateWithApplicability(
+        upsertTemplateWithApplicability(
                 invoicePrelim,
                 ApplicationTenancyForNl.PATH, " (Netherlands)",
                 false, url
@@ -92,26 +87,26 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF"
                 + "&appTenancy=/NLD", stringInterpolatePreviewCapture,
-                "Preliminary letter for ${this.id} (Netherlands)", stringInterpolate,
+                "Preliminary letter for Invoice ${this.number} (Netherlands)", stringInterpolate,
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
 
-        createTemplateWithApplicability(
-                createType(DOC_TYPE_REF_INVOICE, "Invoice"),
+        upsertTemplateWithApplicability(
+                upsertType(DOC_TYPE_REF_INVOICE, "Invoice", executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 false,
                 url
                 + "Invoice"
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF", stringInterpolatePreviewCapture,
-                "Invoice for ${this.id}", stringInterpolate,
+                "Invoice for ${this.number}", stringInterpolate,
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
 
 
         // InvoiceSummaryForPropertyDueDateStatus
-        createTemplateWithApplicability(
-                createType(DOC_TYPE_REF_INVOICES_OVERVIEW, "Invoices overview"),
+        upsertTemplateWithApplicability(
+                upsertType(DOC_TYPE_REF_INVOICES_OVERVIEW, "Invoices overview", executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 true,
                 url
@@ -123,8 +118,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 BinderForReportServerAttachNone.class,
                 executionContext);
 
-        createTemplateWithApplicability(
-                createType(DOC_TYPE_REF_INVOICES_PRELIM, "Preliminary letter for Invoices"),
+        upsertTemplateWithApplicability(
+                upsertType(DOC_TYPE_REF_INVOICES_PRELIM, "Preliminary letter for Invoices", executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 true,
                 url
@@ -136,8 +131,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 BinderForReportServerAttachNone.class,
                 executionContext);
 
-        createTemplateWithApplicability(
-                createType(DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER, "Preliminary Invoice for Seller"),
+        upsertTemplateWithApplicability(
+                upsertType(DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER, "Preliminary Invoice for Seller", executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 true,
                 url
@@ -150,7 +145,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 executionContext);
     }
 
-    private DocumentTemplate createTemplateWithApplicability(
+    private DocumentTemplate upsertTemplateWithApplicability(
             final DocumentType documentType,
             final String atPath, final String nameSuffixIfAny,
             final boolean previewOnly,
@@ -161,18 +156,14 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final ExecutionContext executionContext) {
 
         final DocumentTemplate template =
-                createTemplate(documentType, atPath, nameSuffixIfAny, previewOnly, text, contentRenderingStrategy, subjectText,
+                upsertTemplate(documentType, atPath, nameSuffixIfAny, previewOnly, text, contentRenderingStrategy, subjectText,
                         subjectRenderingStrategy, executionContext);
         template.applicable(applicableToClass, binderClass);
 
         return template;
     }
 
-    private DocumentType createType(final String docTypeRef, final String docTypeName) {
-        return documentTypeRepository.create(docTypeRef, docTypeName);
-    }
-
-    private DocumentTemplate createTemplate(
+    private DocumentTemplate upsertTemplate(
             final DocumentType docType,
             final String atPath,
             final String nameSuffixIfAny,
@@ -184,7 +175,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         final ApplicationTenancy appTenancy = applicationTenancyRepository.findByPath(atPath);
 
-        return createDocumentTextTemplate(
+        return upsertDocumentTextTemplate(
                 docType, now, appTenancy.getPath(), ".pdf", previewOnly,
                 docType.getName() + (nameSuffixIfAny != null? nameSuffixIfAny : ""),
                 "application/pdf",

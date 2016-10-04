@@ -26,9 +26,11 @@
                                 <ns2:property id="lastItemSequence"/>
                                 <ns2:property id="status"/>
                                 <ns2:property id="uuid"/>
-                                <ns2:property id="applicationTenancyPath"/>
                                 <ns2:property id="number"/>
                                 <ns2:property id="runId"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Communications" id="comms">
+                                <ns2:property id="sendTo"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="RelatedTo" id="relatedTo">
                                 <ns2:property id="fixedAsset"/>
@@ -64,6 +66,7 @@
                         <col span="12">
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
                                 <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="applicationTenancyPath"/>
                             </ns2:fieldSet>
                         </col>
                     </row>

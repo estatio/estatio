@@ -31,6 +31,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
@@ -178,6 +179,10 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
         invoice.setPaidBy(lease.getPaidBy());
         invoice.setFixedAsset(lease.getProperty());
 
+        // copy over the current invoice address (if any)
+        final CommunicationChannel sendTo = invoiceSendToService.firstTenantInvoiceAddress(lease);
+        invoice.setSendTo(sendTo);
+
         persistIfNotAlready(invoice);
         getContainer().flush();
         return invoice;
@@ -250,5 +255,8 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @javax.inject.Inject
     private EstatioSettingsService settings;
+
+    @javax.inject.Inject
+    InvoiceSendToService invoiceSendToService;
 
 }

@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.fixture.documents.demo;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
@@ -28,7 +28,7 @@ public class RenderingStrategyFSForSvg extends RenderingStrategyFSAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createRenderingStrategy(
+        upsertRenderingStrategy(
                 REF,
                 "SVG Rendering Strategy",
                 DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,

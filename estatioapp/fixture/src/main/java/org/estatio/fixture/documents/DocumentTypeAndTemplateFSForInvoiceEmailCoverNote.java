@@ -30,8 +30,6 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
-import org.incode.module.documents.fixture.RenderingStrategyFSToUseDataModelAsOutput;
-import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.documents.binders.BinderForDocumentAttachedToInvoice;
 import org.estatio.dom.invoice.Constants;
@@ -52,16 +50,16 @@ public class DocumentTypeAndTemplateFSForInvoiceEmailCoverNote extends DocumentT
 
         // prereqs
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new RenderingStrategyFSToUseDataModelAsOutput());
+        executionContext.executeChild(this, new RenderingStrategies());
 
-        createType(TYPE_REF, "Invoice Email Cover Note", executionContext);
+        upsertType(TYPE_REF, "Invoice Email Cover Note", executionContext);
 
         final DocumentType documentType = documentTypeRepository.findByReference(TYPE_REF);
-        final RenderingStrategy freemarkerRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategyFSForFreemarker.REF);
+        final RenderingStrategy freemarkerRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
         final LocalDate date = clockService.now();
 
-        final DocumentTemplate documentTemplate = createDocumentTextTemplate(
+        final DocumentTemplate documentTemplate = upsertDocumentTextTemplate(
                 documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
                 "${invoice.lease.reference}: invoice ${invoice.number} cover note",
                 freemarkerRenderingStrategy,

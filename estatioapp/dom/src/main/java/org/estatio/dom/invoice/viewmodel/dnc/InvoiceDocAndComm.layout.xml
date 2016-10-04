@@ -9,6 +9,7 @@
         <col span="4">
             <cpt:fieldSet name="General" id="general">
                 <cpt:property id="invoice"/>
+                <cpt:property id="sendTo"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
             </cpt:fieldSet>
@@ -18,20 +19,20 @@
                 <col span="6">
                     <cpt:fieldSet name="Prelim Document">
                         <cpt:property id="prelimDocument">
-                            <cpt:named>Document</cpt:named>
+                            <cpt:named>Prelim Doc</cpt:named>
                         </cpt:property>
                         <cpt:property id="prelimDocumentState">
-                            <cpt:named>State</cpt:named>
+                            <cpt:named>Prelim Doc State</cpt:named>
                         </cpt:property>
                     </cpt:fieldSet>
                 </col>
                 <col span="6">
                     <cpt:fieldSet name="Prelim Communication">
                         <cpt:property id="prelimCommunication">
-                            <cpt:named>Communication</cpt:named>
+                            <cpt:named>Prelim Comm</cpt:named>
                         </cpt:property>
                         <cpt:property id="prelimCommunicationState">
-                            <cpt:named>State</cpt:named>
+                            <cpt:named>Prelim Comm State</cpt:named>
                         </cpt:property>
                     </cpt:fieldSet>
                 </col>
@@ -40,20 +41,20 @@
                 <col span="6">
                     <cpt:fieldSet name="Invoice Document">
                         <cpt:property id="invoiceDocument">
-                            <cpt:named>Document</cpt:named>
+                            <cpt:named>Invoice Doc</cpt:named>
                         </cpt:property>
                         <cpt:property id="invoiceDocumentState">
-                            <cpt:named>State</cpt:named>
+                            <cpt:named>Invoice Doc State</cpt:named>
                         </cpt:property>
                     </cpt:fieldSet>
                 </col>
                 <col span="6">
                     <cpt:fieldSet name="Invoice Communication">
                         <cpt:property id="invoiceCommunication">
-                            <cpt:named>Communication</cpt:named>
+                            <cpt:named>Invoice Comm</cpt:named>
                         </cpt:property>
                         <cpt:property id="invoiceCommunicationState">
-                            <cpt:named>State</cpt:named>
+                            <cpt:named>Invoice Comm State</cpt:named>
                         </cpt:property>
                     </cpt:fieldSet>
                 </col>
