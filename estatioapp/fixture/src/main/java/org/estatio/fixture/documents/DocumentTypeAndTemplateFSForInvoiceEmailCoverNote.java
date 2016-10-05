@@ -64,7 +64,7 @@ public class DocumentTypeAndTemplateFSForInvoiceEmailCoverNote extends DocumentT
                 "${invoice.lease.reference}: invoice ${invoice.number} cover note",
                 freemarkerRenderingStrategy,
                 "Dear Sir/Madam\n"
-                + "With respect to your lease ${invoice.lease.reference}, please find enclosed invoice ${invoice.number}, dated ${invoice.invoiceDate}.\n"
+                + "With respect to your lease ${invoice.lease.reference}, please find enclosed invoice ${invoice.number}, due on ${invoice.dueDate}.\n"
                 + "${additionalText}\n"
                 + "Best Regards",
                 freemarkerRenderingStrategy,

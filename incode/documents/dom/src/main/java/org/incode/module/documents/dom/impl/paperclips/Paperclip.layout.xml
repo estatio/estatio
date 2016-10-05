@@ -10,7 +10,7 @@
         <bs3:col span="6">
             <cpt:fieldSet name="Document">
                 <cpt:property id="document" hidden="REFERENCES_PARENT"/>
-                <cpt:property id="documentDate" hidden="EVERYWHERE"/>
+                <cpt:property id="documentDate"/>
                 <cpt:property id="documentState"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
