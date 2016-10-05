@@ -27,6 +27,8 @@ import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelForTesting;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -47,6 +49,7 @@ public class InvoiceTest {
                     .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
                     .withFixture(pojos(BankMandate.class))
                     .withFixture(pojos(ApplicationTenancy.class))
+                    .withFixture(pojos(CommunicationChannel.class, CommunicationChannelForTesting.class))
                     .exercise(new Invoice());
         }
 

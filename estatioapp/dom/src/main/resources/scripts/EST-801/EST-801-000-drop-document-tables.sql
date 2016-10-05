@@ -15,4 +15,7 @@ drop table incodeDocuments.DocumentAbstract
 drop table incodeDocuments.DocumentType
 drop table incodeDocuments.RenderingStrategy
 
+drop table dbo.CommChannelRole
+drop table dbo.Communication
+
 go

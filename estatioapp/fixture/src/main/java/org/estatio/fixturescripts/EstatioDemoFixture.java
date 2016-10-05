@@ -96,7 +96,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectsForGra());
 
-        executionContext.executeChild(this, new DemoDocumentAndCommsFixture());
+        executionContext.executeChild(this, new SeedDocumentAndCommsFixture());
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());
