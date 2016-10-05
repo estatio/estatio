@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.dom.index.Indexable;
 import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
 
@@ -28,7 +29,6 @@ public class IndexationMethodTest {
         term1.setNext(term2);
         term2.setPrevious(term1);
         term2.indexationService = new IndexationService();
-
     }
 
     public static class DoInitialize extends IndexationMethodTest {
@@ -166,7 +166,7 @@ public class IndexationMethodTest {
 
         }
 
-        private void tester(IndexationMethod indexationMethod, String baseValue, String indexedValue, String effectiveIndexedValue, String settledValue, String expectedBaseValue, String expectedEffectiveIndexedValue){
+        void tester(IndexationMethod indexationMethod, String baseValue, String indexedValue, String effectiveIndexedValue, String settledValue, String expectedBaseValue, String expectedEffectiveIndexedValue){
             //given
             term1.setIndexationMethod(indexationMethod);
             term1.setBaseValue(Util.bdFromStr(baseValue));
@@ -183,6 +183,91 @@ public class IndexationMethodTest {
         }
 
     }
+
+
+    public static class DoAlignWithChangingBaseRentNegativeIndexation extends IndexationMethodTest {
+
+        @Before
+        public void setUp() throws Exception {
+            term1 = new LeaseTermForIndexable();
+            term1.initialize();
+            term1.setBaseIndexStartDate(new LocalDate(2012, 1, 1));
+            term1.setNextIndexStartDate(new LocalDate(2013, 1, 1));
+            term1.setFrequency(LeaseTermFrequency.YEARLY);
+
+            term2 = new LeaseTermForIndexable();
+            term1.setNext(term2);
+            term2.setPrevious(term1);
+            term2.indexationService = new IndexationService(){
+                @Override
+                public void indexate(final Indexable input){
+                    term2.setIndexedValue(new BigDecimal("12.34"));
+                }
+            };
+
+        }
+
+        @Test
+        public void testBaseAndEffectiveIndexValue(){
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "12.34", "13.45", "13.45", "23.45", "12.34");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "12.34", "13.45", "13.45", "23.45", "12.34");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX, "12.34", "13.45", "13.45", "23.45", "23.45");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "12.34", "13.45", "13.45", "23.45", "23.45");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "12.34", "13.45", "13.45", "23.45", "23.45");
+
+        }
+    }
+
+    public static class DoAlignWithChangingBaseRentPositiveIndexation extends IndexationMethodTest {
+
+        @Before
+        public void setUp() throws Exception {
+            term1 = new LeaseTermForIndexable();
+            term1.initialize();
+            term1.setBaseIndexStartDate(new LocalDate(2012, 1, 1));
+            term1.setNextIndexStartDate(new LocalDate(2013, 1, 1));
+            term1.setFrequency(LeaseTermFrequency.YEARLY);
+
+            term2 = new LeaseTermForIndexable();
+            term1.setNext(term2);
+            term2.setPrevious(term1);
+            term2.indexationService = new IndexationService(){
+                @Override
+                public void indexate(final Indexable input){
+                    term2.setIndexedValue(new BigDecimal("43.21"));
+                }
+            };
+
+        }
+
+        @Test
+        public void testBaseAndEffectiveIndexValue(){
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_ALLOW_DECREASE, "12.34", "13.45", "13.45", "23.45", "43.21");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_FRANCE, "12.34", "13.45", "13.45", "23.45", "43.21");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX, "12.34", "13.45", "13.45", "23.45", "43.21");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE, "12.34", "13.45", "13.45", "23.45", "43.21");
+            testerWithChangingBaseValue(IndexationMethod.BASE_INDEX_NO_DECREASE_FRANCE, "12.34", "13.45", "13.45", "23.45", "43.21");
+
+        }
+
+    }
+
+    void testerWithChangingBaseValue(IndexationMethod indexationMethod, String baseValue, String indexedValue, String effectiveIndexedValue, String newBaseValue, String expectedEffectiveIndexedValue){
+        //given
+        term1.setIndexationMethod(indexationMethod);
+        term1.setBaseValue(Util.bdFromStr(baseValue));
+        term1.setIndexedValue(Util.bdFromStr(indexedValue));
+        term1.setEffectiveIndexedValue(Util.bdFromStr(effectiveIndexedValue));
+        //when
+        term2.initialize();
+        term2.setBaseValue(Util.bdFromStr(newBaseValue));
+        term2.doAlign();
+        //then
+        assertThat(term2.getBaseValue()).isEqualTo(Util.bdFromStr(newBaseValue));
+        assertThat(term2.getEffectiveIndexedValue()).isEqualTo(Util.bdFromStr(expectedEffectiveIndexedValue));
+
+    }
+
 
     static class Util {
         static BigDecimal bdFromStr(String input){
