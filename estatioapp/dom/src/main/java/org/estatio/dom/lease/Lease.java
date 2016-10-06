@@ -1021,14 +1021,6 @@ public class Lease
         }
     }
 
-    public static class RenewalEvent extends ActionDomainEvent<Lease> {
-        private static final long serialVersionUID = 1L;
-
-        public LocalDate getRenewalDate() {
-            return (LocalDate) (this.getArguments().isEmpty() ? null : getArguments().get(2));
-        }
-    }
-
     public static class SuspendAllEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
