@@ -58,6 +58,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -952,8 +953,11 @@ public class Lease
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        return copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate);
-
+        Lease newLease = copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate);
+        if (newLease != null){
+            wrapperFactory.wrapSkipRules(this).terminate(startDate.minusDays(1));
+        }
+        return newLease;
     }
 
     public String default0Renew() {
@@ -1017,6 +1021,14 @@ public class Lease
         }
     }
 
+    public static class RenewalEvent extends ActionDomainEvent<Lease> {
+        private static final long serialVersionUID = 1L;
+
+        public LocalDate getRenewalDate() {
+            return (LocalDate) (this.getArguments().isEmpty() ? null : getArguments().get(2));
+        }
+    }
+
     public static class SuspendAllEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
 
@@ -1067,5 +1079,8 @@ public class Lease
 
     @Inject
     ClockService clockService;
+
+    @Inject
+    private WrapperFactory wrapperFactory;
 
 }

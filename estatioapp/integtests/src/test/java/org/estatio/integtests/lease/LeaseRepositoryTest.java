@@ -23,16 +23,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.app.menus.asset.PropertyMenu;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Property;
-import org.estatio.app.menus.asset.PropertyMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
@@ -49,9 +48,7 @@ import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class LeaseRepositoryTest extends EstatioIntegrationTest {
@@ -85,7 +82,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             // when
             final List<Lease> matchingLeases = leaseRepository.findExpireInDateRange(startDate, endDate);
             // then
-            assertThat(matchingLeases.size(), is(4));
+            assertThat(matchingLeases.size()).isEqualTo(4);
         }
 
     }
@@ -107,7 +104,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
         @Test
         public void whenValidReference() {
             final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            Assert.assertEquals(LeaseForOxfTopModel001Gb.REF, lease.getReference());
+            assertThat(LeaseForOxfTopModel001Gb.REF).isEqualTo(lease.getReference());
         }
 
     }
@@ -129,7 +126,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
         @Test
         public void noResults() {
             final Lease lease = leaseRepository.findLeaseByReferenceElseNull("FAKEREF");
-            assertNull(lease);
+            assertThat(lease).isNull();
         }
     }
 
@@ -156,7 +153,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
         public void whenWildcard() {
             // Given
             final List<Lease> matchingLeases = leaseRepository.matchByReferenceOrName("OXF*", false);
-            assertThat(matchingLeases.size(), is(5));
+            assertThat(matchingLeases.size()).isEqualTo(5);
 
             // When
             // terminate one lease...
@@ -164,9 +161,9 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             oxfTop.terminate(new LocalDate(2014, 1, 1));
 
             // Then
-            assertThat(oxfTop.getTenancyEndDate(), is(new LocalDate(2014, 1, 1)));
-            assertThat(leaseRepository.matchByReferenceOrName("OXF*", false).size(), is(4));
-            assertThat(leaseRepository.matchByReferenceOrName("OXF*", true).size(), is(5));
+            assertThat(oxfTop.getTenancyEndDate()).isEqualTo(new LocalDate(2014, 1, 1));
+            assertThat(leaseRepository.matchByReferenceOrName("OXF*", false).size()).isEqualTo(4);
+            assertThat(leaseRepository.matchByReferenceOrName("OXF*", true).size()).isEqualTo(5);
         }
 
     }
@@ -202,7 +199,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             // when
             final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
-            assertThat(matchingLeases.size(), is(4));
+            assertThat(matchingLeases.size()).isEqualTo(4);
         }
 
     }
@@ -228,7 +225,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             // given
             final Brand brand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
             final List<Lease> matchingLeases = leaseRepository.findByBrand(brand, false);
-            assertThat(matchingLeases.size(), is(1));
+            assertThat(matchingLeases.size()).isEqualTo(1);
 
             // when
             Lease oxfTop = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
@@ -238,7 +235,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             // then
             assertTrue(matchingLeases2.isEmpty());
             final List<Lease> matchingLeases3 = leaseRepository.findByBrand(brand, true);
-            assertThat(matchingLeases3.size(), is(1));
+            assertThat(matchingLeases3.size()).isEqualTo(1);
         }
     }
 
@@ -264,8 +261,8 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             System.out.println(property);
             // when
-            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size(), is(0));
-            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size(), is(1));
+            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size()).isEqualTo(0);
+            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size()).isEqualTo(1);
         }
     }
 
@@ -294,7 +291,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             Lease lease = leaseRepository.allLeases().get(0);
             String newReference = lease.default0Renew() + "-2";
             String newName = lease.default1Renew() + "-2";
-            LocalDate newStartDate = lease.default2Renew();
+            LocalDate newStartDate = lease.default2Renew().plusDays(5); // +5 is to ensure that the change in tenancy end date is detected by the test
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
             lease.setComments("Some comments");
 
@@ -302,19 +299,22 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
 
             // Then
-            assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
 
-            assertThat(newLease.getOccupancies().size(), is(1));
-            assertThat(newLease.getStartDate(), is(newStartDate));
-            assertThat(newLease.getEndDate(), is(newEndDate));
-            assertThat(newLease.getTenancyStartDate(), is(newStartDate));
-            assertThat(newLease.getTenancyEndDate(), is(newEndDate));
-            assertThat(newLease.getComments(), is("Some comments"));
+            // the lease is terminated
+            assertThat(lease.getTenancyEndDate()).isEqualTo(newStartDate.minusDays(1));
+            assertThat(lease.getOccupancies().first().getEndDate()).isEqualTo(newStartDate.minusDays(1));
+
+            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
+            assertThat(newLease.getStartDate()).isEqualTo(newStartDate);
+            assertThat(newLease.getEndDate()).isEqualTo(newEndDate);
+            assertThat(newLease.getTenancyStartDate()).isEqualTo(newStartDate);
+            assertThat(newLease.getTenancyEndDate()).isEqualTo(newEndDate);
+            assertThat(newLease.getComments()).isEqualTo("Some comments");
 
             // Then
             assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypeRepository
-                    .findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size(), is(2));
-            assertThat(newLease.getOccupancies().size(), is(1));
+                    .findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size()).isEqualTo(2);
+            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
         }
 
         @Test
@@ -331,7 +331,7 @@ public class LeaseRepositoryTest extends EstatioIntegrationTest {
             Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
 
             // Then
-            assertThat(newLease.getOccupancies().size(), is(1));
+            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
         }
 
     }
