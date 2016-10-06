@@ -34,13 +34,10 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
-import org.estatio.dom.communications.AgreementRoleCommunicationChannelLocator;
+import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DocumentEmailSupportForDocumentsAttachedToInvoice implements DocumentEmailSupport {
@@ -87,6 +84,6 @@ public class DocumentEmailSupportForDocumentsAttachedToInvoice implements Docume
     PaperclipRepository paperclipRepository;
 
     @Inject
-    AgreementRoleCommunicationChannelLocator locator;
+    AgreementCommunicationChannelLocator locator;
 
 }

@@ -29,11 +29,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.party.Party;
 
@@ -180,13 +183,25 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
         invoice.setFixedAsset(lease.getProperty());
 
         // copy over the current invoice address (if any)
-        final CommunicationChannel sendTo = invoiceSendToService.firstTenantInvoiceAddress(lease);
+        final CommunicationChannel sendTo = firstTenantInvoiceAddress(lease);
         invoice.setSendTo(sendTo);
 
         persistIfNotAlready(invoice);
         getContainer().flush();
         return invoice;
     }
+
+    private CommunicationChannel firstTenantInvoiceAddress(final Agreement agreement) {
+        final List<CommunicationChannel> channels = tenantInvoiceAddresses(agreement);
+        return channels.size() > 0 ? channels.get(0): null;
+    }
+
+    List<CommunicationChannel> tenantInvoiceAddresses(final Agreement agreement) {
+        return locator.current(agreement, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS);
+
+    }
+
+
 
     @Programmatic
     public Invoice findOrCreateMatchingInvoice(
@@ -257,6 +272,6 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
     private EstatioSettingsService settings;
 
     @javax.inject.Inject
-    InvoiceSendToService invoiceSendToService;
+    AgreementCommunicationChannelLocator locator;
 
 }

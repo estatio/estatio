@@ -20,10 +20,10 @@ package org.estatio.dom.lease;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.communications.Agreement_communicationChannel;
+import org.estatio.dom.communications.Agreement_currentCommunicationChannel;
 
 @Mixin
-public class Lease_tenantInvoiceAddress extends Agreement_communicationChannel {
+public class Lease_tenantInvoiceAddress extends Agreement_currentCommunicationChannel {
 
     public Lease_tenantInvoiceAddress(final Lease lease) {
         super(lease, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS);

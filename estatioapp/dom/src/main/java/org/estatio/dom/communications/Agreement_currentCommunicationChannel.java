@@ -31,21 +31,21 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
-public abstract class Agreement_communicationChannel {
+public abstract class Agreement_currentCommunicationChannel {
 
     private final Agreement agreement;
     private final String art;
     private final String arcct;
     private final CommunicationChannelType cct;
 
-    public Agreement_communicationChannel(
+    public Agreement_currentCommunicationChannel(
             final Agreement agreement,
             final String agreementRoleTypeTitle,
             final String agreementRoleCommunicationChannelTypeTitle) {
         this(agreement, agreementRoleTypeTitle, agreementRoleCommunicationChannelTypeTitle, null);
     }
 
-    public Agreement_communicationChannel(
+    public Agreement_currentCommunicationChannel(
             final Agreement agreement,
             final String agreementRoleTypeTitle,
             final String agreementRoleCommunicationChannelTypeTitle,
@@ -59,11 +59,11 @@ public abstract class Agreement_communicationChannel {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public CommunicationChannel $$() {
-        final List<CommunicationChannel> channels = locator.locate(agreement, art, arcct, cct);
+        final List<CommunicationChannel> channels = locator.current(agreement, art, arcct, cct);
         return channels.isEmpty() ? null : channels.get(0);
     }
 
     @Inject
-    AgreementRoleCommunicationChannelLocator locator;
+    AgreementCommunicationChannelLocator locator;
 
 }

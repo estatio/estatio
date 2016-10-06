@@ -30,7 +30,11 @@
                                 <ns2:property id="runId"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Communications" id="comms">
-                                <ns2:property id="sendTo"/>
+                                <ns2:property id="sendTo">
+                                    <ns2:action id="overrideSendTo">
+                                        <ns2:named>Override</ns2:named>
+                                    </ns2:action>
+                                </ns2:property>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="RelatedTo" id="relatedTo">
                                 <ns2:property id="fixedAsset"/>
