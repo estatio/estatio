@@ -1,6 +1,6 @@
 package org.estatio.dom;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -9,11 +9,12 @@ public class Dflt {
     private Dflt(){}
 
     @Programmatic
-    public static <T> T of(final List<T> choices) {
+    public static <T> T of(final Collection<T> choices) {
         switch(choices.size()) {
-            case 0: return null;
-            case 1: return choices.get(0);
-            default: return null;
+        case 0: return null;
+        case 1: return choices.iterator().next();
+        default: return null;
         }
     }
+
 }

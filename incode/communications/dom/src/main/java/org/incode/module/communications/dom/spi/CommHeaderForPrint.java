@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -18,35 +19,8 @@
  */
 package org.incode.module.communications.dom.spi;
 
-import java.util.Set;
+import org.estatio.dom.communicationchannel.PostalAddress;
 
-import com.google.common.collect.Sets;
+public class CommHeaderForPrint extends CommHeaderAbstract<PostalAddress> {
 
-import org.estatio.dom.communicationchannel.EmailAddress;
-
-import lombok.Getter;
-import lombok.Setter;
-
-public class EmailHeader {
-
-    @Getter @Setter
-    private String subject;
-
-    @Getter
-    private final Set<EmailAddress> toSet = Sets.newTreeSet();
-
-    @Getter
-    private String cc ;
-
-    @Getter
-    private String bcc;
-
-    @Getter @Setter
-    private EmailAddress from;
-
-    /**
-     * Reason, if any, why the email could not be sent.
-     */
-    @Getter @Setter
-    private String disabledReason;
 }

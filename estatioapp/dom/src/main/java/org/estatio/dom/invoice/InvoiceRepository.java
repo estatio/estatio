@@ -183,7 +183,7 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
         invoice.setFixedAsset(lease.getProperty());
 
         // copy over the current invoice address (if any)
-        final CommunicationChannel sendTo = firstTenantInvoiceAddress(lease);
+        final CommunicationChannel sendTo = firstCurrentTenantInvoiceAddress(lease);
         invoice.setSendTo(sendTo);
 
         persistIfNotAlready(invoice);
@@ -191,12 +191,12 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
         return invoice;
     }
 
-    private CommunicationChannel firstTenantInvoiceAddress(final Agreement agreement) {
-        final List<CommunicationChannel> channels = tenantInvoiceAddresses(agreement);
+    CommunicationChannel firstCurrentTenantInvoiceAddress(final Agreement agreement) {
+        final List<CommunicationChannel> channels = currentTenantInvoiceAddresses(agreement);
         return channels.size() > 0 ? channels.get(0): null;
     }
 
-    List<CommunicationChannel> tenantInvoiceAddresses(final Agreement agreement) {
+    List<CommunicationChannel> currentTenantInvoiceAddresses(final Agreement agreement) {
         return locator.current(agreement, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS);
 
     }

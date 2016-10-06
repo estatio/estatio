@@ -66,6 +66,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.paperclips.Paperclip;
@@ -77,8 +78,6 @@ import org.estatio.dom.communicationchannel.EmailAddress;
 
 import lombok.Getter;
 import lombok.Setter;
-import static org.incode.module.communications.dom.mixins.Document_email.PAPERCLIP_ROLE_ATTACHMENT;
-import static org.incode.module.communications.dom.mixins.Document_email.PAPERCLIP_ROLE_COVER;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE
@@ -196,14 +195,25 @@ public class Communication implements Comparable<Communication> {
     //endregion
 
     //region > constructors
-    public Communication(
-            final CommunicationChannelType type,
+    public static Communication newEmail(
             final String atPath,
             final String subject,
             final DateTime queuedAt) {
+        return new Communication(CommunicationChannelType.EMAIL_ADDRESS, atPath, subject, queuedAt);
+    }
+    public static Communication newPostal(
+            final String atPath,
+            final String subject) {
+        return new Communication(CommunicationChannelType.POSTAL_ADDRESS, atPath, subject, null);
+    }
+    private Communication(
+            final CommunicationChannelType type,
+            final String atPath,
+            final String subjectIfAny,
+            final DateTime queuedAt) {
         this.type = type;
         this.atPath = atPath;
-        this.subject = subject;
+        this.subject = subjectIfAny;
         this.queuedAt = queuedAt;
         this.state = CommunicationState.QUEUED;
     }
@@ -238,8 +248,13 @@ public class Communication implements Comparable<Communication> {
 
     //region > subject (property)
     public static class SubjectDomainEvent extends PropertyDomainEvent<String> { }
+
+    /**
+     * Populated for {@link #getType() type} of {@link CommunicationChannelType#EMAIL_ADDRESS email}, but not for
+     * {@link CommunicationChannelType#POSTAL_ADDRESS}.
+     */
     @Getter @Setter
-    @Column(allowsNull = "false", length = CommunicationsModule.JdoColumnLength.SUBJECT)
+    @Column(allowsNull = "true", length = CommunicationsModule.JdoColumnLength.SUBJECT)
     @Property(
             domainEvent = SubjectDomainEvent.class,
             editing = Editing.DISABLED
@@ -250,7 +265,7 @@ public class Communication implements Comparable<Communication> {
     //region > queuedAt (property)
     public static class QueuedAtDomainEvent extends PropertyDomainEvent<DateTime> { }
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     @Property(
             domainEvent = QueuedAtDomainEvent.class,
             editing = Editing.DISABLED
@@ -326,8 +341,8 @@ public class Communication implements Comparable<Communication> {
     @Action(hidden = Where.EVERYWHERE) // so can invoke via BackgroundService
     public Communication send(final String subject) {
 
-        Document attachment = findDocument(PAPERCLIP_ROLE_ATTACHMENT);
-        Document coverNoteDoc = findDocument(PAPERCLIP_ROLE_COVER);
+        Document attachment = findDocument(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT);
+        Document coverNoteDoc = findDocument(DocumentConstants.PAPERCLIP_ROLE_COVER);
 
         List<String> toList = findCorrespondents(CommChannelRoleType.TO);
         List<String> ccList = findCorrespondents(CommChannelRoleType.CC);

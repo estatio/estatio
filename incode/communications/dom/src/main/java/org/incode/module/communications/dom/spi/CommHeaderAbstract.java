@@ -18,21 +18,26 @@
  */
 package org.incode.module.communications.dom.spi;
 
-import org.apache.isis.applib.annotation.Programmatic;
+import java.util.Set;
 
-import org.incode.module.communications.dom.mixins.Document_email;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.types.DocumentType;
+import com.google.common.collect.Sets;
 
-/**
- * As used by the {@link Document_email} mixin.
- */
-public interface DocumentEmailSupport {
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 
-    @Programmatic
-    DocumentType emailCoverNoteDocumentTypeFor(final Document document);
+import lombok.Getter;
+import lombok.Setter;
 
-    @Programmatic
-    void inferHeaderFor(final Document document, final EmailHeader header);
+public abstract class CommHeaderAbstract<T extends CommunicationChannel> {
 
+    @Getter @Setter
+    private T toDefault;
+
+    @Getter
+    private final Set<T> toChoices = Sets.newTreeSet();
+
+    /**
+     * Reason, if any, why the email could not be sent.
+     */
+    @Getter @Setter
+    private String disabledReason;
 }

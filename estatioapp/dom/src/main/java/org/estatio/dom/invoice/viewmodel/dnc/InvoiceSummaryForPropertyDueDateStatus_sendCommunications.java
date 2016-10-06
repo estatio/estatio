@@ -27,10 +27,14 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.communications.dom.mixins.Document_email;
+import org.incode.module.communications.dom.mixins.Document_print;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
+import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
@@ -51,15 +55,33 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendCommunications {
         for (Invoice invoice : invoices) {
             Document document = invoiceDocumentTemplateService.createAndAttach(invoice, documentTemplate);
 
-            // try to send as email
-            Document_email emailMixin = emailMixin(document);
-            final EmailAddress emailAddress = emailMixin.default0$$();
-            if(emailAddress != null) {
-                final String cc = emailMixin.default1$$();
-                final String bcc = emailMixin.default2$$();
-                final String subject = emailMixin.default3$$();
-                final String message = emailMixin.default4$$();
-                emailMixin.$$(emailAddress, cc, bcc, subject, message);
+            final CommunicationChannel sendTo = invoice.getSendTo();
+            if(sendTo != null) {
+                final CommunicationChannelType channelType = sendTo.getType();
+                switch (channelType) {
+
+                case EMAIL_ADDRESS:
+                    Document_email emailMixin = emailMixin(document);
+                    final EmailAddress emailAddress = emailMixin.default0$$();
+                    if(emailAddress != null) {
+                        final String cc = emailMixin.default1$$();
+                        final String bcc = emailMixin.default2$$();
+                        final String subject = emailMixin.default3$$();
+                        final String message = emailMixin.default4$$();
+                        emailMixin.$$(emailAddress, cc, bcc, subject, message);
+                    }
+                    break;
+                case POSTAL_ADDRESS:
+                    Document_print printMixin = printMixin(document);
+                    final PostalAddress postalAddress = printMixin.default0$$();
+                    if(postalAddress != null) {
+                        printMixin.$$(postalAddress);
+                    }
+                    break;
+                case PHONE_NUMBER:
+                case FAX_NUMBER:
+                    break;
+                }
             }
         }
 
@@ -68,6 +90,10 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendCommunications {
 
     private Document_email emailMixin(final Document document) {
         return factoryService.mixin(Document_email.class, document);
+    }
+
+    private Document_print printMixin(final Document document) {
+        return factoryService.mixin(Document_print.class, document);
     }
 
     public String disable$$() {

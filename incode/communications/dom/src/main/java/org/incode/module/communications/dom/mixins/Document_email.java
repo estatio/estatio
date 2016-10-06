@@ -19,7 +19,6 @@
 package org.incode.module.communications.dom.mixins;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -45,8 +44,8 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.spi.DocumentEmailSupport;
-import org.incode.module.communications.dom.spi.EmailHeader;
+import org.incode.module.communications.dom.spi.CommHeaderForEmail;
+import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentState;
@@ -57,7 +56,6 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.EmailAddress;
 
 /**
@@ -67,9 +65,6 @@ import org.estatio.dom.communicationchannel.EmailAddress;
 public class Document_email  {
 
     public static final int EMAIL_COVERING_NOTE_MULTILINE = 14;
-
-    public static final String PAPERCLIP_ROLE_ATTACHMENT = "attachment";
-    public static final String PAPERCLIP_ROLE_COVER = "cover";
 
     private final Document document;
 
@@ -110,8 +105,7 @@ public class Document_email  {
         // create comm and correspondents
         final DateTime commSent = clockService.nowAsDateTime();
 
-        final Communication communication = new Communication(
-                CommunicationChannelType.EMAIL_ADDRESS, document.getAtPath(), subject, commSent);
+        final Communication communication = Communication.newEmail(document.getAtPath(), subject, commSent);
         serviceRegistry2.injectServicesInto(communication);
 
         communication.addCorrespondent(CommChannelRoleType.TO, toChannel);
@@ -125,7 +119,7 @@ public class Document_email  {
         repositoryService.persistAndFlush(communication);
 
         // attach this doc to communication
-        paperclipRepository.attach(document, PAPERCLIP_ROLE_ATTACHMENT, communication);
+        paperclipRepository.attach(document, DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT, communication);
 
         // create and attach cover note
         final DocumentTemplate coverNoteTemplate = determineEmailCoverNoteTemplate();
@@ -133,7 +127,7 @@ public class Document_email  {
 
         coverNoteDoc.render(coverNoteTemplate, this.document, message);
 
-        paperclipRepository.attach(coverNoteDoc, PAPERCLIP_ROLE_COVER, communication);
+        paperclipRepository.attach(coverNoteDoc, DocumentConstants.PAPERCLIP_ROLE_COVER, communication);
 
         // schedule the email to be sent
         communication.scheduleSend(subject);
@@ -161,11 +155,11 @@ public class Document_email  {
     }
 
     public EmailAddress default0$$() {
-        return ifOnlyOne(choices0$$());
+        return determineEmailHeader().getToDefault();
     }
 
     public Set<EmailAddress> choices0$$() {
-        return determineEmailHeader().getToSet();
+        return determineEmailHeader().getToChoices();
     }
 
     public String default1$$() {
@@ -196,8 +190,8 @@ public class Document_email  {
 
     private DocumentType determineEmailCoverNoteDocumentType() {
         return queryResultsCache.execute(() -> {
-            if(documentEmailSupports != null) {
-                for (DocumentEmailSupport supportService : documentEmailSupports) {
+            if(documentCommunicationSupports != null) {
+                for (DocumentCommunicationSupport supportService : documentCommunicationSupports) {
                     final DocumentType documentType = supportService.emailCoverNoteDocumentTypeFor(document);
                     if(documentType != null) {
                         return documentType;
@@ -208,32 +202,16 @@ public class Document_email  {
         }, Document_email.class, "determineEmailCoverNoteDocumentType", document);
     }
 
-    private EmailHeader determineEmailHeader() {
+    private CommHeaderForEmail determineEmailHeader() {
         return queryResultsCache.execute(() -> {
-            final EmailHeader emailHeader = new EmailHeader();
-            if(documentEmailSupports != null) {
-                for (DocumentEmailSupport emailSupport : documentEmailSupports) {
-                    emailSupport.inferHeaderFor(document, emailHeader);;
+            final CommHeaderForEmail commHeaderForEmail = new CommHeaderForEmail();
+            if(documentCommunicationSupports != null) {
+                for (DocumentCommunicationSupport emailSupport : documentCommunicationSupports) {
+                    emailSupport.inferEmailHeaderFor(document, commHeaderForEmail);;
                 }
             }
-            return emailHeader;
+            return commHeaderForEmail;
         }, Document_email.class, "determineEmailHeader", document);
-    }
-
-    private static List<String> asList(EmailAddress emailAddress) {
-        return emailAddress != null
-                ? Collections.singletonList(emailAddress.getEmailAddress())
-                : Collections.emptyList();
-    }
-
-    private static List<String> asList(String emailAddress) {
-        return emailAddress != null
-                ? Collections.singletonList(emailAddress)
-                : Collections.emptyList();
-    }
-
-    private static <T> T ifOnlyOne(final Set<T> set) {
-        return set.size() == 1? set.iterator().next(): null;
     }
 
 
@@ -244,7 +222,7 @@ public class Document_email  {
     RepositoryService repositoryService;
 
     @Inject
-    List<DocumentEmailSupport> documentEmailSupports;
+    List<DocumentCommunicationSupport> documentCommunicationSupports;
 
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
