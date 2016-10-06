@@ -58,10 +58,12 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
@@ -69,6 +71,9 @@ import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
+import org.incode.module.documents.dom.impl.docs.DocumentAbstract_downloadTextAsClob;
+import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsBlob;
+import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsClob;
 import org.incode.module.documents.dom.impl.paperclips.Paperclip;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
@@ -215,7 +220,7 @@ public class Communication implements Comparable<Communication> {
         this.atPath = atPath;
         this.subject = subjectIfAny;
         this.queuedAt = queuedAt;
-        this.state = CommunicationState.QUEUED;
+        this.state = CommunicationState.PENDING;
     }
     //endregion
 
@@ -286,8 +291,8 @@ public class Communication implements Comparable<Communication> {
 
     //region > sent (programmatic)
     @Programmatic
-    public void sent(DateTime dateTime) {
-        setSentAt(dateTime);
+    public void sent() {
+        setSentAt(clockService.nowAsDateTime());
         setState(CommunicationState.SENT);
     }
     //endregion
@@ -333,6 +338,7 @@ public class Communication implements Comparable<Communication> {
     private CommunicationState state;
     //endregion
 
+    //region > scheduleSend (programmatic), send (action)
     @Programmatic
     public void scheduleSend(final String subject) {
         backgroundService.execute(this).send(subject);
@@ -359,11 +365,63 @@ public class Communication implements Comparable<Communication> {
             throw new ApplicationException("Failed to send email; see system logs for details.");
         }
 
-        sent(clockService.nowAsDateTime());
+        sent();
 
         return this;
     }
 
+    //endregion
+
+    //region > print
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public Object print() {
+        sent();
+        final Document enclosed = findDocument(DocumentConstants.PAPERCLIP_ROLE_ENCLOSED);
+        switch (enclosed.getSort()) {
+        case EMPTY:
+            // not expected
+            return this;
+        case BLOB:
+            return enclosed.getBlob();
+        case CLOB:
+            return enclosed.getClob();
+        case TEXT:
+            return factoryService.mixin(DocumentAbstract_downloadTextAsClob.class, enclosed).$$();
+        case EXTERNAL_BLOB:
+            return factoryService.mixin(Document_downloadExternalUrlAsBlob.class, enclosed).$$();
+        case EXTERNAL_CLOB:
+            return factoryService.mixin(Document_downloadExternalUrlAsClob.class, enclosed).$$();
+        }
+        // not expected
+        return this;
+    }
+
+    public String disablePrint() {
+        if(getType() != CommunicationChannelType.POSTAL_ADDRESS) {
+            return "Only postal address communications can be printed";
+        }
+        final Document enclosed = findDocument(DocumentConstants.PAPERCLIP_ROLE_ENCLOSED);
+        if(enclosed == null) {
+            return "Cannot locate the 'enclosed' Document";
+        }
+        switch (enclosed.getSort()) {
+        case BLOB:
+        case CLOB:
+        case TEXT:
+        case EXTERNAL_BLOB:
+        case EXTERNAL_CLOB:
+            return null;
+        }
+        // not really expected
+        return "Cannot print a document of this sort (" + enclosed.getSort() + ")";
+    }
+    
+    //endregion
+
+    //region > findCorrespondents, findDocument (programmatic)
+
+    @Programmatic
     public List<String> findCorrespondents(final CommChannelRoleType roleType) {
         SortedSet<CommChannelRole> correspondents = getCorrespondents();
         return correspondents.stream()
@@ -387,10 +445,19 @@ public class Communication implements Comparable<Communication> {
 
     @Programmatic
     public Document findDocument(final String roleName) {
-        DocumentAbstract documentAbstract = findDocumentIfAny(roleName);
-        if(documentAbstract == null) {
+        Document document = findDocumentIfAny(roleName);
+        if(document == null) {
             throw new ApplicationException(
                     String.format("Could not find document via paperclip, role '%s'", roleName));
+        }
+        return document;
+    }
+
+    @Programmatic
+    public Document findDocumentIfAny(final String roleName) {
+        DocumentAbstract documentAbstract = findDocumentAbstractIfAny(roleName);
+        if(documentAbstract == null) {
+            return null;
         }
         if(documentAbstract instanceof Document) {
             return (Document) documentAbstract;
@@ -399,13 +466,14 @@ public class Communication implements Comparable<Communication> {
                 String.format("Found document via paperclip, role '%s', but was DocumentTemplate (not an instance of Document)", roleName));
     }
 
-    private DocumentAbstract findDocumentIfAny(final String roleName) {
+    private DocumentAbstract findDocumentAbstractIfAny(final String roleName) {
         List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(this);
         Optional<Paperclip> paperclipForAttachment = paperclips.stream()
                 .filter(x -> Objects.equal(x.getRoleName(), roleName)).findFirst();
         return paperclipForAttachment.isPresent() ?
                 paperclipForAttachment.get().getDocument() : null;
     }
+    //endregion
 
     //region > id (programmatic, for comparison)
     @Programmatic
@@ -448,6 +516,9 @@ public class Communication implements Comparable<Communication> {
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    FactoryService factoryService;
     //endregion
 
 }

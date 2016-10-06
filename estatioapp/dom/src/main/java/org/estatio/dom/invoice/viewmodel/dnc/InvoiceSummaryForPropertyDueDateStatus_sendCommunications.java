@@ -61,7 +61,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendCommunications {
                 switch (channelType) {
 
                 case EMAIL_ADDRESS:
-                    Document_email emailMixin = emailMixin(document);
+                    final Document_email emailMixin = emailMixin(document);
                     final EmailAddress emailAddress = emailMixin.default0$$();
                     if(emailAddress != null) {
                         final String cc = emailMixin.default1$$();
@@ -72,7 +72,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendCommunications {
                     }
                     break;
                 case POSTAL_ADDRESS:
-                    Document_print printMixin = printMixin(document);
+                    final Document_print printMixin = printMixin(document);
                     final PostalAddress postalAddress = printMixin.default0$$();
                     if(postalAddress != null) {
                         printMixin.$$(postalAddress);

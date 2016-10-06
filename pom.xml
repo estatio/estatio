@@ -85,6 +85,7 @@ mvn clean install -DskipTests -o
 
         <isis-module-excel.version>1.13.1</isis-module-excel.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
+        <isis-module-pdfbox.version>1.13.0</isis-module-pdfbox.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.3</isis-module-security.version>
         <isis-module-sessionlogger.version>1.13.1</isis-module-sessionlogger.version>
@@ -560,6 +561,11 @@ mvn clean install -DskipTests -o
                 <groupId>org.isisaddons.module.poly</groupId>
                 <artifactId>isis-module-poly-dom</artifactId>
                 <version>${isis-module-poly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.pdfbox</groupId>
+                <artifactId>isis-module-pdfbox-dom</artifactId>
+                <version>${isis-module-pdfbox.version}</version>
             </dependency>
 
             <dependency>

@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
 import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.communications.dom.CommunicationsModule;
@@ -45,6 +46,7 @@ public class EstatioAppManifest implements AppManifest {
 
                         CommunicationsModule.class,
                         DocumentsModule.class,
+                        PdfBoxModule.class,
                         StringInterpolatorDocRenderingModule.class,
 
                         // TODO: sort out packages for the 'fixture' module

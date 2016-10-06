@@ -226,6 +226,11 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.isisaddons.module.pdfbox</groupId>
+            <artifactId>isis-module-pdfbox-dom</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
             <version>${isis-module-stringinterpolator.version}</version>

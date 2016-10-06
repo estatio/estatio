@@ -79,7 +79,6 @@ public class Document_print {
         serviceRegistry2.injectServicesInto(communication);
 
         communication.addCorrespondent(CommChannelRoleType.TO, toChannel);
-        communication.sent(clockService.nowAsDateTime());
 
         repositoryService.persistAndFlush(communication);
 
