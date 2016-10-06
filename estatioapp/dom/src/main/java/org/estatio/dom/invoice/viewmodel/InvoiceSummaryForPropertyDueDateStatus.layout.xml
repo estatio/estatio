@@ -11,10 +11,6 @@
             <ns2:action id="saveAllAsHistoric"/>
             <ns2:action id="syncAll"/>
             <ns2:action id="links"/>
-            <ns2:action id="createDocument"/>
-            <ns2:action id="createDocuments"/>
-            <ns2:action id="sendCommunications"/>
-            <ns2:action id="documentsAndCommunications"/>
         </col>
     </row>
     <row>
@@ -61,6 +57,16 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="documentsAndCommunications">
+                                <ns2:action id="createDocument">
+                                    <ns2:named>Preview</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="createDocuments" hidden="EVERYWHERE"/>
+                                <ns2:action id="sendCommunications">
+                                    <ns2:named>Send</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="downloadPostalCommunications">
+                                    <ns2:named>Download postal</ns2:named>
+                                </ns2:action>
                                 <ns2:named>Prelim &amp; Invoice Comms</ns2:named>
                             </ns2:collection>
                         </col>

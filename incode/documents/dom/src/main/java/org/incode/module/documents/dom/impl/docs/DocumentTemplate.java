@@ -804,9 +804,6 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         }
     }
 
-    private static Object coalesce(final Object x, final Object y) {
-        return x != null? x: y;
-    }
 
     //endregion
 

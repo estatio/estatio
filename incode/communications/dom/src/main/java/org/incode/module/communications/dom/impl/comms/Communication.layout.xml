@@ -14,7 +14,18 @@
                             <cpt:fieldSet name="Identifier">
                                 <cpt:property id="subject"/>
                                 <cpt:property id="state"/>
-                                <cpt:property id="sent"/>
+                                <cpt:property id="type"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application level">
+                                <cpt:property id="atPath" hidden="EVERYWHERE"/>
+                                <!-- assuming a mixin is present to look this up -->
+                                <cpt:property id="applicationTenancy"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -43,11 +54,9 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-            <cpt:fieldSet name="Details">
-                <cpt:property id="type"/>
-                <cpt:property id="atPath" hidden="EVERYWHERE"/>
-                <!-- assuming a mixin is present to look this up -->
-                <cpt:property id="applicationTenancy"/>
+            <cpt:fieldSet name="Dates">
+                <cpt:property id="queuedAt"/>
+                <cpt:property id="sentAt"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">

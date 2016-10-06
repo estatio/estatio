@@ -17,6 +17,17 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
+                <bs3:tab name="Application Level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Level">
+                                <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                                <!-- assuming a mixin is present to look this up -->
+                                <cpt:property id="applicationTenancy"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
                 <bs3:tab name="Metadata">
                     <bs3:row>
                         <bs3:col span="12">
@@ -44,9 +55,8 @@
             <cpt:fieldSet name="Details">
                 <cpt:property id="type"/>
                 <cpt:property id="state"/>
-                <cpt:property id="atPath" hidden="ALL_TABLES"/>
-                <!-- assuming a mixin is present to look this up -->
-                <cpt:property id="applicationTenancy"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Dates">
                 <!-- can't put in tab because of ISIS-1480 -->
                 <cpt:property id="createdAt"/>
                 <cpt:property id="renderedAt"/>
