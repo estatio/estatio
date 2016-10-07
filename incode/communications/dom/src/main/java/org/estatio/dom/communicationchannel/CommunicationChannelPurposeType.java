@@ -22,7 +22,8 @@ import org.estatio.dom.TitledEnum;
 
 public enum CommunicationChannelPurposeType implements TitledEnum {
 
-    ACCOUNTING("Accounting");
+    ACCOUNTING("Accounting"),
+    INVOICING("Invoicing");
 
     private String title;
 
