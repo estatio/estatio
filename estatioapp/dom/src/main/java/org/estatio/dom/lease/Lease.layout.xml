@@ -68,11 +68,12 @@
             </tabGroup>
             <ns2:fieldSet name="Status Info" id="statusInfo">
                 <ns2:property id="status">
-                    <ns2:action id="renew" position="BELOW"/>
                     <ns2:action id="terminate" position="BELOW"/>
                     <ns2:action id="assign" position="BELOW"/>
                     <ns2:action id="suspendAll" position="BELOW"/>
                     <ns2:action id="resumeAll" position="BELOW"/>
+                    <ns2:action id="renew" position="BELOW"/>
+                    <ns2:action id="renewKeepingExisting" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Comments" id="comments">

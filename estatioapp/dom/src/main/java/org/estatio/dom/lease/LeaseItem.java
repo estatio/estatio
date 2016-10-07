@@ -363,6 +363,22 @@ public class LeaseItem
         return newItem;
     }
 
+    public LocalDate default0Copy() {
+        return getStartDate();
+    }
+
+    public InvoicingFrequency default1Copy() {
+        return getInvoicingFrequency();
+    }
+
+    public PaymentMethod default2Copy() {
+        return getPaymentMethod();
+    }
+
+    public Charge default3Copy() {
+        return getCharge();
+    }
+
     public List<Charge> choices3Copy() {
         return chargeRepository.chargesForCountry(this.getApplicationTenancy());
     }

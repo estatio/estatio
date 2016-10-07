@@ -96,6 +96,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
+import static org.apache.commons.lang3.StringUtils.left;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -984,7 +985,46 @@ public class Lease
         return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
     }
 
-    // //////////////////////////////////////
+    public String disableRenew() {
+        if(getNext() != null){
+            return "Cannot renew when there is a next lease";
+        }
+        return null;
+    }
+
+    public Lease renewKeepingThis(final LocalDate newStartDate, final LocalDate newEndDate) {
+        final String newReference = left(getReference(), 14).concat("_");
+        final String newName = getName().concat(" - Archived");
+        Lease prevLease = leaseRepository.newLease(
+                getApplicationTenancy(),
+                newReference,
+                newName,
+                getLeaseType(),
+                getStartDate(),
+                getEndDate(),
+                getTenancyStartDate(),
+                newStartDate.minusDays(1),
+                getPrimaryParty(),
+                getSecondaryParty());
+        prevLease.setNext(this);
+        prevLease.setComments(getComments());
+
+        setStartDate(newStartDate);
+        setEndDate(newEndDate);
+        setTenancyStartDate(newStartDate);
+        setTenancyEndDate(newEndDate);
+        return this;
+    }
+
+    public String disableRenewKeepingThis() {
+        if (getPrevious() != null) {
+            return "Previous lease found";
+        }
+        if (getNext() != null) {
+            return "Next lease found";
+        }
+        return null;
+    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove() {
@@ -1010,8 +1050,6 @@ public class Lease
         }
         return dates;
     }
-
-    // //////////////////////////////////////
 
     public static class TerminateEvent extends ActionDomainEvent<Lease> {
         private static final long serialVersionUID = 1L;
@@ -1043,8 +1081,6 @@ public class Lease
         }
     }
 
-    // //////////////////////////////////////
-
     @Inject
     LeaseItemRepository leaseItemRepository;
 
@@ -1057,8 +1093,7 @@ public class Lease
     @Inject
     BankMandateRepository bankMandateRepository;
 
-    @Inject
-    private LeaseRepository leaseRepository;
+    @Inject LeaseRepository leaseRepository;
 
     @Inject
     UnitRepository unitRepository;

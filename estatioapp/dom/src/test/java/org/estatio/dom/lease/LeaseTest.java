@@ -42,6 +42,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
@@ -65,6 +66,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -199,7 +201,7 @@ public class LeaseTest {
             // Then
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLeaseItemRepository).newLeaseItem(lease,leaseItemType,charge,invoicingFrequency,paymentMethod,startDate);
+                    oneOf(mockLeaseItemRepository).newLeaseItem(lease, leaseItemType, charge, invoicingFrequency, paymentMethod, startDate);
                 }
             });
 
@@ -534,7 +536,9 @@ public class LeaseTest {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockBankMandateRepository).newBankMandate(with(any(String.class)), with(any(String.class)), with(any(LocalDate.class)), with(any(LocalDate.class)), with(any(Party.class)), with(any(Party.class)), with(any(BankAccount.class)), with(any(SequenceType.class)),with(any(Scheme.class)), with(any(LocalDate.class)));
+                    oneOf(mockBankMandateRepository)
+                            .newBankMandate(with(any(String.class)), with(any(String.class)), with(any(LocalDate.class)), with(any(LocalDate.class)), with(any(Party.class)), with(any(Party.class)), with(any(BankAccount.class)), with(any(SequenceType.class)), with(any(Scheme.class)),
+                                    with(any(LocalDate.class)));
                     will(returnValue(bankMandate));
 
                 }
@@ -932,24 +936,24 @@ public class LeaseTest {
 
     }
 
-    public static class PrimaryOccupancy{
+    public static class PrimaryOccupancy {
 
         @Test
         public void highest_start_date_first() throws Exception {
             Lease lease = new Lease();
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "100.00"));
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2015,1,1), "100.00"));
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2013,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014, 1, 1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2015, 1, 1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2013, 1, 1), "100.00"));
             assertThat(lease.getOccupancies()).hasSize(3);
-            assertThat(lease.primaryOccupancy().get().getStartDate()).isEqualTo(new LocalDate(2015,1,1));
+            assertThat(lease.primaryOccupancy().get().getStartDate()).isEqualTo(new LocalDate(2015, 1, 1));
         }
 
         @Test
         public void null_start_date_first() throws Exception {
             Lease lease = new Lease();
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014, 1, 1), "100.00"));
             lease.getOccupancies().add(newOccupancy(null, "100.00"));
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2013,1,1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2013, 1, 1), "100.00"));
             assertThat(lease.getOccupancies()).hasSize(3);
             assertThat(lease.primaryOccupancy().get().getStartDate()).isNull();
         }
@@ -957,9 +961,9 @@ public class LeaseTest {
         @Test
         public void largest_area_first() throws Exception {
             Lease lease = new Lease();
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "99.00"));
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "100.00"));
-            lease.getOccupancies().add(newOccupancy(new LocalDate(2014,1,1), "88.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014, 1, 1), "99.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014, 1, 1), "100.00"));
+            lease.getOccupancies().add(newOccupancy(new LocalDate(2014, 1, 1), "88.00"));
             assertThat(lease.getOccupancies()).hasSize(3);
             assertThat(lease.primaryOccupancy().get().getUnit().getArea()).isEqualTo(new BigDecimal("100.00"));
         }
@@ -971,7 +975,6 @@ public class LeaseTest {
             assertThat(lease.primaryOccupancy().isPresent()).isFalse();
         }
 
-
         private Occupancy newOccupancy(final LocalDate startDate, final String area) {
             Occupancy o = new Occupancy();
             o.setStartDate(startDate);
@@ -982,6 +985,114 @@ public class LeaseTest {
             o.setUnit(unit);
             return o;
         }
+
+    }
+
+    public static class Renew extends LeaseTest {
+
+        @Test
+        public void disabled_when_there_is_a_next_lease() throws Exception {
+           //Given
+            Lease lease = new Lease();
+            lease.setNext(new Lease());
+
+            //When, Then
+            assertThat(lease.disableRenew()).isNotNull();
+        }
+    }
+
+
+    public static class RenewKeepingThis extends LeaseTest {
+
+        @Mock
+        LeaseRepository mockLeaseRepository;
+
+        @Mock
+        ApplicationTenancyRepository mockApplicationTenancyRepository;
+
+        @Test
+        public void happy_case() throws Exception {
+            //Given
+            final Organisation tenant = new Organisation();
+            final Organisation landlord = new Organisation();
+            LeaseForTest lease = new LeaseForTest(){
+                @Override public Party getPrimaryParty() {
+                    return landlord;
+                }
+                @Override public Party getSecondaryParty() {
+                    return tenant;
+                }
+            };
+            lease.setReference("OXF-HELLO-123");
+            lease.setName("OXF-HELLO-123");
+            lease.setComments("Comments");
+            final LocalDate startDate = new LocalDate(2000, 1, 1);
+            lease.setStartDate(startDate);
+            final LocalDate endDate = new LocalDate(2009, 12, 31);
+            lease.setEndDate(endDate);
+            lease.setTenancyStartDate(startDate);
+            lease.leaseRepository = mockLeaseRepository;
+            lease.setSecurityApplicationTenancyRepository(mockApplicationTenancyRepository);
+
+            Lease previousLease = new Lease();
+
+            final LocalDate newStartDate = new LocalDate(2010, 1, 1);
+            final LocalDate newEndDate = new LocalDate(2019, 12, 31);
+
+            //Then
+            context.checking(new Expectations() {
+                {
+                    allowing(mockApplicationTenancyRepository).findByPathCached(with(aNull(String.class)));
+                    final ApplicationTenancy applicationTenancy = new ApplicationTenancy();
+                    will(returnValue(applicationTenancy));
+                    allowing(mockLeaseRepository).newLease(
+                            applicationTenancy,
+                            "OXF-HELLO-123_",
+                            "OXF-HELLO-123 - Archived",
+                            null,
+                            startDate,
+                            endDate,
+                            startDate,
+                            newStartDate.minusDays(1),
+                            landlord,
+                            tenant);
+                    will(returnValue(previousLease));
+                }
+            });
+
+            //When
+            lease.renewKeepingThis(newStartDate, newEndDate);
+
+            //Then
+            assertThat(previousLease.getNext()).isEqualTo(lease);
+            assertThat(previousLease.getComments()).isEqualTo("Comments");
+
+            assertThat(lease.getStartDate()).isEqualTo(newStartDate);
+            assertThat(lease.getEndDate()).isEqualTo(newEndDate);
+            assertThat(lease.getTenancyEndDate()).isEqualTo(newEndDate);
+
+        }
+
+        @Test
+        public void disabled_when_previous_lease_found() throws Exception {
+            //Given
+            Lease lease =  new Lease();
+            lease.setNext(new Lease());
+            //When, Then
+            assertThat(lease.disableRenewKeepingThis()).isNotNull();
+
+        }
+
+        @Test
+        public void disabled_when_next_lease_found() throws Exception {
+            //Given
+            Lease lease =  new Lease();
+            lease.setPrevious(new Lease());
+            //When, Then
+            assertThat(lease.disableRenewKeepingThis()).isNotNull();
+
+        }
+
 
     }
 
