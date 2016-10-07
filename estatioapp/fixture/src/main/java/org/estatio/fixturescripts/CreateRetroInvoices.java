@@ -126,13 +126,13 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final ExecutionContext fixtureResults) {
         for (LocalDate dueDate : lease.dueDatesInRange(startDueDate, nextDueDate)) {
             InvoiceCalculationParameters parameters =
-                    new InvoiceCalculationParameters(
-                            lease,
-                            InvoiceCalculationSelection.ALL_ITEMS.selectedTypes(),
-                            InvoiceRunType.NORMAL_RUN,
-                            dueDate,
-                            startDueDate,
-                            dueDate.plusDays(1));
+                    InvoiceCalculationParameters.builder()
+                            .lease(lease)
+                            .leaseItemTypes(InvoiceCalculationSelection.ALL_ITEMS.selectedTypes())
+                            .invoiceRunType(InvoiceRunType.NORMAL_RUN)
+                            .invoiceDueDate(dueDate)
+                            .startDueDate(startDueDate)
+                            .nextDueDate(dueDate.plusDays(1)).build();
             createAndApprove(parameters, fixtureResults);
         }
         return fixtureResults;

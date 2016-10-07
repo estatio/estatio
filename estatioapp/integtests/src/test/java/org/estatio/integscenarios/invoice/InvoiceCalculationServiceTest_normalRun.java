@@ -18,28 +18,45 @@
  */
 package org.estatio.integscenarios.invoice;
 
+import java.math.BigDecimal;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
-import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.*;
 import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.lease.*;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.SortedSet;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -47,19 +64,13 @@ import static org.junit.Assert.assertThat;
 
 /**
  * This looks to have been copied-n-pasted from
- * {@link InvoiceCalculationServiceTest_normalRun_COPY};
+ * {@link InvoiceCalculationServiceIntegTest_prove_something_is_wrong};
  * both have ignored tests; not sure which is in the best state to fix up.
  */
 public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationTest {
-    
-    @Inject
-    private LeaseMenu leaseMenu;
 
     @Inject
     private LeaseRepository leaseRepository;
-
-    @Inject
-    private LeaseTermRepository leaseTermRepository;
 
     @Inject
     private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
@@ -215,12 +226,12 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         nextTransaction();
         isisJdoSupport.refresh(leaseTerm);
 
-        InvoiceCalculationParameters parameters = new InvoiceCalculationParameters(
-                leaseTerm,
-                InvoiceRunType.NORMAL_RUN,
-                VT.ld(startDueDate),
-                VT.ld(startDueDate),
-                VT.ld(nextDueDate));
+        InvoiceCalculationParameters parameters = InvoiceCalculationParameters.builder()
+                .leaseTerm(leaseTerm)
+                .invoiceRunType(InvoiceRunType.NORMAL_RUN)
+                .invoiceDueDate(VT.ld(startDueDate))
+                .startDueDate(VT.ld(startDueDate))
+                .nextDueDate(VT.ld(nextDueDate)).build();
         invoiceCalculationService.calculateAndInvoice(parameters);
 
         InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));

@@ -48,13 +48,13 @@ public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
         final Lease lease = leaseRepository.findLeaseByReference(coalesce(fixtureResults.getParameters(), propertyRef));
         lease.verifyUntil(ld(2014, 1, 1));
 
-        InvoiceCalculationParameters calculationParameters = new InvoiceCalculationParameters(
-                lease,
-                InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE.selectedTypes(),
-                InvoiceRunType.NORMAL_RUN,
-                ld(2013, 4, 1),
-                ld(2013, 4, 1),
-                ld(2013, 4, 2));
+        InvoiceCalculationParameters calculationParameters = InvoiceCalculationParameters.builder()
+                .lease(lease)
+                .leaseItemTypes(InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE.selectedTypes())
+                .invoiceRunType(InvoiceRunType.NORMAL_RUN)
+                .invoiceDueDate(ld(2013, 4, 1))
+                .startDueDate(ld(2013, 4, 1))
+                .nextDueDate(ld(2013, 4, 2)).build();
         calculationService.calculateAndInvoice(calculationParameters);
     }
 
