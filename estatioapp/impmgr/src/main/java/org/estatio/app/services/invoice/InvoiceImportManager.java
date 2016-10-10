@@ -90,11 +90,25 @@ public class InvoiceImportManager {
     public List<InvoiceImportLine> getLines(){
         List<InvoiceImportLine> result = new ArrayList<>();
         for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(getProperty(), clockService.now())){
+
             PaymentMethod paymentMethod = null;
-            if (leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).size()>0){
-                paymentMethod = leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0).getPaymentMethod();
+
+            if (lease.getItems().size()>0) {
+
+                if (leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).size() > 0) {
+                    paymentMethod = leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT).get(0).getPaymentMethod();
+                } else {
+                    paymentMethod = lease.getItems().first().getPaymentMethod();
+                }
+
+                result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null));
+
+            } else {
+
+                result.add(new InvoiceImportLine(lease.getReference(), null, null, null, null, null, null, null));
+
             }
-            result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null));
+
         }
         return result;
     }
