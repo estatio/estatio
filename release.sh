@@ -30,7 +30,6 @@ echo "\$SNAPSHOT_VERSION = $SNAPSHOT_VERSION"
 echo "\$NO_SANITY_CHECK  = $NO_SANITY_CHECK"
 
 
-
 echo ""
 echo "sanity check (mvn clean install -T1C -o)"
 echo ""
@@ -39,7 +38,6 @@ if [ $NO_SANITY_CHECK == 0 ]; then
 else
     echo "... skipped"
 fi
-
 
 
 echo ""
@@ -54,17 +52,11 @@ echo "Tagging"
 git tag $RELEASE_VERSION || exit 1 
 
 
-
-
-
 echo ""
 echo "building release locally"
 echo ""
+rm -Rf ~/.m2/repository/org/estatio/
 mvn clean install -T1C -o || exit 1  >/dev/null
-
-
-
-
 
 
 echo ""
@@ -76,11 +68,7 @@ echo "Committing changes"
 git commit -am "$JIRA: bumping to next snapshot $SNAPSHOT_VERSION" || exit 1 
 
 
-
-
 echo ""
 echo "building new snapshot locally"
 echo ""
 mvn clean install -T1C -o -DskipTests=true || exit 1  >/dev/null
-
-

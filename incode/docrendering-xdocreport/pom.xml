@@ -81,9 +81,6 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
 
-        <incode-module-base.version>1.7.0-SNAPSHOT</incode-module-base.version>
-        <incode-module-documents.version>1.7.0-SNAPSHOT</incode-module-documents.version>
-        
         <isis-module-xdocreport.version>1.14.0-SNAPSHOT</isis-module-xdocreport.version>
 
         <lombok.version>1.16.6</lombok.version>
@@ -246,13 +243,13 @@ Copyright 2014~2015 Dan Haywood
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base.version}</version>
+                <version> ${project.parent.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.incode.module.documents</groupId>
                 <artifactId>incode-module-documents-dom</artifactId>
-                <version>${incode-module-documents.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <dependency>
