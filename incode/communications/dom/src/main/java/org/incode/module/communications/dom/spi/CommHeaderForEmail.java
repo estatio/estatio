@@ -25,9 +25,6 @@ import lombok.Setter;
 
 public class CommHeaderForEmail extends CommHeaderAbstract<EmailAddress> {
 
-    @Getter @Setter
-    private String subject;
-
     @Getter
     private String cc ;
 

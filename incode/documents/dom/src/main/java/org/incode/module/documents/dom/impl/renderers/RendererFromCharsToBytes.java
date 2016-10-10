@@ -24,6 +24,7 @@ public interface RendererFromCharsToBytes extends Renderer {
 
     byte[] renderCharsToBytes(
             final DocumentType documentType,
+            final String variant,
             final String atPath,
             final long templateVersion,
             final String templateChars,

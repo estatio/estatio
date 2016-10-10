@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.Mixin;
 public class InvoiceDocAndComm_prelimDocumentState extends InvoiceDocAndComm_documentStateAbstract {
 
     public InvoiceDocAndComm_prelimDocumentState(final InvoiceDocAndComm invoiceDocAndComm) {
-        super(invoiceDocAndComm, Constants.DOC_TYPE_REF_INVOICE_PRELIM);
+        super(invoiceDocAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_PRELIM);
     }
 
 }

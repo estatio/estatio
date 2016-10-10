@@ -144,7 +144,25 @@ public class Document extends DocumentAbstract<Document> {
             if(ev.getIconName() != null) {
                 return;
             }
-            ev.setIconName("");
+            final Document document = ev.getSource();
+            final String documentName = document.getName();
+            String iconName = "";
+            if(documentName.endsWith(".xls") || documentName.endsWith(".xlsx")) {
+                iconName = "xlsx";
+            }
+            if(documentName.endsWith(".doc") || documentName.endsWith(".docx")) {
+                iconName = "docx";
+            }
+            if(documentName.endsWith(".ppt") || documentName.endsWith(".pptx")) {
+                iconName = "pptx";
+            }
+            if(documentName.endsWith(".pdf")) {
+                iconName = "pdf";
+            }
+            if(documentName.endsWith(".html")) {
+                iconName = "html";
+            }
+            ev.setIconName(iconName);
         }
     }
 
@@ -203,14 +221,14 @@ public class Document extends DocumentAbstract<Document> {
 
     //region > setBlob, setClob, setTextData
     @Override
-    void setBlob(Blob blob) {
+    public void setBlob(Blob blob) {
         super.setBlob(blob);
         setState(DocumentState.RENDERED);
         setRenderedAt(clockService.nowAsDateTime());
     }
 
     @Override
-    void setClob(Clob clob) {
+    public void setClob(Clob clob) {
         super.setClob(clob);
         setState(DocumentState.RENDERED);
         setRenderedAt(clockService.nowAsDateTime());

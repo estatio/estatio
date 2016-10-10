@@ -82,7 +82,7 @@ public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS extends Docum
 
         final Clob clob = readSvgResourceAsClob(NAME);
 
-        final DocumentTemplate documentTemplate = createDocumentClobTemplate(documentType, clockService.now(),
+        final DocumentTemplate documentTemplate = upsertDocumentClobTemplate(documentType, clockService.now(),
                 ApplicationTenancyForGbOxf.PATH, FILE_SUFFIX,
                 false,
                 clob, svgRenderingStrategy,

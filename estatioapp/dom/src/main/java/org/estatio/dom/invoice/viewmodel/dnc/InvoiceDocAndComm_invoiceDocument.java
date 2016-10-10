@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.Mixin;
 public class InvoiceDocAndComm_invoiceDocument extends InvoiceDocAndComm_documentAbstract {
 
     public InvoiceDocAndComm_invoiceDocument(final InvoiceDocAndComm invoiceDocAndComm) {
-        super(invoiceDocAndComm, Constants.DOC_TYPE_REF_INVOICE);
+        super(invoiceDocAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_INVOICE);
     }
 
 }

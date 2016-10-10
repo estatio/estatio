@@ -71,12 +71,12 @@ public class DocumentTemplate_cloneWhenText {
             final LocalDate date,
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
             final String templateText,
+            @ParameterLayout(named = "Content rendering strategy")
             final RenderingStrategy contentRenderingStrategy,
             @Parameter(maxLength = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
-            @ParameterLayout(named = "Subject text")
-            final String subjectText,
-            @ParameterLayout(named = "Subject rendering strategy")
-            final RenderingStrategy subjectRenderingStrategy,
+            final String nameText,
+            @ParameterLayout(named = "Name rendering strategy")
+            final RenderingStrategy nameRenderingStrategy,
             @ParameterLayout(named = "Preview only?")
             final boolean previewOnly) {
 
@@ -85,7 +85,7 @@ public class DocumentTemplate_cloneWhenText {
         final String fileSuffix = documentTemplate.getFileSuffix();
         final DocumentTemplate template = documentTemplateRepository.createText(
                 type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, name, mimeType, templateText, contentRenderingStrategy,
-                subjectText, subjectRenderingStrategy);
+                nameText, nameRenderingStrategy);
         for (Applicability applicability : documentTemplate.getAppliesTo()) {
             template.applicable(applicability.getDomainClassName(), applicability.getBinderClassName());
         }
@@ -123,11 +123,11 @@ public class DocumentTemplate_cloneWhenText {
     }
 
     public String default5$$() {
-        return documentTemplate.getSubjectText();
+        return documentTemplate.getNameText();
     }
 
     public RenderingStrategy default6$$() {
-        return documentTemplate.getSubjectRenderingStrategy();
+        return documentTemplate.getNameRenderingStrategy();
     }
 
     public boolean default7$$() {

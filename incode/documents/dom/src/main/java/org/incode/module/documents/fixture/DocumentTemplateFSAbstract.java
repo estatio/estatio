@@ -66,8 +66,10 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final boolean previewOnly,
             final String name,
             final String mimeType,
-            final String subjectText, final RenderingStrategy subjectRenderingStrategy,
-            final String contentText, final RenderingStrategy contentRenderingStrategy,
+            final String contentText,
+            final RenderingStrategy contentRenderingStrategy,
+            final String nameText,
+            final RenderingStrategy nameRenderingStrategy,
             ExecutionContext executionContext) {
 
         DocumentTemplate documentTemplate = documentTemplateRepository
@@ -79,8 +81,8 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             documentTemplate.setMimeType(mimeType);
             documentTemplate.setText(contentText);
             documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
-            documentTemplate.setSubjectText(subjectText);
-            documentTemplate.setSubjectRenderingStrategy(subjectRenderingStrategy);
+            documentTemplate.setNameText(nameText);
+            documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
         } else {
             documentTemplate =
                     documentTemplateRepository.createText(
@@ -88,12 +90,12 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
                             fileSuffix, previewOnly,
                             name, mimeType,
                             contentText, contentRenderingStrategy,
-                            subjectText, subjectRenderingStrategy);
+                            nameText, nameRenderingStrategy);
         }
         return executionContext.addResult(this, documentTemplate);
     }
 
-    protected DocumentTemplate createDocumentClobTemplate(
+    protected DocumentTemplate upsertDocumentClobTemplate(
             final DocumentType documentType,
             final LocalDate date,
             final String atPath,
@@ -102,19 +104,31 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final Clob clob,
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy,
+            final RenderingStrategy nameRenderingStrategy,
             ExecutionContext executionContext) {
 
-        final DocumentTemplate documentTemplate =
-                documentTemplateRepository .createClob(
-                        documentType, date, atPath,
-                        fileSuffix, previewOnly, clob,
-                        contentRenderingStrategy,
-                        subjectText, subjectRenderingStrategy);
+        DocumentTemplate documentTemplate = documentTemplateRepository
+                .findByTypeAndAtPathAndDate(documentType, atPath, date);
+
+        if(documentTemplate != null) {
+            documentTemplate.setFileSuffix(fileSuffix);
+            documentTemplate.setPreviewOnly(previewOnly);
+            documentTemplate.setClob(clob);
+            documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
+            documentTemplate.setNameText(subjectText);
+            documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
+        } else {
+            documentTemplate =
+                    documentTemplateRepository.createClob(
+                            documentType, date, atPath,
+                            fileSuffix, previewOnly, clob,
+                            contentRenderingStrategy,
+                            subjectText, nameRenderingStrategy);
+        }
         return executionContext.addResult(this, documentTemplate);
     }
 
-    protected DocumentTemplate createDocumentBlobTemplate(
+    protected DocumentTemplate upsertDocumentBlobTemplate(
             final DocumentType documentType,
             final LocalDate date,
             final String atPath,
@@ -122,16 +136,28 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final boolean previewOnly,
             final Blob blob,
             final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy,
+            final String nameText,
+            final RenderingStrategy nameRenderingStrategy,
             ExecutionContext executionContext) {
 
-        final DocumentTemplate documentTemplate =
-                documentTemplateRepository .createBlob(
-                        documentType, date, atPath,
-                        fileSuffix, previewOnly, blob,
-                        contentRenderingStrategy,
-                        subjectText, subjectRenderingStrategy);
+        DocumentTemplate documentTemplate = documentTemplateRepository
+                .findByTypeAndAtPathAndDate(documentType, atPath, date);
+        if(documentTemplate != null) {
+            documentTemplate.setFileSuffix(fileSuffix);
+            documentTemplate.setPreviewOnly(previewOnly);
+            documentTemplate.setBlob(blob);
+            documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
+            documentTemplate.setNameText(nameText);
+            documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
+        } else {
+            documentTemplate =
+                    documentTemplateRepository.createBlob(
+                            documentType, date, atPath,
+                            fileSuffix, previewOnly, blob,
+                            contentRenderingStrategy,
+                            nameText, nameRenderingStrategy);
+        }
+
         return executionContext.addResult(this, documentTemplate);
     }
 

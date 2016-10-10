@@ -104,19 +104,19 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Subject">
+                <bs3:tab name="Name">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Rendering" id="subjectRendering">
-                                <cpt:property id="subjectRenderingStrategy" hidden="ALL_TABLES">
-                                    <cpt:action id="changeSubjectRenderingStrategy">
+                            <cpt:fieldSet name="Rendering" id="nameRendering">
+                                <cpt:property id="nameRenderingStrategy" hidden="ALL_TABLES">
+                                    <cpt:action id="changeNameRenderingStrategy">
                                         <cpt:named>Change</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Template" id="subjectTemplate">
-                                <cpt:property id="subjectText" hidden="ALL_TABLES">
-                                    <cpt:action id="updateSubjectText">
+                                <cpt:property id="nameText" hidden="ALL_TABLES">
+                                    <cpt:action id="updateNameText">
                                         <cpt:named>Update</cpt:named>
                                     </cpt:action>
                                 </cpt:property>

@@ -19,6 +19,7 @@
 package org.estatio.dom.invoice.email;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,7 @@ import org.incode.module.communications.dom.spi.CommHeaderForEmail;
 import org.incode.module.communications.dom.spi.CommHeaderForPrint;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.documents.dom.impl.docs.Document;
+import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.paperclips.Paperclip;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
@@ -54,15 +56,29 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoice implement
             return null;
         }
 
-        return documentTypeRepository.findByReference(Constants.EMAIL_COVER_NOTE_DOCUMENT_TYPE);
+        final String coverNoteTypeRef = determineCoverNoteTypeRef(document);
+        return coverNoteTypeRef != null
+                    ? documentTypeRepository.findByReference(coverNoteTypeRef)
+                    : null;
+    }
+
+    private static String determineCoverNoteTypeRef(final Document document) {
+
+        if(Objects.equals(document.getType().getReference(), Constants.DOC_TYPE_REF_INVOICE)) {
+            return Constants.DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE;
+        }
+
+        if(Objects.equals(document.getType().getReference(), Constants.DOC_TYPE_REF_PRELIM)) {
+            return Constants.DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE;
+        }
+
+        return null;
     }
 
     @Override
     public void inferEmailHeaderFor(
             final Document document,
             final CommHeaderForEmail header) {
-
-        header.setSubject(document.getName());
 
         inferToHeader(document, header, CommunicationChannelType.EMAIL_ADDRESS);
     }
@@ -122,6 +138,8 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoice implement
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
+
+    @Inject DocumentTemplateRepository documentTemplateRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;

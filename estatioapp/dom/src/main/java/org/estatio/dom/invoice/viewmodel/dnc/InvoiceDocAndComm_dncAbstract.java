@@ -21,11 +21,9 @@ package org.estatio.dom.invoice.viewmodel.dnc;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 
@@ -62,16 +60,10 @@ public abstract class InvoiceDocAndComm_dncAbstract {
 
 
     @Inject
-    PaperclipRepository paperclipRepository;
-
-    @Inject
     QueryResultsCache queryResultsCache;
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    TitleService titleService;
 
     @Inject
     InvoiceDocAndCommService invoiceDocAndCommService;

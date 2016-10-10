@@ -32,6 +32,7 @@ public class RendererUsingStringInterpolator implements RendererFromCharsToChars
     @Override
     public String renderCharsToChars(
             final DocumentType documentType,
+            final String variant,
             final String atPath,
             final long templateVersion,
             final String templateChars,

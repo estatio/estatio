@@ -58,12 +58,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
@@ -71,9 +69,6 @@ import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract_downloadTextAsClob;
-import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsBlob;
-import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsClob;
 import org.incode.module.documents.dom.impl.paperclips.Paperclip;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
@@ -340,21 +335,22 @@ public class Communication implements Comparable<Communication> {
 
     //region > scheduleSend (programmatic), send (action)
     @Programmatic
-    public void scheduleSend(final String subject) {
-        backgroundService.execute(this).send(subject);
+    public void scheduleSend() {
+        backgroundService.execute(this).send();
     }
 
     @Action(hidden = Where.EVERYWHERE) // so can invoke via BackgroundService
-    public Communication send(final String subject) {
+    public Communication send() {
 
-        Document attachment = findDocument(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT);
-        Document coverNoteDoc = findDocument(DocumentConstants.PAPERCLIP_ROLE_COVER);
-
-        List<String> toList = findCorrespondents(CommChannelRoleType.TO);
-        List<String> ccList = findCorrespondents(CommChannelRoleType.CC);
-        List<String> bccList = findCorrespondents(CommChannelRoleType.BCC);
-
+        final Document attachment = findDocument(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT);
+        final Document coverNoteDoc = findDocument(DocumentConstants.PAPERCLIP_ROLE_COVER);
         final String emailBody = coverNoteDoc.asChars();
+
+        final List<String> toList = findCorrespondents(CommChannelRoleType.TO);
+        final List<String> ccList = findCorrespondents(CommChannelRoleType.CC);
+        final List<String> bccList = findCorrespondents(CommChannelRoleType.BCC);
+
+        final String subject = getSubject();
 
         final boolean send = emailService.send(
                 toList, ccList, bccList,
@@ -370,53 +366,6 @@ public class Communication implements Comparable<Communication> {
         return this;
     }
 
-    //endregion
-
-    //region > print
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public Object print() {
-        sent();
-        final Document enclosed = findDocument(DocumentConstants.PAPERCLIP_ROLE_ENCLOSED);
-        switch (enclosed.getSort()) {
-        case EMPTY:
-            // not expected
-            return this;
-        case BLOB:
-            return enclosed.getBlob();
-        case CLOB:
-            return enclosed.getClob();
-        case TEXT:
-            return factoryService.mixin(DocumentAbstract_downloadTextAsClob.class, enclosed).$$();
-        case EXTERNAL_BLOB:
-            return factoryService.mixin(Document_downloadExternalUrlAsBlob.class, enclosed).$$();
-        case EXTERNAL_CLOB:
-            return factoryService.mixin(Document_downloadExternalUrlAsClob.class, enclosed).$$();
-        }
-        // not expected
-        return this;
-    }
-
-    public String disablePrint() {
-        if(getType() != CommunicationChannelType.POSTAL_ADDRESS) {
-            return "Only postal address communications can be printed";
-        }
-        final Document enclosed = findDocument(DocumentConstants.PAPERCLIP_ROLE_ENCLOSED);
-        if(enclosed == null) {
-            return "Cannot locate the 'enclosed' Document";
-        }
-        switch (enclosed.getSort()) {
-        case BLOB:
-        case CLOB:
-        case TEXT:
-        case EXTERNAL_BLOB:
-        case EXTERNAL_CLOB:
-            return null;
-        }
-        // not really expected
-        return "Cannot print a document of this sort (" + enclosed.getSort() + ")";
-    }
-    
     //endregion
 
     //region > findCorrespondents, findDocument (programmatic)
@@ -516,9 +465,6 @@ public class Communication implements Comparable<Communication> {
 
     @Inject
     PaperclipRepository paperclipRepository;
-
-    @Inject
-    FactoryService factoryService;
     //endregion
 
 }

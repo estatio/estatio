@@ -42,7 +42,7 @@ public abstract class RendererForXDocReportAbstract implements RendererFromBytes
 
     @Override
     public byte[] renderBytesToBytes(
-            final DocumentType documentType, final String atPath, final long version,
+            final DocumentType documentType, final String variant, final String atPath, final long version,
             final byte[] templateBytes, final Object dataModel)
             throws IOException {
 

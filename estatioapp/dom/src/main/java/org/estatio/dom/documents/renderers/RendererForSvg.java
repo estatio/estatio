@@ -32,7 +32,7 @@ public class RendererForSvg implements RendererFromCharsToChars {
     @Override
     public String renderCharsToChars(
             final DocumentType documentType,
-            final String atPath,
+            final String variant, final String atPath,
             final long templateVersion,
             final String templateChars,
             final Object dataModel) throws IOException {

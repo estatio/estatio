@@ -16,20 +16,39 @@
  */
 package org.incode.module.documents.dom.impl.docs;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
+import javax.activation.DataSource;
+import javax.inject.Inject;
+import javax.jdo.JDOHelper;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
+
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-import javax.activation.DataSource;
-import javax.inject.Inject;
-import javax.jdo.JDOHelper;
-import javax.jdo.annotations.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
@@ -164,7 +183,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return new Blob(getName(), getMimeType(), getBlobBytes());
 
     }
-    void setBlob(Blob blob) {
+    public void setBlob(Blob blob) {
         setName(blob.getName());
         setMimeType(blob.getMimeType().toString());
         setBlobBytes(blob.getBytes());
@@ -198,7 +217,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return new Clob(getName(), getMimeType(), getClobChars());
 
     }
-    void setClob(Clob clob) {
+    public void setClob(Clob clob) {
         setName(clob.getName());
         setMimeType(clob.getMimeType().toString());
         setClobChars(clob.getChars().toString());

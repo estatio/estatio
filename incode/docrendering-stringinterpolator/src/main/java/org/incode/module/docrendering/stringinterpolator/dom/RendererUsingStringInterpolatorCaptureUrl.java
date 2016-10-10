@@ -24,9 +24,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
-
 import org.apache.isis.applib.services.config.ConfigurationService;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
@@ -40,7 +37,7 @@ public class RendererUsingStringInterpolatorCaptureUrl implements RendererFromCh
     @Override
     public byte[] renderCharsToBytes(
             final DocumentType documentType,
-            final String atPath,
+            final String variant, final String atPath,
             final long templateVersion,
             final String templateChars,
             final Object dataModel) throws IOException {

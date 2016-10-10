@@ -53,7 +53,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendCommunications {
 
         final List<Invoice> invoices = invoiceSummary.getInvoices();
         for (Invoice invoice : invoices) {
-            Document document = invoiceDocumentTemplateService.createAndAttach(invoice, documentTemplate);
+            Document document = invoiceDocumentTemplateService.createAttachAndScheduleRender(invoice, documentTemplate);
 
             final CommunicationChannel sendTo = invoice.getSendTo();
             if(sendTo != null) {
@@ -66,9 +66,8 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendCommunications {
                     if(emailAddress != null) {
                         final String cc = emailMixin.default1$$();
                         final String bcc = emailMixin.default2$$();
-                        final String subject = emailMixin.default3$$();
-                        final String message = emailMixin.default4$$();
-                        emailMixin.$$(emailAddress, cc, bcc, subject, message);
+                        final String message = emailMixin.default3$$();
+                        emailMixin.$$(emailAddress, cc, bcc, message);
                     }
                     break;
                 case POSTAL_ADDRESS:

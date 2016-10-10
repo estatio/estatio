@@ -45,7 +45,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_createDocuments {
         final List<Invoice> invoices = invoiceSummary.getInvoices();
         for (Invoice invoice : invoices) {
             DocumentTemplate documentTemplate1 = documentTemplate;
-            invoiceDocumentTemplateService.createAndAttach(invoice, documentTemplate1);
+            invoiceDocumentTemplateService.createAttachAndScheduleRender(invoice, documentTemplate1);
         }
 
         return this.invoiceSummary;

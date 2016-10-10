@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.services.clock.ClockService;
+import com.google.common.base.Joiner;
 
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
@@ -35,22 +35,27 @@ public class RendererForFreemarker implements RendererFromCharsToChars {
 
     public String renderCharsToChars(
             final DocumentType documentType,
+            final String variant,
             final String atPath,
             final long templateVersion,
             final String templateChars,
             final Object dataModel) throws IOException {
 
         try {
-            return freeMarkerService.render(documentType.getReference(), atPath, templateVersion, templateChars, dataModel);
+            final String templateName = join(documentType.getReference(), variant, atPath, "" + templateVersion);
+
+            return freeMarkerService.render(templateName, templateChars, dataModel);
+
         } catch (TemplateException e) {
             throw new IOException(e);
         }
     }
 
+    private static String join(final String... parts) {
+        return Joiner.on(":").join(parts);
+    }
 
     @Inject
-    private ClockService clockService;
-    @Inject
-    private FreeMarkerService freeMarkerService;
+    FreeMarkerService freeMarkerService;
 
 }

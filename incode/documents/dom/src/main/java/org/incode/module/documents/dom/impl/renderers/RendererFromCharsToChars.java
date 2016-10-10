@@ -24,6 +24,7 @@ public interface RendererFromCharsToChars extends Renderer {
 
     String renderCharsToChars(
             final DocumentType documentType,
+            final String variant,
             final String atPath,
             final long templateVersion,
             final String templateChars,

@@ -26,18 +26,18 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.documents.dom.DocumentsModule;
 
 @Mixin
-public class DocumentTemplate_updateSubjectText {
+public class DocumentTemplate_updateNameText {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_updateSubjectText(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_updateNameText(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateSubjectText>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_updateNameText>  { }
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
@@ -47,12 +47,12 @@ public class DocumentTemplate_updateSubjectText {
             @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
             final String text
     ) {
-        documentTemplate.setSubjectText(text);
+        documentTemplate.setNameText(text);
         return documentTemplate;
     }
 
     public String default0$$() {
-        return documentTemplate.getSubjectText();
+        return documentTemplate.getNameText();
     }
 
 

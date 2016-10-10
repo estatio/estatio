@@ -35,7 +35,7 @@ import lombok.Data;
 /**
  * For use with email covering notes for invoices.
  */
-public class BinderForDocumentAttachedToInvoice implements Binder {
+public class BinderForDocumentAttachedToPrelimLetterOrInvoice implements Binder {
 
     @Override
     public Binding newBinding(

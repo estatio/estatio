@@ -19,7 +19,6 @@ package org.estatio.fixturescripts;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.fixture.documents.DocumentTypeAndTemplateFSForInvoiceEmailCoverNote;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 import org.estatio.fixture.documents.RenderingStrategies;
 
@@ -29,7 +28,6 @@ public class SeedDocumentAndCommsFixture extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new RenderingStrategies());
-        executionContext.executeChild(this, new DocumentTypeAndTemplateFSForInvoiceEmailCoverNote());
         executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs());
 
     }

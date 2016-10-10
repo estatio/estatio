@@ -30,22 +30,19 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.isisaddons.module.security.app.user.MeService;
-
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.communications.dom.spi.CommHeaderForPrint;
+import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentState;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.communicationchannel.PostalAddress;
@@ -71,6 +68,12 @@ public class Document_print {
     public Communication $$(
             @ParameterLayout(named = "to:")
             final PostalAddress toChannel) throws IOException {
+
+        if(this.document.getState() == DocumentState.NOT_RENDERED) {
+            // can't generate the comm yet, so schedule to try again shortly.
+            backgroundService.executeMixin(Document_print.class, document).$$(toChannel);
+            return null;
+        }
 
         // create comm and correspondents
         final DateTime commSent = clockService.nowAsDateTime();
@@ -130,21 +133,15 @@ public class Document_print {
     List<DocumentCommunicationSupport> documentCommunicationSupports;
 
     @Inject
-    DocumentTemplateRepository documentTemplateRepository;
-
-    @Inject
     ClockService clockService;
 
     @Inject
     PaperclipRepository paperclipRepository;
 
     @Inject
-    MeService meService;
-
-    @Inject
     ServiceRegistry2 serviceRegistry2;
 
     @Inject
-    EmailService emailService;
+    BackgroundService2 backgroundService;
 
 }

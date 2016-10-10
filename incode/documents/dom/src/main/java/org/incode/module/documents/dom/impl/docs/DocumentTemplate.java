@@ -317,16 +317,16 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String fileSuffix,
             final boolean previewOnly,
             final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
+            final String nameText,
+            final RenderingStrategy nameRenderingStrategy) {
         this.typeCopy = type;
         this.atPathCopy = atPath;
         this.date = date;
         this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
         this.previewOnly = previewOnly;
         this.contentRenderingStrategy = contentRenderingStrategy;
-        this.subjectText = subjectText;
-        this.subjectRenderingStrategy = subjectRenderingStrategy;
+        this.nameText = nameText;
+        this.nameRenderingStrategy = nameRenderingStrategy;
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -399,27 +399,31 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
 
-    //region > subjectText (persisted property)
-    public static class SubjectTextDomainEvent extends PropertyDomainEvent<Clob> { }
+    //region > nameText (persisted property)
+    public static class NameTextDomainEvent extends PropertyDomainEvent<Clob> { }
+
+    /**
+     * Used to determine the name of the {@link Document#getName() name} of the rendered {@link Document}.
+     */
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
     @Property(
             notPersisted = true, // exclude from auditing
-            domainEvent = SubjectTextDomainEvent.class,
+            domainEvent = NameTextDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private String subjectText;
+    private String nameText;
     //endregion
 
-    //region > subjectRenderingStrategy (property)
-    public static class SubjectRenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
+    //region > nameRenderingStrategy (property)
+    public static class NameRenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
     @Getter @Setter
-    @Column(allowsNull = "false", name = "subjectRenderStrategyId")
+    @Column(allowsNull = "false", name = "nameRenderStrategyId")
     @Property(
-            domainEvent = SubjectRenderingStrategyDomainEvent.class,
+            domainEvent = NameRenderingStrategyDomainEvent.class,
             editing = Editing.DISABLED
     )
-    private RenderingStrategy subjectRenderingStrategy;
+    private RenderingStrategy nameRenderingStrategy;
     //endregion
 
     //region > PreviewOnly (property)
@@ -713,13 +717,13 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         serviceRegistry2.injectServicesInto(contentDataModel);
 
         // subject
-        final RendererFromCharsToChars subjectRenderer =
-                (RendererFromCharsToChars) getSubjectRenderingStrategy().newRenderer();
+        final RendererFromCharsToChars nameRenderer =
+                (RendererFromCharsToChars) getNameRenderingStrategy().newRenderer();
         String renderedDocumentName;
         try {
-            renderedDocumentName = subjectRenderer.renderCharsToChars(
-                    getType(), getAtPath(), getVersion(),
-                    getSubjectText(), contentDataModel);
+            renderedDocumentName = nameRenderer.renderCharsToChars(
+                    getType(), "name", getAtPath(), getVersion(),
+                    getNameText(), contentDataModel);
         } catch (IOException e) {
             renderedDocumentName = getName();
         }
@@ -737,6 +741,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final Document document,
             final Object contentDataModel) {
 
+        final String variant = "content";
         final String documentName = document.getName();
         try {
 
@@ -750,14 +755,14 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                     switch (outputNature) {
                     case BYTES:
                         final byte[] renderedBytes = ((RendererFromBytesToBytes) renderer).renderBytesToBytes(
-                                getType(), getAtPath(), getVersion(),
+                                getType(), variant, getAtPath(), getVersion(),
                                 asBytes(), contentDataModel);
                         final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
                         document.setBlob(blob);
                         return;
                     case CHARACTERS:
-                    final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
-                            getType(), getAtPath(), getVersion(),
+                        final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
+                            getType(), variant, getAtPath(), getVersion(),
                             asBytes(), contentDataModel);
                         if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
                             document.setTextData(getName(), getMimeType(), renderedChars);
@@ -774,15 +779,15 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                     switch (outputNature) {
                     case BYTES:
                         final byte[] renderedBytes = ((RendererFromCharsToBytes) renderer).renderCharsToBytes(
-                                getType(), getAtPath(), getVersion(),
+                                getType(), variant, getAtPath(), getVersion(),
                                 asChars(), contentDataModel);
                         final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
                         document.setBlob(blob);
                         return;
                     case CHARACTERS:
-                    final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
-                            getType(), getAtPath(), getVersion(),
-                            asChars(), contentDataModel);
+                        final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
+                                getType(), variant, getAtPath(), getVersion(),
+                                asChars(), contentDataModel);
                         if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
                             document.setTextData(getName(), getMimeType(), renderedChars);
                         } else {

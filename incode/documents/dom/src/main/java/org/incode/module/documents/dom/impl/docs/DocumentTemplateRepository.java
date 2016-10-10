@@ -140,6 +140,16 @@ public class DocumentTemplateRepository {
     }
 
     /**
+     * Returns all document templates for the specified {@link DocumentType}, ordered by type, then most specific to
+     * provided application tenancy, and then by date (desc).
+     */
+    @Programmatic
+    public DocumentTemplate findFirstByTypeAndApplicableToAtPath(final DocumentType documentType, final String atPath) {
+        final List<DocumentTemplate> templates = findByTypeAndApplicableToAtPath(documentType, atPath);
+        return templates.isEmpty() ? null : templates.get(0);
+    }
+
+    /**
      * Returns all document templates, ordered by most specific to provided application tenancy first, and then by date (desc).
      */
     public List<DocumentTemplate> findByApplicableToAtPath(final String atPath) {

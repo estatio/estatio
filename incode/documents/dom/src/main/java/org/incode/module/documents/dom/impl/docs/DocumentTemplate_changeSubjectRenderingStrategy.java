@@ -48,7 +48,7 @@ public class DocumentTemplate_changeSubjectRenderingStrategy {
     )
     public DocumentTemplate $$(
             final RenderingStrategy renderingStrategy) {
-        documentTemplate.setSubjectRenderingStrategy(renderingStrategy);
+        documentTemplate.setNameRenderingStrategy(renderingStrategy);
         return documentTemplate;
     }
 
@@ -61,7 +61,7 @@ public class DocumentTemplate_changeSubjectRenderingStrategy {
     }
 
     private RenderingStrategy currentSubjectRenderingStrategy() {
-        return documentTemplate.getSubjectRenderingStrategy();
+        return documentTemplate.getNameRenderingStrategy();
     }
 
 

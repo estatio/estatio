@@ -63,7 +63,8 @@ public class DocumentTypeAndTemplateFSForHelloGlobal extends DocumentTemplateFSA
 
         final DocumentTemplate documentTemplate = upsertDocumentTextTemplate(
                 documentType, date, AT_PATH, FILE_SUFFIX, false, TEMPLATE_NAME, TEMPLATE_MIME_TYPE,
-                SUBJECT_TEXT, freemarkerRenderingStrategy, CONTENT_TEXT, freemarkerRenderingStrategy,
+                CONTENT_TEXT, freemarkerRenderingStrategy,
+                SUBJECT_TEXT, freemarkerRenderingStrategy,
                 executionContext);
 
         documentTemplate.applicable(WithNameGetter.class, BinderForWithNameGetterAttachToInput.class);
