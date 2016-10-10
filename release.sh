@@ -55,6 +55,11 @@ git tag $RELEASE_VERSION || exit 1
 echo ""
 echo "building release locally"
 echo ""
+rm -Rf ~/.m2/repository/org/incode/module/base/
+rm -Rf ~/.m2/repository/org/incode/module/classification/
+rm -Rf ~/.m2/repository/org/incode/module/communications/
+rm -Rf ~/.m2/repository/org/incode/module/documents/
+rm -Rf ~/.m2/repository/org/incode/module/docrendering/
 rm -Rf ~/.m2/repository/org/estatio/
 mvn clean install -T1C -o || exit 1  >/dev/null
 
