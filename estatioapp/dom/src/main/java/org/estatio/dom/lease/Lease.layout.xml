@@ -26,8 +26,10 @@
                                 <ns2:property id="type"/>
                                 <ns2:property id="reference"/>
                                 <ns2:property id="name"/>
+                                <ns2:property id="externalReference"/>
                                 <ns2:property id="leaseType">
                                     <ns2:action id="change" position="BELOW"/>
+                                    <ns2:action id="changeExternalReference" position="BELOW"/>
                                 </ns2:property>
                                 <ns2:property id="property"/>
                                 <ns2:property id="paidBy">
@@ -35,7 +37,8 @@
                                     <ns2:action id="paidBy" position="BELOW"/>
                                 </ns2:property>
                                 <ns2:property id="secondaryParty"/>
-                                <ns2:property id="primaryParty"/>
+                                <ns2:property id="primaryParty">
+                                </ns2:property>
                             </ns2:fieldSet>
                         </col>
                     </row>

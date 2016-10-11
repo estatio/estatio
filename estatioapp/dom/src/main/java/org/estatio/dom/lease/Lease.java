@@ -268,15 +268,30 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @Getter @Setter
+    @Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    private String externalReference;
+
+    public Lease changeExternalReference(final String externalReference) {
+        setExternalReference(externalReference);
+        return this;
+    }
+
+    public String default0ChangeExternalReference(){
+        return getExternalReference();
+    }
+
     @javax.jdo.annotations.Column(name = "leaseTypeId", allowsNull = "true")
     @Getter @Setter
     private LeaseType leaseType;
 
     public Lease change(
             final String name,
-            final @Parameter(optionality = Optionality.OPTIONAL) LeaseType leaseType) {
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final LeaseType leaseType) {
         setName(name);
         setLeaseType(leaseType);
+        setExternalReference(externalReference);
         return this;
     }
 
