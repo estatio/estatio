@@ -15,12 +15,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.modules.docrendering.freemarker.fixture;
+package org.incode.module.docrendering.freemarker.fixture;
 
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
 
-import org.incode.modules.docrendering.freemarker.dom.RendererForFreemarker;
+import org.incode.module.docrendering.freemarker.dom.RendererForFreemarker;
 
 public class RenderingStrategyFSForFreemarker extends RenderingStrategyFSAbstract {
 

@@ -29,7 +29,7 @@ import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrate
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
-import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
+import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 public class RenderingStrategies extends DocumentTemplateFSAbstract {
 

@@ -35,7 +35,7 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepositor
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
-import org.incode.modules.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
+import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
