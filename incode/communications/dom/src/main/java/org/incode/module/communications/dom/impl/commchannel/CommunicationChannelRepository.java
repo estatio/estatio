@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communicationchannel;
+package org.incode.module.communications.dom.impl.commchannel;
 
 import java.util.List;
 import java.util.SortedSet;

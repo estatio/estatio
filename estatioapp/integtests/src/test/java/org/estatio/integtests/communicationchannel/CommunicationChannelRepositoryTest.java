@@ -26,9 +26,9 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

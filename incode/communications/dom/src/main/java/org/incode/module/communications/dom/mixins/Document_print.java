@@ -45,7 +45,7 @@ import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentState;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.communicationchannel.PostalAddress;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 /**
  * Provides the ability to send an print.

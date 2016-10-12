@@ -30,8 +30,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelRepository;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Party.RemoveEvent;
 import org.estatio.dom.party.PartyRepository;

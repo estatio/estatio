@@ -22,6 +22,9 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
 import org.estatio.dom.geography.Country;

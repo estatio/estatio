@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.estatio.dom.invoice.Invoice;
 
 import lombok.Getter;

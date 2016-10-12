@@ -72,9 +72,9 @@ import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.paperclips.Paperclip;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.EmailAddress;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 import lombok.Getter;
 import lombok.Setter;

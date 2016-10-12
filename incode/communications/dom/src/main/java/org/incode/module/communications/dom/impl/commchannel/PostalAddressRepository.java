@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communicationchannel;
+package org.incode.module.communications.dom.impl.commchannel;
 
 import java.util.List;
 
@@ -30,34 +30,41 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.geography.Country;
 
-@DomainService(repositoryFor = EmailAddress.class, nature = NatureOfService.DOMAIN)
-public class EmailAddressRepository extends UdoDomainRepositoryAndFactory<EmailAddress> {
+/**
+ * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.
+ */
+@DomainService(repositoryFor = PostalAddress.class, nature = NatureOfService.DOMAIN)
+public class PostalAddressRepository extends UdoDomainRepositoryAndFactory<PostalAddress> {
 
     public String getId() {
-        return "estatio.EmailAddressRepository";
+        return "estatio.PostalAddressRepository";
     }
 
-    public EmailAddressRepository() {
-        super(EmailAddressRepository.class, EmailAddress.class);
+    public PostalAddressRepository() {
+        super(PostalAddressRepository.class, PostalAddress.class);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
-    public EmailAddress findByEmailAddress(
+    public PostalAddress findByAddress(
             final CommunicationChannelOwner owner, 
-            final String emailAddress) {
+            final String address1, 
+            final String postalCode, 
+            final String city, 
+            final Country country) {
 
         final List<CommunicationChannelOwnerLink> links =
-                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.EMAIL_ADDRESS);
-        final Iterable<EmailAddress> emailAddresses =
+                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.POSTAL_ADDRESS);
+        final Iterable<PostalAddress> postalAddresses =
                 Iterables.transform(
                         links,
-                        CommunicationChannelOwnerLink.Functions.communicationChannel(EmailAddress.class));
-        final Optional<EmailAddress> emailAddressIfFound =
-                Iterables.tryFind(emailAddresses, EmailAddress.Predicates.equalTo(emailAddress));
-        return emailAddressIfFound.orNull();
+                        CommunicationChannelOwnerLink.Functions.communicationChannel(PostalAddress.class));
+        final Optional<PostalAddress> postalAddressIfFound =
+                Iterables.tryFind(postalAddresses, PostalAddress.Predicates.equalTo(address1, postalCode, city, country));
+        return postalAddressIfFound.orNull();
     }
 
     @Inject

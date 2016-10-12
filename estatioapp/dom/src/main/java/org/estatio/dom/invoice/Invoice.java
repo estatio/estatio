@@ -63,7 +63,7 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;

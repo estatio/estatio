@@ -25,8 +25,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner_newChannelContributions;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.StateRepository;
 import org.estatio.dom.party.Party;

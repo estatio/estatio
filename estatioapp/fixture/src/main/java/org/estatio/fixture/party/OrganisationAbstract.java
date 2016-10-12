@@ -25,8 +25,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner_newChannelContributions;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.CountryRepository;
 import org.estatio.dom.geography.State;
@@ -37,7 +38,7 @@ import org.estatio.dom.party.PersonRepository;
 
 /**
  * Sets up the {@link org.estatio.dom.party.Organisation} and also a number of
- * {@link org.estatio.dom.communicationchannel.CommunicationChannel}s.
+ * {@link CommunicationChannel}s.
  */
 public abstract class OrganisationAbstract extends FixtureScript {
 

@@ -31,10 +31,10 @@ import org.incode.module.communications.dom.mixins.Document_print;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.EmailAddress;
-import org.estatio.dom.communicationchannel.PostalAddress;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 

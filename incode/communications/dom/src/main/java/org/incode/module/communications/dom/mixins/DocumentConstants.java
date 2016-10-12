@@ -21,7 +21,7 @@ package org.incode.module.communications.dom.mixins;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.documents.dom.impl.docs.Document;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 public final class DocumentConstants {
 

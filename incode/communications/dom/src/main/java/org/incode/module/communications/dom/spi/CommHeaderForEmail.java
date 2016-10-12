@@ -18,7 +18,7 @@
  */
 package org.incode.module.communications.dom.spi;
 
-import org.estatio.dom.communicationchannel.EmailAddress;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 import lombok.Getter;
 import lombok.Setter;

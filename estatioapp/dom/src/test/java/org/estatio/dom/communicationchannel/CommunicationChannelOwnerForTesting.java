@@ -18,6 +18,8 @@ package org.estatio.dom.communicationchannel;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
+
 public class CommunicationChannelOwnerForTesting implements CommunicationChannelOwner {
 
     @Override

@@ -20,7 +20,6 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
-import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -28,9 +27,9 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.Dflt;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.lease.LeaseConstants;
 

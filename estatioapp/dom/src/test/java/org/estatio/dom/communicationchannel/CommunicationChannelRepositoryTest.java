@@ -25,6 +25,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 

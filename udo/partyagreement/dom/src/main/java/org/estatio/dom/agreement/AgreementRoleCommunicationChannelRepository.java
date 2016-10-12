@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

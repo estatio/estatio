@@ -22,7 +22,7 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import lombok.Getter;
 import lombok.Setter;

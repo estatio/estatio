@@ -30,7 +30,7 @@ import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract_downloadTextAsClob;
 import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsClob;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 @Mixin
 public class Communication_printAsClob {

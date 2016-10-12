@@ -19,7 +19,7 @@
  */
 package org.incode.module.communications.dom.spi;
 
-import org.estatio.dom.communicationchannel.PostalAddress;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 public class CommHeaderForPrint extends CommHeaderAbstract<PostalAddress> {
 

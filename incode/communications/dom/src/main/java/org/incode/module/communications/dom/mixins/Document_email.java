@@ -56,7 +56,7 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
-import org.estatio.dom.communicationchannel.EmailAddress;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 /**
  * Provides the ability to send an email.

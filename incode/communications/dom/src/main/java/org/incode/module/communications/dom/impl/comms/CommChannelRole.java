@@ -49,7 +49,7 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.communications.dom.CommunicationsModule;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -32,7 +32,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;

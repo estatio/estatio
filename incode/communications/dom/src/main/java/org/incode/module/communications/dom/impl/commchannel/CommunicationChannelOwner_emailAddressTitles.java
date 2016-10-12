@@ -1,4 +1,4 @@
-package org.estatio.dom.communicationchannel;
+package org.incode.module.communications.dom.impl.commchannel;
 
 import javax.inject.Inject;
 
@@ -12,13 +12,12 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
 
-public abstract class CommunicationChannelOwner_phoneNumberTitles {
-
+public abstract class CommunicationChannelOwner_emailAddressTitles {
 
     private final CommunicationChannelOwner owner;
     private String separator;
 
-    public CommunicationChannelOwner_phoneNumberTitles(final CommunicationChannelOwner owner, final String separator) {
+    public CommunicationChannelOwner_emailAddressTitles(final CommunicationChannelOwner owner, final String separator) {
         this.owner = owner;
         this.separator = separator;
     }
@@ -34,5 +33,4 @@ public abstract class CommunicationChannelOwner_phoneNumberTitles {
 
     @Inject
     CommunicationChannelTitleService communicationChannelTitleService;
-
 }

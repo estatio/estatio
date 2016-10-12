@@ -45,7 +45,7 @@ import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;

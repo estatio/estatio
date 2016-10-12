@@ -29,7 +29,7 @@ import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsBlob;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 @Mixin
 public class Communication_printAsBlob  {

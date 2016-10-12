@@ -55,7 +55,7 @@ import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.dom.valuetypes.LocalDateInterval;

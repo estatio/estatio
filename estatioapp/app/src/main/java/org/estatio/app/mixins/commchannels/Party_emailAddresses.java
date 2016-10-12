@@ -2,7 +2,7 @@ package org.estatio.app.mixins.commchannels;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner_emailAddressTitles;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_emailAddressTitles;
 import org.estatio.dom.party.Party;
 
 @Mixin

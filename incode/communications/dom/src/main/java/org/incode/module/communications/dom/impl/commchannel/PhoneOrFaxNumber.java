@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communicationchannel;
+package org.incode.module.communications.dom.impl.commchannel;
 
 import java.util.Objects;
 
@@ -24,6 +24,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.base.Predicate;
 
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -39,39 +40,34 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.EmailAddress")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.PhoneOrFaxNumber")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
-                name = "EmailAddress_emailAddress_IDX", members = { "emailAddress" })
+                name = "PhoneNumber_phoneNumber_IDX", members = { "phoneNumber" })
 })
 @DomainObject(editing = Editing.DISABLED)
-public class EmailAddress extends CommunicationChannel {
-
+public class PhoneOrFaxNumber extends CommunicationChannel {
 
     public String title() {
-        return getEmailAddress();
+        return getPhoneNumber();
     }
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.EMAIL_ADDRESS)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PHONE_NUMBER)
     @Property(optionality = Optionality.MANDATORY)
     @Getter @Setter
-    private String emailAddress;
+    private String phoneNumber;
 
-    public EmailAddress changeEmailAddress(
-            @Parameter(
-                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
-                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
-                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION
-            )
-            final String emailAddress) {
-        setEmailAddress(emailAddress);
+    @ActionLayout(named = "Change Number")
+    public PhoneOrFaxNumber changePhoneOrFaxNumber(
+            final @Parameter(regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber) {
+        setPhoneNumber(phoneNumber);
 
         return this;
     }
 
-    public String default0ChangeEmailAddress() {
-        return getEmailAddress();
+    public String default0ChangePhoneOrFaxNumber() {
+        return getPhoneNumber();
     }
 
     // //////////////////////////////////////
@@ -79,15 +75,18 @@ public class EmailAddress extends CommunicationChannel {
     public static class Predicates {
         private Predicates(){}
 
-        public static Predicate<EmailAddress> equalTo(
-                final String emailAddress) {
-            return new Predicate<EmailAddress>() {
+        public static Predicate<PhoneOrFaxNumber> equalTo(
+                final String phoneNumber,
+                final CommunicationChannelType communicationChannelType) {
+            return new Predicate<PhoneOrFaxNumber>() {
                 @Override
-                public boolean apply(final EmailAddress input) {
-                    return Objects.equals(emailAddress, input.getEmailAddress());
+                public boolean apply(final PhoneOrFaxNumber input) {
+                    return  Objects.equals(phoneNumber, input.getPhoneNumber()) &&
+                            Objects.equals(communicationChannelType, input.getType());
                 }
             };
         }
     }
+
 
 }

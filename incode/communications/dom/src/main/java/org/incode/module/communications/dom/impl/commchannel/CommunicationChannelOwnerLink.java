@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communicationchannel;
+package org.incode.module.communications.dom.impl.commchannel;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -152,7 +152,7 @@ public abstract class CommunicationChannelOwnerLink extends PolymorphicAssociati
      * copy of the {@link #getCommunicationChannel()}'s {@link CommunicationChannel#getType() type}.
      *
      * <p>
-     *     To support querying.  This is an immutable property of {@link org.estatio.dom.communicationchannel.CommunicationChannel} so
+     *     To support querying.  This is an immutable property of {@link CommunicationChannel} so
      *     it is safe to copy.
      * </p>
      */
