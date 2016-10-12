@@ -333,6 +333,18 @@ Copyright 2014~2015 Dan Haywood
             <scope>provided</scope>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.incode.module.base</groupId>
+            <artifactId>incode-module-base-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.base</groupId>
+            <artifactId>incode-module-base-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <distributionManagement>
