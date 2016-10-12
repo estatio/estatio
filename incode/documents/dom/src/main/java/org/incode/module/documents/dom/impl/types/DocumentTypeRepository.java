@@ -47,7 +47,7 @@ public class DocumentTypeRepository {
     }
     //endregion
 
-    //region > findBy...
+    //region > findByReference
     @Programmatic
     public DocumentType findByReference(
             final String reference) {

@@ -177,6 +177,9 @@ public class DocumentType implements Comparable<DocumentType> {
 
 
     //region > constructor
+    DocumentType() {
+        // for testing
+    }
     public DocumentType(final String reference, final String name) {
         this.reference = reference;
         this.name = name;

@@ -41,10 +41,10 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-import junit.framework.AssertionFailedError;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+
+import junit.framework.AssertionFailedError;
 
 public final class PojoTester {
 
@@ -231,6 +231,16 @@ public final class PojoTester {
 		        list.add("element" + counter.getAndIncrement());
 		        list.add("element" + counter.getAndIncrement());
 		        return list;
+		    }
+		});
+		fixtureDataByType.put(byte[].class, new FixtureDatumFactory<byte[]>() {
+		    public byte[] getNext() {
+		        return new byte[]{ (byte) counter.getAndIncrement() };
+		    }
+		});
+		fixtureDataByType.put(char[].class, new FixtureDatumFactory<char[]>() {
+		    public char[] getNext() {
+				return new char[]{ (char) counter.getAndIncrement() };
 		    }
 		});
 	}

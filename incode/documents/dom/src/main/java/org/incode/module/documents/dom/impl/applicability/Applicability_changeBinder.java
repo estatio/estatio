@@ -46,6 +46,7 @@ public class Applicability_changeBinder {
                 "No BinderClassNameService registered to locate implementations of Binder")
                 : null;
     }
+
     public List<ClassNameViewModel> choices0$$() {
         return binderClassNameService.binderClassNames();
     }

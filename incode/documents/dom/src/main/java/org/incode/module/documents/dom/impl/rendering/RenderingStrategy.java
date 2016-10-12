@@ -181,6 +181,9 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
 
 
     //region > constructor
+    RenderingStrategy() {
+        // for unit testing only
+    }
     public RenderingStrategy(
             final String reference,
             final String name,

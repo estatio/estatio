@@ -74,7 +74,6 @@ public abstract class ClassNameServiceAbstract<C> {
                         .collect(Collectors.toList()));
     }
 
-
     @Inject
     private ClassDiscoveryService2 classDiscoveryService2;
 

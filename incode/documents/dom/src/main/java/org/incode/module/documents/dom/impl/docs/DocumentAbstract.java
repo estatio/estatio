@@ -88,6 +88,10 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //endregion
 
     //region > constructors
+    DocumentAbstract() {
+        // for testing only
+    }
+
     public DocumentAbstract(
             final DocumentType type,
             final String atPath) {
@@ -132,9 +136,6 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     private String name;
-    public void setName(String name) {
-        this.name = name;
-    }
     //endregion
 
     //region > mimeType (property)
@@ -183,7 +184,8 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return new Blob(getName(), getMimeType(), getBlobBytes());
 
     }
-    public void setBlob(Blob blob) {
+    @Programmatic
+    public void modifyBlob(Blob blob) {
         setName(blob.getName());
         setMimeType(blob.getMimeType().toString());
         setBlobBytes(blob.getBytes());
@@ -217,7 +219,8 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         return new Clob(getName(), getMimeType(), getClobChars());
 
     }
-    public void setClob(Clob clob) {
+    @Programmatic
+    public void modifyClob(Clob clob) {
         setName(clob.getName());
         setMimeType(clob.getMimeType().toString());
         setClobChars(clob.getChars().toString());

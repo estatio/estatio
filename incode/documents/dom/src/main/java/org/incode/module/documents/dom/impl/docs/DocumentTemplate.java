@@ -85,7 +85,7 @@ import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.spi.BinderClassNameService;
-import org.incode.module.documents.dom.valuetypes.FullyQualifiedClassNameSpecification;
+import org.incode.module.documents.dom.services.FullyQualifiedClassNameSpecification;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -265,6 +265,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
     //region > constructor
+    DocumentTemplate() {
+        // for unit testing only
+    }
+
     public DocumentTemplate(
             final DocumentType type,
             final LocalDate date,
@@ -276,7 +280,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
         super(type, atPath);
-        setBlob(blob);
+        modifyBlob(blob);
         init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
@@ -306,7 +310,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
         super(type, atPath);
-        setClob(clob);
+        modifyClob(clob);
         init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
@@ -758,7 +762,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                                 getType(), variant, getAtPath(), getVersion(),
                                 asBytes(), contentDataModel);
                         final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
-                        document.setBlob(blob);
+                        document.modifyBlob(blob);
                         return;
                     case CHARACTERS:
                         final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
@@ -768,7 +772,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                             document.setTextData(getName(), getMimeType(), renderedChars);
                         } else {
                             final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
-                            document.setClob(clob);
+                            document.modifyClob(clob);
                         }
                         return;
                     default:
@@ -782,7 +786,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                                 getType(), variant, getAtPath(), getVersion(),
                                 asChars(), contentDataModel);
                         final Blob blob = new Blob (documentName, getMimeType(), renderedBytes);
-                        document.setBlob(blob);
+                        document.modifyBlob(blob);
                         return;
                     case CHARACTERS:
                         final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
@@ -792,7 +796,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                             document.setTextData(getName(), getMimeType(), renderedChars);
                         } else {
                             final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
-                            document.setClob(clob);
+                            document.modifyClob(clob);
                         }
                         return;
                     default:

@@ -16,14 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.documents.dom.valuetypes;
+package org.incode.module.documents.dom.services;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.spec.AbstractSpecification2;
-
-import org.incode.module.documents.dom.services.ClassService;
 
 public class FullyQualifiedClassNameSpecification extends AbstractSpecification2<String> {
 

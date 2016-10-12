@@ -82,8 +82,6 @@ public class Document_movedToExternalUrl {
     }
 
 
-
-
     @Inject
     MessageService messageService;
 

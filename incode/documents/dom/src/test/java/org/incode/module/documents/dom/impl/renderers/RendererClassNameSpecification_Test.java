@@ -1,7 +1,5 @@
 /*
- *
- *  Copyright 2012-2014 Eurocommercial Properties NV
- *
+ *  Copyright 2016 Dan Haywood
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,17 +14,24 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom;
+package org.incode.module.documents.dom.impl.renderers;
 
-import org.joda.time.LocalDate;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-public class FixtureDatumFactoriesForJoda {
+public class RendererClassNameSpecification_Test {
 
-	public static FixtureDatumFactory<LocalDate> dates() {
-		return new FixtureDatumFactory<>(LocalDate.class, new LocalDate(2012, 7, 19), new LocalDate(2012, 7, 20), new LocalDate(2012, 8, 19), new LocalDate(2013, 7, 19));
-	}
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
+
+    @Ignore
+    @Test
+    public void delegates_to_ClassService() {
+
+    }
 
 }

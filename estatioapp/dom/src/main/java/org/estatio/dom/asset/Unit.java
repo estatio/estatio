@@ -222,6 +222,21 @@ public class Unit
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public Unit resetDates() {
+        setStartDate(null);
+        setEndDate(null);
+        return this;
+    }
+
+    public String disableResetDates() {
+        return getStartDate() == null && getEndDate() == null ? "Dates are already clear": null;
+    }
+
+
+
     // //////////////////////////////////////
 
     public Unit changeAsset(

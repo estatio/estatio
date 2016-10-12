@@ -140,6 +140,9 @@ public class Applicability implements Comparable<Applicability> {
 
 
     //region > constructor
+    Applicability() {
+        // for testing only
+    }
     public Applicability(final DocumentTemplate documentTemplate, final Class<?> domainClass, final Class<? extends Binder> binderClass) {
         this(documentTemplate, domainClass.getName(), binderClass.getName());
     }

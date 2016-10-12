@@ -113,7 +113,7 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
         if(documentTemplate != null) {
             documentTemplate.setFileSuffix(fileSuffix);
             documentTemplate.setPreviewOnly(previewOnly);
-            documentTemplate.setClob(clob);
+            documentTemplate.modifyClob(clob);
             documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
             documentTemplate.setNameText(subjectText);
             documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
@@ -145,7 +145,7 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
         if(documentTemplate != null) {
             documentTemplate.setFileSuffix(fileSuffix);
             documentTemplate.setPreviewOnly(previewOnly);
-            documentTemplate.setBlob(blob);
+            documentTemplate.modifyBlob(blob);
             documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
             documentTemplate.setNameText(nameText);
             documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);

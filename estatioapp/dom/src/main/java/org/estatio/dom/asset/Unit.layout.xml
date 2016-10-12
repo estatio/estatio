@@ -26,6 +26,9 @@
                         <ns2:property id="startDate"/>
                         <ns2:property id="endDate">
                             <ns2:action id="changeDates" position="BELOW"/>
+                            <ns2:action id="resetDates" position="BELOW">
+                                <ns2:named>Clear</ns2:named>
+                            </ns2:action>
                         </ns2:property>
                     </ns2:fieldSet>
                     <ns2:fieldSet name="Areas" id="areas">

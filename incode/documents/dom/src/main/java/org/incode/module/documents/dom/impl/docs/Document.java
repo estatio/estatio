@@ -189,6 +189,9 @@ public class Document extends DocumentAbstract<Document> {
 
 
     //region > constructor
+    Document() {
+        // for unit testing only
+    }
     public Document(
             final DocumentType type,
             final String atPath,
@@ -221,15 +224,15 @@ public class Document extends DocumentAbstract<Document> {
 
     //region > setBlob, setClob, setTextData
     @Override
-    public void setBlob(Blob blob) {
-        super.setBlob(blob);
+    public void modifyBlob(Blob blob) {
+        super.modifyBlob(blob);
         setState(DocumentState.RENDERED);
         setRenderedAt(clockService.nowAsDateTime());
     }
 
     @Override
-    public void setClob(Clob clob) {
-        super.setClob(clob);
+    public void modifyClob(Clob clob) {
+        super.modifyClob(clob);
         setState(DocumentState.RENDERED);
         setRenderedAt(clockService.nowAsDateTime());
     }
@@ -259,7 +262,7 @@ public class Document extends DocumentAbstract<Document> {
     @Getter @Setter
     @Column(allowsNull = "true")
     @Property(
-            domainEvent = CreatedAtDomainEvent.class,
+            domainEvent = RenderedAtDomainEvent.class,
             editing = Editing.DISABLED
     )
     private DateTime renderedAt;
@@ -270,7 +273,7 @@ public class Document extends DocumentAbstract<Document> {
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
-            domainEvent = Document.StateDomainEvent.class,
+            domainEvent = StateDomainEvent.class,
             editing = Editing.DISABLED
     )
     private DocumentState state;

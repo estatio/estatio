@@ -29,18 +29,18 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 
 @Mixin
-public class DocumentTemplate_changeSubjectRenderingStrategy {
+public class DocumentTemplate_changeNameRenderingStrategy {
 
     //region > constructor
     private final DocumentTemplate documentTemplate;
 
-    public DocumentTemplate_changeSubjectRenderingStrategy(final DocumentTemplate documentTemplate) {
+    public DocumentTemplate_changeNameRenderingStrategy(final DocumentTemplate documentTemplate) {
         this.documentTemplate = documentTemplate;
     }
     //endregion
 
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_changeSubjectRenderingStrategy>  { }
+    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<DocumentTemplate_changeNameRenderingStrategy>  { }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
@@ -53,14 +53,14 @@ public class DocumentTemplate_changeSubjectRenderingStrategy {
     }
 
     public RenderingStrategy default0$$() {
-        return currentSubjectRenderingStrategy();
+        return currentNameRenderingStrategy();
     }
 
     public List<RenderingStrategy> choices0$$() {
         return renderingStrategyRepository.findForUseWithSubjectText();
     }
 
-    private RenderingStrategy currentSubjectRenderingStrategy() {
+    private RenderingStrategy currentNameRenderingStrategy() {
         return documentTemplate.getNameRenderingStrategy();
     }
 

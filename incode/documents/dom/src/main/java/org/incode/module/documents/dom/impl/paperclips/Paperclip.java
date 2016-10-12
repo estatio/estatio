@@ -24,7 +24,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.NotPersistent;
 
-import com.google.common.base.Function;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -298,27 +297,8 @@ public abstract class Paperclip implements Comparable<Paperclip> {
 
     //endregion
 
-    //region > Functions
-    public static class Functions {
-        public static Function<Paperclip, DocumentAbstract> document() {
-            return document(DocumentAbstract.class);
-        }
-        public static <T extends DocumentAbstract> Function<Paperclip, T> document(Class<T> cls) {
-            return input -> (T)input.getDocument();
-        }
-        public static Function<Paperclip, Object> attachedTo() {
-            return attachedTo(Object.class);
-        }
-        public static <T extends Object> Function<Paperclip, T> attachedTo(final Class<T> cls) {
-            return input -> (T)input.getAttachedTo();
-        }
-    }
-    //endregion
-
 
     //region > injected services
-    @Inject
-    PaperclipRepository paperclipRepository;
 
     @Inject
     TitleService titleService;
