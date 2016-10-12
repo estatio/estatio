@@ -65,15 +65,17 @@ import lombok.Setter;
  * Represents a condition upon which the {@link Lease} can be terminated.
  */
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.VALUE_MAP,
+        column = "discriminator",
+        value = "org.estatio.dom.lease.breaks.BreakOption"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME,
-        column = "discriminator")
 @javax.jdo.annotations.Unique(
         name = "BreakOption_lease_type_breakDate_exerciseType_exerciseDate_UNQ",
         members = { "lease", "type", "breakDate", "exerciseType", "exerciseDate" })

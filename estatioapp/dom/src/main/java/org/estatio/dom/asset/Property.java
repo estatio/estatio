@@ -19,10 +19,8 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -56,7 +54,6 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -67,6 +64,7 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.asset.Property")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",

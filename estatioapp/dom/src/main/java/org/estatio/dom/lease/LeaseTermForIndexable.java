@@ -23,12 +23,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Queries;
-import javax.jdo.annotations.Query;
 
 import org.joda.time.LocalDate;
 
@@ -48,10 +44,11 @@ import org.estatio.dom.utils.MathUtils;
 import lombok.Getter;
 import lombok.Setter;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Queries({
-        @Query(
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForIndexable")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
                 name = "findByIndexAndDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseTermForIndexable "

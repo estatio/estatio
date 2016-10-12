@@ -19,8 +19,6 @@
 package org.estatio.dom.lease.invoicing;
 
 import javax.inject.Inject;
-import javax.jdo.annotations.Index;
-import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
@@ -53,6 +51,7 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.invoicing.InvoiceItemForLease")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -94,10 +93,10 @@ import lombok.Setter;
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& invoice.status == :invoiceStatus")
 })
-@Indices({
-        @Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
+@javax.jdo.annotations.Indices({
+        @javax.jdo.annotations.Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
                 members = { "leaseTerm", "startDate", "endDate", "dueDate" }),
-        @Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_IDX",
+        @javax.jdo.annotations.Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_IDX",
                 members = { "leaseTerm", "startDate", "endDate" }),
 
 })

@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTesting")
 public class LeaseTermForTesting extends LeaseTerm {
 
     public LeaseTermForTesting() {

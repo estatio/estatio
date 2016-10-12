@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.RollingBreakOption")
 @DomainObject(
         objectType = "lease.RollingBreakOption"
 )

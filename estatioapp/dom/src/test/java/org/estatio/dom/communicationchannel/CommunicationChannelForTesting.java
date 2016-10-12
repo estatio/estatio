@@ -19,6 +19,8 @@
 package org.estatio.dom.communicationchannel;
 
 
+
+@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.CommunicationChannelForTesting")
 public class CommunicationChannelForTesting extends CommunicationChannel {
 
     public String getName() {

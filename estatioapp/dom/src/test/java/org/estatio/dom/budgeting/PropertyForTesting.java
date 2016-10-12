@@ -17,10 +17,10 @@
 
 package org.estatio.dom.budgeting;
 
+import javax.jdo.annotations.Discriminator;
+
 import org.estatio.dom.asset.Property;
 
-/**
- * Created by jodo on 22/04/15.
- */
+@Discriminator("org.estatio.dom.budgeting.PropertyForTesting")
 public class PropertyForTesting extends Property {
 }

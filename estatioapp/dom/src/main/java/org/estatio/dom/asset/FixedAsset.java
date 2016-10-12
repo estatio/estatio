@@ -69,10 +69,13 @@ import lombok.Setter;
         column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
-        column = "version")
+        column = "version"
+)
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME,
-        column = "discriminator")
+        strategy = DiscriminatorStrategy.VALUE_MAP,
+        column = "discriminator",
+        value = "org.estatio.dom.asset.FixedAsset"
+)
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "FixedAsset_reference_UNQ", members = { "reference" })

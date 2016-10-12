@@ -20,6 +20,7 @@ package org.estatio.dom.party;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+@javax.jdo.annotations.Discriminator("org.estatio.dom.party.PartyForTesting")
 public class PartyForTesting extends Party {
 
     private final ApplicationTenancy applicationTenancy;

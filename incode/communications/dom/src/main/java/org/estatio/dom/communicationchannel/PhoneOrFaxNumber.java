@@ -40,6 +40,7 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.PhoneOrFaxNumber")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(

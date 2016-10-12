@@ -36,8 +36,8 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-public class LeaseTermForFixed
-        extends LeaseTerm {
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForFixed")
+public class LeaseTermForFixed extends LeaseTerm {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)

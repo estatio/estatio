@@ -26,6 +26,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTax")
 @DomainObject
 public class LeaseTermForTax extends LeaseTerm {
 

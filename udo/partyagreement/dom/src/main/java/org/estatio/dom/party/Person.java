@@ -42,9 +42,9 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.party.Person")
 @DomainObject(editing = Editing.DISABLED)
-public class Person
-        extends Party
+public class Person extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
 

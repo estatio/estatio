@@ -48,8 +48,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.party.Organisation")
 @DomainObject(editing = Editing.DISABLED)
 public class Organisation
         extends Party
