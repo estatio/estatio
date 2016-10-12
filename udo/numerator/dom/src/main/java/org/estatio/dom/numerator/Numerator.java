@@ -36,6 +36,8 @@ import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
@@ -150,7 +152,7 @@ public class Numerator
      * The combination of ({@link #getObjectType() objectType},
      * {@link #getName() name}) is unique.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String name;

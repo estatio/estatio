@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.SettingType;
 
+import org.incode.module.base.types.DescriptionType;
+
 import org.estatio.dom.JdoColumnLength;
 
 import lombok.Getter;
@@ -56,7 +58,7 @@ public class ApplicationSettingForEstatio extends SettingAbstractForEstatio impl
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length=JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(length= DescriptionType.MAX_LEN)
     @javax.jdo.annotations.Persistent
     @Override
     public String getDescription() {

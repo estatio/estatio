@@ -32,6 +32,8 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.EnumType;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -94,7 +96,7 @@ public class Person extends Party
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @MemberOrder(sequence = "1")
     @Getter @Setter
     private PersonGenderType gender;

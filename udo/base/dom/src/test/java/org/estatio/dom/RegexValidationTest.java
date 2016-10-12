@@ -81,22 +81,6 @@ public class RegexValidationTest {
     }
 
     @Test
-    public void testPhoneNumer() {
-        tester(RegexValidation.CommunicationChannel.PHONENUMBER, "+31 20 12344-12", true);
-        tester(RegexValidation.CommunicationChannel.PHONENUMBER, "00316-57201234", true);
-        tester(RegexValidation.CommunicationChannel.PHONENUMBER, "asd", false);
-    }
-
-    @Test
-    public void testEmailAddress() {
-        tester(RegexValidation.CommunicationChannel.EMAIL, "asd@@asd.com", false);
-        tester(RegexValidation.CommunicationChannel.EMAIL, "asd@asd.com", true);
-        tester(RegexValidation.CommunicationChannel.EMAIL, "a sd@asd.com", false);
-        tester(RegexValidation.CommunicationChannel.EMAIL, "asd@asd", false);
-        tester(RegexValidation.CommunicationChannel.EMAIL, "asd", false);
-    }
-
-    @Test
     public void testLeaseReference() {
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A-A1&+=_-", true);
         tester(RegexValidation.Lease.REFERENCE, "AAA-A0A0-/A/1&+", true);

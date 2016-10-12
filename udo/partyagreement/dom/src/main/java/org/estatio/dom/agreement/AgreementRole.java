@@ -56,9 +56,10 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+
+import org.incode.module.base.types.NameType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Party;
@@ -170,7 +171,7 @@ public class AgreementRole
     @Getter @Setter
     private AgreementRoleType type;
 
-    @javax.jdo.annotations.Column(length = JdoColumnLength.NAME, allowsNull = "true")
+    @javax.jdo.annotations.Column(length = NameType.MAX_LEN, allowsNull = "true")
     @Getter @Setter
     private String externalReference;
 

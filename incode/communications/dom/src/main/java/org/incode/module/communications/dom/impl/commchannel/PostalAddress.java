@@ -55,6 +55,14 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 public class PostalAddress extends CommunicationChannel {
 
+
+    public static final class AddressLineType {
+        private AddressLineType() {
+        }
+
+        public static final int MAX_LEN = 100;
+    }
+
     public String title() {
         return new TitleBuffer()
                 .append(getAddress1())
@@ -67,7 +75,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PostalAddress.AddressLineType.MAX_LEN)
     @Property(optionality = Optionality.MANDATORY)
     @PropertyLayout(named = "Address line 1")
     @Getter @Setter
@@ -75,14 +83,14 @@ public class PostalAddress extends CommunicationChannel {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PostalAddress.AddressLineType.MAX_LEN)
     @PropertyLayout(named = "Address line 2")
     @Getter @Setter
     private String address2;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PostalAddress.AddressLineType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(named = "Address line 3")
     @Getter @Setter
@@ -90,7 +98,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.POSTAL_CODE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PostalAddress.PostalCodeType.MAX_LEN)
     @Property(optionality = Optionality.MANDATORY)
     @Getter @Setter
     private String postalCode;
@@ -123,6 +131,13 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     // //////////////////////////////////////
+
+    public static final class PostalCodeType {
+        private PostalCodeType() {
+        }
+
+        public static final int MAX_LEN = 12;
+    }
 
     @ActionLayout(named = "Update")
     @MemberOrder(sequence = "1")

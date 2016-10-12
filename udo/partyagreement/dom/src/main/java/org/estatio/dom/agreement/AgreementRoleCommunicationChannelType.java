@@ -34,8 +34,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.TitleType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 import org.estatio.dom.utils.TitleBuilder;
@@ -88,7 +89,7 @@ public class AgreementRoleCommunicationChannelType
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
+    @javax.jdo.annotations.Column(allowsNull="false", length= TitleType.MAX_LEN)
     @Getter @Setter
     private String title;
 

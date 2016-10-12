@@ -29,6 +29,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -102,14 +105,14 @@ public class Country
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(regexPattern = RegexValidation.REFERENCE)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 

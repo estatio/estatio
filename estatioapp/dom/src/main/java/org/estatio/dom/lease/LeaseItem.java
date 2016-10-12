@@ -57,6 +57,8 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.EnumType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
@@ -294,7 +296,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @Getter @Setter
     private LeaseItemType type;
 

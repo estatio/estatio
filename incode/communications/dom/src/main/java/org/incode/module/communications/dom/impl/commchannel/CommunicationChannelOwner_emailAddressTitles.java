@@ -10,8 +10,6 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.JdoColumnLength;
-
 public abstract class CommunicationChannelOwner_emailAddressTitles {
 
     private final CommunicationChannelOwner owner;
@@ -25,7 +23,7 @@ public abstract class CommunicationChannelOwner_emailAddressTitles {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Property(hidden = Where.OBJECT_FORMS)
-    @PropertyLayout(typicalLength = JdoColumnLength.PHONE_NUMBER)
+    @PropertyLayout(typicalLength = CommunicationChannel.PhoneNumberType.MAX_LEN)
     public String $$() {
         return communicationChannelTitleService.channelTitleJoined(owner, CommunicationChannelType.EMAIL_ADDRESS,
                 separator);

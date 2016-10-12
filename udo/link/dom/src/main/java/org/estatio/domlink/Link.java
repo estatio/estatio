@@ -29,6 +29,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -90,7 +92,7 @@ public class Link
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @MemberOrder(sequence = "2")
     @Getter @Setter
     private String name;

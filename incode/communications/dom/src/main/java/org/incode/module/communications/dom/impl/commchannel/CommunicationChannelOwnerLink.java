@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
 
-import org.estatio.dom.JdoColumnLength;
+import org.incode.module.base.types.EnumType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -157,7 +157,7 @@ public abstract class CommunicationChannelOwnerLink extends PolymorphicAssociati
      * </p>
      */
     @MemberOrder(sequence = "1")
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private CommunicationChannelType communicationChannelType;

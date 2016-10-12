@@ -31,9 +31,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,14 +50,14 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
         return getPhoneNumber();
     }
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PHONE_NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PhoneNumberType.MAX_LEN)
     @Property(optionality = Optionality.MANDATORY)
     @Getter @Setter
     private String phoneNumber;
 
     @ActionLayout(named = "Change Number")
     public PhoneOrFaxNumber changePhoneOrFaxNumber(
-            final @Parameter(regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber) {
+            final @Parameter(regexPattern = PhoneNumberType.REGEX, regexPatternReplacement = PhoneNumberType.REGEX_DESC) String phoneNumber) {
         setPhoneNumber(phoneNumber);
 
         return this;

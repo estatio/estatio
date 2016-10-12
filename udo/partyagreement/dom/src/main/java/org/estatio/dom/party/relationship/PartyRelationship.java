@@ -21,7 +21,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.JdoColumnLength;
+import org.incode.module.base.types.DescriptionType;
+
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -131,7 +132,7 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
     @Getter @Setter
     private String description;
 

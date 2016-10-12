@@ -37,7 +37,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.JdoColumnLength;
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
@@ -71,7 +72,7 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 

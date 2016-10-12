@@ -27,9 +27,10 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.DescriptionType;
+
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.TitleBuilder;
@@ -113,7 +114,7 @@ public class FinancialAccountTransaction
     // //////////////////////////////////////
 
 
-    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
     @MemberOrder(sequence = "4")
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter

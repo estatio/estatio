@@ -40,7 +40,6 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
@@ -52,6 +51,8 @@ import org.joda.time.LocalDate;
 import com.google.common.base.Function;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.base.types.EnumType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -147,7 +148,7 @@ public class ProjectRole
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @Property(editing=Editing.DISABLED)
     @Getter @Setter
     private ProjectRoleType type;

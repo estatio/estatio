@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
@@ -95,19 +95,19 @@ public class PartyRelationshipMenuAndContributions {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.REFERENCE, regexPatternReplacement = RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.Person.INITIALS, regexPatternReplacement = RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = org.estatio.dom.RegexValidation.Person.REFERENCE, regexPatternReplacement = org.estatio.dom.RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = org.estatio.dom.RegexValidation.Person.INITIALS, regexPatternReplacement = org.estatio.dom.RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
             final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final String lastName,
             final PersonGenderType gender,
             final String relationshipType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = RegexValidation.CommunicationChannel.PHONENUMBER, regexPatternReplacement = RegexValidation.CommunicationChannel.PHONENUMBER_DESCRIPTION) String phoneNumber,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = CommunicationChannel.PhoneNumberType.REGEX, regexPatternReplacement = CommunicationChannel.PhoneNumberType.REGEX_DESC) String phoneNumber,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
-                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
-                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC
             )
             final String emailAddress
     ) {

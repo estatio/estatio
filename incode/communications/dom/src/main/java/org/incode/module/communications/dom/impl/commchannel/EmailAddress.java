@@ -30,9 +30,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,16 +50,16 @@ public class EmailAddress extends CommunicationChannel {
         return getEmailAddress();
     }
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.EMAIL_ADDRESS)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = EmailType.MAX_LEN)
     @Property(optionality = Optionality.MANDATORY)
     @Getter @Setter
     private String emailAddress;
 
     public EmailAddress changeEmailAddress(
             @Parameter(
-                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
-                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
-                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION
+                    maxLength = EmailType.MAX_LEN,
+                    regexPattern = EmailType.REGEX,
+                    regexPatternReplacement = EmailType.REGEX_DESC
             )
             final String emailAddress) {
         setEmailAddress(emailAddress);

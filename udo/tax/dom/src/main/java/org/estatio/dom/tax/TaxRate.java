@@ -39,9 +39,10 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.TitleBuilder;
@@ -108,7 +109,7 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;

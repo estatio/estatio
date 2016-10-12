@@ -41,8 +41,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
@@ -109,27 +112,27 @@ public class Tax
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(regexPattern = RegexValidation.REFERENCE)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
     @Getter @Setter

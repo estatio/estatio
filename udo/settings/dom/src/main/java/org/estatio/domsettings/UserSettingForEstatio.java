@@ -28,6 +28,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.isisaddons.module.settings.dom.SettingType;
 import org.isisaddons.module.settings.dom.UserSetting;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -70,7 +73,7 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
                 .toString();
     }
 
-    @javax.jdo.annotations.Column(length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(length= NameType.MAX_LEN)
     @javax.jdo.annotations.PrimaryKey
     @MemberOrder(sequence = "5")
     @Getter @Setter
@@ -85,7 +88,7 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length=JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(length= DescriptionType.MAX_LEN)
     @javax.jdo.annotations.Persistent
     @Override
     public String getDescription() {

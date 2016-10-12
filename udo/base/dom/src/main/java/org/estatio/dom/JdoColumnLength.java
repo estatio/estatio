@@ -18,6 +18,8 @@
  */
 package org.estatio.dom;
 
+import org.incode.module.base.types.ReferenceType;
+
 public final class JdoColumnLength {
 
     private JdoColumnLength() {
@@ -28,21 +30,11 @@ public final class JdoColumnLength {
     public final static int LEASE_TERM_FREQUENCY_ENUM = 30;
     public final static int OCCUPANCY_REPORTING_TYPE_ENUM = 30;
     public final static int PAYMENT_METHOD_ENUM = 30;
-    public final static int TYPE_ENUM = 30;
 
-    public final static int REFERENCE = 24;
-
-    public final static int TITLE = 50;
-    public final static int NAME = 50;
     public final static int SHORT_DESCRIPTION = 50;
-    public final static int DESCRIPTION = 254;
     public final static int NOTES = 4000;
 
     public final static int PROPER_NAME = 50;
-
-    public final static int PHONE_NUMBER = 20;
-
-    public final static int EMAIL_ADDRESS = 254; //http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address 
 
     public final static int FQCN = 254;
     public static final int OBJECT_IDENTIFIER = 20;
@@ -62,13 +54,6 @@ public final class JdoColumnLength {
         public static final int URL_TEMPLATE = 254;
     }
 
-    public static final class EstatioInstance {
-        private EstatioInstance() {
-        }
-
-        public static final int PATH = 12;
-    }
-
     public static final class Event {
         private Event() {
         }
@@ -83,14 +68,6 @@ public final class JdoColumnLength {
         public static final int EXERCISE_TYPE_ENUM = 20;
     }
 
-    public static final class PostalAddress {
-        private PostalAddress() {
-        }
-
-        public static final int ADDRESS_LINE = 100;
-        public static final int POSTAL_CODE = 12;
-    }
-
     public static final class LeaseTermForTurnoverRent {
         private LeaseTermForTurnoverRent() {
         }
@@ -103,7 +80,7 @@ public final class JdoColumnLength {
         }
 
         /**
-         * {@link JdoColumnLength#REFERENCE} plus a few chars
+         * {@link ReferenceType#MAX_LEN} plus a few chars
          */
         public final static int FORMAT = 30;
     }

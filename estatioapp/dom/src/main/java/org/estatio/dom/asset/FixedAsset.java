@@ -49,12 +49,14 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
+
+import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ReferenceType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
@@ -119,7 +121,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this asset")
     @Getter @Setter
@@ -145,14 +147,14 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     // */
     // public abstract String getName();
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @PropertyLayout(describedAs = "Unique name for this property")
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;

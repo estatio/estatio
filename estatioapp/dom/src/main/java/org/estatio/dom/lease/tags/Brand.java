@@ -36,8 +36,9 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.geography.Country;
@@ -121,7 +122,7 @@ public class Brand
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 

@@ -32,9 +32,12 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.IsisMultilineLines;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
@@ -98,27 +101,27 @@ public class Charge
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(regexPattern = RegexValidation.REFERENCE, editing = Editing.DISABLED)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = DescriptionType.MAX_LEN)
     @PropertyLayout(multiLine = IsisMultilineLines.NUMBER_OF_LINES)
     @Getter @Setter
     private String description;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;
@@ -137,7 +140,7 @@ public class Charge
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String sortOrder;

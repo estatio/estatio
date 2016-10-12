@@ -34,8 +34,10 @@ import org.apache.isis.applib.annotation.RenderType;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -92,14 +94,14 @@ public class ChargeGroup
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(regexPattern = RegexValidation.REFERENCE)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 

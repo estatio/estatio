@@ -42,6 +42,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.spi.CommHeaderForEmail;
@@ -54,8 +55,6 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 /**
@@ -83,16 +82,16 @@ public class Document_email  {
             final EmailAddress toChannel,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
-                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
-                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION)
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
             @ParameterLayout(named = "cc:")
             final String cc,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = JdoColumnLength.EMAIL_ADDRESS,
-                    regexPattern = RegexValidation.CommunicationChannel.EMAIL,
-                    regexPatternReplacement = RegexValidation.CommunicationChannel.EMAIL_DESCRIPTION)
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
             @ParameterLayout(named = "bcc:")
             final String bcc,
             @Parameter(optionality = Optionality.OPTIONAL)

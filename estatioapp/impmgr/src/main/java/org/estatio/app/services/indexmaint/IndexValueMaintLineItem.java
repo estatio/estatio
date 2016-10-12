@@ -38,7 +38,8 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.JdoColumnLength;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
@@ -94,7 +95,7 @@ public class IndexValueMaintLineItem {
     private String reference;
 
     // @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @MemberOrder(name = "Index", sequence = "1.5")
     public String getReference() {
         return reference;

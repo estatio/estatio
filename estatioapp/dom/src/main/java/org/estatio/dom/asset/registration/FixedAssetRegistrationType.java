@@ -31,6 +31,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.TitleType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.PowerType;
@@ -84,7 +86,7 @@ public class FixedAssetRegistrationType
         return TitleBuilder.start().withName(getTitle()).toString();
     }
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
+    @javax.jdo.annotations.Column(allowsNull="false", length= TitleType.MAX_LEN)
     @Getter @Setter
     private String title;
 

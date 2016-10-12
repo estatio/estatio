@@ -48,6 +48,9 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.EnumType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -128,7 +131,7 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @Getter @Setter
     private BreakType type;
 
@@ -195,7 +198,7 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
     @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String description;

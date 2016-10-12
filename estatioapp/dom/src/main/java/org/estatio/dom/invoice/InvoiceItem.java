@@ -51,9 +51,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.IsisMultilineLines;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
@@ -204,8 +206,8 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    @PropertyLayout(typicalLength = JdoColumnLength.NAME, multiLine = IsisMultilineLines.NUMBER_OF_LINES)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
+    @PropertyLayout(typicalLength = NameType.MAX_LEN, multiLine = IsisMultilineLines.NUMBER_OF_LINES)
     @Getter @Setter
     private String description;
 

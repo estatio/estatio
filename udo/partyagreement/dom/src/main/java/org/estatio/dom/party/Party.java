@@ -45,6 +45,8 @@ import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
+
+import org.incode.module.base.types.ReferenceType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -103,7 +105,7 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(editing = Editing.DISABLED, regexPattern = RegexValidation.REFERENCE)
     @Getter @Setter
     private String reference;

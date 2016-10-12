@@ -41,6 +41,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.EnumType;
+import org.incode.module.base.types.NameType;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -126,13 +129,13 @@ public class FinancialAccount
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private FinancialAccountType type;
@@ -151,7 +154,7 @@ public class FinancialAccount
     // //////////////////////////////////////
 
     @Property(optionality = Optionality.OPTIONAL)
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
     @Getter @Setter
     private String externalReference;
 

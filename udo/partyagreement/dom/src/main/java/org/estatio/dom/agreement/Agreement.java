@@ -54,9 +54,11 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
+import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
@@ -150,7 +152,7 @@ public abstract class Agreement
                 .toString();
     }
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @Property(regexPattern = RegexValidation.REFERENCE)
     @PropertyLayout(describedAs = "Unique reference code for this agreement")
     @Getter @Setter
@@ -158,7 +160,7 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length = JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(length = NameType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(describedAs = "Optional name for this agreement")
     @Getter @Setter

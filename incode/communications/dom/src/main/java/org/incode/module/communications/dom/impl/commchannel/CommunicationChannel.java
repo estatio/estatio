@@ -45,8 +45,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.EnumType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -86,6 +89,34 @@ import lombok.Setter;
 public abstract class CommunicationChannel
         extends UdoDomainObject2<CommunicationChannel>
         implements WithNameGetter, WithReferenceGetter, WithApplicationTenancyCountry {
+
+    public static class PhoneNumberType {
+
+        private PhoneNumberType() {}
+
+        public static final String REGEX = "[+]?[0-9 -]*";
+        public static final String REGEX_DESC = "Only numbers and two symbols being \"-\" and \"+\" are allowed ";
+
+        public final static int MAX_LEN = 20;
+
+    }
+
+    public static class EmailType {
+
+        // as per http://emailregex.com/
+        // better would probably be:
+        // (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+        public static final String REGEX = "[^@ ]*@{1}[^@ ]*[.]+[^@ ]*";
+        public static final String REGEX_DESC = "Only one \"@\" symbol is allowed, followed by a domain e.g. test@example.com";
+
+        public final static int MAX_LEN = 254; //http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+
+        private EmailType(){}
+
+    }
+
+    // //////////////////////////////////////
+
 
     public CommunicationChannel() {
         super("type, legal, id");
@@ -147,7 +178,7 @@ public abstract class CommunicationChannel
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "1")
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private CommunicationChannelType type;
@@ -157,14 +188,14 @@ public abstract class CommunicationChannel
     /**
      * For import purposes only
      */
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length = JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(length = DescriptionType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(multiLine = 3)
     @Getter @Setter
@@ -178,7 +209,7 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "true", length = JdoColumnLength.TYPE_ENUM)
+    @Column(allowsNull = "true", length = EnumType.MAX_LEN)
     @Getter @Setter
     private CommunicationChannelPurposeType purpose;
 

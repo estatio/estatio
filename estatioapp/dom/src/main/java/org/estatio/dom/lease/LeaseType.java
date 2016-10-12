@@ -32,8 +32,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.types.TitleType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
@@ -90,21 +93,21 @@ public class LeaseType
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
     @MemberOrder(sequence = "1")
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = JdoColumnLength.TITLE)
+    @Column(allowsNull = "false", length = TitleType.MAX_LEN)
     @MemberOrder(sequence = "2")
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
     @MemberOrder(sequence = "3")
