@@ -269,7 +269,7 @@ public class Lease
     // //////////////////////////////////////
 
     @Getter @Setter
-    @Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    @Column(allowsNull = "true", length = ExternalReferenceType.Meta.MAX_LEN)
     private String externalReference;
 
     public Lease changeExternalReference(final String externalReference) {
@@ -1148,4 +1148,18 @@ public class Lease
         }
 
     }
+
+    public static class ExternalReferenceType {
+
+        private ExternalReferenceType() {}
+
+        public static class Meta {
+
+            public static final int MAX_LEN = org.incode.module.base.types.ReferenceType.Meta.MAX_LEN;
+
+            private Meta() {}
+
+        }
+    }
+
 }
