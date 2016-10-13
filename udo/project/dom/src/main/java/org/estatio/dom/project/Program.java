@@ -47,7 +47,8 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
@@ -96,7 +97,7 @@ public class Program
     // //////////////////////////////////////
 
     @Column(allowsNull = "false")
-    @org.apache.isis.applib.annotation.Property(regexPattern = RegexValidation.REFERENCE)
+    @org.apache.isis.applib.annotation.Property(regexPattern = ReferenceType.Meta.REGEX)
     @PropertyLayout(describedAs = "Unique reference code for this program")
     @MemberOrder(sequence="1")
     @Getter @Setter

@@ -37,7 +37,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -66,7 +67,7 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
     @Programmatic
     public Guarantee newGuarantee(
             final Lease lease,
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final GuaranteeType guaranteeType,
             final LocalDate startDate,

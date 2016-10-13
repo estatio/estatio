@@ -41,4 +41,14 @@ public enum BreakType implements Titled {
     public String title() {
         return StringUtils.enumTitle(this.toString());
     }
+
+
+    // //////////////////////////////////////
+
+    public static class Meta {
+        private Meta(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

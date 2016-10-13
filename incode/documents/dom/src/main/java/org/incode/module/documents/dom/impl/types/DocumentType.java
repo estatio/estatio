@@ -49,6 +49,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.documents.dom.types.NameType;
+import org.incode.module.documents.dom.types.ReferenceType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -189,7 +191,7 @@ public class DocumentType implements Comparable<DocumentType> {
     //region > reference (property)
     public static class ReferenceDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.REFERENCE)
+    @Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
     @Property(
             domainEvent = ReferenceDomainEvent.class,
             editing = Editing.DISABLED
@@ -200,7 +202,7 @@ public class DocumentType implements Comparable<DocumentType> {
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Property(
             domainEvent = NameDomainEvent.class,
             editing = Editing.DISABLED

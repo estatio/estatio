@@ -22,6 +22,12 @@ public class NameType {
 
     private NameType() {}
 
-    public final static int MAX_LEN = 50;
+    public static class Meta {
+
+        public final static int MAX_LEN = 50;
+
+        private Meta() {}
+
+    }
 
 }

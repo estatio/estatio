@@ -30,8 +30,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.Dflt;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.numerator.NumeratorRepository;
@@ -46,7 +47,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     // //////////////////////////////////////
 
     public Organisation newOrganisation(
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumereratorForReference,
             final String name,
             final ApplicationTenancy applicationTenancy) {

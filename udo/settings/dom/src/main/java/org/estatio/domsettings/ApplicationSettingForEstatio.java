@@ -28,7 +28,8 @@ import org.isisaddons.module.settings.dom.SettingType;
 
 import org.incode.module.base.types.DescriptionType;
 
-import org.estatio.dom.JdoColumnLength;
+import org.estatio.domsettings.types.SettingKeyType;
+import org.estatio.domsettings.types.SettingTypeType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -51,14 +52,14 @@ import lombok.Setter;
 @DomainServiceLayout(named = "Application Setting")
 public class ApplicationSettingForEstatio extends SettingAbstractForEstatio implements ApplicationSetting {
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Setting.KEY)
+    @javax.jdo.annotations.Column(allowsNull="false", length= SettingKeyType.Meta.MAX_LEN)
     @javax.jdo.annotations.PrimaryKey
     @Getter @Setter
     private String key;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length= DescriptionType.MAX_LEN)
+    @javax.jdo.annotations.Column(length= DescriptionType.Meta.MAX_LEN)
     @javax.jdo.annotations.Persistent
     @Override
     public String getDescription() {
@@ -84,7 +85,7 @@ public class ApplicationSettingForEstatio extends SettingAbstractForEstatio impl
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Setting.TYPE)
+    @javax.jdo.annotations.Column(allowsNull="false", length= SettingTypeType.Meta.MAX_LEN)
     @javax.jdo.annotations.Persistent
     @Override
     public SettingType getType() {

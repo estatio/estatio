@@ -35,4 +35,10 @@ public enum InvoiceStatus {
         return this.equals(InvoiceStatus.APPROVED) || this.equals(InvoiceStatus.NEW);
     }
 
+    public static class Meta {
+        private Meta() {}
+
+        public final static int MAX_LEN = 20;
+
+    }
 }

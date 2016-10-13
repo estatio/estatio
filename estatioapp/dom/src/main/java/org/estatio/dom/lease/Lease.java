@@ -62,10 +62,10 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.NotesType;
+
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioUserRole;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
@@ -191,7 +191,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseStatus.Meta.MAX_LEN)
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
     @Getter @Setter
     private LeaseStatus status;
@@ -303,7 +303,7 @@ public class Lease
         return getLeaseType();
     }
 
-    @Column(allowsNull = "true", length = JdoColumnLength.NOTES)
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
     @Getter @Setter
     private String comments;
@@ -673,7 +673,7 @@ public class Lease
 
     public Lease newMandate(
             final BankAccount bankAccount,
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
             final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
@@ -861,7 +861,7 @@ public class Lease
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease assign(
-            @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) final String reference,
+            @Parameter(regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
             final String name,
             final Party tenant,
             final LocalDate tenancyStartDate
@@ -964,7 +964,7 @@ public class Lease
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease renew(
-            @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) final String reference,
+            @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate
@@ -1096,6 +1096,8 @@ public class Lease
         }
     }
 
+    // //////////////////////////////////////
+
     @Inject
     LeaseItemRepository leaseItemRepository;
 
@@ -1125,4 +1127,25 @@ public class Lease
     @Inject
     private WrapperFactory wrapperFactory;
 
+
+
+    // //////////////////////////////////////
+
+    public static class ReferenceType {
+
+        private ReferenceType() {}
+
+        public static class Meta {
+
+            //(?=(?:.{11,15}|.{17}))([X,Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\&+=_/-]{1,7})
+            //public static final String REGEX = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\\&+=_/-]{1,7})";
+            //public static final String REGEX = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{3})-([A-Z,0-9]{3,8})-([A-Z,0-9,\\&+=_/-]{1,7})$";
+            public static final String REGEX = "^([X,Z]-)?(?=.{8,15}$)([A-Z]{2,4})-([A-Z,0-9,\\&\\ \\+=_/-]{1,15})$";
+            public static final String REGEX_DESCRIPTION = "Only letters and numbers devided by at least 2 and at most 4 dashes:\"-\" totalling between 8 and 15 characters. ";
+
+            private Meta() {}
+
+        }
+
+    }
 }

@@ -171,7 +171,7 @@ public class AgreementRole
     @Getter @Setter
     private AgreementRoleType type;
 
-    @javax.jdo.annotations.Column(length = NameType.MAX_LEN, allowsNull = "true")
+    @javax.jdo.annotations.Column(length = NameType.Meta.MAX_LEN, allowsNull = "true")
     @Getter @Setter
     private String externalReference;
 

@@ -40,8 +40,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
+import org.estatio.dom.event.types.CalendarNameType;
+import org.incode.module.base.types.NotesType;
+
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -155,14 +157,14 @@ public class Event
      * break</i>, <i>Fixed break exercise</i> and <i>Fixed break exercise
      * reminder</i>.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Event.CALENDAR_NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = CalendarNameType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String calendarName;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NOTES)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = NUMBER_OF_LINES)
     @Getter @Setter
     private String notes;

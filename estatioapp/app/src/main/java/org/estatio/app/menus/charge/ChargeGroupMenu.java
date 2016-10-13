@@ -31,7 +31,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 
@@ -45,7 +46,7 @@ public class ChargeGroupMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public List<ChargeGroup> newChargeGroup(
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Description") String description) {
         chargeGroupRepository.createChargeGroup(reference, description);
         return allChargeGroups();

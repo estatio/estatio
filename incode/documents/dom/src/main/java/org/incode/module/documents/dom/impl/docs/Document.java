@@ -53,6 +53,7 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.applicability.Binder;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.types.ExternalUrlType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -282,7 +283,7 @@ public class Document extends DocumentAbstract<Document> {
     //region > externalUrl (property)
     public static class ExternalUrlDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.EXTERNAL_URL)
+    @Column(allowsNull = "true", length = ExternalUrlType.Meta.MAX_LEN)
     @Property(
             domainEvent = ExternalUrlDomainEvent.class,
             editing = Editing.DISABLED

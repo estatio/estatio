@@ -35,7 +35,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.charge.Charge;
@@ -62,8 +63,8 @@ public class ChargeMenu extends UdoDomainRepositoryAndFactory<Charge> {
     public Charge newCharge(
             final ApplicationTenancy applicationTenancy,
             @Parameter(
-                    regexPattern = RegexValidation.REFERENCE,
-                    regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION)
+                    regexPattern = ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
             @ParameterLayout(named = "Reference")
             final String reference,
             @ParameterLayout(named = "Name")

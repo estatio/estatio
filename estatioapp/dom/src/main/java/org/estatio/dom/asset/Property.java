@@ -50,10 +50,8 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
-import org.incode.module.base.types.EnumType;
+import org.incode.module.base.types.ProperNameType;
 
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
@@ -116,7 +114,7 @@ public class Property
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = PropertyType.Meta.MAX_LEN)
     @Getter @Setter
     private PropertyType type;
 
@@ -149,7 +147,7 @@ public class Property
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ProperNameType.Meta.MAX_LEN)
     @Getter @Setter
     private String city;
 
@@ -216,7 +214,7 @@ public class Property
     )
     @MemberOrder(sequence = "1", name = "units")
     public Unit newUnit(
-            final @Parameter(regexPattern = RegexValidation.Unit.REFERENCE, regexPatternReplacement = RegexValidation.Unit.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = Unit.ReferenceType.Meta.REGEX, regexPatternReplacement = Unit.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final UnitType type) {
         return unitRepository.newUnit(this, reference, name, type);
@@ -269,5 +267,22 @@ public class Property
     @Inject
     FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
 
+    // //////////////////////////////////////
+
+    public static class ReferenceType {
+
+        private ReferenceType() {}
+
+        public static class Meta {
+
+            /* Only 3 letters */
+            public static final String REGEX = "[A-Z,0-9]{2,4}";
+            public static final String REGEX_DESCRIPTION = "2 to 4 numbers or letters, e.g. XXX9";
+
+            private Meta() {}
+
+        }
+
+    }
 }
 

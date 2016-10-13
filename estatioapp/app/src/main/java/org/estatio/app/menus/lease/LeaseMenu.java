@@ -44,7 +44,6 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -74,7 +73,7 @@ public class LeaseMenu {
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber
             final ApplicationTenancy applicationTenancy,
-            final @Parameter(regexPattern = RegexValidation.Lease.REFERENCE, regexPatternReplacement = RegexValidation.Lease.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = Lease.ReferenceType.Meta.REGEX, regexPatternReplacement = Lease.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final LeaseType leaseType,
             final LocalDate startDate,

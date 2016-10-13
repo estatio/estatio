@@ -30,4 +30,11 @@ public enum BreakExerciseType implements Titled {
     public String title() {
         return StringUtils.enumTitle(this.toString());
     }
+
+    public static class Meta {
+        public static final int MAX_LEN = 20;
+
+        private Meta() {}
+    }
+
 }

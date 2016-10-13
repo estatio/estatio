@@ -36,10 +36,12 @@ import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.FqcnType;
 import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.ObjectIdentifierType;
+import org.incode.module.base.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
@@ -152,7 +154,7 @@ public class Numerator
      * The combination of ({@link #getObjectType() objectType},
      * {@link #getName() name}) is unique.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String name;
@@ -175,7 +177,7 @@ public class Numerator
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier()
      * identifier}) can be used to recreate a {@link Bookmark}, if required.
      */
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.FQCN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = FqcnType.Meta.MAX_LEN)
     @Getter @Setter
     private String objectType;
 
@@ -200,7 +202,7 @@ public class Numerator
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier()
      * identifier}) can be used to recreate a {@link Bookmark}, if required.
      */
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.OBJECT_IDENTIFIER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ObjectIdentifierType.Meta.MAX_LEN)
     @Getter @Setter
     private String objectIdentifier;
 
@@ -213,7 +215,7 @@ public class Numerator
     /**
      * The String format to use to generate the value.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Numerator.FORMAT)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FormatType.Meta.MAX_LEN)
     @Getter @Setter
     private String format;
 
@@ -292,4 +294,22 @@ public class Numerator
         return isScoped() ? new Bookmark(getObjectType(), getObjectIdentifier()) : null;
     }
 
+    // //////////////////////////////////////
+
+    public static class FormatType {
+
+        private FormatType() {}
+
+        public static class Meta {
+
+            /**
+             * {@link ReferenceType.Meta#MAX_LEN} plus a few chars
+             */
+            public final static int MAX_LEN = 30;
+
+            private Meta() {}
+
+        }
+
+    }
 }

@@ -16,12 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.incode.module.base.types;
+package org.incode.module.documents.dom.types;
 
-public class EnumType {
+public class SubjectTextType {
 
-    private EnumType () {}
+    private SubjectTextType() {}
 
-    public final static int MAX_LEN = 30;
+    public static class Meta {
+
+        public static final int MAX_LEN = 255;
+
+        private Meta() {}
+
+    }
 
 }

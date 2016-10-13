@@ -50,6 +50,14 @@ public enum LeaseTermFrequency {
     public LocalDate nextDate(final LocalDate date) {
         return CalendarUtils.nextDate(date, this.rrule);
     }
-    
+
+
+    public static class Meta {
+
+        public final static int MAX_LEN = 30;
+
+        private Meta() {}
+
+    }
 
 }

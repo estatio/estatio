@@ -38,7 +38,6 @@ import org.incode.module.base.types.NameType;
 import org.incode.module.base.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
@@ -94,14 +93,14 @@ public class ChargeGroup
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
-    @Property(regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 

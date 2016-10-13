@@ -41,7 +41,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.JdoColumnScale;
+import org.incode.module.base.types.MoneyType;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
@@ -177,7 +178,7 @@ public class Guarantee
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", scale = JdoColumnScale.MONEY)
+    @javax.jdo.annotations.Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     @Getter @Setter
     private BigDecimal contractualAmount;
 

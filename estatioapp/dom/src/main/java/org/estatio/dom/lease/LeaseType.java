@@ -93,21 +93,21 @@ public class LeaseType
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
+    @Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
     @MemberOrder(sequence = "1")
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = TitleType.MAX_LEN)
+    @Column(allowsNull = "false", length = TitleType.Meta.MAX_LEN)
     @MemberOrder(sequence = "2")
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
+    @Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
     @MemberOrder(sequence = "3")

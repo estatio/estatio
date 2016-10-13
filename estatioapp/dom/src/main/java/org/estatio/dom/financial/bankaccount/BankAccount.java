@@ -37,7 +37,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
@@ -66,7 +65,7 @@ public class BankAccount
     @Getter @Setter
     private Country country;
 
-    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
+    @Column(allowsNull = "true", length = IbanType.Meta.MAX_LEN)
     @Getter @Setter
     private String iban;
 
@@ -80,29 +79,29 @@ public class BankAccount
         return this;
     }
 
-    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
+    @Column(allowsNull = "true", length = NationalCheckCodeType.Meta.MAX_LEN)
     @Getter @Setter
     private String nationalCheckCode;
 
-    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
+    @Column(allowsNull = "true", length = NationalBankCodeType.Meta.MAX_LEN)
     @Getter @Setter
     private String nationalBankCode;
 
-    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
+    @Column(allowsNull = "true", length = BranchCodeType.Meta.MAX_LEN)
     @Getter @Setter
     private String branchCode;
 
-    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @Column(allowsNull = "true", length = AccountNumberType.Meta.MAX_LEN)
     @Getter @Setter
     private String accountNumber;
 
-    @Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @Column(allowsNull = "true", length = AccountNumberType.Meta.MAX_LEN)
     @Getter @Setter
     private String bic;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BankAccount change(
-            @ParameterLayout(typicalLength = JdoColumnLength.BankAccount.IBAN)
+            @ParameterLayout(typicalLength = IbanType.Meta.MAX_LEN)
             final String iban,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String bic,
@@ -164,4 +163,94 @@ public class BankAccount
     @Inject
     BankAccountRepository bankAccountRepository;
 
+
+
+    public static class AccountNumberType {
+
+        private AccountNumberType() {}
+
+        public static class Meta {
+
+            /**
+             * TODO: review
+             */
+            public final static int MAX_LEN = 20;
+
+            private Meta() {}
+
+        }
+
+    }
+
+    public static class IbanType {
+
+        private IbanType() {}
+
+        public static class Meta {
+
+            /**
+             * eg http://en.wikipedia.org/wiki/International_Bank_Account_Number
+             *
+             */
+            public final static int MAX_LEN = 34;
+
+            public static final String REGEX = "[A-Z,0-9]+";
+            public static final String REGEX_DESCRIPTION = "Only letters and numbers are allowed";
+
+            private Meta() {}
+
+        }
+
+    }
+
+    public static class BranchCodeType {
+
+        private BranchCodeType() {}
+
+        public static class Meta {
+
+            /**
+             * TODO: review
+             */
+            public final static int MAX_LEN = 20;
+
+            private Meta() {}
+
+        }
+
+    }
+
+    public static class NationalBankCodeType {
+
+        private NationalBankCodeType() {}
+
+        public static class Meta {
+
+            /**
+             * TODO: review
+             */
+            public final static int MAX_LEN = 20;
+
+            private Meta() {}
+
+        }
+
+    }
+
+    public static class NationalCheckCodeType {
+
+        private NationalCheckCodeType() {}
+
+        public static class Meta {
+
+            /**
+             * TODO: review
+             */
+            public final static int MAX_LEN = 20;
+
+            private Meta() {}
+
+        }
+
+    }
 }

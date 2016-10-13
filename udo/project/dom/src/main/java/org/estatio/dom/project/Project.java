@@ -52,8 +52,9 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.JdoColumnScale;
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.MoneyType;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
@@ -92,7 +93,7 @@ public class Project extends UdoDomainObject<Project> implements
 	// //////////////////////////////////////
 
 	@Column(allowsNull = "false")
-	@Property(regexPattern = RegexValidation.REFERENCE)
+	@Property(regexPattern = ReferenceType.Meta.REGEX)
 	@PropertyLayout(describedAs = "Unique reference code for this project")
 	@MemberOrder(sequence="1")
 	@Getter @Setter
@@ -141,7 +142,7 @@ public class Project extends UdoDomainObject<Project> implements
 
 	// //////////////////////////////////////
 
-	@Column(allowsNull = "true", scale = JdoColumnScale.MONEY)
+	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
 	@MemberOrder(sequence="7")
     @Getter @Setter
     private BigDecimal estimatedCost;

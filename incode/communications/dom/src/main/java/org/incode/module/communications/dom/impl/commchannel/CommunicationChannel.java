@@ -46,7 +46,6 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.types.DescriptionType;
-import org.incode.module.base.types.EnumType;
 import org.incode.module.base.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
@@ -178,7 +177,7 @@ public abstract class CommunicationChannel
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "1")
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = CommunicationChannelType.Type.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private CommunicationChannelType type;
@@ -188,14 +187,14 @@ public abstract class CommunicationChannel
     /**
      * For import purposes only
      */
-    @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.Meta.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length = DescriptionType.MAX_LEN)
+    @javax.jdo.annotations.Column(length = DescriptionType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(multiLine = 3)
     @Getter @Setter
@@ -209,7 +208,7 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "true", length = EnumType.MAX_LEN)
+    @Column(allowsNull = "true", length = CommunicationChannelPurposeType.Meta.MAX_LEN)
     @Getter @Setter
     private CommunicationChannelPurposeType purpose;
 

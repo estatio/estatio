@@ -206,8 +206,8 @@ public abstract class InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
-    @PropertyLayout(typicalLength = NameType.MAX_LEN, multiLine = IsisMultilineLines.NUMBER_OF_LINES)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
+    @PropertyLayout(typicalLength = NameType.Meta.MAX_LEN, multiLine = IsisMultilineLines.NUMBER_OF_LINES)
     @Getter @Setter
     private String description;
 

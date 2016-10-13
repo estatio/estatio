@@ -40,7 +40,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.types.ReferenceType;
 
-import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexBaseRepository;
@@ -95,7 +94,7 @@ public class IndexValueMaintLineItem {
     private String reference;
 
     // @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
     @MemberOrder(name = "Index", sequence = "1.5")
     public String getReference() {
         return reference;
@@ -178,7 +177,7 @@ public class IndexValueMaintLineItem {
 
     private BigDecimal value;
 
-    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "false")
+    @javax.jdo.annotations.Column(scale = IndexValue.ValueType.Meta.SCALE, allowsNull = "false")
     @MemberOrder(name = "Index Value", sequence = "2")
     public BigDecimal getValue() {
         return value;

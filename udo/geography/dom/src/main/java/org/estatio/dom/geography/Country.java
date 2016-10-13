@@ -33,8 +33,6 @@ import org.incode.module.base.types.NameType;
 import org.incode.module.base.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -105,14 +103,14 @@ public class Country
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
-    @Property(regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
@@ -120,9 +118,25 @@ public class Country
 
     // not possible to make this unique because Country is rolled-up to
     // Geography.
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Country.ALPHA2CODE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = Alpha2CodeType.Meta.MAX_LEN)
     @javax.jdo.annotations.Index(unique = "false")
     @Getter @Setter
     private String alpha2Code;
 
+
+
+
+    public static class Alpha2CodeType {
+
+        private Alpha2CodeType() {}
+
+        public static class Meta {
+
+            public static final int MAX_LEN = 2;
+
+            private Meta() {}
+
+        }
+
+    }
 }

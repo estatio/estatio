@@ -18,7 +18,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
@@ -36,7 +37,7 @@ public class Lease_newGuaranteeContribution extends UdoDomainService<Guarantee> 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Guarantee newGuarantee(
             final Lease lease,
-            final @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX) String reference,
             final String name,
             final GuaranteeType guaranteeType,
             final LocalDate startDate,

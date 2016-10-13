@@ -37,17 +37,15 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
+import org.incode.module.base.types.ReferenceType;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
+
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
-
-import org.incode.module.base.types.ReferenceType;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.estatio.dom.utils.TitleBuilder;
 
 import lombok.Getter;
@@ -105,14 +103,14 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
-    @Property(editing = Editing.DISABLED, regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(editing = Editing.DISABLED, regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Party.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
@@ -166,4 +164,20 @@ public abstract class Party
         return party != this ? null : "Cannot replace a party with itself";
     }
 
+
+    // //////////////////////////////////////
+
+    public static class NameType {
+
+        private NameType() {}
+
+        public static class Meta {
+
+            public static final int MAX_LEN = 80;
+
+            private Meta() {}
+
+        }
+
+    }
 }

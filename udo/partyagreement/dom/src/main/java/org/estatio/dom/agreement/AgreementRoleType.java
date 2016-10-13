@@ -87,7 +87,7 @@ public class AgreementRoleType
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = TitleType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = TitleType.Meta.MAX_LEN)
     @Getter @Setter
     private String title;
 

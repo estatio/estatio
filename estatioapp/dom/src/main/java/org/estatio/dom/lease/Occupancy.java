@@ -43,7 +43,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
@@ -348,7 +347,7 @@ public class Occupancy
 
     private OccupancyReportingType reportTurnover;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportTurnover() {
         return reportTurnover;
@@ -362,7 +361,7 @@ public class Occupancy
 
     private OccupancyReportingType reportRent;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportRent() {
         return reportRent;
@@ -376,7 +375,7 @@ public class Occupancy
 
     private OccupancyReportingType reportOCR;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportOCR() {
         return reportOCR;
@@ -415,6 +414,14 @@ public class Occupancy
 
         public String title() {
             return title;
+        }
+
+        public static class Meta {
+
+            public final static int MAX_LEN = 30;
+
+            private Meta() {}
+
         }
 
     }

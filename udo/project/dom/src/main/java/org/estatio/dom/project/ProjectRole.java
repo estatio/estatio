@@ -52,8 +52,6 @@ import com.google.common.base.Function;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.EnumType;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -148,7 +146,7 @@ public class ProjectRole
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ProjectRoleType.Type.MAX_LEN)
     @Property(editing=Editing.DISABLED)
     @Getter @Setter
     private ProjectRoleType type;

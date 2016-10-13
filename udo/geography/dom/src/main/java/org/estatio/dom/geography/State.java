@@ -32,8 +32,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.types.NameType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -104,14 +102,14 @@ public class State
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.State.REFERENCE)
-    @Property(regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
@@ -121,4 +119,21 @@ public class State
     @Getter @Setter
     private Country country;
 
+
+    // //////////////////////////////////////
+
+    public static class ReferenceType {
+
+        private ReferenceType() {}
+
+        public static class Meta {
+
+            public final static int MAX_LEN = 6;
+            public final static String REGEX = org.incode.module.base.types.ReferenceType.Meta.REGEX;
+
+            private Meta() {}
+
+        }
+
+    }
 }

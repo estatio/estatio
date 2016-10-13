@@ -31,10 +31,10 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.FqcnType;
 import org.incode.module.base.types.TitleType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
@@ -86,13 +86,13 @@ public class FixedAssetRegistrationType
         return TitleBuilder.start().withName(getTitle()).toString();
     }
 
-    @javax.jdo.annotations.Column(allowsNull="false", length= TitleType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull="false", length= TitleType.Meta.MAX_LEN)
     @Getter @Setter
     private String title;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.FQCN)
+    @javax.jdo.annotations.Column(allowsNull="false", length= FqcnType.Meta.MAX_LEN)
     @Getter @Setter
     private String fullyQualifiedClassName;
 

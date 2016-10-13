@@ -32,9 +32,9 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
+import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
 import org.estatio.dom.lease.indexation.IndexationMethod;
@@ -87,7 +87,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // ///////////////////////////////////////////
 
-    @Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
+    @Column(scale = IndexValue.ValueType.Meta.SCALE, allowsNull = "true")
     @Getter @Setter
     private BigDecimal baseIndexValue;
 
@@ -100,13 +100,13 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     // ///////////////////////////////////////////
 
-    @Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
+    @Column(scale = IndexValue.ValueType.Meta.SCALE, allowsNull = "true")
     @Getter @Setter
     private BigDecimal nextIndexValue;
 
     // //////////////////////////////////////
 
-    @Column(scale = JdoColumnScale.IndexValue.REBASE_FACTOR, allowsNull = "true")
+    @Column(scale = RebaseFactorType.Meta.SCALE, allowsNull = "true")
     @Getter @Setter
     private BigDecimal rebaseFactor;
 
@@ -311,4 +311,21 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     @Inject
     IndexationService indexationService;
+
+    // ///////////////////////////////////////////
+
+
+    public static class RebaseFactorType {
+
+        private RebaseFactorType() {}
+
+        public static class Meta {
+
+            public static final int SCALE = 3;
+
+            private Meta() {}
+
+        }
+
+    }
 }

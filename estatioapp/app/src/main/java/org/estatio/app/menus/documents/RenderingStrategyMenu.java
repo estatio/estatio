@@ -33,15 +33,16 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.DocumentNature;
 import org.incode.module.documents.dom.impl.renderers.Renderer;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.impl.renderers.RendererClassNameSpecification;
+import org.incode.module.documents.dom.types.FqcnType;
+import org.incode.module.documents.dom.types.NameType;
+import org.incode.module.documents.dom.types.ReferenceType;
 
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
@@ -63,13 +64,13 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
     @MemberOrder(sequence = "1")
     public RenderingStrategy newRenderingStrategy(
             @Parameter(
-                    regexPattern = RegexValidation.REFERENCE,
-                    regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION,
-                    maxLength = DocumentsModule.JdoColumnLength.REFERENCE
+                    regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION,
+                    maxLength = ReferenceType.Meta.MAX_LEN
             )
             @ParameterLayout(named = "Reference")
             final String reference,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @Parameter(maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name")
             final String name,
             @ParameterLayout(named = "Input nature")
@@ -77,7 +78,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             @ParameterLayout(named = "Output nature")
             final DocumentNature outputNature,
             @Parameter(
-                    maxLength = DocumentsModule.JdoColumnLength.FQCN,
+                    maxLength = FqcnType.Meta.MAX_LEN,
                     mustSatisfy = RendererClassNameSpecification.class
             )
             @ParameterLayout(named = "Renderer class name")

@@ -32,7 +32,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
@@ -53,7 +54,7 @@ public class Party_financialAccountContributions extends UdoDomainService<Party_
     public FinancialAccount addAccount(
             final Party owner,
             final FinancialAccountType financialAccountType,
-            final @Parameter(regexPattern = RegexValidation.REFERENCE) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX) String reference,
             final String name) {
         return financialAccountRepository.newFinancialAccount(financialAccountType, reference, name, owner);
     }

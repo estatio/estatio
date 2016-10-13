@@ -122,7 +122,7 @@ public class Brand
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 

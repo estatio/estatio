@@ -57,10 +57,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.EnumType;
-
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -196,7 +193,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseItemStatus.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseItemStatus status;
 
@@ -296,7 +293,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseItemType.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseItemType type;
 
@@ -436,7 +433,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.INVOICING_FREQUENCY_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = InvoicingFrequency.Meta.MAX_LEN)
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private InvoicingFrequency invoicingFrequency;
@@ -453,7 +450,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
 

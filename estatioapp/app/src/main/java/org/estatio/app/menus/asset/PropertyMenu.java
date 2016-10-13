@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.Property;
@@ -57,7 +56,7 @@ public class PropertyMenu extends UdoDomainRepositoryAndFactory<Property> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Property newProperty(
-            @Parameter(regexPattern = RegexValidation.Property.REFERENCE)
+            @Parameter(regexPattern = Property.ReferenceType.Meta.REGEX)
             final String propertyReference,
             final String name,
             final PropertyType propertyType,

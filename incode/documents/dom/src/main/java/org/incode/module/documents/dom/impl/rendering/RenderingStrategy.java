@@ -56,6 +56,9 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.renderers.PreviewToUrl;
 import org.incode.module.documents.dom.impl.renderers.Renderer;
 import org.incode.module.documents.dom.services.ClassService;
+import org.incode.module.documents.dom.types.FqcnType;
+import org.incode.module.documents.dom.types.NameType;
+import org.incode.module.documents.dom.types.ReferenceType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -203,7 +206,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     //region > reference (property)
     public static class ReferenceDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.REFERENCE)
+    @Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
     @Property(
             domainEvent = ReferenceDomainEvent.class,
             editing = Editing.DISABLED
@@ -214,7 +217,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.NAME)
+    @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Property(
             domainEvent = NameDomainEvent.class,
             editing = Editing.DISABLED
@@ -273,7 +276,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     public static class RendererClassNameDomainEvent extends PropertyDomainEvent<String> { }
 
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FQCN)
+    @Column(allowsNull = "false", length = FqcnType.Meta.MAX_LEN)
     @Property(
             domainEvent = RendererClassNameDomainEvent.class,
             editing = Editing.DISABLED

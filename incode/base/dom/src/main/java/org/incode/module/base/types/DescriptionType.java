@@ -22,6 +22,12 @@ public class DescriptionType {
 
     private DescriptionType() {}
 
-    public final static int MAX_LEN = 254;
+    public static class Meta {
+
+        public final static int MAX_LEN = 254;
+
+        private Meta() {}
+
+    }
 
 }

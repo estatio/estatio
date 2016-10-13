@@ -48,6 +48,8 @@ import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentState;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.types.BookmarkType;
+import org.incode.module.documents.dom.types.NameType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -178,7 +180,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
 
     //region > attachedToStr (property, hidden)
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.BOOKMARK)
+    @Column(allowsNull = "false", length = BookmarkType.Meta.MAX_LEN)
     @Property(
             hidden = Where.EVERYWHERE
     )
@@ -212,7 +214,7 @@ public abstract class Paperclip implements Comparable<Paperclip> {
     //region > roleName (property, optional)
     public static class RoleNameDomainEvent extends Paperclip.PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.NAME)
+    @Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Property(
             domainEvent = RoleNameDomainEvent.class,
             editing = Editing.DISABLED

@@ -32,7 +32,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
@@ -49,7 +50,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
     @Programmatic
     public Charge newCharge(
             final ApplicationTenancy applicationTenancy,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final @ParameterLayout(named = "Name") String name,
             final @ParameterLayout(named = "Description") String description,
             final Tax tax,

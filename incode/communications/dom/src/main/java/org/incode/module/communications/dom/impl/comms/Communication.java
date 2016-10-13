@@ -67,6 +67,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
+import org.incode.module.communications.dom.types.AtPathType;
+import org.incode.module.communications.dom.types.SubjectType;
 import org.incode.module.documents.dom.impl.docs.Document;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.paperclips.Paperclip;
@@ -234,7 +236,7 @@ public class Communication implements Comparable<Communication> {
     //region > atPath (property)
     public static class AtPathDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = CommunicationsModule.JdoColumnLength.AT_PATH)
+    @Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
     @Property(
             domainEvent = AtPathDomainEvent.class,
             editing = Editing.DISABLED
@@ -254,7 +256,7 @@ public class Communication implements Comparable<Communication> {
      * {@link CommunicationChannelType#POSTAL_ADDRESS}.
      */
     @Getter @Setter
-    @Column(allowsNull = "true", length = CommunicationsModule.JdoColumnLength.SUBJECT)
+    @Column(allowsNull = "true", length = SubjectType.Meta.MAX_LEN)
     @Property(
             domainEvent = SubjectDomainEvent.class,
             editing = Editing.DISABLED

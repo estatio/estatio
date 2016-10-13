@@ -49,14 +49,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
 import org.incode.module.base.types.DescriptionType;
-import org.incode.module.base.types.EnumType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.event.Event;
-import org.estatio.dom.event.EventSource;
 import org.estatio.dom.event.EventRepository;
+import org.estatio.dom.event.EventSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.TitleBuilder;
@@ -131,7 +129,7 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = BreakType.Meta.MAX_LEN)
     @Getter @Setter
     private BreakType type;
 
@@ -167,13 +165,13 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.BreakOption.EXERCISE_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = BreakExerciseType.Meta.MAX_LEN)
     @Getter @Setter
     private BreakExerciseType exerciseType;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DURATION)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NotificationPeriodType.Meta.MAX_LEN)
     @Getter @Setter
     private String notificationPeriod;
 
@@ -198,7 +196,7 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String description;
@@ -363,4 +361,22 @@ public abstract class BreakOption
 
     @Inject
     protected EventRepository eventRepository;
+
+
+    // //////////////////////////////////////
+
+
+    public static class NotificationPeriodType {
+
+        private NotificationPeriodType() {}
+
+        public static class Meta {
+
+            public static final int MAX_LEN = 20;
+
+            private Meta() {}
+
+        }
+
+    }
 }

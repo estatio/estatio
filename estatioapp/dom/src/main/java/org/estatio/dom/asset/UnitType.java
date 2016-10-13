@@ -45,4 +45,10 @@ public enum UnitType implements TitledEnum {
         return StringUtils.enumTitle(this.name());
     }
 
+    public static class Meta {
+        private Meta(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

@@ -90,7 +90,7 @@ public class Activity
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length= NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length= NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 

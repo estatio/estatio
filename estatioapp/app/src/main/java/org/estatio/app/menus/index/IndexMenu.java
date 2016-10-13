@@ -32,8 +32,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.Dflt;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
@@ -45,7 +46,7 @@ public class IndexMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Index newIndex(
-            @Parameter(regexPattern = RegexValidation.REFERENCE)
+            @Parameter(regexPattern = ReferenceType.Meta.REGEX)
             final String reference,
             final String name,
             final ApplicationTenancy applicationTenancy) {

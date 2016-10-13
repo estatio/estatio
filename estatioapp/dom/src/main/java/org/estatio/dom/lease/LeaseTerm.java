@@ -58,7 +58,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
@@ -304,13 +303,13 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseTermStatus.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseTermStatus status;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseTermFrequency.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseTermFrequency frequency;
 

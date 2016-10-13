@@ -48,4 +48,10 @@ public enum FixedAssetRoleType implements TitledEnum {
         };
     }
 
+    public static class Meta {
+        private Meta(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

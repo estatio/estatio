@@ -44,6 +44,8 @@ import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.types.NameType;
+import org.incode.module.documents.dom.types.SubjectTextType;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
@@ -62,7 +64,7 @@ public class DocumentTemplate_cloneWhenText {
             contributed = Contributed.AS_ACTION
     )
     public DocumentTemplate $$(
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @Parameter(maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name")
             final String name,
             final ApplicationTenancy applicationTenancy,
@@ -73,7 +75,7 @@ public class DocumentTemplate_cloneWhenText {
             final String templateText,
             @ParameterLayout(named = "Content rendering strategy")
             final RenderingStrategy contentRenderingStrategy,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+            @Parameter(maxLength = SubjectTextType.Meta.MAX_LEN)
             final String nameText,
             @ParameterLayout(named = "Name rendering strategy")
             final RenderingStrategy nameRenderingStrategy,

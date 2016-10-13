@@ -46,8 +46,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.EnumType;
-
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
@@ -148,7 +146,7 @@ public class ProgramRole
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ProgramRoleType.Type.MAX_LEN)
     @Property(editing=Editing.DISABLED)
     @Getter @Setter
     private ProgramRoleType type;

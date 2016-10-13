@@ -27,7 +27,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = LeaseType.class)
@@ -41,7 +42,7 @@ public class LeaseTypeRepository extends UdoDomainRepositoryAndFactory<LeaseType
 
     @Programmatic
     public LeaseType newLeaseType(
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
         final LeaseType leaseType = newTransientInstance();

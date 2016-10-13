@@ -29,7 +29,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.index.api.IndexCreator;
 import org.estatio.dom.index.api.IndexFinder;
@@ -43,7 +44,7 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implem
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Index newIndex(
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
         final Index index = new Index(reference, name, applicationTenancy);

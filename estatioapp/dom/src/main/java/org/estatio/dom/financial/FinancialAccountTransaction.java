@@ -28,10 +28,10 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.types.MoneyType;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.TitleBuilder;
 
@@ -114,7 +114,7 @@ public class FinancialAccountTransaction
     // //////////////////////////////////////
 
 
-    @Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
+    @Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @MemberOrder(sequence = "4")
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
@@ -122,7 +122,7 @@ public class FinancialAccountTransaction
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "false", scale = JdoColumnScale.MONEY)
+    @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
     @MemberOrder(sequence = "5")
     @Getter @Setter
     BigDecimal amount;
@@ -148,7 +148,7 @@ public class FinancialAccountTransaction
     }
 
     public BigDecimal default0ChangeTransactionDetails(){
-        return getAmount().setScale(JdoColumnScale.MONEY);
+        return getAmount().setScale(MoneyType.Meta.SCALE);
     }
 
     public LocalDate default1ChangeTransactionDetails(){

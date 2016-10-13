@@ -19,6 +19,7 @@ package org.incode.module.documents.dom.impl.docs;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.message.MessageService;
 import org.incode.module.documents.dom.DocumentsModule;
+import org.incode.module.documents.dom.types.NameType;
 
 import javax.inject.Inject;
 
@@ -55,7 +56,7 @@ public class Document_movedToExternalUrl {
     public Document $$(
             @ParameterLayout(named = "External URL")
             final String externalUrl,
-            @Parameter(optionality = Optionality.OPTIONAL, maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name")
             final String name
     ) {

@@ -46,7 +46,6 @@ import org.incode.module.base.types.NameType;
 import org.incode.module.base.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -112,27 +111,27 @@ public class Tax
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
-    @Property(regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @PropertyLayout(multiLine = 3)
     @Getter @Setter

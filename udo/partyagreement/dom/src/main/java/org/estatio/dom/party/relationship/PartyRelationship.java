@@ -132,7 +132,7 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
 
     // //////////////////////////////////////
 
-    @Column(allowsNull = "true", length = DescriptionType.MAX_LEN)
+    @Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @Getter @Setter
     private String description;
 

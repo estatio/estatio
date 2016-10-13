@@ -31,4 +31,12 @@ public enum LeaseStatus {
         return StringUtils.enumTitle(this.name());
     }
 
+    public static class Meta {
+
+        public final static int MAX_LEN = 20;
+
+        private Meta() {}
+
+    }
+
 }

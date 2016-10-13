@@ -54,4 +54,13 @@ public enum CommunicationChannelType implements TitledEnum {
             }}));
     }
 
+
+    // //////////////////////////////////////
+
+    public static class Type {
+        private Type(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

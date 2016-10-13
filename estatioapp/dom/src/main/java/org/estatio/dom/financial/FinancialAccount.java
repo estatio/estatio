@@ -41,12 +41,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.EnumType;
 import org.incode.module.base.types.NameType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
@@ -122,20 +119,20 @@ public class FinancialAccount
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FinancialAccount.REFERENCE)
-    @Property(regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FinancialAccountType.Meta.MAX_LEN)
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private FinancialAccountType type;
@@ -154,7 +151,7 @@ public class FinancialAccount
     // //////////////////////////////////////
 
     @Property(optionality = Optionality.OPTIONAL)
-    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String externalReference;
 
@@ -187,6 +184,30 @@ public class FinancialAccount
         return getName();
     }
 
+
+
+    // //////////////////////////////////////
+
     @Inject
     private FinancialAccountTransactionRepository financialAccountTransactionRepository;
+
+
+    // //////////////////////////////////////
+
+    public static class ReferenceType {
+
+        private ReferenceType() {}
+
+        public static class Meta {
+
+            /**
+             * To store the IBAN code as reference we need to increase this
+             */
+            public final static int MAX_LEN = 34;
+
+            private Meta() {}
+
+        }
+
+    }
 }

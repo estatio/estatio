@@ -86,6 +86,12 @@ import org.incode.module.documents.dom.services.ClassNameViewModel;
 import org.incode.module.documents.dom.services.ClassService;
 import org.incode.module.documents.dom.spi.BinderClassNameService;
 import org.incode.module.documents.dom.services.FullyQualifiedClassNameSpecification;
+import org.incode.module.documents.dom.types.AtPathType;
+import org.incode.module.documents.dom.types.DocNameType;
+import org.incode.module.documents.dom.types.FileSuffixType;
+import org.incode.module.documents.dom.types.FqcnType;
+import org.incode.module.documents.dom.types.SubjectTextType;
+import org.incode.module.documents.dom.types.TextType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -360,7 +366,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      * Copy of {@link #getAtPath()}, for query purposes only.
      */
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.AT_PATH)
+    @Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
     @Property(
             notPersisted = true, // ignore for auditing
             hidden = Where.EVERYWHERE
@@ -394,7 +400,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //region > fileSuffix (property)
     public static class FileSuffixDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FILE_SUFFIX)
+    @Column(allowsNull = "false", length = FileSuffixType.Meta.MAX_LEN)
     @Property(
             domainEvent = FileSuffixDomainEvent.class,
             editing = Editing.DISABLED
@@ -410,7 +416,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      * Used to determine the name of the {@link Document#getName() name} of the rendered {@link Document}.
      */
     @Getter @Setter
-    @javax.jdo.annotations.Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.SUBJECT_TEXT)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = SubjectTextType.Meta.MAX_LEN)
     @Property(
             notPersisted = true, // exclude from auditing
             domainEvent = NameTextDomainEvent.class,
@@ -472,10 +478,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     )
     @MemberOrder(name = "appliesTo", sequence = "1")
     public DocumentTemplate applicable(
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
+            @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Domain type")
             final String domainClassName,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.FQCN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
+            @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FullyQualifiedClassNameSpecification.class)
             @ParameterLayout(named = "Binder")
             final ClassNameViewModel binderClassNameViewModel) {
 
@@ -768,7 +774,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                         final String renderedChars = ((RendererFromBytesToChars) renderer).renderBytesToChars(
                             getType(), variant, getAtPath(), getVersion(),
                             asBytes(), contentDataModel);
-                        if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
+                        if(renderedChars.length() <= TextType.Meta.MAX_LEN) {
                             document.setTextData(getName(), getMimeType(), renderedChars);
                         } else {
                             final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
@@ -792,7 +798,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
                         final String renderedChars = ((RendererFromCharsToChars) renderer).renderCharsToChars(
                                 getType(), variant, getAtPath(), getVersion(),
                                 asChars(), contentDataModel);
-                        if(renderedChars.length() <= DocumentsModule.JdoColumnLength.TEXT) {
+                        if(renderedChars.length() <= TextType.Meta.MAX_LEN) {
                             document.setTextData(getName(), getMimeType(), renderedChars);
                         } else {
                             final Clob clob = new Clob (documentName, getMimeType(), renderedChars);
@@ -824,10 +830,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         final String suffixNoDot = suffix.substring(lastPeriod + 1);
         final String suffixWithDot = "." + suffixNoDot;
         if (documentName.endsWith(suffixWithDot)) {
-            return trim(documentName, DocumentsModule.JdoColumnLength.DOC_NAME);
+            return trim(documentName, DocNameType.Meta.MAX_LEN);
         }
         else {
-            return trim(documentName, DocumentsModule.JdoColumnLength.DOC_NAME - suffixWithDot.length()) + suffixWithDot;
+            return trim(documentName, DocNameType.Meta.MAX_LEN - suffixWithDot.length()) + suffixWithDot;
         }
     }
 

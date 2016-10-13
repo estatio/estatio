@@ -20,6 +20,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.documents.dom.types.FqcnType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -176,7 +177,7 @@ public class Applicability implements Comparable<Applicability> {
      * The class used as the input for the document
      */
     @Getter @Setter
-    @javax.jdo.annotations.Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FQCN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FqcnType.Meta.MAX_LEN)
     @Property(
             domainEvent = DomainClassNameDomainEvent.class
     )
@@ -187,7 +188,7 @@ public class Applicability implements Comparable<Applicability> {
     //region > binderClassName (property)
     public static class BinderClassNameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @javax.jdo.annotations.Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.FQCN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FqcnType.Meta.MAX_LEN)
     @Property(
             domainEvent = BinderClassNameDomainEvent.class
     )

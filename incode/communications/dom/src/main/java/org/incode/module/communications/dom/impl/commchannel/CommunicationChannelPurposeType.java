@@ -35,4 +35,13 @@ public enum CommunicationChannelPurposeType implements TitledEnum {
         return title;
     }
 
+
+    // //////////////////////////////////////
+
+    public static class Meta {
+        private Meta(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

@@ -51,4 +51,12 @@ public enum LeaseTermStatus {
         return updatable;
     }
 
+    public static class Meta {
+
+        public final static int MAX_LEN = 20;
+
+        private Meta() {}
+
+    }
+
 }

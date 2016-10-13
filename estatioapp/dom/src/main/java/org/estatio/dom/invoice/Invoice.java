@@ -53,8 +53,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
 import org.estatio.dom.EstatioUserRole;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -63,7 +64,6 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.charge.Charge;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -253,14 +253,14 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = InvoiceNumberType.Meta.MAX_LEN)
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private String collectionNumber;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = InvoiceNumberType.Meta.MAX_LEN)
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private String invoiceNumber;
@@ -320,7 +320,7 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = InvoiceStatus.Meta.MAX_LEN)
     @Getter @Setter
     private InvoiceStatus status;
 
@@ -334,7 +334,7 @@ public class Invoice
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
 
@@ -711,4 +711,24 @@ public class Invoice
 
     @javax.inject.Inject
     InvoiceItemRepository invoiceItemRepository;
+
+
+
+
+    public static class InvoiceNumberType {
+
+        private InvoiceNumberType() {}
+
+        public static class Meta {
+
+            /**
+             * TODO: review
+             */
+            public static final int MAX_LEN = 16;
+
+            private Meta() {}
+
+        }
+
+    }
 }

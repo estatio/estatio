@@ -30,4 +30,13 @@ public enum PersonGenderType {
         return StringUtils.enumTitle(name());
     }
 
+
+    // //////////////////////////////////////
+
+    public static class Type {
+        private Type(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

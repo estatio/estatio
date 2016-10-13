@@ -18,12 +18,12 @@
  */
 package org.estatio.dom.financial;
 
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.FatalException;
+
 import org.estatio.dom.PowerType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.utils.StringUtils;
-
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.FatalException;
 
 public enum FinancialAccountType implements PowerType<FinancialAccount> {
 
@@ -51,6 +51,12 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
         } catch (Exception ex) {
             throw new FatalException(ex);
         }
+    }
+
+    public static class Meta {
+        private Meta(){}
+
+        public final static int MAX_LEN = 30;
     }
 
 }

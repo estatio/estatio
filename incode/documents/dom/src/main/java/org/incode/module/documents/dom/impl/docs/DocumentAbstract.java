@@ -46,6 +46,10 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.documents.dom.types.AtPathType;
+import org.incode.module.documents.dom.types.DocNameType;
+import org.incode.module.documents.dom.types.MimeTypeType;
+import org.incode.module.documents.dom.types.TextType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -115,7 +119,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > atPath (property)
     public static class AtPathDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.AT_PATH)
+    @Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
     @Property(
             domainEvent = AtPathDomainEvent.class,
             editing = Editing.DISABLED
@@ -130,7 +134,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > name (property)
     public static class NameDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.DOC_NAME)
+    @Column(allowsNull = "false", length = DocNameType.Meta.MAX_LEN)
     @Property(
             domainEvent = NameDomainEvent.class,
             editing = Editing.DISABLED
@@ -141,7 +145,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > mimeType (property)
     public static class MimeTypeDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
-    @Column(allowsNull = "false", length = DocumentsModule.JdoColumnLength.MIME_TYPE)
+    @Column(allowsNull = "false", length = MimeTypeType.Meta.MAX_LEN)
     @Property(
             domainEvent = MimeTypeDomainEvent.class,
             editing = Editing.DISABLED
@@ -235,7 +239,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //region > text (persisted property)
     public static class TextDomainEvent extends PropertyDomainEvent<Clob> { }
     @Getter @Setter
-    @javax.jdo.annotations.Column(allowsNull = "true", length = DocumentsModule.JdoColumnLength.TEXT)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = TextType.Meta.MAX_LEN)
     @Property(
             notPersisted = true, // exclude from auditing
             domainEvent = TextDomainEvent.class,

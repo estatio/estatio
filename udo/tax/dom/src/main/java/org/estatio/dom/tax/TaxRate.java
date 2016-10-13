@@ -109,7 +109,7 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;

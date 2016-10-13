@@ -30,7 +30,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.RegexValidation;
+import org.incode.module.base.types.ReferenceType;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Country.class)
@@ -44,7 +45,7 @@ public class CountryRepository extends UdoDomainRepositoryAndFactory<Country> {
 
     @Programmatic
     public List<Country> newCountry(
-            final @Parameter(regexPattern = RegexValidation.REFERENCE, regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String alpha2Code,
             final String name) {
         createCountry(reference, alpha2Code, name);

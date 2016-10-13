@@ -41,4 +41,12 @@ public enum LeaseItemStatus {
         return status != null ? valueOf(status) : statusElse;
     }
 
+    public static class Meta {
+
+        public final static int MAX_LEN = 20;
+
+        private Meta() {}
+
+    }
+
 }

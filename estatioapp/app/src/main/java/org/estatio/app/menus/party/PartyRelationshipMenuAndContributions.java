@@ -95,8 +95,8 @@ public class PartyRelationshipMenuAndContributions {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = org.estatio.dom.RegexValidation.Person.REFERENCE, regexPatternReplacement = org.estatio.dom.RegexValidation.Person.REFERENCE_DESCRIPTION) String reference,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = org.estatio.dom.RegexValidation.Person.INITIALS, regexPatternReplacement = org.estatio.dom.RegexValidation.Person.INITIALS_DESCRIPTION) String initials,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = Person.ReferenceType.Meta.REGEX, regexPatternReplacement = Person.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
+            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = Person.InitialsType.Meta.REGEX, regexPatternReplacement = Person.InitialsType.Meta.REGEX_DESCRIPTION) String initials,
             final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final String lastName,
             final PersonGenderType gender,

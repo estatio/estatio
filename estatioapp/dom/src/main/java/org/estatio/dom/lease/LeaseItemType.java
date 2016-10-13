@@ -87,4 +87,13 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     public boolean allowOpenEndDate() {
         return allowOpenEndDate;
     }
+
+    // //////////////////////////////////////
+
+    public static class Meta {
+        private Meta(){}
+
+        public final static int MAX_LEN = 30;
+    }
+
 }

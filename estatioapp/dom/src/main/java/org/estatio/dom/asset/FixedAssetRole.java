@@ -44,8 +44,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.EnumType;
-
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -135,7 +133,7 @@ public class FixedAssetRole
     // //////////////////////////////////////
 
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FixedAssetRoleType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private FixedAssetRoleType type;

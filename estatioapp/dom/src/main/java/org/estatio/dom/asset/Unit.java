@@ -39,8 +39,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.EnumType;
-
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.lease.OccupancyRepository;
@@ -102,7 +100,7 @@ public class Unit
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = EnumType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = UnitType.Meta.MAX_LEN)
     @Getter @Setter
     private UnitType type;
 
@@ -291,6 +289,7 @@ public class Unit
 
 
     // ///////////////////////////////////////
+
     @Programmatic
     public boolean hasOccupancyOverlappingInterval(final LocalDateInterval localDateInterval) {
         if (occupancyRepository.occupanciesByUnitAndInterval(this, localDateInterval).size() > 0) {
@@ -302,4 +301,20 @@ public class Unit
     @Inject
     private OccupancyRepository occupancyRepository;
 
+    // ///////////////////////////////////////
+
+    public static class ReferenceType {
+
+        private ReferenceType() {}
+
+        public static class Meta {
+
+            public static final String REGEX = "(?=.{5,17})([A-Z]{1}-)?([A-Z]{2,4}-[A-Z,0-9,/,+,-]{1,11})";
+            public static final String REGEX_DESCRIPTION = "Only letters and numbers devided by at least 1 and at most 3 dashes:\"-\" totalling between 5 and 15 characters. ";
+
+            private Meta() {}
+
+        }
+
+    }
 }

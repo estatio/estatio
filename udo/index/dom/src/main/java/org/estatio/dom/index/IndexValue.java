@@ -35,7 +35,6 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.TitleBuilder;
@@ -106,7 +105,7 @@ public class IndexValue
     @Getter @Setter
     private IndexBase indexBase;
 
-    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "false")
+    @javax.jdo.annotations.Column(scale = ValueType.Meta.SCALE, allowsNull = "false")
     @Getter @Setter
     private BigDecimal value;
 
@@ -119,4 +118,20 @@ public class IndexValue
         private static final long serialVersionUID = 1L;
     }
 
+
+
+
+    public static class ValueType {
+
+        private ValueType() {}
+
+        public static class Meta {
+
+            public static final int SCALE = 4;
+
+            private Meta() {}
+
+        }
+
+    }
 }

@@ -59,7 +59,6 @@ import org.incode.module.base.types.ReferenceType;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
@@ -152,15 +151,15 @@ public abstract class Agreement
                 .toString();
     }
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.MAX_LEN)
-    @Property(regexPattern = RegexValidation.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @Property(regexPattern = ReferenceType.Meta.REGEX)
     @PropertyLayout(describedAs = "Unique reference code for this agreement")
     @Getter @Setter
     private String reference;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(length = NameType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @PropertyLayout(describedAs = "Optional name for this agreement")
     @Getter @Setter

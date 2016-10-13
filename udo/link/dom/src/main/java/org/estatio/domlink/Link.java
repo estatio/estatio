@@ -29,10 +29,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.types.FqcnType;
 import org.incode.module.base.types.NameType;
+import org.incode.module.base.types.UrlTemplateType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.utils.TitleBuilder;
@@ -85,21 +86,21 @@ public class Link
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FQCN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FqcnType.Meta.MAX_LEN)
     @MemberOrder(sequence = "1")
     @Getter @Setter
     private String className;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @MemberOrder(sequence = "2")
     @Getter @Setter
     private String name;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Link.URL_TEMPLATE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = UrlTemplateType.Meta.MAX_LEN)
     @MemberOrder(sequence = "3")
     @Getter @Setter
     private String urlTemplate;

@@ -33,11 +33,11 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.DocumentsModule;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.documents.dom.types.NameType;
+import org.incode.module.documents.dom.types.ReferenceType;
 
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
@@ -59,13 +59,13 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
     @MemberOrder(sequence = "1")
     public DocumentType newDocumentType(
             @Parameter(
-                    regexPattern = RegexValidation.REFERENCE,
-                    regexPatternReplacement = RegexValidation.REFERENCE_DESCRIPTION,
-                    maxLength = DocumentsModule.JdoColumnLength.REFERENCE
+                    regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION,
+                    maxLength = ReferenceType.Meta.MAX_LEN
             )
             @ParameterLayout(named = "Reference")
             final String reference,
-            @Parameter(maxLength = DocumentsModule.JdoColumnLength.NAME)
+            @Parameter(maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name")
             final String name) {
 
