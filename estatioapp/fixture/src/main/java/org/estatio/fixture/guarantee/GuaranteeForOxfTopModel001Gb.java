@@ -31,8 +31,8 @@ import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForDagoBankGb;
 
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.bd;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 

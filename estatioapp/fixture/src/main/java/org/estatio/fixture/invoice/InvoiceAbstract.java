@@ -43,7 +43,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 /**
  * Creates {@link org.estatio.dom.invoice.Invoice} and associated {@link org.estatio.dom.invoice.InvoiceItem}s.

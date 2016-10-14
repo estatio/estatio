@@ -31,7 +31,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

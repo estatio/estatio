@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.RenderType;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.NameType;
-import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.dom.types.NameType;
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithReferenceComparable;

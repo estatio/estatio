@@ -32,8 +32,8 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.valuetypes.AbstractInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

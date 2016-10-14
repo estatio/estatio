@@ -26,7 +26,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldIt;
 import org.estatio.fixture.party.PersonForLucianoPavarottiIt;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class PropertyForGraIt extends PropertyAbstract {
 

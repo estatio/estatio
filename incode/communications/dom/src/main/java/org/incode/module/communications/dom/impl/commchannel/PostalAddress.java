@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.util.TitleBuffer;
 
-import org.incode.module.base.types.ProperNameType;
+import org.incode.module.base.dom.types.ProperNameType;
 
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;

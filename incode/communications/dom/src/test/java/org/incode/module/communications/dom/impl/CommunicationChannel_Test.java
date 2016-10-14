@@ -22,8 +22,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.PojoTester;
 
 public class CommunicationChannel_Test {
 

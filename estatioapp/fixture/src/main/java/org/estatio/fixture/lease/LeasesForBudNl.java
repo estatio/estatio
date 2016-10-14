@@ -31,7 +31,7 @@ import org.estatio.fixture.party.OrganisationForNlBankNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeasesForBudNl extends LeaseAbstract {
 

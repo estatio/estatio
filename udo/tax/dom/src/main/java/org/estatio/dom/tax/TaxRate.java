@@ -39,14 +39,14 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.NameType;
 
-import org.estatio.dom.Chained;
+import org.incode.module.base.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithIntervalMutable;
+import org.incode.module.base.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -20,6 +20,8 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 
+import org.incode.module.base.dom.WithStartDate;
+
 public class InstantiatorForWithStartDate implements Instantiator {
 
     public final Class<? extends WithStartDate> cls;

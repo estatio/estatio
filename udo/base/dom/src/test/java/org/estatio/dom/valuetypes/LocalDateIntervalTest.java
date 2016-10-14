@@ -21,7 +21,8 @@ package org.estatio.dom.valuetypes;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

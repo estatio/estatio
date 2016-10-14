@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

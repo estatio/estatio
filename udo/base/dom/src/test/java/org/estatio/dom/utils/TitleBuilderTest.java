@@ -2,7 +2,7 @@ package org.estatio.dom.utils;
 
 import org.junit.Test;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

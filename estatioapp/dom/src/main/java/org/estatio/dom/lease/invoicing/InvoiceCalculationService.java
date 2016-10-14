@@ -49,8 +49,8 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field

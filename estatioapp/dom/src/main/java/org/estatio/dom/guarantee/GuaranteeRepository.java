@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;

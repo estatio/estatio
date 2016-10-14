@@ -45,11 +45,11 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithIntervalContiguous;
+import org.incode.module.base.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

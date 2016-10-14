@@ -28,8 +28,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.isisaddons.module.settings.dom.SettingType;
 import org.isisaddons.module.settings.dom.UserSetting;
 
-import org.incode.module.base.types.DescriptionType;
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.DescriptionType;
+import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.dom.utils.TitleBuilder;
 import org.estatio.domsettings.types.SettingKeyType;

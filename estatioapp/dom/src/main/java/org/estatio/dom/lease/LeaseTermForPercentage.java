@@ -32,7 +32,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

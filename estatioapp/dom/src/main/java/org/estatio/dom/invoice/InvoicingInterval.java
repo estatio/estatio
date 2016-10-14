@@ -5,8 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.valuetypes.AbstractInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 public class InvoicingInterval extends AbstractInterval<InvoicingInterval> {
 

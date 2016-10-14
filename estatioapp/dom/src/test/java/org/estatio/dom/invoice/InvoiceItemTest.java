@@ -33,7 +33,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 

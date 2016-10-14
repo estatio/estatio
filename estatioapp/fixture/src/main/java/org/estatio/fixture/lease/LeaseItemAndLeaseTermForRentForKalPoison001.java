@@ -26,7 +26,7 @@ import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlKalDefault;
 
-import static org.estatio.integtests.VT.bd;
+import static org.incode.module.base.integtests.VT.bd;
 
 public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTermsAbstract {
 

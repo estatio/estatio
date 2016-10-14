@@ -51,20 +51,20 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.DescriptionType;
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.DescriptionType;
+import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.WithDescriptionGetter;
-import org.estatio.dom.WithInterval;
+import org.incode.module.base.dom.WithInterval;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

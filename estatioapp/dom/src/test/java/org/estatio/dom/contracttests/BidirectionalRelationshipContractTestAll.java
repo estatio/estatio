@@ -33,7 +33,7 @@ import org.estatio.dom.WithCodeComparable;
 import org.estatio.dom.WithDescriptionComparable;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithStartDate;
+import org.incode.module.base.dom.WithStartDate;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.asset.FixedAsset;

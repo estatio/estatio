@@ -41,15 +41,16 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.WithIntervalMutable;
+
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.PojoTester;
+import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -316,7 +317,7 @@ public class LeaseTermTest {
 
         protected LeaseTerm doCreateWithIntervalMutable(final WithIntervalMutable.Helper<LeaseTerm> mockChangeDates) {
             return new LeaseTerm() {
-                @Override org.estatio.dom.WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
+                @Override WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
                     return mockChangeDates;
                 }
 

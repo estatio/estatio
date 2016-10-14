@@ -25,8 +25,8 @@ import org.incode.module.documents.dom.impl.rendering.RenderingStrategyForTestin
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeForTesting;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.FixtureDatumFactoriesForApplib;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.FixtureDatumFactoriesForApplib;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

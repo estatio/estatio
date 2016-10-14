@@ -36,7 +36,7 @@ import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.numerator.Numerator;
 
-import static org.estatio.integtests.VT.bi;
+import static org.incode.module.base.integtests.VT.bi;
 
 public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 

@@ -52,8 +52,8 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.MoneyType;
-import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.dom.types.MoneyType;
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.WithReferenceUnique;

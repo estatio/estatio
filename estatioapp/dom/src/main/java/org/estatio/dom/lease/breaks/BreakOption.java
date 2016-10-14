@@ -48,7 +48,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
-import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.dom.types.DescriptionType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;

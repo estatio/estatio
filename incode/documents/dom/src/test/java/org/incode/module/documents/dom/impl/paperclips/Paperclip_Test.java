@@ -25,8 +25,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
 import org.incode.module.documents.dom.impl.docs.DocumentAbstractForTesting;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.FixtureDatumFactoriesForJoda;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.FixtureDatumFactoriesForJoda;
 
 public class Paperclip_Test {
 

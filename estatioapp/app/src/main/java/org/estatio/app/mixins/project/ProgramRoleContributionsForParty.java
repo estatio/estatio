@@ -38,7 +38,7 @@ import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRole;
 import org.estatio.dom.project.ProgramRoleRepository;
 import org.estatio.dom.project.ProgramRoleType;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class ProgramRoleContributionsForParty {

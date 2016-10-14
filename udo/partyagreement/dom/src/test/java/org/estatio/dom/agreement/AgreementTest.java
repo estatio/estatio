@@ -41,9 +41,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.WithIntervalMutable;
+
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
@@ -80,7 +81,7 @@ public class AgreementTest {
 
         protected Agreement doCreateWithIntervalMutable(final WithIntervalMutable.Helper<Agreement> mockChangeDates) {
             return new AgreementForTesting() {
-                @Override org.estatio.dom.WithIntervalMutable.Helper<Agreement> getChangeDates() {
+                @Override WithIntervalMutable.Helper<Agreement> getChangeDates() {
                     return mockChangeDates;
                 }
 

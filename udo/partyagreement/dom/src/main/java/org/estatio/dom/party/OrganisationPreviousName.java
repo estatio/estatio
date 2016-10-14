@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.dom.utils.TitleBuilder;
 

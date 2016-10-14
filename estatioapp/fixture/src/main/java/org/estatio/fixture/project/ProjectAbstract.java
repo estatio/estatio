@@ -39,7 +39,7 @@ import org.estatio.dom.project.ProjectRepository;
 import org.estatio.dom.project.ProjectRoleRepository;
 import org.estatio.dom.project.ProjectRoleType;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 /**
  * Sets up the {@link org.estatio.dom.project.Program} 

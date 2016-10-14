@@ -29,7 +29,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
 

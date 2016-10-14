@@ -29,9 +29,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.FqcnType;
-import org.incode.module.base.types.NameType;
-import org.incode.module.base.types.UrlTemplateType;
+import org.incode.module.base.dom.types.FqcnType;
+import org.incode.module.base.dom.types.NameType;
+import org.incode.module.base.dom.types.UrlTemplateType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;

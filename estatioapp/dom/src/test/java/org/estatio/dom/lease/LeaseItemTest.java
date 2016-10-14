@@ -41,10 +41,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.PojoTester.FixtureDatumFactory;
+import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
@@ -219,7 +219,7 @@ public class LeaseItemTest {
 
         protected LeaseItem doCreateWithIntervalMutable(final WithIntervalMutable.Helper<LeaseItem> mockChangeDates) {
             return new LeaseItem() {
-                @Override org.estatio.dom.WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
+                @Override WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
                     return mockChangeDates;
                 }
             };

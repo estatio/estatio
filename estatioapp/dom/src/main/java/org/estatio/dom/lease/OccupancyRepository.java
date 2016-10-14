@@ -39,7 +39,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class, nature = NatureOfService.DOMAIN)
 public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy> {

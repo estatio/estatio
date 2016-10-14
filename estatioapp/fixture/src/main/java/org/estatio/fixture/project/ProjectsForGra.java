@@ -25,7 +25,7 @@ import org.estatio.fixture.party.OrganisationForMediaXNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class ProjectsForGra extends ProjectAbstract {
 

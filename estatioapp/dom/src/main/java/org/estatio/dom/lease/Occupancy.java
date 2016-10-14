@@ -43,7 +43,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithIntervalMutable;
+import org.incode.module.base.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.geography.Country;
@@ -57,7 +57,7 @@ import org.estatio.dom.lease.tags.SectorRepository;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.lease.tags.UnitSizeRepository;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

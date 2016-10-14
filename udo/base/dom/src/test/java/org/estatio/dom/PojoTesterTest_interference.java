@@ -20,6 +20,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.incode.module.base.dom.PojoTester;
+
 import static org.hamcrest.Matchers.containsString;
 
 public class PojoTesterTest_interference {

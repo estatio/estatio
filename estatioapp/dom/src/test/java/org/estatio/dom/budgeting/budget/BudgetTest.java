@@ -23,13 +23,13 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

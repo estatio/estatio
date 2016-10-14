@@ -32,8 +32,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.incode.module.base.dom.FinderInteraction;
+import org.incode.module.base.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -29,7 +29,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 
 public class AgreementRoleTypeTest {
 

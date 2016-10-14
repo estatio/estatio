@@ -37,7 +37,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;

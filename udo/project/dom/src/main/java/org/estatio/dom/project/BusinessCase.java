@@ -25,7 +25,7 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.Chained;
+import org.incode.module.base.dom.Chained;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 

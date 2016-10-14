@@ -41,7 +41,7 @@ import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
 import org.estatio.dom.event.types.CalendarNameType;
-import org.incode.module.base.types.NotesType;
+import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;

@@ -30,7 +30,7 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.EstatioApplicationException;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 public final class CalendarUtils {
 

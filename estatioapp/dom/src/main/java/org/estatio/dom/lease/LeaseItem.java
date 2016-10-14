@@ -58,7 +58,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithIntervalMutable;
+import org.incode.module.base.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -70,7 +70,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -32,7 +32,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.ProperNameType;
+import org.incode.module.base.dom.types.ProperNameType;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;

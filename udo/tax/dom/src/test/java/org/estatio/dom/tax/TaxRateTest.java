@@ -28,9 +28,9 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,7 +60,7 @@ public class TaxRateTest {
         protected TaxRate doCreateWithIntervalMutable(final WithIntervalMutable.Helper<TaxRate> mockChangeDates) {
             return new TaxRate() {
                 @Override
-                org.estatio.dom.WithIntervalMutable.Helper<TaxRate> getChangeDates() {
+                WithIntervalMutable.Helper<TaxRate> getChangeDates() {
                     return mockChangeDates;
                 }
             };

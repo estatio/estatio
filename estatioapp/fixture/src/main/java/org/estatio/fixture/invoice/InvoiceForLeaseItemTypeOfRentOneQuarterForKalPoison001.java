@@ -35,7 +35,7 @@ import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlKal;
 
-import static org.estatio.integtests.VT.ldix;
+import static org.incode.module.base.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {

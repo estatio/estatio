@@ -59,8 +59,8 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
     @MemberOrder(sequence = "1")
     public DocumentType newDocumentType(
             @Parameter(
-                    regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX,
-                    regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION,
+                    regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION,
                     maxLength = ReferenceType.Meta.MAX_LEN
             )
             @ParameterLayout(named = "Reference")

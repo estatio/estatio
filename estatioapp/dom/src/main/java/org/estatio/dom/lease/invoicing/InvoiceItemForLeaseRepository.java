@@ -43,7 +43,7 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = InvoiceItemForLease.class, nature = NatureOfService.DOMAIN)
 public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {

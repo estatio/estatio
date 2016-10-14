@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameUnique;
@@ -129,7 +129,7 @@ public class State
         public static class Meta {
 
             public final static int MAX_LEN = 6;
-            public final static String REGEX = org.incode.module.base.types.ReferenceType.Meta.REGEX;
+            public final static String REGEX = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX;
 
             private Meta() {}
 

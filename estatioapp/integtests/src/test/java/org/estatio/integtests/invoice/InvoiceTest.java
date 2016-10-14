@@ -65,7 +65,7 @@ import org.estatio.fixture.party.OrganisationForPoisonGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

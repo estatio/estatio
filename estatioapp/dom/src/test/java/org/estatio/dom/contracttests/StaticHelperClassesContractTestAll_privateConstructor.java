@@ -20,7 +20,7 @@ package org.estatio.dom.contracttests;
 
 import org.junit.Test;
 
-import org.estatio.dom.PrivateConstructorTester;
+import org.incode.module.base.dom.PrivateConstructorTester;
 import org.estatio.dom.WithCodeGetter;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithNameGetter;

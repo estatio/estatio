@@ -30,7 +30,7 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.*;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.WithInterval;
+import org.incode.module.base.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.agreement.AgreementType;

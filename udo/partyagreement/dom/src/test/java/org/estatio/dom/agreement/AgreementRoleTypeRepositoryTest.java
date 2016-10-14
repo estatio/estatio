@@ -28,8 +28,8 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.incode.module.base.dom.FinderInteraction;
+import org.incode.module.base.dom.FinderInteraction.FinderMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

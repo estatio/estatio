@@ -46,7 +46,7 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseBuilder;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

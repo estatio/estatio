@@ -25,7 +25,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
 import org.incode.module.documents.dom.impl.docs.DocumentTemplateForTesting;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 

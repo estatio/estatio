@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.FqcnType;
-import org.incode.module.base.types.TitleType;
+import org.incode.module.base.dom.types.FqcnType;
+import org.incode.module.base.dom.types.TitleType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.PowerType;

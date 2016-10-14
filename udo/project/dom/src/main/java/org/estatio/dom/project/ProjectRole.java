@@ -41,11 +41,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainObject;
-import org.estatio.dom.WithIntervalContiguous;
+import org.incode.module.base.dom.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import com.google.common.base.Function;

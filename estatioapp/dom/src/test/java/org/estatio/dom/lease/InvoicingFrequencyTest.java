@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

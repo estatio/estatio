@@ -49,9 +49,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.Chained;
+import org.incode.module.base.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithStartDate;
+import org.incode.module.base.dom.WithStartDate;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.index.api.IndexValueCreator;
 import org.estatio.dom.utils.MathUtils;

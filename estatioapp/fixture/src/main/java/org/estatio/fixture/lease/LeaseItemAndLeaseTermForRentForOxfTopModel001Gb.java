@@ -22,8 +22,8 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.bd;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForRentForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 

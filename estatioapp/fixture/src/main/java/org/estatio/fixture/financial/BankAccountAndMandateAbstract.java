@@ -41,7 +41,7 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public abstract class BankAccountAndMandateAbstract extends FixtureScript {
 

@@ -30,7 +30,7 @@ import org.estatio.fixture.party.OrganisationForPretGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfPret004Gb extends LeaseAbstract {
 

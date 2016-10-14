@@ -32,7 +32,7 @@ import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioReferenceDataTeardownFixture;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

@@ -33,7 +33,7 @@ import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.api.IndexCreator;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class IndexRefData extends FixtureScript {
 

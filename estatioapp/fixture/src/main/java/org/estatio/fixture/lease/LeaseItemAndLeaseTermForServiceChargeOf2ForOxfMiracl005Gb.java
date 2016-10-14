@@ -21,8 +21,8 @@ package org.estatio.fixture.lease;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.bd;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
 

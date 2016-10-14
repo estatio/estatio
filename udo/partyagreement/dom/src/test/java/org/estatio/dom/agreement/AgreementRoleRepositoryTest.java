@@ -26,11 +26,11 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.incode.module.base.dom.FinderInteraction;
+import org.incode.module.base.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

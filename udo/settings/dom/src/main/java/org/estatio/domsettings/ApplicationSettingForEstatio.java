@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.SettingType;
 
-import org.incode.module.base.types.DescriptionType;
+import org.incode.module.base.dom.types.DescriptionType;
 
 import org.estatio.domsettings.types.SettingKeyType;
 import org.estatio.domsettings.types.SettingTypeType;

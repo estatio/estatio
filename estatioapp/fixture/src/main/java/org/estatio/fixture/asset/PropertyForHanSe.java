@@ -26,7 +26,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldSe;
 import org.estatio.fixture.party.PersonForAgnethaFaltskogSe;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForSe;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class PropertyForHanSe extends PropertyAbstract {
 

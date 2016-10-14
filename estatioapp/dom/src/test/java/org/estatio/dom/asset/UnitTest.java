@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 
 public class UnitTest {
 

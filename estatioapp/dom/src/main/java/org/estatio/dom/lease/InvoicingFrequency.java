@@ -31,7 +31,7 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 public enum InvoicingFrequency {
 

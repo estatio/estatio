@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.financial.FinancialAccount;

@@ -41,7 +41,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameGetter;
@@ -120,7 +120,7 @@ public class FinancialAccount
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
-    @Property(regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX)
+    @Property(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 

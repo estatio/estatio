@@ -36,7 +36,7 @@ import org.apache.isis.applib.security.UserMemento;
 import org.estatio.dom.EstatioUserRole;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm> {

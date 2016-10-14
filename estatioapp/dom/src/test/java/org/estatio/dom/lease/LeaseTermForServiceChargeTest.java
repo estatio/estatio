@@ -31,8 +31,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.PojoTester;
 import org.estatio.dom.index.Index;
 
 import static org.assertj.core.api.Assertions.assertThat;

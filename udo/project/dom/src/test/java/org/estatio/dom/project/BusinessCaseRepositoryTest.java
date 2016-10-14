@@ -11,8 +11,8 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.incode.module.base.dom.FinderInteraction;
+import org.incode.module.base.dom.FinderInteraction.FinderMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

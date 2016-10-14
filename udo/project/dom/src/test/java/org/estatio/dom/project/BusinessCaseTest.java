@@ -2,7 +2,7 @@ package org.estatio.dom.project;
 
 import org.junit.Test;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 
 public class BusinessCaseTest {
 	

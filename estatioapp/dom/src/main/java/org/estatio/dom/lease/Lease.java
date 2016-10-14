@@ -62,7 +62,8 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.NotesType;
+import org.incode.module.base.dom.types.NotesType;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioUserRole;
@@ -92,7 +93,6 @@ import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -674,7 +674,7 @@ public class Lease
 
     public Lease newMandate(
             final BankAccount bankAccount,
-            final @Parameter(regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
+            final @Parameter(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
             final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
@@ -862,7 +862,7 @@ public class Lease
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease assign(
-            @Parameter(regexPattern = org.incode.module.base.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.types.ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
+            @Parameter(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
             final String name,
             final Party tenant,
             final LocalDate tenancyStartDate
@@ -1156,7 +1156,7 @@ public class Lease
 
         public static class Meta {
 
-            public static final int MAX_LEN = org.incode.module.base.types.ReferenceType.Meta.MAX_LEN;
+            public static final int MAX_LEN = org.incode.module.base.dom.types.ReferenceType.Meta.MAX_LEN;
 
             private Meta() {}
 

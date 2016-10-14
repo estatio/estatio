@@ -29,7 +29,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetAssignmentService {

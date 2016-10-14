@@ -38,7 +38,7 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;

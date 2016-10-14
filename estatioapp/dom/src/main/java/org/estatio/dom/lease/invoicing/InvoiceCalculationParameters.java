@@ -14,8 +14,8 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Builder;
 import lombok.Singular;

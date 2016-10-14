@@ -35,7 +35,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForMiracleGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
-import static org.estatio.integtests.VT.ldix;
+import static org.incode.module.base.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
 
 public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {

@@ -59,10 +59,10 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
+import org.incode.module.base.integtests.VT;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 import static org.hamcrest.Matchers.containsString;
 
 public class LeaseIntegTest extends EstatioIntegrationTest {

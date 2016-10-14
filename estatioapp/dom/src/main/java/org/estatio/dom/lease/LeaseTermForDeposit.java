@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.base.types.MoneyType;
+import org.incode.module.base.dom.types.MoneyType;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -27,8 +27,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.DescriptionType;
-import org.incode.module.base.types.MoneyType;
+import org.incode.module.base.dom.types.DescriptionType;
+import org.incode.module.base.dom.types.MoneyType;
 
 import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;

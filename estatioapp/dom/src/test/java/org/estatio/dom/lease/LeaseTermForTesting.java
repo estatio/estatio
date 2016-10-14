@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTesting")
 public class LeaseTermForTesting extends LeaseTerm {

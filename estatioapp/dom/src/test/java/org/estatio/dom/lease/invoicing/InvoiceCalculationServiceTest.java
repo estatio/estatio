@@ -48,7 +48,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResu
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRateRepository;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 
 import static org.assertj.core.api.Assertions.assertThat;

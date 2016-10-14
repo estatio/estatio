@@ -23,7 +23,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.estatio.dom.PrivateConstructorTester;
+import org.incode.module.base.dom.PrivateConstructorTester;
 
 import static org.junit.Assert.assertEquals;
 

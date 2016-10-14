@@ -38,8 +38,8 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.incode.module.base.dom.FinderInteraction;
+import org.incode.module.base.dom.FinderInteraction.FinderMethod;
 
 import static org.apache.isis.core.commons.matchers.IsisMatchers.classEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;

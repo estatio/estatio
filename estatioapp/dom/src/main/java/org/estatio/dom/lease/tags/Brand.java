@@ -36,7 +36,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.NameType;
+import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;

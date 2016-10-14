@@ -25,8 +25,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.PojoTester;
 
 public class EmailAddressTest {
 

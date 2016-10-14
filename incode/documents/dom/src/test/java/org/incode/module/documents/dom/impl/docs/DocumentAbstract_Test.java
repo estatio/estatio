@@ -25,8 +25,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.documents.dom.impl.types.DocumentType;
 import org.incode.module.documents.dom.impl.types.DocumentTypeForTesting;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.FixtureDatumFactoriesForApplib;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.FixtureDatumFactoriesForApplib;
 
 public class DocumentAbstract_Test {
 

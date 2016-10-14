@@ -39,7 +39,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
 

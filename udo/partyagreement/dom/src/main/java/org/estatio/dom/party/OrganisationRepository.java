@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.types.ReferenceType;
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;

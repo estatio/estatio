@@ -27,7 +27,7 @@ import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class PropertyForOxfGb extends PropertyAbstract {
 

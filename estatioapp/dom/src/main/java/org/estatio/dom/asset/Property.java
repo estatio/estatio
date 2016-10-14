@@ -50,7 +50,7 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
-import org.incode.module.base.types.ProperNameType;
+import org.incode.module.base.dom.types.ProperNameType;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;

@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

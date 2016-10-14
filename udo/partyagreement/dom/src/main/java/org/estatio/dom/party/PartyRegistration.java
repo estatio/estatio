@@ -38,9 +38,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithIntervalMutable;
+import org.incode.module.base.dom.WithIntervalMutable;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;

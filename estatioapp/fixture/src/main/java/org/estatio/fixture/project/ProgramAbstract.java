@@ -32,7 +32,7 @@ import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRepository;
 import org.estatio.dom.project.ProgramRoleType;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 /**
  * Sets up the {@link org.estatio.dom.project.Program} 

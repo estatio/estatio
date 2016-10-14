@@ -26,7 +26,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForMiracleGb;
 import org.estatio.fixture.party.PersonForJohnSmithGb;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
 

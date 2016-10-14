@@ -26,7 +26,7 @@ import org.estatio.fixture.party.OrganisationForHelloWorldFr;
 import org.estatio.fixture.party.PersonForJeanneDarcFr;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
-import static org.estatio.integtests.VT.ld;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class PropertyForVivFr extends PropertyAbstract {
 

@@ -21,8 +21,9 @@ package org.estatio.dom.party;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.WithIntervalMutable;
+
+import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +41,7 @@ public class PartyRegistrationTest {
         protected PartyRegistration doCreateWithIntervalMutable(final WithIntervalMutable.Helper<PartyRegistration> mockChangeDates) {
             return new PartyRegistration() {
                 @Override
-                org.estatio.dom.WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
+                WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
                     return mockChangeDates;
                 }
             };
