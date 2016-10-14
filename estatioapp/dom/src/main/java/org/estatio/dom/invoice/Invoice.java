@@ -76,7 +76,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        identityType = IdentityType.DATASTORE)
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioInvoice"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

@@ -37,19 +37,20 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        //       ,schema = "budget"
+        ,schema = "estatioBudgeting"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

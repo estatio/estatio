@@ -54,7 +54,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        identityType = IdentityType.DATASTORE)
+        identityType = IdentityType.DATASTORE,
+        schema = "estatioGuarantee"
+)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee")

@@ -40,12 +40,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
-import org.estatio.dom.event.types.CalendarNameType;
 import org.incode.module.base.dom.types.NotesType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.incode.module.base.dom.utils.TitleBuilder;
+import org.estatio.dom.event.types.CalendarNameType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +54,10 @@ import lombok.Setter;
  * An event that has or is scheduled to occur at some point in time, pertaining
  * to an {@link EventSource}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "incodeEvent"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

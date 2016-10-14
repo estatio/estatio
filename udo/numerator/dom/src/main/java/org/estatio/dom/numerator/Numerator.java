@@ -64,7 +64,10 @@ import lombok.Setter;
  * the numerator has been scoped. The values of these properties are taken from
  * the applib {@link Bookmark}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "incodeNumerator"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")

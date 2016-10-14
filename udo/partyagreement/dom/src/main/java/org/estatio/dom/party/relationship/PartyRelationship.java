@@ -21,16 +21,19 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.base.dom.types.DescriptionType;
-
 import org.incode.module.base.dom.WithInterval;
-import org.estatio.dom.party.Party;
+import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioParty"
+)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Queries({

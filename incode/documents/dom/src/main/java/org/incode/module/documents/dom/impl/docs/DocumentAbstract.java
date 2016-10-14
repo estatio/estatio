@@ -56,17 +56,16 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "DocumentAbstract"
+        schema = "incodeDocuments"
 )
+@Inheritance(
+        strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@Inheritance(
-        strategy = InheritanceStrategy.NEW_TABLE)
 @Indices({
         @Index(
                 name = "DocumentAbstract_type_atPath_IDX",

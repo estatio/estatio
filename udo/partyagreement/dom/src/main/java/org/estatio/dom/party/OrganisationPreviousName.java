@@ -44,7 +44,10 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioParty"
+)
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

@@ -35,8 +35,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        //        ,
-        //        schema = "incodeCommunications"
+        schema = "incodeCommunications"
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.PhoneOrFaxNumber") // can be overridden using .jdo if required.

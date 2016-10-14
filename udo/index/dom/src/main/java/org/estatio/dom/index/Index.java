@@ -54,6 +54,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameUnique;
@@ -62,7 +63,6 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.index.api.IndexBaseCreator;
 import org.estatio.dom.index.api.IndexValueCreator;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -81,7 +81,10 @@ import lombok.Setter;
  * {@link IndexBase#getValues() hold} the {@link IndexValue}s. The rebasing
  * {@link IndexBase#getFactor() factor} is held in {@link IndexBase}.
  */
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioIndex"
+)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

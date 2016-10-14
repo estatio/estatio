@@ -39,19 +39,22 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.types.NameType;
-
 import org.incode.module.base.dom.Chained;
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalMutable;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioTax"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

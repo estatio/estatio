@@ -34,7 +34,9 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable()
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioParty"
+)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(

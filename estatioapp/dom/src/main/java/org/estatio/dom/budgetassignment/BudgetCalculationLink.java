@@ -43,6 +43,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
+        ,schema = "estatioBudgetassignment"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

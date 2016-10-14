@@ -169,7 +169,7 @@ public class EstatioAppManifest implements AppManifest {
 
     private static Map<String, String> withEstatioSchemaOverrides(Map<String, String> props) {
         // to pick up Xxx-estatio.orm overrides
-        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping","estatio");
+        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping", "dbo");
         return props;
     }
 

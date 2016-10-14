@@ -31,13 +31,16 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioLease"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForPercentage")
 public class LeaseTermForPercentage extends LeaseTerm {

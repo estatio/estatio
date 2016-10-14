@@ -41,13 +41,10 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE
-//        ,
-//        schema = "estatioInvoice"  // TODO
+        ,schema = "estatioInvoice"
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@DomainObject(
-        objectType = "estatioAssets.PaperclipForInvoice"
-)
+@DomainObject()
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )

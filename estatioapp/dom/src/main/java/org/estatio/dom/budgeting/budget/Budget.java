@@ -56,9 +56,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.roles.EstatioRole;
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.UnitRepository;
@@ -78,15 +80,14 @@ import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        //      ,schema = "budget"
+        ,schema = "estatioBudgeting"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

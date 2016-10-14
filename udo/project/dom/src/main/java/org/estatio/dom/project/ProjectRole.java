@@ -60,7 +60,10 @@ import lombok.Setter;
  * {@link #getType() type} of role with respect to a {@link #getProgram() program
  * }, for a particular {@link #getInterval() interval of time}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioProject"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

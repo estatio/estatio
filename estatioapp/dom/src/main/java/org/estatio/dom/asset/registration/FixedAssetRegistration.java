@@ -40,16 +40,19 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioAssetRegistration"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,

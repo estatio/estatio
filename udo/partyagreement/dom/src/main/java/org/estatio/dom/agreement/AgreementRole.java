@@ -55,21 +55,24 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalContiguous;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-
 import org.incode.module.base.dom.types.NameType;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
-import org.estatio.dom.party.Party;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
+
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioAgreement"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

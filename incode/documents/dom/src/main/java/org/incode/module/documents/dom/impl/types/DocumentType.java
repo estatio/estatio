@@ -57,8 +57,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "DocumentType"
+        schema = "incodeDocuments"
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(
@@ -84,7 +83,6 @@ import lombok.Setter;
         )
 })
 @DomainObject(
-        objectType = "incodeDocuments.DocumentType",
         editing = Editing.DISABLED,
         bounded = true
 )

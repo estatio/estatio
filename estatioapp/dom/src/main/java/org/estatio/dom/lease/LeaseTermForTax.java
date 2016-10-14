@@ -24,7 +24,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioLease"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTax")
 @DomainObject

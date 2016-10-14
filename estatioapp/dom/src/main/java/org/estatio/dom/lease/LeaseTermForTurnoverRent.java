@@ -33,13 +33,16 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioLease"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTurnoverRent")
 public class LeaseTermForTurnoverRent extends LeaseTerm {

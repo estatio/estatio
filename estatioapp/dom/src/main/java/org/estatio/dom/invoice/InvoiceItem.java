@@ -75,7 +75,10 @@ import lombok.Setter;
  * decouples the <tt>invoice</tt> module from the <tt>lease</tt> module, and
  * provides a many-to-many between the two concepts.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioInvoice"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,

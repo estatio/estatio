@@ -46,6 +46,8 @@ import org.apache.isis.applib.services.timestamp.Timestampable;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.Distributable;
@@ -53,14 +55,13 @@ import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-//      ,schema = "budget"
+        ,schema = "estatioBudgeting"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

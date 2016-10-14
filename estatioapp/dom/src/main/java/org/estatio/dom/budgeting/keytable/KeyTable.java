@@ -53,6 +53,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
@@ -62,14 +64,13 @@ import org.estatio.dom.budgeting.DistributionService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        //       ,schema = "budget"
+        ,schema = "estatioBudgeting"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

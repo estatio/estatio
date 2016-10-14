@@ -98,8 +98,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType= IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "DocumentTemplate"
+        schema = "incodeDocuments"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({

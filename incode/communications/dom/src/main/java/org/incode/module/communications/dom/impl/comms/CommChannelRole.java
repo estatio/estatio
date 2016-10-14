@@ -91,8 +91,7 @@ import lombok.Setter;
         // none yet
 })
 @DomainObject(
-        editing = Editing.DISABLED,
-        objectType = "estatioCommunications.CommChannelRole"
+        editing = Editing.DISABLED
 )
 @DomainObjectLayout(
         titleUiEvent = CommChannelRole.TitleUiEvent.class,

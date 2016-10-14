@@ -40,7 +40,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 //TODO: is this in scope?
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType=IdentityType.DATASTORE
+        ,schema = "estatioLeaseAssignment"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")

@@ -30,6 +30,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
@@ -38,7 +40,6 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -48,7 +49,9 @@ import lombok.Setter;
  * {@link #getLeaseTerm() back} to the {@link LeaseTerm} that acts as the
  * <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.
  */
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioLeaseInvoicing"
+)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.invoicing.InvoiceItemForLease")

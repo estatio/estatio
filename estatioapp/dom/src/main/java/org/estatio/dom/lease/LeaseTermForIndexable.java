@@ -32,6 +32,8 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.incode.module.base.dom.utils.MathUtils;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.index.IndexValue;
@@ -39,12 +41,13 @@ import org.estatio.dom.index.Indexable;
 import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
 import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
-import org.incode.module.base.dom.utils.MathUtils;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioLease"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForIndexable")
 @javax.jdo.annotations.Queries({

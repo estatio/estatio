@@ -60,18 +60,21 @@ import org.incode.module.base.dom.WithInterval;
 import org.incode.module.base.dom.WithIntervalMutable;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioAgreement"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,

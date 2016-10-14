@@ -63,7 +63,10 @@ import org.estatio.dom.currency.Currency;
 import lombok.Getter;
 import lombok.Setter;
 
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+		identityType = IdentityType.DATASTORE
+		,schema = "estatioProject"
+)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Unique(members={"reference"})

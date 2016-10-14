@@ -4,11 +4,9 @@
      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
         http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
 
-    <package name="org.incode.module.communications.dom.impl.comms">
-        <class name="CommChannelRole"
-               table="CommunicationChannelRole"
-               schema="dbo"
-        >
+    <package name="org.estatio.dom.lease.invoicing">
+        <class name="InvoiceItemForLease"
+               schema="dbo">
         </class>
     </package>
 

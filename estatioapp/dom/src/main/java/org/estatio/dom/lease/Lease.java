@@ -97,7 +97,10 @@ import lombok.Getter;
 import lombok.Setter;
 import static org.apache.commons.lang3.StringUtils.left;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioLease"
+)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype

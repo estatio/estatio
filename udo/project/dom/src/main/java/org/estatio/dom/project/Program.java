@@ -59,7 +59,10 @@ import lombok.Setter;
 
 //import org.apache.isis.applib.annotation.Property;
 
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioProject"
+)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Unique(members={"reference"})

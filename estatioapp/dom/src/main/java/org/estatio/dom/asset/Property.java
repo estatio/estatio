@@ -61,7 +61,9 @@ import org.estatio.dom.party.Party;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioAsset"
+)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.asset.Property")

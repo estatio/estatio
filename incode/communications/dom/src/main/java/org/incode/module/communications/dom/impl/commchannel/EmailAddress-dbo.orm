@@ -5,7 +5,8 @@
         http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
 
     <package name="org.incode.module.communications.dom.impl.commchannel">
-        <class name="EmailAddress">
+        <class name="EmailAddress"
+                schema="dbo">
             <inheritance strategy="superclass-table">
                 <discriminator strategy="value-map" value="org.estatio.dom.communicationchannel.EmailAddress">
                 </discriminator>

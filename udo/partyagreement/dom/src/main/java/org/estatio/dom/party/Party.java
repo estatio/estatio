@@ -38,20 +38,23 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
-import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
-import org.incode.module.base.dom.utils.TitleBuilder;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioParty"
+)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",

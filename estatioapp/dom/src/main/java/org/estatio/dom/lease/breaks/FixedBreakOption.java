@@ -39,7 +39,9 @@ import org.estatio.dom.event.Event;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioLeaseBreaks"
+)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype

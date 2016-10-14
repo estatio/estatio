@@ -45,7 +45,9 @@ import org.estatio.dom.geography.StateRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable()
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "incodeCommunications"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.incode.module.communications.dom.impl.commchannel.PostalAddress") // can be overridden using .jdo if required.
 @javax.jdo.annotations.Indices({

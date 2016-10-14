@@ -46,7 +46,9 @@ import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioBankmandate"
+)
 // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)

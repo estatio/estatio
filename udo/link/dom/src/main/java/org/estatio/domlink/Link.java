@@ -32,18 +32,19 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.FqcnType;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.UrlTemplateType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        identityType = IdentityType.DATASTORE,
-        table = "Link")
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioLink"
+)
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByClassName", language = "JDOQL",

@@ -48,7 +48,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        , schema = "incodeCountry"
+        , schema = "incodeGeography"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

@@ -57,8 +57,11 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -69,8 +72,6 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -87,7 +88,10 @@ import lombok.Setter;
  * generated on a quarterly basis. The lease terms (by implementing
  * <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioLease"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

@@ -47,7 +47,9 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "estatioParty"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.party.Organisation")
 @DomainObject(editing = Editing.DISABLED)

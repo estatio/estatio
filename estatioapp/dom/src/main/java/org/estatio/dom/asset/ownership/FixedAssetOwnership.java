@@ -39,7 +39,10 @@ import org.estatio.dom.party.Party;
 import lombok.Getter;
 import lombok.Setter;
 
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioAssetOwnership"
+)
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

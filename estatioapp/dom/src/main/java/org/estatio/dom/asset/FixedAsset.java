@@ -48,23 +48,26 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
 
+import org.incode.module.base.dom.types.NameType;
+import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
+
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
-
-import org.incode.module.base.dom.types.NameType;
-import org.incode.module.base.dom.types.ReferenceType;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioAsset"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

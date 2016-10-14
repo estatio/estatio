@@ -36,7 +36,9 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.APPLICATION,
-        table="ApplicationSetting")
+        table="ApplicationSetting"
+        ,schema = "estatioSettings"
+)
 @javax.jdo.annotations.Queries({ 
      @javax.jdo.annotations.Query(
              name = "findByKey", language = "JDOQL", 

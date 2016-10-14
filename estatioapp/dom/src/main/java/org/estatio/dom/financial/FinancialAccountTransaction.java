@@ -29,16 +29,19 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.MoneyType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.incode.module.base.dom.utils.TitleBuilder;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioFinancial"
+)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Queries({

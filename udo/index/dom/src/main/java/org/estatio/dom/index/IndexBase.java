@@ -50,12 +50,13 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithStartDate;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.index.api.IndexValueCreator;
 import org.incode.module.base.dom.utils.MathUtils;
 import org.incode.module.base.dom.utils.TitleBuilder;
+
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.index.api.IndexValueCreator;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,7 +68,10 @@ import lombok.Setter;
  *
  * @see Index
  */
-@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioIndex"
+)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

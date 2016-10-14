@@ -56,8 +56,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "Paperclip"
+        schema = "incodeDocuments"
 )
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Inheritance(
@@ -94,9 +93,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Uniques({
     // none currently
 })
-@DomainObject(
-        objectType = "incodeDocuments.Paperclip"
-)
+@DomainObject()
 @DomainObjectLayout(
         // titleUiEvent = Paperclip.TitleUiEvent.class,
         iconUiEvent = Paperclip.IconUiEvent.class,

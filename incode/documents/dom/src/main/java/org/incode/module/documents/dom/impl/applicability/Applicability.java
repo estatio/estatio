@@ -31,7 +31,6 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         schema = "incodeDocuments",
-        table = "Applicability",
         identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

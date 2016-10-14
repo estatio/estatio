@@ -41,8 +41,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE
-//        ,
-//        schema = "estatioAssets"  // DN doesn't seem to allow this to be in a different schema to FixedAsset...
+        ,schema = "estatioAsset"
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(

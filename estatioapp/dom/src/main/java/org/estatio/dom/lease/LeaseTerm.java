@@ -55,23 +55,27 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.roles.EstatioRole;
 import org.incode.module.base.dom.Chained;
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioLease"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,

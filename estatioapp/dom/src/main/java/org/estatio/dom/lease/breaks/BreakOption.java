@@ -49,6 +49,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 
 import org.incode.module.base.dom.types.DescriptionType;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -56,8 +58,6 @@ import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.event.EventSource;
 import org.estatio.dom.lease.Lease;
-import org.incode.module.base.dom.utils.JodaPeriodUtils;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,7 +65,10 @@ import lombok.Setter;
 /**
  * Represents a condition upon which the {@link Lease} can be terminated.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioLeaseBreaks"
+)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",

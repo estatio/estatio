@@ -34,10 +34,11 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithStartDate;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.incode.module.base.dom.utils.TitleBuilder;
+
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +48,10 @@ import lombok.Setter;
  * (base)} from a particular {@link #getStartDate() point in time} (until
  * succeeded by some other value).
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioIndex"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")

@@ -60,8 +60,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE,
-        schema = "incodeDocuments",
-        table = "Document"
+        schema = "incodeDocuments"
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
@@ -86,7 +85,6 @@ import lombok.Setter;
     // none yet
 })
 @DomainObject(
-        objectType = "incodeDocuments.Document",
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(

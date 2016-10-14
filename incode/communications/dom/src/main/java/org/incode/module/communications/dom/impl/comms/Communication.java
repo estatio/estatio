@@ -83,7 +83,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE
-//        , schema = "incodeCommunications"
+        , schema = "incodeCommunications"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -109,8 +109,7 @@ import lombok.Setter;
         // none yet
 })
 @DomainObject(
-        editing = Editing.DISABLED,
-        objectType = "estatioCommunications.Communication"
+        editing = Editing.DISABLED
 )
 @DomainObjectLayout(
         titleUiEvent = Communication.TitleUiEvent.class,
@@ -118,7 +117,6 @@ import lombok.Setter;
         cssClassUiEvent = Communication.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-
 public class Communication implements Comparable<Communication> {
 
     //region > ui event classes

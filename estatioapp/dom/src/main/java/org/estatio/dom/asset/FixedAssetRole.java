@@ -44,12 +44,13 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalContiguous;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.party.Party;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -59,7 +60,10 @@ import lombok.Setter;
  * {@link #getType() type} of role with respect to a {@link #getAsset() fixed
  * asset}, for a particular {@link #getInterval() interval of time}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "estatioAsset"
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
