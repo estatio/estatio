@@ -24,12 +24,14 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,6 +42,8 @@ public class FixedAssetRegistrationContributionsTest {
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
+        @Mock
+        private FactoryService mockFactoryService;
         @Mock
         private DomainObjectContainer mockContainer;
         @Mock
@@ -54,31 +58,26 @@ public class FixedAssetRegistrationContributionsTest {
 
             @Override
             public LocalDate default0ChangeDates() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public LocalDate default1ChangeDates() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public LocalDateInterval getEffectiveInterval() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public boolean isCurrent() {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public String getName() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
@@ -93,6 +92,7 @@ public class FixedAssetRegistrationContributionsTest {
             target = new FixedAsset_registrationContributions();
             target.fixedAssetRegistrationRepository = mockFixedAssetRegistrationRepository;
             target.setContainer(mockContainer);
+            target.factoryService = mockFactoryService;
         }
 
         @Test
@@ -100,7 +100,7 @@ public class FixedAssetRegistrationContributionsTest {
             final FoobarAssetRegistration created = new FoobarAssetRegistration();
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(FoobarAssetRegistration.class);
+                    oneOf(mockFactoryService).instantiate(FoobarAssetRegistration.class);
                     will(returnValue(created));
 
                     oneOf(mockContainer).persistIfNotAlready(created);

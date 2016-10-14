@@ -50,8 +50,8 @@ public class ClassUtilsTest {
         @Test
         public void doesNotExist() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            thrown.expectMessage("Class 'org.estatio.dom.utils.SomeNonExistentClass' not found");
-            final Class<? extends SomeClass> cls = ClassUtils.load("org.estatio.dom.utils.SomeNonExistentClass", SomeClass.class);
+            thrown.expectMessage("Class 'org.incode.module.base.dom.utils.SomeNonExistentClass' not found");
+            final Class<? extends SomeClass> cls = ClassUtils.load("org.incode.module.base.dom.utils.SomeNonExistentClass", SomeClass.class);
             assertThat(cls, is(not(nullValue())));
         }
 
@@ -64,7 +64,7 @@ public class ClassUtilsTest {
         @Test
         public void existsAndIsNotASubclass() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            thrown.expectMessage("Class 'org.estatio.dom.utils.ClassUtilsTest$Load$SomeOtherClass' not a subclass of org.estatio.dom.utils.ClassUtilsTest$Load$SomeClass");
+            thrown.expectMessage("Class 'org.incode.module.base.dom.utils.ClassUtilsTest$Load$SomeOtherClass' not a subclass of org.incode.module.base.dom.utils.ClassUtilsTest$Load$SomeClass");
             final Class<? extends SomeClass> cls = ClassUtils.load(SomeOtherClass.class.getName(), SomeClass.class);
             assertThat(cls, is(not(nullValue())));
         }
