@@ -79,7 +79,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReferenceAndType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
+                        + "FROM org.incode.module.communications.dom.impl.commchannel.CommunicationChannel "
                         + "WHERE reference == :reference "
                         + "&& type == :type")
 })

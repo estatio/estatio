@@ -44,18 +44,18 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByCommunicationChannel", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink "
+                        + "FROM org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink "
                         + "WHERE communicationChannel == :communicationChannel"),
         @javax.jdo.annotations.Query(
                 name = "findByOwner", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink "
+                        + "FROM org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink "
                         + "WHERE ownerObjectType == :ownerObjectType "
                         + "   && ownerIdentifier == :ownerIdentifier "),
         @javax.jdo.annotations.Query(
                 name = "findByOwnerAndCommunicationChannelType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannelOwnerLink "
+                        + "FROM org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink "
                         + "WHERE ownerObjectType == :ownerObjectType "
                         + "   && ownerIdentifier == :ownerIdentifier "
                         + "   && communicationChannelType == :communicationChannelType ")
