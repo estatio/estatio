@@ -51,7 +51,7 @@ import lombok.Setter;
         table = "InvoiceSummaryForInvoiceRun",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"InvoiceSummaryForInvoiceRun\" " +
+                        value = "CREATE VIEW \"dbo\".\"InvoiceSummaryForInvoiceRun\" " +
                                 "( " +
                                 "  {this.atPath}, " +
                                 "  {this.runId}, " +
@@ -61,23 +61,23 @@ import lombok.Setter;
                                 "  {this.grossAmount} " +
                                 ") AS " +
                                 "SELECT " +
-                                "   \"Invoice\".\"atPath\" , " +
-                                "   \"Invoice\".\"runId\" , " +
-                                "   COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
-                                "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
-                                "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
-                                "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
-                                "FROM \"Invoice\" " +
-                                "  INNER JOIN \"Lease\"   " +
-                                "    ON \"Invoice\".\"leaseId\" = \"Lease\".\"id\" " +
-                                "  INNER JOIN \"FixedAsset\"  " +
-                                "    ON \"FixedAsset\".\"id\"  = \"Invoice\".\"fixedAssetId\" " +
-                                "  INNER JOIN \"InvoiceItem\" " +
-                                "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
+                                "   i.\"atPath\" , " +
+                                "   i.\"runId\" , " +
+                                "   COUNT(DISTINCT(i.\"id\")) AS \"total\", " +
+                                "   SUM(ii.\"netAmount\") AS \"netAmount\", " +
+                                "   SUM(ii.\"vatAmount\") AS \"vatAmount\", " +
+                                "   SUM(ii.\"grossAmount\") AS \"grossAmount\" " +
+                                "FROM \"dbo\".\"Invoice\" i " +
+                                "  INNER JOIN \"dbo\".\"Lease\" l  " +
+                                "    ON i.\"leaseId\" = l.\"id\" " +
+                                "  INNER JOIN \"dbo\".\"FixedAsset\" fa " +
+                                "    ON fa.\"id\"  = i.\"fixedAssetId\" " +
+                                "  INNER JOIN \"dbo\".\"InvoiceItem\" ii " +
+                                "    ON ii.\"invoiceId\" = i.\"id\" " +
                                 "WHERE " +
-                                "   NOT \"Invoice\".\"runId\" IS NULL " +
+                                "   NOT i.\"runId\" IS NULL " +
                                 "GROUP BY " +
-                                "   \"Invoice\".\"runId\", \"Invoice\".\"atPath\"")
+                                "   i.\"runId\", i.\"atPath\"")
         })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(

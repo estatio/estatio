@@ -35,12 +35,13 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +51,7 @@ import lombok.Setter;
         table = "InvoiceSummaryForPropertyDueDateStatus",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDateStatus\" " +
+                        value = "CREATE VIEW \"dbo\".\"InvoiceSummaryForPropertyDueDateStatus\" " +
                                 "( " +
                                 "  {this.atPath}, " +
                                 "  {this.sellerReference}, " +
@@ -62,24 +63,24 @@ import lombok.Setter;
                                 "  {this.grossAmount} " +
                                 ") AS " +
                                 "SELECT " +
-                                "  \"Invoice\".\"atPath\", " +
-                                "  \"Party\".\"reference\" , " +
-                                "  \"Invoice\".\"dueDate\", " +
-                                "  \"Invoice\".\"status\", " +
-                                "  COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
-                                "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
-                                "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
-                                "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
-                                "FROM \"Invoice\" " +
-                                "  INNER JOIN \"InvoiceItem\" " +
-                                "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
-                                "  INNER JOIN \"Party\" " +
-                                "    ON \"Party\".\"id\" = \"Invoice\".\"sellerPartyId\" " +
+                                "  i.\"atPath\", " +
+                                "  p.\"reference\" , " +
+                                "  i.\"dueDate\", " +
+                                "  i.\"status\", " +
+                                "  COUNT(DISTINCT(i.\"id\")) AS \"total\", " +
+                                "   SUM(ii.\"netAmount\") AS \"netAmount\", " +
+                                "   SUM(ii.\"vatAmount\") AS \"vatAmount\", " +
+                                "   SUM(ii.\"grossAmount\") AS \"grossAmount\" " +
+                                "FROM \"dbo\".\"Invoice\" i " +
+                                "  INNER JOIN \"dbo\".\"InvoiceItem\" ii " +
+                                "    ON ii.\"invoiceId\" = i.\"id\" " +
+                                "  INNER JOIN \"dbo\".\"Party\" p " +
+                                "    ON p.\"id\" = i.\"sellerPartyId\" " +
                                 "GROUP BY " +
-                                "  \"Invoice\".\"atPath\", " +
-                                "  \"Party\".\"reference\", " +
-                                "  \"Invoice\".\"dueDate\", " +
-                                "  \"Invoice\".\"status\"")
+                                "  i.\"atPath\", " +
+                                "  p.\"reference\", " +
+                                "  i.\"dueDate\", " +
+                                "  i.\"status\"")
         })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
