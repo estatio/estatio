@@ -63,10 +63,10 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NotesType;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.roles.EstatioRole;
-import org.estatio.dom.roles.EstatioUserRole;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
@@ -91,8 +91,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.JodaPeriodUtils;
-import org.incode.module.base.dom.utils.StringUtils;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -1055,7 +1054,7 @@ public class Lease
     }
 
     public boolean hideRemove() {
-        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
+        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(getUser());
     }
 
     @Programmatic

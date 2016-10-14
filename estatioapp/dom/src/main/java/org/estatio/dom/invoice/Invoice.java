@@ -55,7 +55,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.dom.roles.EstatioUserRole;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -71,6 +70,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -697,7 +697,7 @@ public class Invoice
     }
 
     public boolean hideSaveAsHistoric(){
-        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
+        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(getUser());
     }
 
     @javax.inject.Inject

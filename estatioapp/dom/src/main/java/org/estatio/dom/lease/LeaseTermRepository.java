@@ -33,10 +33,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.security.UserMemento;
 
-import org.estatio.dom.roles.EstatioUserRole;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.estatio.dom.roles.EstatioRole;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm> {
@@ -211,7 +212,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
 
     public boolean hideFindTermsWithInvalidInterval() {
         final UserMemento user = getContainer().getUser();
-        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(getUser());
+        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(getUser());
     }
 
     @Programmatic

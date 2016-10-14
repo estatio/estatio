@@ -33,10 +33,10 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
-import org.estatio.dom.roles.EstatioUserRole;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.roles.EstatioRole;
 
 public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 
@@ -84,7 +84,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     }
 
     public boolean hideSaveAllAsHistoric(){
-        return !EstatioUserRole.ADMIN_ROLE.isApplicableTo(userService.getUser());
+        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(userService.getUser());
     }
 
     @CollectionLayout(defaultView = "table")
