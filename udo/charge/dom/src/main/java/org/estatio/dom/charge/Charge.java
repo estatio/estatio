@@ -37,7 +37,6 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -114,7 +113,7 @@ public class Charge
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = DescriptionType.Meta.MAX_LEN)
-    @PropertyLayout(multiLine = IsisMultilineLines.NUMBER_OF_LINES)
+    @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;
 
