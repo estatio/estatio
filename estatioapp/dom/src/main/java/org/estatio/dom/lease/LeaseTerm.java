@@ -55,7 +55,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.app.security.EstatioRole;
+import org.estatio.dom.roles.EstatioRole;
 import org.incode.module.base.dom.Chained;
 import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithIntervalMutable;

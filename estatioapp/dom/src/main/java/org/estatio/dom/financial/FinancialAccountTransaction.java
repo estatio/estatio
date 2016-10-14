@@ -30,7 +30,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.MoneyType;
 
-import org.estatio.app.security.EstatioRole;
+import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.incode.module.base.dom.utils.TitleBuilder;

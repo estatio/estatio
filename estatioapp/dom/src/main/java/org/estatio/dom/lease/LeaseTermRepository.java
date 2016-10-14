@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.security.UserMemento;
 
-import org.estatio.dom.EstatioUserRole;
+import org.estatio.dom.roles.EstatioUserRole;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;

@@ -1,6 +1,4 @@
-package org.estatio.dom;
-
-import java.util.List;
+package org.estatio.dom.roles;
 
 import org.apache.isis.applib.security.RoleMemento;
 import org.apache.isis.applib.security.UserMemento;

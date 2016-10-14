@@ -65,8 +65,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.app.security.EstatioRole;
-import org.estatio.dom.EstatioUserRole;
+import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.roles.EstatioUserRole;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;

@@ -1,4 +1,4 @@
-package org.estatio.app.security;
+package org.estatio.dom.roles;
 
 import org.apache.isis.applib.security.RoleMemento;
 import org.apache.isis.applib.security.UserMemento;

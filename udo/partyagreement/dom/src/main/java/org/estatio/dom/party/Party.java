@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
-import org.estatio.app.security.EstatioRole;
+import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
