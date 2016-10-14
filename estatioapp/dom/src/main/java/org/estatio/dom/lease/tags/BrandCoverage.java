@@ -19,7 +19,7 @@
 
 package org.estatio.dom.lease.tags;
 
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 public enum BrandCoverage {
 

@@ -63,7 +63,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;

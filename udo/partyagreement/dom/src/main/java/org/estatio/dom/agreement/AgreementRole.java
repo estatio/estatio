@@ -63,7 +63,7 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;

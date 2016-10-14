@@ -1,4 +1,4 @@
-package org.estatio.dom.utils;
+package org.incode.module.base.dom.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -17,11 +17,6 @@ public class TitleBuilder {
     private final StringBuilder nameString;
     private final StringBuilder referenceString;
 
-    public static boolean isEmpty(Object object) {
-        String title = titleFor(object);
-        return isEmpty(title);
-    }
-
     private static String titleFor(Object object) {
         if (object == null) {
             return null;
@@ -37,10 +32,6 @@ public class TitleBuilder {
                 return object.toString();
             }
         }
-    }
-
-    public static boolean isEmpty(String text) {
-        return text == null || text.equals("");
     }
 
     private TitleBuilder() {

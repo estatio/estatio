@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 public enum InvoiceCalculationSelection {
     ALL_RENT_AND_SERVICE_CHARGE(

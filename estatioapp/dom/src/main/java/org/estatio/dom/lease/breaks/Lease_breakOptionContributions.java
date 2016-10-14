@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class Lease_breakOptionContributions extends UdoDomainService<Lease_breakOptionContributions> {

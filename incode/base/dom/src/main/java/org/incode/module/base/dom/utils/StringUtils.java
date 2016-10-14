@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.utils;
+package org.incode.module.base.dom.utils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;

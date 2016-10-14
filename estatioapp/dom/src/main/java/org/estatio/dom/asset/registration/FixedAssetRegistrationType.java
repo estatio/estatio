@@ -40,8 +40,8 @@ import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.utils.ClassUtils;
-import org.estatio.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.utils.ClassUtils;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;

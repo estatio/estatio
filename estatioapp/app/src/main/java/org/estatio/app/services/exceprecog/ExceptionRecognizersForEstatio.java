@@ -24,7 +24,7 @@ import com.google.common.collect.Maps;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.exceprecog.ExceptionRecognizerComposite;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(menuOrder = "99")
 public class ExceptionRecognizersForEstatio extends ExceptionRecognizerComposite {

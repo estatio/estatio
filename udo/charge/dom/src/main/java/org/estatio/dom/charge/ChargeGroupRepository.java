@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.utils.ValueUtils;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = ChargeGroup.class)
 public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeGroup> {
@@ -41,7 +40,7 @@ public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeG
     public ChargeGroup createChargeGroup(final String reference, final String description) {
         final ChargeGroup chargeGroup = newTransientInstance();
         chargeGroup.setReference(reference);
-        chargeGroup.setName(ValueUtils.coalesce(description, reference));
+        chargeGroup.setName(description != null ? description : reference);
         persist(chargeGroup);
         return chargeGroup;
     }

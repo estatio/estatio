@@ -55,8 +55,8 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.JodaPeriodUtils;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 

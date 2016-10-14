@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.lease;
 
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 public enum LeaseStatus {
 

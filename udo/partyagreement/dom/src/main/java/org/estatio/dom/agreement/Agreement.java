@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -54,19 +55,18 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.base.dom.types.NameType;
-import org.incode.module.base.dom.types.ReferenceType;
-
 import org.incode.module.base.dom.Chained;
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.WithInterval;
 import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.types.NameType;
+import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.TitleBuilder;
-import org.estatio.dom.utils.ValueUtils;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -222,8 +222,13 @@ public abstract class Agreement
         }
 
         // and return the party
-        final AgreementRole currentOrMostRecentRole = ValueUtils.firstElseNull(roles);
+        final AgreementRole currentOrMostRecentRole = firstElseNull(roles);
         return currentOrMostRecentRole;
+    }
+
+    private static <T> T firstElseNull(final Iterable<T> iterable) {
+        Iterator<T> iterator = iterable.iterator();
+        return iterator.hasNext() ? iterator.next() : null;
     }
 
     protected Party partyOf(final AgreementRole agreementRole) {

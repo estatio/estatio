@@ -56,8 +56,8 @@ import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.event.EventSource;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.utils.JodaPeriodUtils;
-import org.estatio.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;

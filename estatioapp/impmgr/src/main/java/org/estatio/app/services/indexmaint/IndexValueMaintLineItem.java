@@ -46,7 +46,7 @@ import org.estatio.dom.index.IndexBaseRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValueRepository;
-import org.estatio.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 @DomainObjectLayout(paged = Integer.MAX_VALUE)
 @MemberGroupLayout(

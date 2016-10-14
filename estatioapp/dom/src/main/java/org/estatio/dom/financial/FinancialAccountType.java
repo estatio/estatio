@@ -23,7 +23,7 @@ import org.apache.isis.applib.FatalException;
 
 import org.estatio.dom.PowerType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 public enum FinancialAccountType implements PowerType<FinancialAccount> {
 

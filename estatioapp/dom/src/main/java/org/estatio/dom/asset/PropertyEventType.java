@@ -19,7 +19,7 @@
 package org.estatio.dom.asset;
 
 import org.estatio.dom.TitledEnum;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 // TODO: is this in scope?
 // EST-131: convert to entity, since will vary by location

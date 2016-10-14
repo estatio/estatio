@@ -1,7 +1,8 @@
-package org.estatio.dom.utils;
+package org.incode.module.base.dom.utils;
 
 import org.junit.Test;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;

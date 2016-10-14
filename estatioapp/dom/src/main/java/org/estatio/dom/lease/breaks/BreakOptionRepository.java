@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = BreakOption.class)
 public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOption> {

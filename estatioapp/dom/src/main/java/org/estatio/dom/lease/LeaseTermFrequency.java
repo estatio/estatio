@@ -21,7 +21,7 @@ package org.estatio.dom.lease;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 
 public enum LeaseTermFrequency {

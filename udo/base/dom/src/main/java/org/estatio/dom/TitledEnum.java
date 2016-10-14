@@ -18,10 +18,11 @@
  */
 package org.estatio.dom;
 
+import org.incode.module.base.dom.utils.StringUtils;
 
 /**
  * An enum that implements {@link Titled} and moreover its {@link #title()}
- * is derived according to the <tt>StringExtensions</tt>'s standard algorithm in <tt>enumTitle()</tt>.
+ * is derived according to the {@link StringUtils#enumTitle(String)} algorithm.
  */
 public interface TitledEnum extends Titled {
     

@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.dom.utils.MathUtils;
+import org.incode.module.base.dom.utils.MathUtils;
 
 import lombok.Getter;
 import lombok.Setter;

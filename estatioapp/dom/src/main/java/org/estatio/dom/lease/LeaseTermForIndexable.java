@@ -39,7 +39,7 @@ import org.estatio.dom.index.Indexable;
 import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
 import org.estatio.dom.lease.indexation.IndexationMethod;
 import org.estatio.dom.lease.indexation.IndexationService;
-import org.estatio.dom.utils.MathUtils;
+import org.incode.module.base.dom.utils.MathUtils;
 
 import lombok.Getter;
 import lombok.Setter;

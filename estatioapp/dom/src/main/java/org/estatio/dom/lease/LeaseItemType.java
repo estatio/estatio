@@ -22,7 +22,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.FatalException;
 
 import org.estatio.dom.PowerType;
-import org.estatio.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.StringUtils;
 
 public enum LeaseItemType implements PowerType<LeaseTerm> {
 
