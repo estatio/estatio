@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
@@ -53,7 +54,7 @@ public class FixedAsset_registrationContributions extends UdoDomainService<Fixed
     public FixedAssetRegistration newRegistration(
             final FixedAsset subject,
             final FixedAssetRegistrationType type) {
-        final FixedAssetRegistration registration = type.create(getContainer());
+        final FixedAssetRegistration registration = type.create(factoryService);
         registration.setSubject(subject);
         persistIfNotAlready(registration);
         return registration;
@@ -81,5 +82,8 @@ public class FixedAsset_registrationContributions extends UdoDomainService<Fixed
 
     @Inject
     FixedAssetRegistrationRepository fixedAssetRegistrationRepository;
+
+    @Inject
+    FactoryService factoryService;
 
 }

@@ -22,6 +22,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -32,6 +34,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.security.UserMemento;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -52,7 +55,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
             final LeaseTerm previous,
             final LocalDate startDate,
             final LocalDate endDate) {
-        LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
+        LeaseTerm leaseTerm = leaseItem.getType().create(factoryService);
         leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.setPrevious(previous);
         if (previous != null) {
@@ -228,4 +231,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         }
         return null;
     }
+
+    @Inject
+    FactoryService factoryService;
 }

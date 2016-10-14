@@ -16,9 +16,9 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom;
+package org.incode.module.base.dom;
 
-import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 /**
  * For <tt>enum</tt>s that act as powertypes, in other words acting as a factory
@@ -26,6 +26,6 @@ import org.apache.isis.applib.DomainObjectContainer;
  */
 public interface PowerType<T> {
 
-    T create(DomainObjectContainer container); 
+    T create(FactoryService factoryService);
 
 }

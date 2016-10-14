@@ -21,27 +21,27 @@ package org.estatio.dom.asset.registration;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.FqcnType;
 import org.incode.module.base.dom.types.TitleType;
+import org.incode.module.base.dom.utils.ClassUtils;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
+import org.incode.module.base.dom.PowerType;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.incode.module.base.dom.utils.ClassUtils;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -99,12 +99,11 @@ public class FixedAssetRegistrationType
     // //////////////////////////////////////
 
     @Programmatic
-    public FixedAssetRegistration create(final DomainObjectContainer container){ 
+    public FixedAssetRegistration create(final FactoryService factoryService){
         try {
             final Class<? extends FixedAssetRegistration> cls = 
                     ClassUtils.load(getFullyQualifiedClassName(), FixedAssetRegistration.class);
-            FixedAssetRegistration registration = 
-                container.newTransientInstance(cls);
+            FixedAssetRegistration registration = factoryService.instantiate(cls);
             registration.setType(this);
             return registration;
         } catch (Exception ex) {

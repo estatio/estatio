@@ -20,9 +20,12 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
@@ -42,7 +45,7 @@ public class FinancialAccountRepository extends UdoDomainRepositoryAndFactory<Fi
             final String reference,
             final String name,
             final Party owner) {
-        FinancialAccount financialAccount = financialAccountType.create(getContainer());
+        FinancialAccount financialAccount = financialAccountType.create(factoryService);
         financialAccount.setReference(reference);
         financialAccount.setName(name);
         financialAccount.setOwner(owner);
@@ -79,5 +82,8 @@ public class FinancialAccountRepository extends UdoDomainRepositoryAndFactory<Fi
     public List<FinancialAccount> allAccounts() {
         return allInstances();
     }
+
+    @Inject
+    FactoryService factoryService;
 
 }

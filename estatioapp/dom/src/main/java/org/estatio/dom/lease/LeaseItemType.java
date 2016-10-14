@@ -18,11 +18,12 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.FatalException;
+import org.apache.isis.applib.services.factory.FactoryService;
 
-import org.estatio.dom.PowerType;
 import org.incode.module.base.dom.utils.StringUtils;
+
+import org.incode.module.base.dom.PowerType;
 
 public enum LeaseItemType implements PowerType<LeaseTerm> {
 
@@ -39,7 +40,7 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     ENTRY_FEE(LeaseTermForFixed.class, false, false, true),
     TAX(LeaseTermForTax.class, true, true, false);
 
-    private final Class<? extends LeaseTerm> clss;
+    private final Class<? extends LeaseTerm> cls;
     private final boolean autoCreateTerms;
     private final boolean useSource;
     private final boolean allowOpenEndDate;
@@ -48,11 +49,11 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     // //////////////////////////////////////
 
     private LeaseItemType(
-            final Class<? extends LeaseTerm> clss,
+            final Class<? extends LeaseTerm> cls,
             final boolean autoCreateTerms,
             final boolean useSource,
             final boolean allowOpenEndDate) {
-        this.clss = clss;
+        this.cls = cls;
         this.autoCreateTerms = autoCreateTerms;
         this.useSource = useSource;
         this.allowOpenEndDate = allowOpenEndDate;
@@ -66,9 +67,9 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
 
     // //////////////////////////////////////
 
-    public LeaseTerm create(final DomainObjectContainer container) {
+    public LeaseTerm create(final FactoryService factoryService) {
         try {
-            LeaseTerm term = container.newTransientInstance(clss);
+            LeaseTerm term = factoryService.instantiate(cls);
             return term;
         } catch (Exception ex) {
             throw new FatalException(ex);
