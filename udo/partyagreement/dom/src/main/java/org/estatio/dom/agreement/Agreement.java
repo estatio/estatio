@@ -74,7 +74,7 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME,
+        strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
         value = "org.estatio.dom.agreement.Agreement"
 )

@@ -57,6 +57,7 @@ import lombok.Setter;
         identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",

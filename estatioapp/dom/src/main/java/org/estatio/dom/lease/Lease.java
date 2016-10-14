@@ -102,6 +102,7 @@ import static org.apache.commons.lang3.StringUtils.left;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.Lease")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
