@@ -3,9 +3,12 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
         http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
-    <package name="org.incode.module.communications.dom.impl.commchannel">
-        <class name="CommunicationChannel"
-               schema="dbo">
+
+    <package name="org.incode.module.communications.dom.impl.comms">
+        <class name="CommChannelRole"
+               table="CommunicationChannelRole"
+               schema="dbo"
+        >
         </class>
     </package>
 

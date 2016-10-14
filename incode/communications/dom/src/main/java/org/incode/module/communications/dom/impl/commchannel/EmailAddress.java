@@ -33,10 +33,7 @@ import org.apache.isis.applib.annotation.Property;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(
-        //        ,
-        //        schema = "incodeCommunications"
-)
+@javax.jdo.annotations.PersistenceCapable()
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.incode.module.communications.dom.impl.commchannel.EmailAddress") // can be overridden using .jdo if required.
 @javax.jdo.annotations.Indices({

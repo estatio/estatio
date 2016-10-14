@@ -137,7 +137,7 @@ public class EstatioAppManifest implements AppManifest {
         final Map<String, String> props = Maps.newHashMap();
         withStandardProps(props);
 
-//        withEstatioSchemaOverrides(props);
+        withEstatioSchemaOverrides(props);
 
         // uncomment to use log4jdbc instead
         // withLog4jdbc(props);
@@ -168,8 +168,8 @@ public class EstatioAppManifest implements AppManifest {
     }
 
     private static Map<String, String> withEstatioSchemaOverrides(Map<String, String> props) {
-        // to pick up Xxx-estatiosqlserver.orm overrides
-        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping","estatiosqlserver");
+        // to pick up Xxx-estatio.orm overrides
+        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping","estatio");
         return props;
     }
 
