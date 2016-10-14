@@ -49,9 +49,10 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
         table = "InvoiceSummaryForPropertyDueDateStatus",
+        schema = "estatioInvoiceViewmodel",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"dbo\".\"InvoiceSummaryForPropertyDueDateStatus\" " +
+                        value = "CREATE VIEW \"estatioInvoiceViewmodel\".\"InvoiceSummaryForPropertyDueDateStatus\" " +
                                 "( " +
                                 "  {this.atPath}, " +
                                 "  {this.sellerReference}, " +
@@ -71,10 +72,10 @@ import lombok.Setter;
                                 "   SUM(ii.\"netAmount\") AS \"netAmount\", " +
                                 "   SUM(ii.\"vatAmount\") AS \"vatAmount\", " +
                                 "   SUM(ii.\"grossAmount\") AS \"grossAmount\" " +
-                                "FROM \"dbo\".\"Invoice\" i " +
-                                "  INNER JOIN \"dbo\".\"InvoiceItem\" ii " +
+                                "FROM \"estatioInvoice\".\"Invoice\" i " +
+                                "  INNER JOIN \"estatioInvoice\".\"InvoiceItem\" ii " +
                                 "    ON ii.\"invoiceId\" = i.\"id\" " +
-                                "  INNER JOIN \"dbo\".\"Party\" p " +
+                                "  INNER JOIN \"estatioParty\".\"Party\" p " +
                                 "    ON p.\"id\" = i.\"sellerPartyId\" " +
                                 "GROUP BY " +
                                 "  i.\"atPath\", " +

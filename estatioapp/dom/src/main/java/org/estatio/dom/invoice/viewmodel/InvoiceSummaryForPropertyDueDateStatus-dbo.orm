@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm xmlns="http://xmlns.jcp.org/xml/ns/jdo/orm"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
+        http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
+
+    <package name="org.estatio.dom.invoice.viewmodel">
+        <class name="InvoiceSummaryForPropertyDueDateStatus"
+               schema="dbo">
+            <extension vendor-name="datanucleus" key="view-definition"
+                       value="CREATE VIEW &quot;dbo&quot;.&quot;InvoiceSummaryForPropertyDueDateStatus&quot; (   {this.atPath},   {this.sellerReference},   {this.dueDate},   {this.status},   {this.total},   {this.netAmount},   {this.vatAmount},   {this.grossAmount} ) AS SELECT   i.&quot;atPath&quot;,   p.&quot;reference&quot; ,   i.&quot;dueDate&quot;,   i.&quot;status&quot;,   COUNT(DISTINCT(i.&quot;id&quot;)) AS &quot;total&quot;,    SUM(ii.&quot;netAmount&quot;) AS &quot;netAmount&quot;,    SUM(ii.&quot;vatAmount&quot;) AS &quot;vatAmount&quot;,    SUM(ii.&quot;grossAmount&quot;) AS &quot;grossAmount&quot; FROM &quot;dbo&quot;.&quot;Invoice&quot; i   INNER JOIN &quot;dbo&quot;.&quot;InvoiceItem&quot; ii     ON ii.&quot;invoiceId&quot; = i.&quot;id&quot;   INNER JOIN &quot;dbo&quot;.&quot;Party&quot; p     ON p.&quot;id&quot; = i.&quot;sellerPartyId&quot; GROUP BY   i.&quot;atPath&quot;,   p.&quot;reference&quot;,   i.&quot;dueDate&quot;,   i.&quot;status&quot;"/>
+        </class>
+
+    </package>
+
+</orm>
+

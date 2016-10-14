@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm xmlns="http://xmlns.jcp.org/xml/ns/jdo/orm"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
+        http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
+
+    <package name="org.estatio.dom.invoice.viewmodel">
+        <class name="InvoiceSummaryForInvoiceRun"
+               schema="dbo">
+
+            <extension vendor-name="datanucleus" key="view-definition" value="CREATE VIEW &quot;dbo&quot;.&quot;InvoiceSummaryForInvoiceRun&quot; (   {this.atPath},   {this.runId},   {this.total},   {this.netAmount},   {this.vatAmount},   {this.grossAmount} ) AS SELECT    i.&quot;atPath&quot; ,    i.&quot;runId&quot; ,    COUNT(DISTINCT(i.&quot;id&quot;)) AS &quot;total&quot;,    SUM(ii.&quot;netAmount&quot;) AS &quot;netAmount&quot;,    SUM(ii.&quot;vatAmount&quot;) AS &quot;vatAmount&quot;,    SUM(ii.&quot;grossAmount&quot;) AS &quot;grossAmount&quot; FROM &quot;dbo&quot;.&quot;Invoice&quot; i   INNER JOIN &quot;dbo&quot;.&quot;Lease&quot; l      ON i.&quot;leaseId&quot; = l.&quot;id&quot;   INNER JOIN &quot;dbo&quot;.&quot;FixedAsset&quot; fa     ON fa.&quot;id&quot;  = i.&quot;fixedAssetId&quot;   INNER JOIN &quot;dbo&quot;.&quot;InvoiceItem&quot; ii     ON ii.&quot;invoiceId&quot; = i.&quot;id&quot; WHERE    NOT i.&quot;runId&quot; IS NULL GROUP BY    i.&quot;runId&quot;, i.&quot;atPath&quot;"/>
+
+        </class>
+    </package>
+
+</orm>
+
