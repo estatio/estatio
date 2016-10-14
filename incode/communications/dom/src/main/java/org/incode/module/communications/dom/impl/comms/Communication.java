@@ -83,8 +83,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        //        ,
-        //        schema = "estatioCommunications"  // DN doesn't seem to allow this to be in a different schema...
+//        , schema = "incodeCommunications"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

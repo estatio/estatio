@@ -64,7 +64,11 @@ import lombok.Setter;
  * This is an abstract entity; concrete subclasses are {@link PostalAddress
  * postal}, {@link PhoneOrFaxNumber phone/fax} and {@link EmailAddress email}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+//        ,
+//        schema = "incodeCommunications"
+)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
