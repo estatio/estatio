@@ -65,12 +65,12 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
     protected void deleteFrom(final Class cls) {
         preDeleteFrom(cls);
-        deleteFrom(cls.getSimpleName());
+        doDeleteFrom(cls);
         postDeleteFrom(cls);
     }
 
-    protected void deleteFrom(final String table) {
-        isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
+    private void doDeleteFrom(final Class cls) {
+        isisJdoSupport.deleteAll(cls);
     }
 
     protected void preDeleteFrom(final Class cls) {}
