@@ -93,7 +93,6 @@
                 <module>../../../github/estatio/estatio/udo/link/dom</module>
                 <module>../../../github/estatio/estatio/udo/settings/dom</module>
                 <module>../../../github/estatio/estatio/incode/communications/dom</module>
-                <module>../../../github/estatio/estatio/incode/documents/dom</module>
                 <module>../../../github/estatio/estatio/estatioapp/dom</module>
             </modules>
         </profile>
