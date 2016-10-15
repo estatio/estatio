@@ -33,13 +33,13 @@ import org.apache.isis.applib.value.Clob;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.module.document.dom.impl.applicability.Binder;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.documents.binders.BinderForDocumentAttachedToPrelimLetterOrInvoice;
 import org.estatio.dom.documents.binders.BinderForReportServerAttachNone;

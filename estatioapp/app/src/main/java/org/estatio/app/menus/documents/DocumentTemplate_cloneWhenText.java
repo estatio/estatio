@@ -37,15 +37,14 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.applicability.Applicability;
-import org.incode.module.documents.dom.impl.docs.DocumentSort;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.types.NameType;
-import org.incode.module.documents.dom.types.SubjectTextType;
+import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.dom.impl.applicability.Applicability;
+import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.types.NameType;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
@@ -71,11 +70,11 @@ public class DocumentTemplate_cloneWhenText {
             @Parameter(optionality = Optionality.OPTIONAL)
             @ParameterLayout(named = "Date")
             final LocalDate date,
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
+            @ParameterLayout(named = "Text", multiLine = DocumentModule.Constants.TEXT_MULTILINE)
             final String templateText,
             @ParameterLayout(named = "Content rendering strategy")
             final RenderingStrategy contentRenderingStrategy,
-            @Parameter(maxLength = SubjectTextType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.NameTextType.Meta.MAX_LEN)
             final String nameText,
             @ParameterLayout(named = "Name rendering strategy")
             final RenderingStrategy nameRenderingStrategy,

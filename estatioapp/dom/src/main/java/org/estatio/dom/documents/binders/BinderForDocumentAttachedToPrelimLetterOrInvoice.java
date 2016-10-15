@@ -23,10 +23,10 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 
-import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.applicability.Binder;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.invoice.Invoice;
 

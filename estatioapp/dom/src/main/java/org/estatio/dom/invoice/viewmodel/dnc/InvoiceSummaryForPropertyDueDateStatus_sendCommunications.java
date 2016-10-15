@@ -28,8 +28,8 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.communications.dom.mixins.Document_email;
 import org.incode.module.communications.dom.mixins.Document_print;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;

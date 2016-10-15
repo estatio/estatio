@@ -34,13 +34,7 @@ language governing permissions and limitations under the License.
 
     <properties>
         <siteBaseDir>..</siteBaseDir>
-        <!-- targetJdk required as a workaround for pmd error, 
-            see https://issues.apache.org/jira/browse/ACCUMULO-443
-            and http://jira.codehaus.org/browse/MPMD-86 -->
-            <!-- 
-        <targetJdk>1.6</targetJdk>
-             -->
-        <incode-module-communications.version>1.14.0-SNAPSHOT</incode-module-communications.version>
+        <incode-module-communications.version>1.13.0-SNAPSHOT</incode-module-communications.version>
     </properties>
 
     <build>
@@ -215,12 +209,12 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.incode.module.documents</groupId>
-            <artifactId>incode-module-documents-dom</artifactId>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.documents</groupId>
-            <artifactId>incode-module-documents-dom</artifactId>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

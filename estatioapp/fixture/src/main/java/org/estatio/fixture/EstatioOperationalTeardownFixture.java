@@ -28,11 +28,11 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.paperclips.Paperclip;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;

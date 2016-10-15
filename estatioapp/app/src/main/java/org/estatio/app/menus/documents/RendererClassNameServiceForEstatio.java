@@ -26,17 +26,19 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.documents.dom.impl.docs.DocumentNature;
-import org.incode.module.documents.dom.impl.renderers.Renderer;
-import org.incode.module.documents.dom.services.ClassNameServiceAbstract;
-import org.incode.module.documents.dom.services.ClassNameViewModel;
+import org.incode.module.document.dom.impl.docs.DocumentNature;
+import org.incode.module.document.dom.impl.renderers.Renderer;
+import org.incode.module.document.dom.spi.RendererClassNameService;
+import org.incode.module.document.dom.services.ClassNameServiceAbstract;
+import org.incode.module.document.dom.services.ClassNameViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class RendererClassNameService extends ClassNameServiceAbstract<Renderer> {
+public class RendererClassNameServiceForEstatio extends ClassNameServiceAbstract<Renderer> implements
+        RendererClassNameService {
 
     private static final String PACKAGE_PREFIX = "org.estatio";
 
-    public RendererClassNameService() {
+    public RendererClassNameServiceForEstatio() {
         super(Renderer.class, PACKAGE_PREFIX);
     }
 
@@ -48,6 +50,11 @@ public class RendererClassNameService extends ClassNameServiceAbstract<Renderer>
             return Lists.newArrayList();
         }
         return classNames(x -> inputNature.canActAsInputTo(x) && outputNature.canActAsOutputTo(x));
+    }
+
+    @Override
+    public Class<Renderer> asClass(final String className) {
+        return super.asClass(className);
     }
 
 }

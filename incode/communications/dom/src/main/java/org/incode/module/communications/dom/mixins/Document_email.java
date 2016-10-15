@@ -47,13 +47,13 @@ import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.spi.CommHeaderForEmail;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentState;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentState;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
@@ -71,7 +71,7 @@ public class Document_email  {
         this.document = document;
     }
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Document_email> { }
+    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Document_email> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,

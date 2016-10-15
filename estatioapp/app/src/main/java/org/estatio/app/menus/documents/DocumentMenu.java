@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentRepository;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
 import org.estatio.dom.UdoDomainService;
 

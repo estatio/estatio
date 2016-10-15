@@ -23,9 +23,9 @@ import javax.inject.Inject;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.Invoice;
 

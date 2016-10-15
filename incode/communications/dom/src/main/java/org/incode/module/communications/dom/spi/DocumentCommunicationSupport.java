@@ -21,8 +21,8 @@ package org.incode.module.communications.dom.spi;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.communications.dom.mixins.Document_email;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
 /**
  * As used by the {@link Document_email} mixin.

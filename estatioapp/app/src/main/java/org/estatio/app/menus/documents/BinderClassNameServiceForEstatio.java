@@ -23,10 +23,10 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.documents.dom.impl.applicability.Binder;
-import org.incode.module.documents.dom.services.ClassNameServiceAbstract;
-import org.incode.module.documents.dom.services.ClassNameViewModel;
-import org.incode.module.documents.dom.spi.BinderClassNameService;
+import org.incode.module.document.dom.impl.applicability.Binder;
+import org.incode.module.document.dom.services.ClassNameServiceAbstract;
+import org.incode.module.document.dom.services.ClassNameViewModel;
+import org.incode.module.document.dom.spi.BinderClassNameService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BinderClassNameServiceForEstatio extends ClassNameServiceAbstract<Binder> implements

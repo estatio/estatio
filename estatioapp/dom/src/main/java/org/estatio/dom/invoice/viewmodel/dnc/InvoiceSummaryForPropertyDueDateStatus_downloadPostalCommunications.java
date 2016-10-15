@@ -33,10 +33,10 @@ import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentSort;
-import org.incode.module.documents.dom.impl.docs.DocumentState;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.dom.impl.docs.DocumentState;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;

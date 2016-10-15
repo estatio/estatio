@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.Document;
 
 public abstract class InvoiceDocAndComm_documentAbstract extends InvoiceDocAndComm_dncAbstract {
 

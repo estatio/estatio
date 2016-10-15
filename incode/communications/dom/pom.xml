@@ -83,9 +83,9 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
 
-        <!--<udo-dom-geography.version>1.7.0-SNAPSHOT</udo-dom-geography.version>-->
-        <!--<incode-module-base.version>1.7.0-SNAPSHOT</incode-module-base.version>-->
-        <!--<incode-module-documents.version>1.7.0-SNAPSHOT</incode-module-documents.version>-->
+        <!--<incode-module-base.version>1.13.0</incode-module-base.version>-->
+        <!--<incode-module-country.version>1.13.0-SNAPSHOT</incode-module-country.version>-->
+        <!--<incode-module-document.version>1.13.0-SNAPSHOT</incode-module-document.version>-->
 
         <lombok.version>1.16.6</lombok.version>
         <axon-core.version>2.4.4</axon-core.version>
@@ -248,7 +248,7 @@ Copyright 2014~2015 Dan Haywood
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${incode-module-base.version}</version>
             </dependency>
 
             <dependency>
@@ -271,9 +271,9 @@ Copyright 2014~2015 Dan Haywood
             </dependency>
 
             <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>${project.parent.version}</version>
+                <groupId>org.incode.module.document</groupId>
+                <artifactId>incode-module-document-dom</artifactId>
+                <version>${incode-module-document.version}</version>
             </dependency>
 
         </dependencies>
@@ -292,8 +292,8 @@ Copyright 2014~2015 Dan Haywood
         </dependency>
 
         <dependency>
-            <groupId>org.incode.module.documents</groupId>
-            <artifactId>incode-module-documents-dom</artifactId>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>

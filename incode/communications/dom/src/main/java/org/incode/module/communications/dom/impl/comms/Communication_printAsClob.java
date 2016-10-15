@@ -26,9 +26,9 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.communications.dom.mixins.DocumentConstants;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract_downloadTextAsClob;
-import org.incode.module.documents.dom.impl.docs.Document_downloadExternalUrlAsClob;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract_downloadTextAsClob;
+import org.incode.module.document.dom.impl.docs.Document_downloadExternalUrlAsClob;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 

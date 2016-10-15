@@ -41,17 +41,14 @@ import org.apache.isis.applib.value.Clob;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.docs.DocumentSort;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.docs.MimeTypeSpecification;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.types.FileSuffixType;
-import org.incode.module.documents.dom.types.MimeTypeType;
-import org.incode.module.documents.dom.types.NameType;
-import org.incode.module.documents.dom.types.SubjectTextType;
+import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -79,18 +76,18 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name", describedAs = "Optional, will defaults to the name of selected document type")
             final String name,
-            @Parameter(maxLength = MimeTypeType.Meta.MAX_LEN, mustSatisfy = MimeTypeSpecification.class)
+            @Parameter(maxLength = DocumentAbstract.MimeTypeType.Meta.MAX_LEN, mustSatisfy = DocumentAbstract.MimeTypeType.Meta.Specification.class)
             @ParameterLayout(named = "MIME type")
             final String mimeType,
-            @Parameter(maxLength = FileSuffixType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.FileSuffixType.Meta.MAX_LEN)
             @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
             final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
-            @ParameterLayout(named = "Text", multiLine = DocumentsModule.Constants.TEXT_MULTILINE)
+            @ParameterLayout(named = "Text", multiLine = DocumentModule.Constants.TEXT_MULTILINE)
             final String templateText,
             @ParameterLayout(named = "Content Rendering Strategy")
             final RenderingStrategy contentRenderingStrategy,
-            @Parameter(maxLength = SubjectTextType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.NameTextType.Meta.MAX_LEN)
             @ParameterLayout(named = "Subject text")
             final String subjectText,
             @ParameterLayout(named = "Subject rendering strategy")
@@ -148,14 +145,14 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Clob")
             final String name,
-            @Parameter(maxLength = FileSuffixType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.FileSuffixType.Meta.MAX_LEN)
             @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
             final String fileSuffix,
             final ApplicationTenancy applicationTenancy,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Clob clob,
             final RenderingStrategy contentRenderingStrategy,
-            @Parameter(maxLength = SubjectTextType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.NameTextType.Meta.MAX_LEN)
             @ParameterLayout(named = "Subject text")
             final String subjectText,
             @ParameterLayout(named = "Subject rendering strategy")
@@ -209,14 +206,14 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
             @Parameter(optionality = Optionality.OPTIONAL, maxLength = NameType.Meta.MAX_LEN)
             @ParameterLayout(named = "Name", describedAs = "Optional, will default to the file name of the uploaded Blob")
             final String name,
-            @Parameter(maxLength = FileSuffixType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.FileSuffixType.Meta.MAX_LEN)
             @ParameterLayout(named = "File suffix", describedAs = "The file suffix for any documents created from this template")
             final String fileSuffix,
-            @Parameter(maxLength = MimeTypeType.Meta.MAX_LEN, mustSatisfy = MimeTypeSpecification.class)
+            @Parameter(maxLength = DocumentAbstract.MimeTypeType.Meta.MAX_LEN, mustSatisfy = DocumentAbstract.MimeTypeType.Meta.Specification.class)
             final ApplicationTenancy applicationTenancy,
             final Blob blob,
             final RenderingStrategy contentRenderingStrategy,
-            @Parameter(maxLength = SubjectTextType.Meta.MAX_LEN)
+            @Parameter(maxLength = DocumentTemplate.NameTextType.Meta.MAX_LEN)
             @ParameterLayout(named = "Subject text")
             final String subjectText,
             @ParameterLayout(named = "Subject rendering strategy")

@@ -17,8 +17,8 @@
  */
 package org.estatio.fixture.documents.demo;
 
-import org.incode.module.documents.dom.impl.docs.DocumentNature;
-import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentNature;
+import org.incode.module.document.fixture.RenderingStrategyFSAbstract;
 
 import org.estatio.dom.documents.renderers.RendererForSvg;
 

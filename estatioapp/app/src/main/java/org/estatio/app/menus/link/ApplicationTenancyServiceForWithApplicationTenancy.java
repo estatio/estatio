@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
-import org.incode.module.documents.dom.spi.ApplicationTenancyService;
+import org.incode.module.document.dom.spi.ApplicationTenancyService;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
 

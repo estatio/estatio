@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.mixins.T_createDocumentAndScheduleRender;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.mixins.T_createDocumentAndScheduleRender;
 
 @Mixin
 public class Invoice_createDocumentAndScheduleRender extends T_createDocumentAndScheduleRender<Invoice> {

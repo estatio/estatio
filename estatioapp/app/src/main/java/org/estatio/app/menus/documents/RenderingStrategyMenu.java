@@ -33,15 +33,15 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.impl.docs.DocumentNature;
-import org.incode.module.documents.dom.impl.renderers.Renderer;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.services.ClassNameViewModel;
-import org.incode.module.documents.dom.impl.renderers.RendererClassNameSpecification;
-import org.incode.module.documents.dom.types.FqcnType;
-import org.incode.module.documents.dom.types.NameType;
-import org.incode.module.documents.dom.types.ReferenceType;
+import org.incode.module.document.dom.impl.docs.DocumentNature;
+import org.incode.module.document.dom.impl.renderers.Renderer;
+import org.incode.module.document.dom.spi.RendererClassNameService;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.services.ClassNameViewModel;
+import org.incode.module.document.dom.types.FqcnType;
+import org.incode.module.document.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -66,7 +66,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             @Parameter(
                     regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX,
                     regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION,
-                    maxLength = ReferenceType.Meta.MAX_LEN
+                    maxLength = DocumentType.ReferenceType.Meta.MAX_LEN
             )
             @ParameterLayout(named = "Reference")
             final String reference,
@@ -79,7 +79,7 @@ public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMen
             final DocumentNature outputNature,
             @Parameter(
                     maxLength = FqcnType.Meta.MAX_LEN,
-                    mustSatisfy = RendererClassNameSpecification.class
+                    mustSatisfy = RenderingStrategy.RendererClassNameType.Meta.Specification.class
             )
             @ParameterLayout(named = "Renderer class name")
             final ClassNameViewModel classViewModel) {

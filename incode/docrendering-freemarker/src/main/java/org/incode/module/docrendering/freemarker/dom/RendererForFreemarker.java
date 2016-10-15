@@ -26,8 +26,8 @@ import com.google.common.base.Joiner;
 
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
-import org.incode.module.documents.dom.impl.renderers.RendererFromCharsToChars;
-import org.incode.module.documents.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.renderers.RendererFromCharsToChars;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
 import freemarker.template.TemplateException;
 

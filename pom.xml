@@ -100,7 +100,9 @@ mvn clean install -DskipTests -o
         <isis-wicket-fullcalendar2.version>1.13.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
-        <incode-module-commchannel.version>1.13.0</incode-module-commchannel.version>
+        <incode-module-base.version>1.13.0</incode-module-base.version>
+        <incode-module-communication.version>1.14.0-SNAPSHOT</incode-module-communication.version>
+        <incode-module-document.version>1.13.0-SNAPSHOT</incode-module-document.version>
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
 
@@ -588,16 +590,15 @@ mvn clean install -DskipTests -o
                 <scope>test</scope>
             </dependency>
 
-            <!-- TODO: update version when move out to separate module -->
             <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.incode.module.document</groupId>
+                <artifactId>incode-module-document-dom</artifactId>
+                <version>${incode-module-document.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.incode.module.document</groupId>
+                <artifactId>incode-module-document-dom</artifactId>
+                <version>${incode-module-document.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
@@ -648,12 +649,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${project.version}</version>
+                <version>${incode-module-base.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${project.version}</version>
+                <version>${incode-module-base.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -1163,9 +1164,7 @@ mvn clean install -DskipTests -o
                 <module>udo/project/dom</module>
                 <module>udo/settings/dom</module>
                 <module>udo/partyagreement/dom</module>
-                <module>incode/base/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
@@ -1193,9 +1192,7 @@ mvn clean install -DskipTests -o
                 <module>udo/project/dom</module>
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/base/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
@@ -1222,9 +1219,7 @@ mvn clean install -DskipTests -o
                 <module>udo/project/dom</module>
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/base/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>
@@ -1255,9 +1250,7 @@ mvn clean install -DskipTests -o
                 <module>udo/project/dom</module>
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
-                <module>incode/base/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/documents/dom</module>
                 <module>incode/docrendering-stringinterpolator</module>
                 <module>incode/docrendering-freemarker</module>
                 <module>incode/docrendering-xdocreport</module>

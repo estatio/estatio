@@ -27,14 +27,14 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
-import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 import org.estatio.dom.asset.FixedAsset;

@@ -33,10 +33,9 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
-import org.incode.module.documents.dom.types.NameType;
-import org.incode.module.documents.dom.types.ReferenceType;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.document.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
@@ -61,7 +60,7 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
             @Parameter(
                     regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX,
                     regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION,
-                    maxLength = ReferenceType.Meta.MAX_LEN
+                    maxLength = DocumentType.ReferenceType.Meta.MAX_LEN
             )
             @ParameterLayout(named = "Reference")
             final String reference,

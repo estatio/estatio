@@ -30,12 +30,12 @@ import org.incode.module.communications.dom.spi.CommHeaderAbstract;
 import org.incode.module.communications.dom.spi.CommHeaderForEmail;
 import org.incode.module.communications.dom.spi.CommHeaderForPrint;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.documents.dom.impl.paperclips.Paperclip;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.documents.dom.impl.types.DocumentType;
-import org.incode.module.documents.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;

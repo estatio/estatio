@@ -69,10 +69,10 @@ import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.communications.dom.types.AtPathType;
 import org.incode.module.communications.dom.types.SubjectType;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentAbstract;
-import org.incode.module.documents.dom.impl.paperclips.Paperclip;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;

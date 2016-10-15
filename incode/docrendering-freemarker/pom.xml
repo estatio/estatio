@@ -32,7 +32,7 @@ Copyright 2014~2015 Dan Haywood
     <!--
         REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO.  FOR NOW, USE estatio.version
 
-        <version>1.14.0-SNAPSHOT</version>
+        <version>1.13.0-SNAPSHOT</version>
     -->
 
     <packaging>jar</packaging>
@@ -46,11 +46,11 @@ Copyright 2014~2015 Dan Haywood
 	<!--
 	REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO
 		
-    <url>https://github.com/incodehq/incode-module-documents</url>
+    <url>https://github.com/incodehq/incode-module-docrendering-freemarker</url>
     <scm>
-        <connection>scm:git:git@github.com:incodehq/incode-module-documents.git</connection>
-        <developerConnection>scm:git:git@github.com:incodehq/incode-module-documents.git</developerConnection>
-        <url>git@github.com:incodehq/incode-module-documents.git</url>
+        <connection>scm:git:git@github.com:incodehq/incode-module-docrendering-freemarker.git</connection>
+        <developerConnection>scm:git:git@github.com:incodehq/incode-module-docrendering-freemarker.git</developerConnection>
+        <url>git@github.com:incodehq/incode-module-docrendering-freemarker.git</url>
     </scm>
 	-->
     <licenses>
@@ -79,10 +79,6 @@ Copyright 2014~2015 Dan Haywood
 
         <isis.version>1.13.0</isis.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
-
-        <!--<incode-module-base.version>1.7.0-SNAPSHOT</incode-module-base.version>-->
-        <!--<incode-module-documents.version>1.7.0-SNAPSHOT</incode-module-documents.version>-->
-
         <isis-module-freemarker.version>1.13.1</isis-module-freemarker.version>
 
         <lombok.version>1.16.6</lombok.version>
@@ -245,13 +241,13 @@ Copyright 2014~2015 Dan Haywood
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${incode-module-base.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.incode.module.documents</groupId>
-                <artifactId>incode-module-documents-dom</artifactId>
-                <version>${project.parent.version}</version>
+                <groupId>org.incode.module.document</groupId>
+                <artifactId>incode-module-document-dom</artifactId>
+                <version>${incode-module-document.version}</version>
             </dependency>
 
             <dependency>
@@ -276,8 +272,8 @@ Copyright 2014~2015 Dan Haywood
             <artifactId>incode-module-base-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.documents</groupId>
-            <artifactId>incode-module-documents-dom</artifactId>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
         </dependency>
 
         <dependency>

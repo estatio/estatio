@@ -27,8 +27,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorCaptureUrl;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
-import org.incode.module.documents.dom.impl.rendering.RenderingStrategyRepository;
-import org.incode.module.documents.fixture.DocumentTemplateFSAbstract;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 public class RenderingStrategies extends DocumentTemplateFSAbstract {

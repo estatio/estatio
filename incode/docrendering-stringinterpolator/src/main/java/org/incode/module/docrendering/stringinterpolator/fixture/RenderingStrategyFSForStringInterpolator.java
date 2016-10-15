@@ -17,8 +17,8 @@
  */
 package org.incode.module.docrendering.stringinterpolator.fixture;
 
-import org.incode.module.documents.dom.impl.docs.DocumentNature;
-import org.incode.module.documents.fixture.RenderingStrategyFSAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentNature;
+import org.incode.module.document.fixture.RenderingStrategyFSAbstract;
 
 import org.incode.module.docrendering.stringinterpolator.dom.RendererUsingStringInterpolator;
 

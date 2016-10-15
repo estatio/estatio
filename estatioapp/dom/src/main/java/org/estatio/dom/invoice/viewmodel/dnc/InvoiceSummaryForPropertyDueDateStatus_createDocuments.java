@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.incode.module.documents.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;

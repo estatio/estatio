@@ -36,16 +36,15 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.spi.CommHeaderForPrint;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
-import org.incode.module.documents.dom.DocumentsModule;
-import org.incode.module.documents.dom.impl.docs.Document;
-import org.incode.module.documents.dom.impl.docs.DocumentState;
-import org.incode.module.documents.dom.impl.paperclips.PaperclipRepository;
-
-import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
+import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentState;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 /**
  * Provides the ability to send an print.
@@ -59,7 +58,7 @@ public class Document_print {
         this.document = document;
     }
 
-    public static class ActionDomainEvent extends DocumentsModule.ActionDomainEvent<Document_print> { }
+    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Document_print> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
