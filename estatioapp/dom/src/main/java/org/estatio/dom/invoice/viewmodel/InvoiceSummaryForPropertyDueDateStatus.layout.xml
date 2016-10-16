@@ -64,8 +64,8 @@
                                 <ns2:action id="sendCommunications">
                                     <ns2:named>Send</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="downloadPostalCommunications">
-                                    <ns2:named>Download postal</ns2:named>
+                                <ns2:action id="downloadForSending">
+                                    <ns2:describedAs>The communication(s) will be marked as sent.</ns2:describedAs>
                                 </ns2:action>
                                 <ns2:named>Prelim &amp; Invoice Comms</ns2:named>
                             </ns2:collection>

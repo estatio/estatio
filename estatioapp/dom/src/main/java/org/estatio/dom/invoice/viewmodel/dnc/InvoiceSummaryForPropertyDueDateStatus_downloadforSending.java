@@ -25,13 +25,16 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
+import org.incode.module.communications.dom.impl.comms.CommunicationState;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
@@ -42,18 +45,26 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_downloadPostalCommunications {
+public class InvoiceSummaryForPropertyDueDateStatus_downloadforSending {
 
     public static final String MIME_TYPE_APPLICATION_PDF = "application/pdf";
     private final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
 
-    public InvoiceSummaryForPropertyDueDateStatus_downloadPostalCommunications(
+    public InvoiceSummaryForPropertyDueDateStatus_downloadforSending(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
         this.invoiceSummary = invoiceSummary;
     }
 
+    public enum Sort {
+        NOT_YET_SENT,
+        PENDING_AND_SENT
+    }
 
-    public Object $$(final DocumentTemplate documentTemplate, final String fileName) throws IOException {
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Object $$(
+            final DocumentTemplate documentTemplate,
+            final String fileName,
+            final Sort sort) throws IOException {
 
         final List<Invoice> invoices = invoiceSummary.getInvoices();
 
@@ -63,6 +74,10 @@ public class InvoiceSummaryForPropertyDueDateStatus_downloadPostalCommunications
             final Communication communication = invoiceDocAndCommService
                     .findCommunication(invoice, documentTemplate.getType());
             if (communication == null) {
+                continue;
+            }
+
+            if(sort == Sort.NOT_YET_SENT && communication.getState() == CommunicationState.SENT) {
                 continue;
             }
 
@@ -114,6 +129,9 @@ public class InvoiceSummaryForPropertyDueDateStatus_downloadPostalCommunications
         return "merged.pdf";
     }
 
+    public Sort default2$$() {
+        return Sort.NOT_YET_SENT;
+    }
 
     @Inject
     InvoiceDocumentTemplateService invoiceDocumentTemplateService;
