@@ -28,13 +28,13 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.CountryRepository;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 import org.estatio.integtests.EstatioIntegrationTest;
 

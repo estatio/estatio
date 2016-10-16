@@ -86,12 +86,12 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-geography</artifactId>
+            <groupId>org.incode.module.country</groupId>
+            <artifactId>incode-module-country-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-geography</artifactId>
+            <groupId>org.incode.module.country</groupId>
+            <artifactId>incode-module-country-dom</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

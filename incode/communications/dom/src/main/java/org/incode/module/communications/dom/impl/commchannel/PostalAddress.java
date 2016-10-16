@@ -38,9 +38,9 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.base.dom.types.ProperNameType;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.StateRepository;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
+import org.incode.module.country.dom.impl.StateRepository;
 
 import lombok.Getter;
 import lombok.Setter;

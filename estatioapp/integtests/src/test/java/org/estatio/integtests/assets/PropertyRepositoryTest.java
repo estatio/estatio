@@ -32,12 +32,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.geography.CountryRepository;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

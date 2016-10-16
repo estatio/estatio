@@ -15,6 +15,7 @@ import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
 import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.country.dom.CountryModule;
 import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
 import org.incode.module.document.dom.DocumentModule;
 
@@ -44,8 +45,10 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioDomainLinkModule.class,
                         EstatioDomainSettingsModule.class,
 
+                        CountryModule.class,
                         CommunicationsModule.class,
                         DocumentModule.class,
+
                         PdfBoxModule.class,
                         StringInterpolatorDocRenderingModule.class,
 

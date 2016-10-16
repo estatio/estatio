@@ -27,8 +27,8 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 import org.incode.module.base.dom.PojoTester;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
 
 public class PostalAddressTest {
 

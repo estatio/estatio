@@ -34,7 +34,7 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;

@@ -23,10 +23,10 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.CountryRepository;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

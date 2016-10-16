@@ -1,9 +1,10 @@
-package org.estatio.dom.apptenancy;
+package org.estatio.dom.country;
 
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -15,7 +16,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -160,7 +161,7 @@ public class EstatioApplicationTenancyRepositoryForCountryTest {
     public void testAllCountryTenancies() throws Exception {
         List<ApplicationTenancy> applicationTenancies = estatioApplicationTenancyRepository.allCountryTenancies();
 
-        assertThat(applicationTenancies).containsExactly(france, italy);
+        Assertions.assertThat(applicationTenancies).containsExactly(france, italy);
     }
 
     @Test
@@ -180,13 +181,13 @@ public class EstatioApplicationTenancyRepositoryForCountryTest {
         applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesFor(france);
 
         // then
-        assertThat(applicationTenancies).containsExactly(france);
+        Assertions.assertThat(applicationTenancies).containsExactly(france);
 
         // when
         applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesFor(global);
 
         // then
-        assertThat(applicationTenancies).containsExactly(france, italy);
+        Assertions.assertThat(applicationTenancies).containsExactly(france, italy);
 
     }
 
@@ -198,13 +199,13 @@ public class EstatioApplicationTenancyRepositoryForCountryTest {
         applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(france);
 
         // then
-        assertThat(applicationTenancies).containsExactly(france);
+        Assertions.assertThat(applicationTenancies).containsExactly(france);
 
         // when
         applicationTenancies = estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(global);
 
         // then
-        assertThat(applicationTenancies).containsExactly(global, france, italy);
+        Assertions.assertThat(applicationTenancies).containsExactly(global, france, italy);
 
     }
 

@@ -41,7 +41,7 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

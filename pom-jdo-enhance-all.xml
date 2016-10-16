@@ -88,7 +88,6 @@
                 <module>../../../github/estatio/estatio/udo/currency/dom</module>
                 <module>../../../github/estatio/estatio/udo/tax/dom</module>
                 <module>../../../github/estatio/estatio/udo/charge/dom</module>
-                <module>../../../github/estatio/estatio/udo/geography/dom</module>
                 <module>../../../github/estatio/estatio/udo/numerator/dom</module>
                 <module>../../../github/estatio/estatio/udo/link/dom</module>
                 <module>../../../github/estatio/estatio/udo/settings/dom</module>

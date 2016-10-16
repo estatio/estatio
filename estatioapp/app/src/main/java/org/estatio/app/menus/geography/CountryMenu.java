@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.CountryRepository;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

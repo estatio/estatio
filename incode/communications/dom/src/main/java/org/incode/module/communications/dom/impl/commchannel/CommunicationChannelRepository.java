@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
 
 @DomainService(repositoryFor = CommunicationChannel.class, nature = NatureOfService.DOMAIN)
 public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactory<CommunicationChannel> {

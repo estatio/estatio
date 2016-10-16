@@ -6,11 +6,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.CountryRepository;
+import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 
 public class BrandsFixture extends FixtureScript {
 

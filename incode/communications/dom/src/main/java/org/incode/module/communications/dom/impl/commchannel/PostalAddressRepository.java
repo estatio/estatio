@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 
 /**
  * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.

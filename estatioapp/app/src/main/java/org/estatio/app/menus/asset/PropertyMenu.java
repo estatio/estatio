@@ -38,7 +38,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 
 @DomainService(repositoryFor = Property.class)
 @DomainServiceLayout(

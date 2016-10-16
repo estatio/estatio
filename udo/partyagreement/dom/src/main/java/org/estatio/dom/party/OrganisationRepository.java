@@ -34,7 +34,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.numerator.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Organisation.class)

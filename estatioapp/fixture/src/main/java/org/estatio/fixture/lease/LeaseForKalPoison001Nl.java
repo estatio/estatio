@@ -23,7 +23,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;

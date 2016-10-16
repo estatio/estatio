@@ -82,10 +82,11 @@ Copyright 2014~2015 Dan Haywood
         <isis.version>1.13.0</isis.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
+        <isis-module-security.version>1.13.4</isis-module-security.version>
 
-        <!--<incode-module-base.version>1.13.0</incode-module-base.version>-->
-        <!--<incode-module-country.version>1.13.0-SNAPSHOT</incode-module-country.version>-->
-        <!--<incode-module-document.version>1.13.0-SNAPSHOT</incode-module-document.version>-->
+        <incode-module-base.version>1.13.0</incode-module-base.version>
+        <incode-module-country.version>1.13.0</incode-module-country.version>
+        <incode-module-document.version>1.13.0</incode-module-document.version>
 
         <lombok.version>1.16.6</lombok.version>
         <axon-core.version>2.4.4</axon-core.version>
@@ -245,6 +246,13 @@ Copyright 2014~2015 Dan Haywood
                 <scope>import</scope>
             </dependency>
 
+            <!-- TODO: remove this dependency when move out as an incode module -->
+            <dependency>
+                <groupId>org.estatio</groupId>
+                <artifactId>udo-base</artifactId>
+                <version>1.8.0-SNAPSHOT</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
@@ -252,14 +260,14 @@ Copyright 2014~2015 Dan Haywood
             </dependency>
 
             <dependency>
-                <groupId>org.estatio</groupId>
-                <artifactId>udo-dom-geography</artifactId>
-                <version>${project.parent.version}</version>
+                <groupId>org.incode.module.country</groupId>
+                <artifactId>incode-module-country-dom</artifactId>
+                <version>1.13.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>org.estatio</groupId>
-                <artifactId>udo-dom-geography</artifactId>
-                <version>${project.parent.version}</version>
+                <groupId>org.incode.module.country</groupId>
+                <artifactId>incode-module-country-dom</artifactId>
+                <version>1.13.0-SNAPSHOT</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
@@ -268,6 +276,11 @@ Copyright 2014~2015 Dan Haywood
                 <groupId>org.isisaddons.module.poly</groupId>
                 <artifactId>isis-module-poly-dom</artifactId>
                 <version>${isis-module-poly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.security</groupId>
+                <artifactId>isis-module-security-dom</artifactId>
+                <version>${isis-module-security.version}</version>
             </dependency>
 
             <dependency>
@@ -286,6 +299,14 @@ Copyright 2014~2015 Dan Haywood
             <version>${isis.version}</version>
         </dependency>
 
+
+        <!-- TODO: remove this dependency when move out as an incode module -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>org.isisaddons.module.poly</groupId>
             <artifactId>isis-module-poly-dom</artifactId>
@@ -296,9 +317,11 @@ Copyright 2014~2015 Dan Haywood
             <artifactId>incode-module-document-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-geography</artifactId>
+            <groupId>org.incode.module.country</groupId>
+            <artifactId>incode-module-country-dom</artifactId>
         </dependency>
+
+
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>

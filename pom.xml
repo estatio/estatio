@@ -102,7 +102,8 @@ mvn clean install -DskipTests -o
 
         <incode-module-base.version>1.13.0</incode-module-base.version>
         <incode-module-communication.version>1.14.0-SNAPSHOT</incode-module-communication.version>
-        <incode-module-document.version>1.13.0-SNAPSHOT</incode-module-document.version>
+        <incode-module-country.version>1.13.0</incode-module-country.version>
+        <incode-module-document.version>1.13.0</incode-module-document.version>
 
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
 
@@ -591,6 +592,19 @@ mvn clean install -DskipTests -o
             </dependency>
 
             <dependency>
+                <groupId>org.incode.module.country</groupId>
+                <artifactId>incode-module-country-dom</artifactId>
+                <version>${incode-module-country.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.country</groupId>
+                <artifactId>incode-module-country-dom</artifactId>
+                <version>${incode-module-country.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
                 <groupId>org.incode.module.document</groupId>
                 <artifactId>incode-module-document-dom</artifactId>
                 <version>${incode-module-document.version}</version>
@@ -645,7 +659,6 @@ mvn clean install -DskipTests -o
                 <type>test-jar</type>
             </dependency>
 
-            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.base</groupId>
                 <artifactId>incode-module-base-dom</artifactId>
@@ -688,7 +701,6 @@ mvn clean install -DskipTests -o
             </dependency>
 
             <!-- UDO modules -->
-            
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-base</artifactId>
@@ -814,19 +826,6 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-geography</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-geography</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -1155,7 +1154,6 @@ mvn clean install -DskipTests -o
                 <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/geography/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
@@ -1183,7 +1181,6 @@ mvn clean install -DskipTests -o
                 <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/geography/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
@@ -1210,7 +1207,6 @@ mvn clean install -DskipTests -o
                 <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/geography/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/tax/dom</module>
                 <module>udo/event/dom</module>
@@ -1242,7 +1238,6 @@ mvn clean install -DskipTests -o
                 <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
-                <module>udo/geography/dom</module>
                 <module>udo/numerator/dom</module>
                 <module>udo/event/dom</module>
                 <module>udo/index/dom</module>

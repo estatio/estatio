@@ -35,14 +35,14 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.geography.CountryRepository;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationPreviousName;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;

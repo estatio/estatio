@@ -38,7 +38,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.Dflt;
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

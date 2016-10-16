@@ -27,8 +27,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.estatio.dom.geography.CountryRepository;
-import org.estatio.dom.geography.StateRepository;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.dom.impl.StateRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.PersonGenderType;

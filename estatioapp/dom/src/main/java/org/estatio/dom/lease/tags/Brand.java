@@ -42,7 +42,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -21,7 +21,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.geography.CountryRepository;
+import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScript {

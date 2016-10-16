@@ -20,9 +20,9 @@ package org.estatio.fixture.numerator;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.geography.CountryRepository;
+import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.dom.party.PartyConstants;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 
 public class NumeratorForOrganisationFra extends NumeratorForOrganisationAbstract {
 

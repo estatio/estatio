@@ -4,8 +4,8 @@
      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
         http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
 
-    <package name="org.estatio.dom.geography">
-        <class name="State"
+    <package name="org.incode.module.country.dom.impl">
+        <class name="Country"
                schema="dbo"
         >
         </class>

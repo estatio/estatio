@@ -27,7 +27,7 @@ import org.incode.module.base.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

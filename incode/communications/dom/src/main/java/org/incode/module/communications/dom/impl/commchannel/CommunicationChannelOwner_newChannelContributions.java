@@ -34,10 +34,10 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.CountryRepository;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.StateRepository;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.dom.impl.State;
+import org.incode.module.country.dom.impl.StateRepository;
 
 /**
  * Domain service that contributes actions to create a new

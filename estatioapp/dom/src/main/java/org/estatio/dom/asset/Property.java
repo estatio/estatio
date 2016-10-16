@@ -55,7 +55,7 @@ import org.incode.module.base.dom.types.ProperNameType;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

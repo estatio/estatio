@@ -1,4 +1,4 @@
-package org.estatio.dom.apptenancy;
+package org.estatio.dom.country;
 
 import java.util.List;
 
@@ -17,9 +17,15 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
+/**
+ * REVIEW: it's rather peculiar that this functionality has ended up here.  It was in udo-dom-geography (now moved out
+ * into incode-module-country), but I wanted to decouple country from AppTenancy completely, so moved this out.
+ *
+ * It would seem that this module (party) is the only one that needs the functionality provided here...
+ */
 @DomainService(
         nature = NatureOfService.DOMAIN
 )

@@ -19,7 +19,7 @@
 package org.estatio.dom.financial.utils;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 
 public final class IBANHelper {
 

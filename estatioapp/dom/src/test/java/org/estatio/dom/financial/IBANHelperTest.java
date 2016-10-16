@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;

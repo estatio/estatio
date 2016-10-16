@@ -34,7 +34,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.FinderInteraction;
 import org.incode.module.base.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

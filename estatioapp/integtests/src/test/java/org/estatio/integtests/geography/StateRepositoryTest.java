@@ -26,10 +26,10 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.CountryRepository;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.StateRepository;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.dom.impl.State;
+import org.incode.module.country.dom.impl.StateRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 

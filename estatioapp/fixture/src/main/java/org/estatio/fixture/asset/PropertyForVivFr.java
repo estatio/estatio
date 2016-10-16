@@ -19,9 +19,9 @@
 package org.estatio.fixture.asset;
 
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.geography.CountriesRefData;
+import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldFr;
 import org.estatio.fixture.party.PersonForJeanneDarcFr;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;

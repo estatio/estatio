@@ -48,7 +48,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.geography.Country;
+import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.ActivityRepository;
 import org.estatio.dom.lease.tags.Brand;
