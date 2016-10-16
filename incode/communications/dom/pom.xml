@@ -262,12 +262,12 @@ Copyright 2014~2015 Dan Haywood
             <dependency>
                 <groupId>org.incode.module.country</groupId>
                 <artifactId>incode-module-country-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-country.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.country</groupId>
                 <artifactId>incode-module-country-dom</artifactId>
-                <version>1.13.0-SNAPSHOT</version>
+                <version>${incode-module-country.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
