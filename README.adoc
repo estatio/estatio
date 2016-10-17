@@ -141,20 +141,24 @@ The Estatio application and modules depend on the framework in that its domain o
 On top of that are a number of modules from http://www.isisaddons.org[Isis Addons].  
 These address technical cross-cutting concerns such as security, auditing, publishing, freemarker mail-merge and so-on.
 The Estatio domain objects don't (tend to) have any dependencies on these modules (though there are one or two mixins to allow the audit trail to be viewed, for example).
+These modules are versioned independently (following the versioning of Apache Isis itself).
 
-At about the same level of abstraction are a modules provided by the http://catalog.incode.org[Incode Catalog].
+At about the same level of abstraction are modules provided by the http://catalog.incode.org[Incode Catalog].
 These provide functionality for various generic business subdomains, such as documents, notes, aliases and classifications.
 This functionality is expected/hoped to be reusable across multiple different applications.
+These modules are versioned independently (following the versioning of Apache Isis itself).
 
 On top of these are a number of Wicket UI components, also provided by http://isisaddons.org[Isis Addons].
 Like the modules, the Estatio domain objects don't (tend to) have any dependencies on these Wicket UI components; the one exception is that objects that can be rendered on a map must implement the `Locatable` interface.
+These modules are versioned independently (following the versioning of Apache Isis itself).
 
 On top of the generic business domain modules are the modules that contain the Estatio domain objects themselves, residing in _this_ git repo.
-To ensure modularity, these reside in separate maven modules, but are versioned together with all of them sharing a single parent `pom.xml`.
 There is some integration between Estatio domain objects and these generic subdomains, for example to allow ``Document``s to be attached to various domain objects (such as `Invoice` etc).
+To ensure modularity, these reside in separate maven modules, but are versioned together with all of them sharing a single parent `pom.xml`.
 
 Finally there is the Estatio application itself. 
-This also consists of further maven module in _this_ git repo, notably the `estatio-app` module (defining the `EstatioAppManifest` and a number of menu services) and the `estatio-webapp` module (which configures the various UI components and builds the WAR file).
+This consists of further maven modules again in _this_ git repo, notably the `estatio-app` module (defining the `EstatioAppManifest` and a number of menu services) and the `estatio-webapp` module (which configures the various UI components and builds the WAR file).
+These modules also versioned along with the Estatio domain objects mentioned above (they share the same parent `pom.xml`), 
 
 
 === Support
@@ -196,12 +200,11 @@ The idea of using present tense is that the commit history, when read back, can 
 
 (As discussed above), Estatio consists of multiple modules:
 
-* http://isisaddons.org[Isis Addons]' (technical) modules and wicket UI components each reside in their own git repo. +
-+
-These are re-released every time there is a new release of Apache Isis itself.
+* http://isisaddons.org[Isis Addons]' (technical) modules and wicket UI components each reside in their own git repo.
+These are versioned independently, generally tracking that of Apache Isis itself (eg `1.13.0`, `1.13.1`, `1.13.2` might all be releases running on top of Apache Isis `1.13.0`).
+They are re-released every time there is a new release of Apache Isis itself.
 
-* http://catalog.incode.org[Incode Catalog] (business) modules also each reside in their own git repo. +
-+
+* http://catalog.incode.org[Incode Catalog] (business) modules also each reside in their own git repo.
 These too are re-released every time there is a new release of Apache Isis itself.
 
 * Domain objects specific to Estatio itself (`Party`, `Lease`, `Invoice` etc are in separate maven modules) within _this_ git repo.
@@ -211,20 +214,26 @@ The Estatio application itself is also in maven modules within _this_ repository
 
 
 For any given user story, we expect that changes should only need to be made to code in one module.
-(If this isn't the case, then it suggests that the boundaries between the modules themselves are wrong, so should be reworked).
-Let's consider two different scenarios:
 
-* a change to functionality within the Estatio domain modules (in this git repo). +
-+
-In this case, the developer can just make and test the change, there's not much more to be said...
+[IMPORTANT]
+====
+If we find that it isn't the case that any given user story only changes code in one module, then that is an indicator that the boundaries between the modules themselves maybe wrong,o should be reworked.
+In other words, we should ensure that the https://en.wikipedia.org/wiki/Single_responsibility_principle[single responsibility principle] is followed: code that changes at the same rate should be grouped together.
+====
 
-* a change to functionality within an http://isisaddons.org[Isis Addons]' (technical) modules, or an http://catalog.incode.org[Incode Catalog] (business) modules. +
-+
-Most of these modules have their own demo apps and integration tests, so _in theory_ one could build out the new functionality just within that demo app.
-However, context is king, so what we recommend instead is that you import into the IDE in the `-SNAPSHOT` version of the module to be changed, and update Estatio locally to reference that `-SNAPSHOT`.
-You can then prototype and develop the changes.
-When the feature is more or less there, then switch back to the demo app and productionize the changes by adding in any unit- and integration tests for the functionality that has been prototyped. +
-+
+
+In the case where a user story changes functionality that resides within only te Estatio domain modules (in this git repo), then there's not much to be said: just prototype and make the change, then productionize with unit- and integration-tests.
+
+The more interesting case is a user story which changes functionality within an http://isisaddons.org[Isis Addons]' (technical) modules, or an http://catalog.incode.org[Incode Catalog] (business) modules:
+
+* Most of these modules have their own demo apps and integration tests, so _in theory_ one could build out the new functionality just within that demo app.
+
+* However, context is king, so what we recommend instead is that you import into the IDE in the `-SNAPSHOT` version of the module to be changed, and update Estatio locally to reference that `-SNAPSHOT`.
+
+* You can then prototype and develop the changes.
+
+* When the feature is more or less there, then switch back to the demo app and productionize the changes by adding in any unit- and integration tests for the functionality that has been prototyped.
+
 [CAUTION]
 ====
 Not all of the modules have their own demo app.
