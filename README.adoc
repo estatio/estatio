@@ -227,7 +227,7 @@ where:
 * `1.13.0` is the base release (adjust as necessary)
 * `origin` is the repo to push back to.
 
-Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0-20161017-1231`; this is published to the Snapshot repository.  
+Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the Snapshot repository.  
 
 Finally, update Estatio to depend upon this newly minted interim version.
 
