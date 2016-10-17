@@ -217,7 +217,7 @@ For any given user story, we expect that changes should only need to be made to 
 
 [IMPORTANT]
 ====
-If we find that it isn't the case that any given user story only changes code in one module, then that is an indicator that the boundaries between the modules themselves maybe wrong,o should be reworked.
+If we find that it isn't the case that any given user story only changes code in one module, then that is an indicator that the boundaries between the modules themselves maybe wrong, so should probably be reworked.
 In other words, we should ensure that the https://en.wikipedia.org/wiki/Single_responsibility_principle[single responsibility principle] is followed: code that changes at the same rate should be grouped together.
 ====
 
