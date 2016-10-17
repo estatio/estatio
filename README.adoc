@@ -57,7 +57,7 @@ and build using maven:
 mvn clean install -Pjetty-console
 ----
 
-The clone is approx 70Mb, and takes approximately 1 minute to build.
+The clone is approx 400Mb, and takes approximately 5 minutes to build.
 
 
 === Configure Estatio (JDBC URL)
@@ -115,13 +115,13 @@ http://localhost:8080/wicket/
 
 * Login using `estatio-admin/pass` or `estatio-user/pass`.
 
-* Install some demo fixtures:
+* Install some demo fixtures (as estatio-admin):
 
-** Administration > Install Demo Fixtures
+    Prototyping > Run Fixture Script > Run script: Estatio Demo Fixture
 
 * Run a script to setup invoices:
 
-** Administration > Run script: GenerateTopModelInvoice
+    Prototyping > Run Fixture Script > Run script: Generate Top Model Invoice
 
 And take a look around :-)
 
@@ -148,7 +148,7 @@ These provide functionality for various generic business subdomains, such as doc
 This functionality is expected/hoped to be reusable across multiple different applications.
 These modules are versioned independently (following the versioning of Apache Isis itself).
 
-On top of these are a number of Wicket UI components, also provided by http://isisaddons.org[Isis Addons].
+On top of these are a number of Wicket UI components, also provided by http://www.isisaddons.org[Isis Addons].
 Like the modules, the Estatio domain objects don't (tend to) have any dependencies on these Wicket UI components; the one exception is that objects that can be rendered on a map must implement the `Locatable` interface.
 These modules are versioned independently (following the versioning of Apache Isis itself).
 
@@ -208,7 +208,7 @@ They are re-released every time there is a new release of Apache Isis itself.
 These too are re-released every time there is a new release of Apache Isis itself.
 
 * Domain objects specific to Estatio itself (`Party`, `Lease`, `Invoice` etc are in separate maven modules) within _this_ git repo.
-These are split into different to eliminate cyclic dependencies between modules (avoid the big all of mud). +
+These are split into different to eliminate cyclic dependencies between modules (avoid the big ball of mud). +
 +
 The Estatio application itself is also in maven modules within _this_ repository.
 
