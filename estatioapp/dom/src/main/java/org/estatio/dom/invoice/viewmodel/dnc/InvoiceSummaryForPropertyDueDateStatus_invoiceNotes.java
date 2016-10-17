@@ -20,11 +20,14 @@ package org.estatio.dom.invoice.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+
 @Mixin
-public class InvoiceDocAndComm_prelimCommunicationState extends InvoiceDocAndComm_communicationStateAbstract {
+public class InvoiceSummaryForPropertyDueDateStatus_invoiceNotes extends
+        InvoiceSummaryForPropertyDueDateStatus_collectionAbstract<DocAndCommForInvoiceNote> {
 
-    public InvoiceDocAndComm_prelimCommunicationState(final InvoiceDocAndComm invoiceDocAndComm) {
-        super(invoiceDocAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_PRELIM);
+    public InvoiceSummaryForPropertyDueDateStatus_invoiceNotes(
+            final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
+        super(invoiceSummary, i -> new DocAndCommForInvoiceNote(i));
     }
-
 }

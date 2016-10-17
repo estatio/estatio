@@ -24,19 +24,19 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.communications.dom.impl.comms.CommunicationState;
+import org.incode.module.communications.dom.impl.comms.Communication;
 
-public abstract class InvoiceDocAndComm_communicationStateAbstract extends InvoiceDocAndComm_dncAbstract {
+public abstract class DocAndCommAbstract_communication<T extends DocAndCommAbstract<T>> extends DocAndCommAbstract_abstract<T> {
 
-    public InvoiceDocAndComm_communicationStateAbstract(final InvoiceDocAndComm invoiceDocAndComm, final String documentTypeReference) {
-        super(invoiceDocAndComm, documentTypeReference);
+    public DocAndCommAbstract_communication(final T docAndComm, final String documentTypeReference) {
+        super(docAndComm, documentTypeReference);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Property()
-    public CommunicationState $$() {
-        return getCommunication() != null ? getCommunication().getState() : null;
+    public Communication $$() {
+        return super.getCommunication();
     }
 
 }

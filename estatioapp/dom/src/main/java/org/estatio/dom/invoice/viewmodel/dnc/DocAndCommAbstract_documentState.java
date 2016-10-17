@@ -26,10 +26,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
-public abstract class InvoiceDocAndComm_documentStateAbstract extends InvoiceDocAndComm_dncAbstract {
+public abstract class DocAndCommAbstract_documentState<T extends DocAndCommAbstract<T>> extends DocAndCommAbstract_abstract<T> {
 
-    public InvoiceDocAndComm_documentStateAbstract(final InvoiceDocAndComm invoiceDocAndComm, final String documentTypeReference) {
-        super(invoiceDocAndComm, documentTypeReference);
+    public DocAndCommAbstract_documentState(final T docAndComm, final String documentTypeReference) {
+        super(docAndComm, documentTypeReference);
     }
 
     @Action(semantics = SemanticsOf.SAFE)

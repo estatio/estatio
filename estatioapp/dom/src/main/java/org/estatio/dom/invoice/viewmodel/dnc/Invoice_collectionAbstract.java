@@ -27,28 +27,28 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.invoice.Invoice;
 
-@Mixin
-public class Invoice_documentsAndCommunications {
+public abstract class Invoice_collectionAbstract<T extends DocAndCommAbstract<T>> {
 
     private final Invoice invoice;
+    private DocAndCommAbstract.Factory.DncProvider<T> provider;
 
-    public Invoice_documentsAndCommunications(final Invoice invoice) {
+    public Invoice_collectionAbstract(final Invoice invoice, final DocAndCommAbstract.Factory.DncProvider<T> provider) {
         this.invoice = invoice;
+        this.provider = provider;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Collection()
     @CollectionLayout(defaultView = "table")
-    public List<InvoiceDocAndComm> $$() {
-        return invoiceDocAndCommFactory.documentsAndCommunicationsFor(invoice);
+    public List<T> $$() {
+        return docAndCommFactory.documentsAndCommunicationsFor(invoice, i -> provider.instantiate(i));
     }
 
     @Inject
-    InvoiceDocAndComm.Factory invoiceDocAndCommFactory;
+    DocAndCommAbstract.Factory docAndCommFactory;
 }

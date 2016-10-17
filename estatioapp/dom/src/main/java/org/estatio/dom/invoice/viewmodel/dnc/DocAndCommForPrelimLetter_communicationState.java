@@ -21,10 +21,10 @@ package org.estatio.dom.invoice.viewmodel.dnc;
 import org.apache.isis.applib.annotation.Mixin;
 
 @Mixin
-public class InvoiceDocAndComm_invoiceDocumentState extends InvoiceDocAndComm_documentStateAbstract {
+public class DocAndCommForPrelimLetter_communicationState extends DocAndCommAbstract_communicationState<DocAndCommForPrelimLetter> {
 
-    public InvoiceDocAndComm_invoiceDocumentState(final InvoiceDocAndComm invoiceDocAndComm) {
-        super(invoiceDocAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_INVOICE);
+    public DocAndCommForPrelimLetter_communicationState(final DocAndCommForPrelimLetter invoiceDocAndComm) {
+        super(invoiceDocAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_PRELIM);
     }
 
 }

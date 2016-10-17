@@ -23,42 +23,33 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
-@Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_createDocuments {
+public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract extends InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
 
-    private final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
-
-    public InvoiceSummaryForPropertyDueDateStatus_createDocuments(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        this.invoiceSummary = invoiceSummary;
+    public InvoiceSummaryForPropertyDueDateStatus_prepareAbstract(
+            final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
+            final String documentTypeReference) {
+        super(invoiceSummary, documentTypeReference);
     }
 
-
-    public InvoiceSummaryForPropertyDueDateStatus $$(final DocumentTemplate documentTemplate) throws IOException {
-
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public InvoiceSummaryForPropertyDueDateStatus $$() throws IOException {
         final List<Invoice> invoices = invoiceSummary.getInvoices();
         for (Invoice invoice : invoices) {
-            DocumentTemplate documentTemplate1 = documentTemplate;
-            invoiceDocumentTemplateService.createAttachAndScheduleRender(invoice, documentTemplate1);
+            final DocumentTemplate documentTemplate = documentTemplateFor(invoice);
+            invoiceDocumentTemplateService.createAttachAndScheduleRender(invoice, documentTemplate);
         }
-
         return this.invoiceSummary;
-    }
-
-    public String disable$$() {
-        return invoiceSummary.getInvoices().isEmpty()? "No invoices": null;
-    }
-
-    public List<DocumentTemplate> choices0$$() {
-        final List<Invoice> invoices = invoiceSummary.getInvoices();
-        final Invoice anyInvoice = invoices.get(0);
-        return invoiceDocumentTemplateService.templatesFor(anyInvoice);
     }
 
     @Inject

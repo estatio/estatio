@@ -29,24 +29,24 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.Invoice;
 
-public abstract class InvoiceDocAndComm_dncAbstract {
+public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T>> {
 
-    final InvoiceDocAndComm invoiceDocAndComm;
+    final T docAndComm;
     private final String documentTypeReference;
 
-    public InvoiceDocAndComm_dncAbstract(final InvoiceDocAndComm invoiceDocAndComm, final String documentTypeReference) {
-        this.invoiceDocAndComm = invoiceDocAndComm;
+    public DocAndCommAbstract_abstract(final T docAndComm, final String documentTypeReference) {
+        this.docAndComm = docAndComm;
         this.documentTypeReference = documentTypeReference;
     }
 
     Invoice getInvoice() {
-        return invoiceDocAndComm.getInvoice();
+        return docAndComm.getInvoice();
     }
 
     DocumentType getDocumentType() {
         return queryResultsCache.execute(
                 () -> documentTypeRepository.findByReference(documentTypeReference),
-                InvoiceDocAndComm_dncAbstract.class,
+                DocAndCommAbstract_abstract.class,
                 "getDocumentType", documentTypeReference);
     }
 
@@ -66,5 +66,5 @@ public abstract class InvoiceDocAndComm_dncAbstract {
     DocumentTypeRepository documentTypeRepository;
 
     @Inject
-    InvoiceDocAndCommService invoiceDocAndCommService;
+    DocAndCommService invoiceDocAndCommService;
 }

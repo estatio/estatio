@@ -35,11 +35,11 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.estatio.dom.invoice.Invoice;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class InvoiceDocAndCommService {
+public class DocAndCommService {
 
     Document findDocument(final Invoice invoice, final DocumentType documentType) {
         return queryResultsCache
-                .execute(() -> findDocumentNotCached(invoice, documentType), InvoiceDocAndCommService.class, "findDocument",
+                .execute(() -> findDocumentNotCached(invoice, documentType), DocAndCommService.class, "findDocument",
                         invoice,
                         documentType);
     }
@@ -58,7 +58,7 @@ public class InvoiceDocAndCommService {
 
     public Communication findCommunication(final Invoice invoice, final DocumentType documentType) {
         return queryResultsCache
-                .execute(() -> findCommunicationNotCached(invoice, documentType), InvoiceDocAndCommService.class, "findCommunication", invoice,
+                .execute(() -> findCommunicationNotCached(invoice, documentType), DocAndCommService.class, "findCommunication", invoice,
                         documentType);
     }
 

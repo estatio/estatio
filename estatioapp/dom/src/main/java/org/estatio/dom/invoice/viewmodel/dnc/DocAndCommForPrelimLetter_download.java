@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -21,15 +20,13 @@ package org.estatio.dom.invoice.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.incode.module.document.dom.mixins.T_createDocumentAndRender;
-
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.invoice.Constants;
 
 @Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_createDocument extends
-        T_createDocumentAndRender<InvoiceSummaryForPropertyDueDateStatus> {
+public class DocAndCommForPrelimLetter_download extends DocAndCommAbstract_download<DocAndCommForPrelimLetter> {
 
-    public InvoiceSummaryForPropertyDueDateStatus_createDocument(final InvoiceSummaryForPropertyDueDateStatus domainObject) {
-        super(domainObject);
+    public DocAndCommForPrelimLetter_download(final DocAndCommForPrelimLetter docAndComm) {
+        super(docAndComm, Constants.DOC_TYPE_REF_PRELIM, "Merged Preliminary Letters.pdf");
     }
+
 }

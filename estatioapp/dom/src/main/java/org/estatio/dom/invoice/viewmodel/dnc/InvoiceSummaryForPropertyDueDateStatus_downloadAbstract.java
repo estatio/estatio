@@ -18,25 +18,35 @@
  */
 package org.estatio.dom.invoice.viewmodel.dnc;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.communications.dom.impl.comms.Communication;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
-public abstract class InvoiceDocAndComm_communicationAbstract extends InvoiceDocAndComm_dncAbstract {
+public abstract class InvoiceSummaryForPropertyDueDateStatus_downloadAbstract<T extends DocAndCommAbstract<T>>  {
 
-    public InvoiceDocAndComm_communicationAbstract(final InvoiceDocAndComm invoiceDocAndComm, final String documentTypeReference) {
-        super(invoiceDocAndComm, documentTypeReference);
+    private final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
+    private final DocAndCommAbstract.Factory.DncProvider<T> provider;
+
+    public InvoiceSummaryForPropertyDueDateStatus_downloadAbstract(
+            final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
+            final DocAndCommAbstract.Factory.DncProvider<T> provider) {
+        this.invoiceSummary = invoiceSummary;
+        this.provider = provider;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @Property()
-    public Communication $$() {
-        return super.getCommunication();
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public List<T> $$() {
+        return docAndCommFactory.documentsAndCommunicationsFor(invoiceSummary.getInvoices(), provider);
     }
 
+    @Inject
+    DocAndCommForPrelimLetter.Factory docAndCommFactory;
 }

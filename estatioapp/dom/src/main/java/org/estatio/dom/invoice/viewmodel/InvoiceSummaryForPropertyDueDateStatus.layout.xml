@@ -53,21 +53,42 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Prelim &amp; Invoice Comms">
+                <tab name="Preliminary Letters">
                     <row>
                         <col span="12">
-                            <ns2:collection id="documentsAndCommunications">
-                                <ns2:action id="createDocument">
-                                    <ns2:named>Preview</ns2:named>
+                            <ns2:collection id="preliminaryLetters">
+                                <ns2:action id="preparePreliminaryLetters">
+                                    <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="createDocuments" hidden="EVERYWHERE"/>
-                                <ns2:action id="sendCommunications">
-                                    <ns2:named>Send</ns2:named>
+                                <ns2:action id="sendByEmailPreliminaryLetters">
+                                    <ns2:named>Send by email</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="downloadForSending">
-                                    <ns2:describedAs>The communication(s) will be marked as sent.</ns2:describedAs>
+                                <ns2:action id="sendByPostPreliminaryLetters">
+                                    <ns2:named>Send by post</ns2:named>
                                 </ns2:action>
-                                <ns2:named>Prelim &amp; Invoice Comms</ns2:named>
+                                <ns2:action id="downloadPreliminaryLetters">
+                                    <ns2:named>Download PDF</ns2:named>
+                                </ns2:action>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Invoice Notes">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="invoiceNotes">
+                                <ns2:action id="prepareInvoiceNotes">
+                                    <ns2:named>Prepare</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="sendByEmailInvoiceNotes">
+                                    <ns2:named>Send by email</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="sendByPostInvoiceNotes">
+                                    <ns2:named>Send by post</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="downloadInvoiceNotes">
+                                    <ns2:named>Download PDF</ns2:named>
+                                </ns2:action>
                             </ns2:collection>
                         </col>
                     </row>

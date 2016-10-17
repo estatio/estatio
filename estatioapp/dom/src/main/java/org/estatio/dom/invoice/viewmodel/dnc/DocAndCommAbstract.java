@@ -22,22 +22,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.ViewModel;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.document.dom.services.ClassService;
+
 import org.estatio.dom.invoice.Invoice;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel
-public class InvoiceDocAndComm {
+public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
 
     @Title
     @Property()
@@ -48,10 +50,10 @@ public class InvoiceDocAndComm {
     @Getter @Setter
     private CommunicationChannel sendTo;
 
-    public InvoiceDocAndComm() {
+    public DocAndCommAbstract() {
     }
 
-    public InvoiceDocAndComm(final Invoice invoice) {
+    public DocAndCommAbstract(final Invoice invoice) {
         this.invoice = invoice;
         this.sendTo = invoice.getSendTo();
     }
@@ -59,18 +61,30 @@ public class InvoiceDocAndComm {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class Factory {
 
-        List<InvoiceDocAndComm> documentsAndCommunicationsFor(
-                final List<Invoice> invoices) {
+        public static interface DncProvider<T extends DocAndCommAbstract<T>> {
+            T instantiate(Invoice invoice);
+        }
+
+        <T extends DocAndCommAbstract<T>>  List<T> documentsAndCommunicationsFor(
+                final List<Invoice> invoices,
+                final DncProvider<T> provider) {
             return Lists.newArrayList(
                     invoices.stream()
-                            .map(invoice -> new InvoiceDocAndComm(invoice))
+                            .map(invoice -> provider.instantiate(invoice))
                             .collect(Collectors.toList())
             );
         }
 
-        List<InvoiceDocAndComm> documentsAndCommunicationsFor(final Invoice invoice) {
-            return documentsAndCommunicationsFor(Collections.singletonList(invoice));
+        <T extends DocAndCommAbstract<T>> List<T> documentsAndCommunicationsFor(
+                final Invoice invoice,
+                final DncProvider<T> provider) {
+            return documentsAndCommunicationsFor(Collections.singletonList(invoice), provider);
         }
+
+        @Inject
+        ClassService classService;
+
     }
+
 
 }

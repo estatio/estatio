@@ -27,29 +27,30 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
-@Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_documentsAndCommunications {
+public abstract class InvoiceSummaryForPropertyDueDateStatus_collectionAbstract<T extends DocAndCommAbstract<T>> {
 
     private final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
+    private final DocAndCommAbstract.Factory.DncProvider<T> provider;
 
-    public InvoiceSummaryForPropertyDueDateStatus_documentsAndCommunications(
-            final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
+    public InvoiceSummaryForPropertyDueDateStatus_collectionAbstract(
+            final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
+            final DocAndCommAbstract.Factory.DncProvider<T> provider) {
         this.invoiceSummary = invoiceSummary;
+        this.provider = provider;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Collection()
     @CollectionLayout(defaultView = "table")
-    public List<InvoiceDocAndComm> $$() {
-        return invoiceDocAndCommFactory.documentsAndCommunicationsFor(invoiceSummary.getInvoices());
+    public List<T> $$() {
+        return docAndCommFactory.documentsAndCommunicationsFor(invoiceSummary.getInvoices(), provider);
     }
 
     @Inject
-    InvoiceDocAndComm.Factory invoiceDocAndCommFactory;
+    DocAndCommForPrelimLetter.Factory docAndCommFactory;
 }
