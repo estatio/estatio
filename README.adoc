@@ -133,7 +133,7 @@ If you encounter any bugs, do https://github.com/estatio/estatio/blob/master/pom
 Estatio consists of multiple modules, deployed as a single WAR (a "modular monolith").
 These modules are layered as follows:
 
-TODO: x-ref picture.
+image::https://raw.githubusercontent.com/estatio/estatio/master/docs/images/modules.png[]
 
 At the bottom is http://isis.apache.org[Apache Isis] framework.
 The Estatio application and modules depend on the framework in that its domain objects are annotated with Apache Isis and DataNucleus annotations, and use domain services provided by Apache Isis (such as `RepositoryService` and `TitleService`).
@@ -184,9 +184,9 @@ These are re-released every time there is a new release of Apache Isis itself.
 These too are re-released every time there is a new release of Apache Isis itself.
 
 * Domain objects specific to Estatio itself (`Party`, `Lease`, `Invoice` etc are in separate maven modules) within _this_ git repo.
-These are split into different to eliminate cyclic dependencies between modules (avoid the big all of mud).
-
-+ The Estatio application itself is also in maven modules within _this_ repository.
+These are split into different to eliminate cyclic dependencies between modules (avoid the big all of mud). +
++
+The Estatio application itself is also in maven modules within _this_ repository.
 
 
 For any given user story, we expect that changes should only need to be made to code in one module.
