@@ -257,7 +257,8 @@ where:
 * `1.13.0` is the base release (adjust as necessary)
 * `origin` is the repo to push back to.
 
-Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the Snapshot repository.  
+Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0.20161017-1231`; this is published to the http://repository-estatio.forge.cloudbees.com/snapshot/[Snapshot repository], eg for the http://repository-estatio.forge.cloudbees.com/snapshot/org/incode/module/[Incode Catalog] or the
+http://repository-estatio.forge.cloudbees.com/snapshot/org/isisaddons/module/[Isis Addons modules]. 
 
 Finally, update Estatio to depend upon this newly minted interim version.
 
