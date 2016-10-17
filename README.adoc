@@ -171,6 +171,27 @@ There is also extensive http://isis.apache.org/documentation.html[online documen
 This section contains useful info for the Estatio developers themselves.
 
 
+=== Commit messages
+
+Use the format:
+
+[source,]
+----
+EST-xxxx: fixes the yada yada yada
+----
+
+that is, specifying the Jira issue number, and then a description of the change in the present tense.
+
+For example: 
+
+* `EST-864: fixes bad reference to country-dom (was -SNAPSHOT, should be 1.13.0)`
+* `EST-863 and EST-865: moves base and documentation module out to incode.`
+* `EST-861: removes EstatioUserRole, with functionality moved to EstatioRole`
+
+
+The idea of using present tense is that the commit history, when read back, can be read as: "this patch, if it was applied... "
+
+
 === Multi-module development
 
 (As discussed above), Estatio consists of multiple modules:
