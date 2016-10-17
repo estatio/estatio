@@ -304,7 +304,7 @@ where:
 
 Thanks to:
 
-* image::https://raw.github.com/estatio/estatio/master/codequality/logoClover.png[width="100px",link="https://raw.github.com/estatio/estatio/master/codequality/logoClover.png"] https://www.atlassian.com[Atlassian] for providing an open source link:https://www.atlassian.com/software/clover/overview/[Clover] license
+* image:https://raw.github.com/estatio/estatio/master/codequality/logoClover.png[width="100px",link="https://raw.github.com/estatio/estatio/master/codequality/logoClover.png"] https://www.atlassian.com[Atlassian] for providing an open source link:https://www.atlassian.com/software/clover/overview/[Clover] license
 * link:http://structure101.com/contact/[Headway Software] for providing an open source link:http://structure101.com/[Structure 101] license
 
 
