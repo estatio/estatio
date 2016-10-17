@@ -1,0 +1,315 @@
+= Estatio: an open source estate management system.
+
+Estatio is modern and flexible property management software.
+It offers real estate professionals and service providers the power and flexibility to manage their business in a superior, flexible and cost-effective manner.
+
+
+== Screenshots
+
+The following screenshots (taken 13 december 2014) correspond to the business logic in Estatio's link:https://github.com/estatio/estatio/tree/master/estatioapp/dom/src/main/java/org/estatio/dom[domain object model].
+
+=== All properties
+
+image::https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties.png[width="600px",link="https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties.png"]
+
+image::https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties-Map.png[width="600px",link="https://raw.github.com/estatio/estatio/master/docs/screenshots/AllProperties-Map.png"]
+
+=== Lease
+
+image::https://raw.github.com/estatio/estatio/master/docs/screenshots/Lease.png[width="600px",link="https://raw.github.com/estatio/estatio/master/docs/screenshots/Lease.png"]
+
+=== LeaseItem
+
+image::https://raw.github.com/estatio/estatio/master/docs/screenshots/LeaseItem.png[width="600px",link="https://raw.github.com/estatio/estatio/master/docs/screenshots/LeaseItem.png"]
+
+=== Invoice
+
+image::https://raw.github.com/estatio/estatio/master/docs/screenshots/Invoice.png[width="600px",link="https://raw.github.com/estatio/estatio/master/docs/screenshots/Invoice.png"]
+
+
+== Trying out Estatio
+
+=== Building Estatio
+
+==== Prereqs
+
+Estatio runs on Java and is built with http://maven.apache.org[Maven].
+The source code is managed using https://help.github.com/articles/set-up-git[git], and is held on http://github.com[github].
+
+If you don't already have them installed, install Java (JDK 6 or later), Maven (3.0.4 or later), and git.
+
+==== Download and build Estatio
+
+Estatio is built using maven.
+
+Download using git:
+
+[source]
+----
+git clone https://github.com/estatio/estatio.git
+cd estatio
+----
+
+and build using maven:
+
+[source]
+----
+mvn clean install -Pjetty-console
+----
+
+The clone is approx 70Mb, and takes approximately 1 minute to build.
+
+
+=== Configure Estatio (JDBC URL)
+
+Before Estatio can be run, you must configure its JDBC URL; typically this lives in the `webapp/src/main/webapp/WEB-INF/persistor.properties` properties file.
+
+You can do this most easily by copying a set of property entries from `webapp/src/main/webapp/WEB-INF/persistor-SAMPLE.properties`.
+
+For example, to run against an in-memory HSQLDB, the `persistor.properties` file should consist of:
+
+[source]
+----
+isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName=org.hsqldb.jdbcDriver
+isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL=jdbc:hsqldb:mem:test
+isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName=sa
+isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword=
+----
+
+The JDBC driver for HSQLDB is on the classpath.
+If you want to connect to some other database, be sure to update the `pom.xml` to add the driver as a `<dependency>`.
+
+=== Run Estatio
+
+You can run Estatio either using the standalone (self-hosting) version of the WAR, or using `mvn jetty plugin`.
+
+* Running as a self-hosting JAR +
++
+Run using: +
++
+[source]
+----
+java -jar estatioapp/webapp/target/estatio-webapp-x.y.z-SNAPSHOT-jetty-console.war
+----
++
+(where `x.y.z` is the current version), and press the 'start button'.
+
+* Running through Maven +
++
+Run using: +
++
+[source]
+----
+cd estatioapp/webapp
+mvn jetty:run
+----
+
+Once the app has started, browse to:
+
+[source]
+----
+http://localhost:8080/wicket/
+----
+
+=== Using Estatio
+
+* Login using `estatio-admin/pass` or `estatio-user/pass`.
+
+* Install some demo fixtures:
+
+** Administration > Install Demo Fixtures
+
+* Run a script to setup invoices:
+
+** Administration > Run script: GenerateTopModelInvoice
+
+And take a look around :-)
+
+If you encounter any bugs, do https://github.com/estatio/estatio/blob/master/pom.xml#L70[let us know].
+
+
+=== Implementation
+
+Estatio consists of multiple modules, deployed as a single WAR (a "modular monolith").
+These modules are layered as follows:
+
+TODO: x-ref picture.
+
+At the bottom is http://isis.apache.org[Apache Isis] framework.
+The Estatio application and modules depend on the framework in that its domain objects are annotated with Apache Isis and DataNucleus annotations, and use domain services provided by Apache Isis (such as `RepositoryService` and `TitleService`).
+
+On top of that are a number of modules from http://www.isisaddons.org[Isis Addons].  
+These address technical cross-cutting concerns such as security, auditing, publishing, freemarker mail-merge and so-on.
+The Estatio domain objects don't (tend to) have any dependencies on these modules (though there are one or two mixins to allow the audit trail to be viewed, for example).
+
+At about the same level of abstraction are a modules provided by the http://catalog.incode.org[Incode Catalog].
+These provide functionality for various generic business subdomains, such as documents, notes, aliases and classifications.
+This functionality is expected/hoped to be reusable across multiple different applications.
+
+On top of these are a number of Wicket UI components, also provided by http://isisaddons.org[Isis Addons].
+Like the modules, the Estatio domain objects don't (tend to) have any dependencies on these Wicket UI components; the one exception is that objects that can be rendered on a map must implement the `Locatable` interface.
+
+On top of the generic business domain modules are the modules that contain the Estatio domain objects themselves, residing in _this_ git repo.
+To ensure modularity, these reside in separate maven modules, but are versioned together with all of them sharing a single parent `pom.xml`.
+There is some integration between Estatio domain objects and these generic subdomains, for example to allow ``Document``s to be attached to various domain objects (such as `Invoice` etc).
+
+Finally there is the Estatio application itself. 
+This also consists of further maven module in _this_ git repo, notably the `estatio-app` module (defining the `EstatioAppManifest` and a number of menu services) and the `estatio-webapp` module (which configures the various UI components and builds the WAR file).
+
+
+=== Support
+
+You are free to adapt or extend Estatio to your needs.
+If you would like assistance in doing so, go to http://www.estatio.org[www.estatio.org].
+
+You can find plenty of help on using Apache Isis at the http://isis.apache.org/support.html[Isis mailing lists].
+There is also extensive http://isis.apache.org/documentation.html[online documentation].
+
+
+== Developers' Guide
+
+This section contains useful info for the Estatio developers themselves.
+
+
+=== Multi-module development
+
+(As discussed above), Estatio consists of multiple modules:
+
+* http://isisaddons.org[Isis Addons]' (technical) modules and wicket UI components each reside in their own git repo. +
++
+These are re-released every time there is a new release of Apache Isis itself.
+
+* http://catalog.incode.org[Incode Catalog] (business) modules also each reside in their own git repo. +
++
+These too are re-released every time there is a new release of Apache Isis itself.
+
+* Domain objects specific to Estatio itself (`Party`, `Lease`, `Invoice` etc are in separate maven modules) within _this_ git repo.
+These are split into different to eliminate cyclic dependencies between modules (avoid the big all of mud).
+
++ The Estatio application itself is also in maven modules within _this_ repository.
+
+
+For any given user story, we expect that changes should only need to be made to code in one module.
+(If this isn't the case, then it suggests that the boundaries between the modules themselves are wrong, so should be reworked).
+Let's consider two different scenarios:
+
+* a change to functionality within the Estatio domain modules (in this git repo). +
++
+In this case, the developer can just make and test the change, there's not much more to be said...
+
+* a change to functionality within an http://isisaddons.org[Isis Addons]' (technical) modules, or an http://catalog.incode.org[Incode Catalog] (business) modules. +
++
+Most of these modules have their own demo apps and integration tests, so _in theory_ one could build out the new functionality just within that demo app.
+However, context is king, so what we recommend instead is that you import into the IDE in the `-SNAPSHOT` version of the module to be changed, and update Estatio locally to reference that `-SNAPSHOT`.
+You can then prototype and develop the changes.
+When the feature is more or less there, then switch back to the demo app and productionize the changes by adding in any unit- and integration tests for the functionality that has been prototyped. +
++
+[CAUTION]
+====
+Not all of the modules have their own demo app.
+In such cases, ideally it would be best to take the time to create a demo app first, then proceed as above.
+But, if that time can't be justified, then just develop and test the changes within Estatio.
+====
+
+The Estatio application itself MUST NOT have dependencies on `-SNAPSHOT` versions (because otherwise we lose traceability).
+Thus, for those stories where a module has been revised, a new interim release must be created of that module.
+This is done using the `interim-release.sh` script.
+
+You will find that the `README` for each module explains how this is done; basically though it's just a matter of running a command such as:
+
+[source,bash]
+----
+sh interim-release.sh 1.13.0 origin
+----
+
+where:
+
+* `1.13.0` is the base release (adjust as necessary)
+* `origin` is the repo to push back to.
+
+Estatio's CI server (on CloudBees) will then create a new timestamped build, eg `1.13.0-20161017-1231`; this is published to the Snapshot repository.  
+
+Finally, update Estatio to depend upon this newly minted interim version.
+
+
+
+
+
+=== AsciiDoc documentation
+
+We use Asciidoc for our documentation (such as it is).
+These reside in `adocs/documentation` directory.
+(There is also some older non-Asciidoc documentation under `docs/` directory).
+
+==== Editing Asciidoc
+
+Recommended is http://asciidocfx.com/[Asciidoc], which is cross-platform.
+This provides side-by-side preview of the document (with sync'ed scrolling), and an outline view of the document.
+Recommended.
+
+==== Style Guide
+
+Some guidance on writing Asciidoc (this list will likely grow in the future):
+
+* Start each sentence in a paragraph on a new line. +
++
+This makes it easy to spot too-long sentences, and sentences that are repetitive. +
+It also makes it easy to apply pull requests to documentation.
+
+==== How to generate the AsciiDoc pages
+
+Just run:
+
+[source]
+----
+cd adocs/documentation
+mvn site
+----
+
+The `.html` will be generated in `target/site`.
+It should be possible to load the HTML straight from the directory.
+Alternatively, load from a webserver, eg:
+
+[source]
+----
+python -m SimpleHTTPServer
+----
+
+and browse to link:http://localhost:8000[http://localhost:8000].
+
+The `mvn` script also generates docbook XML and PDF, but there are some caveats:
+
+* the PDF currently does not include images at all.
+
+* Using link:https://github.com/asciidoctor/asciidoctor-fopub[asciidoctor-fopub] the XML can be converted to PDF; however there are currently some issues with images being scaled correctly.
+
+
+=== Release process
+
+To release the open source version, use:
+
+[source]
+----
+sh release.sh -j EST-1234 -r 1.7.0 -s 1.8.0-SNAPSHOT
+----
+
+where:
+
+* -j is the JIRA number
+* -r is the release version
+* -s is the next snapshot version
+
+
+== Thanks
+
+Thanks to:
+
+* image::https://raw.github.com/estatio/estatio/master/codequality/logoClover.png[width="100px",link="https://raw.github.com/estatio/estatio/master/codequality/logoClover.png"] https://www.atlassian.com[Atlassian] for providing an open source link:https://www.atlassian.com/software/clover/overview/[Clover] license
+* link:http://structure101.com/contact/[Headway Software] for providing an open source link:http://structure101.com/[Structure 101] license
+
+
+== Legal Stuff
+
+Copyright 2012-\``date`` http://www.eurocommercialproperties.com[Eurocommercial Properties NV]
+
+Licensed under http://www.apache.org/licenses/LICENSE-2.0[Apache License 2.0]
