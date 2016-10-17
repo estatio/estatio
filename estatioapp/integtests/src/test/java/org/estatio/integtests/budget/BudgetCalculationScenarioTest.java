@@ -17,11 +17,15 @@ import org.estatio.dom.budgetassignment.BudgetAssignmentService;
 import org.estatio.dom.budgetassignment.BudgetCalculationLinkRepository;
 import org.estatio.dom.budgetassignment.ServiceChargeItemRepository;
 import org.estatio.dom.budgetassignment.viewmodels.BudgetAssignmentResult;
+import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetAssignmentResult;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationResult;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
+import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.budget.BudgetForBud;
@@ -55,6 +59,12 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
     BudgetAssignmentService budgetAssignmentService;
 
     @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
+
+    @Inject
     ServiceChargeItemRepository serviceChargeItemRepository;
 
 
@@ -74,8 +84,9 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
         Property property;
         Budget budget;
-        List<BudgetCalculationResult> calculationResults;
+        List<BudgetCalculationViewmodel> calculationResults;
         List<BudgetAssignmentResult> budgetAssignmentResults;
+        List<DetailedBudgetAssignmentResult> detailedBudgetAssignmentResults;
 
         @Before
         public void setup() {
@@ -87,6 +98,7 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
         @Test
         public void CalculateAndAssign() throws Exception {
             overviewCalculation();
+            detailedOverviewCalculation();
             calculation();
             assignBudget();
             assignBudgetWhenUpdated();
@@ -99,7 +111,7 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
         public void overviewCalculation() throws Exception {
 
             // when
-            calculationResults = budgetCalculationService.getCalculatedResults(budget);
+            calculationResults = budgetCalculationService.getCalculations(budget);
             budgetAssignmentResults = budgetAssignmentService.getAssignmentResults(budget);
 
             // then
@@ -124,11 +136,41 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
         }
 
         private BigDecimal budgetedAmountFor(final String leaseReference, final String invoiceChargeReference){
-            return resultsForLease(leaseReference, invoiceChargeReference).get(0).getBudgetedAmount();
+            return resultsForLease(leaseReference, invoiceChargeReference).get(0).getBudgetedValue();
         }
 
         private List<BudgetAssignmentResult> resultsForLease(final String leaseReference, final String invoiceChargeReference){
             return budgetAssignmentResults.stream().filter(x ->x.getLeaseReference().equals(leaseReference) && x.getInvoiceCharge().equals(invoiceChargeReference)).collect(Collectors.toList());
+        }
+
+        public void detailedOverviewCalculation() throws Exception {
+
+            String INCOMING_CHARGE_LABEL_1 = "NLD_INCOMING_CHARGE_1 Incoming Charge 1 (NLD) | budgeted 10000.00 | 100.00 % table1";
+            String INCOMING_CHARGE_LABEL_2 = "NLD_INCOMING_CHARGE_2 Incoming Charge 2 (NLD) | budgeted 20000.00 | 80.00 % table1 | 20.00 % table2";
+            String INCOMING_CHARGE_LABEL_3 = "NLD_INCOMING_CHARGE_3 Incoming Charge 3 (NLD) | budgeted 30000.00 | 90.00 % table1 | 10.00 % table2";
+
+            // given
+            Lease leaseForDago = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4);
+
+            // when
+            calculationResults = budgetCalculationService.getCalculations(budget);
+            detailedBudgetAssignmentResults = budgetAssignmentService.getDetailedBudgetAssignmentResults(budget, leaseForDago);
+
+            // then
+            assertThat(detailedBudgetAssignmentResults.size()).isEqualTo(5);
+
+            assertThat(detailedBudgetAssignmentResults.get(0).getBudgetedValue()).isEqualTo(new BigDecimal("1904.761900"));
+            assertThat(detailedBudgetAssignmentResults.get(0).getIncomingCharge()).isEqualTo(INCOMING_CHARGE_LABEL_1);
+            assertThat(detailedBudgetAssignmentResults.get(0).getInvoiceCharge()).isEqualTo(chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE).getReference());
+
+            assertThat(detailedBudgetAssignmentResults.get(1).getBudgetedValue()).isEqualTo(new BigDecimal("3047.619040"));
+            assertThat(detailedBudgetAssignmentResults.get(1).getIncomingCharge()).isEqualTo(INCOMING_CHARGE_LABEL_2);
+            assertThat(detailedBudgetAssignmentResults.get(1).getInvoiceCharge()).isEqualTo(chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE).getReference());
+
+            assertThat(detailedBudgetAssignmentResults.get(4).getBudgetedValue()).isEqualTo(new BigDecimal("5142.857130"));
+            assertThat(detailedBudgetAssignmentResults.get(4).getIncomingCharge()).isEqualTo(INCOMING_CHARGE_LABEL_3);
+            assertThat(detailedBudgetAssignmentResults.get(4).getInvoiceCharge()).isEqualTo(chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE2).getReference());
+
         }
 
         public void calculation() throws Exception {

@@ -83,7 +83,7 @@ public class BudgetCalculationServiceTest {
             allocation.setPercentage(new BigDecimal("100.00"));
 
             // when
-            List<BudgetCalculationResult> results = service.getCalculatedResults(budget);
+            List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
 
             // then
             assertThat(results).hasSize(2);
@@ -100,7 +100,7 @@ public class BudgetCalculationServiceTest {
             allocation.setPercentage(new BigDecimal("99.00"));
 
             // when
-            List<BudgetCalculationResult> results = service.getCalculatedResults(budget);
+            List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
 
             // then
             assertThat(results).hasSize(2);
@@ -117,7 +117,7 @@ public class BudgetCalculationServiceTest {
             allocation.setPercentage(new BigDecimal("99.00"));
 
             // when
-            List<BudgetCalculationResult> results = service.getCalculatedResults(budget);
+            List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
 
             // then
             assertThat(results).hasSize(2);
@@ -134,7 +134,7 @@ public class BudgetCalculationServiceTest {
             allocation.setPercentage(BigDecimal.ZERO);
 
             // when
-            List<BudgetCalculationResult> results = service.getCalculatedResults(budget);
+            List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
 
             // then
             assertThat(results).hasSize(2);
@@ -153,7 +153,7 @@ public class BudgetCalculationServiceTest {
             keyItem2.setValue(BigDecimal.ZERO);
 
             // when
-            List<BudgetCalculationResult> results = service.getCalculatedResults(budget);
+            List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
 
             // then
             assertThat(results).hasSize(2);

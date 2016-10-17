@@ -32,9 +32,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
-public class BudgetCalculationResult implements Distributable {
+public class BudgetCalculationViewmodel implements Distributable {
 
-    public BudgetCalculationResult(
+    public BudgetCalculationViewmodel(
             final BudgetItemAllocation itemAllocation,
             final KeyItem keyItem,
             final BigDecimal value,
