@@ -10,7 +10,16 @@ import org.estatio.dom.party.Person;
 
 public enum PartyRelationshipType {
 
+    // Org - Org
+    OWNERSHIP("Owns","Owned by", Organisation.class, Organisation.class),
+    // Org - Person
     EMPLOYMENT("Employer", "Employee", Organisation.class, Person.class),
+    MARKETING("Marketing", "Marketing", Organisation.class, Person.class),
+    LEASING("Leasing", "Leasing", Organisation.class, Person.class),
+    ACCOUNTING("Accounting", "Accounting", Organisation.class, Person.class),
+    STORE_MANAGER("Store Manager", "Store Manager", Organisation.class, Person.class),
+    TURNOVER_REFERENT("Turnover Referent", "Turnover Referent", Organisation.class, Person.class),
+    // Person - Person
     MARRIAGE("Husband", "Wife", Person.class, Person.class),
     CONTACT("Contact", "Contact", Party.class, Party.class);
 
@@ -19,7 +28,7 @@ public enum PartyRelationshipType {
     Class<? extends Party> fromClass;
     Class<? extends Party> toClass;
 
-    private PartyRelationshipType(
+    PartyRelationshipType(
             final String fromTitle,
             final String toTitle,
             final Class<? extends Party> fromClass,
