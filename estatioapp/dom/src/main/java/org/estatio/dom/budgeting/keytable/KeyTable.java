@@ -70,7 +70,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioBudgeting"
+        ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -97,7 +97,11 @@ import lombok.Setter;
                         "WHERE name.toLowerCase().indexOf(:name) >= 0 ")
 })
 @Unique(name = "KeyTable_budget_name", members = { "budget", "name" })
-@DomainObject(autoCompleteRepository = KeyTableRepository.class, autoCompleteAction = "autoComplete")
+@DomainObject(
+        autoCompleteRepository = KeyTableRepository.class,
+        autoCompleteAction = "autoComplete",
+        objectType = "org.estatio.dom.budgeting.keytable.KeyTable"  // TODO: externalize mapping
+)
 public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicationTenancyProperty {
 
     public KeyTable() {

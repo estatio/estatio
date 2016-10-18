@@ -25,6 +25,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
@@ -45,7 +46,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioAssetFinancial"
+        schema = "EstatioAssetFinancial" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -72,6 +73,9 @@ import lombok.Setter;
                         + "WHERE financialAccount == :financialAccount")
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
+@DomainObject(
+        objectType = "org.estatio.dom.asset.financial.FixedAssetFinancialAccount" // TODO: externalize mapping
+)
 public class FixedAssetFinancialAccount
         extends UdoDomainObject2<FixedAssetFinancialAccount>
         implements WithApplicationTenancyProperty {

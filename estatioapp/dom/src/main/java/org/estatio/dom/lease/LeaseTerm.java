@@ -74,13 +74,14 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLease"
+        ,schema = "EstatioLease"     // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.lease.LeaseTerm")
+        value = "org.estatio.dom.lease.LeaseTerm"   // TODO: externalize mapping
+)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")

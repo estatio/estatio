@@ -44,7 +44,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioAgreement"
+        ,schema = "EstatioAgreement"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -67,7 +67,11 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.agreement.AgreementRoleType "
                         + "WHERE appliesTo == :agreementType && title == :title")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        bounded = true,
+        objectType = "org.estatio.dom.agreement.AgreementRoleType"  // TODO: externalize mapping
+)
 public class AgreementRoleType
         extends UdoDomainObject2<AgreementRoleType>
         implements WithTitleComparable<AgreementRoleType>, WithApplicationTenancyGlobal {

@@ -22,7 +22,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLease"
+        ,schema = "EstatioLease"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -45,7 +45,9 @@ import lombok.Setter;
                         + "WHERE item == :item && sourceItem == :sourceItem")
 })
 @Unique(name = "LeaseItemSource_item_sourceItem_UNQ", members = {"item", "sourceItem"})
-@DomainObject
+@DomainObject(
+        objectType = "org.estatio.dom.lease.LeaseItemSource"
+)
 public class LeaseItemSource extends UdoDomainObject2<LeaseItemSource> implements WithApplicationTenancyPropertyLocal {
 
     public LeaseItemSource() {

@@ -83,7 +83,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        , schema = "incodeCommunications"
+        , schema = "IncodeCommunications"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

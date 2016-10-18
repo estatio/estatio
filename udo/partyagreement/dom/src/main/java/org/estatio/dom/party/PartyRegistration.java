@@ -26,6 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -49,7 +50,7 @@ import lombok.Setter;
 // REVIEW: is this in scope?
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioParty"
+        ,schema = "EstatioParty"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -73,6 +74,9 @@ import lombok.Setter;
                         + "   && type == :type "
                         + "   && endDate == :endDate")
 })
+@DomainObject(
+        objectType = "org.estatio.dom.party.PartyRegistration"      // TODO: externalize mapping
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
         extends UdoDomainObject2<PartyRegistration>

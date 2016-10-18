@@ -29,6 +29,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
@@ -41,7 +42,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioAssetOwnership"
+        ,schema = "EstatioAssetOwnership"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(
@@ -50,6 +51,9 @@ import lombok.Setter;
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version"
+)
+@DomainObject(
+        objectType = "org.estatio.dom.asset.ownership.FixedAssetOwnership" // TODO: externalize mapping
 )
 public class FixedAssetOwnership implements Comparable<FixedAssetOwnership> {
 

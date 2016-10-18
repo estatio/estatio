@@ -47,7 +47,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioAgreement"
+        ,schema = "EstatioAgreement"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -63,7 +63,11 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.agreement.AgreementType "
                         + "WHERE title == :title")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        bounded = true,
+        objectType = "org.estatio.dom.agreement.AgreementType"  // TODO: externalize mapping
+)
 public class AgreementType
         extends UdoDomainObject2<AgreementType>
         implements WithTitleComparable<AgreementType>, WithTitleUnique, WithApplicationTenancyGlobal {

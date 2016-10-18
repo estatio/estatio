@@ -51,7 +51,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "incodeCurrency"
+        ,schema = "IncodeCurrency"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -78,7 +78,13 @@ import lombok.Setter;
                         + "WHERE reference.matches(:searchArg) "
                         + "|| description.matches(:searchArg)")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = CurrencyRepository.class, autoCompleteAction = "autoComplete", bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        autoCompleteRepository = CurrencyRepository.class,
+        autoCompleteAction = "autoComplete",
+        bounded = true,
+        objectType = "org.estatio.dom.currency.Currency"    // TODO: externalize mapping
+)
 public class Currency
         extends UdoDomainObject2<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {

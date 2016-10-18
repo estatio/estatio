@@ -34,7 +34,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
 		identityType = IdentityType.DATASTORE
-		,schema = "estatioProject"
+		,schema = "EstatioProject"	// Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -60,7 +60,10 @@ import lombok.Setter;
                     "FROM org.estatio.dom.project.BusinessCase " +
                     "WHERE project == :project && next == null")                      
 })
-@DomainObject(editing=Editing.DISABLED)
+@DomainObject(
+		editing=Editing.DISABLED,
+		objectType = "org.estatio.dom.project.BusinessCase"		// TODO: externalize mapping
+)
 public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chained<BusinessCase>, WithApplicationTenancyGlobalAndCountry{
 
 	public BusinessCase() {

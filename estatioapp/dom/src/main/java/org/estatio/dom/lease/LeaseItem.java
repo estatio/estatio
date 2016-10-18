@@ -90,7 +90,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLease"
+        ,schema = "EstatioLease"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -146,7 +146,10 @@ import lombok.Setter;
 
 })
 @Unique(name = "LeaseItem_lease_type_charge_startDate_sequence_UNQ", members = {"lease", "type", "charge", "startDate", "sequence"})
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.lease.LeaseItem"  // TODO: externalize mapping
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
         extends UdoDomainObject2<LeaseItem>

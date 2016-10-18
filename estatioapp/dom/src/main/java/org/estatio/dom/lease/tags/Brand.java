@@ -38,18 +38,18 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.incode.module.country.dom.impl.Country;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLeaseTags"
+        ,schema = "EstatioLeaseTags"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -89,7 +89,12 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.lease.tags.Brand WHERE this.group != null "
                         + "ORDER BY this.group ")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = BrandRepository.class, autoCompleteAction = "autoComplete")
+@DomainObject(
+        editing = Editing.DISABLED,
+        autoCompleteRepository = BrandRepository.class,
+        autoCompleteAction = "autoComplete",
+        objectType = "org.estatio.dom.lease.tags.Brand" // TODO: externalize mapping
+)
 public class Brand
         extends UdoDomainObject2<Brand>
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {

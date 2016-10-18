@@ -55,11 +55,11 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "estatioGuarantee"
+        schema = "EstatioGuarantee" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee") // TODO: externalize mapping
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
@@ -84,7 +84,11 @@ import lombok.Setter;
                         + "|| name.matches(:referenceOrNameOrComments)"
                         + "|| comments.matches(:referenceOrNameOrComments)")
 })
-@DomainObject(editing = Editing.DISABLED, autoCompleteRepository = GuaranteeRepository.class, autoCompleteAction = "autoComplete")
+@DomainObject(
+        editing = Editing.DISABLED,
+        autoCompleteRepository = GuaranteeRepository.class,
+        autoCompleteAction = "autoComplete"
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Guarantee
         extends Agreement

@@ -42,7 +42,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLeaseTags"
+        ,schema = "EstatioLeaseTags"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -62,8 +62,11 @@ import lombok.Setter;
                         + "WHERE sector == :sector "
                         + "   && name == :name")
 })
-
-@DomainObject(bounded = true, editing = Editing.DISABLED)
+@DomainObject(
+        bounded = true,
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.lease.tags.Activity"  // TODO: externalize mapping
+)
 public class Activity
         extends UdoDomainObject2<Activity>
         implements WithNameGetter, WithApplicationTenancyGlobal {

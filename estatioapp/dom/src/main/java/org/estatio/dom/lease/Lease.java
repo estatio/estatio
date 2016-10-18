@@ -99,12 +99,12 @@ import static org.apache.commons.lang3.StringUtils.left;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLease"
+        ,schema = "EstatioLease" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.Lease")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.Lease") // TODO: externalize mapping
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",

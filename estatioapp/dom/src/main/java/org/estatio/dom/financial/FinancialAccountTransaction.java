@@ -17,6 +17,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -40,7 +41,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioFinancial"
+        ,schema = "EstatioFinancial" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -67,6 +68,9 @@ import lombok.Setter;
 @Index(
         name = "FinancialAccountTransaction_financialAccount_transactionDate_IDX",
         members = { "financialAccount", "transactionDate" })
+@DomainObject(
+        objectType = "org.estatio.dom.financial.FinancialAccountTransaction"    // TODO: externalize mapping
+)
 public class FinancialAccountTransaction
         extends UdoDomainObject2<FinancialAccountTransaction>
         implements WithApplicationTenancyCountry {

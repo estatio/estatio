@@ -77,7 +77,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioInvoice"
+        ,schema = "EstatioInvoice"   // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -184,7 +184,10 @@ import lombok.Setter;
         @Index(name = "Invoice_invoiceNumber_IDX",
                 members = { "invoiceNumber" })
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.invoice.Invoice"  // TODO: externalize mapping
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Invoice
         extends UdoDomainObject2<Invoice>

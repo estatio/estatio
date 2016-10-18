@@ -33,6 +33,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
@@ -46,7 +47,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioParty"
+        ,schema = "EstatioParty"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(
@@ -58,6 +59,9 @@ import lombok.Setter;
 )
 @Unique(
         name = "Organisation"
+)
+@DomainObject(
+        objectType = "org.estatio.dom.party.OrganisationPreviousName"   // TODO: externalize mapping
 )
 public class OrganisationPreviousName implements Comparable<OrganisationPreviousName> {
 

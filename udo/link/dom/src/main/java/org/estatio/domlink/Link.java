@@ -21,6 +21,7 @@ package org.estatio.domlink;
 
 import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
@@ -43,7 +44,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLink"
+        ,schema = "EstatioLink" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -53,6 +54,9 @@ import lombok.Setter;
                         + "WHERE className == :className")
 })
 @javax.jdo.annotations.Unique(members = { "className", "name" })
+@DomainObject(
+        objectType = "org.estatio.domlink.Link"     // TODO: externalize mapping
+)
 @MemberGroupLayout(columnSpans = { 12, 0, 0, 12 })
 public class Link
         extends UdoDomainObject2<Link>

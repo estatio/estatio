@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -44,11 +45,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.WithIntervalMutable;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
-import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.ActivityRepository;
 import org.estatio.dom.lease.tags.Brand;
@@ -65,7 +66,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLease"
+        ,schema = "EstatioLease"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -111,6 +112,9 @@ import lombok.Setter;
                         + "WHERE brand == :brand "
                         + "&& (:includeTerminated || endDate == null || endDate >= :date)")
 })
+@DomainObject(
+        objectType = "org.estatio.dom.lease.Occupancy"  // TODO: externalize mapping
+)
 public class Occupancy
         extends UdoDomainObject2<Occupancy>
         implements WithIntervalMutable<Occupancy>, WithApplicationTenancyProperty {

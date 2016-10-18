@@ -27,7 +27,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioBudgetassignment"
+        ,schema = "EstatioBudgetassignment" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -48,7 +48,9 @@ import lombok.Setter;
                         "WHERE occupancy == :occupancy && charge == :charge")
 })
 @Unique(name = "ServiceChargeItem_occupancy_charge_UNQ", members = { "occupancy", "charge" })
-@DomainObject()
+@DomainObject(
+        objectType = "org.estatio.dom.budgetassignment.ServiceChargeItem"   // TODO: externalize mapping
+)
 public class ServiceChargeItem extends UdoDomainObject2<ServiceChargeItem> implements WithApplicationTenancyProperty {
 
     public ServiceChargeItem()  {

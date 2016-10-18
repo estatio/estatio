@@ -61,7 +61,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioBudgeting"
+        ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -103,7 +103,11 @@ import lombok.Setter;
                         "WHERE budgetItemAllocation == :budgetItemAllocation")
 })
 @Unique(name = "BudgetCalculation_budgetItemAllocation_keyItem_calculationType_status_UNQ", members = {"budgetItemAllocation", "keyItem", "calculationType", "status"})
-@DomainObject(auditing = Auditing.DISABLED, publishing = Publishing.DISABLED)
+@DomainObject(
+        auditing = Auditing.DISABLED,
+        publishing = Publishing.DISABLED,
+        objectType = "org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation"    // TODO: externalize mapping
+)
 public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
         implements Distributable, WithApplicationTenancyProperty, Timestampable {
 

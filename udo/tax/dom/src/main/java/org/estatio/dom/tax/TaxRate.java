@@ -53,7 +53,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioTax"
+        ,schema = "EstatioTax"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -70,7 +70,10 @@ import lombok.Setter;
                         + "  && startDate <= :date"
                         + "  && (endDate == null || endDate >= :date)")
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.tax.TaxRate"      // TODO: externalize mapping
+)
 public class TaxRate
         extends UdoDomainObject2<TaxRate>
         implements Chained<TaxRate>, WithIntervalMutable<TaxRate>, WithApplicationTenancyCountry {

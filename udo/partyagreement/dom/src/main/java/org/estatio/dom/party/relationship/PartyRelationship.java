@@ -32,7 +32,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioParty"
+        ,schema = "EstatioParty"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -42,7 +42,10 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.party.relationship.PartyRelationship "
                         + "WHERE (to == :party || from == :party) ")
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.party.relationship.PartyRelationship"     // TODO: externalize mapping
+)
 public class PartyRelationship extends AbstractDomainObject implements WithInterval<PartyRelationship> {
 
     public String title() {

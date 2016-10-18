@@ -63,7 +63,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioAgreement"
+        ,schema = "EstatioAgreement"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -100,7 +100,10 @@ import lombok.Setter;
 @Unique(name = "AgreementRoleCommunicationChannel_role_startDate_type_communicationChannel_UNQ", members = {
         "role", "startDate", "type", "communicationChannel" })
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.agreement.AgreementRoleCommunicationChannel"  // TODO: externalize mapping
+)
 public class AgreementRoleCommunicationChannel
         extends UdoDomainObject2<AgreementRoleCommunicationChannel>
         implements WithIntervalContiguous<AgreementRoleCommunicationChannel>, WithApplicationTenancyProperty {

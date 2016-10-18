@@ -7,10 +7,6 @@
     <package name="org.incode.module.communications.dom.impl.commchannel">
         <class name="EmailAddress"
                 schema="dbo">
-            <inheritance strategy="superclass-table">
-                <discriminator strategy="value-map" value="org.estatio.dom.communicationchannel.EmailAddress">
-                </discriminator>
-            </inheritance>
         </class>
     </package>
 </orm>

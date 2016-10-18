@@ -48,7 +48,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioCharge"
+        ,schema = "EstatioCharge"   // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -69,7 +69,10 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.charge.Charge "
                         + "WHERE reference == :reference")
 })
-@DomainObject(bounded = true)
+@DomainObject(
+        bounded = true,
+        objectType = "org.estatio.dom.charge.Charge"    // TODO: externalize mapping
+)
 public class Charge
         extends UdoDomainObject2<Charge>
         implements WithReferenceUnique, WithNameUnique, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {

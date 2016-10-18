@@ -27,6 +27,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -50,7 +51,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioIndex"
+        ,schema = "EstatioIndex"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -75,6 +76,9 @@ import lombok.Setter;
 @javax.jdo.annotations.Unique(
         name = "IndexValue_indexBase_startDate_IDX",
         members = { "indexBase", "startDate" })
+@DomainObject(
+        objectType = "org.estatio.dom.index.IndexValue"     // TODO: externalize mapping
+)
 public class IndexValue
         extends UdoDomainObject2<IndexValue>
         implements WithStartDate, WithApplicationTenancyCountry {

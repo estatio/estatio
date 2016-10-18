@@ -83,7 +83,7 @@ import lombok.Setter;
  */
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioIndex"
+        ,schema = "EstatioIndex"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -104,7 +104,11 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.index.Index "
                         + "WHERE reference == :reference")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        bounded = true,
+        objectType = "org.estatio.dom.index.Index"  // TODO: externalize mapping
+)
 public class Index
         extends UdoDomainObject2<Index>
         implements WithReferenceComparable<Index>, WithNameUnique, WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted, IndexBaseCreator, IndexValueCreator {

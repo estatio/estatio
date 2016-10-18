@@ -40,7 +40,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        ,schema = "incodeEvent"
+        ,schema = "IncodeEvent" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Inheritance(
@@ -72,7 +72,7 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Unique(name="EventSourceLink_event_source_UNQ", members = {"event","sourceObjectType","sourceIdentifier"})
 @DomainObject(
-        objectType = "event.EventSourceLink"
+        objectType = "event.EventSourceLink"    // TODO: migrate to IncodeEvent in future
 )
 public abstract class EventSourceLink extends PolymorphicAssociationLink<Event, EventSource, EventSourceLink> {
 

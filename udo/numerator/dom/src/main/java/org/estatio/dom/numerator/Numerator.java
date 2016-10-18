@@ -66,7 +66,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "incodeNumerator"
+        ,schema = "IncodeNumerator" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -97,7 +97,10 @@ import lombok.Setter;
                         + "WHERE name == :name"
                         + "&& applicationTenancyPath == :applicationTenancyPath ")
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.numerator.Numerator"      // TODO: externalize mapping
+)
 public class Numerator
         extends UdoDomainObject2<Numerator>
         implements Comparable<Numerator>, BookmarkHolder, WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {

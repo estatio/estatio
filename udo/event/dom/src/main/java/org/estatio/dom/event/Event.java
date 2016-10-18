@@ -56,7 +56,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "incodeEvent"
+        ,schema = "IncodeEvent" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -72,7 +72,10 @@ import lombok.Setter;
                     "WHERE date >= :rangeStartDate " +
                     "   && date <= :rangeEndDate")
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.event.Event"  // TODO: externalize mapping
+)
 public class Event
         extends UdoDomainObject2<Event>
         implements CalendarEventable, WithApplicationTenancyProperty {

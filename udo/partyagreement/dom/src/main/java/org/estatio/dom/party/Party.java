@@ -53,12 +53,12 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioParty"
+        ,schema = "EstatioParty"    // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.party.Party")
+        value = "org.estatio.dom.party.Party")  // TODO: externalize mapping
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
@@ -87,7 +87,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Party "
                         + "WHERE reference == :reference") })
-@DomainObject(editing = Editing.DISABLED, autoCompleteAction = "autoComplete", autoCompleteRepository = PartyRepository.class)
+@DomainObject(
+        editing = Editing.DISABLED,
+        autoCompleteAction = "autoComplete",
+        autoCompleteRepository = PartyRepository.class
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Party
         extends UdoDomainObject2<Party>

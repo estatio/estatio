@@ -70,7 +70,7 @@ import lombok.Setter;
  */
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioIndex"
+        ,schema = "EstatioIndex"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -94,7 +94,10 @@ import lombok.Setter;
                         "&& startDate <= :date " +
                         "ORDER BY startDate DESC ")
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.index.IndexBase"  // TODO: externalize mapping
+)
 public class IndexBase
         extends UdoDomainObject2<IndexBase>
         implements WithStartDate, Chained<IndexBase>, WithApplicationTenancyCountry, IndexValueCreator {

@@ -71,7 +71,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioAgreement"
+        ,schema = "EstatioAgreement"        // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -126,7 +126,10 @@ import lombok.Setter;
 @Unique(
         name = "AgreementRole_agreement_party_type_startDate_UNQ",
         members = { "agreement", "party", "type", "startDate" })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.agreement.AgreementRole"  // TODO: externalize mapping
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class AgreementRole
         extends UdoDomainObject2<AgreementRole>

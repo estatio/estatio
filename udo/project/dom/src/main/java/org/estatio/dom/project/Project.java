@@ -65,7 +65,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
 		identityType = IdentityType.DATASTORE
-		,schema = "estatioProject"
+		,schema = "EstatioProject"	// Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -80,7 +80,10 @@ import lombok.Setter;
 		@Query(name = "findByProgram", language = "JDOQL", value = "SELECT "
 				+ "FROM org.estatio.dom.project.Project "
 				+ "WHERE program == :program ") })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+		editing = Editing.DISABLED,
+		objectType = "org.estatio.dom.project.Project"		// TODO: externalize mapping
+)
 public class Project extends UdoDomainObject<Project> implements
 		WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
 

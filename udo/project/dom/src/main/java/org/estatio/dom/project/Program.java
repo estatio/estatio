@@ -61,7 +61,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioProject"
+        ,schema = "EstatioProject"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -83,7 +83,10 @@ import lombok.Setter;
                         "FROM org.estatio.dom.project.Program " +
                         "WHERE property == :property ")
 })
-@DomainObject(editing=Editing.DISABLED)
+@DomainObject(
+        editing=Editing.DISABLED,
+        objectType = "org.estatio.dom.project.Program"      // TODO: externalize mapping
+)
 public class Program 
 			extends UdoDomainObject<Program>
 			implements WithReferenceUnique, WithApplicationTenancyPathPersisted, WithApplicationTenancyGlobalAndCountry {

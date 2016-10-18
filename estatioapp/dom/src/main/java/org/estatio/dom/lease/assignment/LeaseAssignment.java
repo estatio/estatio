@@ -24,6 +24,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -42,7 +43,7 @@ import lombok.Setter;
 //TODO: is this in scope?
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        ,schema = "estatioLeaseAssignment"
+        ,schema = "EstatioLeaseAssignment"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
@@ -50,6 +51,9 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
+@DomainObject(
+        objectType = "org.estatio.dom.lease.assignment.LeaseAssignment" // TODO: externalize mapping
+)
 public class LeaseAssignment
         extends UdoDomainObject2<LeaseAssignment>
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {

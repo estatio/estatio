@@ -66,7 +66,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioAsset"
+        ,schema = "EstatioAsset" // Isis' ObjectSpecId inferred @Discriminator
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -78,7 +78,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.asset.FixedAsset"
+        value = "org.estatio.dom.asset.FixedAsset" // TODO: externalize mapping
 )
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(

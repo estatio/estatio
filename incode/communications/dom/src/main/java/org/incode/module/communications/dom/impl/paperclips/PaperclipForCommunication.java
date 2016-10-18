@@ -40,12 +40,10 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE
-        , schema = "incodeCommunications"
+        , schema = "IncodeCommunications"
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@DomainObject(
-        objectType = "estatioCommunications.PaperclipForCommunication"
-)
+@DomainObject()
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )

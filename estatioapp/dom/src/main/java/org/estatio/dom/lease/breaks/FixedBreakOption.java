@@ -40,15 +40,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioLeaseBreaks"
+        schema = "EstatioLeaseBreaks"   // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.FixedBreakOption")
-@DomainObject(
-        objectType = "lease.FixedBreakOption"
-)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.FixedBreakOption")   // TODO: externalize mapping
+@DomainObject()
 public class FixedBreakOption
         extends BreakOption {
 

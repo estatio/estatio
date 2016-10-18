@@ -7,10 +7,6 @@
     <package name="org.incode.module.communications.dom.impl.commchannel">
         <class name="PhoneOrFaxNumber"
                 schema="dbo">
-            <inheritance strategy="superclass-table">
-                <discriminator strategy="value-map" value="org.estatio.dom.communicationchannel.PhoneOrFaxNumber">
-                </discriminator>
-            </inheritance>
         </class>
     </package>
 

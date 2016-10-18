@@ -21,6 +21,7 @@ package org.estatio.domsettings;
 
 import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
@@ -37,7 +38,7 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.APPLICATION,
         table="ApplicationSetting"
-        ,schema = "estatioSettings"
+        ,schema = "EstatioSettings"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Queries({ 
      @javax.jdo.annotations.Query(
@@ -51,6 +52,9 @@ import lombok.Setter;
                     + "FROM org.estatio.domsettings.ApplicationSettingForEstatio "
                     + "ORDER BY key")
 })
+@DomainObject(
+        objectType = "org.estatio.domsettings.ApplicationSettingForEstatio" // TODO: externalize mapping
+)
 @DomainServiceLayout(named = "Application Setting")
 public class ApplicationSettingForEstatio extends SettingAbstractForEstatio implements ApplicationSetting {
 

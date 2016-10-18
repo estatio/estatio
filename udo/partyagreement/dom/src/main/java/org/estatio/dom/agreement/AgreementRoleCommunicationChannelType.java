@@ -46,7 +46,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        ,schema = "estatioAgreement"
+        ,schema = "EstatioAgreement"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
@@ -68,9 +68,12 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannelType "
                         + "WHERE appliesTo == :agreementType && title == :title")
 })
-
-@DomainObject(bounded = true, editing = Editing.DISABLED)
-public class AgreementRoleCommunicationChannelType 
+@DomainObject(
+        bounded = true,
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.agreement.AgreementRoleCommunicationChannelType"  // TODO: externalize mapping
+)
+public class AgreementRoleCommunicationChannelType
         extends UdoDomainObject2<AgreementRoleCommunicationChannelType>
         implements WithApplicationTenancyGlobal {
 

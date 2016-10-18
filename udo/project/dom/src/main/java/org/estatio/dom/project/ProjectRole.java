@@ -29,6 +29,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -62,7 +63,7 @@ import lombok.Setter;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioProject"
+        ,schema = "EstatioProject"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -111,7 +112,9 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.project.ProjectRole "
                         + "WHERE party == :party ")
 })
-
+@DomainObject(
+        objectType = "org.estatio.dom.project.ProjectRole"      // TODO: externalize mapping
+)
 @DomainObjectLayout(bookmarking=BookmarkPolicy.AS_CHILD)
 public class ProjectRole
         extends UdoDomainObject<ProjectRole>

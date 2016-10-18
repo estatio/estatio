@@ -56,7 +56,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-       ,schema = "estatioBudgeting"
+       ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -82,7 +82,10 @@ import lombok.Setter;
                         "WHERE charge == :charge && budgetItem == :budgetItem && keyTable == :keyTable ")
 })
 @Unique(name = "ScheduleItem_charge_budgetItem_keyTable_UNQ", members = {"charge", "budgetItem", "keyTable"})
-@DomainObject(auditing = Auditing.DISABLED)
+@DomainObject(
+        auditing = Auditing.DISABLED,
+        objectType = "org.estatio.dom.budgeting.allocation.BudgetItemAllocation"   // TODO: externalize mapping
+)
 public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation> implements WithApplicationTenancyProperty {
 
     public BudgetItemAllocation() {

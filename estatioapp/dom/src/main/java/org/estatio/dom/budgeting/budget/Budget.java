@@ -87,7 +87,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioBudgeting"
+        ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -109,7 +109,9 @@ import lombok.Setter;
                         "WHERE property == :property && startDate == :startDate")
 })
 @Unique(name = "Budget_property_startDate_UNQ", members = { "property", "startDate" })
-@DomainObject()
+@DomainObject(
+        objectType = "org.estatio.dom.budgeting.budget.Budget"   // TODO: externalize mapping
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Budget extends UdoDomainObject2<Budget>
         implements WithIntervalMutable<Budget>, WithApplicationTenancyProperty, BudgetItemCreator {

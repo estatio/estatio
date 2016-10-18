@@ -32,11 +32,13 @@ import org.estatio.dom.event.EventSource;
 import org.estatio.dom.event.EventSourceLink;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioLeaseBreaks"
+        schema = "EstatioLeaseBreaks"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@DomainObject()
+@DomainObject(
+        objectType = "org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption"   // TODO: externalize mapping
+)
 public class EventSourceLinkForBreakOption extends EventSourceLink {
 
     @DomainService(nature = NatureOfService.DOMAIN)

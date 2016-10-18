@@ -58,7 +58,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioTax"
+        ,schema = "EstatioTax"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -77,7 +77,11 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.tax.Tax "
                         + "WHERE reference == :reference")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        bounded = true,
+        objectType = "org.estatio.dom.tax.Tax"      // TODO: externalize mapping
+)
 public class Tax
         extends UdoDomainObject2<Tax>
         implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique,

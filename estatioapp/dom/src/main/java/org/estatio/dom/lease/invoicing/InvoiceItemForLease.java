@@ -50,11 +50,11 @@ import lombok.Setter;
  * <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.
  */
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioLeaseInvoicing"
+        schema = "EstatioLeaseInvoicing"    // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.invoicing.InvoiceItemForLease")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.invoicing.InvoiceItemForLease") // TODO: externalize mapping
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(

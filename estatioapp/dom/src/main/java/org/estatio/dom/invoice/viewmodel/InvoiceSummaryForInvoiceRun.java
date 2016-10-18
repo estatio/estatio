@@ -49,10 +49,10 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
         table = "InvoiceSummaryForInvoiceRun",
-        schema = "estatioInvoiceViewmodel",
+        schema = "EstatioInvoiceViewmodel",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"estatioInvoiceViewmodel\".\"InvoiceSummaryForInvoiceRun\" " +
+                        value = "CREATE VIEW \"EstatioInvoiceViewmodel\".\"InvoiceSummaryForInvoiceRun\" " +
                                 "( " +
                                 "  {this.atPath}, " +
                                 "  {this.runId}, " +
@@ -68,12 +68,12 @@ import lombok.Setter;
                                 "   SUM(ii.\"netAmount\") AS \"netAmount\", " +
                                 "   SUM(ii.\"vatAmount\") AS \"vatAmount\", " +
                                 "   SUM(ii.\"grossAmount\") AS \"grossAmount\" " +
-                                "FROM \"estatioInvoice\".\"Invoice\" i " +
-                                "  INNER JOIN \"estatioLease\".\"Lease\" l  " +
+                                "FROM \"EstatioInvoice\".\"Invoice\" i " +
+                                "  INNER JOIN \"EstatioLease\".\"Lease\" l  " +
                                 "    ON i.\"leaseId\" = l.\"id\" " +
-                                "  INNER JOIN \"estatioAsset\".\"FixedAsset\" fa " +
+                                "  INNER JOIN \"EstatioAsset\".\"FixedAsset\" fa " +
                                 "    ON fa.\"id\"  = i.\"fixedAssetId\" " +
-                                "  INNER JOIN \"estatioInvoice\".\"InvoiceItem\" ii " +
+                                "  INNER JOIN \"EstatioInvoice\".\"InvoiceItem\" ii " +
                                 "    ON ii.\"invoiceId\" = i.\"id\" " +
                                 "WHERE " +
                                 "   NOT i.\"runId\" IS NULL " +

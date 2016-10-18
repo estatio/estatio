@@ -37,11 +37,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;
@@ -49,10 +50,10 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioFinancial"
+        ,schema = "EstatioFinancial" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.financial.bankaccount.BankAccount")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.financial.bankaccount.BankAccount")   // TODO: externalize mapping
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)

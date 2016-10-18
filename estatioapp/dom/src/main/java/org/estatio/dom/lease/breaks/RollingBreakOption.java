@@ -30,11 +30,11 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioLeaseBreaks"
+        schema = "EstatioLeaseBreaks"   // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.RollingBreakOption")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.RollingBreakOption")   // TODO: externalize mapping
 @DomainObject()
 public class RollingBreakOption
         extends BreakOption {

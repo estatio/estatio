@@ -50,7 +50,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioBudgeting"
+        ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -58,7 +58,6 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@DomainObject(editing = Editing.DISABLED)
 @javax.jdo.annotations.Queries({
         @Query(
                 name = "findByKeyTableAndUnit", language = "JDOQL",
@@ -66,6 +65,10 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgeting.keyitem.KeyItem " +
                         "WHERE keyTable == :keyTable && unit == :unit")
 })
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.budgeting.keyitem.KeyItem"    // TODO: externalize mapping
+)
 public class KeyItem extends UdoDomainObject2<KeyItem>
         implements WithApplicationTenancyProperty, Distributable {
 

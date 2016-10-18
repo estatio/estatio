@@ -37,10 +37,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioLease"
+        schema = "EstatioLease" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForDeposit")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForDeposit")   // TODO: externalize mapping
 public class LeaseTermForDeposit extends LeaseTerm {
 
     @Column(allowsNull = "false")

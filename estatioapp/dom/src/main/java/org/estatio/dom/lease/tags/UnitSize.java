@@ -43,7 +43,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLeaseTags"
+        ,schema = "EstatioLeaseTags"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE, 
@@ -66,7 +66,11 @@ import lombok.Setter;
                 value = "SELECT name "
                         + "FROM org.estatio.dom.lease.tags.UnitSize")
 })
-@DomainObject(bounded = true, editing = Editing.DISABLED)
+@DomainObject(
+        bounded = true,
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.lease.tags.UnitSize"  // TODO: externalize mapping
+)
 public class UnitSize
         extends UdoDomainObject2<UnitSize>
         implements WithNameUnique, WithNameComparable<UnitSize>, WithApplicationTenancyGlobal {

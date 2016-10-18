@@ -49,10 +49,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioAsset"
+        schema = "EstatioAsset" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.asset.Unit")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.asset.Unit") // TODO: externalize mapping
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",

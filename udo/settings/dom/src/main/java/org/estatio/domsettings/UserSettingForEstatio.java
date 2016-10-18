@@ -22,6 +22,7 @@ package org.estatio.domsettings;
 
 import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 
@@ -42,7 +43,7 @@ import lombok.Setter;
         identityType = IdentityType.APPLICATION, 
         objectIdClass=UserSettingPrimaryKey.class,
         table="UserSetting"
-        ,schema = "estatioSettings"
+        ,schema = "EstatioSettings"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Queries({ 
     @javax.jdo.annotations.Query(
@@ -64,7 +65,10 @@ import lombok.Setter;
                     + "ORDER BY user, key") 
 })
 // can't see how to specify this order in the primary key; however HSQLDB objects :-(
-//@javax.jdo.annotations.Unique(name="USER_KEY_IDX", members={"user","key"}) 
+//@javax.jdo.annotations.Unique(name="USER_KEY_IDX", members={"user","key"})
+@DomainObject(
+        objectType = "org.estatio.domsettings.UserSettingForEstatio"    // TODO: externalize mapping
+)
 @DomainObjectLayout(named = "User Setting")
 public class UserSettingForEstatio extends SettingAbstractForEstatio implements UserSetting {
 

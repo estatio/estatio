@@ -47,7 +47,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioLease"
+        ,schema = "EstatioLease"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -65,7 +65,11 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.lease.LeaseType "
                         + "WHERE reference == :reference")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        bounded = true,
+        objectType = "org.estatio.dom.lease.LeaseType"  // TODO: externalize mapping
+)
 public class LeaseType
         extends UdoDomainObject2<LeaseType>
         implements WithReferenceComparable<LeaseType>, WithNameUnique, WithApplicationTenancyGlobal {

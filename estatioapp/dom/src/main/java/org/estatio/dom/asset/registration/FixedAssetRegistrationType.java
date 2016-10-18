@@ -48,7 +48,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        ,schema = "estatioAssetRegistration"
+        ,schema = "EstatioAssetRegistration" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
@@ -64,7 +64,11 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistrationType "
                         + "WHERE title == :title")
 })
-@DomainObject(editing = Editing.DISABLED, bounded = true)
+@DomainObject(
+        editing = Editing.DISABLED,
+        bounded = true,
+        objectType = "org.estatio.dom.asset.registration.FixedAssetRegistrationType"    // TODO: externalize mapping
+)
 public class FixedAssetRegistrationType 
         extends UdoDomainObject2<FixedAssetRegistrationType>
         implements WithTitleComparable<FixedAssetRegistrationType>, 

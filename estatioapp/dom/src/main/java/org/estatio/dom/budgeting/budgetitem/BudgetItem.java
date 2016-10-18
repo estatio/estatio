@@ -60,7 +60,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "estatioBudgeting"
+        ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -87,7 +87,9 @@ import lombok.Setter;
                     + "&& charge == :charge "
                     + "&& budget.startDate == :startDate")
 })
-@DomainObject()
+@DomainObject(
+        objectType = "org.estatio.dom.budgeting.budgetitem.BudgetItem"    // TODO: externalize mapping
+)
 public class BudgetItem extends UdoDomainObject2<BudgetItem>
         implements WithApplicationTenancyProperty, BudgetItemAllocationCreator {
 

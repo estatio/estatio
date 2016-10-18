@@ -51,22 +51,22 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.incode.module.base.dom.types.ProperNameType;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
-import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioAsset"
+        schema = "EstatioAsset" // Isis' ObjectSpecId inferred by @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.asset.Property")
+@javax.jdo.annotations.Discriminator("org.estatio.dom.asset.Property") // TODO: externalize mapping
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",

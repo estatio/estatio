@@ -34,10 +34,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "incodeCommunications"
+        schema = "IncodeCommunications" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.incode.module.communications.dom.impl.commchannel.EmailAddress") // can be overridden using .jdo if required.
+@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.EmailAddress") // TODO: externalize mapping
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "EmailAddress_emailAddress_IDX", members = { "emailAddress" })

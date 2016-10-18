@@ -35,12 +35,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "estatioParty"
+        schema = "EstatioParty" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "party.CommunicationChannelOwnerLinkForParty"
+        objectType = "party.CommunicationChannelOwnerLinkForParty"  // TODO: externalize mapping, change to EstatioParty...
 )
 public class CommunicationChannelOwnerLinkForParty extends CommunicationChannelOwnerLink {
 
