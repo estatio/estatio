@@ -13,43 +13,86 @@
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="Name" id="name" unreferencedProperties="true">
-                <ns2:property id="name"/>
-                <ns2:property id="firstName"/>
-                <ns2:property id="initials"/>
-                <ns2:property id="lastName"/>
-                <ns2:property id="gender"/>
-                <ns2:property id="reference">
-                    <ns2:action id="change" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="applicationTenancyPath"/>
-            </ns2:fieldSet>
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Name" id="name" unreferencedProperties="true">
+                                <ns2:property id="name"/>
+                                <ns2:property id="firstName"/>
+                                <ns2:property id="initials"/>
+                                <ns2:property id="lastName"/>
+                                <ns2:property id="gender"/>
+                                <ns2:property id="reference">
+                                    <ns2:action id="change" position="BELOW"/>
+                                </ns2:property>
+                                <ns2:property id="applicationTenancyPath"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application level">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
             <ns2:fieldSet name="Contributed" id="contributed">
                 <ns2:property id="phoneNumbers"/>
                 <ns2:property id="emailAddresses"/>
             </ns2:fieldSet>
-            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
+
+            <tabGroup>
+                <tab name="Communication Channels">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="communicationChannels"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Relationships">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="relationships" defaultView="table">
+                                <ns2:action id="newRelationship"/>
+                                <ns2:action id="newRelatedPerson"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Previous Names">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="previousNames"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+
             <ns2:collection id="currentLeases">
                 <ns2:action id="allLeases"/>
-            </ns2:collection>
-            <ns2:collection id="communicationChannels"/>
-            <ns2:collection id="relationships">
-                <ns2:action id="newRelationship"/>
-                <ns2:action id="newRelatedPerson"/>
             </ns2:collection>
             <ns2:collection id="currentBankMandates"/>
             <ns2:collection id="financialAccounts">
