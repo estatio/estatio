@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.app;
+package org.estatio.integtests.invoice.viewmodel;
 
 import java.util.List;
 
@@ -27,7 +27,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.app.menus.invoice.InvoiceSummariesForPropertyDueDateStatusMenu;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
+import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
@@ -37,9 +38,9 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class InvoiceSummariesTest extends EstatioIntegrationTest {
+public class InvoiceSummaryRepositoryTest extends EstatioIntegrationTest {
 
-    public static class InvoicesForPropertyDueDate extends InvoiceSummariesTest {
+    public static class FindInvoicesByStatus extends InvoiceSummaryRepositoryTest {
 
         @Before
         public void setupData() {
@@ -55,12 +56,14 @@ public class InvoiceSummariesTest extends EstatioIntegrationTest {
         }
 
         @Inject
-        private InvoiceSummariesForPropertyDueDateStatusMenu invoiceSummaries;
+        private InvoiceSummaryForPropertyDueDateStatusRepository repository;
 
         @Test
-        public void whenPresent() throws Exception {
-            final List<InvoiceSummaryForPropertyDueDateStatus> summaries =
-                    invoiceSummaries.allNewInvoices();
+        public void happy_case() throws Exception {
+            // Given, When
+            final List<InvoiceSummaryForPropertyDueDateStatus> summaries = repository.findInvoicesByStatus(InvoiceStatus.NEW);
+
+            // Then
             assertThat(summaries.size(), is(2));
         }
 

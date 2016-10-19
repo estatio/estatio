@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="syncAll"/>
+            <ns2:action id="links"/>
+        </col>
+    </row>
+    <row>
+        <col span="6">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="invoiceDate"/>
+                <ns2:property id="applicationTenancy"/>
+                <ns2:property id="seller"/>
+                <ns2:property id="vatAmount"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <ns2:property id="datanucleusId"/>
+                <ns2:property id="datanucleusVersionLong"/>
+                <ns2:property id="datanucleusVersionTimestamp"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Stats" id="stats">
+                <ns2:property id="total"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Totals" id="totals">
+                <ns2:property id="netAmount"/>
+                <ns2:property id="grossAmount"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="12" unreferencedCollections="false">
+            <tabGroup>
+                <tab name="Invoices">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="invoices"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Preliminary Letters">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="preliminaryLetters">
+                                <ns2:action id="preparePreliminaryLetters">
+                                    <ns2:named>Prepare</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="sendByEmailPreliminaryLetters">
+                                    <ns2:named>Send by email</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="sendByPostPreliminaryLetters">
+                                    <ns2:named>Send by post</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="downloadPreliminaryLetters">
+                                    <ns2:named>Download PDF</ns2:named>
+                                </ns2:action>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Invoice Notes">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="invoiceNotes">
+                                <ns2:action id="prepareInvoiceNotes">
+                                    <ns2:named>Prepare</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="sendByEmailInvoiceNotes">
+                                    <ns2:named>Send by email</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="sendByPostInvoiceNotes">
+                                    <ns2:named>Send by post</ns2:named>
+                                </ns2:action>
+                                <ns2:action id="downloadInvoiceNotes">
+                                    <ns2:named>Download PDF</ns2:named>
+                                </ns2:action>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="12" unreferencedCollections="true">
+        </col>
+    </row>
+</grid>

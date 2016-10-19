@@ -28,11 +28,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -150,6 +151,17 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
                 "seller", seller,
                 "dueDate", dueDate,
                 "status", status);
+    }
+
+    @Programmatic
+    public List<Invoice> findByApplicationTenancyPathAndSellerAndInvoiceDate(
+            final String applicationTenancyPath,
+            final Party seller,
+            final LocalDate invoiceDate) {
+        return allMatches("findByApplicationTenancyPathAndSellerAndInvoiceDate",
+                "applicationTenancyPath", applicationTenancyPath,
+                "seller", seller,
+                "invoiceDate", invoiceDate);
     }
 
     // //////////////////////////////////////

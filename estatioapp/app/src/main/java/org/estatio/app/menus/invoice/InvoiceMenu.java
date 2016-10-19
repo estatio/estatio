@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -29,6 +30,12 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
@@ -67,6 +74,18 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "1")
+    public List<InvoiceSummaryForInvoiceRun> allInvoiceRuns() {
+        return invoiceSummaryForInvoiceRunRepository.allInvoiceRuns();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "1")
+    public List<InvoiceSummaryForPropertyInvoiceDate> allRecentlyInvoiced() {
+        return invoiceSummaryForPropertyInvoiceDateRepository.byInvoiceDate(clockService.now().minusDays(6));
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Invoice> findInvoices(
             final FixedAsset fixedAsset,
@@ -88,6 +107,24 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
         return invoiceRepository.findByInvoiceNumber(invoiceNumber);
     }
 
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "20")
+    public List<InvoiceSummaryForPropertyDueDateStatus> allNewInvoices() {
+        return invoiceSummaryForPropertyDueDateStatusRepository.findInvoicesByStatus(InvoiceStatus.NEW);
+    }
+
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "21")
+    public List<InvoiceSummaryForPropertyDueDateStatus> allApprovedInvoices() {
+        return invoiceSummaryForPropertyDueDateStatusRepository.findInvoicesByStatus(InvoiceStatus.APPROVED);
+    }
+
+
+
+
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
@@ -95,6 +132,16 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     public List<Invoice> allInvoices() {
         return invoiceRepository.allInvoices();
     }
+
+
+    @Inject
+    private InvoiceSummaryForPropertyInvoiceDateRepository invoiceSummaryForPropertyInvoiceDateRepository;
+
+    @Inject
+    private InvoiceSummaryForPropertyDueDateStatusRepository invoiceSummaryForPropertyDueDateStatusRepository;
+
+    @Inject
+    private InvoiceSummaryForInvoiceRunRepository invoiceSummaryForInvoiceRunRepository;
 
     @Inject
     private InvoiceRepository invoiceRepository;
@@ -104,4 +151,7 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Inject
     private MeService meService;
+
+    @Inject
+    private ClockService clockService;
 }

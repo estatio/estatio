@@ -115,6 +115,14 @@ import lombok.Setter;
                         "dueDate == :dueDate " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
+                name = "findByApplicationTenancyPathAndSellerAndInvoiceDate", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE " +
+                        "seller == :seller && " +
+                        "applicationTenancyPath == :applicationTenancyPath && " +
+                        "invoiceDate == :invoiceDate " +
+                        "ORDER BY invoiceNumber"),
+        @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndDueDateAndStatus", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE " +
@@ -128,6 +136,13 @@ import lombok.Setter;
                         "WHERE " +
                         "fixedAsset == :fixedAsset && " +
                         "dueDate == :dueDate " +
+                        "ORDER BY invoiceNumber"),
+        @javax.jdo.annotations.Query(
+                name = "findByFixedAssetAndInvoiceDate", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE " +
+                        "fixedAsset == :fixedAsset && " +
+                        "invoiceDate == :invoiceDate " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
