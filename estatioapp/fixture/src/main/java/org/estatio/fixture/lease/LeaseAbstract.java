@@ -33,6 +33,13 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
@@ -41,12 +48,6 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseRepository;
@@ -140,6 +141,37 @@ public abstract class LeaseAbstract extends FixtureScript {
         if (leaseRepository.findLeaseByReference(reference) == null) {
             throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
+        return lease;
+    }
+
+    protected Lease createOccupancyWithEndDate(
+            String reference,
+            String unitReference,
+            String brand,
+            BrandCoverage brandCoverage,
+            String countryOfOriginRef,
+            String sector,
+            String activity,
+            LocalDate startDate,
+            LocalDate occupancyEndDate,
+            ExecutionContext fixtureResults) {
+
+        Unit unit = unitRepository.findUnitByReference(unitReference);
+        Lease lease = null;
+        if (leaseRepository.findLeaseByReference(reference) == null) {
+            throw new RuntimeException("could not find lease reference='" + reference + "'");
+        } else {
+            lease = leaseRepository.findLeaseByReference(reference);
+        }
+
+        Country countryOfOrigin = countryRepository.findCountry(countryOfOriginRef);
+        Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
+        occupancy.setEndDate(occupancyEndDate);
+        occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
+        occupancy.setSectorName(sector);
+        occupancy.setActivityName(activity);
+        fixtureResults.addResult(this, occupancy);
+
         return lease;
     }
 

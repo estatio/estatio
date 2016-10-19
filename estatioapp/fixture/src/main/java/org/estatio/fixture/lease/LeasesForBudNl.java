@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.lease;
 
+import org.incode.module.country.fixture.CountriesRefData;
+
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForBudNl;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForDagoBankNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
@@ -42,6 +43,7 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String REF4A = "BUD-NLBANK-004";
     public static final String REF5 = "BUD-HYPER-005";
     public static final String REF6 = "BUD-HELLO-006";
+    public static final String REF7 = "BUD-DAGO-007";
 
     public static final String UNIT_REF1 = PropertyForBudNl.unitReference("001");
     public static final String UNIT_REF2 = PropertyForBudNl.unitReference("002");
@@ -49,6 +51,7 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String UNIT_REF4 = PropertyForBudNl.unitReference("004");
     public static final String UNIT_REF5 = PropertyForBudNl.unitReference("005");
     public static final String UNIT_REF6 = PropertyForBudNl.unitReference("006");
+    public static final String UNIT_REF7 = PropertyForBudNl.unitReference("007");
 
     public static final String PARTY_REF_TENANT1 = OrganisationForPoisonNl.REF;
     public static final String PARTY_REF_TENANT2 = OrganisationForMiracleNl.REF;
@@ -159,6 +162,19 @@ public class LeasesForBudNl extends LeaseAbstract {
                 true,
                 manager,
                 executionContext);
+
+        createOccupancyWithEndDate(
+                REF4,
+                UNIT_REF7,
+                BRAND4,
+                BRAND_COVERAGE,
+                COUNTRY_OF_ORIGIN_REF,
+                "BANK",
+                "LOANS",
+                ld(2011, 1, 1),
+                ld(2015, 6, 30),
+                executionContext
+                );
 
         createLease(
                 REF4A,

@@ -320,17 +320,15 @@ public class Budget extends UdoDomainObject2<Budget>
     public KeyTable createKeyTable(
             final String name,
             final FoundationValueType foundationValueType,
-            final KeyValueMethod keyValueMethod,
-            final Integer numberOfDigits) {
-        return keyTableRepository.newKeyTable(this, name, foundationValueType, keyValueMethod, numberOfDigits);
+            final KeyValueMethod keyValueMethod) {
+        return keyTableRepository.newKeyTable(this, name, foundationValueType, keyValueMethod, 6);
     }
 
     public String validateCreateKeyTable(
             final String name,
             final FoundationValueType foundationValueType,
-            final KeyValueMethod keyValueMethod,
-            final Integer numberOfDigits) {
-        return keyTableRepository.validateNewKeyTable(this, name, foundationValueType, keyValueMethod, numberOfDigits);
+            final KeyValueMethod keyValueMethod) {
+        return keyTableRepository.validateNewKeyTable(this, name, foundationValueType, keyValueMethod, 6);
     }
 
     @Programmatic

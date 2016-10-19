@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.asset;
 
-import org.estatio.dom.asset.PropertyType;
 import org.incode.module.country.dom.impl.Country;
-import org.estatio.dom.party.Party;
 import org.incode.module.country.fixture.CountriesRefData;
+
+import org.estatio.dom.asset.PropertyType;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
@@ -54,7 +55,7 @@ public class PropertyForBudNl extends PropertyAbstract {
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "BudgetToren", "Amsterdam", netherlands, PropertyType.SHOPPING_CENTER,
-                6, ld(2003, 12, 1), ld(2003, 12, 1), owner, manager,
+                7, ld(2003, 12, 1), ld(2003, 12, 1), owner, manager,
                 "52.37597;4.90814", executionContext);
     }
 

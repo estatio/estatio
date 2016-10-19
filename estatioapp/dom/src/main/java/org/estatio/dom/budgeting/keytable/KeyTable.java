@@ -277,7 +277,7 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         call distribute method
          */
         DistributionService distributionService = new DistributionService();
-        distributionService.distribute(input, getKeyValueMethod().targetTotal(), getPrecision());
+        distributionService.distribute(input, getKeyValueMethod().divider(this), getPrecision());
 
         return this;
     }
@@ -296,7 +296,7 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
     public KeyTable distributeSourceValues() {
 
         DistributionService distributionService = new DistributionService();
-        distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().targetTotal(), getPrecision());
+        distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().divider(this), getPrecision());
 
         return this;
     }
@@ -339,7 +339,7 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
 
     @Programmatic
     public void createCopyOn(final Budget newBudget) {
-        KeyTable copiedTable = newBudget.createKeyTable(getName(), getFoundationValueType(), getKeyValueMethod(), getPrecision());
+        KeyTable copiedTable = newBudget.createKeyTable(getName(), getFoundationValueType(), getKeyValueMethod());
         for (KeyItem item : getItems()){
             copiedTable.newItem(item.getUnit(), item.getSourceValue(), item.getValue());
         }

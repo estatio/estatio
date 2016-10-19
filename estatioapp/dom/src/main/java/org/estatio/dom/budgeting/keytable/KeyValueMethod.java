@@ -19,7 +19,6 @@
 package org.estatio.dom.budgeting.keytable;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Iterator;
 
 import org.estatio.dom.budgeting.keyitem.KeyItem;
@@ -42,8 +41,8 @@ public enum KeyValueMethod {
             return sum.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
         }
         @Override
-        public BigDecimal targetTotal() {
-            return new BigDecimal(1000, MathContext.DECIMAL64);
+        public BigDecimal divider(KeyTable keyTable) {
+            return new BigDecimal("1000");
         }
     },
     PERCENT {
@@ -63,8 +62,8 @@ public enum KeyValueMethod {
             return sum.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
         }
         @Override
-        public BigDecimal targetTotal() {
-            return new BigDecimal(100, MathContext.DECIMAL64);
+        public BigDecimal divider(KeyTable keyTable) {
+            return new BigDecimal("100");
         }
     },
     DEFAULT {
@@ -81,12 +80,12 @@ public enum KeyValueMethod {
             return sum;
         }
         @Override
-        public BigDecimal targetTotal() {
-            return null;
+        public BigDecimal divider(KeyTable keyTable) {
+            return keySum(keyTable);
         }
     };
 
-    public abstract BigDecimal targetTotal();
+    public abstract BigDecimal divider(KeyTable keyTable);
 
     public abstract boolean isValid(final KeyTable keyTable);
 

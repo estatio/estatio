@@ -24,7 +24,6 @@ import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 
-import org.estatio.dom.budgeting.Distributable;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 
@@ -32,18 +31,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
-public class BudgetCalculationViewmodel implements Distributable {
+public class BudgetCalculationViewmodel {
 
     public BudgetCalculationViewmodel(
             final BudgetItemAllocation itemAllocation,
             final KeyItem keyItem,
             final BigDecimal value,
-            final BigDecimal sourceValue,
             final BudgetCalculationType calculationType) {
         this.budgetItemAllocation = itemAllocation;
         this.keyItem = keyItem;
         this.value = value;
-        this.sourceValue = sourceValue;
         this.calculationType = calculationType;
     }
 
@@ -55,10 +52,7 @@ public class BudgetCalculationViewmodel implements Distributable {
 
     @Getter @Setter
     private KeyItem keyItem;
-
-    @Getter @Setter
-    private BigDecimal sourceValue;
-
+    
     @Getter @Setter
     private BudgetCalculationType calculationType;
 

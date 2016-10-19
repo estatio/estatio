@@ -87,8 +87,8 @@ public class BudgetCalculationServiceTest {
 
             // then
             assertThat(results).hasSize(2);
-            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("333.333333"));
-            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("666.666667"));
+            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("10.000000"));
+            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("20.000000"));
 
         }
 
@@ -104,8 +104,8 @@ public class BudgetCalculationServiceTest {
 
             // then
             assertThat(results).hasSize(2);
-            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("330.000000"));
-            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("660.000000"));
+            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("9.900000"));
+            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("19.800000"));
 
         }
 
@@ -121,8 +121,8 @@ public class BudgetCalculationServiceTest {
 
             // then
             assertThat(results).hasSize(2);
-            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6));
+            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6));
 
         }
 
@@ -138,8 +138,8 @@ public class BudgetCalculationServiceTest {
 
             // then
             assertThat(results).hasSize(2);
-            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6));
+            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6));
 
         }
 
@@ -157,8 +157,8 @@ public class BudgetCalculationServiceTest {
 
             // then
             assertThat(results).hasSize(2);
-            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO);
-            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(results.get(0).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6));
+            assertThat(results.get(1).getValue()).isEqualTo(BigDecimal.ZERO.setScale(6));
 
         }
 

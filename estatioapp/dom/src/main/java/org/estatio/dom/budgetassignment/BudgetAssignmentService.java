@@ -85,7 +85,7 @@ public class BudgetAssignmentService {
 
         concatString = concatString
                 .concat(" | budgeted ")
-                .concat(getTotalBudgetedValue(budgetItem).toString());
+                .concat(budgetItem.getBudgetedValue().toString());
 
         List<BudgetItemAllocation> sortedAllocations = new ArrayList<>(budgetItem.getBudgetItemAllocations());
 
@@ -117,12 +117,12 @@ public class BudgetAssignmentService {
         List<BudgetAssignmentResult> results = new ArrayList<>();
         // TODO: this is an extra filter because currently occupancies can outrun terminated leases
         if (lease.getStatus() != LeaseStatus.TERMINATED) {
-            List<BudgetCalculationViewmodel> calculationResultsForLease = new ArrayList<>();
             for (Occupancy occupancy : lease.getOccupancies()) {
+                List<BudgetCalculationViewmodel> calculationResultsForOccupancy = new ArrayList<>();
                 if (occupancy.getInterval().overlaps(budget.getInterval())) {
-                    calculationResultsForLease.addAll(calculationResults(budget, occupancy.getUnit()));
+                    calculationResultsForOccupancy.addAll(calculationResults(budget, occupancy.getUnit()));
                 }
-                results.addAll(createFromCalculationResults(lease, occupancy.getUnit(), calculationResultsForLease));
+                results.addAll(createFromCalculationResults(lease, occupancy.getUnit(), calculationResultsForOccupancy));
             }
         }
         return results;
@@ -173,7 +173,6 @@ public class BudgetAssignmentService {
                     ServiceChargeItem serviceChargeItem = serviceChargeItemRepository.findOrCreateServiceChargeItem(occupancy, invoiceCharge);
 
                 }
-
 
             }
 
