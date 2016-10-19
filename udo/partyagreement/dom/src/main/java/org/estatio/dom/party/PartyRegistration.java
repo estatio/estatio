@@ -75,7 +75,7 @@ import lombok.Setter;
                         + "   && endDate == :endDate")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.party.PartyRegistration"      // TODO: externalize mapping
+        objectType = "org.estatio.dom.party.PartyRegistration"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class PartyRegistration

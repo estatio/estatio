@@ -49,7 +49,7 @@ import lombok.Setter;
 })
 @Unique(name = "ServiceChargeItem_occupancy_charge_UNQ", members = { "occupancy", "charge" })
 @DomainObject(
-        objectType = "org.estatio.dom.budgetassignment.ServiceChargeItem"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgetassignment.ServiceChargeItem"
 )
 public class ServiceChargeItem extends UdoDomainObject2<ServiceChargeItem> implements WithApplicationTenancyProperty {
 

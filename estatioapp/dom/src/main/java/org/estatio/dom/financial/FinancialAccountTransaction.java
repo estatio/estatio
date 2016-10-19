@@ -69,7 +69,7 @@ import lombok.Setter;
         name = "FinancialAccountTransaction_financialAccount_transactionDate_IDX",
         members = { "financialAccount", "transactionDate" })
 @DomainObject(
-        objectType = "org.estatio.dom.financial.FinancialAccountTransaction"    // TODO: externalize mapping
+        objectType = "org.estatio.dom.financial.FinancialAccountTransaction"
 )
 public class FinancialAccountTransaction
         extends UdoDomainObject2<FinancialAccountTransaction>

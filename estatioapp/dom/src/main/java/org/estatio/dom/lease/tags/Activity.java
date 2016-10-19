@@ -65,7 +65,7 @@ import lombok.Setter;
 @DomainObject(
         bounded = true,
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.lease.tags.Activity"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.tags.Activity"
 )
 public class Activity
         extends UdoDomainObject2<Activity>

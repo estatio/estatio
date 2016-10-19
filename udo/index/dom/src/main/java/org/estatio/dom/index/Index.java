@@ -107,7 +107,7 @@ import lombok.Setter;
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.index.Index"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.index.Index"
 )
 public class Index
         extends UdoDomainObject2<Index>

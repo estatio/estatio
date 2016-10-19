@@ -40,7 +40,7 @@ import lombok.Setter;
         schema = "EstatioLease"     // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForServiceCharge")   // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForServiceCharge")
 @DomainObject(editing = Editing.DISABLED)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 

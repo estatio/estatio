@@ -88,7 +88,7 @@ import lombok.Setter;
                     + "&& budget.startDate == :startDate")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.budgeting.budgetitem.BudgetItem"    // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgeting.budgetitem.BudgetItem"
 )
 public class BudgetItem extends UdoDomainObject2<BudgetItem>
         implements WithApplicationTenancyProperty, BudgetItemAllocationCreator {

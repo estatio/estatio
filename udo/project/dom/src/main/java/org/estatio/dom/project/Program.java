@@ -85,7 +85,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing=Editing.DISABLED,
-        objectType = "org.estatio.dom.project.Program"      // TODO: externalize mapping
+        objectType = "org.estatio.dom.project.Program"
 )
 public class Program 
 			extends UdoDomainObject<Program>

@@ -38,7 +38,7 @@ import lombok.Setter;
         schema = "IncodeCommunications" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.PhoneOrFaxNumber") // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.communicationchannel.PhoneOrFaxNumber")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "PhoneNumber_phoneNumber_IDX", members = { "phoneNumber" })

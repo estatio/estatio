@@ -92,7 +92,7 @@ import lombok.Setter;
                         + "WHERE asset == :asset")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.asset.FixedAssetRole" // TODO: externalize mapping
+        objectType = "org.estatio.dom.asset.FixedAssetRole"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole

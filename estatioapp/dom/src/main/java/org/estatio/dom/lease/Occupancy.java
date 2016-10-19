@@ -113,7 +113,7 @@ import lombok.Setter;
                         + "&& (:includeTerminated || endDate == null || endDate >= :date)")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.lease.Occupancy"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.Occupancy"
 )
 public class Occupancy
         extends UdoDomainObject2<Occupancy>

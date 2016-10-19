@@ -74,7 +74,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.event.Event"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.event.Event"
 )
 public class Event
         extends UdoDomainObject2<Event>

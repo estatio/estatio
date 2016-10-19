@@ -57,7 +57,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.asset.registration.FixedAssetRegistration" // TODO: externalize mapping
+        value = "org.estatio.dom.asset.registration.FixedAssetRegistration"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

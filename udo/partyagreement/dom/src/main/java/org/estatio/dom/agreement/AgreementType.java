@@ -66,7 +66,7 @@ import lombok.Setter;
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.agreement.AgreementType"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.agreement.AgreementType"
 )
 public class AgreementType
         extends UdoDomainObject2<AgreementType>

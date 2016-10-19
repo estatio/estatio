@@ -53,7 +53,7 @@ import lombok.Setter;
         column = "version"
 )
 @DomainObject(
-        objectType = "org.estatio.dom.asset.ownership.FixedAssetOwnership" // TODO: externalize mapping
+        objectType = "org.estatio.dom.asset.ownership.FixedAssetOwnership"
 )
 public class FixedAssetOwnership implements Comparable<FixedAssetOwnership> {
 

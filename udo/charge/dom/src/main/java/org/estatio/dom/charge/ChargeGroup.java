@@ -71,7 +71,7 @@ import lombok.Setter;
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.charge.ChargeGroup"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.charge.ChargeGroup"
 )
 public class ChargeGroup
         extends UdoDomainObject2<ChargeGroup>

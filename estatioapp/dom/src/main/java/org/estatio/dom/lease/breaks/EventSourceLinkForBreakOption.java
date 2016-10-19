@@ -37,7 +37,7 @@ import org.estatio.dom.event.EventSourceLink;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.breaks.EventSourceLinkForBreakOption"
 )
 public class EventSourceLinkForBreakOption extends EventSourceLink {
 

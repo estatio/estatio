@@ -51,7 +51,7 @@ import lombok.Setter;
         schema = "EstatioParty" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.party.Organisation")  // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.party.Organisation")
 @DomainObject(editing = Editing.DISABLED)
 public class Organisation
         extends Party

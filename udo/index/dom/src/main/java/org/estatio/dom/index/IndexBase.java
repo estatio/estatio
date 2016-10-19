@@ -96,7 +96,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.index.IndexBase"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.index.IndexBase"
 )
 public class IndexBase
         extends UdoDomainObject2<IndexBase>

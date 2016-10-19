@@ -83,7 +83,7 @@ import lombok.Setter;
         autoCompleteRepository = CurrencyRepository.class,
         autoCompleteAction = "autoComplete",
         bounded = true,
-        objectType = "org.estatio.dom.currency.Currency"    // TODO: externalize mapping
+        objectType = "org.estatio.dom.currency.Currency"
 )
 public class Currency
         extends UdoDomainObject2<Currency>

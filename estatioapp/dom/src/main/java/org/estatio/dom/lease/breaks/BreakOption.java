@@ -72,7 +72,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.lease.breaks.BreakOption"  // TODO: externalize mapping
+        value = "org.estatio.dom.lease.breaks.BreakOption"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

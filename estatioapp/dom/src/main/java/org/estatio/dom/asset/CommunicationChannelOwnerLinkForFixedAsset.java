@@ -43,7 +43,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "fixedasset.CommunicationChannelOwnerLinkForFixedAsset" // TODO: externalize mapping; also reconcile with schema
+        objectType = "fixedasset.CommunicationChannelOwnerLinkForFixedAsset" // TODO: reconcile with schema
 )
 public class CommunicationChannelOwnerLinkForFixedAsset extends CommunicationChannelOwnerLink {
 

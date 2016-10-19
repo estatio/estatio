@@ -53,7 +53,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@javax.jdo.annotations.Discriminator("org.estatio.dom.bankmandate.BankMandate") // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.bankmandate.BankMandate")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findBankMandatesFor", language = "JDOQL",

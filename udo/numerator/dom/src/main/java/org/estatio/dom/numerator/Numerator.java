@@ -99,7 +99,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.numerator.Numerator"      // TODO: externalize mapping
+        objectType = "org.estatio.dom.numerator.Numerator"
 )
 public class Numerator
         extends UdoDomainObject2<Numerator>

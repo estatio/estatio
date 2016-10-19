@@ -70,7 +70,7 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Unique(name="CommunicationChannelOwnerLink_commchannel_owner_UNQ", members = {"communicationChannel","ownerObjectType","ownerIdentifier"})
 @DomainObject(
-        objectType = "comms.CommunicationChannelOwnerLink"  // TODO: externalize mapping, and change to EstatioComms
+        objectType = "comms.CommunicationChannelOwnerLink"  // TODO: reconcile with schema
 )
 public abstract class CommunicationChannelOwnerLink extends PolymorphicAssociationLink<CommunicationChannel, CommunicationChannelOwner, CommunicationChannelOwnerLink> {
 

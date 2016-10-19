@@ -69,7 +69,7 @@ import lombok.Setter;
 @DomainObject(
         bounded = true,
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.lease.tags.UnitSize"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.tags.UnitSize"
 )
 public class UnitSize
         extends UdoDomainObject2<UnitSize>

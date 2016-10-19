@@ -100,7 +100,7 @@ import lombok.Setter;
 @DomainObject(
         autoCompleteRepository = KeyTableRepository.class,
         autoCompleteAction = "autoComplete",
-        objectType = "org.estatio.dom.budgeting.keytable.KeyTable"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgeting.keytable.KeyTable"
 )
 public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicationTenancyProperty {
 

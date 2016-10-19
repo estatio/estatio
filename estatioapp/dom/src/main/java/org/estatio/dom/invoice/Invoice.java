@@ -201,7 +201,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.invoice.Invoice"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.invoice.Invoice"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Invoice

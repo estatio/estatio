@@ -77,7 +77,7 @@ import lombok.Setter;
         name = "IndexValue_indexBase_startDate_IDX",
         members = { "indexBase", "startDate" })
 @DomainObject(
-        objectType = "org.estatio.dom.index.IndexValue"     // TODO: externalize mapping
+        objectType = "org.estatio.dom.index.IndexValue"
 )
 public class IndexValue
         extends UdoDomainObject2<IndexValue>

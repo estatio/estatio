@@ -52,7 +52,7 @@ import lombok.Setter;
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
 @DomainObject(
-        objectType = "org.estatio.dom.lease.assignment.LeaseAssignment" // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.assignment.LeaseAssignment"
 )
 public class LeaseAssignment
         extends UdoDomainObject2<LeaseAssignment>

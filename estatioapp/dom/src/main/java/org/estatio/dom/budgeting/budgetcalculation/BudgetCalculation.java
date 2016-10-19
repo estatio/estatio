@@ -106,7 +106,7 @@ import lombok.Setter;
 @DomainObject(
         auditing = Auditing.DISABLED,
         publishing = Publishing.DISABLED,
-        objectType = "org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation"    // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation"
 )
 public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
         implements Distributable, WithApplicationTenancyProperty, Timestampable {

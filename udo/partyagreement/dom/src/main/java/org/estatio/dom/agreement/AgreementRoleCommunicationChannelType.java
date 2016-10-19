@@ -71,7 +71,7 @@ import lombok.Setter;
 @DomainObject(
         bounded = true,
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.agreement.AgreementRoleCommunicationChannelType"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.agreement.AgreementRoleCommunicationChannelType"
 )
 public class AgreementRoleCommunicationChannelType
         extends UdoDomainObject2<AgreementRoleCommunicationChannelType>

@@ -113,7 +113,7 @@ import lombok.Setter;
                         + "WHERE party == :party ")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.project.ProjectRole"      // TODO: externalize mapping
+        objectType = "org.estatio.dom.project.ProjectRole"
 )
 @DomainObjectLayout(bookmarking=BookmarkPolicy.AS_CHILD)
 public class ProjectRole

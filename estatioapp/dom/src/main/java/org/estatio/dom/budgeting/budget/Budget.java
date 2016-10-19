@@ -110,7 +110,7 @@ import lombok.Setter;
 })
 @Unique(name = "Budget_property_startDate_UNQ", members = { "property", "startDate" })
 @DomainObject(
-        objectType = "org.estatio.dom.budgeting.budget.Budget"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgeting.budget.Budget"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class Budget extends UdoDomainObject2<Budget>

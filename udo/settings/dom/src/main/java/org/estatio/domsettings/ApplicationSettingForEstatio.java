@@ -53,7 +53,7 @@ import lombok.Setter;
                     + "ORDER BY key")
 })
 @DomainObject(
-        objectType = "org.estatio.domsettings.ApplicationSettingForEstatio" // TODO: externalize mapping
+        objectType = "org.estatio.domsettings.ApplicationSettingForEstatio"
 )
 @DomainServiceLayout(named = "Application Setting")
 public class ApplicationSettingForEstatio extends SettingAbstractForEstatio implements ApplicationSetting {

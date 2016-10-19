@@ -67,7 +67,7 @@ import lombok.Setter;
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.asset.registration.FixedAssetRegistrationType"    // TODO: externalize mapping
+        objectType = "org.estatio.dom.asset.registration.FixedAssetRegistrationType"
 )
 public class FixedAssetRegistrationType 
         extends UdoDomainObject2<FixedAssetRegistrationType>

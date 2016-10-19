@@ -93,7 +93,7 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         autoCompleteRepository = BrandRepository.class,
         autoCompleteAction = "autoComplete",
-        objectType = "org.estatio.dom.lease.tags.Brand" // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.tags.Brand"
 )
 public class Brand
         extends UdoDomainObject2<Brand>

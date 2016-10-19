@@ -67,7 +67,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.budgeting.keyitem.KeyItem"    // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgeting.keyitem.KeyItem"
 )
 public class KeyItem extends UdoDomainObject2<KeyItem>
         implements WithApplicationTenancyProperty, Distributable {

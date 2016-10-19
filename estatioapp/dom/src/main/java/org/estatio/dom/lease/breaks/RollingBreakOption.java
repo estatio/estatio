@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.RollingBreakOption")   // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.RollingBreakOption")
 @DomainObject()
 public class RollingBreakOption
         extends BreakOption {

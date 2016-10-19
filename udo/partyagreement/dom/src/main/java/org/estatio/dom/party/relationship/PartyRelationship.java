@@ -44,7 +44,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.party.relationship.PartyRelationship"     // TODO: externalize mapping
+        objectType = "org.estatio.dom.party.relationship.PartyRelationship"
 )
 public class PartyRelationship extends AbstractDomainObject implements WithInterval<PartyRelationship> {
 

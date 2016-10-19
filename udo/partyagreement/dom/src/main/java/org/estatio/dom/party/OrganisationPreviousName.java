@@ -61,7 +61,7 @@ import lombok.Setter;
         name = "Organisation"
 )
 @DomainObject(
-        objectType = "org.estatio.dom.party.OrganisationPreviousName"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.party.OrganisationPreviousName"
 )
 public class OrganisationPreviousName implements Comparable<OrganisationPreviousName> {
 

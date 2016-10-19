@@ -59,7 +59,7 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee") // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",

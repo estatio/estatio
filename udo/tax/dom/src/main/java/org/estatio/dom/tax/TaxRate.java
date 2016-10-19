@@ -72,7 +72,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.tax.TaxRate"      // TODO: externalize mapping
+        objectType = "org.estatio.dom.tax.TaxRate"
 )
 public class TaxRate
         extends UdoDomainObject2<TaxRate>

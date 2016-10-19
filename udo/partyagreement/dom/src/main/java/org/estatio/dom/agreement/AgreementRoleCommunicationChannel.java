@@ -102,7 +102,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.agreement.AgreementRoleCommunicationChannel"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.agreement.AgreementRoleCommunicationChannel"
 )
 public class AgreementRoleCommunicationChannel
         extends UdoDomainObject2<AgreementRoleCommunicationChannel>

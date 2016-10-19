@@ -68,7 +68,7 @@ import lombok.Setter;
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.lease.LeaseType"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.lease.LeaseType"
 )
 public class LeaseType
         extends UdoDomainObject2<LeaseType>

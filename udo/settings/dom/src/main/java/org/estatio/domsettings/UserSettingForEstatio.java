@@ -67,7 +67,7 @@ import lombok.Setter;
 // can't see how to specify this order in the primary key; however HSQLDB objects :-(
 //@javax.jdo.annotations.Unique(name="USER_KEY_IDX", members={"user","key"})
 @DomainObject(
-        objectType = "org.estatio.domsettings.UserSettingForEstatio"    // TODO: externalize mapping
+        objectType = "org.estatio.domsettings.UserSettingForEstatio"
 )
 @DomainObjectLayout(named = "User Setting")
 public class UserSettingForEstatio extends SettingAbstractForEstatio implements UserSetting {

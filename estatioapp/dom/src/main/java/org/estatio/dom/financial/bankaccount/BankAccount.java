@@ -53,7 +53,7 @@ import lombok.Setter;
         ,schema = "EstatioFinancial" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.financial.bankaccount.BankAccount")   // TODO: externalize mapping
+@javax.jdo.annotations.Discriminator("org.estatio.dom.financial.bankaccount.BankAccount")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)

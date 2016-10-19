@@ -128,7 +128,7 @@ import lombok.Setter;
         members = { "agreement", "party", "type", "startDate" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.agreement.AgreementRole"  // TODO: externalize mapping
+        objectType = "org.estatio.dom.agreement.AgreementRole"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class AgreementRole

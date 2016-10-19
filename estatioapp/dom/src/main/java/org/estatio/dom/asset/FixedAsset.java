@@ -78,7 +78,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.asset.FixedAsset" // TODO: externalize mapping
+        value = "org.estatio.dom.asset.FixedAsset"
 )
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(

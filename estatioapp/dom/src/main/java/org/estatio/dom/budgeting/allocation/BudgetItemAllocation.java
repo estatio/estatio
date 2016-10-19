@@ -84,7 +84,7 @@ import lombok.Setter;
 @Unique(name = "ScheduleItem_charge_budgetItem_keyTable_UNQ", members = {"charge", "budgetItem", "keyTable"})
 @DomainObject(
         auditing = Auditing.DISABLED,
-        objectType = "org.estatio.dom.budgeting.allocation.BudgetItemAllocation"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgeting.allocation.BudgetItemAllocation"
 )
 public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation> implements WithApplicationTenancyProperty {
 

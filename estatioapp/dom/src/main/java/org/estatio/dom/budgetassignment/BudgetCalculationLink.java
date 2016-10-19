@@ -70,7 +70,7 @@ import lombok.Setter;
                         "&& budgetCalculation == :budgetCalculation")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.budgetassignment.BudgetCalculationLink"   // TODO: externalize mapping
+        objectType = "org.estatio.dom.budgetassignment.BudgetCalculationLink"
 )
 public class BudgetCalculationLink extends UdoDomainObject2<BudgetCalculationLink> implements WithApplicationTenancyProperty {
 

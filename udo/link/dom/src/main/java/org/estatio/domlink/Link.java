@@ -55,7 +55,7 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Unique(members = { "className", "name" })
 @DomainObject(
-        objectType = "org.estatio.domlink.Link"     // TODO: externalize mapping
+        objectType = "org.estatio.domlink.Link"
 )
 @MemberGroupLayout(columnSpans = { 12, 0, 0, 12 })
 public class Link
