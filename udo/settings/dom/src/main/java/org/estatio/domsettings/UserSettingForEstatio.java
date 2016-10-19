@@ -43,7 +43,7 @@ import lombok.Setter;
         identityType = IdentityType.APPLICATION, 
         objectIdClass=UserSettingPrimaryKey.class,
         table="UserSetting"
-        ,schema = "EstatioSettings"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Queries({ 
     @javax.jdo.annotations.Query(

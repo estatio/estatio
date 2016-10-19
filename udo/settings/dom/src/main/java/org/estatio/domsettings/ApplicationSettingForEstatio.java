@@ -38,7 +38,7 @@ import lombok.Setter;
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.APPLICATION,
         table="ApplicationSetting"
-        ,schema = "EstatioSettings"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Queries({ 
      @javax.jdo.annotations.Query(
