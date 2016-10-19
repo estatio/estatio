@@ -14,13 +14,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
-import org.estatio.dom.budgetassignment.BudgetCalculationLinkRepository;
-import org.estatio.dom.budgetassignment.ServiceChargeItemRepository;
 import org.estatio.dom.budgetassignment.viewmodels.BudgetAssignmentResult;
 import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetAssignmentResult;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.dom.budgeting.keytable.KeyTable;
@@ -42,12 +39,6 @@ public class
 BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
     @Inject
-    BudgetCalculationRepository budgetCalculationRepository;
-
-    @Inject
-    BudgetCalculationLinkRepository budgetCalculationLinkRepository;
-
-    @Inject
     PropertyRepository propertyRepository;
 
     @Inject
@@ -64,9 +55,6 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
     @Inject
     ChargeRepository chargeRepository;
-
-    @Inject
-    ServiceChargeItemRepository serviceChargeItemRepository;
 
 
     @Before
@@ -108,8 +96,6 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 //            assignBudgetWhenUpdated();
 //            assignBudgetWhenAudited();
 //            assignBudgetWhenAuditedAndUpdated();
-//            assignBudgetWhenAuditedAndUpdatedWithEmptyAuditedValueOnBudgetItem();
-//            assignBudgetWhenOccupationEndsInBudgetYear();
         }
 
         public void calculate() throws Exception {
@@ -133,10 +119,6 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
             assertThat(budgetedAmountFor(LeasesForBudNl.REF4A, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("3857.142861"));
             assertThat(budgetedAmountFor(LeasesForBudNl.REF5, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("5642.857155"));
             assertThat(budgetedAmountFor(LeasesForBudNl.REF5, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("4821.428583"));
-
-
-//            assertThat(budgetAssignmentService.getShortFallAmountBudgeted(budget)).isEqualTo(new BigDecimal("31309.39"));
-
 
         }
 
@@ -195,11 +177,9 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
         public void persistCalculations() throws Exception {
 
-
         }
 
         public void assignBudget() throws Exception {
-
 
         }
 
@@ -212,14 +192,6 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
         }
 
         public void assignBudgetWhenAuditedAndUpdated() throws Exception {
-
-        }
-
-        public void assignBudgetWhenAuditedAndUpdatedWithEmptyAuditedValueOnBudgetItem() throws Exception {
-
-        }
-
-        public void assignBudgetWhenOccupationEndsInBudgetYear() throws Exception {
 
         }
 
