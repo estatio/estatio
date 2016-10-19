@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "EstatioLeaseBreaks"   // Isis' ObjectSpecId inferred from @Discriminator
+        schema = "dbo"   // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)

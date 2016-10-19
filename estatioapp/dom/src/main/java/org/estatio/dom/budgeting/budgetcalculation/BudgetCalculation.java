@@ -61,7 +61,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioBudgeting" // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

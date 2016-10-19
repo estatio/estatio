@@ -42,7 +42,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioAssetOwnership"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DatastoreIdentity(

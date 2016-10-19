@@ -66,7 +66,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioAsset" // Isis' ObjectSpecId inferred @Discriminator
+        ,schema = "dbo" // Isis' ObjectSpecId inferred @Discriminator
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

@@ -32,7 +32,7 @@ import org.estatio.dom.event.EventSource;
 import org.estatio.dom.event.EventSourceLink;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "EstatioLeaseBreaks"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        schema = "dbo"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)

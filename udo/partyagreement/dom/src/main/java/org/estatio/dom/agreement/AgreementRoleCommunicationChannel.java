@@ -63,7 +63,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioAgreement"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")

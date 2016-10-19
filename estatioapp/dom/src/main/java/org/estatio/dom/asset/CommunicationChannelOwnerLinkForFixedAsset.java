@@ -38,7 +38,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "EstatioAsset" // Isis' ObjectSpecId inferred @DomainObject#objectType
+        schema = "dbo" // Isis' ObjectSpecId inferred @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)

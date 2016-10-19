@@ -43,7 +43,7 @@ import lombok.Setter;
 //TODO: is this in scope?
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE
-        ,schema = "EstatioLeaseAssignment"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo"  // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 

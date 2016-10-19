@@ -47,7 +47,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "EstatioBankmandate" // Isis' ObjectSpecId inferred from @Discriminator
+        schema = "dbo" // Isis' ObjectSpecId inferred from @Discriminator
 )
 // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(

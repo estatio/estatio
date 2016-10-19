@@ -37,7 +37,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "EstatioLease" // Isis' ObjectSpecId inferred from @Discriminator
+        schema = "dbo" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForDeposit")

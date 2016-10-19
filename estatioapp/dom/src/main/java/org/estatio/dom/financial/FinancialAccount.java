@@ -55,7 +55,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioFinancial" // Isis' ObjectSpecId inferred from @Discriminator
+        ,schema = "dbo" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(

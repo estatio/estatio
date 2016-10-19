@@ -53,7 +53,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioParty"    // Isis' ObjectSpecId inferred from @Discriminator
+        ,schema = "dbo"    // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,

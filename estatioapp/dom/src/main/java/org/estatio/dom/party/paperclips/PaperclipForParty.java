@@ -41,11 +41,11 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE
-        ,schema = "EstatioParty"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        ,schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "EstatioParty.PaperclipForParty"
+        objectType = "org.estatio.dom.party.paperclips.PaperclipForParty"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT

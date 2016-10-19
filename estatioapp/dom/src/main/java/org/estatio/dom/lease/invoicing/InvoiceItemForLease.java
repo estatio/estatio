@@ -50,7 +50,7 @@ import lombok.Setter;
  * <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.
  */
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "EstatioLeaseInvoicing"    // Isis' ObjectSpecId inferred from @Discriminator
+        schema = "dbo"    // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)

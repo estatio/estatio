@@ -99,7 +99,7 @@ import static org.apache.commons.lang3.StringUtils.left;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "EstatioLease" // Isis' ObjectSpecId inferred from @Discriminator
+        ,schema = "dbo" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
