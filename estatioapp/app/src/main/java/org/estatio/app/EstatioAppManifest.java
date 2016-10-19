@@ -170,8 +170,15 @@ public class EstatioAppManifest implements AppManifest {
         return props;
     }
 
+    /**
+     * We need to use overrides where we have a dependency on a module whose entities is defined to reside
+     * its own schema (eg incode modules), but where we have a PK/FK relationship to its entities.
+     *
+     * In this case, because DN (seems to) require both are in the same schema, we force the module's entity to be
+     * mapped to a table in Estatio's own schema, ie 'dbo'.
+     */
     private static Map<String, String> withEstatioSchemaOverrides(Map<String, String> props) {
-        // to pick up Xxx-estatio.orm overrides
+        // to pick up Xxx-dbo.orm overrides
         props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping", "dbo");
         return props;
     }
