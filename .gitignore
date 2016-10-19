@@ -13,6 +13,7 @@ logs/
 datanucleus.log*
 *.iml
 .idea
+.asciidoctor
 *.log
 *.lck
 .checkstyle-ncachefile

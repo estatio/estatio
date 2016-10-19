@@ -161,6 +161,7 @@ This consists of further maven modules again in _this_ git repo, notably the `es
 These modules also versioned along with the Estatio domain objects mentioned above (they share the same parent `pom.xml`), 
 
 
+
 === Support
 
 You are free to adapt or extend Estatio to your needs.
@@ -173,6 +174,136 @@ There is also extensive http://isis.apache.org/documentation.html[online documen
 == Developers' Guide
 
 This section contains useful info for the Estatio developers themselves.
+
+
+
+=== Component Diagrams
+
+The diagrams below represent the "to be" case; still to do:
+
+* move apptenancy from udo to icm
+* move docrendering modules from estatio to icm
+* move communications from udo to icm
+
+
+==== Estatio OS
+
+[plantuml, docs/images/estatio, png]
+....
+package "github/estatio" {
+    [estatio-app]
+    [estatio-canonicalfactory]
+    [estatio-canonical]
+    [estatio-fixture]
+    [estatio-dom]
+
+    [estatio-app] --> [estatio-fixture]
+    [estatio-fixture] --> [estatio-dom]
+
+    [estatio-canonicalfactory] -up-> [estatio-canonical]
+    [estatio-canonicalfactory] --> [estatio-dom]
+
+    package "udo-modules" {
+        [udo-base]
+        [udo-charge]
+        [udo-currency] --> [udo-base]
+        [udo-index] --> [udo-base]
+        [udo-link] --> [udo-base]
+        [udo-numerator] --> [udo-base]
+        [udo-partyagreement] --> [udo-base]
+        [udo-tax] --> [udo-base]
+        [udo-event] --> [udo-base]
+        [udo-settings] --> [udo-base]
+
+        [udo-charge] --> [udo-tax]
+        [udo-partyagreement] --> [udo-numerator]
+    }
+
+    [estatio-dom] --> [udo-charge]
+    [estatio-dom] --> [udo-currency]
+    [estatio-dom] --> [udo-index]
+    [estatio-dom] --> [udo-link]
+    [estatio-dom] --> [udo-partyagreement]
+    [estatio-dom] --> [udo-tax]
+    [estatio-dom] --> [udo-event]
+    [estatio-dom] --> [udo-settings]
+}
+
+
+package "incode-modules" {
+    [icm-base]
+    [icm-documents] --> [icm-base]
+    [icm-country] --> [icm-base]
+    [icm-apptenancy] --> [icm-base]
+    [icm-classification] --> [icm-base]
+    [icm-communications] --> [icm-country]
+    [icm-communications] --> [icm-apptenancy]
+}
+
+
+[estatio-dom] --> [icm-communications]
+[estatio-dom] --> [icm-documents]
+[estatio-dom] --> [icm-classification]
+[udo-charge] --> [icm-apptenancy]
+[udo-partyagreement] --> [icm-apptenancy]
+
+[estatio-fixture] -right-> IsisAddonsModules
+....
+
+==== Incode Modules / IsisAddons
+
+[plantuml, docs/images/incode-and-isisaddons, png]
+....
+package "incode-modules" {
+
+    [icm-base]
+
+    [icm-classification]
+
+    [icm-country] --> [icm-base]
+    [icm-document] --> [icm-base]
+    [icm-communication] --> [icm-base]
+    [icm-alias] --> [icm-base]
+
+    [icm-communication] --> [icm-document]
+    [icm-communication] --> [icm-country]
+
+    package "docrendering" {
+        [icm-docrendering\n-freemarker] -up-> [icm-document]
+        [icm-docrendering\n-stringinterpolator] -up-> [icm-document]
+        [icm-docrendering\n-xdocreport] -up-> [icm-document]
+    }
+}
+
+package "isisaddons-modules" {
+
+    [iam-pdfbox]
+    [iam-excel]
+    [iam-poly]
+
+    [iam-audit]
+    [iam-security]
+    [iam-sessionlogger]
+    [iam-settings]
+    [iam-command]
+    [iam-publishmq]
+    [iam-quartz]
+
+    [iam-freemarker]
+    [iam-stringinterpolator]
+    [iam-xdocreport]
+}
+
+package "isisaddons-wicket" {
+    [iaw-excel]
+    [iaw-fullcalendar2]
+    [iaw-gmap3]
+}
+
+[icm-docrendering\n-freemarker] --> [iam-freemarker]
+[icm-docrendering\n-stringinterpolator] --> [iam-stringinterpolator]
+[icm-docrendering\n-xdocreport] --> [iam-xdocreport]
+....
 
 
 === Commit messages
@@ -276,7 +407,10 @@ These reside in `adocs/documentation` directory.
 
 Recommended is http://asciidocfx.com/[Asciidoc], which is cross-platform.
 This provides side-by-side preview of the document (with sync'ed scrolling), and an outline view of the document.
-Recommended.
+
+Also, install GraphViz (to enable asciidiagram support, eg component diagrams above).
+
+
 
 ==== Style Guide
 
