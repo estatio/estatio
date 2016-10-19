@@ -90,6 +90,22 @@ public class BudgetCalculationServiceTest {
             assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("10.000000"));
             assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("20.000000"));
 
+            // and when
+            keyTable.setKeyValueMethod(KeyValueMethod.PROMILLE);
+            results = service.getCalculations(budget);
+
+            // then
+            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("1.000000"));
+            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("2.000000"));
+
+            // and when
+            keyTable.setKeyValueMethod(KeyValueMethod.DEFAULT);
+            results = service.getCalculations(budget);
+
+            // then
+            assertThat(results.get(0).getValue()).isEqualTo(new BigDecimal("333.333333"));
+            assertThat(results.get(1).getValue()).isEqualTo(new BigDecimal("666.666667"));
+
         }
 
         @Test
