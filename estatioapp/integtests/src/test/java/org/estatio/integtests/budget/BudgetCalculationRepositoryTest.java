@@ -71,7 +71,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             // given
             BudgetItemAllocation budgetItemAllocation = budgetItemAllocationRepository.allBudgetItemAllocations().get(0);
             KeyItem keyItem = budgetItemAllocation.getKeyTable().getItems().first();
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(budgetItemAllocation, keyItem, BigDecimal.ZERO, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(budgetItemAllocation, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
 
             // when
             BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(budgetItemAllocation, keyItem, BudgetCalculationStatus.TEMPORARY, BudgetCalculationType.BUDGETED);
@@ -90,7 +90,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             // given
             BudgetItemAllocation budgetItemAllocation = budgetItemAllocationRepository.allBudgetItemAllocations().get(0);
             KeyItem keyItem = budgetItemAllocation.getKeyTable().getItems().first();
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(budgetItemAllocation, keyItem, BigDecimal.ZERO, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(budgetItemAllocation, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
 
             // when
             List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetItemAllocation(budgetItemAllocation);

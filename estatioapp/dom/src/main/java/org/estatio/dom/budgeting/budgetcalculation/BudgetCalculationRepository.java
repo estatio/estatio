@@ -25,25 +25,22 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
             final BudgetItemAllocation budgetItemAllocation,
             final KeyItem keyItem,
             final BigDecimal value,
-            final BigDecimal sourceValue,
             final BudgetCalculationType calculationType){
 
         BudgetCalculation existingCalculation = findUnique(budgetItemAllocation, keyItem, BudgetCalculationStatus.TEMPORARY, calculationType);
 
         if (existingCalculation != null) {
             existingCalculation.setValue(value);
-            existingCalculation.setSourceValue(sourceValue);
             return existingCalculation;
         }
 
-        return createBudgetCalculation(budgetItemAllocation, keyItem, value, sourceValue, calculationType, BudgetCalculationStatus.TEMPORARY);
+        return createBudgetCalculation(budgetItemAllocation, keyItem, value, calculationType, BudgetCalculationStatus.TEMPORARY);
     }
 
     public BudgetCalculation createBudgetCalculation(
             final BudgetItemAllocation budgetItemAllocation,
             final KeyItem keyItem,
             final BigDecimal value,
-            final BigDecimal sourceValue,
             final BudgetCalculationType calculationType,
             final BudgetCalculationStatus status){
 
@@ -51,7 +48,6 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         budgetCalculation.setBudgetItemAllocation(budgetItemAllocation);
         budgetCalculation.setKeyItem(keyItem);
         budgetCalculation.setValue(value);
-        budgetCalculation.setSourceValue(sourceValue);
         budgetCalculation.setCalculationType(calculationType);
         budgetCalculation.setStatus(status);
 
@@ -63,10 +59,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     public BudgetCalculation updateOrCreateAssignedFromTemporary(final BudgetCalculation calculation){
         BudgetCalculation existingAssignedCalculation = findUnique(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), BudgetCalculationStatus.ASSIGNED, calculation.getCalculationType());
         if (existingAssignedCalculation == null) {
-            return createBudgetCalculation(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), calculation.getValue(), calculation.getSourceValue(), calculation.getCalculationType(), BudgetCalculationStatus.ASSIGNED);
+            return createBudgetCalculation(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), calculation.getValue(), calculation.getCalculationType(), BudgetCalculationStatus.ASSIGNED);
         } else {
             existingAssignedCalculation.setValue(calculation.getValue());
-            existingAssignedCalculation.setSourceValue(calculation.getSourceValue());
             return existingAssignedCalculation;
         }
     }

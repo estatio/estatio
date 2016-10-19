@@ -30,7 +30,6 @@ public class BudgetCalculationService {
                     result.getBudgetItemAllocation(),
                     result.getKeyItem(),
                     result.getValue(),
-                    result.getValue(),
                     result.getCalculationType())
             );
         }
