@@ -116,10 +116,13 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 false, url
                         + "Preliminary+Letter"
                         + "&id=${this.id}"
-                        + "&rs:Command=Render&rs:Format=PDF",
+                        + "&rs:Command=Render&rs:Format=PDF"
+                        + "&Reference=&invoiceNumber=&atPath=",
                 "Preliminary letter for Invoice ${this.number}",
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
+
+        // (currently) this is identical to global
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
                 ApplicationTenancyForIt.PATH, " (Italy)",
@@ -127,7 +130,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "Preliminary+Letter"
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF"
-                        + "&appTenancy=/ITA",
+                        + "&Reference=&invoiceNumber=&atPath=",
                 "Preliminary letter for Invoice ${this.number} (Italy)",
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
@@ -174,6 +177,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 "Invoice for ${this.number}",
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
+        // (currently) this is identical to global
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
                 ApplicationTenancyForIt.PATH, "( Italy)",
@@ -181,8 +185,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 url
                 + "Invoice"
                 + "&id=${this.id}"
-                + "&rs:Command=Render&rs:Format=PDF"
-                + "&appTenancy=/ITA",
+                + "&rs:Command=Render&rs:Format=PDF",
                 "Invoice for ${this.number}",
                 Invoice.class, BinderForReportServerAttachToInput.class,
                 executionContext);
