@@ -32,7 +32,7 @@ Copyright 2014~2015 Dan Haywood
     <artifactId>incode-module-communications-dom</artifactId>
 
     <!--
-        REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO.  FOR NOW, USE estatio.version
+        REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO (EST-866).  FOR NOW, USE estatio.version
 
         <version>1.14.0-SNAPSHOT</version>
     -->
@@ -84,7 +84,7 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.4</isis-module-security.version>
 
-        <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
+        <incode-module-base.version>1.13.1</incode-module-base.version>
         <incode-module-country.version>1.13.0</incode-module-country.version>
         <incode-module-document.version>1.13.0</incode-module-document.version>
 
