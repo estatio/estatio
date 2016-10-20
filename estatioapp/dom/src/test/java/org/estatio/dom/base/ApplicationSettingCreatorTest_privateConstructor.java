@@ -16,18 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.dom.base;
 
-import org.estatio.dom.appsettings.ApplicationSettingCreatorTestAbstract;
+import org.junit.Test;
 
+import org.incode.module.base.dom.PrivateConstructorTester;
 
-public class ApplicationSettingKeyTest {
+import org.estatio.domsettings.ApplicationSettingCreator;
 
-    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
+public class ApplicationSettingCreatorTest_privateConstructor {
 
-        public Instantiate() {
-            super(ApplicationSettingKey.values());
-        }
+    @Test
+    public void cover() throws Exception {
+        exercise(ApplicationSettingCreator.Helper.class);
+    }
 
+    private static void exercise(final Class<?> cls) throws Exception {
+        new PrivateConstructorTester(cls).exercise();
     }
 }

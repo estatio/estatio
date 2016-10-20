@@ -62,10 +62,6 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-applib</artifactId>
-        </dependency>
 
         <!-- download:
              $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
@@ -80,11 +76,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>com.google</groupId>
             <artifactId>rfc-2445</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>
@@ -164,13 +155,6 @@ language governing permissions and limitations under the License.
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
             <scope>test</scope>
-        </dependency>
-
-
-        <!-- SECURITY (for multi-tenancy impl) -->
-        <dependency>
-            <groupId>org.isisaddons.module.security</groupId>
-            <artifactId>isis-module-security-dom</artifactId>
         </dependency>
 
     </dependencies>

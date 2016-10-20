@@ -29,6 +29,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -36,8 +37,6 @@ import org.reflections.Reflections;
 import org.estatio.dom.TitledEnum;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.UdoDomainObject2;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Automatically tests all enums implementing {@link TitledEnum}.
@@ -48,8 +47,6 @@ public class UdoDomainObjectContractTestAll_jdoAnnotations {
     @Test
     public void searchAndTest() {
         Reflections reflections = new Reflections("org.estatio.dom");
-
-        System.out.println("EstatioDomainObjectContractTestAll_jdoAnnotations");
 
         Set<Class<? extends UdoDomainObject>> subtypes =
                 reflections.getSubTypesOf(UdoDomainObject.class);
@@ -67,16 +64,16 @@ public class UdoDomainObjectContractTestAll_jdoAnnotations {
 
             // must have a @PersistenceCapable(identityType=...) annotation
             final PersistenceCapable persistenceCapable = subtype.getAnnotation(PersistenceCapable.class);
-            assertThat(persistenceCapable).isNotNull();
+            Assertions.assertThat(persistenceCapable).isNotNull();
 
             IdentityType identityType = persistenceCapable.identityType();
-            assertThat(identityType).isNotNull();
+            Assertions.assertThat(identityType).isNotNull();
 
             if (identityType == IdentityType.DATASTORE) {
                 // NOT mandatory to have a @DatastoreIdentity, but if does, then @DatastoreIdentity(..., column="id")
                 final DatastoreIdentity datastoreIdentity = subtype.getAnnotation(DatastoreIdentity.class);
                 if (datastoreIdentity != null) {
-                    assertThat(datastoreIdentity.column()).isEqualTo("id");
+                    Assertions.assertThat(datastoreIdentity.column()).isEqualTo("id");
                 }
             }
 
@@ -96,8 +93,8 @@ public class UdoDomainObjectContractTestAll_jdoAnnotations {
 
                 // must have a @Discriminator(..., column="discriminator") on one of its supertypes
                 final Discriminator superDiscriminator = subtype.getSuperclass().getAnnotation(Discriminator.class);
-                assertThat(superDiscriminator).isNotNull();
-                assertThat(superDiscriminator.column()).isEqualTo("discriminator");
+                Assertions.assertThat(superDiscriminator).isNotNull();
+                Assertions.assertThat(superDiscriminator.column()).isEqualTo("discriminator");
 
             }
 
@@ -105,8 +102,8 @@ public class UdoDomainObjectContractTestAll_jdoAnnotations {
                 // must have a @Version(..., column="version")
                 final Version version = getAnnotationOfTypeOfItsSupertypes(subtype, Version.class);
 
-                assertThat(version).isNotNull();
-                assertThat(version.column()).isEqualTo("version");
+                Assertions.assertThat(version).isNotNull();
+                Assertions.assertThat(version.column()).isEqualTo("version");
             }
 
         }

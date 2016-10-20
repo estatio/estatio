@@ -16,18 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.dom.base;
 
-import org.estatio.dom.appsettings.ApplicationSettingCreatorTestAbstract;
+import org.apache.isis.core.unittestsupport.sortedsets.SortedSetsContractTestAbstract;
 
 
-public class ApplicationSettingKeyTest {
+public class SortedSetsContractTestAll extends SortedSetsContractTestAbstract {
 
-    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
-
-        public Instantiate() {
-            super(ApplicationSettingKey.values());
-        }
-
+    public SortedSetsContractTestAll() {
+        super("org.estatio.dom");
+        withLoggingTo(System.out);
     }
+
 }

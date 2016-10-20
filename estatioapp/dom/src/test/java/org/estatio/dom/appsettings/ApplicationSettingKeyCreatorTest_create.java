@@ -16,18 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.dom.appsettings;
 
-import org.estatio.dom.appsettings.ApplicationSettingCreatorTestAbstract;
+public class ApplicationSettingKeyCreatorTest_create extends ApplicationSettingCreatorTestAbstract.Instantiate {
 
-
-public class ApplicationSettingKeyTest {
-
-    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
-
-        public Instantiate() {
-            super(ApplicationSettingKey.values());
-        }
-
+    public ApplicationSettingKeyCreatorTest_create() {
+        super(ApplicationSettingKey.values());
     }
+
 }

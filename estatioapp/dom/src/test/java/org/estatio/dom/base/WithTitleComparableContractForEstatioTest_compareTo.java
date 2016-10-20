@@ -16,18 +16,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.dom.base;
 
-import org.estatio.dom.appsettings.ApplicationSettingCreatorTestAbstract;
+import com.google.common.collect.ImmutableMap;
+
+import org.estatio.dom.ComparableByTitleContractTestAbstract_compareTo;
+import org.estatio.dom.WithTitleComparable;
 
 
-public class ApplicationSettingKeyTest {
+/**
+ * Automatically tests all domain objects implementing {@link WithTitleComparable}.
+ */
+public class WithTitleComparableContractForEstatioTest_compareTo extends ComparableByTitleContractTestAbstract_compareTo {
 
-    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
-
-        public Instantiate() {
-            super(ApplicationSettingKey.values());
-        }
-
+    public WithTitleComparableContractForEstatioTest_compareTo() {
+        super("org.estatio", ImmutableMap.<Class<?>,Class<?>>of());
     }
+
 }

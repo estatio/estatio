@@ -66,6 +66,10 @@ language governing permissions and limitations under the License.
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.poly</groupId>
+            <artifactId>isis-module-poly-dom</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.incode.module.base</groupId>

@@ -16,18 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.dom.base;
 
-import org.estatio.dom.appsettings.ApplicationSettingCreatorTestAbstract;
+import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.contracttests.WithFieldUniqueContractTestAllAbstract;
 
+public class WithReferenceUniqueContractForEstatioTest_hasJdoUniqueIndexAnnotation extends
+        WithFieldUniqueContractTestAllAbstract<WithReferenceUnique> {
 
-public class ApplicationSettingKeyTest {
-
-    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
-
-        public Instantiate() {
-            super(ApplicationSettingKey.values());
-        }
-
+    public WithReferenceUniqueContractForEstatioTest_hasJdoUniqueIndexAnnotation() {
+        super(WithReferenceUnique.class, "reference", "org.estatio");
     }
+
 }

@@ -16,18 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease;
+package org.estatio.dom.base;
 
-import org.estatio.dom.appsettings.ApplicationSettingCreatorTestAbstract;
+import org.estatio.dom.TitledEnum;
+import org.estatio.dom.contracttests.TitledEnumContractTestAbstract_title;
 
+/**
+ * Automatically tests all enums implementing {@link TitledEnum}.
+ */
+public class TitledEnumContractForEstatioTest_title extends TitledEnumContractTestAbstract_title {
 
-public class ApplicationSettingKeyTest {
-
-    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
-
-        public Instantiate() {
-            super(ApplicationSettingKey.values());
-        }
-
+    public TitledEnumContractForEstatioTest_title() {
+        super("org.estatio");
     }
 }
+
+

@@ -100,7 +100,7 @@ mvn clean install -DskipTests -o
         <isis-wicket-fullcalendar2.version>1.13.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
-        <incode-module-base.version>1.13.0</incode-module-base.version>
+        <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
         <incode-module-communication.version>1.14.0-SNAPSHOT</incode-module-communication.version>
         <incode-module-country.version>1.13.0</incode-module-country.version>
         <incode-module-document.version>1.13.0</incode-module-document.version>
@@ -941,6 +941,16 @@ mvn clean install -DskipTests -o
                 <version>3.1</version>
             </dependency>
 
+            <!-- download:
+                 $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
+                 install to ~/.m2/repo using:
+                 $ mvn install:install-file \
+                     -Dfile=rfc2445-4Mar2011.jar \
+                     -DgroupId=com.google \
+                     -DartifactId=rfc-2445 \
+                     -Dversion=0.0.20110304 \
+                     -Dpackaging=jar
+             -->
             <dependency>
                 <groupId>com.google</groupId>
                 <artifactId>rfc-2445</artifactId>

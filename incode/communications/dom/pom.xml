@@ -84,7 +84,7 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.4</isis-module-security.version>
 
-        <incode-module-base.version>1.13.0</incode-module-base.version>
+        <incode-module-base.version>1.14.0-SNAPSHOT</incode-module-base.version>
         <incode-module-country.version>1.13.0</incode-module-country.version>
         <incode-module-document.version>1.13.0</incode-module-document.version>
 
@@ -246,11 +246,21 @@ Copyright 2014~2015 Dan Haywood
                 <scope>import</scope>
             </dependency>
 
-            <!-- TODO: remove this dependency when move out as an incode module -->
+            <!--
+            TODO: to remove, but only after have figured out/refactored WithApplicationTenancy and
+            removed dependency on UdoDomainObject
+            -->
             <dependency>
                 <groupId>org.estatio</groupId>
                 <artifactId>udo-base</artifactId>
-                <version>1.8.0-SNAPSHOT</version>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.estatio</groupId>
+                <artifactId>udo-base</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -297,13 +307,6 @@ Copyright 2014~2015 Dan Haywood
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-applib</artifactId>
             <version>${isis.version}</version>
-        </dependency>
-
-
-        <!-- TODO: remove this dependency when move out as an incode module -->
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
         </dependency>
 
 
@@ -354,6 +357,21 @@ Copyright 2014~2015 Dan Haywood
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!--
+        TODO: to remove, but only after have figured out/refactored WithApplicationTenancy and
+        removed dependency on UdoDomainObject
+        -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
 
