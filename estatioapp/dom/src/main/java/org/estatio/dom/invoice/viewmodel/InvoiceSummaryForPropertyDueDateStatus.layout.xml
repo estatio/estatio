@@ -53,7 +53,7 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Preliminary Letters">
+                <tab name="Communications">
                     <row>
                         <col span="12">
                             <ns2:collection id="preliminaryLetters">
@@ -70,12 +70,6 @@
                                     <ns2:named>Download PDF</ns2:named>
                                 </ns2:action>
                             </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Invoice Notes">
-                    <row>
-                        <col span="12">
                             <ns2:collection id="invoiceNotes">
                                 <ns2:action id="prepareInvoiceNotes">
                                     <ns2:named>Prepare</ns2:named>

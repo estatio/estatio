@@ -27,9 +27,10 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.document.dom.services.ClassService;
@@ -41,12 +42,20 @@ import lombok.Setter;
 
 public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
 
-    @Title
+    //region > title, icon etc
+    public String title() {
+        return titleService.titleOf(getInvoice());
+    }
+    //endregion
+
+    // @Title   // REVIEW: not being picked up?
     @Property()
+    @MemberOrder(sequence = "1")
     @Getter @Setter
     private Invoice invoice;
 
     @Property()
+    @MemberOrder(sequence = "4")
     @Getter @Setter
     private CommunicationChannel sendTo;
 
@@ -86,5 +95,8 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
 
     }
 
+
+    @Inject
+    TitleService titleService;
 
 }

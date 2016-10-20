@@ -30,7 +30,7 @@
                                 <ns2:property id="runId"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Communications" id="comms">
-                                <ns2:property id="sendTo">
+                                <ns2:property id="sendTo" hidden="ALL_TABLES">
                                     <ns2:action id="overrideSendTo">
                                         <ns2:named>Override</ns2:named>
                                     </ns2:action>
@@ -115,12 +115,11 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Prelim &amp; Invoice Comms">
+                <tab name="Communications">
                     <row>
                         <col span="12">
-                            <ns2:collection id="documentsAndCommunications">
-                                <ns2:named>Prelim &amp; Invoice Comms</ns2:named>
-                            </ns2:collection>
+                            <ns2:collection id="preliminaryLetters"/>
+                            <ns2:collection id="invoiceNotes"/>
                         </col>
                     </row>
                 </tab>

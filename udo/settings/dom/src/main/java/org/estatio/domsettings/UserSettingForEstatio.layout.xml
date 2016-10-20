@@ -3,30 +3,68 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="downloadJdoMetadata"/>
-            <ns2:action id="links"/>
             <ns2:action id="delete"/>
         </col>
     </row>
     <row>
-        <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="valueAsLong"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="valueRaw"/>
-                <ns2:property id="valueAsString"/>
-                <ns2:property id="description"/>
-                <ns2:property id="valueAsBoolean"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-                <ns2:property id="type"/>
-                <ns2:property id="valueAsInt"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="valueAsLocalDate"/>
-                <ns2:property id="user"/>
-                <ns2:property id="key"/>
-            </ns2:fieldSet>
+        <col span="6">
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <ns2:property id="user"/>
+                                <ns2:property id="key"/>
+                                <ns2:property id="description"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata">
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="clearHints" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="user"/>
+                                <ns2:property id="key"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="6">
+            <tabGroup>
+                <tab name="Value">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Value">
+                                <ns2:property id="type"/>
+                                <ns2:property id="valueAsLong"/>
+                                <ns2:property id="valueRaw"/>
+                                <ns2:property id="valueAsString"/>
+                                <ns2:property id="valueAsBoolean"/>
+                                <ns2:property id="valueAsLocalDate"/>
+                                <ns2:property id="valueAsInt"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Dummy">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="dummy"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
         <col span="8" unreferencedCollections="true"/>
     </row>

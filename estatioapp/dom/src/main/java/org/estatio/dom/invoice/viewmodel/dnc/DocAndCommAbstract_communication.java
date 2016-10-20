@@ -21,6 +21,7 @@ package org.estatio.dom.invoice.viewmodel.dnc;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -35,6 +36,7 @@ public abstract class DocAndCommAbstract_communication<T extends DocAndCommAbstr
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Property()
+    @MemberOrder(sequence = "5") // workaround, DocAndCommForInvoiceNote.layout.xml not being honoured for table, for some reason
     public Communication $$() {
         return super.getCommunication();
     }

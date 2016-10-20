@@ -2,7 +2,6 @@
 -- these tables were deployed while the functionality was still being developed; they are all empty, so can just drop and start over.
 --
 
-drop table incodeDocTemplates.DocTemplate
 drop table dbo.PaperclipForCommunication
 drop table dbo.PaperclipForFixedAsset
 drop table dbo.PaperclipForInvoice

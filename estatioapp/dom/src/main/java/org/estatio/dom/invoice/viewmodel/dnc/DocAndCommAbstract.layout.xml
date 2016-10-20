@@ -3,32 +3,35 @@
     <row>
         <col span="12" unreferencedActions="true">
             <cpt:domainObject/>
+            <cpt:action id="download"/>
         </col>
     </row>
     <row>
-        <col span="4">
+        <col span="6">
             <cpt:fieldSet name="General" id="general">
-                <cpt:property id="invoice"/>
-                <cpt:property id="sendTo"/>
+                <cpt:action id="recentAuditEntries" hidden="EVERYWHERE"/>
+                <cpt:action id="findChangesByDate" hidden="EVERYWHERE"/>
+                <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                <cpt:property id="invoice" hidden="REFERENCES_PARENT"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Document">
+                <cpt:property id="document"/>
+                <cpt:property id="documentState"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
             </cpt:fieldSet>
         </col>
-        <col span="8">
-            <row>
-                <col span="6">
-                    <cpt:fieldSet name="Document">
-                        <cpt:property id="document"/>
-                        <cpt:property id="documentState"/>
-                    </cpt:fieldSet>
-                </col>
-                <col span="6">
-                    <cpt:fieldSet name="Communication">
-                        <cpt:property id="communication"/>
-                        <cpt:property id="communicationState"/>
-                    </cpt:fieldSet>
-                </col>
-            </row>
+        <col span="6">
+            <cpt:fieldSet name="Send to">
+                <cpt:property id="sendTo"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Communication">
+                <cpt:property id="communication"/>
+                <cpt:property id="communicationState"/>
+            </cpt:fieldSet>
         </col>
     </row>
     <row>
