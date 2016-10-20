@@ -14,8 +14,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
-
 @DomainService(
         nature = NatureOfService.DOMAIN
 )

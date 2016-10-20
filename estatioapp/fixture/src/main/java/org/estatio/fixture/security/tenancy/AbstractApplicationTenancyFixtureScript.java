@@ -22,7 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 
 public abstract class AbstractApplicationTenancyFixtureScript extends FixtureScript {
 

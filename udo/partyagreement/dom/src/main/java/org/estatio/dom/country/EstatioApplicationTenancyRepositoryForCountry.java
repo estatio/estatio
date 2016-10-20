@@ -18,7 +18,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.country.dom.impl.Country;
-import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 
 /**
  * REVIEW: it's rather peculiar that this functionality has ended up here.  It was in udo-dom-geography (now moved out

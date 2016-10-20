@@ -57,7 +57,7 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.valuetypes;
+package org.estatio.dom.apptenancy;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +29,9 @@ import com.google.common.collect.Lists;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
+/**
+ * Value type.
+ */
 public final class ApplicationTenancyLevel implements Comparable<ApplicationTenancyLevel> {
 
     public static ApplicationTenancyLevel of(final String path) {

@@ -5,7 +5,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
 
 public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenancyEventChanged> {
 

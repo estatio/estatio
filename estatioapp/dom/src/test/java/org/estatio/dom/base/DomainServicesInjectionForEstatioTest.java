@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.base;
 
-import org.estatio.dom.contracttests.DomainServicesInjectionTestAbstract_inject;
+import org.estatio.dom.DomainServicesInjectionTestAbstract_inject;
 
 /**
  * Automatically tests domain services injected into domain objects.

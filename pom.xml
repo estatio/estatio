@@ -809,19 +809,6 @@ mvn clean install -DskipTests -o
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-apptenancy</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-apptenancy</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -1163,7 +1150,6 @@ mvn clean install -DskipTests -o
             </activation>
             <modules>
                 <module>udo/base/dom</module>
-                <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
                 <module>udo/numerator/dom</module>
@@ -1187,7 +1173,6 @@ mvn clean install -DskipTests -o
             <id>quicktest</id>
             <modules>
                 <module>udo/base/dom</module>
-                <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
                 <module>udo/numerator/dom</module>
@@ -1210,7 +1195,6 @@ mvn clean install -DskipTests -o
             <id>extended</id>
             <modules>
                 <module>udo/base/dom</module>
-                <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
                 <module>udo/numerator/dom</module>
@@ -1238,7 +1222,6 @@ mvn clean install -DskipTests -o
             </properties>
             <modules>
                 <module>udo/base/dom</module>
-                <module>udo/apptenancy/dom</module>
                 <module>udo/charge/dom</module>
                 <module>udo/currency/dom</module>
                 <module>udo/numerator/dom</module>

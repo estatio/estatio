@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.contracttests;
+package org.estatio.dom;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

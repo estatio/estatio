@@ -1,4 +1,4 @@
-package org.estatio.dom.valuetypes;
+package org.estatio.dom.apptenancy;
 
 import java.util.List;
 

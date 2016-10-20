@@ -36,7 +36,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.valuetypes.ApplicationTenancyLevel;
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Charge.class)
 public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {

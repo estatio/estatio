@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.contracttests;
+package org.estatio.dom;
 
 import java.lang.annotation.Annotation;
 import java.util.Set;
@@ -31,7 +31,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.incode.module.base.dom.TitledEnum;
-import org.estatio.dom.UdoDomainObject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
