@@ -56,16 +56,16 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.Chained;
-import org.incode.module.base.dom.WithInterval;
-import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithInterval;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceGetter;
+import org.incode.module.base.dom.with.WithNameGetter;
+import org.incode.module.base.dom.with.WithReferenceGetter;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

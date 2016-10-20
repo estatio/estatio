@@ -30,8 +30,8 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
-import org.incode.module.base.dom.PojoTester;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.PojoTester;
 
 public class CommunicationChannelTest {
 

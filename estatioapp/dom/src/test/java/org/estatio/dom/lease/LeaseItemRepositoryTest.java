@@ -25,8 +25,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 
-import org.incode.module.base.dom.FinderInteraction;
-import org.incode.module.base.dom.FinderInteraction.FinderMethod;
+import org.incode.module.base.dom.testing.FinderInteraction;
+import org.incode.module.base.dom.testing.FinderInteraction.FinderMethod;
 import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.charge.Charge;
 

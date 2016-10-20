@@ -50,7 +50,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
-import org.incode.module.base.dom.WithStartDate;
+import org.incode.module.base.dom.with.WithStartDate;
 import org.incode.module.base.dom.utils.MathUtils;
 import org.incode.module.base.dom.utils.TitleBuilder;
 

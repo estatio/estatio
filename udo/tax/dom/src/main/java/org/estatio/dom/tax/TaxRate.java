@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
-import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;

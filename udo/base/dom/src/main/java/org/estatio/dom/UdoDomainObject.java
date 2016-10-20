@@ -29,6 +29,11 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
+import org.incode.module.base.dom.with.WithCodeGetter;
+import org.incode.module.base.dom.with.WithDescriptionGetter;
+import org.incode.module.base.dom.with.WithNameGetter;
+import org.incode.module.base.dom.with.WithReferenceGetter;
+import org.incode.module.base.dom.with.WithTitleGetter;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over time,

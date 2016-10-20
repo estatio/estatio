@@ -33,7 +33,7 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithNameGetter;
+import org.incode.module.base.dom.with.WithNameGetter;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 

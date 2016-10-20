@@ -23,7 +23,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
 import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;

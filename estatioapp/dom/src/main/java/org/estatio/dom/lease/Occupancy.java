@@ -42,7 +42,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
@@ -59,7 +59,7 @@ import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.SectorRepository;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.lease.tags.UnitSizeRepository;
-import org.estatio.dom.roles.EstatioRole;
+import org.incode.module.base.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

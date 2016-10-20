@@ -18,8 +18,8 @@
  */
 package org.estatio.dom.base;
 
-import org.estatio.dom.TitledEnum;
-import org.estatio.dom.contracttests.TitledEnumContractTestAbstract_title;
+import org.incode.module.base.dom.TitledEnum;
+import org.incode.module.base.dom.TitledEnumContractTestAbstract_title;
 
 /**
  * Automatically tests all enums implementing {@link TitledEnum}.

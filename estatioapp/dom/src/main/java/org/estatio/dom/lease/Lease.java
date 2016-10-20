@@ -91,7 +91,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.roles.EstatioRole;
+import org.incode.module.base.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

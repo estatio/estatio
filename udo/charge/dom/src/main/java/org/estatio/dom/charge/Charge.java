@@ -37,8 +37,8 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithNameUnique;
-import org.estatio.dom.WithReferenceUnique;
+import org.incode.module.base.dom.with.WithNameUnique;
+import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.tax.Tax;

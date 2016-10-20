@@ -20,7 +20,7 @@ package org.estatio.dom.base;
 
 import org.junit.Test;
 
-import org.incode.module.base.dom.PrivateConstructorTester;
+import org.incode.module.base.dom.testing.PrivateConstructorTester;
 
 import org.estatio.domsettings.ApplicationSettingCreator;
 

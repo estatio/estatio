@@ -40,7 +40,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.roles.EstatioRole;
+import org.incode.module.base.dom.roles.EstatioRole;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm> {

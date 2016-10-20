@@ -18,7 +18,7 @@
  */
 package org.incode.module.communications.dom.impl.commchannel;
 
-import org.estatio.dom.TitledEnum;
+import org.incode.module.base.dom.TitledEnum;
 
 public enum CommunicationChannelPurposeType implements TitledEnum {
 

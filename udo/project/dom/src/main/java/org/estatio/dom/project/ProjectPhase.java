@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.project;
 
-import org.estatio.dom.TitledEnum;
+import org.incode.module.base.dom.TitledEnum;
 import org.incode.module.base.dom.utils.StringUtils;
 
 public enum ProjectPhase implements TitledEnum {

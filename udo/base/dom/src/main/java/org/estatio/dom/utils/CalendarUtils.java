@@ -29,7 +29,7 @@ import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.EstatioApplicationException;
+import org.incode.module.base.dom.IncodeApplicationException;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 public final class CalendarUtils {
@@ -89,7 +89,7 @@ public final class CalendarUtils {
                 thisDate = nextDate;
             }
         } catch (final ParseException ex) {
-            throw new EstatioApplicationException("Unable to parse rrule >>" + rrule + "<<", ex);
+            throw new IncodeApplicationException("Unable to parse rrule >>" + rrule + "<<", ex);
         }
         return null;
     }

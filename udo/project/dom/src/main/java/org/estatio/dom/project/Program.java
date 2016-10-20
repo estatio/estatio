@@ -50,7 +50,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainObject;
-import org.estatio.dom.WithReferenceUnique;
+import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 

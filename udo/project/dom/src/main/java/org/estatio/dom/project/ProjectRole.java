@@ -42,7 +42,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.UdoDomainObject;
-import org.incode.module.base.dom.WithIntervalContiguous;
+import org.incode.module.base.dom.with.WithIntervalContiguous;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.party.Party;
 import org.incode.module.base.dom.utils.TitleBuilder;

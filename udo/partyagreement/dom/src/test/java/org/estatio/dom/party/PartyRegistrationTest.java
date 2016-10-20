@@ -21,9 +21,9 @@ package org.estatio.dom.party;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 
-import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -41,10 +41,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
-import org.incode.module.base.dom.PojoTester.FixtureDatumFactory;
-import org.incode.module.base.dom.WithIntervalMutable;
-import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.PojoTester.FixtureDatumFactory;
+import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;

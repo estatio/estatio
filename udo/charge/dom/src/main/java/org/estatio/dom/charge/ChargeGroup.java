@@ -39,8 +39,8 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithReferenceUnique;
+import org.incode.module.base.dom.with.WithReferenceComparable;
+import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 

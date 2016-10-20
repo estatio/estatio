@@ -30,7 +30,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.dom.WithNameGetter;
+import org.incode.module.base.dom.with.WithNameGetter;
 import org.estatio.dom.documents.binders.BinderForWithNameGetterAttachToInput;
 import org.estatio.fixture.documents.RenderingStrategies;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;

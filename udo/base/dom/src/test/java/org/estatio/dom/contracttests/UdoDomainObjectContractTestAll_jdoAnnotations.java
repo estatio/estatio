@@ -34,7 +34,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import org.estatio.dom.TitledEnum;
+import org.incode.module.base.dom.TitledEnum;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.UdoDomainObject2;
 

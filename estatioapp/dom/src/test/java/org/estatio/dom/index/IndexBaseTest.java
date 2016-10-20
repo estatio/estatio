@@ -28,7 +28,7 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
 public class IndexBaseTest {
 

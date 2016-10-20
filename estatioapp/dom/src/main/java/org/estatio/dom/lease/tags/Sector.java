@@ -36,8 +36,8 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.WithNameUnique;
+import org.incode.module.base.dom.with.WithNameComparable;
+import org.incode.module.base.dom.with.WithNameUnique;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 

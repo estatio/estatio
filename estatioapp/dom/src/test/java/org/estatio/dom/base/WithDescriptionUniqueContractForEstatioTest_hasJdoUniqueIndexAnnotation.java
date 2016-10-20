@@ -18,8 +18,8 @@
  */
 package org.estatio.dom.base;
 
-import org.estatio.dom.WithDescriptionUnique;
-import org.estatio.dom.contracttests.WithFieldUniqueContractTestAllAbstract;
+import org.incode.module.base.dom.with.WithDescriptionUnique;
+import org.incode.module.base.dom.with.WithFieldUniqueContractTestAllAbstract;
 
 public class WithDescriptionUniqueContractForEstatioTest_hasJdoUniqueIndexAnnotation extends
         WithFieldUniqueContractTestAllAbstract<WithDescriptionUnique> {

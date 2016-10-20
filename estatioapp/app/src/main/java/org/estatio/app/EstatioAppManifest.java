@@ -24,7 +24,7 @@ import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
-import org.estatio.services.calendar.CalendarService;
+import org.incode.module.base.services.calendar.CalendarService;
 
 public class EstatioAppManifest implements AppManifest {
 

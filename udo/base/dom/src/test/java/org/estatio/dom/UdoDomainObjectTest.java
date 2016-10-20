@@ -28,6 +28,12 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.with.WithCodeGetter;
+import org.incode.module.base.dom.with.WithDescriptionGetter;
+import org.incode.module.base.dom.with.WithNameGetter;
+import org.incode.module.base.dom.with.WithReferenceGetter;
+import org.incode.module.base.dom.with.WithTitleGetter;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

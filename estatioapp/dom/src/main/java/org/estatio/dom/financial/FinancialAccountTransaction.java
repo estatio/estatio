@@ -34,7 +34,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.roles.EstatioRole;
+import org.incode.module.base.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

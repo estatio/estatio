@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
 public class CurrencyTest {
 

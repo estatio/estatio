@@ -36,7 +36,7 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.Dflt;
+import org.incode.module.base.dom.Dflt;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 

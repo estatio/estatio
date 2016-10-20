@@ -30,7 +30,7 @@ import javax.jdo.annotations.Version;
 import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
-import org.estatio.dom.TitledEnum;
+import org.incode.module.base.dom.TitledEnum;
 import org.estatio.dom.UdoDomainObject;
 
 import static org.hamcrest.CoreMatchers.is;

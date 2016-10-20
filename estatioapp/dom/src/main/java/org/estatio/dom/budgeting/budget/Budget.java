@@ -56,7 +56,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -80,7 +80,7 @@ import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
-import org.estatio.dom.roles.EstatioRole;
+import org.incode.module.base.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

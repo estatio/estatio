@@ -21,7 +21,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.base.dom.WithInterval;
+import org.incode.module.base.dom.with.WithInterval;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 

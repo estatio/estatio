@@ -19,7 +19,7 @@ package org.estatio.dom.budgetassignment;
 
 import org.junit.Test;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancy;
 

@@ -28,9 +28,9 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
-import org.incode.module.base.dom.WithIntervalMutable;
-import org.incode.module.base.dom.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

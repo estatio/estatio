@@ -31,7 +31,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.memento.MementoService;
 
-import org.estatio.services.calendar.CalendarService;
+import org.incode.module.base.services.calendar.CalendarService;
 
 public abstract class UdoDomainService<T> extends AbstractService {
 

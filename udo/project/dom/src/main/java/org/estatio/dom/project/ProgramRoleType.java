@@ -23,7 +23,7 @@ import com.google.common.base.Predicate;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.TitledEnum;
+import org.incode.module.base.dom.TitledEnum;
 import org.incode.module.base.dom.utils.StringUtils;
 
 public enum ProgramRoleType implements TitledEnum {

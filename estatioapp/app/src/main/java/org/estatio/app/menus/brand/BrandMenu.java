@@ -35,7 +35,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.Dflt;
+import org.incode.module.base.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.incode.module.country.dom.impl.Country;

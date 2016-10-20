@@ -35,7 +35,7 @@ import org.incode.module.base.dom.types.TitleType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithTitleComparable;
+import org.incode.module.base.dom.with.WithTitleComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 

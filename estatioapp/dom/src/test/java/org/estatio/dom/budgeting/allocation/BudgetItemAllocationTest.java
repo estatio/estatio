@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import org.incode.module.base.dom.AbstractBeanPropertiesTest;
+import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.budgeting.PropertyForTesting;

@@ -45,8 +45,8 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceGetter;
+import org.incode.module.base.dom.with.WithNameGetter;
+import org.incode.module.base.dom.with.WithReferenceGetter;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.party.Party;
 

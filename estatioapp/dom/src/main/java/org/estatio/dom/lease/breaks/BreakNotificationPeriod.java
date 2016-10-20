@@ -20,7 +20,7 @@ package org.estatio.dom.lease.breaks;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.Titled;
+import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.StringUtils;
 
 public enum BreakNotificationPeriod implements Titled {
