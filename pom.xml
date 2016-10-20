@@ -105,6 +105,10 @@ mvn clean install -DskipTests -o
         <incode-module-country.version>1.13.0</incode-module-country.version>
         <incode-module-document.version>1.13.0</incode-module-document.version>
 
+        <incode-module-docrendering-freemarker.version>1.13.0</incode-module-docrendering-freemarker.version>
+        <incode-module-docrendering-stringinterpolator.version>1.13.0</incode-module-docrendering-stringinterpolator.version>
+        <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
+
         <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -120,6 +124,7 @@ mvn clean install -DskipTests -o
 
         <compileSource>1.8</compileSource>
         <compileTarget>1.8</compileTarget>
+
     </properties>
 
     <repositories>
@@ -617,44 +622,41 @@ mvn clean install -DskipTests -o
                 <scope>test</scope>
             </dependency>
 
-            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-stringinterpolator</artifactId>
-                <version>${project.version}</version>
+                <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
+                <version>${incode-module-docrendering-stringinterpolator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-stringinterpolator</artifactId>
-                <version>${project.version}</version>
+                <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
+                <version>${incode-module-docrendering-stringinterpolator.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
 
-            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-freemarker</artifactId>
-                <version>${project.version}</version>
+                <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
+                <version>${incode-module-docrendering-freemarker.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-freemarker</artifactId>
-                <version>${project.version}</version>
+                <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
+                <version>${incode-module-docrendering-freemarker.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
 
-            <!-- TODO: update version when move out to separate module -->
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-xdocreport</artifactId>
-                <version>${project.version}</version>
+                <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
+                <version>${incode-module-docrendering-xdocreport.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-xdocreport</artifactId>
-                <version>${project.version}</version>
+                <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
+                <version>${incode-module-docrendering-xdocreport.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -1163,9 +1165,6 @@ mvn clean install -DskipTests -o
                 <module>udo/settings/dom</module>
                 <module>udo/partyagreement/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/docrendering-stringinterpolator</module>
-                <module>incode/docrendering-freemarker</module>
-                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
@@ -1190,9 +1189,6 @@ mvn clean install -DskipTests -o
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/docrendering-stringinterpolator</module>
-                <module>incode/docrendering-freemarker</module>
-                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
@@ -1216,9 +1212,6 @@ mvn clean install -DskipTests -o
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/docrendering-stringinterpolator</module>
-                <module>incode/docrendering-freemarker</module>
-                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
@@ -1246,9 +1239,6 @@ mvn clean install -DskipTests -o
                 <module>udo/partyagreement/dom</module>
                 <module>udo/settings/dom</module>
                 <module>incode/communications/dom</module>
-                <module>incode/docrendering-stringinterpolator</module>
-                <module>incode/docrendering-freemarker</module>
-                <module>incode/docrendering-xdocreport</module>
                 <module>estatioapp/app</module>
                 <module>estatioapp/impmgr</module>
                 <module>estatioapp/dom</module>
