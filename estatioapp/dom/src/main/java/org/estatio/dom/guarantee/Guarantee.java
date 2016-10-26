@@ -27,6 +27,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -37,6 +38,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -49,6 +51,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -147,8 +150,7 @@ public class Guarantee
     }
 
     public String disableChangeGuaranteeType(GuaranteeType guaranteeType) {
-        return (getGuaranteeType() == GuaranteeType.COMPANY_GUARANTEE ||
-                getGuaranteeType() == GuaranteeType.NONE || getGuaranteeType() == GuaranteeType.UNKNOWN) ? null : "Bank guarantees and deposits cannot be changed";
+        return getGuaranteeType().isMutable() || EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Bank guarantees and deposits cannot be changed";
     }
 
     // //////////////////////////////////////
@@ -227,6 +229,21 @@ public class Guarantee
             @Parameter(optionality = Optionality.OPTIONAL)
             final Agreement previousLease) {
         return this;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove(final String reason) {
+        remove(this);
+        final FinancialAccount financialAccount = getFinancialAccount();
+        this.setFinancialAccount(null);
+        if (financialAccount != null) {
+            financialAccount.remove(reason);
+        }
+    }
+
+    public boolean hideRemove() {
+        final boolean userIsAdmin = EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !userIsAdmin;
     }
 
     @Inject

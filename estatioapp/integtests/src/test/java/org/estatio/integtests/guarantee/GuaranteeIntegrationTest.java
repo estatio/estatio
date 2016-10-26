@@ -20,13 +20,20 @@ package org.estatio.integtests.guarantee;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.sudo.SudoService;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.xactn.TransactionService;
+
+import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.financial.FinancialAccount;
@@ -40,11 +47,10 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GuaranteeTest extends EstatioIntegrationTest {
+public class GuaranteeIntegrationTest extends EstatioIntegrationTest {
 
     @Inject
     LeaseMenu leaseMenu;
@@ -57,6 +63,15 @@ public class GuaranteeTest extends EstatioIntegrationTest {
 
     @Inject
     TransactionService transactionService;
+
+    @Inject
+    SudoService sudoService;
+
+    @Inject
+    UserService userService;
+
+    @Inject
+    private DomainObjectContainer container;
 
     Lease lease;
 
@@ -86,7 +101,28 @@ public class GuaranteeTest extends EstatioIntegrationTest {
         transactionService.flushTransaction();
     }
 
-    public static class ChangeGuaranteeType extends GuaranteeTest {
+    public static class Remove extends GuaranteeIntegrationTest {
+
+        @Test
+        public void xxx() throws Exception {
+            //Given
+            final Guarantee guarantee = guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE);
+
+            // When
+            sudoService.sudo("estatio-admin", Lists.newArrayList("estatio-admin"), new Runnable() {
+                @Override public void run() {
+                    wrap(guarantee).remove("Some reason");
+                }
+            });
+
+            //Then
+            assertThat(guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE)).isNull();
+
+        }
+
+    }
+
+    public static class ChangeGuaranteeType extends GuaranteeIntegrationTest {
 
         @Test
         public void happyCase1() throws Exception {
@@ -113,21 +149,16 @@ public class GuaranteeTest extends EstatioIntegrationTest {
             assertThat(financialAccount.getOwner()).isEqualTo(secondaryParty);
         }
 
-        @Test
-        public void sadCase() throws Exception {
-            // when
-            try {
-                wrap(guaranteeWithFinancialAccount).changeGuaranteeType(GuaranteeType.UNKNOWN);
-            } catch (DisabledException e) {
-                // TODO: is this the right way to test disabledXxx() testing?
-            }
-
-            // then
-            assertThat(guaranteeWithFinancialAccount.getGuaranteeType()).isEqualTo(GuaranteeType.BANK_GUARANTEE);
+        @Test(expected = DisabledException.class)
+        public void cannot_change_without_administrator_role() throws Exception {
+            sudoService.sudo("estatio-user", Lists.newArrayList("estatio-user"), new Runnable() {
+                @Override public void run() {
+                    wrap(guaranteeWithFinancialAccount).changeGuaranteeType(GuaranteeType.UNKNOWN);                }
+            });
         }
     }
 
-    public static class Terminate extends GuaranteeTest {
+    public static class Terminate extends GuaranteeIntegrationTest {
 
         @Test
         public void happyCaseWithFinancialAccount() throws Exception {
@@ -154,4 +185,5 @@ public class GuaranteeTest extends EstatioIntegrationTest {
             assertThat(guaranteeWithoutFinancialAccount.getTerminationDate()).isEqualTo(new LocalDate(2016, 1, 1));
         }
     }
+
 }

@@ -151,7 +151,7 @@ public class BankAccount
     }
 
     @Action(domainEvent = BankAccount.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void remove() {
+    public void remove(final String reason) {
         getContainer().remove(this);
         getContainer().flush();
         return;

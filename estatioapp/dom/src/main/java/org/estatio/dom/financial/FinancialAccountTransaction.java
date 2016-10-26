@@ -28,13 +28,13 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.dom.roles.EstatioRole;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.incode.module.base.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -153,6 +153,16 @@ public class FinancialAccountTransaction
             final String description){
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove(final String reason) {
+        remove(this);
+    }
+
+    public boolean hideRemove() {
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+    }
+
 
     public BigDecimal default0ChangeTransactionDetails(){
         return getAmount().setScale(MoneyType.Meta.SCALE);

@@ -19,6 +19,7 @@
 package org.estatio.dom.financial;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -43,12 +44,13 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
-
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -188,9 +190,23 @@ public class FinancialAccount
         return getName();
     }
 
-
+    @Programmatic
+    public List<FinancialAccountTransaction> getTransactions(){
+        return financialAccountTransactionRepository.transactions(this);
+    }
 
     // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void remove(final String reason) {
+        for (FinancialAccountTransaction transaction : getTransactions()){
+            transaction.remove(reason);
+        }
+    }
+
+    public boolean hideRemove() {
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+    }
 
     @Inject
     private FinancialAccountTransactionRepository financialAccountTransactionRepository;

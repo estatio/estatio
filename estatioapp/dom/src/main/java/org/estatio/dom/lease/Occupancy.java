@@ -59,7 +59,7 @@ import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.SectorRepository;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.lease.tags.UnitSizeRepository;
-import org.incode.module.base.dom.roles.EstatioRole;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

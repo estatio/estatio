@@ -5,7 +5,6 @@
             <ns2:domainObject/>
             <ns2:action id="newRole"/>
             <ns2:action id="recentChanges"/>
-            <ns2:action id="changeGuaranteeType"/>
             <ns2:action id="links"/>
             <ns2:action id="terminate"/>
         </col>
@@ -16,7 +15,9 @@
                 <ns2:property id="reference"/>
                 <ns2:property id="name"/>
                 <ns2:property id="type"/>
-                <ns2:property id="guaranteeType"/>
+                <ns2:property id="guaranteeType">
+                    <ns2:action id="changeGuaranteeType"/>
+                </ns2:property>
                 <ns2:property id="description"/>
                 <ns2:property id="comments"/>
                 <ns2:property id="lease">

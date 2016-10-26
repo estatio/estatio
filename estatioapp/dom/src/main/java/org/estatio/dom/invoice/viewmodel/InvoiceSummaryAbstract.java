@@ -36,7 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
-import org.incode.module.base.dom.roles.EstatioRole;
+import org.estatio.dom.roles.EstatioRole;
 
 public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 

@@ -30,6 +30,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
+import org.incode.module.base.integtests.VT;
+
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
@@ -46,11 +48,10 @@ import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
+public class GuaranteeRepositoryIntegrationTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -83,7 +84,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
     @Inject
     TransactionService transactionService;
 
-    public static class NewGuarantee extends GuaranteeRepositoryTest {
+    public static class NewGuarantee extends GuaranteeRepositoryIntegrationTest {
 
         private Lease lease;
         private Guarantee guarantee;
@@ -197,7 +198,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindGuarantees extends GuaranteeRepositoryTest {
+    public static class FindGuarantees extends GuaranteeRepositoryIntegrationTest {
 
         @Test
         public void findGuarantees() throws Exception {
@@ -223,7 +224,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindByReference extends GuaranteeRepositoryTest {
+    public static class FindByReference extends GuaranteeRepositoryIntegrationTest {
 
         @Test
         public void findByReference() throws Exception {
@@ -235,7 +236,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class GuaranteesFinder extends GuaranteeRepositoryTest {
+    public static class GuaranteesFinder extends GuaranteeRepositoryIntegrationTest {
 
         @Test
         public void guarantees() throws Exception {
@@ -250,7 +251,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindByLease extends GuaranteeRepositoryTest {
+    public static class FindByLease extends GuaranteeRepositoryIntegrationTest {
 
         @Test
         public void findByLease() throws Exception {
@@ -265,7 +266,7 @@ public class GuaranteeRepositoryTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindByFinancialAccount extends GuaranteeRepositoryTest {
+    public static class FindByFinancialAccount extends GuaranteeRepositoryIntegrationTest {
 
         @Test
 

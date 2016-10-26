@@ -80,7 +80,7 @@ import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
-import org.incode.module.base.dom.roles.EstatioRole;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

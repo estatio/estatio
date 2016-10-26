@@ -1,20 +1,23 @@
 package org.estatio.dom.guarantee;
 
-import org.estatio.dom.financial.FinancialAccountType;
 import org.incode.module.base.dom.utils.StringUtils;
 
-public enum GuaranteeType {
-    BANK_GUARANTEE(FinancialAccountType.BANK_GUARANTEE),
-    DEPOSIT(FinancialAccountType.GUARANTEE_DEPOSIT),
-    COMPANY_GUARANTEE(null),
-    NONE(null),
-    UNKNOWN(null);
+import org.estatio.dom.financial.FinancialAccountType;
 
-    private GuaranteeType(FinancialAccountType financialAccountType) {
-        this.financialAccountType = financialAccountType;
-    }
+public enum GuaranteeType {
+    BANK_GUARANTEE(FinancialAccountType.BANK_GUARANTEE, false),
+    DEPOSIT(FinancialAccountType.GUARANTEE_DEPOSIT, false),
+    COMPANY_GUARANTEE(null, true),
+    NONE(null, true),
+    UNKNOWN(null, true);
 
     private FinancialAccountType financialAccountType;
+    private boolean mutable;
+
+    private GuaranteeType(FinancialAccountType financialAccountType, final boolean mutable) {
+        this.financialAccountType = financialAccountType;
+        this.mutable = mutable;
+    }
 
     public FinancialAccountType getFinancialAccountType() {
         return this.financialAccountType;
@@ -22,5 +25,9 @@ public enum GuaranteeType {
 
     public String title() {
         return StringUtils.enumTitle(this.name());
+    }
+
+    public boolean isMutable() {
+        return mutable;
     }
 }
