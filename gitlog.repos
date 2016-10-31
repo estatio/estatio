@@ -3,6 +3,10 @@ estatio-ecp:/c/bitbucket/incodehq/estatio-ecp
 contactapp:/c/github/incodehq/contactapp
 ecpcrm:/c/github/incodehq/ecpcrm
 incode-module-commchannel:/c/github/incodehq/incode-module-commchannel
+incode-module-document:/c/github/incodehq/incode-module-document
+incode-module-docrendering-freemarker:/c/github/incodehq/incode-module-docrendering-freemarker
+incode-module-docrendering-stringinterpolator:/c/github/incodehq/incode-module-docrendering-stringinterpolator
+incode-module-docrendering-xdocreport:/c/github/incodehq/incode-module-docrendering-xdocreport
 incode-module-note:/c/github/incodehq/incode-module-note
 incode-module-classification:/c/github/incodehq/incode-module-classification
 incode-module-alias:/c/github/incodehq/incode-module-alias
@@ -15,7 +19,10 @@ isis-module-command:/c/github/isisaddons/isis-module-command
 isis-module-docx:/c/github/isisaddons/isis-module-docx
 isis-module-excel:/c/github/isisaddons/isis-module-excel
 isis-module-fakedata:/c/github/isisaddons/isis-module-fakedata
+isis-module-freemarker:/c/github/isisaddons/isis-module-freemarker
+isis-module-xdocreport:/c/github/isisaddons/isis-module-xdocreport
 isis-module-poly:/c/github/isisaddons/isis-module-poly
+isis-module-quartz:/c/github/isisaddons/isis-module-quartz
 isis-module-publishing:/c/github/isisaddons/isis-module-publishing
 isis-module-publishmq:/c/github/isisaddons/isis-module-publishmq
 isis-module-security:/c/github/isisaddons/isis-module-security
