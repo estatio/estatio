@@ -38,7 +38,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -49,9 +53,6 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
-import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
-import org.estatio.dom.appsettings.EstatioSettingsService;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)
@@ -153,7 +154,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
         invoiceRepository.removeRuns(parameters);
         try {
             startInteraction(parameters.toString());
-            for (Lease lease : parameters.leases() == null ? leaseRepository.findLeasesByProperty(parameters.property()) : parameters.leases()) {
+            final List<Lease> leases = parameters.leases();
+            for (Lease lease : leases.size() == 0 ? leaseRepository.findLeasesByProperty(parameters.property()) : leases) {
                 lease.verifyUntil(parameters.dueDateRange().endDateExcluding());
                 if (lease.getStatus() != LeaseStatus.SUSPENDED) {
                     SortedSet<LeaseItem> leaseItems =
