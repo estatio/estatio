@@ -88,7 +88,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForPrelimCoverNote =
                 upsertType(Constants.DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE, "Email Cover Note for Preliminary Letter", executionContext);
 
-        String subjectText = "Preliminary letter for invoice ${invoice.lease.reference} due ${invoice.dueDate}";
+        String subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter ${invoice.dueDate}";
         String contentText = loadResource("PrelimLetterEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
@@ -97,7 +97,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 contentText,
                 executionContext);
 
-        subjectText = "Lettera preliminare per fattura ${invoice.lease.reference} causa ${invoice.dueDate}";
+        subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter/Avviso di fatturazione ${invoice.dueDate}";
         contentText = loadResource("PrelimLetterEmailCoverNote-ITA.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
@@ -144,7 +144,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForInvoiceCoverNote =
                 upsertType(Constants.DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE, "Email Cover Note for Invoice", executionContext);
 
-        subjectText = "Invoice ${invoice.lease.reference} due ${invoice.dueDate}";
+        subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice ${invoice.dueDate}";
         contentText = loadResource("InvoiceEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
@@ -153,7 +153,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 contentText,
                 executionContext);
 
-        subjectText = "Fattura ${invoice.lease.reference} causa ${invoice.dueDate}";
+        subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice/Fatturazione ${invoice.dueDate}";
         contentText = loadResource("InvoiceEmailCoverNote-ITA.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,

@@ -20,6 +20,8 @@
 package org.estatio.dom.documents.binders;
 
 import java.util.Collections;
+import java.util.Optional;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -28,7 +30,12 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.party.Party;
 
 import lombok.Data;
 
@@ -52,6 +59,18 @@ public class BinderForDocumentAttachedToPrelimLetterOrInvoice implements Binder 
 
         final DataModel dataModel = new DataModel();
         dataModel.setInvoice(invoice);
+        dataModel.setTenant(invoice.getBuyer());
+        dataModel.setProperty(invoice.getLease().getProperty());
+        final Optional<Occupancy> occupancyIfAny = invoice.getLease().primaryOccupancy();
+        if(occupancyIfAny.isPresent()) {
+            final Occupancy occupancy = occupancyIfAny.get();
+            final Unit unit = occupancy.getUnit();
+            dataModel.setUnit(unit);
+            dataModel.setBrand(occupancy.getBrand());
+        }
+        final SortedSet<Occupancy> occupancies = invoice.getLease().getOccupancies();
+        occupancies.first().getUnit();
+
         dataModel.setDocument(document);
         dataModel.setAdditionalText(additionalTextIfAny);
 
@@ -61,6 +80,10 @@ public class BinderForDocumentAttachedToPrelimLetterOrInvoice implements Binder 
     @Data
     public static class DataModel {
         Invoice invoice;
+        Party tenant;
+        Property property;
+        Unit unit;
+        Brand brand;
         Document document;
         String additionalText;
     }
