@@ -38,9 +38,18 @@ The source code is managed using https://help.github.com/articles/set-up-git[git
 
 If you don't already have them installed, install Java (JDK 6 or later), Maven (3.0.4 or later), and git.
 
-==== Download and build Estatio
+After that, you'll need to manually build and install the https://code.google.com/archive/p/google-rfc-2445/[google RFC-2445] Jar (this is not available in Maven Central repo).
 
-Estatio is built using maven.
+[source]
+----
+git clone https://github.com/jcvanderwal/google-rfc-2445.git
+cd google-rfc-2445/
+git checkout mavenized
+mvn clean install -DskipTests
+----
+
+
+==== Download and build Estatio
 
 Download using git:
 
