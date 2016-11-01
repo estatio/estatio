@@ -21,7 +21,6 @@ package org.estatio.dom.documents.binders;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -68,8 +67,6 @@ public class BinderForDocumentAttachedToPrelimLetterOrInvoice implements Binder 
             dataModel.setUnit(unit);
             dataModel.setBrand(occupancy.getBrand());
         }
-        final SortedSet<Occupancy> occupancies = invoice.getLease().getOccupancies();
-        occupancies.first().getUnit();
 
         dataModel.setDocument(document);
         dataModel.setAdditionalText(additionalTextIfAny);

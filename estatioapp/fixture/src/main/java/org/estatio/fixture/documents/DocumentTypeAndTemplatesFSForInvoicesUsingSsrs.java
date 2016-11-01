@@ -62,6 +62,12 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     public static final String DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER = "INVOICES-FOR-SELLER";
     public static final String URL = "${reportServerBaseUrl}";
 
+    public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter ${invoice.dueDate}";
+    public static final String NAME_TEXT_PRELIM_LETTER_ITA = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter/Avviso di fatturazione ${invoice.dueDate}";
+
+    public static final String NAME_TEXT_INVOICE_ITA = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice/Fatturazione ${invoice.dueDate}";
+    public static final String NAME_TEXT_INVOICE_GLOBAL = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice ${invoice.dueDate}";
+
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
@@ -80,6 +86,13 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final String url = "${reportServerBaseUrl}";
 
 
+        final RenderingStrategy fmkRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
+        final RenderingStrategy sipcRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SIPC);
+        final RenderingStrategy siRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SI);
+
         //
         // prelim letter
         //
@@ -88,23 +101,21 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForPrelimCoverNote =
                 upsertType(Constants.DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE, "Email Cover Note for Preliminary Letter", executionContext);
 
-        String subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter ${invoice.dueDate}";
         String contentText = loadResource("PrelimLetterEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 ApplicationTenancyForGlobal.PATH, null,
-                subjectText,
-                contentText,
-                executionContext);
+                contentText, fmkRenderingStrategy,
+                NAME_TEXT_PRELIM_LETTER_GLOBAL, fmkRenderingStrategy,
+                executionContext, Document.class, BinderForDocumentAttachedToPrelimLetterOrInvoice.class);
 
-        subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter/Avviso di fatturazione ${invoice.dueDate}";
         contentText = loadResource("PrelimLetterEmailCoverNote-ITA.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 ApplicationTenancyForIt.PATH, " (Italy)",
-                subjectText,
-                contentText,
-                executionContext);
+                contentText, fmkRenderingStrategy,
+                NAME_TEXT_PRELIM_LETTER_ITA, fmkRenderingStrategy,
+                executionContext, Document.class, BinderForDocumentAttachedToPrelimLetterOrInvoice.class);
 
 
         // template for PL itself
@@ -113,27 +124,31 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
                 ApplicationTenancyForGlobal.PATH, null,
-                false, url
+                false,
+                url
                         + "Preliminary+Letter"
                         + "&id=${this.id}"
-                        + "&rs:Command=Render&rs:Format=PDF"
-                        + "&Reference=&invoiceNumber=&atPath=",
+                        + "&rs:Command=Render&rs:Format=PDF",
+                sipcRenderingStrategy,
                 "Preliminary letter for Invoice ${this.number}",
-                Invoice.class, BinderForReportServerAttachToInput.class,
-                executionContext);
+                siRenderingStrategy, Invoice.class, BinderForReportServerAttachToInput.class,
+                executionContext
+        );
 
         // (currently) this is identical to global
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
                 ApplicationTenancyForIt.PATH, " (Italy)",
-                false, url
+                false,
+                url
                         + "Preliminary+Letter"
                         + "&id=${this.id}"
-                        + "&rs:Command=Render&rs:Format=PDF"
-                        + "&Reference=&invoiceNumber=&atPath=",
+                        + "&rs:Command=Render&rs:Format=PDF",
+                sipcRenderingStrategy,
                 "Preliminary letter for Invoice ${this.number} (Italy)",
-                Invoice.class, BinderForReportServerAttachToInput.class,
-                executionContext);
+                siRenderingStrategy, Invoice.class, BinderForReportServerAttachToInput.class,
+                executionContext
+        );
 
 
         //
@@ -144,23 +159,21 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForInvoiceCoverNote =
                 upsertType(Constants.DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE, "Email Cover Note for Invoice", executionContext);
 
-        subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice ${invoice.dueDate}";
         contentText = loadResource("InvoiceEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 ApplicationTenancyForGlobal.PATH, null,
-                subjectText,
-                contentText,
-                executionContext);
+                contentText, fmkRenderingStrategy,
+                NAME_TEXT_INVOICE_GLOBAL, fmkRenderingStrategy,
+                executionContext, Document.class, BinderForDocumentAttachedToPrelimLetterOrInvoice.class);
 
-        subjectText = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice/Fatturazione ${invoice.dueDate}";
         contentText = loadResource("InvoiceEmailCoverNote-ITA.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 ApplicationTenancyForIt.PATH, " (Italy)",
-                subjectText,
-                contentText,
-                executionContext);
+                contentText, fmkRenderingStrategy,
+                NAME_TEXT_INVOICE_ITA, fmkRenderingStrategy,
+                executionContext, Document.class, BinderForDocumentAttachedToPrelimLetterOrInvoice.class);
 
 
         // template for invoice itself
@@ -174,9 +187,11 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "Invoice"
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
-                "Invoice for ${this.number}",
-                Invoice.class, BinderForReportServerAttachToInput.class,
-                executionContext);
+                sipcRenderingStrategy, "Invoice for ${this.number}",
+                siRenderingStrategy, Invoice.class, BinderForReportServerAttachToInput.class,
+                executionContext
+        );
+
         // (currently) this is identical to global
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
@@ -186,12 +201,18 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "Invoice"
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
-                "Invoice for ${this.number}",
-                Invoice.class, BinderForReportServerAttachToInput.class,
-                executionContext);
+                sipcRenderingStrategy, "Invoice for ${this.number}",
+                siRenderingStrategy, Invoice.class, BinderForReportServerAttachToInput.class,
+                executionContext
+        );
     }
 
     private void upsertTemplatesForInvoiceSummaryForPropertyDueDateStatus(final ExecutionContext executionContext) {
+
+        final RenderingStrategy sipcRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SIPC);
+        final RenderingStrategy siRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SI);
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DOC_TYPE_REF_INVOICES_OVERVIEW, "Invoices overview", executionContext),
@@ -201,10 +222,12 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "Invoices"
                 + "&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}"
                 + "&rs:Command=Render&rs:Format=PDF",
-                "Invoices overview",
+                sipcRenderingStrategy, "Invoices overview",
+                siRenderingStrategy,
                 InvoiceSummaryForPropertyDueDateStatus.class,
                 BinderForReportServerAttachNone.class,
-                executionContext);
+                executionContext
+        );
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DOC_TYPE_REF_INVOICES_PRELIM, "Preliminary letter for Invoices", executionContext),
@@ -214,10 +237,13 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "Preliminary+Letter"
                 + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
                 + "&rs:Command=Render&rs:Format=PDF",
+                sipcRenderingStrategy,
                 "Preliminary letter for Invoices",
+                siRenderingStrategy,
                 InvoiceSummaryForPropertyDueDateStatus.class,
                 BinderForReportServerAttachNone.class,
-                executionContext);
+                executionContext
+        );
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER, "Preliminary Invoice for Seller", executionContext),
@@ -227,30 +253,30 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "Preliminary+Letter"
                 + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
                 + "&rs:Command=Render&rs:Format=PDF",
+                sipcRenderingStrategy,
                 "Preliminary Invoice for Seller",
+                siRenderingStrategy,
                 InvoiceSummaryForPropertyDueDateStatus.class,
                 BinderForReportServerAttachNone.class,
-                executionContext);
+                executionContext
+        );
     }
 
     private DocumentTemplate upsertTemplateForPdfWithApplicability(
             final DocumentType documentType,
-            final String atPath, final String nameSuffixIfAny,
+            final String atPath,
+            final String nameSuffixIfAny,
             final boolean previewOnly,
-            final String text,
-            final String subjectText,
+            final String contentText, final RenderingStrategy contentRenderingStrategy,
+            final String nameText, final RenderingStrategy nameRenderingStrategy,
             final Class<?> applicableToClass,
             final Class<? extends Binder> binderClass,
             final ExecutionContext executionContext) {
 
-        final RenderingStrategy contentRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SIPC);
-        final RenderingStrategy subjectRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_SI);
-
         final DocumentTemplate template =
-                upsertTemplateForPdf(documentType, atPath, nameSuffixIfAny, previewOnly, text, contentRenderingStrategy, subjectText,
-                        subjectRenderingStrategy, executionContext);
+                upsertTemplateForPdf(documentType, atPath, nameSuffixIfAny, previewOnly, contentText,
+                        contentRenderingStrategy, nameText,
+                        nameRenderingStrategy, executionContext);
         template.applicable(applicableToClass, binderClass);
 
         return template;
@@ -262,7 +288,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final String nameSuffixIfAny,
             final boolean previewOnly,
             final String contentText, final RenderingStrategy contentRenderingStrategy,
-            final String subjectText, final RenderingStrategy subjectRenderingStrategy,
+            final String nameText, final RenderingStrategy nameRenderingStrategy,
             final ExecutionContext executionContext) {
 
         final LocalDate now = clockService.now();
@@ -274,7 +300,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 buildTemplateName(docType, nameSuffixIfAny),
                 "application/pdf",
                 contentText, contentRenderingStrategy,
-                subjectText, subjectRenderingStrategy,
+                nameText, nameRenderingStrategy,
                 executionContext);
     }
 
@@ -282,25 +308,24 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final DocumentType docType,
             final String atPath,
             final String nameSuffixIfAny,
-            final String subjectText,
-            final String contentText,
-            final ExecutionContext executionContext) {
+            final String contentText, final RenderingStrategy contentRenderingStrategy,
+            final String nameText, final RenderingStrategy nameRenderingStrategy,
+            final ExecutionContext executionContext,
+            final Class<Document> domainClass,
+            final Class<? extends Binder> binderClass) {
 
         final LocalDate date = clockService.now();
-
-        final RenderingStrategy freemarkerRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
 
         final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), "text/html", contentText);
         final DocumentTemplate documentTemplate = upsertDocumentClobTemplate(
                 docType, date, atPath,
                 ".html",
                 false,
-                clob, freemarkerRenderingStrategy,
-                subjectText, freemarkerRenderingStrategy,
+                clob, contentRenderingStrategy,
+                nameText, nameRenderingStrategy,
                 executionContext);
 
-        documentTemplate.applicable(Document.class, BinderForDocumentAttachedToPrelimLetterOrInvoice.class);
+        documentTemplate.applicable(domainClass, binderClass);
 
         executionContext.addResult(this, documentTemplate);
     }
