@@ -108,8 +108,12 @@
                 <tab name="Units">
                     <row>
                         <col span="12">
-                            <ns2:collection id="units" defaultView="table" paged="6">
-                            </ns2:collection>
+                            <ns2:collection id="vacantUnits" defaultView="table" paged="6"/>
+                        </col>
+                    </row>
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="units" defaultView="table" paged="6"/>
                         </col>
                     </row>
                 </tab>
@@ -130,7 +134,7 @@
                 <tab name="Budgets">
                     <row>
                         <col span="12">
-                        <ns2:collection id="budgets" defaultView="table"/>
+                            <ns2:collection id="budgets" defaultView="table"/>
                         </col>
                     </row>
                 </tab>

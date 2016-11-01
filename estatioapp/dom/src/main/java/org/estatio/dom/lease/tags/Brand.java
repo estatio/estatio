@@ -106,8 +106,6 @@ public class Brand
     public String title() {
         return TitleBuilder.start()
                 .withName(getName())
-                .withName(" - ")
-                .withName(getApplicationTenancy().getName())
                 .toString();
     }
 

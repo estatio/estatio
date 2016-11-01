@@ -18,9 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -34,12 +34,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.tags.Brand;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class, nature = NatureOfService.DOMAIN)
 public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy> {
@@ -111,40 +112,33 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     @Programmatic
     public List<Occupancy> occupanciesByUnitAndInterval(final Unit unit, final LocalDateInterval localDateInterval) {
-
-        List<Occupancy> foundOccupancies = new ArrayList<>();
-        for (Occupancy occupancy : findByUnit(unit)) {
-
-            if (localDateInterval.overlaps(occupancy.getInterval())) {
-                foundOccupancies.add(occupancy);
-            }
-
-        }
-
-        return foundOccupancies;
-
+        return findByUnit(unit).stream()
+                .filter(occupancy -> occupancy.getInterval().overlaps(localDateInterval))
+                .collect(Collectors.toList());
     }
 
+    @Programmatic
     public List<Occupancy> occupanciesByPropertyAndInterval(final Property property, final LocalDateInterval localDateInterval) {
-        List<Occupancy> foundOccupancies = new ArrayList<>();
-        for (Unit unit : unitRepository.findByProperty(property)){
-            foundOccupancies.addAll(occupanciesByUnitAndInterval(unit, localDateInterval));
-        }
-        return foundOccupancies;
+        return findByProperty(property).stream()
+                .filter(occupancy -> occupancy.getInterval().overlaps(localDateInterval))
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<Occupancy> findByProperty(final Property property) {
+        return allMatches("findByProperty", "property", property);
     }
 
     // //////////////////////////////////////
 
     private void verifyFor(Lease lease) {
-        for (Occupancy occupancy : findByLease(lease)) {
-            occupancy.verify();
-        }
+        findByLease(lease).stream()
+                .forEach(occupancy -> occupancy.verify());
     }
 
     private void terminateFor(Lease lease, LocalDate terminationDate) {
-        for (Occupancy occupancy : findByLease(lease)) {
-            occupancy.terminate(terminationDate);
-        }
+        findByLease(lease).stream()
+                .forEach(occupancy -> occupancy.terminate(terminationDate));
     }
 
     // //////////////////////////////////////
@@ -219,6 +213,5 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     @Inject
     private UnitRepository unitRepository;
-
 
 }

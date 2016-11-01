@@ -18,11 +18,12 @@
  */
 package org.estatio.integtests.assets;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,20 +32,21 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
-import org.estatio.dom.asset.Property;
 import org.estatio.app.menus.asset.PropertyMenu;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.dom.lease.contributed.Property_vacantUnits;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.asset.PropertyBuilder;
 import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PropertyTest extends EstatioIntegrationTest {
 
@@ -56,6 +58,7 @@ public class PropertyTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
     }
@@ -64,6 +67,8 @@ public class PropertyTest extends EstatioIntegrationTest {
     PropertyMenu propertyMenu;
     @Inject
     PropertyRepository propertyRepository;
+    @Inject
+    OccupancyRepository occupancyRepository;
 
     public static class GetUnits extends PropertyTest {
 
@@ -76,7 +81,29 @@ public class PropertyTest extends EstatioIntegrationTest {
             Set<Unit> units = property.getUnits();
 
             // then
-            assertThat(units.size(), is(25));
+            assertThat(units).hasSize(25);
+        }
+
+        @Test
+        public void occupiedUnits() throws Exception {
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+            Set<Unit> allUnits = property.getUnits();
+            Set<Unit> occupiedUnits = occupancyRepository.findByProperty(property)
+                    .stream()
+                    .map(Occupancy::getUnit)
+                    .collect(Collectors.toSet());
+
+            assertThat(allUnits).hasSize(25);
+            assertThat(occupiedUnits).isNotEmpty();
+
+            // When
+            List<Unit> vacantUnits = wrap(mixin(Property_vacantUnits.class, property)).$$();
+
+            // Then
+            assertThat(vacantUnits).isNotEmpty();
+            assertThat(vacantUnits.size()).isEqualTo(allUnits.size() - occupiedUnits.size());
         }
     }
 
@@ -111,7 +138,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             // given
             //
             final Property property = fs.getProperty();
-            Assertions.assertThat(property.getDisposalDate()).isNull();
+            assertThat(property.getDisposalDate()).isNull();
 
             //
             // when
@@ -122,7 +149,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // then
             //
-            Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
+            assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
         }
 
         @Test
@@ -139,13 +166,13 @@ public class PropertyTest extends EstatioIntegrationTest {
             final LocalDate disposalDate = clockService.now().plusDays(fakeDataService.values().anInt(10, 20));
             wrap(property).dispose(disposalDate);
 
-            Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
+            assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
 
             //
             // expect
             //
             expectedExceptions.expect(DisabledException.class);
-            expectedExceptions.expectMessage(containsString("already disposed"));
+            expectedExceptions.expectMessage("already disposed");
 
             //
             // when
@@ -156,7 +183,7 @@ public class PropertyTest extends EstatioIntegrationTest {
             //
             // then
             //
-            Assertions.assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
+            assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
 
         }
 

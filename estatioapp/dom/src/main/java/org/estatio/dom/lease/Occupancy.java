@@ -42,9 +42,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainObject2;
@@ -66,7 +66,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        , schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -76,13 +76,19 @@ import lombok.Setter;
         column = "version")
 @javax.jdo.annotations.Unique(
         name = "Occupancy_lease_unit_startDate_UNQ",
-        members = {"lease", "unit", "startDate"})
+        members = { "lease", "unit", "startDate" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByUnit", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Occupancy "
                         + "WHERE unit == :unit "
+                        + "ORDER BY startDate "),
+        @javax.jdo.annotations.Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Occupancy "
+                        + "WHERE unit.property == :property "
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
@@ -125,9 +131,10 @@ public class Occupancy
 
     public String title() {
         return TitleBuilder.start()
-                .withName(getStartDate())
+                .withName(getBrand())
                 .withTupleElement(getLease())
                 .withTupleElement(getUnit())
+                .withName(getStartDate())
                 .toString();
     }
 
@@ -428,7 +435,8 @@ public class Occupancy
 
             public final static int MAX_LEN = 30;
 
-            private Meta() {}
+            private Meta() {
+            }
 
         }
 
