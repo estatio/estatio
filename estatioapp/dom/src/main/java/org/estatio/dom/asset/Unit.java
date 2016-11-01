@@ -20,7 +20,6 @@ package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
@@ -39,11 +38,10 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.lease.OccupancyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -289,22 +287,6 @@ public class Unit
     public BigDecimal default4ChangeAreas() {
         return getDehorsArea();
     }
-
-
-    // ///////////////////////////////////////
-
-    @Programmatic
-    public boolean hasOccupancyOverlappingInterval(final LocalDateInterval localDateInterval) {
-        if (occupancyRepository.occupanciesByUnitAndInterval(this, localDateInterval).size() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    @Inject
-    private OccupancyRepository occupancyRepository;
-
-    // ///////////////////////////////////////
 
     public static class ReferenceType {
 
