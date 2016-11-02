@@ -32,7 +32,7 @@ public class Budget_DownloadCalculations {
         final String fileName =  budget.title() + ".xlsx";
         WorksheetSpec spec = new WorksheetSpec(BudgetAssignmentResult.class, "calculations");
         WorksheetContent worksheetContent = new WorksheetContent(budgetAssignmentResults(), spec);
-        return excelService.toExcel(worksheetContent, fileName);
+        return excelService.toExcelPivot(worksheetContent, fileName);
     }
 
     private List<BudgetAssignmentResult> budgetAssignmentResults(){

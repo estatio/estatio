@@ -137,13 +137,17 @@ public class BudgetAssignmentService {
     private List<BudgetAssignmentResult> createFromCalculationResults(final Lease lease, final Unit unit, final List<BudgetCalculationViewmodel> calculationResultsForLease){
         List<BudgetAssignmentResult> assignmentResults = new ArrayList<>();
         for (BudgetCalculationViewmodel calculationResult : calculationResultsForLease){
-            List<BudgetAssignmentResult> filteredByCharge = assignmentResults.stream().filter(x -> x.getInvoiceCharge().equals(calculationResult.getBudgetItemAllocation().getCharge().getReference())).collect(Collectors.toList());
-            if (filteredByCharge.size()>0){
-                filteredByCharge.get(0).add(calculationResult);
+            List<BudgetAssignmentResult> filteredByChargeAndKeyTable = assignmentResults.stream()
+                    .filter(x -> x.getInvoiceCharge().equals(calculationResult.getBudgetItemAllocation().getCharge().getReference()))
+                    .filter(x -> x.getKeyTable().equals(calculationResult.getBudgetItemAllocation().getKeyTable().getName()))
+                    .collect(Collectors.toList());
+            if (filteredByChargeAndKeyTable.size()>0){
+                filteredByChargeAndKeyTable.get(0).add(calculationResult);
             } else {
                 assignmentResults.add(new BudgetAssignmentResult(
                     lease,
                     unit,
+                    calculationResult.getKeyItem().getKeyTable(),
                     calculationResult.getBudgetItemAllocation().getCharge(),
                     calculationResult.getValue()
                 ));

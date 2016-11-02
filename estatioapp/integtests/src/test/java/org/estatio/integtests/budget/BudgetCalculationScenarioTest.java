@@ -106,7 +106,7 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
             // then
             assertThat(calculationResults.size()).isEqualTo(35);
-            assertThat(budgetAssignmentResults.size()).isEqualTo(14);
+            assertThat(budgetAssignmentResults.size()).isEqualTo(20);
             assertThat(budgetedAmountFor(LeasesForBudNl.REF1, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("1928.571437"));
             assertThat(budgetedAmountFor(LeasesForBudNl.REF1, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("964.285722"));
             assertThat(budgetedAmountFor(LeasesForBudNl.REF2, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("2857.142847"));
