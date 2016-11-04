@@ -100,7 +100,7 @@ mvn clean install -DskipTests -o
         <isis-wicket-fullcalendar2.version>1.13.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
-        <incode-module-base.version>1.13.1</incode-module-base.version>
+        <incode-module-base.version>1.13.2</incode-module-base.version>
         <incode-module-country.version>1.13.0</incode-module-country.version>
         <incode-module-document.version>1.13.0</incode-module-document.version>
 
