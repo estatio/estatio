@@ -24,7 +24,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
+import com.google.common.base.Predicates;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,15 +36,19 @@ import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.base.integtests.VT;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
+import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.app.services.invoice.InvoiceImportLine;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -69,8 +74,8 @@ import org.estatio.fixture.party.OrganisationForPoisonGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -298,13 +303,13 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
             Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath(OXFTENANCYPATH));
 
             // then
-            Assertions.assertThat(numerator).isEqualTo(numeratorForOxfUsingWildCard);
+            assertThat(numerator).isEqualTo(numeratorForOxfUsingWildCard);
 
         }
 
     }
 
-    public static class FindInvoiceRepository extends InvoiceRepositoryTest {
+    public static class FindInvoiceRepositoryTest extends InvoiceRepositoryTest {
 
         @Before
         public void setupData() {
@@ -321,13 +326,13 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
 
         private static String runId = "2014-02-16T02:30:03.156 - OXF - [OXF-TOPMODEL-001] - [RENT, SERVICE_CHARGE, TURNOVER_RENT, TAX] - 2012-01-01 - 2012-01-01/2012-01-02";
 
-        private Property propertyKal;
+        Property propertyKal;
 
-        private Lease lease;
+        Lease lease;
 
-        private Party buyer;
+        Party buyer;
 
-        private Party seller;
+        Party seller;
 
         ApplicationTenancy applicationTenancy;
 
@@ -353,50 +358,111 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
             Assert.assertNotNull(invoice);
         }
 
-        @Test
-        public void byLease() {
-            List<Lease> allLeases = leaseRepository.allLeases();
 
-            assertThat(invoiceRepository.allInvoices().size(), is(2));
+        public static class ByLeaseTest extends FindInvoiceRepositoryTest {
 
-            List<Invoice> invoiceList = invoiceRepository.findByLease(lease);
-            assertThat(invoiceList.size(), is(1));
+            @Test
+            public void happy_case() {
+                List<Lease> allLeases = leaseRepository.allLeases();
+
+                assertThat(invoiceRepository.allInvoices().size(), is(2));
+
+                List<Invoice> invoiceList = invoiceRepository.findByLease(lease);
+                assertThat(invoiceList.size(), is(1));
+            }
+
+
+        }
+        public static class ByPartyTest extends FindInvoiceRepositoryTest {
+
+            @Test
+            public void happy_case() {
+                List<Invoice> invoiceList = invoiceRepository.findByBuyer(buyer);
+                assertThat(invoiceList.size(), is(1));
+            }
+
+
+        }
+        public static class ByPropertyAndStatusTest extends FindInvoiceRepositoryTest {
+
+            @Test
+            public void happy_case() {
+                List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndStatus(propertyKal, InvoiceStatus.NEW);
+                assertThat(invoiceList.size(), is(1));
+            }
+
+
+        }
+        public static class ByStatusTest extends FindInvoiceRepositoryTest {
+
+            @Test
+            public void happy_case() {
+                List<Invoice> invoiceList = invoiceRepository.findByStatus(InvoiceStatus.NEW);
+                assertThat(invoiceList.size(), is(2));
+            }
+
+
+        }
+        public static class ByPropertyDueDateTest extends FindInvoiceRepositoryTest {
+
+            @Test
+            public void happy_case() {
+                List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDate(propertyKal, VT.ld(2012, 1, 1));
+                assertThat(invoiceList.size(), is(1));
+            }
+
+
+        }
+        public static class ByPropertyDueDateStatusTest extends FindInvoiceRepositoryTest {
+
+            @Test
+            public void happy_case() {
+                List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDateAndStatus(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
+                assertThat(invoiceList.size(), is(1));
+            }
+
+        }
+        public static class BySellerBuyerPaymentMethodLeaseInvoiceStatusDueDateTest extends FindInvoiceRepositoryTest {
+
+            @Test
+            public void happy_case() {
+                Invoice invoice = invoiceRepository.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease));
+                assertNotNull(invoice);
+            }
         }
 
-        @Test
-        public void byParty() {
-            List<Invoice> invoiceList = invoiceRepository.findByBuyer(buyer);
-            assertThat(invoiceList.size(), is(1));
-        }
+        public static class BySendToTest extends FindInvoiceRepositoryTest {
 
-        @Test
-        public void byPropertyAndStatus() {
-            List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndStatus(propertyKal, InvoiceStatus.NEW);
-            assertThat(invoiceList.size(), is(1));
-        }
+            @Inject
+            RepositoryService repositoryService;
+            CommunicationChannel communicationChannel;
 
-        @Test
-        public void byStatus() {
-            List<Invoice> invoiceList = invoiceRepository.findByStatus(InvoiceStatus.NEW);
-            assertThat(invoiceList.size(), is(2));
-        }
+            @Before
+            public void lookupCommChannel() throws Exception {
+                communicationChannel = repositoryService
+                        .firstMatch(CommunicationChannel.class, Predicates.alwaysTrue());
+                assertThat(communicationChannel).isNotNull();
+            }
 
-        @Test
-        public void byPropertyDueDate() {
-            List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDate(propertyKal, VT.ld(2012, 1, 1));
-            assertThat(invoiceList.size(), is(1));
-        }
+            @Test
+            public void when_none() {
+                final List<Invoice> invoices = invoiceRepository.findBySendTo(communicationChannel);
+                assertThat(invoices).isEmpty();
+            }
 
-        @Test
-        public void byPropertyDueDateStatus() {
-            List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDateAndStatus(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
-            assertThat(invoiceList.size(), is(1));
-        }
+            @Test
+            public void when_some() {
+                // given
+                final Invoice invoice0 = repositoryService
+                        .firstMatch(Invoice.class, Predicates.alwaysTrue());
+                invoice0.setSendTo(communicationChannel);
 
-        @Test
-        public void bySellerBuyerPaymentMethodLeaseInvoiceStatusDueDate() {
-            Invoice invoice = invoiceRepository.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease));
-            assertNotNull(invoice);
+                // when
+                final List<Invoice> invoices = invoiceRepository.findBySendTo(communicationChannel);
+
+                // then
+                assertThat(invoices).containsExactly(invoice0);
+            }
         }
     }
 
@@ -573,25 +639,25 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
             // then
 
             // two import lines create to invoices
-            Assertions.assertThat(invoiceRepository.findByStatus(InvoiceStatus.NEW).size()).isEqualTo(2);
+            assertThat(invoiceRepository.findByStatus(InvoiceStatus.NEW).size()).isEqualTo(2);
 
             // for first invoice
             Invoice invoice = invoiceRepository.findByStatus(InvoiceStatus.NEW).get(0);
-            Assertions.assertThat(invoice.getDueDate()).isEqualTo(dueDate);
-            Assertions.assertThat(invoice.getNetAmount()).isEqualTo(netAmount);
-            Assertions.assertThat(invoice.getCurrency().getReference()).isEqualTo(CurrenciesRefData.EUR);
+            assertThat(invoice.getDueDate()).isEqualTo(dueDate);
+            assertThat(invoice.getNetAmount()).isEqualTo(netAmount);
+            assertThat(invoice.getCurrency().getReference()).isEqualTo(CurrenciesRefData.EUR);
 
             InvoiceItem item = invoice.getItems().first();
-            Assertions.assertThat(item.getDescription()).isEqualTo(itemDescription);
-            Assertions.assertThat(item.getStartDate()).isEqualTo(itemStartDate);
-            Assertions.assertThat(item.getEndDate()).isEqualTo(itemEndDate);
-            Assertions.assertThat(item.getCharge().getReference()).isEqualTo(itemChargeReference);
-            Assertions.assertThat(item.getQuantity()).isEqualTo(BigDecimal.ONE);
+            assertThat(item.getDescription()).isEqualTo(itemDescription);
+            assertThat(item.getStartDate()).isEqualTo(itemStartDate);
+            assertThat(item.getEndDate()).isEqualTo(itemEndDate);
+            assertThat(item.getCharge().getReference()).isEqualTo(itemChargeReference);
+            assertThat(item.getQuantity()).isEqualTo(BigDecimal.ONE);
 
             // second invoice item defaults to charge description
             Invoice invoice2 = invoiceRepository.findByStatus(InvoiceStatus.NEW).get(1);
             InvoiceItem item2 = invoice2.getItems().first();
-            Assertions.assertThat(item2.getDescription()).isEqualTo(item2.getCharge().getDescription());
+            assertThat(item2.getDescription()).isEqualTo(item2.getCharge().getDescription());
 
         }
 
