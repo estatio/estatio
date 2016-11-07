@@ -20,11 +20,13 @@ package org.estatio.dom.invoice;
 
 import java.util.List;
 
+import org.datanucleus.query.typesafe.TypesafeQuery;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -278,7 +280,17 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
         }
     }
 
+    @Programmatic
+    public List<Invoice> findBySendTo(final CommunicationChannel communicationChannel) {
+        final TypesafeQuery<Invoice> query = isisJdoSupport.newTypesafeQuery(Invoice.class);
+        QInvoice cand = QInvoice.candidate();
+        return query.filter(cand.sendTo.eq(communicationChannel)).executeList();
+    }
+
     // //////////////////////////////////////
+
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
 
     @javax.inject.Inject
     private EstatioSettingsService settings;
