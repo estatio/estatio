@@ -19,7 +19,6 @@
 package org.estatio.integtests.invoice;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,21 +31,20 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.base.integtests.VT;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.app.services.invoice.InvoiceImportLine;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.CommunicationChannelSubscriptions;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -54,7 +52,6 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
@@ -74,15 +71,12 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class InvoiceRepositoryTest extends EstatioIntegrationTest {
+public class CommunicationChannelSubscriptionsTest extends EstatioIntegrationTest {
 
     @Inject
     InvoiceRepository invoiceRepository;
@@ -108,206 +102,8 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
     @Inject
     BookmarkService bookmarkService;
 
-    public static class CreateCollectionNumberNumerator extends InvoiceRepositoryTest {
 
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-                }
-            });
-        }
-
-        @Test
-        public void createThenFind() throws Exception {
-            // when
-            Numerator numerator = estatioNumeratorRepository.createCollectionNumberNumerator("%09d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
-            // then
-            assertThat(numerator, is(notNullValue()));
-            assertThat(numerator.getName(), is(Constants.COLLECTION_NUMBER_NUMERATOR_NAME));
-            assertThat(numerator.getObjectType(), is(nullValue()));
-            assertThat(numerator.getObjectIdentifier(), is(nullValue()));
-            assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
-        }
-
-        @Test
-        public void whenNone() throws Exception {
-            Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator();
-            assertThat(numerator, is(nullValue()));
-        }
-
-    }
-
-    public static class CreateInvoiceNumberNumerator extends InvoiceRepositoryTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new PropertyForOxfGb());
-                    executionContext.executeChild(this, new PropertyForKalNl());
-                }
-            });
-        }
-
-        private Property propertyOxf;
-        private Property propertyKal;
-
-        private Bookmark propertyOxfBookmark;
-
-        @Before
-        public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
-
-            propertyOxfBookmark = bookmarkService.bookmarkFor(propertyOxf);
-        }
-
-        @Test
-        public void whenNoneForProperty() throws Exception {
-
-            // given
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
-            Assert.assertNull(numerator);
-
-            // when
-            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
-
-            // then
-            Assert.assertNotNull(numerator);
-            assertThat(numerator.getName(), is(Constants.INVOICE_NUMBER_NUMERATOR_NAME));
-            assertThat(numerator.getObjectType(), is(propertyOxfBookmark.getObjectType()));
-            assertThat(numerator.getObjectIdentifier(), is(propertyOxfBookmark.getIdentifier()));
-            assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
-        }
-
-        @Test
-        public void canCreateOnePerProperty() throws Exception {
-
-            // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
-            Assert.assertNotNull(numerator1);
-
-            // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/"));
-
-            // then
-            Assert.assertNotNull(numerator2);
-            assertThat(numerator1, is(not(numerator2)));
-
-            assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
-            assertThat(numerator2.nextIncrementStr(), is("KAL-00001"));
-            assertThat(numerator2.nextIncrementStr(), is("KAL-00002"));
-            assertThat(numerator1.nextIncrementStr(), is("OXF-00012"));
-        }
-
-        @Test
-        public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
-
-            // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
-            Assert.assertNotNull(numerator1);
-
-            assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
-
-            // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/"));
-
-            // then
-            Assert.assertNotNull(numerator2);
-            assertThat(numerator1, is(sameInstance(numerator2)));
-
-            assertThat(numerator1.nextIncrementStr(), is("OXF-00012"));
-        }
-
-    }
-
-    public static class FindInvoiceNumberNumerator extends InvoiceRepositoryTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new PropertyForOxfGb());
-                }
-            });
-        }
-
-        private Property propertyOxf;
-
-        @Before
-        public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        }
-
-        @Test
-        public void whenNone() throws Exception {
-            // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
-            // then
-            Assert.assertNull(numerator);
-        }
-
-    }
-
-    public static class FindInvoiceNumberNumeratorUsingWildCard extends InvoiceRepositoryTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
-                    executionContext.executeChild(this, new PropertyForOxfGb());
-                }
-            });
-        }
-
-        private Property propertyOxf;
-        private ApplicationTenancy applicationTenancyForOxf;
-        private ApplicationTenancy applicationTenancyWithWildCard;
-        private String OXFTENANCYPATH = "/GBR/OXF/GB01";
-        private String WILCARDTENANCYPATH = "/GBR/%/GB01";
-        private Numerator numeratorForOxfUsingWildCard;
-
-        @Before
-        public void setUp() throws Exception {
-            applicationTenancyForOxf = applicationTenancyRepository.newTenancy(OXFTENANCYPATH, OXFTENANCYPATH, null);
-            applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
-            numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
-                    Constants.INVOICE_NUMBER_NUMERATOR_NAME,
-                    propertyOxf,
-                    propertyOxf.getReference().concat("-%04d"),
-                    BigInteger.ZERO,
-                    applicationTenancyWithWildCard
-            );
-        }
-
-        @Test
-        public void whenUsingWildCardForAppTenancyPath() throws Exception {
-
-            // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath(OXFTENANCYPATH));
-
-            // then
-            assertThat(numerator).isEqualTo(numeratorForOxfUsingWildCard);
-
-        }
-
-    }
-
-    public static class FindInvoiceRepositoryTest extends InvoiceRepositoryTest {
+    public static class FindInvoiceRepositoryTest extends CommunicationChannelSubscriptionsTest {
 
         @Before
         public void setupData() {
@@ -356,122 +152,99 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
             Assert.assertNotNull(invoice);
         }
 
-
-        public static class ByLeaseTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                List<Lease> allLeases = leaseRepository.allLeases();
-
-                assertThat(invoiceRepository.allInvoices().size(), is(2));
-
-                List<Invoice> invoiceList = invoiceRepository.findByLease(lease);
-                assertThat(invoiceList.size(), is(1));
-            }
-
-
-        }
-        public static class ByPartyTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                List<Invoice> invoiceList = invoiceRepository.findByBuyer(buyer);
-                assertThat(invoiceList.size(), is(1));
-            }
-
-
-        }
-        public static class ByPropertyAndStatusTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndStatus(propertyKal, InvoiceStatus.NEW);
-                assertThat(invoiceList.size(), is(1));
-            }
-
-
-        }
-        public static class ByStatusTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                List<Invoice> invoiceList = invoiceRepository.findByStatus(InvoiceStatus.NEW);
-                assertThat(invoiceList.size(), is(2));
-            }
-
-
-        }
-        public static class ByPropertyDueDateTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDate(propertyKal, VT.ld(2012, 1, 1));
-                assertThat(invoiceList.size(), is(1));
-            }
-
-
-        }
-        public static class ByPropertyDueDateStatusTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                List<Invoice> invoiceList = invoiceRepository.findByFixedAssetAndDueDateAndStatus(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
-                assertThat(invoiceList.size(), is(1));
-            }
-
-        }
-        public static class BySellerBuyerPaymentMethodLeaseInvoiceStatusDueDateTest extends FindInvoiceRepositoryTest {
-
-            @Test
-            public void happy_case() {
-                Invoice invoice = invoiceRepository.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease));
-                assertNotNull(invoice);
-            }
-        }
-
-        public static class BySendToTest extends FindInvoiceRepositoryTest {
+        public static class OnRemoveTest extends FindInvoiceRepositoryTest {
 
             @Inject
             RepositoryService repositoryService;
-            CommunicationChannel communicationChannel0;
-            CommunicationChannel communicationChannel1;
+            CommunicationChannel originalChannel;
+            CommunicationChannel replacementChannel;
 
             @Before
             public void lookupCommChannel() throws Exception {
                 final List<CommunicationChannel> communicationChannels = repositoryService
                         .allInstances(CommunicationChannel.class);
                 assertThat(communicationChannels.size()).isGreaterThanOrEqualTo(2);
-                communicationChannel0 = communicationChannels.get(0);
-                communicationChannel1 = communicationChannels.get(1);
+                originalChannel = communicationChannels.get(0);
+                replacementChannel = communicationChannels.get(1);
+            }
+
+            @Inject
+            CommunicationChannelSubscriptions communicationChannelSubscriptions;
+
+            @Test
+            public void when_none_and_no_replacement() {
+
+                // when
+                wrap(originalChannel).remove(null);
+
+                // then ok..
+
             }
 
             @Test
-            public void when_none() {
-                final List<Invoice> invoices = invoiceRepository.findBySendTo(communicationChannel0);
-                assertThat(invoices).isEmpty();
-            }
+            public void when_some_and_replacement() {
 
-            @Test
-            public void when_some() {
                 // given
                 final List<Invoice> invoiceList = repositoryService.allInstances(Invoice.class);
                 assertThat(invoiceList.size()).isGreaterThanOrEqualTo(2);
                 final Invoice invoice0 = invoiceList.get(0);
                 final Invoice invoice1 = invoiceList.get(1);
 
-                invoice0.setSendTo(communicationChannel0);
-                invoice1.setSendTo(communicationChannel1);
+                invoice0.setSendTo(originalChannel);
+                invoice1.setSendTo(replacementChannel);
 
                 // when
-                final List<Invoice> invoices = invoiceRepository.findBySendTo(communicationChannel0);
+                wrap(originalChannel).remove(replacementChannel);
 
                 // then
-                assertThat(invoices).containsExactly(invoice0);
+                assertThat(invoice0.getSendTo()).isSameAs(replacementChannel);
+            }
+
+            @Test
+            public void when_some_and_not_yet_invoiced_and_no_replacement() {
+
+                // given
+                final List<Invoice> invoiceList = repositoryService.allInstances(Invoice.class);
+                assertThat(invoiceList.size()).isGreaterThanOrEqualTo(2);
+                final Invoice invoice0 = invoiceList.get(0);
+                final Invoice invoice1 = invoiceList.get(1);
+
+                invoice0.setSendTo(originalChannel);
+                invoice1.setSendTo(replacementChannel);
+
+                // expect
+                expectedExceptions.expect(InvalidException.class);
+                expectedExceptions.expectMessage(containsString("Communication channel is being used (as the 'sendTo' channel for 1 invoice(s); provide a replacement"));
+
+                // when
+                wrap(originalChannel).remove(null);
+            }
+
+
+            @Test
+            public void when_some_but_already_invoiced() {
+
+                // given
+                final List<Invoice> invoiceList = repositoryService.allInstances(Invoice.class);
+                assertThat(invoiceList.size()).isGreaterThanOrEqualTo(2);
+                final Invoice invoice0 = invoiceList.get(0);
+                final Invoice invoice1 = invoiceList.get(1);
+
+                invoice0.setSendTo(originalChannel);
+                invoice1.setSendTo(replacementChannel);
+
+                invoice0.setInvoiceNumber("XXX-000123");
+
+                // when
+                wrap(originalChannel).remove(null);
+
+                // then
+                assertThat(invoice0.getSendTo()).isNull();
             }
         }
     }
 
-    public static class FindInvoiceRepositoryByRunId extends InvoiceRepositoryTest {
+    public static class FindInvoiceRepositoryByRunId extends CommunicationChannelSubscriptionsTest {
 
         private Property kalProperty;
 
@@ -518,7 +291,7 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
     }
 
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-    public static class FindOrCreateMatchingInvoice extends InvoiceRepositoryTest {
+    public static class FindOrCreateMatchingInvoice extends CommunicationChannelSubscriptionsTest {
 
         @Before
         public void setupData() {
@@ -579,7 +352,7 @@ public class InvoiceRepositoryTest extends EstatioIntegrationTest {
 
     }
 
-    public static class InvoiceForLeaseImportTest extends InvoiceRepositoryTest {
+    public static class InvoiceForLeaseImportTest extends CommunicationChannelSubscriptionsTest {
 
         @Before
         public void setup() {

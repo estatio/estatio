@@ -198,6 +198,8 @@ import lombok.Setter;
                 members = { "lease", "seller", "buyer", "paymentMethod", "dueDate", "status" }),
         @Index(name = "Invoice_invoiceNumber_IDX",
                 members = { "invoiceNumber" })
+        ,@Index(name = "Invoice_sendTo_IDX",
+                members = { "sendTo" })
 })
 @DomainObject(
         editing = Editing.DISABLED,
