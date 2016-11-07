@@ -79,9 +79,7 @@ public class CommunicationChannelSubscriptions extends UdoDomainService<Communic
             alreadyInvoiced = (List<Invoice>) scratchpad.get("alreadyInvoiced");
 
             for (Invoice invoice : notYetInvoiced) {
-                if(invoice.getInvoiceNumber() != null) {
-                    invoice.setSendTo(replacementCommunicationChannel);
-                }
+                invoice.setSendTo(replacementCommunicationChannel);
             }
             for (Invoice invoice : alreadyInvoiced) {
                 if(invoice.getInvoiceNumber() != null) {
