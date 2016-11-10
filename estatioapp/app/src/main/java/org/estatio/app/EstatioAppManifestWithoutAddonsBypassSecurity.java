@@ -9,7 +9,7 @@ public class EstatioAppManifestWithoutAddonsBypassSecurity extends EstatioAppMan
     @Override
     public List<Class<?>> getModules() {
         List<Class<?>> modules = Lists.newArrayList();
-        appendDomModulesAndSecurityAddon(modules);
+        appendDomModulesAndSecurityAndCommandAddon(modules);
         return modules;
     }
 

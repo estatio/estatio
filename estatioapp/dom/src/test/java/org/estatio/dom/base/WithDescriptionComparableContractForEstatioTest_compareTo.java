@@ -20,14 +20,14 @@ package org.estatio.dom.base;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.incode.module.base.dom.with.ComparableByDescriptionContractTestAbstract_compareTo;
 import org.incode.module.base.dom.with.WithDescriptionComparable;
-
+import org.incode.module.unittestsupport.dom.with.ComparableByDescriptionContractTestAbstract_compareTo;
 
 /**
  * Automatically tests all domain objects implementing {@link WithDescriptionComparable}.
  */
-public class WithDescriptionComparableContractForEstatioTest_compareTo extends ComparableByDescriptionContractTestAbstract_compareTo {
+public class WithDescriptionComparableContractForEstatioTest_compareTo extends
+        ComparableByDescriptionContractTestAbstract_compareTo {
 
     public WithDescriptionComparableContractForEstatioTest_compareTo() {
         super("org.estatio", ImmutableMap.<Class<?>,Class<?>>of());

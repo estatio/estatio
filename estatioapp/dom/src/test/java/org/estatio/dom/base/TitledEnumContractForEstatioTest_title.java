@@ -19,7 +19,7 @@
 package org.estatio.dom.base;
 
 import org.incode.module.base.dom.TitledEnum;
-import org.incode.module.base.dom.TitledEnumContractTestAbstract_title;
+import org.incode.module.unittestsupport.dom.titled.TitledEnumContractTestAbstract_title;
 
 /**
  * Automatically tests all enums implementing {@link TitledEnum}.

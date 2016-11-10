@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

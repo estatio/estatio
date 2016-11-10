@@ -34,10 +34,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+import org.incode.module.unittestsupport.dom.bean.PojoTester;
+import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
-import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
-import org.incode.module.base.dom.testing.PojoTester;
-import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;

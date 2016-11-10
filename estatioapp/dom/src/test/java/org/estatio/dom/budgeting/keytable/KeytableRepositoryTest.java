@@ -30,8 +30,8 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.incode.module.base.dom.testing.FinderInteraction;
 
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.estatio.dom.budgeting.budget.Budget;
 
 import static org.assertj.core.api.Assertions.assertThat;

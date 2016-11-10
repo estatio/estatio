@@ -19,7 +19,7 @@
 package org.estatio.dom.base;
 
 import org.incode.module.base.dom.with.WithNameUnique;
-import org.incode.module.base.dom.with.WithFieldUniqueContractTestAllAbstract;
+import org.incode.module.unittestsupport.dom.with.WithFieldUniqueContractTestAllAbstract;
 
 public class WithNameUniqueContractForEstatioTest_hasJdoUniqueIndexAnnotation extends
         WithFieldUniqueContractTestAllAbstract<WithNameUnique> {

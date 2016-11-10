@@ -22,8 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.incode.module.base.dom.with.WithIntervalMutable;
-
-import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
+import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -26,8 +26,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 
-import org.incode.module.base.dom.testing.FinderInteraction;
-import org.incode.module.base.dom.testing.FinderInteraction.FinderMethod;
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRateRepository;

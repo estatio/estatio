@@ -83,9 +83,6 @@ public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
-
-    @Inject
     private DocumentTypeRepository documentTypeRepository;
 
 

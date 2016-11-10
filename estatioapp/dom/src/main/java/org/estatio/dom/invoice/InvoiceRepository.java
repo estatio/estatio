@@ -26,6 +26,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -276,7 +277,7 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
     public void removeRuns(InvoiceCalculationParameters parameters) {
         List<Invoice> invoices = findByFixedAssetAndDueDateAndStatus(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
         for (Invoice invoice : invoices) {
-            invoice.remove();
+            factoryService.mixin(Invoice._remove.class, invoice).$$();
         }
     }
 
@@ -290,10 +291,13 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
     // //////////////////////////////////////
 
     @javax.inject.Inject
+    FactoryService factoryService;
+
+    @javax.inject.Inject
     IsisJdoSupport isisJdoSupport;
 
     @javax.inject.Inject
-    private EstatioSettingsService settings;
+    EstatioSettingsService settings;
 
     @javax.inject.Inject
     AgreementCommunicationChannelLocator locator;

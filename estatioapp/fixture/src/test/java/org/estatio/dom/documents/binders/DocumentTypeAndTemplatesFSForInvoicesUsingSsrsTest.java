@@ -17,7 +17,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
 import org.incode.module.docrendering.freemarker.dom.impl.RendererForFreemarker;
-import org.incode.module.document.dom.impl.applicability.Binder;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -25,6 +24,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
@@ -44,6 +44,9 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrsTest {
     DocumentTemplate mockDocumentTemplate;
 
     @Mock
+    DocumentType mockDocumentType;
+
+    @Mock
     Document mockDocument;
 
     @Mock
@@ -59,11 +62,11 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrsTest {
     @Mock
     PaperclipRepository mockPaperclipRepository;
 
-    BinderForDocumentAttachedToPrelimLetterOrInvoice binder;
+    FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover rendererModelFactory;
 
     @Before
     public void setUp() throws Exception {
-        stubDocumentType = new DocumentType("DT", "Some document type");
+        stubDocumentType = new DocumentType(Constants.DOC_TYPE_REF_PRELIM, "Prelim letter");
 
         stubInvoice = new Invoice();
         stubInvoice.setDueDate(new LocalDate(2016,11,1));
@@ -92,6 +95,9 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrsTest {
 
             allowing(mockLease).getReference();
             will(returnValue("XXX-ABC-789"));
+
+            allowing(mockDocument).getType();
+            will(returnValue(stubDocumentType));
         }});
 
         // expecting
@@ -100,8 +106,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrsTest {
             will(returnValue("prototyping"));
         }});
 
-        binder = new BinderForDocumentAttachedToPrelimLetterOrInvoice();
-        binder.paperclipRepository = mockPaperclipRepository;
+        rendererModelFactory = new FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover();
+        rendererModelFactory.paperclipRepository = mockPaperclipRepository;
     }
 
     @Test
@@ -119,17 +125,14 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrsTest {
         }});
 
         // when
-        final Binder.Binding binding = binder.newBinding(mockDocumentTemplate, mockDocument, "some additional text");
-
-        // then
-        final Object dataModel = binding.getDataModel();
+        final Object rendererModel = rendererModelFactory.newRendererModel(mockDocumentTemplate, mockDocument);
 
         // given
         final RendererForFreemarker renderer = rendererForFreemarker();
 
         // when
         final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.NAME_TEXT_INVOICE_GLOBAL;
-        final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, dataModel);
+        final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
         Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1 XXX-123 Brandino Invoice 2016-11-01");
@@ -146,17 +149,14 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrsTest {
         }});
 
         // when
-        final Binder.Binding binding = binder.newBinding(mockDocumentTemplate, mockDocument, "some additional text");
-
-        // then
-        final Object dataModel = binding.getDataModel();
+        final Object rendererModel = rendererModelFactory.newRendererModel(mockDocumentTemplate, mockDocument);
 
         // given
         final RendererForFreemarker renderer = rendererForFreemarker();
 
         // when
         final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.NAME_TEXT_INVOICE_GLOBAL;
-        final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, dataModel);
+        final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
         Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1   Invoice 2016-11-01");

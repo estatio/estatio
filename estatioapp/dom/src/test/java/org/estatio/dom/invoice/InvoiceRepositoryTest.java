@@ -37,8 +37,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.testing.FinderInteraction;
-import org.incode.module.base.dom.testing.FinderInteraction.FinderMethod;
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;

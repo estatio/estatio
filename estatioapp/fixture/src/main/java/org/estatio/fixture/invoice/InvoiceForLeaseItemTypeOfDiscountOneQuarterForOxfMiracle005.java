@@ -72,7 +72,7 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
         final LocalDate invoiceStartDate = startDateFor(lease);
 
-        final Invoice invoice = createInvoice(
+        final Invoice invoice = createInvoiceAndNumerator(
                 applicationTenancy,
                 lease,
                 PARTY_REF_SELLER,

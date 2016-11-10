@@ -92,9 +92,8 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.base</groupId>
-            <artifactId>incode-module-base-dom</artifactId>
-            <type>test-jar</type>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
 

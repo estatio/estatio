@@ -83,6 +83,7 @@ mvn clean install -DskipTests -o
     <properties>
         <isis.version>1.13.0.20161107-1837</isis.version>
 
+        <isis-module-command.version>1.13.2</isis-module-command.version>
         <isis-module-excel.version>1.13.1.20161101-1119</isis-module-excel.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-pdfbox.version>1.13.0</isis-module-pdfbox.version>
@@ -100,14 +101,13 @@ mvn clean install -DskipTests -o
         <isis-wicket-fullcalendar2.version>1.13.0</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
-        <incode-module-base.version>1.13.2</incode-module-base.version>
+        <incode-module-base.version>1.13.5</incode-module-base.version>
         <incode-module-country.version>1.13.0</incode-module-country.version>
-        <incode-module-document.version>1.13.0</incode-module-document.version>
-
-
+        <incode-module-document.version>1.13.11</incode-module-document.version>
         <incode-module-docrendering-freemarker.version>1.13.0</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-stringinterpolator.version>1.13.0</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
+        <incode-module-unittestsupport.version>1.13.2</incode-module-unittestsupport.version>
 
         <!-- TODO: change when this is moved out (EST-866) -->
         <incode-module-communication.version>${project.version}</incode-module-communication.version>
@@ -544,6 +544,11 @@ mvn clean install -DskipTests -o
             <!-- modules -->
 
             <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${isis-module-command.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.isisaddons.module.excel</groupId>
                 <artifactId>isis-module-excel-dom</artifactId>
                 <version>${isis-module-excel.version}</version>
@@ -670,11 +675,9 @@ mvn clean install -DskipTests -o
                 <version>${incode-module-base.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.incode.module.base</groupId>
-                <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
+                <groupId>org.incode.module.unittestsupport</groupId>
+                <artifactId>incode-module-unittestsupport-dom</artifactId>
+                <version>${incode-module-unittestsupport.version}</version>
             </dependency>
 
 
@@ -981,7 +984,12 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>2.0.0</version>
+                <version>3.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-guava</artifactId>
+                <version>3.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.github.javafaker</groupId>
@@ -989,6 +997,11 @@ mvn clean install -DskipTests -o
                 <version>0.5</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.danhaywood.java</groupId>
+                <artifactId>danhaywood-java-assertjext</artifactId>
+                <version>0.1.0</version>
+            </dependency>
 
             <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
             <dependency>

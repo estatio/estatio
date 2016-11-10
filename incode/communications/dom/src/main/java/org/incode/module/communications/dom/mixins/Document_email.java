@@ -24,27 +24,24 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.joda.time.DateTime;
-
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.background.BackgroundService2;
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.email.EmailService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.repository.RepositoryService;
-
-import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.comms.CommChannelRoleType;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
+import org.incode.module.communications.dom.impl.comms.CommunicationRepository;
 import org.incode.module.communications.dom.spi.CommHeaderForEmail;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.document.dom.DocumentModule;
@@ -52,18 +49,16 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
-
-import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
+import org.incode.module.document.dom.services.DocumentCreatorService;
 
 /**
  * Provides the ability to send an email.
  */
 @Mixin
 public class Document_email  {
-
-    public static final int EMAIL_COVERING_NOTE_MULTILINE = 14;
 
     private final Document document;
 
@@ -76,6 +71,10 @@ public class Document_email  {
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
+    )
+    @ActionLayout(
+            cssClassFa = "at",
+            contributed = Contributed.AS_ACTION
     )
     public Communication $$(
             @ParameterLayout(named = "to:")
@@ -93,48 +92,54 @@ public class Document_email  {
                     regexPattern = CommunicationChannel.EmailType.REGEX,
                     regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
             @ParameterLayout(named = "bcc:")
-            final String bcc,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            @ParameterLayout(named = "Covering note message", multiLine = EMAIL_COVERING_NOTE_MULTILINE)
-            final String message) throws IOException {
+            final String bcc) throws IOException {
 
         if(this.document.getState() == DocumentState.NOT_RENDERED) {
-            // can't send the email yet, so schedule to try again in shortly.
-            backgroundService.executeMixin(Document_email.class, document).$$(toChannel, cc, bcc, message);
-            return null;
+            // this shouldn't happen, but want to fail-fast in case a future programmer calls this directly
+            throw new IllegalArgumentException("Document is not yet rendered");
         }
 
         // create and attach cover note
+        // nb: this functionality is basically the same as T_createAndAttachDocumentAbstract#$$
         final DocumentTemplate coverNoteTemplate = determineEmailCoverNoteTemplate();
-        final Document coverNoteDoc = coverNoteTemplate.createDocumentUsingBinding(this.document, message);
 
-        coverNoteDoc.render(coverNoteTemplate, this.document, message);
+        final Document coverNoteDoc =
+                documentCreatorService.createDocumentAndAttachPaperclips(this.document, coverNoteTemplate);
+
+        coverNoteDoc.render(coverNoteTemplate, this.document);
 
         // create comm and correspondents
-        final DateTime queuedAt = clockService.nowAsDateTime();
+        final String atPath = document.getAtPath();
+        final String subject = coverNoteDoc.getName();
+        final Communication communication =  communicationRepository.createEmail(subject, atPath, toChannel, cc, bcc);
 
-        final Communication communication = Communication.newEmail(document.getAtPath(), coverNoteDoc.getName(), queuedAt);
-        serviceRegistry2.injectServicesInto(communication);
+        transactionService.flushTransaction();
 
-        communication.addCorrespondent(CommChannelRoleType.TO, toChannel);
-        communication.addCorrespondentIfAny(CommChannelRoleType.CC, cc);
-        communication.addCorrespondentIfAny(CommChannelRoleType.BCC, bcc);
-
-        final ApplicationUser currentUser = meService.me();
-        final String currentUserEmailAddress = currentUser.getEmailAddress();
-        communication.addCorrespondentIfAny(CommChannelRoleType.PREPARED_BY, currentUserEmailAddress);
-
-        repositoryService.persistAndFlush(communication);
-
-        // attach the doc and the cover note to communication
-        paperclipRepository.attach(document, DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT, communication);
+        // attach the cover note to the communication
         paperclipRepository.attach(coverNoteDoc, DocumentConstants.PAPERCLIP_ROLE_COVER, communication);
+        paperclipRepository.attach(document, DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT, communication);
+
+        // also copy over as attachments to the comm anything else also attached to original document
+        final List<Paperclip> documentPaperclips = paperclipRepository.findByDocument(this.document);
+        for (Paperclip documentPaperclip : documentPaperclips) {
+            final Object objAttachedToDocument = documentPaperclip.getAttachedTo();
+            if (!(objAttachedToDocument instanceof Document)) {
+                continue;
+            }
+            final Document docAttachedToDocument = (Document) objAttachedToDocument;
+            if (docAttachedToDocument == document || docAttachedToDocument == coverNoteDoc) {
+                continue;
+            }
+            paperclipRepository.attach(docAttachedToDocument, DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT, communication);
+        }
+        transactionService.flushTransaction();
 
         // finally, schedule the email to be sent
         communication.scheduleSend();
 
         return communication;
     }
+
 
     public String disable$$() {
         if (emailService == null || !emailService.isConfigured()) {
@@ -156,7 +161,12 @@ public class Document_email  {
     }
 
     public EmailAddress default0$$() {
-        return determineEmailHeader().getToDefault();
+        final EmailAddress toDefault = determineEmailHeader().getToDefault();
+        if (toDefault != null) {
+            return toDefault;
+        }
+        final Set<EmailAddress> choices = choices0$$();
+        return choices.isEmpty() ? null : choices.iterator().next();
     }
 
     public Set<EmailAddress> choices0$$() {
@@ -171,9 +181,6 @@ public class Document_email  {
         return determineEmailHeader().getBcc();
     }
 
-    public String default3$$() {
-        return "";
-    }
 
     private DocumentTemplate determineEmailCoverNoteTemplate() {
         final DocumentType blankDocType = determineEmailCoverNoteDocumentType();
@@ -214,7 +221,7 @@ public class Document_email  {
     QueryResultsCache queryResultsCache;
 
     @Inject
-    RepositoryService repositoryService;
+    TransactionService transactionService;
 
     @Inject
     List<DocumentCommunicationSupport> documentCommunicationSupports;
@@ -223,21 +230,22 @@ public class Document_email  {
     DocumentTemplateRepository documentTemplateRepository;
 
     @Inject
-    ClockService clockService;
+    CommunicationRepository communicationRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;
-
-    @Inject
-    MeService meService;
-
-    @Inject
-    ServiceRegistry2 serviceRegistry2;
 
     @Inject
     EmailService emailService;
 
     @Inject
     BackgroundService2 backgroundService;
+
+    @Inject
+    DocumentCreatorService documentCreatorService;
+
+    @Inject
+    FactoryService factoryService;
+
 
 }

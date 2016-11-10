@@ -19,16 +19,9 @@ package org.incode.module.communications.dom;
 public final class CommunicationsModule {
 
     //region > constants
-
-
     public static class Constants {
-
         private Constants(){}
-
-//        public static final int CLOB_MULTILINE = 14;
     }
-
-
     //endregion
 
     //region > constructor

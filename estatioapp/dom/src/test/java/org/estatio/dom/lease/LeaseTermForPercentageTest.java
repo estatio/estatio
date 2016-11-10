@@ -32,8 +32,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
-import org.incode.module.base.dom.testing.PojoTester.FixtureDatumFactory;
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;

@@ -23,17 +23,13 @@ import com.google.common.collect.Lists;
 
 import org.apache.log4j.Level;
 
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
 
-import org.isisaddons.module.excel.dom.ExcelService;
-import org.isisaddons.wicket.gmap3.cpt.applib.Location;
-import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
-
 import org.estatio.app.EstatioAppManifest;
+import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
+import org.estatio.integtests.fakes.FakeEmailService;
+import org.estatio.integtests.fakes.FakeLookupLocationService;
 
 /**
  * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on
@@ -52,6 +48,13 @@ public class EstatioSystemInitializer {
                     .withLoggingAt(Level.DEBUG)
                     .with(new AuthenticationRequestNameOnly("estatio-admin"))
                     .with(new EstatioAppManifest() {
+
+                        @Override public List<Class<?>> getModules() {
+                            final List<Class<?>> modules = super.getModules();
+                            modules.add(EstatioIntegTestFakeServicesModule.class);
+                            return modules;
+                        }
+
                         @Override
                         public Map<String, String> getConfigurationProperties() {
                             Map<String, String> props = super.getConfigurationProperties();
@@ -65,7 +68,6 @@ public class EstatioSystemInitializer {
                             List<Class<?>> additionalServices = Lists.newArrayList();
                             appendEstatioCalendarService(additionalServices);
                             appendOptionalServicesForSecurityModule(additionalServices);
-                            additionalServices.add(FakeLookupLocationService.class);
                             return additionalServices;
                         }
                     })
@@ -74,33 +76,6 @@ public class EstatioSystemInitializer {
             IsisSystemForTest.set(isft);
         }
         return isft;
-    }
-
-    // REVIEW: may not need anymore since appManifest refactoring...
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class FakeExcelService extends ExcelService {
-        public String getId() {
-            return getClass().getName();
-        }
-        @Override
-        public <T> Blob toExcel(List<T> domainObjects, Class<T> cls, String fileName) throws Exception {
-            return null;
-        }
-        @Override
-        public <T> List<T> fromExcel(Blob excelBlob, Class<T> cls) throws Exception {
-            return null;
-        }
-    }
-
-    @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "1")
-    public static class FakeLookupLocationService extends LocationLookupService {
-        public String getId() {
-            return getClass().getName();
-        }
-        @Override
-        public Location lookup(final String description) {
-            return null;
-        }
     }
 
 }

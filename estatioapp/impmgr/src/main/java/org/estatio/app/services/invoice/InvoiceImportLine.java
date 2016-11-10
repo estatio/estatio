@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -113,7 +114,7 @@ public class InvoiceImportLine implements Importable {
                 getDueDate(),
                 lease, null);
 
-        InvoiceItem invoiceItem = invoice.newItem(fetchCharge(getItemChargeReference()), BigDecimal.ONE, getItemNetAmount(), getItemStartDate(), getItemEndDate());
+        InvoiceItem invoiceItem = factoryService.mixin(Invoice._newItem.class, invoice).$$(fetchCharge(getItemChargeReference()), BigDecimal.ONE, getItemNetAmount(), getItemStartDate(), getItemEndDate());
         if (getItemDescription() != null) {
             invoiceItem.setDescription(getItemDescription());
         }
@@ -149,6 +150,9 @@ public class InvoiceImportLine implements Importable {
     }
 
     //region > injected services
+    @Inject
+    private FactoryService factoryService;
+
     @Inject
     private ChargeRepository chargeRepository;
 

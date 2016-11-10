@@ -21,7 +21,9 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.activation.DataSource;
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
@@ -39,7 +41,7 @@ import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -66,6 +68,9 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.communications.dom.types.AtPathType;
 import org.incode.module.communications.dom.types.SubjectType;
@@ -73,10 +78,6 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -286,6 +287,9 @@ public class Communication implements Comparable<Communication> {
     //region > sent (programmatic)
     @Programmatic
     public void sent() {
+        if(CommunicationState.SENT == getState()) {
+            return;
+        }
         setSentAt(clockService.nowAsDateTime());
         setState(CommunicationState.SENT);
     }
@@ -335,14 +339,17 @@ public class Communication implements Comparable<Communication> {
     //region > scheduleSend (programmatic), send (action)
     @Programmatic
     public void scheduleSend() {
-        backgroundService.execute(this).send();
+        backgroundService.execute(this).sendByEmail();
     }
 
     @Action(hidden = Where.EVERYWHERE) // so can invoke via BackgroundService
-    public Communication send() {
+    public Communication sendByEmail() {
 
-        final Document attachment = findDocument(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT);
         final Document coverNoteDoc = findDocument(DocumentConstants.PAPERCLIP_ROLE_COVER);
+        final List<DataSource> attachments =
+                findDocumentsInRoleAsStream(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT)
+                        .map(DocumentAbstract::asDataSource)
+                        .collect(Collectors.toList());
         final String emailBody = coverNoteDoc.asChars();
 
         final List<String> toList = findCorrespondents(CommChannelRoleType.TO);
@@ -354,7 +361,7 @@ public class Communication implements Comparable<Communication> {
         final boolean send = emailService.send(
                 toList, ccList, bccList,
                 subject, emailBody,
-                attachment.asDataSource());
+                attachments.toArray(new DataSource[]{}));
 
         if(!send) {
             throw new ApplicationException("Failed to send email; see system logs for details.");
@@ -393,33 +400,34 @@ public class Communication implements Comparable<Communication> {
 
     @Programmatic
     public Document findDocument(final String roleName) {
-        Document document = findDocumentIfAny(roleName);
-        if(document == null) {
-            throw new ApplicationException(
-                    String.format("Could not find document via paperclip, role '%s'", roleName));
-        }
-        return document;
+        final Stream<Document> documents = findDocumentsInRoleAsStream(roleName);
+        final Optional<Document> documentIfAny = documents.findFirst();
+        return documentIfAny.orElseThrow(() -> (RuntimeException)new ApplicationException(String.format(
+                "Found document via paperclip, role '%s', but was DocumentTemplate (not an instance of Document)",
+                roleName)));
     }
 
     @Programmatic
-    public Document findDocumentIfAny(final String roleName) {
-        DocumentAbstract documentAbstract = findDocumentAbstractIfAny(roleName);
-        if(documentAbstract == null) {
-            return null;
-        }
-        if(documentAbstract instanceof Document) {
-            return (Document) documentAbstract;
-        }
-        throw new ApplicationException(
-                String.format("Found document via paperclip, role '%s', but was DocumentTemplate (not an instance of Document)", roleName));
+    public List<Document> findDocuments(final String roleName) {
+        return Lists.newArrayList(findDocumentsInRoleAsStream(roleName).collect(Collectors.toList()));
+    }
+
+    private Stream<Document> findDocumentsInRoleAsStream(final String roleName) {
+        final List<Paperclip> paperclips = findPaperclipsInRole(roleName);
+        return paperclips.stream().map(paperclip -> paperclip.getDocument())
+                .filter(object -> object instanceof Document).map(Document.class::cast);
     }
 
     private DocumentAbstract findDocumentAbstractIfAny(final String roleName) {
-        List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(this);
-        Optional<Paperclip> paperclipForAttachment = paperclips.stream()
-                .filter(x -> Objects.equal(x.getRoleName(), roleName)).findFirst();
-        return paperclipForAttachment.isPresent() ?
-                paperclipForAttachment.get().getDocument() : null;
+        List<Paperclip> paperclips = findPaperclipsInRole(roleName);
+        Optional<Paperclip> firstPaperclipInRole = paperclips.stream().findFirst();
+        return firstPaperclipInRole.isPresent()
+                ? firstPaperclipInRole.get().getDocument()
+                : null;
+    }
+
+    private List<Paperclip> findPaperclipsInRole(final String roleName) {
+        return paperclipRepository.findByAttachedToAndRoleName(this, roleName);
     }
     //endregion
 

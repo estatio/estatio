@@ -29,6 +29,8 @@ public final class Constants {
     public static final String DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE = "PL-COVER";
     public static final String DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE = "INV-COVER";
 
+    public static final String DOC_TYPE_REF_SUPPLIER_RECEIPT = "SUP-RCPT";
+    public static final String DOC_TYPE_REF_TAX_RECEIPT = "TAX-RCPT";
 
 
 }

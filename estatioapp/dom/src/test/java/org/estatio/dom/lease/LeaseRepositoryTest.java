@@ -27,8 +27,8 @@ import org.junit.Test;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.base.dom.testing.FinderInteraction;
-import org.incode.module.base.dom.testing.FinderInteraction.FinderMethod;
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
+import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
