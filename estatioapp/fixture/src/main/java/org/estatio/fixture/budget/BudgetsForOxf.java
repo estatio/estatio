@@ -23,6 +23,9 @@ import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -44,18 +47,22 @@ public class BudgetsForOxf extends BudgetAbstact {
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
         createBudget(executionContext, property, BigDecimal.valueOf(30000.55), BigDecimal.valueOf(40000.35), BUDGET_2015_START_DATE);
-       createBudget(executionContext, property, BigDecimal.valueOf(30500.99), BigDecimal.valueOf(40600.01), BUDGET_2016_START_DATE);
+        createBudget(executionContext, property, BigDecimal.valueOf(30500.99), BigDecimal.valueOf(40600.01), BUDGET_2016_START_DATE);
     }
 
     private void createBudget(final ExecutionContext executionContext, final Property property, final BigDecimal value1, final BigDecimal value2, final LocalDate budgetStartDate) {
-        Budget newBudget1 = createBudget(
+        Budget newBudget = createBudget(
                 property,
                 budgetStartDate,
                 budgetStartDate.plusYears(1).minusDays(1),
                 executionContext);
 
-        createBudgetItem(newBudget1,value1, chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1));
-        createBudgetItem(newBudget1,value2, chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2));
+        BudgetItem item1 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1));
+        BudgetItem item2 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2));
+
+        BudgetItemValue val1 = createBudgetItemValue(item1, value1, budgetStartDate, BudgetCalculationType.BUDGETED);
+        BudgetItemValue val2 = createBudgetItemValue(item2, value2, budgetStartDate, BudgetCalculationType.BUDGETED);
+
     }
 
 }

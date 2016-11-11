@@ -49,7 +49,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
@@ -72,35 +72,35 @@ import lombok.Setter;
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE budgetItemAllocation == :budgetItemAllocation " +
+                        "WHERE partitionItem == :partitionItem " +
                         "&& keyItem == :keyItem " +
                         "&& status == :status " +
                         "&& calculationType == :calculationType"),
         @Query(
-                name = "findByBudgetItemAllocationAndCalculationType", language = "JDOQL",
+                name = "findByPartitionItemAndCalculationType", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE budgetItemAllocation == :budgetItemAllocation " +
+                        "WHERE partitionItem == :partitionItem " +
                         "&& calculationType == :calculationType"),
         @Query(
-                name = "findByBudgetItemAllocationAndStatus", language = "JDOQL",
+                name = "findByPartitionItemAndStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE budgetItemAllocation == :budgetItemAllocation " +
+                        "WHERE partitionItem == :partitionItem " +
                         "&& status == :status"),
         @Query(
-                name = "findByBudgetItemAllocationAndStatusAndCalculationType", language = "JDOQL",
+                name = "findByPartitionItemAndStatusAndCalculationType", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE budgetItemAllocation == :budgetItemAllocation " +
+                        "WHERE partitionItem == :partitionItem " +
                         "&& status == :status && calculationType == :calculationType"),
         @Query(
-                name = "findByBudgetItemAllocation", language = "JDOQL",
+                name = "findByPartitionItem", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE budgetItemAllocation == :budgetItemAllocation")
+                        "WHERE partitionItem == :partitionItem")
 })
-@Unique(name = "BudgetCalculation_budgetItemAllocation_keyItem_calculationType_status_UNQ", members = {"budgetItemAllocation", "keyItem", "calculationType", "status"})
+@Unique(name = "BudgetCalculation_partitionItem_keyItem_calculationType_status_UNQ", members = {"partitionItem", "keyItem", "calculationType", "status"})
 @DomainObject(
         auditing = Auditing.DISABLED,
         publishing = Publishing.DISABLED,
@@ -110,7 +110,7 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
         implements WithApplicationTenancyProperty, Timestampable {
 
     public BudgetCalculation() {
-        super("budgetItemAllocation, keyItem");
+        super("partitionItem, keyItem");
     }
 
     public String title(){
@@ -126,9 +126,9 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     private BigDecimal value;
 
     @Getter @Setter
-    @Column(allowsNull = "false", name="budgetItemAllocationId")
+    @Column(allowsNull = "false", name="partitionItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
-    private BudgetItemAllocation budgetItemAllocation;
+    private PartitionItem partitionItem;
 
     @Getter @Setter
     @Column(allowsNull = "false", name="keyItemId")
@@ -146,7 +146,7 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return getBudgetItemAllocation().getApplicationTenancy();
+        return this.getPartitionItem().getApplicationTenancy();
     }
 
     @Getter @Setter
@@ -162,31 +162,25 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public Budget getBudget(){
-        return getBudgetItemAllocation().getBudget();
+        return this.getPartitionItem().getBudget();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public BudgetItem getBudgetItem(){
-        return getBudgetItemAllocation().getBudgetItem();
+        return this.getPartitionItem().getBudgetItem();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
+    // TODO: revisit when working on shortfall and audited calculations
     public BigDecimal getValueForBudgetPeriod() {
-        return getValue().multiply(getAnnualFactor());
+        return getValue().multiply(BigDecimal.ONE);
     }
 
     @Programmatic
     public void remove(){
         getContainer().remove(this);
-    }
-
-    @Programmatic
-    public BigDecimal getAnnualFactor(){
-
-        return getBudget().getAnnualFactor();
-
     }
 
 }

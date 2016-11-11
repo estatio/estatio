@@ -18,14 +18,16 @@
 package org.estatio.dom.budgeting.budgetcalculation;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
@@ -38,7 +40,8 @@ public class BudgetCalculationServiceTest {
 
         Budget budget;
         BudgetItem budgetItem;
-        BudgetItemAllocation allocation;
+        BudgetItemValue budgetItemValue;
+        PartitionItem partitionItem;
         KeyTable keyTable;
         KeyItem keyItem1;
         KeyItem keyItem2;
@@ -49,7 +52,21 @@ public class BudgetCalculationServiceTest {
         public void setup() {
 
             budget = new Budget();
-            budgetItem = new BudgetItem();
+            budgetItemValue = new BudgetItemValue();
+            budgetItem = new BudgetItem(){
+                @Override
+                public BigDecimal getBudgetedValue(){
+                    return budgetItemValue.getValue();
+                }
+                @Override
+                public BigDecimal getAuditedValue(){
+                    return null;
+                }
+                @Override
+                public List<PartitionItem> getPartitionItems(){
+                    return Arrays.asList(partitionItem);
+                }
+            };
 
             keyTable = new KeyTable();
             keyTable.setKeyValueMethod(KeyValueMethod.PERCENT);
@@ -65,12 +82,10 @@ public class BudgetCalculationServiceTest {
             keyItem2.setKeyTable(keyTable);
             keyTable.getItems().add(keyItem2);
 
+            partitionItem = new PartitionItem();
+            partitionItem.setBudgetItem(budgetItem);
+            partitionItem.setKeyTable(keyTable);
 
-            allocation = new BudgetItemAllocation();
-            allocation.setBudgetItem(budgetItem);
-            allocation.setKeyTable(keyTable);
-
-            budgetItem.getBudgetItemAllocations().add(allocation);
             budget.getItems().add(budgetItem);
 
         }
@@ -79,8 +94,9 @@ public class BudgetCalculationServiceTest {
         public void calculate100Percent() {
 
             // given
-            budgetItem.setBudgetedValue(new BigDecimal("1000.00"));
-            allocation.setPercentage(new BigDecimal("100.00"));
+            budgetItemValue.setValue(new BigDecimal("1000.00"));
+            budgetItemValue.setType(BudgetCalculationType.BUDGETED);
+            partitionItem.setPercentage(new BigDecimal("100.00"));
 
             // when
             List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
@@ -112,8 +128,9 @@ public class BudgetCalculationServiceTest {
         public void calculate99Percent() {
 
             // given
-            budgetItem.setBudgetedValue(new BigDecimal("1000.00"));
-            allocation.setPercentage(new BigDecimal("99.00"));
+            budgetItemValue.setValue(new BigDecimal("1000.00"));
+            budgetItemValue.setType(BudgetCalculationType.BUDGETED);
+            partitionItem.setPercentage(new BigDecimal("99.00"));
 
             // when
             List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
@@ -129,8 +146,9 @@ public class BudgetCalculationServiceTest {
         public void budgetedValueIsZero() {
 
             // given
-            budgetItem.setBudgetedValue(BigDecimal.ZERO);
-            allocation.setPercentage(new BigDecimal("99.00"));
+            budgetItemValue.setValue(BigDecimal.ZERO);
+            budgetItemValue.setType(BudgetCalculationType.BUDGETED);
+            partitionItem.setPercentage(new BigDecimal("99.00"));
 
             // when
             List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
@@ -146,8 +164,9 @@ public class BudgetCalculationServiceTest {
         public void PercentageIsZero() {
 
             // given
-            budgetItem.setBudgetedValue(new BigDecimal("1000.00"));
-            allocation.setPercentage(BigDecimal.ZERO);
+            budgetItemValue.setValue(BigDecimal.ZERO);
+            budgetItemValue.setType(BudgetCalculationType.BUDGETED);
+            partitionItem.setPercentage(BigDecimal.ZERO);
 
             // when
             List<BudgetCalculationViewmodel> results = service.getCalculations(budget);
@@ -163,8 +182,9 @@ public class BudgetCalculationServiceTest {
         public void keySumKeyTableIsZero() {
 
             // given
-            budgetItem.setBudgetedValue(new BigDecimal("1000.00"));
-            allocation.setPercentage(new BigDecimal("99.00"));
+            budgetItemValue.setValue(new BigDecimal("1000.00"));
+            budgetItemValue.setType(BudgetCalculationType.BUDGETED);
+            partitionItem.setPercentage(new BigDecimal("99.00"));
             keyItem1.setValue(BigDecimal.ZERO);
             keyItem2.setValue(BigDecimal.ZERO);
 

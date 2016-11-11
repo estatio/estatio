@@ -39,7 +39,6 @@ public abstract class BudgetItemAbstact extends FixtureScript {
     ){
         BudgetItem budgetItem = budgetItemRepository.newBudgetItem(
                 budget,
-                value,
                 charge);
         return fixtureResults.addResult(this, budgetItem);
     }

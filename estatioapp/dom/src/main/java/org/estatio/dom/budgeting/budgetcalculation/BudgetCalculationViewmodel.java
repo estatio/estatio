@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 
 import lombok.Getter;
@@ -34,11 +34,11 @@ import lombok.Setter;
 public class BudgetCalculationViewmodel {
 
     public BudgetCalculationViewmodel(
-            final BudgetItemAllocation itemAllocation,
+            final PartitionItem partitionItem,
             final KeyItem keyItem,
             final BigDecimal value,
             final BudgetCalculationType calculationType) {
-        this.budgetItemAllocation = itemAllocation;
+        this.partitionItem = partitionItem;
         this.keyItem = keyItem;
         this.value = value;
         this.calculationType = calculationType;
@@ -48,7 +48,7 @@ public class BudgetCalculationViewmodel {
     private BigDecimal value;
 
     @Getter @Setter
-    private BudgetItemAllocation budgetItemAllocation;
+    private PartitionItem partitionItem;
 
     @Getter @Setter
     private KeyItem keyItem;

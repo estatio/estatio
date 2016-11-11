@@ -29,14 +29,17 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
@@ -46,14 +49,16 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
-import org.estatio.dom.budgeting.api.BudgetItemAllocationCreator;
+import org.estatio.dom.budgeting.api.PartitionItemCreator;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
+import org.estatio.dom.budgeting.partioning.Partitioning;
+import org.estatio.dom.budgeting.partioning.PartitioningRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -87,14 +92,15 @@ import lombok.Setter;
                     + "&& charge == :charge "
                     + "&& budget.startDate == :startDate")
 })
+@Unique(name = "BudgetItem_budget_charge_UNQ", members = { "budget", "charge" })
 @DomainObject(
         objectType = "org.estatio.dom.budgeting.budgetitem.BudgetItem"
 )
 public class BudgetItem extends UdoDomainObject2<BudgetItem>
-        implements WithApplicationTenancyProperty, BudgetItemAllocationCreator {
+        implements WithApplicationTenancyProperty, PartitionItemCreator {
 
     public BudgetItem() {
-        super("budget, charge, budgetedValue");
+        super("budget, charge");
     }
 
     public String title() {
@@ -109,50 +115,45 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Getter @Setter
     private Budget budget;
 
-    @Column(allowsNull = "false", scale = 2)
+    @Persistent(mappedBy = "budgetItem", dependentElement = "true")
     @Getter @Setter
-    private BigDecimal budgetedValue;
+    private SortedSet<BudgetItemValue> values = new TreeSet<>();
 
-    @Action(hidden = Where.EVERYWHERE)
-    public BudgetItem changeBudgetedValue(final BigDecimal value) {
-        setBudgetedValue(value);
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public BudgetItem newValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+        budgetItemValueRepository.newBudgetItemValue(this, value, date, type);
         return this;
     }
 
-    public BigDecimal default0ChangeBudgetedValue(final BigDecimal value) {
-        return getBudgetedValue();
+    public LocalDate default1NewValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+        return getBudget().getStartDate();
     }
 
-    public String validateChangeBudgetedValue(final BigDecimal value) {
-        if (value.compareTo(BigDecimal.ZERO) <= 0) {
-            return "Value should be a positive non zero value";
+    public BudgetCalculationType default2NewValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+        return BudgetCalculationType.BUDGETED;
+    }
+
+    public String validateNewValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+        return budgetItemValueRepository.validateNewBudgetItemValue(this, value, date, type);
+    }
+
+    @Programmatic
+    public BigDecimal getBudgetedValue() {
+        if (budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.BUDGETED).size() > 0) {
+            return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.BUDGETED).get(0).getValue().setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            return BigDecimal.ZERO;
         }
-        return null;
     }
 
-    // ////////////////////////////////////////
-
-    @Column(allowsNull = "true", scale = 2)
-    @Getter @Setter
-    private BigDecimal auditedValue;
-
-    public BudgetItem changeAuditedValue(final BigDecimal value) {
-        setAuditedValue(value);
-        return this;
-    }
-
-    public BigDecimal default0ChangeAuditedValue(final BigDecimal value) {
-        return getAuditedValue();
-    }
-
-    public String validateChangeAuditedValue(final BigDecimal value) {
-        if (value.compareTo(BigDecimal.ZERO) < 0) {
-            return "Value can't be negative";
+    @Programmatic
+    public BigDecimal getAuditedValue(){
+        if (budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).size() > 0) {
+            return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).get(0).getValue();
+        } else {
+            return null;
         }
-        return null;
     }
-
-    // ////////////////////////////////////////
 
     @Column(name="chargeId", allowsNull = "false")
     @Getter @Setter
@@ -178,55 +179,43 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return null;
     }
 
-    @CollectionLayout(render= RenderType.EAGERLY)
-    @Persistent(mappedBy = "budgetItem", dependentElement = "true")
-    @Getter @Setter
-    private SortedSet<BudgetItemAllocation> budgetItemAllocations = new TreeSet<>();
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<PartitionItem> getPartitionItems(){
+        return partitionItemRepository.findByBudgetItem(this);
+    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public BudgetItemAllocation createBudgetItemAllocation(
-            final Charge charge,
-            final KeyTable keyTable,
-            final BigDecimal percentage) {
-        return budgetItemAllocationRepository.newBudgetItemAllocation(charge, keyTable, this, percentage);
+    public PartitionItem createPartitionItemForBudgeting(final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+        return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, keyTable, this, percentage);
     }
 
-    public List<Charge> choices0CreateBudgetItemAllocation(
-            final Charge charge,
-            final KeyTable keyTable,
-            final BigDecimal percentage
-    ){
-        return chargeRepository.allCharges();
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public PartitionItem createPartitionItemForAudit(final Partitioning partitioning, final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+        return partitionItemRepository.newPartitionItem(partitioning, charge, keyTable, this, percentage);
     }
 
-    public List<KeyTable> choices1CreateBudgetItemAllocation(
-            final Charge charge,
-            final KeyTable keyTable,
-            final BigDecimal percentage) {
-        return keyTableRepository.findByBudget(getBudget());
-    }
-
-    public BigDecimal default2CreateBudgetItemAllocation(
-            final Charge charge,
-            final KeyTable keyTable,
-            final BigDecimal percentage) {
-        return new BigDecimal(100);
-    }
-
-    public String validateCreateBudgetItemAllocation(
-            final Charge charge,
-            final KeyTable keyTable,
-            final BigDecimal percentage){
-        return budgetItemAllocationRepository.validateNewBudgetItemAllocation(charge,keyTable, this, percentage);
+    public List<Partitioning> choices0CreatePartitionItemForAudit(final Partitioning partitioning, final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+        return partitioningRepository.findByBudgetAndType(getBudget(), BudgetCalculationType.AUDITED);
     }
 
     @Programmatic
     public void createCopyOn(final Budget budget) {
         BudgetItem itemCopy = budget.newBudgetItem(getBudgetedValue(), getCharge());
-        for (BudgetItemAllocation allocation : getBudgetItemAllocations()){
-            String keyTableName = allocation.getKeyTable().getName();
-            KeyTable correspondingTableOnbudget = keyTableRepository.findByBudgetAndName(budget, keyTableName);
-            itemCopy.createBudgetItemAllocation(allocation.getCharge(), correspondingTableOnbudget, allocation.getPercentage());
+        for (BudgetItemValue value : getValues()){
+            // only copies of budgeted values are made
+            if (value.getType() == BudgetCalculationType.BUDGETED) {
+                itemCopy.newValue(value.getValue(), budget.getStartDate(), value.getType());
+            }
+        }
+        for (PartitionItem partitionItem : partitionItemRepository.findByBudgetItem(this)){
+            // only copies of budgeted items are made
+            if (partitionItem.getPartitioning().getType()==BudgetCalculationType.BUDGETED) {
+                String keyTableName = partitionItem.getKeyTable().getName();
+                KeyTable correspondingTableOnbudget = keyTableRepository.findByBudgetAndName(budget, keyTableName);
+                itemCopy.createPartitionItemForBudgeting(partitionItem.getCharge(), correspondingTableOnbudget, partitionItem.getPercentage());
+            }
         }
     }
 
@@ -236,27 +225,32 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return getBudget().getApplicationTenancy();
     }
 
-    @Override
     @Programmatic
-    public BudgetItemAllocation findOrCreateBudgetItemAllocation(final Charge allocationCharge, final KeyTable keyTable, final BigDecimal percentage) {
-        return budgetItemAllocationRepository.findOrCreateBudgetItemAllocation(this, allocationCharge, keyTable, percentage);
+    public BudgetItem updateOrCreateBudgetItemValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+        if (value!=null) {
+            budgetItemValueRepository.updateOrCreateBudgetItemValue(value, this, date, type);
+        }
+        return this;
     }
 
     @Programmatic
-    public BudgetItemAllocation updateOrCreateBudgetItemAllocation(final Charge allocationCharge, final KeyTable keyTable, final BigDecimal percentage) {
-        return budgetItemAllocationRepository.updateOrCreateBudgetItemAllocation(this, allocationCharge, keyTable, percentage);
+    public PartitionItem updateOrCreatePartitionItem(final Charge charge, final KeyTable keyTable, final BigDecimal percentage){
+        return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, keyTable, percentage);
     }
 
     @Inject
     private BudgetItemRepository budgetItemRepository;
 
     @Inject
-    private BudgetItemAllocationRepository budgetItemAllocationRepository;
+    private PartitionItemRepository partitionItemRepository;
+
+    @Inject
+    private PartitioningRepository partitioningRepository;
 
     @Inject
     private KeyTableRepository keyTableRepository;
 
     @Inject
-    private ChargeRepository chargeRepository;
+    private BudgetItemValueRepository budgetItemValueRepository;
 
 }

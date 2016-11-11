@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
@@ -22,30 +22,30 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     }
 
     public BudgetCalculation updateOrCreateTemporaryBudgetCalculation(
-            final BudgetItemAllocation budgetItemAllocation,
+            final PartitionItem partitionItem,
             final KeyItem keyItem,
             final BigDecimal value,
             final BudgetCalculationType calculationType){
 
-        BudgetCalculation existingCalculation = findUnique(budgetItemAllocation, keyItem, BudgetCalculationStatus.TEMPORARY, calculationType);
+        BudgetCalculation existingCalculation = findUnique(partitionItem, keyItem, BudgetCalculationStatus.TEMPORARY, calculationType);
 
         if (existingCalculation != null) {
             existingCalculation.setValue(value);
             return existingCalculation;
         }
 
-        return createBudgetCalculation(budgetItemAllocation, keyItem, value, calculationType, BudgetCalculationStatus.TEMPORARY);
+        return createBudgetCalculation(partitionItem, keyItem, value, calculationType, BudgetCalculationStatus.TEMPORARY);
     }
 
     public BudgetCalculation createBudgetCalculation(
-            final BudgetItemAllocation budgetItemAllocation,
+            final PartitionItem partitionItem,
             final KeyItem keyItem,
             final BigDecimal value,
             final BudgetCalculationType calculationType,
             final BudgetCalculationStatus status){
 
         BudgetCalculation budgetCalculation = newTransientInstance(BudgetCalculation.class);
-        budgetCalculation.setBudgetItemAllocation(budgetItemAllocation);
+        budgetCalculation.setPartitionItem(partitionItem);
         budgetCalculation.setKeyItem(keyItem);
         budgetCalculation.setValue(value);
         budgetCalculation.setCalculationType(calculationType);
@@ -57,9 +57,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     }
 
     public BudgetCalculation updateOrCreateAssignedFromTemporary(final BudgetCalculation calculation){
-        BudgetCalculation existingAssignedCalculation = findUnique(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), BudgetCalculationStatus.ASSIGNED, calculation.getCalculationType());
+        BudgetCalculation existingAssignedCalculation = findUnique(calculation.getPartitionItem(), calculation.getKeyItem(), BudgetCalculationStatus.ASSIGNED, calculation.getCalculationType());
         if (existingAssignedCalculation == null) {
-            return createBudgetCalculation(calculation.getBudgetItemAllocation(), calculation.getKeyItem(), calculation.getValue(), calculation.getCalculationType(), BudgetCalculationStatus.ASSIGNED);
+            return createBudgetCalculation(calculation.getPartitionItem(), calculation.getKeyItem(), calculation.getValue(), calculation.getCalculationType(), BudgetCalculationStatus.ASSIGNED);
         } else {
             existingAssignedCalculation.setValue(calculation.getValue());
             return existingAssignedCalculation;
@@ -67,35 +67,35 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     }
 
     public BudgetCalculation findUnique(
-            final BudgetItemAllocation budgetItemAllocation,
+            final PartitionItem partitionItem,
             final KeyItem keyItem,
             final BudgetCalculationStatus calculationStatus,
             final BudgetCalculationType calculationType
             ){
         return uniqueMatch(
                 "findUnique",
-                "budgetItemAllocation", budgetItemAllocation,
+                "partitionItem", partitionItem,
                 "keyItem", keyItem,
                 "status", calculationStatus,
                 "calculationType", calculationType);
     }
 
-    public List<BudgetCalculation> findByBudgetItemAllocationAndCalculationType(BudgetItemAllocation budgetItemAllocation, BudgetCalculationType calculationType) {
-        return allMatches("findByBudgetItemAllocationAndCalculationType", "budgetItemAllocation", budgetItemAllocation, "calculationType", calculationType);
+    public List<BudgetCalculation> findByPartitionItemAndCalculationType(PartitionItem partitionItem, BudgetCalculationType calculationType) {
+        return allMatches("findByPartitionItemAndCalculationType", "partitionItem", partitionItem, "calculationType", calculationType);
     }
 
-    public List<BudgetCalculation> findByBudgetItemAllocation(
-            final BudgetItemAllocation budgetItemAllocation
+    public List<BudgetCalculation> findByPartitionItem(
+            final PartitionItem partitionItem
     ){
-        return allMatches("findByBudgetItemAllocation", "budgetItemAllocation", budgetItemAllocation);
+        return allMatches("findByPartitionItem", "partitionItem", partitionItem);
     }
 
-    public List<BudgetCalculation> findByBudgetItemAllocationAndStatus(final BudgetItemAllocation budgetItemAllocation, final BudgetCalculationStatus status) {
-        return allMatches("findByBudgetItemAllocationAndStatus", "budgetItemAllocation", budgetItemAllocation, "status", status);
+    public List<BudgetCalculation> findByPartitionItemAndStatus(final PartitionItem partitionItem, final BudgetCalculationStatus status) {
+        return allMatches("findByPartitionItemAndStatus", "partitionItem", partitionItem, "status", status);
     }
 
-    public List<BudgetCalculation> findByBudgetItemAllocationAndStatusAndCalculationType(final BudgetItemAllocation budgetItemAllocation, final BudgetCalculationStatus status, final BudgetCalculationType calculationType) {
-        return allMatches("findByBudgetItemAllocationAndStatusAndCalculationType", "budgetItemAllocation", budgetItemAllocation, "status", status, "calculationType", calculationType);
+    public List<BudgetCalculation> findByPartitionItemAndStatusAndCalculationType(final PartitionItem partitionItem, final BudgetCalculationStatus status, final BudgetCalculationType calculationType) {
+        return allMatches("findByPartitionItemAndStatusAndCalculationType", "partitionItem", partitionItem, "status", status, "calculationType", calculationType);
     }
 
     public List<BudgetCalculation> allBudgetCalculations() {
@@ -105,9 +105,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     public List<BudgetCalculation> findByBudgetAndCharge(final Budget budget, final Charge charge) {
         List<BudgetCalculation> result = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()){
-            for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()){
+            for (PartitionItem allocation : budgetItem.getPartitionItems()){
                 if (allocation.getCharge().equals(charge)) {
-                    result.addAll(findByBudgetItemAllocation(allocation));
+                    result.addAll(findByPartitionItem(allocation));
                 }
             }
         }
@@ -138,9 +138,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     public List<BudgetCalculation> findByBudgetItemAndCalculationType(final BudgetItem budgetItem, final BudgetCalculationType calculationType) {
 
         List<BudgetCalculation> result = new ArrayList<>();
-        for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
+        for (PartitionItem allocation : budgetItem.getPartitionItems()) {
 
-            result.addAll(findByBudgetItemAllocationAndCalculationType(allocation, calculationType));
+            result.addAll(findByPartitionItemAndCalculationType(allocation, calculationType));
 
         }
         return result;
@@ -158,9 +158,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
     public List<BudgetCalculation> findByBudgetItemAndStatus(final BudgetItem budgetItem, final BudgetCalculationStatus status) {
         List<BudgetCalculation> result = new ArrayList<>();
-        for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
+        for (PartitionItem allocation : budgetItem.getPartitionItems()) {
 
-            result.addAll(findByBudgetItemAllocationAndStatus(allocation, status));
+            result.addAll(findByPartitionItemAndStatus(allocation, status));
 
         }
         return result;
@@ -178,9 +178,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
     public List<BudgetCalculation> findByBudgetItemAndStatusAndCalculationType(final BudgetItem budgetItem, final BudgetCalculationStatus status, final BudgetCalculationType calculationType) {
         List<BudgetCalculation> result = new ArrayList<>();
-        for (BudgetItemAllocation allocation : budgetItem.getBudgetItemAllocations()) {
+        for (PartitionItem allocation : budgetItem.getPartitionItems()) {
 
-            result.addAll(findByBudgetItemAllocationAndStatusAndCalculationType(allocation, status, calculationType));
+            result.addAll(findByPartitionItemAndStatusAndCalculationType(allocation, status, calculationType));
 
 
 

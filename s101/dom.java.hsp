@@ -226,7 +226,7 @@
                                 <cell name="budget" pattern="dom.org.estatio.dom.budgeting.budget.?" vexpanded="false" visibility="public" drill="false" />
                               </row>
                               <row>
-                                <cell name="allocation" pattern="dom.org.estatio.dom.budgeting.allocation.?" vexpanded="false" visibility="public" drill="false" />
+                                <cell name="allocation" pattern="dom.org.estatio.dom.budgeting.partioning.?" vexpanded="false" visibility="public" drill="false" />
                               </row>
                             </grid>
                           </cell>

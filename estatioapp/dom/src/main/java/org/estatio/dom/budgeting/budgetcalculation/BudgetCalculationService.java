@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.budgetassignment.BudgetCalculationLinkRepository;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
@@ -27,7 +27,7 @@ public class BudgetCalculationService {
         for (BudgetCalculationViewmodel result : getCalculations(budget)){
             budgetCalculations.add(
                     budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(
-                    result.getBudgetItemAllocation(),
+                    result.getPartitionItem(),
                     result.getKeyItem(),
                     result.getValue(),
                     result.getCalculationType())
@@ -55,43 +55,43 @@ public class BudgetCalculationService {
     private List<BudgetCalculationViewmodel> calculate(final BudgetItem budgetItem) {
 
         List<BudgetCalculationViewmodel> result = new ArrayList<>();
-        for (BudgetItemAllocation itemAllocation : budgetItem.getBudgetItemAllocations()) {
+        for (PartitionItem partitionItem : budgetItem.getPartitionItems()) {
 
-            result.addAll(calculate(itemAllocation));
+            result.addAll(calculate(partitionItem));
 
         }
 
         return result;
     }
 
-    private List<BudgetCalculationViewmodel> calculate(final BudgetItemAllocation itemAllocation) {
+    private List<BudgetCalculationViewmodel> calculate(final PartitionItem partitionItem) {
 
         List<BudgetCalculationViewmodel> results = new ArrayList<>();
 
-        BigDecimal budgetedTotal = percentageOf(itemAllocation.getBudgetItem().getBudgetedValue(), itemAllocation.getPercentage());
-        results.addAll(calculateForTotalAndType(itemAllocation, budgetedTotal, BudgetCalculationType.BUDGETED));
+        BigDecimal budgetedTotal = percentageOf(partitionItem.getBudgetItem().getBudgetedValue(), partitionItem.getPercentage());
+        results.addAll(calculateForTotalAndType(partitionItem, budgetedTotal, BudgetCalculationType.BUDGETED));
 
-        if (itemAllocation.getBudgetItem().getAuditedValue() != null){
-            BigDecimal auditedTotal = percentageOf(itemAllocation.getBudgetItem().getAuditedValue(), itemAllocation.getPercentage());
-            results.addAll(calculateForTotalAndType(itemAllocation,auditedTotal, BudgetCalculationType.AUDITED));
+        if (partitionItem.getBudgetItem().getAuditedValue() != null){
+            BigDecimal auditedTotal = percentageOf(partitionItem.getBudgetItem().getAuditedValue(), partitionItem.getPercentage());
+            results.addAll(calculateForTotalAndType(partitionItem,auditedTotal, BudgetCalculationType.AUDITED));
         }
 
         return results;
     }
 
-    private List<BudgetCalculationViewmodel> calculateForTotalAndType(final BudgetItemAllocation itemAllocation, final BigDecimal total, final BudgetCalculationType calculationType) {
+    private List<BudgetCalculationViewmodel> calculateForTotalAndType(final PartitionItem partitionItem, final BigDecimal total, final BudgetCalculationType calculationType) {
 
         List<BudgetCalculationViewmodel> results = new ArrayList<>();
 
-        BigDecimal divider = itemAllocation.getKeyTable().getKeyValueMethod().divider(itemAllocation.getKeyTable());
+        BigDecimal divider = partitionItem.getKeyTable().getKeyValueMethod().divider(partitionItem.getKeyTable());
 
-        for (KeyItem keyItem : itemAllocation.getKeyTable().getItems()) {
+        for (KeyItem keyItem : partitionItem.getKeyTable().getItems()) {
 
             BudgetCalculationViewmodel calculationResult;
 
 
             calculationResult = new BudgetCalculationViewmodel(
-                    itemAllocation,
+                    partitionItem,
                     keyItem,
                     total.multiply(keyItem.getValue()).
                             divide(divider, MathContext.DECIMAL64).

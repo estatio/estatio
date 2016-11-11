@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -71,13 +71,13 @@ public class BudgetImportExportService {
         BigDecimal budgetedValue = item.getBudgetedValue();
         BigDecimal auditedValue = item.getAuditedValue();
 
-        if (item.getBudgetItemAllocations().size()==0){
+        if (item.getPartitionItems().size()==0){
             // create 1 line
             lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null));
 
         } else {
-            // create a line for each allocation
-            for (BudgetItemAllocation allocation : item.getBudgetItemAllocations()) {
+            // create a line for each partion item
+            for (PartitionItem allocation : item.getPartitionItems()) {
                 String keyTableName = allocation.getKeyTable().getName();
                 String foundationValueType = allocation.getKeyTable().getFoundationValueType().toString();
                 String keyValueMethod = allocation.getKeyTable().getKeyValueMethod().toString();

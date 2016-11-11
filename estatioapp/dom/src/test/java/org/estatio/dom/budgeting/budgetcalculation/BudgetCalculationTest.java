@@ -20,7 +20,7 @@ package org.estatio.dom.budgeting.budgetcalculation;
 import org.junit.Test;
 
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 
 public class BudgetCalculationTest {
@@ -31,7 +31,7 @@ public class BudgetCalculationTest {
         public void test() {
             final BudgetCalculation pojo = new BudgetCalculation();
             newPojoTester()
-                    .withFixture(pojos(BudgetItemAllocation.class, BudgetItemAllocation.class))
+                    .withFixture(pojos(PartitionItem.class, PartitionItem.class))
                     .withFixture(pojos(KeyItem.class, KeyItem.class))
                     .exercise(pojo);
         }

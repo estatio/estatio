@@ -3,25 +3,31 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="removeBudget" />
-            <ns2:action id="createNextBudget" />
-            <ns2:action id="calculate"/>
-            <ns2:action id="assignCalculations"/>
-            <ns2:action id="DownloadCalculations"/>
-            <ns2:action id="DownloadCalculationsForLease"/>
-            <ns2:action id="importExportBudget" />
+            <ns2:action id="remove"/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="Budget" id="budget" unreferencedProperties="true">
-                <ns2:property id="property"/>
-                <ns2:property id="budgetYear"/>
-                <ns2:property id="startDate"/>
-                <ns2:property id="endDate" />
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="applicationTenancy"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Partition item" id="partitionItem">
+                <ns2:property id="partitioning"/>
+                <ns2:property id="budget" hidden="ALL_TABLES"/>
+                <ns2:property id="budgetItem" hidden="ALL_TABLES"/>
+                <ns2:property id="keyTable">
+                    <ns2:action id="changeKeyTable" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Charge" id="charge">
+                <ns2:property id="charge"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Percentage" id="percentage">
+                <ns2:property id="percentage">
+                    <ns2:action id="updatePercentage" position="BELOW"/>
+                </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -34,14 +40,7 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="items" defaultView="table">
-                <ns2:action id="newBudgetItem"/>
-                <ns2:action id="removeAllBudgetItems"/>
-            </ns2:collection>
-            <ns2:collection id="partitionings" defaultView="table"/>
-            <ns2:collection id="keyTables" defaultView="table">
-                <ns2:action id="createKeyTable"/>
-            </ns2:collection>
+            <ns2:collection id="calculations" />
         </col>
     </row>
 </grid>

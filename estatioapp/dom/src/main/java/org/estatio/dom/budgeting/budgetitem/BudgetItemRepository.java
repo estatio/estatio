@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.budgeting.budgetitem;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -48,30 +47,21 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
         super(BudgetItemRepository.class, BudgetItem.class);
     }
 
-    // //////////////////////////////////////
 
     public BudgetItem newBudgetItem(
             final Budget budget,
-            final BigDecimal budgetedValue,
             final Charge charge) {
         BudgetItem budgetItem = newTransientInstance();
         budgetItem.setBudget(budget);
-        budgetItem.setBudgetedValue(budgetedValue);
         budgetItem.setCharge(charge);
-
         persistIfNotAlready(budgetItem);
 
         return budgetItem;
     }
 
-
     public String validateNewBudgetItem(
             final Budget budget,
-            final BigDecimal budgetedValue,
             final Charge charge) {
-        if (budgetedValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "Value can't be negative";
-        }
         if (findByBudgetAndCharge(budget, charge)!=null) {
             return "There is already an item with this charge.";
         }
@@ -107,25 +97,18 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
     }
 
     @Programmatic
-    public BudgetItem findOrCreateBudgetItem(final Budget budget, final Charge budgetItemCharge, final BigDecimal budgetedValue) {
+    public BudgetItem findOrCreateBudgetItem(final Budget budget, final Charge budgetItemCharge) {
         BudgetItem budgetItem = findByBudgetAndCharge(budget, budgetItemCharge);
         if (budgetItem == null){
-            return newBudgetItem(budget,budgetedValue,budgetItemCharge);
-        }
-        return budgetItem;
-    }
-
-    @Programmatic
-    public BudgetItem updateOrCreateBudgetItem(final Budget budget, final Charge budgetItemCharge, final BigDecimal budgetedValue, final BigDecimal auditedValue) {
-        BudgetItem budgetItem = findOrCreateBudgetItem(budget, budgetItemCharge, budgetedValue);
-        budgetItem.setBudgetedValue(budgetedValue);
-        if (auditedValue!=null) {
-            budgetItem.setAuditedValue(auditedValue);
+            return newBudgetItem(budget, budgetItemCharge);
         }
         return budgetItem;
     }
 
     @Inject
     BudgetRepository budgetRepository;
+
+    @Inject
+    private BudgetItemValueRepository budgetItemValueRepository;
 
 }

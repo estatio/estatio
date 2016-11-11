@@ -17,15 +17,16 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocationRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 
@@ -107,10 +108,13 @@ public class BudgetImportExport implements Importable {
         Charge targetCharge = fetchCharge(getInvoiceChargeReference());
         Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
         KeyTable keyTable = findOrCreateKeyTable(budget, getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
-        BudgetItemAllocation budgetItemAllocation =
+        PartitionItem partitionItem =
                 budget
-                        .updateOrCreateBudgetItem(sourceCharge, getBudgetedValue(), getAuditedValue())
-                        .updateOrCreateBudgetItemAllocation(targetCharge, keyTable, getPercentage());
+                        .findOrCreatePartitioningForBudgeting()
+                        .findOrCreateBudgetItem(sourceCharge)
+                        .updateOrCreateBudgetItemValue(budgetedValue, budgetStartDate, BudgetCalculationType.BUDGETED)
+                        .updateOrCreateBudgetItemValue(auditedValue, budgetEndDate, BudgetCalculationType.AUDITED)
+                        .updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage());
 
         return Lists.newArrayList(budget);
     }
@@ -138,7 +142,7 @@ public class BudgetImportExport implements Importable {
     private BudgetItemRepository budgetItemRepository;
 
     @Inject
-    private BudgetItemAllocationRepository budgetItemAllocationRepository;
+    private PartitionItemRepository partitionItemRepository;
 
     @Inject
     private PropertyRepository propertyRepository;

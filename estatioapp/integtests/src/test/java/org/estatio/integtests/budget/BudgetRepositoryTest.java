@@ -20,7 +20,7 @@ import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.budget.BudgetItemAllocationsForOxf;
+import org.estatio.fixture.budget.PartitionItemsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -44,7 +44,7 @@ public class BudgetRepositoryTest extends EstatioIntegrationTest {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
-                executionContext.executeChild(this, new BudgetItemAllocationsForOxf());
+                executionContext.executeChild(this, new PartitionItemsForOxf());
             }
         });
     }

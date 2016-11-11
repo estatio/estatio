@@ -23,6 +23,8 @@ import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.charge.ChargeRefData;
@@ -52,9 +54,13 @@ public class BudgetForBud extends BudgetAbstact {
                 budgetStartDate.plusYears(1).minusDays(1),
                 executionContext);
 
-        createBudgetItem(newBudget,value1, chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1));
-        createBudgetItem(newBudget,value2, chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_2));
-        createBudgetItem(newBudget,value3, chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_3));
+        BudgetItem item1 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1));
+        BudgetItem item2 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_2));
+        BudgetItem item3 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_3));
+
+        createBudgetItemValue(item1, value1, budgetStartDate, BudgetCalculationType.BUDGETED);
+        createBudgetItemValue(item2, value2, budgetStartDate, BudgetCalculationType.BUDGETED);
+        createBudgetItemValue(item3, value3, budgetStartDate, BudgetCalculationType.BUDGETED);
     }
 
 }

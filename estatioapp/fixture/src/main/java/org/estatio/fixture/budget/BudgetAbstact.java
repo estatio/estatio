@@ -29,7 +29,12 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
+import org.estatio.dom.budgeting.budgetitem.BudgetItemValueRepository;
+import org.estatio.dom.budgeting.partioning.PartitioningRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 
@@ -42,16 +47,22 @@ public abstract class BudgetAbstact extends FixtureScript {
             final LocalDate endDate,
             final ExecutionContext fixtureResults){
         Budget budget = budgetRepository.newBudget(property, startDate, endDate);
-
         return fixtureResults.addResult(this, budget);
     }
 
-    protected void createBudgetItem(
+    protected BudgetItem createBudgetItem(
             final Budget budget,
-            final BigDecimal value,
             final Charge charge
     ){
-        budgetItemRepository.newBudgetItem(budget, value, charge);
+        return budgetItemRepository.newBudgetItem(budget, charge);
+    }
+
+    protected BudgetItemValue createBudgetItemValue(
+            final BudgetItem item,
+            final BigDecimal value,
+            final LocalDate date,
+            final BudgetCalculationType type){
+        return budgetItemValueRepository.newBudgetItemValue(item, value, date, type);
     }
 
     @Inject
@@ -65,5 +76,11 @@ public abstract class BudgetAbstact extends FixtureScript {
 
     @Inject
     protected ChargeRepository chargeRepository;
+
+    @Inject
+    protected BudgetItemValueRepository budgetItemValueRepository;
+
+    @Inject
+    protected PartitioningRepository partitioningRepository;
 
 }

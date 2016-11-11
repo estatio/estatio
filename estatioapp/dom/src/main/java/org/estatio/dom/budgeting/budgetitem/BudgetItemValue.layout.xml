@@ -9,24 +9,12 @@
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+            <ns2:fieldSet name="Value" id="value" unreferencedProperties="true">
+                <ns2:property id="value"/>
+                <ns2:property id="type"/>
+                <ns2:property id="date"/>
+                <ns2:property id="budgetItem"/>
                 <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Allocation" id="allocation">
-                <ns2:property id="budget" hidden="ALL_TABLES"/>
-                <ns2:property id="budgetItem" hidden="ALL_TABLES"/>
-                <ns2:property id="keyTable">
-                    <ns2:action id="changeKeyTable" position="BELOW"/>
-                    <ns2:action id="deleteBudgetItemAllocation" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Charge" id="charge">
-                <ns2:property id="charge"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Percentage" id="percentage">
-                <ns2:property id="percentage">
-                    <ns2:action id="updatePercentage" position="BELOW"/>
-                </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -39,7 +27,6 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="calculations"/>
         </col>
     </row>
 </grid>

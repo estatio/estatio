@@ -15,33 +15,24 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budgetitem;
+package org.estatio.dom.budgeting.partioning;
 
 import org.junit.Test;
 
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.budgeting.ChargeForTesting;
-import org.estatio.dom.budgeting.CurrencyForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetForTesting;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.currency.Currency;
 
-public class BudgetItemTest {
+public class PartitioningTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
         @Test
         public void test() {
-            final BudgetItem pojo = new BudgetItem();
+            final Partitioning pojo = new Partitioning();
             newPojoTester()
-                    .withFixture(pojos(Currency.class, CurrencyForTesting.class))
                     .withFixture(pojos(Budget.class, BudgetForTesting.class))
-                    .withFixture(pojos(Charge.class, ChargeForTesting.class))
-                    .withFixture(pojos(KeyTable.class, KeyTableForTesting.class))
                     .exercise(pojo);
         }
 

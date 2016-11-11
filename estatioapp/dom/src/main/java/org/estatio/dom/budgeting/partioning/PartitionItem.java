@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.budgeting.allocation;
+package org.estatio.dom.budgeting.partioning;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -68,28 +68,28 @@ import lombok.Setter;
         @Query(
                 name = "findByBudgetItem", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.allocation.BudgetItemAllocation " +
+                        "FROM org.estatio.dom.budgeting.partioning.PartitionItem " +
                         "WHERE budgetItem == :budgetItem "),
         @Query(
                 name = "findByKeyTable", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.allocation.BudgetItemAllocation " +
+                        "FROM org.estatio.dom.budgeting.partioning.PartitionItem " +
                         "WHERE keyTable == :keyTable "),
         @Query(
-                name = "findByChargeAndBudgetItemAndKeyTable", language = "JDOQL",
+                name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.allocation.BudgetItemAllocation " +
-                        "WHERE charge == :charge && budgetItem == :budgetItem && keyTable == :keyTable ")
+                        "FROM org.estatio.dom.budgeting.partioning.PartitionItem " +
+                        "WHERE partitioning == :partitioning && charge == :charge && budgetItem == :budgetItem && keyTable == :keyTable ")
 })
-@Unique(name = "ScheduleItem_charge_budgetItem_keyTable_UNQ", members = {"charge", "budgetItem", "keyTable"})
+@Unique(name = "PartitionItem_partitioning_charge_budgetItem_keyTable_UNQ", members = {"partitioning", "charge", "budgetItem", "keyTable"})
 @DomainObject(
         auditing = Auditing.DISABLED,
-        objectType = "org.estatio.dom.budgeting.allocation.BudgetItemAllocation"
+        objectType = "org.estatio.dom.budgeting.partioning.PartitionItem"
 )
-public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation> implements WithApplicationTenancyProperty {
+public class PartitionItem extends UdoDomainObject2<PartitionItem> implements WithApplicationTenancyProperty {
 
-    public BudgetItemAllocation() {
-        super("budgetItem, charge, keyTable");
+    public PartitionItem() {
+        super("partitioning, budgetItem, charge, keyTable");
     }
 
     //region > identificatiom
@@ -105,6 +105,10 @@ public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation>
     }
     //endregion
 
+    @Column(allowsNull = "false", name = "partitioningId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
+    @Getter @Setter
+    private Partitioning partitioning;
 
     @Column(allowsNull = "false", name = "chargeId")
     @Getter @Setter
@@ -116,7 +120,7 @@ public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation>
     private KeyTable keyTable;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public BudgetItemAllocation changeKeyTable(final KeyTable keyTable) {
+    public PartitionItem changeKeyTable(final KeyTable keyTable) {
         setKeyTable(keyTable);
         return this;
     }
@@ -145,7 +149,7 @@ public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation>
     private BigDecimal percentage;
 
     @Action(restrictTo = RestrictTo.PROTOTYPING)
-    public BudgetItemAllocation updatePercentage(final BigDecimal percentage) {
+    public PartitionItem updatePercentage(final BigDecimal percentage) {
         setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
         return this;
     }
@@ -163,13 +167,13 @@ public class BudgetItemAllocation extends UdoDomainObject2<BudgetItemAllocation>
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<BudgetCalculation> getCalculations(){
-        return budgetCalculationRepository.findByBudgetItemAllocation(this);
+        return budgetCalculationRepository.findByPartitionItem(this);
     }
 
     // ////////////////////////////////////////
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Budget deleteBudgetItemAllocation() {
+    public Budget remove() {
         removeIfNotAlready(this);
         return this.getBudgetItem().getBudget();
     }

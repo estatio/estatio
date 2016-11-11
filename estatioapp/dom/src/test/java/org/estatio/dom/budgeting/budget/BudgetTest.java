@@ -24,12 +24,12 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.PropertyForTesting;
-import org.estatio.dom.budgeting.allocation.BudgetItemAllocation;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,7 +70,7 @@ public class BudgetTest {
             assertThat(budgetTitle).isEqualTo(
                     property.getClass().getSimpleName()
                             + " [" + property.getReference() + "]"
-                            + " > " + new LocalDateInterval(startDate, endDate).toString());
+                            + " > " + budget.getBudgetYear());
         }
     }
 
@@ -92,7 +92,7 @@ public class BudgetTest {
         }
 
         @Test
-        public void withNoCharges() {
+        public void withCharges() {
 
             // given
             Budget budget = new Budget();
@@ -113,7 +113,7 @@ public class BudgetTest {
             // given
             Budget budget = new Budget();
             budget.getItems().add(createItemFor(budget, "0"));
-            budget.getItems().addAll(createTwoItemsWithSameAllocationFor(budget, "1", "2"));
+            budget.getItems().addAll(createTwoItemsWithSamePartitionItemFor(budget, "1", "2"));
 
             // when
             charges = budget.getInvoiceCharges();
@@ -128,23 +128,27 @@ public class BudgetTest {
 
         private BudgetItem createItemFor(final Budget budget, final String uniqueString) {
 
-            BudgetItem newItem = new BudgetItem();
+            PartitionItem partitionItem = new PartitionItem();
+            Charge targetCharge = new Charge();
+            targetCharge.setReference("target".concat(uniqueString));
+            partitionItem.setCharge(targetCharge);
+
+            BudgetItem newItem = new BudgetItem(){
+                @Override
+                public List<PartitionItem> getPartitionItems(){
+                    return Arrays.asList(partitionItem);
+                }
+            };
             Charge charge = new Charge();
             charge.setReference(uniqueString);
             newItem.setCharge(charge);
 
-            BudgetItemAllocation allocation = new BudgetItemAllocation();
-            Charge targetCharge = new Charge();
-            targetCharge.setReference("target".concat(uniqueString));
-            allocation.setCharge(targetCharge);
-            allocation.setBudgetItem(newItem);
-
-            newItem.getBudgetItemAllocations().add(allocation);
+            partitionItem.setBudgetItem(newItem);
 
             return newItem;
         }
 
-        private List<BudgetItem> createTwoItemsWithSameAllocationFor(final Budget budget, final String str1, final String str2) {
+        private List<BudgetItem> createTwoItemsWithSamePartitionItemFor(final Budget budget, final String str1, final String str2) {
 
             BudgetItem newItem1 = new BudgetItem();
             Charge charge1 = new Charge();
@@ -156,14 +160,14 @@ public class BudgetTest {
             charge2.setReference(str2);
             newItem2.setCharge(charge2);
 
-            BudgetItemAllocation allocation = new BudgetItemAllocation();
+            PartitionItem partitionItem = new PartitionItem();
             Charge targetCharge = new Charge();
             targetCharge.setReference("target".concat(str1));
-            allocation.setCharge(targetCharge);
-            allocation.setBudgetItem(newItem1);
+            partitionItem.setCharge(targetCharge);
+            partitionItem.setBudgetItem(newItem1);
 
-            newItem1.getBudgetItemAllocations().add(allocation);
-            newItem2.getBudgetItemAllocations().add(allocation);
+            newItem1.getPartitionItems().add(partitionItem);
+            newItem2.getPartitionItems().add(partitionItem);
 
             return Arrays.asList(newItem1, newItem2);
         }

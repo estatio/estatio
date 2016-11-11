@@ -16,14 +16,6 @@
                 </ns2:property>
                 <ns2:property id="applicationTenancy"/>
             </ns2:fieldSet>
-            <ns2:fieldSet name="Values" id="values">
-                <ns2:property id="budgetedValue">
-                    <ns2:action id="changeBudgetedValue" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="auditedValue">
-                    <ns2:action id="changeAuditedValue" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                 <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
@@ -35,11 +27,13 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="budgetItemAllocations">
-                <ns2:action id="createBudgetItemAllocation"/>
+            <ns2:collection id="values" defaultView="table">
+                <ns2:action id="newValue"/>
             </ns2:collection>
-            <ns2:collection id="auditedCalculations"/>
-            <ns2:collection id="budgetedCalculations"/>
+            <ns2:collection id="partitionItems" defaultView="table">
+                <ns2:action id="createPartitionItemForBudgeting"/>
+                <ns2:action id="createPartitionItemForAudit"/>
+            </ns2:collection>
         </col>
     </row>
 </grid>
