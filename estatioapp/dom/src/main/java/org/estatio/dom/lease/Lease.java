@@ -1143,7 +1143,7 @@ public class Lease
             //(?=(?:.{11,15}|.{17}))([X,Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\&+=_/-]{1,7})
             //public static final String REGEX = "(?=.{11,17})([A-Z]{1}-)?([A-Z]{3}-([A-Z,0-9]{3,8})-[A-Z,0-9,\\&+=_/-]{1,7})";
             //public static final String REGEX = "^([X,Z]-)?(?=.{11,15}$)([A-Z]{3})-([A-Z,0-9]{3,8})-([A-Z,0-9,\\&+=_/-]{1,7})$";
-            public static final String REGEX = "^([X,Z]-)?(?=.{8,15}$)([A-Z]{2,4})-([A-Z,0-9,\\&\\ \\+=_/-]{1,15})$";
+            public static final String REGEX = "^([X,Z]-)?(?=.{3,15}$)([A-Z]{2,4})-([A-Z,0-9,\\&\\ \\+=_/-]{1,15})$";
             public static final String REGEX_DESCRIPTION = "Only letters and numbers devided by at least 2 and at most 4 dashes:\"-\" totalling between 8 and 15 characters. ";
 
             private Meta() {}

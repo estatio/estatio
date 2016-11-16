@@ -99,6 +99,10 @@ public class Lease_ReferenceType_RegexValidationTest {
         // ECP-130
         tester(Lease.ReferenceType.Meta.REGEX, "CH-CELIO", true);
         tester(Lease.ReferenceType.Meta.REGEX, "CH-CE LIO", true);
+
+        // ECP-130
+        tester(Lease.ReferenceType.Meta.REGEX, "CH-KRYS", true);
+        tester(Lease.ReferenceType.Meta.REGEX, "CH-CE LIO", true);
     }
 
     private void tester(String regex, String pattern, boolean expected) {
