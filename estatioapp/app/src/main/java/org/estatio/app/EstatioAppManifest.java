@@ -14,6 +14,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
 import org.isisaddons.module.security.SecurityModule;
 
+import org.incode.module.base.services.calendar.CalendarService;
 import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.country.dom.CountryModule;
 import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
@@ -24,7 +25,6 @@ import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
-import org.incode.module.base.services.calendar.CalendarService;
 
 public class EstatioAppManifest implements AppManifest {
 
@@ -155,6 +155,8 @@ public class EstatioAppManifest implements AppManifest {
         withFacetFactory(props, "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory");
 
         withDebugMailSmtpSettings(props);
+
+        props.put("isis.persistor.datanucleus.impl.datanucleus.deletionPolicy", "DataNucleus");
 
         return props;
     }

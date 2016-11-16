@@ -36,6 +36,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.lease.LeaseMenu;
+import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
@@ -73,6 +74,9 @@ public class GuaranteeIntegrationTest extends EstatioIntegrationTest {
     @Inject
     private DomainObjectContainer container;
 
+    @Inject
+    AgreementRoleRepository agreementRoleRepository;
+
     Lease lease;
 
     Guarantee guaranteeWithFinancialAccount;
@@ -104,11 +108,15 @@ public class GuaranteeIntegrationTest extends EstatioIntegrationTest {
     public static class Remove extends GuaranteeIntegrationTest {
 
         @Test
-        public void xxx() throws Exception {
+        public void happy_case() throws Exception {
             //Given
             final Guarantee guarantee = guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE);
+            assertThat(guarantee.getRoles()).isNotNull();
+            final Party primaryParty = guarantee.getPrimaryParty();
+            final int size = agreementRoleRepository.findByParty(primaryParty).size();
 
-            // When
+
+            //When
             sudoService.sudo("estatio-admin", Lists.newArrayList("estatio-admin"), new Runnable() {
                 @Override public void run() {
                     wrap(guarantee).remove("Some reason");
@@ -118,6 +126,8 @@ public class GuaranteeIntegrationTest extends EstatioIntegrationTest {
             //Then
             assertThat(guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE)).isNull();
 
+            //TODO: The agreement roles are implicitly removed, scary....
+            assertThat(agreementRoleRepository.findByParty(primaryParty).size()).isEqualTo(size-1);
         }
 
     }
