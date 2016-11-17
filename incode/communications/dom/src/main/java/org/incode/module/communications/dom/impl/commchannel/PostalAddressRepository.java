@@ -29,8 +29,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.country.dom.impl.Country;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 /**
  * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.
@@ -66,6 +67,28 @@ public class PostalAddressRepository extends UdoDomainRepositoryAndFactory<Posta
                 Iterables.tryFind(postalAddresses, PostalAddress.Predicates.equalTo(address1, postalCode, city, country));
         return postalAddressIfFound.orNull();
     }
+
+    @Programmatic
+    public PostalAddress findByAddress(
+            final CommunicationChannelOwner owner,
+            final String address1,
+            final String address2,
+            final String address3,
+            final String postalCode,
+            final String city,
+            final Country country) {
+
+        final List<CommunicationChannelOwnerLink> links =
+                communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.POSTAL_ADDRESS);
+        final Iterable<PostalAddress> postalAddresses =
+                Iterables.transform(
+                        links,
+                        CommunicationChannelOwnerLink.Functions.communicationChannel(PostalAddress.class));
+        final Optional<PostalAddress> postalAddressIfFound =
+                Iterables.tryFind(postalAddresses, PostalAddress.Predicates.equalTo(address1, address2, address3, postalCode, city, country));
+        return postalAddressIfFound.orNull();
+    }
+
 
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;

@@ -231,6 +231,26 @@ public class PostalAddress extends CommunicationChannel {
             };
         }
 
+        public static Predicate<PostalAddress> equalTo(
+                final String address1,
+                final String address2,
+                final String address3,
+                final String postalCode,
+                final String city,
+                final Country country) {
+            return new Predicate<PostalAddress>() {
+                @Override
+                public boolean apply(final PostalAddress input) {
+                    return Objects.equals(address1, input.getAddress1()) &&
+                            Objects.equals(address2, input.getAddress2()) &&
+                            Objects.equals(address3, input.getAddress3()) &&
+                            Objects.equals(postalCode, input.getPostalCode()) &&
+                            Objects.equals(city, input.getCity()) &&
+                            Objects.equals(country, input.getCountry());
+                }
+            };
+        }
+
     }
 
     // //////////////////////////////////////
