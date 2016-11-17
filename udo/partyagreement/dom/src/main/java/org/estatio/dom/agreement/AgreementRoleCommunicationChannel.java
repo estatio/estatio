@@ -166,6 +166,7 @@ public class AgreementRoleCommunicationChannel
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private CommunicationChannel communicationChannel;
 

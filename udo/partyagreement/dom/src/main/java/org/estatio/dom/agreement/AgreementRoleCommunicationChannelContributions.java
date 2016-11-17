@@ -29,8 +29,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
@@ -43,12 +44,11 @@ public class AgreementRoleCommunicationChannelContributions extends UdoDomainRep
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.LAZILY)
+    @CollectionLayout(render = RenderType.EAGERLY)
     public List<AgreementRoleCommunicationChannel> agreements(
             final CommunicationChannel communicationChannel) {
         return agreementRoleCommunicationChannelRepository.findByCommunicationChannel(communicationChannel);
     }
-
 
     @javax.inject.Inject
     private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
