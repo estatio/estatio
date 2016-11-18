@@ -53,6 +53,25 @@ language governing permissions and limitations under the License.
                 </excludes>
             </resource>
         </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>com.github.odavid.maven.plugins</groupId>
+                <artifactId>mixin-maven-plugin</artifactId>
+                <version>0.1-alpha-39</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <mixins>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>datanucleusenhance</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                    </mixins>
+                </configuration>
+            </plugin>
+        </plugins>
+
     </build>
 
     <dependencies>
@@ -149,80 +168,6 @@ language governing permissions and limitations under the License.
     </reporting>
 
     <profiles>
-        <profile>
-            <id>enhance</id>
-            <activation>
-                <property>
-                    <name>!skip.enhance</name>
-                </property>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                            <groupId>org.eclipse.m2e</groupId>
-                            <artifactId>lifecycle-mapping</artifactId>
-                            <version>1.0.0</version>
-                            <configuration>
-                                <lifecycleMappingMetadata>
-                                    <pluginExecutions>
-                                        <pluginExecution>
-                                            <pluginExecutionFilter>
-                                                <groupId>org.datanucleus</groupId>
-                                                <artifactId>datanucleus-maven-plugin</artifactId>
-                                                <versionRange>[${datanucleus-maven-plugin.version},)</versionRange>
-                                                <goals>
-                                                    <goal>enhance</goal>
-                                                </goals>
-                                            </pluginExecutionFilter>
-                                            <action>
-                                                <ignore></ignore>
-                                            </action>
-                                        </pluginExecution>
-                                    </pluginExecutions>
-                                </lifecycleMappingMetadata>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-                <plugins>
-                    <plugin>
-                        <groupId>org.datanucleus</groupId>
-                        <artifactId>datanucleus-maven-plugin</artifactId>
-                        <version>${datanucleus-maven-plugin.version}</version>
-                        <configuration>
-                            <fork>false</fork>
-                            <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
-                            <verbose>true</verbose>
-                            <props>${basedir}/datanucleus.properties</props>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>process-classes</phase>
-                                <goals>
-                                    <goal>enhance</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-core</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-jodatime</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-api-jdo</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>analysis</id>
             <build>
