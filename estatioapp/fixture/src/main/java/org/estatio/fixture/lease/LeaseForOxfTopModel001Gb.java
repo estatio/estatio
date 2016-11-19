@@ -18,23 +18,12 @@
  */
 package org.estatio.fixture.lease;
 
-import java.util.SortedSet;
+import org.incode.module.country.fixture.CountriesRefData;
 
-import javax.inject.Inject;
-
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
@@ -52,15 +41,6 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
     public static final String BRAND = "Topmodel";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
     public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.GBR;
-
-    @Inject
-    private AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    @Inject
-    private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
-
-    @Inject
-    private CommunicationChannelRepository communicationChannelRepository;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -91,17 +71,8 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
                 true,
                 manager,
                 executionContext);
-        createAddress(lease, LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
-        createAddress(lease, LeaseConstants.ARCCT_INVOICE_ADDRESS);
-    }
 
-    private void createAddress(Lease lease, String addressType) {
-        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
-        AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
-                .findByTitle(addressType);
-        final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
-        final CommunicationChannel postalAddress = channels.first();
-        agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress, null);
+        addAddresses(lease);
     }
 
 }

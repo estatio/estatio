@@ -34,16 +34,18 @@ public class OrganisationForMediaXGb extends OrganisationAbstract {
                 AT_PATH,
                 REF,
                 "Media Electronics (GB)",
+                "85 High St",
                 null,
+                "EN11 8TL",
+                "Hoddesdon",
                 null,
-                null,
-                null,
-                null,
-                null,
+                "GBR",
                 "+442079897676",
                 "+442079897677",
-                "info@mediax.example.com", executionContext);
-    }
+                "info@mediax.example.com",
+                executionContext);
 
+
+    }
 
 }

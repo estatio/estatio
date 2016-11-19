@@ -26,12 +26,14 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.country.dom.impl.StateRepository;
+
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PersonRepository;
@@ -85,34 +87,36 @@ public abstract class OrganisationAbstract extends FixtureScript {
         if (address1 != null) {
             final Country country = countryRepository.findCountry(countryReference);
             final State state = stateRepository.findState(stateReference);
-            communicationChannelContributedActions.newPostal(
+            final PostalAddress postalAddress = communicationChannelRepository.newPostal(
                     party,
                     CommunicationChannelType.POSTAL_ADDRESS,
-                    country,
-                    state,
                     address1,
                     address2,
                     null,
                     postalCode,
-                    city);
+                    city,
+                    state,
+                    country);
+            // We make this the legal address too...
+            postalAddress.setLegal(true);
             getContainer().flush();
         }
         if (phone != null) {
-            communicationChannelContributedActions.newPhoneOrFax(
+            communicationChannelRepository.newPhoneOrFax(
                     party,
                     CommunicationChannelType.PHONE_NUMBER,
                     phone);
             getContainer().flush();
         }
         if (fax != null) {
-            communicationChannelContributedActions.newPhoneOrFax(
+            communicationChannelRepository.newPhoneOrFax(
                     party,
                     CommunicationChannelType.FAX_NUMBER,
                     fax);
             getContainer().flush();
         }
         if (emailAddress != null) {
-            communicationChannelContributedActions.newEmail(
+            communicationChannelRepository.newEmail(
                     party,
                     CommunicationChannelType.EMAIL_ADDRESS,
                     emailAddress);
@@ -141,7 +145,7 @@ public abstract class OrganisationAbstract extends FixtureScript {
     protected PersonRepository personRepository;
 
     @Inject
-    protected CommunicationChannelOwner_newChannelContributions communicationChannelContributedActions;
+    protected CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
     protected ApplicationTenancies applicationTenancies;

@@ -18,10 +18,12 @@
  */
 package org.estatio.fixture.lease;
 
+import org.incode.module.country.fixture.CountriesRefData;
+
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
 import org.estatio.fixture.party.PersonForJohnSmithGb;
@@ -52,7 +54,7 @@ public class LeaseForOxfMediaX002Gb extends LeaseAbstract {
         // exec
         Party manager = partyRepository.findPartyByReference(PersonForJohnSmithGb.REF);
 
-        createLease(
+        final Lease lease = createLease(
                 REF,
                 "Mediax Lease",
                 UNIT_REF,
@@ -69,6 +71,8 @@ public class LeaseForOxfMediaX002Gb extends LeaseAbstract {
                 true,
                 manager,
                 executionContext);
+
+        addAddresses(lease);
     }
 
 }

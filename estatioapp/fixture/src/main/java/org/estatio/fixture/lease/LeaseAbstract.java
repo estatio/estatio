@@ -36,6 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -59,10 +60,15 @@ import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
+import static org.incode.module.base.integtests.VT.ld;
+
 /**
  * Sets up the lease, and the roles, and also the first occupancy.
  */
 public abstract class LeaseAbstract extends FixtureScript {
+
+    @Inject
+    private CommunicationChannelRepository communicationChannelRepository;
 
     protected Lease createLease(
             String reference,
@@ -249,4 +255,17 @@ public abstract class LeaseAbstract extends FixtureScript {
     @Inject
     protected CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
+    public void createAddress(Lease lease, String addressType) {
+        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
+        AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
+                .findByTitle(addressType);
+        final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
+        final CommunicationChannel postalAddress = channels.first();
+        agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress, null);
+    }
+
+    protected void addAddresses(final Lease lease) {
+        createAddress(lease, LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+        createAddress(lease, LeaseConstants.ARCCT_INVOICE_ADDRESS);
+    }
 }
