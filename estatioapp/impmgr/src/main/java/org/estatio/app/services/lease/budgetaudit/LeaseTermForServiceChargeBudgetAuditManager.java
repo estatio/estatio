@@ -34,10 +34,11 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermRepository;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -131,14 +132,14 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     public Blob download() {
         final String fileName = "ServiceChargeBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
         final List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems = getServiceCharges();
-        return excelService.toExcel(lineItems, LeaseTermForServiceChargeBudgetAuditLineItem.class, fileName);
+        return excelService.toExcel(lineItems, LeaseTermForServiceChargeBudgetAuditLineItem.class, "lease terms", fileName);
     }
     //endregion
 
     //region > upload (action)
     public LeaseTermForServiceChargeBudgetAuditManager upload(final @Named("Excel spreadsheet") Blob spreadsheet) {
         List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems =
-                excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBudgetAuditLineItem.class);
+                excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBudgetAuditLineItem.class, "lease terms");
         for (LeaseTermForServiceChargeBudgetAuditLineItem lineItem : lineItems) {
             final LeaseTermForServiceCharge leaseTerm = lineItem.getLeaseTerm();
             leaseTerm.setAuditedValue(lineItem.getAuditedValue());
