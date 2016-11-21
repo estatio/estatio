@@ -18,6 +18,7 @@
  */
 package org.estatio.fixture.invoice;
 
+import java.math.BigInteger;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
@@ -29,10 +30,14 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -43,7 +48,6 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 /**
  * Creates {@link org.estatio.dom.invoice.Invoice} and associated {@link org.estatio.dom.invoice.InvoiceItem}s.
@@ -54,7 +58,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected Invoice createInvoice(
+    protected Invoice createInvoiceAndNumerator(
             final ApplicationTenancy applicationTenancy,
             Lease lease,
             String sellerStr,
@@ -71,6 +75,10 @@ public abstract class InvoiceAbstract extends FixtureScript {
 
         final Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
+
+        final Property property = lease.getProperty();
+        final String format = property.getReference() + "-%06d";
+        numeratorForCollectionRepository.createInvoiceNumberNumerator(property, format, BigInteger.ZERO, applicationTenancy);
 
         return executionContext.addResult(this, invoice);
     }
@@ -111,5 +119,8 @@ public abstract class InvoiceAbstract extends FixtureScript {
 
     @Inject
     protected ApplicationTenancies applicationTenancies;
+
+    @Inject
+    protected NumeratorForCollectionRepository numeratorForCollectionRepository;
 
 }

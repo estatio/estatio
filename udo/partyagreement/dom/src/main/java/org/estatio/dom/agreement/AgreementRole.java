@@ -52,12 +52,13 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.services.title.TitleService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.with.WithIntervalContiguous;
 import org.incode.module.base.dom.types.NameType;
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -154,12 +155,11 @@ public class AgreementRole
         super("agreement, startDate desc nullsLast, type, party");
     }
 
-    public String title() {
-        return TitleBuilder.start()
-                .withName(getType())
-                .withTupleElement(getParty())
-                .withTupleElement(getAgreement())
-                .toString();
+    public TranslatableString title() {
+        return TranslatableString.tr("{type} of {agreement} ({party})",
+                "type", getType().getTitle(),
+                "agreement", getAgreement().getReference(),
+                "party", getParty().getName());
     }
 
     @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
@@ -565,5 +565,8 @@ public class AgreementRole
 
     @Inject
     private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
+
+    @Inject
+    TitleService titleService;
 
 }

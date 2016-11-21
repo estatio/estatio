@@ -19,7 +19,7 @@ package org.estatio.dom.budgeting.partioning;
 
 import org.junit.Test;
 
-import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.budgeting.budget.Budget;
 

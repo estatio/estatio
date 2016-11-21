@@ -24,6 +24,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -33,9 +34,10 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
-import org.incode.module.communications.dom.mixins.Document_email;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.dnc.Invoice_email;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {
@@ -50,39 +52,51 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public InvoiceSummaryForPropertyDueDateStatus $$() throws IOException {
 
-        for (Document document : documentsToSend()) {
+        final List<InvoiceAndDocument> invoiceAndDocuments = invoiceAndDocumentsToSend();
+        for (InvoiceAndDocument invoiceAndDocument : invoiceAndDocuments) {
+            final Invoice invoice = invoiceAndDocument.getInvoice();
+            final Document document = invoiceAndDocument.getDocument();
 
-            final Document_email emailMixin = emailMixin(document);
-            final EmailAddress emailAddress = emailMixin.default0$$();
+            final Invoice_email invoice_email = invoice_email(invoice);
 
-            final String cc = emailMixin.default1$$();
-            final String bcc = emailMixin.default2$$();
-            final String message = emailMixin.default3$$();
-            emailMixin.$$(emailAddress, cc, bcc, message);
+            final EmailAddress emailAddress = invoice_email.default1$$(document);
+            final String cc = invoice_email.default2$$(document);
+            final String bcc = invoice_email.default3$$(document);
+
+            invoice_email.$$(document, emailAddress, cc, bcc);
         }
-
         return this.invoiceSummary;
     }
 
     public String disable$$() {
-        return documentsToSend().isEmpty()? "No documents available to be send by email": null;
+        return invoiceAndDocumentsToSend().isEmpty()? "No documents available to be send by email": null;
     }
 
     @Override
-    List<Document> documentsToSend() {
-        return documentsToSend(canBeSentByEmail());
+    Predicate<InvoiceAndDocument> filter() {
+        return Predicates.and(
+                        invoiceAndDocument -> !exclude(invoiceAndDocument),
+                        canBeSentByEmail()
+                );
     }
 
-    private Predicate<Document> canBeSentByEmail() {
-        return doc -> {
-            final Document_email emailMixin = emailMixin(doc);
-            final EmailAddress emailAddress = emailMixin.default0$$();
+    /**
+     * Optional hook to allow subclasses to further restrict the documents that can be sent.
+     */
+    protected boolean exclude(final InvoiceAndDocument invoiceAndDocument) {
+        return false;
+    }
+
+    private Predicate<InvoiceAndDocument> canBeSentByEmail() {
+        return invoiceAndDocument -> {
+            final Invoice_email emailMixin = invoice_email(invoiceAndDocument.getInvoice());
+            final EmailAddress emailAddress = emailMixin.default1$$(invoiceAndDocument.getDocument());
             return emailAddress != null;
         };
     }
 
-    private Document_email emailMixin(final Document document) {
-        return factoryService.mixin(Document_email.class, document);
+    private Invoice_email invoice_email(final Invoice invoice) {
+        return factoryService.mixin(Invoice_email.class, invoice);
     }
 
     @Inject

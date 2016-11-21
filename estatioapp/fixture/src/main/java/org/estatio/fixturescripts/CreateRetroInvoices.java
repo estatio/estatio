@@ -29,6 +29,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -146,22 +147,25 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
         invoiceCalculationService.calculateAndInvoice(parameters);
 
         for (Invoice invoice : invoiceRepository.findByStatus(InvoiceStatus.NEW)) {
-            invoice.saveAsHistoric();
+            factoryService.mixin(Invoice._saveAsHistoric.class, invoice).$$();
             executionContext.addResult(this, invoice.getInvoiceNumber(), invoice);
         }
         return executionContext;
     }
 
     @Inject
-    public InvoiceRepository invoiceRepository;
+    protected InvoiceRepository invoiceRepository;
 
     @Inject
-    public LeaseRepository leaseRepository;
+    protected LeaseRepository leaseRepository;
 
     @Inject
-    public PropertyRepository propertyRepository;
+    protected PropertyRepository propertyRepository;
 
     @Inject
-    public InvoiceCalculationService invoiceCalculationService;
+    protected InvoiceCalculationService invoiceCalculationService;
+
+    @Inject
+    protected FactoryService factoryService;
 
 }

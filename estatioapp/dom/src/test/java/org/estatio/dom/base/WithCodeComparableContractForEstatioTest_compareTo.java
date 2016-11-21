@@ -20,9 +20,8 @@ package org.estatio.dom.base;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.incode.module.base.dom.with.ComparableByCodeContractTestAbstract_compareTo;
 import org.incode.module.base.dom.with.WithCodeComparable;
-
+import org.incode.module.unittestsupport.dom.with.ComparableByCodeContractTestAbstract_compareTo;
 
 /**
  * Automatically tests all domain objects implementing {@link WithCodeComparable}.

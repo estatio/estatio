@@ -28,7 +28,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.factory.FactoryService;
 
+import org.incode.module.base.integtests.VT;
+
+import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -40,13 +44,11 @@ import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -75,22 +77,29 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
+    FactoryService factoryService;
+
+    @Inject
     InvoiceCalculationService invoiceCalculationService;
 
     @Inject
     InvoiceServiceMenuAndContributions invoiceService;
 
-    CreateRetroInvoices creator;
+    CreateRetroInvoices createRetroInvoices;
 
     Lease lease;
 
     @Before
     public void setup() {
-        creator = new CreateRetroInvoices();
-        creator.leaseRepository = leaseRepository;
-        creator.invoiceRepository = invoiceRepository;
-        creator.propertyRepository = propertyRepository;
-        creator.invoiceCalculationService = invoiceCalculationService;
+        createRetroInvoices = new CreateRetroInvoices() {
+            {
+                leaseRepository = CreateRetroInvoicesTest.this.leaseRepository;
+                invoiceRepository = CreateRetroInvoicesTest.this.invoiceRepository;
+                propertyRepository = CreateRetroInvoicesTest.this.propertyRepository;
+                invoiceCalculationService = CreateRetroInvoicesTest.this.invoiceCalculationService;
+                factoryService = CreateRetroInvoicesTest.this.factoryService;
+            }
+        };
 
         lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
     }
@@ -116,7 +125,7 @@ public class CreateRetroInvoicesTest extends EstatioIntegrationTest {
             assertThat(dueDates.size(), is(10));
 
             // when
-            creator.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
+            createRetroInvoices.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
 
             // then
             assertThat(invoiceRepository.findByLease(lease).size(), is(10));

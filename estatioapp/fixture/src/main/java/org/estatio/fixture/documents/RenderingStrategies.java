@@ -18,18 +18,11 @@
  */
 package org.estatio.fixture.documents;
 
-import javax.inject.Inject;
-
-import org.apache.isis.applib.services.clock.ClockService;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
+import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorCaptureUrl;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
-import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
 public class RenderingStrategies extends DocumentTemplateFSAbstract {
 
@@ -50,13 +43,5 @@ public class RenderingStrategies extends DocumentTemplateFSAbstract {
         executionContext.executeChild(this, new RenderingStrategyFSForFreemarker());
 
     }
-
-    @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
-    @Inject
-    private RenderingStrategyRepository renderingStrategyRepository;
-    @Inject
-    private ClockService clockService;
-
 
 }

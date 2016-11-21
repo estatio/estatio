@@ -27,10 +27,13 @@ public final class DocumentConstants {
 
     private DocumentConstants(){}
 
+    public static final String MIME_TYPE_APPLICATION_PDF = "application/pdf";
+
     /**
      * for {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} {@link Communication}s
      */
     public static final String PAPERCLIP_ROLE_ATTACHMENT = "attachment";
+
     /**
      * for {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} {@link Communication}s
      */
@@ -40,5 +43,6 @@ public final class DocumentConstants {
      * for {@link Document}s attached to {@link CommunicationChannelType#POSTAL_ADDRESS postal} {@link Communication}s
      */
     public static final String PAPERCLIP_ROLE_ENCLOSED = "enclosed";
+
 
 }

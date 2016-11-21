@@ -41,7 +41,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
-import static org.estatio.dom.invoice.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract.MIME_TYPE_APPLICATION_PDF;
+import static org.incode.module.communications.dom.mixins.DocumentConstants.MIME_TYPE_APPLICATION_PDF;
 
 public abstract class DocAndCommAbstract_download<T extends DocAndCommAbstract<T>> extends DocAndCommAbstract_abstract<T> {
 

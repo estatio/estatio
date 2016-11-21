@@ -18,7 +18,10 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+
+import lombok.Getter;
 
 public class OrganisationForPoisonGb extends OrganisationAbstract {
 
@@ -31,15 +34,17 @@ public class OrganisationForPoisonGb extends OrganisationAbstract {
                 AT_PATH,
                 REF,
                 "Poison Perfumeries",
+                "46 Brewster Street",
                 null,
+                "W2D1PQ",
+                "London",
                 null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null, executionContext);
+                "GBR",
+                "+44202218888",
+                "+44202218899",
+                "info@poison-perfumeries.com",
+                executionContext);
+
     }
 
 }

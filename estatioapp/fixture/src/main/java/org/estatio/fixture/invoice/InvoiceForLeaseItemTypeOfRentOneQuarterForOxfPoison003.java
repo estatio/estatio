@@ -76,7 +76,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
 
         final LocalDate startDate = startDateFor(lease);
 
-        final Invoice invoice = createInvoice(
+        final Invoice invoice = createInvoiceAndNumerator(
                 applicationTenancy,
                 lease, PARTY_REF_SELLER,
                 PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,

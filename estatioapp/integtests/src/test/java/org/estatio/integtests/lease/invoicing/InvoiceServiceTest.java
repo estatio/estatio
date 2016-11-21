@@ -30,11 +30,15 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.base.integtests.VT;
+
+import org.estatio.app.menus.invoice.InvoiceMenu;
+import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
+import org.estatio.app.menus.lease.LeaseMenu;
+import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
-import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.app.menus.invoice.InvoiceMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
@@ -42,12 +46,10 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -60,7 +62,6 @@ import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -180,8 +181,10 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
             final List<Invoice> allInvoices = invoiceMenu.allInvoices();
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
-            invoice.approve();
-            invoice.invoice(VT.ld(2013, 11, 7));
+
+            mixin(Invoice._approve.class, invoice).$$();
+            mixin(Invoice._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
+
             assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
@@ -234,7 +237,7 @@ public class InvoiceServiceTest extends EstatioIntegrationTest {
 
         private void approveInvoicesFor(final Lease lease) {
             for (final Invoice invoice : invoiceRepository.findByLease(lease)) {
-                invoice.approve();
+                mixin(Invoice._approve.class, invoice).$$();
             }
         }
     }

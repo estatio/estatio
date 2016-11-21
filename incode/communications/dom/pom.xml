@@ -84,14 +84,15 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.4</isis-module-security.version>
 
-        <incode-module-base.version>1.13.2</incode-module-base.version>
+        <incode-module-base.version>1.13.5</incode-module-base.version>
         <incode-module-country.version>1.13.0</incode-module-country.version>
-        <incode-module-document.version>1.13.0</incode-module-document.version>
+        <incode-module-document.version>1.13.11</incode-module-document.version>
 
         <lombok.version>1.16.6</lombok.version>
         <axon-core.version>2.4.4</axon-core.version>
 
-        <assertj-core.version>3.3.0</assertj-core.version>
+        <assertj-core.version>3.5.2</assertj-core.version>
+        <assertj-guava.version>3.1.0</assertj-guava.version>
         <danhaywood-java-assertjext.version>0.1.0</danhaywood-java-assertjext.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -348,10 +349,17 @@ Copyright 2014~2015 Dan Haywood
             <version>${isis.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-guava</artifactId>
+            <version>${assertj-guava.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -396,9 +404,8 @@ Copyright 2014~2015 Dan Haywood
             <artifactId>incode-module-base-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.base</groupId>
-            <artifactId>incode-module-base-dom</artifactId>
-            <type>test-jar</type>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
 

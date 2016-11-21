@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
@@ -103,7 +104,9 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             Assertions.assertThat(invoiceRepository.findByLease(topmodelLease).get(1).getNetAmount()).isEqualTo(new BigDecimal("652.51"));
 
             // and after approval of first invoice only the delta is invoiced
-            invoiceRepository.findByLease(topmodelLease).get(0).approve();
+            final Invoice invoice = invoiceRepository.findByLease(topmodelLease).get(0);
+            mixin(Invoice._approve.class, invoice).$$();
+
             invoiceService.calculate(
                     topmodelLease,
                     InvoiceRunType.NORMAL_RUN,
@@ -117,7 +120,9 @@ public class LeaseTermsForDepositTest extends EstatioIntegrationTest {
             // and after terminating the invoiced deposit is credited
             depositTerm = (LeaseTermForDeposit) topmodelLease.findFirstItemOfType(LeaseItemType.DEPOSIT).getTerms().first();
             depositTerm.terminate(startDate.plusYears(5).minusDays(1));
-            invoiceRepository.findByLease(topmodelLease).get(1).approve();
+            final Invoice invoice1 = invoiceRepository.findByLease(topmodelLease).get(1);
+            mixin(Invoice._approve.class, invoice1).$$();
+
             invoiceService.calculate(
                     topmodelLease,
                     InvoiceRunType.RETRO_RUN,

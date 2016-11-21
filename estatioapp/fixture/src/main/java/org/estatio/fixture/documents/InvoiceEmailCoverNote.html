@@ -793,7 +793,7 @@
 
 
                                                 <p>
-                                                    Con la presente trasmettiamo in allegato <span class="emphasis">Invoice ${invoice.number} ${invoice.dueDate}</span>
+                                                    Con la presente trasmettiamo in allegato <span class="emphasis">Invoice ${(invoice.invoiceNumber)!""} ${invoice.dueDate}.</span>
                                                 </p>
 
                                                 <p>
@@ -817,7 +817,10 @@
 
                                                 <br/>
                                                 <p>
-                                                    Please find attached the <span class="emphasis">Invoice ${invoice.number} {invoice.dueDate}</span>
+                                                    Please find attached the <span class="emphasis">Invoice ${(invoice.invoiceNumber)!""} ${invoice.dueDate}.</span>
+                                                </p>
+
+                                                <p>
                                                     According to the Presidential Decree 445/00 SEZ III Art. 14, please print out the attached document, store it and consider it as the original.
                                                 </p>
 

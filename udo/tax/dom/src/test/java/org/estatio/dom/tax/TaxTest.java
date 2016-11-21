@@ -37,7 +37,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.incode.module.base.IsisMatchers;
+import org.incode.module.unittestsupport.dom.matchers.IsisMatchers;
 
 import static org.junit.Assert.assertEquals;
 

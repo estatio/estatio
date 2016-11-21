@@ -18,9 +18,13 @@
  */
 package org.estatio.dom.invoice.viewmodel.dnc;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin
@@ -28,6 +32,12 @@ public class InvoiceSummaryForPropertyDueDateStatus_preparePreliminaryLetters ex
 
     public InvoiceSummaryForPropertyDueDateStatus_preparePreliminaryLetters(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
         super(invoiceSummary, Constants.DOC_TYPE_REF_PRELIM);
+    }
+
+    @Override
+    Predicate<Invoice> filter() {
+        // no restrictions for creating preliminary letters
+        return Predicates.alwaysTrue();
     }
 
 }

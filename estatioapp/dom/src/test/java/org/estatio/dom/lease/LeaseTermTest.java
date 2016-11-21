@@ -41,16 +41,16 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+import org.incode.module.unittestsupport.dom.bean.PojoTester;
+import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
-import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
-import org.incode.module.base.dom.testing.PojoTester;
-import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;

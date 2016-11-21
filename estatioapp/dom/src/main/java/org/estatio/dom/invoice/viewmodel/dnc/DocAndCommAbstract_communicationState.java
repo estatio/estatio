@@ -36,7 +36,7 @@ public abstract class DocAndCommAbstract_communicationState<T extends DocAndComm
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Property()
-    @MemberOrder(sequence = "6") // workaround, DocAndCommForInvoiceNote.layout.xml not being honoured for table, for some reason
+    @MemberOrder(sequence = "6") // workaround, DocAndCommForInvoiceDoc.layout.xml not being honoured for table, for some reason
     public CommunicationState $$() {
         return getCommunication() != null ? getCommunication().getState() : null;
     }

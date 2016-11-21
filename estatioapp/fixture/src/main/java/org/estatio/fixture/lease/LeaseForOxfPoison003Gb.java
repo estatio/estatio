@@ -18,10 +18,13 @@
  */
 package org.estatio.fixture.lease;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.country.fixture.CountriesRefData;
+
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForPoisonGb;
 import org.estatio.fixture.party.PersonForJohnSmithGb;
@@ -38,7 +41,7 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
     public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.NLD;
 
-    public static final String TENANT_REFERENCE = OrganisationForPoisonGb.REF;
+    public static final String PARTY_REF_TENANT = OrganisationForPoisonGb.REF;
     public static final String PARTY_REF_MANAGER = PersonForJohnSmithGb.REF;
 
     @Override
@@ -52,7 +55,7 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
-        createLease(
+        final Lease lease = createLease(
                 REF,
                 "Poison Lease",
                 UNIT_REFERENCE,
@@ -62,13 +65,18 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
                 "HEALT&BEAUTY",
                 "PERFUMERIE",
                 PARTY_REF_LANDLORD,
-                TENANT_REFERENCE,
+                PARTY_REF_TENANT,
                 ld(2011, 1, 1),
                 ld(2020, 12, 31),
                 true,
                 true,
                 manager,
                 executionContext);
+
+        final String partyRefTenant = PARTY_REF_TENANT;
+        final CommunicationChannelType channelType = CommunicationChannelType.EMAIL_ADDRESS;
+
+        addInvoiceAddressForTenant(lease, partyRefTenant, channelType);
     }
 
 }

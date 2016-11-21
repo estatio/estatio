@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
@@ -42,7 +43,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
 
     public Object approveAll() {
         for (Invoice invoice : getInvoices()) {
-            invoice.doApprove();
+            mixin(Invoice._approve.class, invoice).doApprove();
         }
         return this;
     }
@@ -50,7 +51,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Object collectAll() {
         for (Invoice invoice : getInvoices()) {
-            invoice.doCollect();
+            mixin(Invoice._collect.class, invoice).doCollect();
         }
         return this;
     }
@@ -58,7 +59,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
-            wrapperFactory.wrap(invoice).invoice(invoiceDate);
+            wrap(mixin(Invoice._invoice.class, invoice)).$$(invoiceDate);
         }
         return this;
     }
@@ -70,7 +71,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object removeAll() {
         for (Invoice invoice : getInvoices()) {
-            invoice.remove();
+            mixin(Invoice._remove.class, invoice).$$();
         }
         return this;
     }
@@ -78,7 +79,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public InvoiceSummaryAbstract saveAllAsHistoric() {
         for (Invoice invoice : getInvoices()) {
-            invoice.saveAsHistoric();
+            mixin(Invoice._saveAsHistoric.class, invoice). $$();
         }
         return this;
     }
@@ -90,6 +91,16 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @CollectionLayout(defaultView = "table")
     public abstract List<Invoice> getInvoices();
 
+
+    private <T> T wrap(final T mixin) {
+        return wrapperFactory.wrap(mixin);
+    }
+
+    private <P, T extends P> T mixin(final Class<T> mixinClass, final P mixedIn) {
+        return factoryService.mixin(mixinClass, mixedIn);
+    }
+
+
     @Inject
     protected InvoiceRepository invoiceRepository;
 
@@ -98,6 +109,9 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
 
     @Inject
     protected WrapperFactory wrapperFactory;
+
+    @Inject
+    protected FactoryService factoryService;
 
     @Inject
     protected ClockService clockService;

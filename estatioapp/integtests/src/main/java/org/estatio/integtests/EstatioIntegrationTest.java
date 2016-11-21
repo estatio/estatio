@@ -18,6 +18,8 @@
  */
 package org.estatio.integtests;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import com.google.common.base.Throwables;
 import org.apache.log4j.PropertyConfigurator;
@@ -30,8 +32,16 @@ import org.slf4j.LoggerFactory;
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
+import org.apache.isis.core.runtime.authentication.standard.SimpleSession;
+
+import org.isisaddons.module.command.dom.BackgroundCommandExecutionFromBackgroundCommandServiceJdo;
+import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
+import org.isisaddons.module.command.dom.CommandJdo;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Base class for integration tests.
@@ -114,6 +124,32 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
             }
         };
     }
+
+    protected void runBackgroundCommands() throws InterruptedException {
+
+        List<CommandJdo> commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        assertThat(commands).hasSize(1);
+
+        transactionService.nextTransaction();
+
+        BackgroundCommandExecutionFromBackgroundCommandServiceJdo backgroundExec =
+                new BackgroundCommandExecutionFromBackgroundCommandServiceJdo();
+        final SimpleSession session = new SimpleSession("scheduler_user", new String[] { "admin_role" });
+
+        final Thread thread = new Thread(() -> backgroundExec.execute(session, null));
+        thread.start();
+
+        thread.join(5000L);
+
+        commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        assertThat(commands).isEmpty();
+    }
+
+    @Inject
+    protected BackgroundCommandServiceJdoRepository backgroundCommandRepository;
+
+    @Inject
+    protected TransactionService transactionService;
 
     @Inject
     protected FixtureScripts fixtureScripts;

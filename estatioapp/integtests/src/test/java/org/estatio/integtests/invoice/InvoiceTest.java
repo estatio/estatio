@@ -67,6 +67,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.incode.module.base.integtests.VT;
 
+import io.swagger.models.auth.In;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -126,7 +127,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
             Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
 
             // when
-            invoice.newItem(charge, VT.bd(1), VT.bd("10000.123"), null, null);
+            mixin(Invoice._newItem.class, invoice).$$(charge, VT.bd(1), VT.bd("10000.123"), null, null);
 
             // then
             Invoice foundInvoice = invoiceRepository.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
@@ -190,7 +191,7 @@ public class InvoiceTest extends EstatioIntegrationTest {
             Assert.assertThat(matchingInvoices.size(), Is.is(1));
             Invoice invoice = matchingInvoices.get(0);
             // when
-            invoice.remove();
+            mixin(Invoice._remove.class, invoice).$$();
             // then
             matchingInvoices = findMatchingInvoices(seller, buyer, lease);
             Assert.assertThat(matchingInvoices.size(), Is.is(0));

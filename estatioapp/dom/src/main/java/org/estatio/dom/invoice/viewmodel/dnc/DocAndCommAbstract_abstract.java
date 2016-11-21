@@ -28,6 +28,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 
 public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T>> {
 
@@ -66,5 +67,5 @@ public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T
     DocumentTypeRepository documentTypeRepository;
 
     @Inject
-    DocAndCommService invoiceDocAndCommService;
+    InvoiceDocAndCommService invoiceDocAndCommService;
 }

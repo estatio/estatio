@@ -74,7 +74,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
         // simply within the lease's start/end date
         final LocalDate startDate = startDateFor(lease);
 
-        final Invoice invoice = createInvoice(
+        final Invoice invoice = createInvoiceAndNumerator(
                 applicationTenancy,
                 lease, PARTY_REF_SELLER,
                 PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,

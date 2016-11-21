@@ -48,16 +48,17 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithInterval;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithDescriptionGetter;
+import org.incode.module.base.dom.with.WithInterval;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.incode.module.base.dom.with.WithDescriptionGetter;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
@@ -320,7 +321,7 @@ public abstract class InvoiceItem
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice remove() {
         if (!getInvoice().isImmutable()) {
-            getContainer().remove(this);
+            repositoryService.remove(this);
         }
         return getInvoice();
     }
@@ -380,6 +381,8 @@ public abstract class InvoiceItem
     @Inject
     private ChargeRepository chargeRepository;
 
+    @javax.inject.Inject
+    RepositoryService repositoryService;
 
 
     public static class DescriptionType {

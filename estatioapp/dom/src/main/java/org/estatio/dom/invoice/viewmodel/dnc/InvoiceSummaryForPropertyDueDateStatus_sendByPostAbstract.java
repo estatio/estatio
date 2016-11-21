@@ -38,16 +38,16 @@ import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
-import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.mixins.Document_print;
+import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.dnc.Invoice_print;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {
 
-    static final String MIME_TYPE_APPLICATION_PDF = "application/pdf";
     private final String defaultFileName;
 
     public InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract(
@@ -64,47 +64,47 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
 
         final List<byte[]> pdfBytes = Lists.newArrayList();
 
-        for (Document document : documentsToSend()) {
+        for (final InvoiceAndDocument invoiceAndDocument : invoiceAndDocumentsToSend()) {
+            final Invoice invoice = invoiceAndDocument.getInvoice();
+            final Document prelimLetterOrInvoiceNote = invoiceAndDocument.getDocument();
 
-            final Document_print printMixin = printMixin(document);
-            final PostalAddress postalAddress = printMixin.default0$$();
+            final Invoice_print invoice_print = invoice_print(invoice);
+            final PostalAddress postalAddress = invoice_print.default1$$(prelimLetterOrInvoiceNote);
 
-            final DocumentSort documentSort = document.getSort();
-            final byte[] bytes = documentSort.asBytes(document);
-            pdfBytes.add(bytes);
-
-            final Communication communication = printMixin.$$(postalAddress);
-            communication.sent();
+            invoice_print.createCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
+            invoice_print.appendPdfBytes(prelimLetterOrInvoiceNote, pdfBytes);
         }
 
         final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
 
-        return new Blob(fileName, MIME_TYPE_APPLICATION_PDF, mergedBytes);
+        return new Blob(fileName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, mergedBytes);
     }
 
 
     public String disable$$() {
-        return documentsToSend().isEmpty()? "No documents available to be send by post": null;
+        return invoiceAndDocumentsToSend().isEmpty()? "No documents available to be send by post": null;
     }
 
     public String default0$$() {
         return  defaultFileName;
     }
 
+
     @Override
-    List<Document> documentsToSend() {
-        return documentsToSend(canBeSentByPost());
+    Predicate<InvoiceAndDocument> filter() {
+        return Predicates.and(isDocPdfAndBlob(), withPostalAddress());
     }
 
-    private Predicate<Document> canBeSentByPost() {
-        return Predicates.and(isPdfAndBlob(), withPostalAddress());
-    }
-    private Predicate<Document> withPostalAddress() {
-        return document -> {
-            final Document_print printMixin = printMixin(document);
-            final PostalAddress postalAddress = printMixin.default0$$();
+    private Predicate<InvoiceAndDocument> withPostalAddress() {
+        return invoiceAndDocument -> {
+            final Invoice_print invoice_print = invoice_print(invoiceAndDocument.getInvoice());
+            final PostalAddress postalAddress = invoice_print.default1$$(invoiceAndDocument.getDocument());
             return postalAddress != null;
         };
+    }
+
+    static Predicate<InvoiceAndDocument> isDocPdfAndBlob() {
+        return invoiceAndDocument -> isPdfAndBlob().apply(invoiceAndDocument.getDocument());
     }
 
     static Predicate<Document> isPdfAndBlob() {
@@ -112,7 +112,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
     }
 
     static Predicate<Document> isPdf() {
-        return document -> MIME_TYPE_APPLICATION_PDF.equals(document.getMimeType());
+        return document -> DocumentConstants.MIME_TYPE_APPLICATION_PDF.equals(document.getMimeType());
     }
 
     static Predicate<Document> isBlobSort() {
@@ -122,8 +122,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
         };
     }
 
-    private Document_print printMixin(final Document document) {
-        return factoryService.mixin(Document_print.class, document);
+    private Invoice_print invoice_print(final Invoice invoice) {
+        return factoryService.mixin(Invoice_print.class, invoice);
     }
 
 

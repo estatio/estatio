@@ -19,8 +19,8 @@ package org.estatio.dom.budgeting.budgetitem;
 
 import org.junit.Test;
 
-import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;

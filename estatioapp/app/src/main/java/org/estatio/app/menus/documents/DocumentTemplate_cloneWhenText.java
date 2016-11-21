@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -84,11 +85,19 @@ public class DocumentTemplate_cloneWhenText {
         final DocumentType type = documentTemplate.getType();
         final String mimeType = documentTemplate.getMimeType();
         final String fileSuffix = documentTemplate.getFileSuffix();
+
         final DocumentTemplate template = documentTemplateRepository.createText(
-                type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, name, mimeType, templateText, contentRenderingStrategy,
+                type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, name, mimeType,
+                templateText, contentRenderingStrategy,
                 nameText, nameRenderingStrategy);
+
+        final DocumentTemplate._applicable template_applicable =
+                factoryService.mixin(DocumentTemplate._applicable.class, template);
         for (Applicability applicability : documentTemplate.getAppliesTo()) {
-            template.applicable(applicability.getDomainClassName(), applicability.getBinderClassName());
+            template_applicable.applicable(
+                    applicability.getDomainClassName(),
+                    applicability.getRendererModelFactoryClassName(),
+                    applicability.getAttachmentAdvisorClassName());
         }
         return template;
     }
@@ -159,11 +168,13 @@ public class DocumentTemplate_cloneWhenText {
 
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
     @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
+    ApplicationTenancyRepository applicationTenancyRepository;
     @Inject
-    private DocumentTemplateRepository documentTemplateRepository;
+    DocumentTemplateRepository documentTemplateRepository;
+    @Inject
+    FactoryService factoryService;
 
 
 }

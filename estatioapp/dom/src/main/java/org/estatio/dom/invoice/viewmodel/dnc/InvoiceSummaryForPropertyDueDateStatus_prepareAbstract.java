@@ -23,14 +23,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.dnc.Invoice_createAndAttachDocumentAndScheduleRender;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract extends InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
@@ -44,16 +49,26 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract ext
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public InvoiceSummaryForPropertyDueDateStatus $$() throws IOException {
-        final List<Invoice> invoices = invoiceSummary.getInvoices();
+        final List<Invoice> invoices = invoicesToPrepare();
         for (Invoice invoice : invoices) {
             final DocumentTemplate documentTemplate = documentTemplateFor(invoice);
-            invoiceDocumentTemplateService.createAttachAndScheduleRender(invoice, documentTemplate);
+            factoryService.mixin(Invoice_createAndAttachDocumentAndScheduleRender.class, invoice).$$(documentTemplate);
         }
         return this.invoiceSummary;
     }
 
+    public String disable$$() {
+        return invoicesToPrepare().isEmpty()? "No invoices available to be prepared": null;
+    }
+
+    private List<Invoice> invoicesToPrepare() {
+        return FluentIterable.from(invoiceSummary.getInvoices()).filter(filter()).toList();
+    }
+
+    abstract Predicate<Invoice> filter();
+
     @Inject
-    InvoiceDocumentTemplateService invoiceDocumentTemplateService;
+    FactoryService factoryService;
 
 
 }

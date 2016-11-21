@@ -31,6 +31,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
@@ -60,10 +62,16 @@ public class InvoiceTest {
     InvoiceRepository mockInvoiceRepository;
 
     @Mock
-    NumeratorForCollectionRepository mockEstatioNumeratorRepository;
+    NumeratorForCollectionRepository mockNumeratorRepository;
 
     @Mock
     ClockService mockClockService;
+
+    @Mock
+    TitleService mockTitleService;
+
+    @Mock
+    MessageService mockMessageService;
 
     @Mock
     Lease lease;
@@ -97,7 +105,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockEstatioNumeratorRepository).findInvoiceNumberNumerator(with(any(Property.class)), with(any(ApplicationTenancy.class)));
+                allowing(mockNumeratorRepository).findInvoiceNumberNumerator(with(any(Property.class)), with(any(ApplicationTenancy.class)));
                 will(returnValue(numerator));
             }
         });
@@ -106,7 +114,7 @@ public class InvoiceTest {
     void allowingMockInvoicesToReturnCollectionNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockEstatioNumeratorRepository).findCollectionNumberNumerator();
+                allowing(mockNumeratorRepository).findCollectionNumberNumerator();
                 will(returnValue(numerator));
             }
         });
@@ -149,7 +157,7 @@ public class InvoiceTest {
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
         invoice.invoiceRepository = mockInvoiceRepository;
-        invoice.numeratorRepository = mockEstatioNumeratorRepository;
+        invoice.numeratorRepository = mockNumeratorRepository;
         invoice.clockService = mockClockService;
         return invoice;
     }
@@ -162,11 +170,25 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnInvoice("XXX-00010", new LocalDate(2012, 1, 1));
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null)).isNull();
-            invoice.invoice(mockClockService.now());
+            // when
+            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            invoice_invoice.numeratorRepository = mockNumeratorRepository;
+            invoice_invoice.titleService = mockTitleService;
+            invoice_invoice.messageService = mockMessageService;
 
-            assertThat(invoice.getInvoiceNumber()).isEqualTo("XXX-00011");
-            assertThat(invoice.getStatus()).isEqualTo(InvoiceStatus.INVOICED);
+            // expect
+            context.checking(new Expectations() {{
+                allowing(mockTitleService).titleOf(invoice);
+                will(returnValue("Invoice #001"));
+
+                oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
+            }});
+
+            assertThat(invoice_invoice.disable$$(null)).isNull();
+            invoice_invoice.$$(mockClockService.now());
+
+            assertThat(this.invoice.getInvoiceNumber()).isEqualTo("XXX-00011");
+            assertThat(this.invoice.getStatus()).isEqualTo(InvoiceStatus.INVOICED);
         }
 
         @Test
@@ -175,8 +197,10 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
-            assertThat(invoice.disableInvoice(null)).isEqualTo("Invoice number already assigned");
-            invoice.invoice(mockClockService.now());
+            // when
+            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            assertThat(invoice_invoice.disable$$(null)).isEqualTo("Invoice number already assigned");
+            invoice_invoice.$$(mockClockService.now());
 
             assertThat(invoice.getInvoiceNumber()).isEqualTo("SOME-INVOICE-NUMBER");
         }
@@ -187,9 +211,13 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
+            // when
+            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            invoice_invoice.numeratorRepository = mockNumeratorRepository;
 
-            invoice.invoice(mockClockService.now());
+            assertThat(invoice_invoice.disable$$(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
+
+            invoice_invoice.$$(mockClockService.now());
             assertThat(invoice.getInvoiceNumber()).isNull();
         }
 
@@ -199,9 +227,13 @@ public class InvoiceTest {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.disableInvoice(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
+            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            invoice_invoice.numeratorRepository = mockNumeratorRepository;
 
-            invoice.invoice(mockClockService.now());
+            // when
+            assertThat(invoice_invoice.disable$$(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
+
+            invoice_invoice.$$(mockClockService.now());
             assertThat(invoice.getInvoiceNumber()).isNull();
         }
 
@@ -228,7 +260,7 @@ public class InvoiceTest {
             };
             invoice.setContainer(mockContainer);
             invoice.invoiceRepository = mockInvoiceRepository;
-            invoice.numeratorRepository = mockEstatioNumeratorRepository;
+            invoice.numeratorRepository = mockNumeratorRepository;
             return invoice;
         }
 
@@ -257,9 +289,13 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(lease);
 
-            assertThat(invoice.hideCollect()).isFalse();
-            assertThat(invoice.disableCollect()).isNull();
-            invoice.doCollect();
+            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            invoice_collect.numeratorRepository = mockNumeratorRepository;
+
+
+            assertThat(invoice_collect.hide$$()).isFalse();
+            assertThat(invoice_collect.disable$$()).isNull();
+            invoice_collect.doCollect();
 
             assertThat(invoice.getCollectionNumber()).isEqualTo("XXX-00011");
         }
@@ -271,9 +307,13 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
-            assertThat(invoice.hideCollect()).isFalse();
-            assertThat(invoice.disableCollect()).isEqualTo("No mandate assigned to invoice's lease");
-            invoice.doCollect();
+            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            invoice_collect.numeratorRepository = mockNumeratorRepository;
+
+            assertThat(invoice_collect.hide$$()).isFalse();
+            assertThat(invoice_collect.disable$$()).isEqualTo("No mandate assigned to invoice's lease");
+            invoice_collect.doCollect();
+
             assertThat(invoice.getCollectionNumber()).isNull();
         }
 
@@ -285,9 +325,10 @@ public class InvoiceTest {
 
             invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
 
-            assertThat(invoice.hideCollect()).isFalse();
-            assertThat(invoice.disableCollect()).isEqualTo("Collection number already assigned");
-            invoice.doCollect();
+            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            assertThat(invoice_collect.hide$$()).isFalse();
+            assertThat(invoice_collect.disable$$()).isEqualTo("Collection number already assigned");
+            invoice_collect.doCollect();
 
             assertThat(invoice.getCollectionNumber()).isEqualTo("SOME-COLLECTION-NUMBER");
         }
@@ -298,10 +339,13 @@ public class InvoiceTest {
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
-            assertThat(invoice.hideCollect()).isFalse();
-            assertThat(invoice.disableCollect()).isEqualTo("No 'collection number' numerator found for invoice's property");
+            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            invoice_collect.numeratorRepository = mockNumeratorRepository;
 
-            invoice.doCollect();
+            assertThat(invoice_collect.hide$$()).isFalse();
+            assertThat(invoice_collect.disable$$()).isEqualTo("No 'collection number' numerator found for invoice's property");
+
+            invoice_collect.doCollect();
             assertThat(invoice.getCollectionNumber()).isNull();
         }
 
@@ -312,10 +356,13 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
-            assertThat(invoice.hideCollect()).isTrue();
-            assertThat(invoice.disableCollect()).isEqualTo("No mandate assigned to invoice's lease");
+            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            invoice_collect.numeratorRepository = mockNumeratorRepository;
 
-            invoice.doCollect();
+            assertThat(invoice_collect.hide$$()).isTrue();
+            assertThat(invoice_collect.disable$$()).isEqualTo("No mandate assigned to invoice's lease");
+
+            invoice_collect.doCollect();
 
             assertThat(invoice.getCollectionNumber()).isNull();
         }
@@ -329,11 +376,14 @@ public class InvoiceTest {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
             // then
-            assertThat(invoice.hideCollect()).isFalse();
-            assertThat(invoice.disableCollect()).isEqualTo("Must be in status of 'approved'");
+            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            invoice_collect.numeratorRepository = mockNumeratorRepository;
+
+            assertThat(invoice_collect.hide$$()).isFalse();
+            assertThat(invoice_collect.disable$$()).isEqualTo("Must be in status of 'approved'");
 
             // and
-            invoice.doCollect();
+            invoice_collect.doCollect();
 
             // then
             assertThat(invoice.getCollectionNumber()).isNull();
@@ -362,6 +412,8 @@ public class InvoiceTest {
 
     public static class ValidInvoiceDate extends InvoiceTest {
 
+        Invoice._invoice invoice_invoice;
+
         @Before
         public void setUp() throws Exception {
             invoice = new Invoice() {
@@ -373,7 +425,7 @@ public class InvoiceTest {
             };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
             invoice.invoiceRepository = mockInvoiceRepository;
-            invoice.numeratorRepository = mockEstatioNumeratorRepository;
+            invoice.numeratorRepository = mockNumeratorRepository;
             invoice.setFixedAsset(invoiceProperty);
 
             numerator = new Numerator();
@@ -381,11 +433,15 @@ public class InvoiceTest {
             numerator.setFormat("XXX-%05d");
             applicationTenancy = new ApplicationTenancy();
             applicationTenancy.setPath("/");
+
+            invoice_invoice = new Invoice._invoice(this.invoice);
+            invoice_invoice.numeratorRepository = mockNumeratorRepository;
+            invoice_invoice.invoiceRepository = mockInvoiceRepository;
         }
 
         @Test
         public void invoiceDateIsAfterDueDate() {
-            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 3))).isNotNull();
+            assertThat(invoice_invoice.validInvoiceDate(new LocalDate(2012, 2, 3))).isNotNull();
         }
 
         @Test
@@ -396,7 +452,7 @@ public class InvoiceTest {
             assertThat(invoice.getApplicationTenancy()).isNotNull();
 
             // when,then
-            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 2, 1))).isNull();
+            assertThat(invoice_invoice.validInvoiceDate(new LocalDate(2012, 2, 1))).isNull();
         }
 
         @Test
@@ -407,7 +463,7 @@ public class InvoiceTest {
             assertThat(invoice.getApplicationTenancy()).isNotNull();
 
             // when,then
-            assertThat(invoice.validInvoiceDate(new LocalDate(2012, 1, 1))).isEqualTo("Invoice number XXX-0010 has an invoice date 2012-01-02 which is after 2012-01-01");
+            assertThat(invoice_invoice.validInvoiceDate(new LocalDate(2012, 1, 1))).isEqualTo("Invoice number XXX-0010 has an invoice date 2012-01-02 which is after 2012-01-01");
         }
     }
 
@@ -419,64 +475,51 @@ public class InvoiceTest {
             Invoice invoice = new Invoice();
             invoice.setStatus(InvoiceStatus.INVOICED);
             // When, Then
-            assertThat(invoice.disableNewItem(null, null, null, null, null)).isNotNull();
+            final Invoice._newItem invoice_newItem = new Invoice._newItem(invoice);
+            assertThat(invoice_newItem.disable$$(null, null, null, null, null)).isNotNull();
         }
     }
 
     public static class ValidateNewItemWithEmptyDates extends InvoiceTest {
 
-        @Mock
-        DomainObjectContainer mockContainer2;
-
-        String s = "Both start date and end date are empty. Is this done intentionally?";
-
-        @Before
-        public void setup() {
-            context.checking(new Expectations() {
-                {
-                    atLeast(1).of(mockContainer2).warnUser(s);
-                }
-            });
-        }
-
         @Test
         public void giveWarningForEmptyDates() throws Exception {
+
             //Given
             Invoice invoice = new Invoice();
-            invoice.setContainer(mockContainer2);
 
-            //When
-            //Then
-            invoice.validateNewItem(null, null, null, null, null);
+            final Invoice._newItem invoice_newItem = new Invoice._newItem(invoice);
+            invoice_newItem.messageService = mockMessageService;
+
+            // expect
+            context.checking(new Expectations() {{
+                oneOf(mockMessageService).warnUser("Both start date and end date are empty. Is this done intentionally?");
+            }});
+
+            // when
+            invoice_newItem.validate$$(null, null, null, null, null);
 
         }
     }
 
     public static class ValidateNewItemWithEmptyStartDate extends InvoiceTest {
 
-        @Mock
-        DomainObjectContainer mockContainer2;
-
-        String s = "Start date is empty. Is this done intentionally?";
-
-        @Before
-        public void setup() {
-            context.checking(new Expectations() {
-                {
-                    atLeast(1).of(mockContainer2).warnUser(s);
-                }
-            });
-        }
 
         @Test
         public void giveWarningForEmptyStartDate() throws Exception {
+
             //Given
             Invoice invoice = new Invoice();
-            invoice.setContainer(mockContainer2);
 
-            //When
-            //Then
-            invoice.validateNewItem(null, null, null, null, new LocalDate(2000, 01, 01));
+            final Invoice._newItem invoice_newItem = new Invoice._newItem(invoice);
+            invoice_newItem.messageService = mockMessageService;
+
+            // expect
+            context.checking(new Expectations() {{
+                oneOf(mockMessageService).warnUser("Start date is empty. Is this done intentionally?");
+            }});
+
+            invoice_newItem.validate$$(null, null, null, null, new LocalDate(2000, 01, 01));
         }
     }
 }
