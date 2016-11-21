@@ -56,12 +56,12 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
-import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithSequence;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.incode.module.base.dom.with.WithSequence;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
@@ -228,7 +228,7 @@ public abstract class LeaseTerm
     }
 
     @Override
-    @Action(semantics = SemanticsOf.IDEMPOTENT, hidden = Where.EVERYWHERE)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTerm changeDates(
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
@@ -241,11 +241,14 @@ public abstract class LeaseTerm
             final LocalDate startDate,
             final LocalDate endDate) {
         if (getStatus().isApproved()){
-            return "Already approved";
+            return "Cannot change dates when term is approved";
         }
-        if (valueType() == LeaseTermValueType.FIXED) {
-            if (!getInvoiceItems().isEmpty()) {
-                return "Cannot change dates because this lease term has invoices and is fixed";
+        if (!getInvoiceItems().isEmpty()){
+            if (valueType() == LeaseTermValueType.FIXED) {
+                return "Cannot change dates when used in invoice and value type is fixed";
+            }
+            if(!EstatioRole.ADMINISTRATOR.isApplicableFor(getUser())){
+                return "Cannot change dates when used in invoice and user does not have administor role";
             }
         }
         return null;
@@ -277,7 +280,6 @@ public abstract class LeaseTerm
         }
         return null;
     }
-
     // //////////////////////////////////////
 
     @Property(hidden = Where.EVERYWHERE)
