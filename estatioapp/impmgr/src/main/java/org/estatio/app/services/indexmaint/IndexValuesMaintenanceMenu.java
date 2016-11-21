@@ -70,7 +70,7 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
     public Blob downloadIndexValues() {
         final String fileName = "IndexValues.xlsx";
         final List<IndexValueMaintLineItem> viewModels = Lists.newArrayList();
-        return excelService.toExcel(viewModels, IndexValueMaintLineItem.class, fileName);
+        return excelService.toExcel(viewModels, IndexValueMaintLineItem.class, IndexValueMaintLineItem.class.getSimpleName(), fileName);
     }
 
     // //////////////////////////////////////
@@ -81,7 +81,7 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
             final @Named("Excel spreadsheet") Blob spreadsheet,
             final ApplicationTenancy applicationTenancy) {
         List<IndexValueMaintLineItem> lineItems = 
-                excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class);
+                excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class, IndexValueMaintLineItem.class.getSimpleName());
         for (IndexValueMaintLineItem lineItem : lineItems) {
             lineItem.setAtPath(applicationTenancy.getPath());
         }

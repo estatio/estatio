@@ -81,7 +81,7 @@ public class InvoiceImportManager {
     public List<InvoiceImportLine> importInvoices(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
         List<InvoiceImportLine> lineItems =
-                excelService.fromExcel(spreadsheet, InvoiceImportLine.class);
+                excelService.fromExcel(spreadsheet, InvoiceImportLine.class, InvoiceImportLine.class.getSimpleName());
         return lineItems;
     }
 

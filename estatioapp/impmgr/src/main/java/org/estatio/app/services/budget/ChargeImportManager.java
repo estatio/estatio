@@ -62,7 +62,7 @@ public class ChargeImportManager {
     public List<ChargeImport> importBlob(
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
         List<ChargeImport> lineItems =
-                excelService.fromExcel(spreadsheet, ChargeImport.class);
+                excelService.fromExcel(spreadsheet, ChargeImport.class, ChargeImport.class.getSimpleName());
         return lineItems;
     }
     //endregion
