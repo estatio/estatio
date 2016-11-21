@@ -20,10 +20,16 @@ package org.estatio.fixture;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.isisaddons.module.settings.dom.ApplicationSettingsService;
+
+import org.estatio.dom.appsettings.ApplicationSettingKey;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.domsettings.ApplicationSettingForEstatio;
 import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
 
 /**
@@ -50,7 +56,15 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
         }
         executionContext.executeChild(this, new EstatioRefDataSetupFixture());
         executionContext.executeChild(this, new EstatioSecurityModuleDemoFixture());
+
+        final ApplicationSettingForEstatio appSetting =
+                (ApplicationSettingForEstatio) applicationSettingsService.find("org.estatio.domsettings.reportServerBaseUrl");
+
+        appSetting.setValueRaw((String) ApplicationSettingKey.reportServerBaseUrl.getDefaultValue());
     }
+
+    @Inject
+    ApplicationSettingsService applicationSettingsService;
 
     /**
      * Use the presence of any persisted {@link Currency} as the indicator as to whether
