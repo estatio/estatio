@@ -34,12 +34,13 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermRepository;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -129,7 +130,7 @@ public class LeaseTermForTurnoverRentManager {
     public Blob download() {
         final String fileName = "TurnoverRentBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
         final List<LeaseTermForTurnoverRentLineItem> lineItems = getTurnoverRents();
-        return excelService.toExcel(lineItems, LeaseTermForTurnoverRentLineItem.class, fileName);
+        return excelService.toExcel(lineItems, LeaseTermForTurnoverRentLineItem.class, "lease terms", fileName);
     }
 
     //endregion
@@ -138,7 +139,7 @@ public class LeaseTermForTurnoverRentManager {
 
     public LeaseTermForTurnoverRentManager upload(final @Named("Excel spreadsheet") Blob spreadsheet) {
         List<LeaseTermForTurnoverRentLineItem> lineItems =
-                excelService.fromExcel(spreadsheet, LeaseTermForTurnoverRentLineItem.class);
+                excelService.fromExcel(spreadsheet, LeaseTermForTurnoverRentLineItem.class, "lease terms");
         for (LeaseTermForTurnoverRentLineItem lineItem : lineItems) {
             final LeaseTermForTurnoverRent leaseTerm = lineItem.getLeaseTerm();
             leaseTerm.setAuditedTurnover(lineItem.getAuditedTurnover());
