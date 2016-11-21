@@ -12,25 +12,19 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budgetassignment.BudgetCalculationLinkRepository;
-import org.estatio.dom.budgetassignment.Budget_assignCalculationsContribution;
-import org.estatio.dom.budgetassignment.ServiceChargeItemRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
@@ -39,7 +33,6 @@ import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.PartitionItemsForBud;
 import org.estatio.fixture.budget.PartitionItemsForOxf;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -60,19 +53,13 @@ public class BudgetIntegrationTest extends EstatioIntegrationTest {
     BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
-    BudgetCalculationLinkRepository budgetCalculationLinkRepository;
-
-    @Inject
-    Budget_assignCalculationsContribution budgetAssignmentContributions;
-
-    @Inject
-    ServiceChargeItemRepository serviceChargeItemRepository;
-
-    @Inject
     LeaseRepository leaseRepository;
 
     @Inject
     OccupancyRepository occupancyRepository;
+
+    @Inject
+    BudgetCalculationService budgetCalculationService;
 
     @Before
     public void setupData() {
@@ -85,66 +72,6 @@ public class BudgetIntegrationTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
             }
         });
-    }
-
-    public static class RemoveBudget extends BudgetIntegrationTest {
-
-        Property propertyOxf;
-        List<Budget> budgetsForOxf;
-        Budget budget2015;
-        LeaseItem topmodelBudgetServiceChargeItem;
-        Occupancy topmodelOccupancy;
-
-        @Rule
-        public ExpectedException expectedException = ExpectedException.none();
-
-        @Before
-        public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
-            budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
-
-            // calculate and assign budget2015
-            budget2015.calculate();
-            budgetAssignmentContributions.assignCalculations(budget2015);
-
-            topmodelBudgetServiceChargeItem = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF).findFirstItemOfType(LeaseItemType.SERVICE_CHARGE_BUDGETED);
-            topmodelOccupancy = occupancyRepository.findByLease(topmodelBudgetServiceChargeItem.getLease()).get(0);
-
-        }
-
-        @Test
-        public void removeBudget() throws Exception {
-            // given
-            assertThat(budgetsForOxf.size()).isEqualTo(2);
-            assertThat(budgetCalculationRepository.allBudgetCalculations().size()).isEqualTo(75);
-            assertThat(budget2015.getKeyTables().size()).isEqualTo(2);
-            assertThat(serviceChargeItemRepository.findByOccupancy(topmodelOccupancy).size()).isEqualTo(1);
-            assertThat(keyTableRepository.allKeyTables().size()).isEqualTo(4);
-
-            // when
-            budget2015.removeBudget(true);
-
-            // then
-            assertThat(budgetRepository.findByProperty(propertyOxf).size()).isEqualTo(1);
-            assertThat(budgetCalculationRepository.allBudgetCalculations().size()).isEqualTo(0);
-            assertThat(budgetCalculationLinkRepository.allBudgetCalculationLinks().size()).isEqualTo(0);
-            assertThat(topmodelBudgetServiceChargeItem.getTerms().size()).isEqualTo(0);
-            assertThat(keyTableRepository.allKeyTables().size()).isEqualTo(2);
-            assertThat(serviceChargeItemRepository.findByOccupancy(topmodelOccupancy).size()).isEqualTo(0);
-        }
-
-        @Test
-        public void removeBudgetOnlyInPrototypeMode() throws Exception {
-
-            //then
-            expectedException.expect(HiddenException.class);
-            expectedException.expectMessage("Reason: Prototyping action not visible in production mode.");
-            // when
-            wrap(budget2015).removeBudget(true);
-
-        }
-
     }
 
     public static class NextBudgetTest extends BudgetIntegrationTest {

@@ -62,7 +62,7 @@ public class ShortFallTest {
         // when
         // then
         assertThat(shortFall1.getShortFall(BudgetCalculationType.BUDGETED)).isEqualTo(new BigDecimal("100.00"));
-        assertThat(shortFall1.getShortFall(BudgetCalculationType.AUDITED)).isEqualTo(new BigDecimal("111.55"));
+        assertThat(shortFall1.getShortFall(BudgetCalculationType.ACTUAL)).isEqualTo(new BigDecimal("111.55"));
     }
 
 }

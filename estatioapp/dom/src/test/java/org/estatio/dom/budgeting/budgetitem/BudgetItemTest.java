@@ -21,12 +21,8 @@ import org.junit.Test;
 
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.budgeting.ChargeForTesting;
-import org.estatio.dom.budgeting.CurrencyForTesting;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
 
@@ -38,10 +34,10 @@ public class BudgetItemTest {
         public void test() {
             final BudgetItem pojo = new BudgetItem();
             newPojoTester()
-                    .withFixture(pojos(Currency.class, CurrencyForTesting.class))
-                    .withFixture(pojos(Budget.class, BudgetForTesting.class))
-                    .withFixture(pojos(Charge.class, ChargeForTesting.class))
-                    .withFixture(pojos(KeyTable.class, KeyTableForTesting.class))
+                    .withFixture(pojos(Currency.class, Currency.class))
+                    .withFixture(pojos(Budget.class, Budget.class))
+                    .withFixture(pojos(Charge.class, Charge.class))
+                    .withFixture(pojos(KeyTable.class, KeyTable.class))
                     .exercise(pojo);
         }
 

@@ -57,7 +57,6 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         return budgetItemValue;
     }
 
-
     public String validateNewBudgetItemValue(
             final BudgetItem budgetItem,
             final BigDecimal value,
@@ -65,6 +64,9 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
             final BudgetCalculationType type) {
         if (type == BudgetCalculationType.BUDGETED && findByBudgetItemAndType(budgetItem, type).size() > 0){
             return "Only one value of type BUDGETED is allowed";
+        }
+        if (type == BudgetCalculationType.ACTUAL && findByBudgetItemAndType(budgetItem, type).size() > 0){
+            return "Only one value of type ACTUAL is supported at the moment";
         }
         if (value == null){
             return "Value cannot be empty";

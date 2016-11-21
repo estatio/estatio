@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.budgeting.partioning;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -32,6 +34,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
@@ -43,6 +46,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.dom.charge.Charge;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -116,4 +120,14 @@ public class Partitioning extends UdoDomainObject2<Partitioning> implements With
         return getBudget().getApplicationTenancy();
     }
 
+    @Programmatic
+    public List<Charge> getDistinctInvoiceCharges() {
+        List<Charge> results = new ArrayList<>();
+        for (PartitionItem item : getItems()){
+            if (!results.contains(item.getCharge())){
+                results.add(item.getCharge());
+            }
+        }
+        return results;
+    }
 }

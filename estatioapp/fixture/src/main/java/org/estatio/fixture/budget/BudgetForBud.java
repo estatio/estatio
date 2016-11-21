@@ -40,6 +40,7 @@ public class BudgetForBud extends BudgetAbstact {
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new LeasesForBudNl());
+        executionContext.executeChild(this, new BudgetOverridesForBud());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);

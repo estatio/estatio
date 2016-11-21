@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.budgeting.budgetitem;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +38,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 
 @DomainService(repositoryFor = BudgetItem.class, nature = NatureOfService.DOMAIN)
@@ -47,6 +49,22 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
         super(BudgetItemRepository.class, BudgetItem.class);
     }
 
+    public BudgetItem newBudgetItem(
+            final Budget budget,
+            final BigDecimal budgetedValue,
+            final Charge charge) {
+        BudgetItem budgetItem = newBudgetItem(budget, charge);
+        budgetItem.newValue(budgetedValue, budget.getStartDate(), BudgetCalculationType.BUDGETED);
+        return budgetItem;
+    }
+
+    public String validateNewBudgetItem(
+            final Budget budget,
+            final BigDecimal budgetedValue,
+            final Charge charge) {
+        if (budgetedValue==null){return "Value cannot be empty";}
+        return validateNewBudgetItem(budget, charge);
+    }
 
     public BudgetItem newBudgetItem(
             final Budget budget,

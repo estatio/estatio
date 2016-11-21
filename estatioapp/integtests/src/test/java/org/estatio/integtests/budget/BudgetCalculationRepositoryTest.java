@@ -16,8 +16,9 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationStatus;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
@@ -49,6 +50,9 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
     @Inject
     ChargeRepository chargeRepository;
 
+    @Inject
+    BudgetCalculationService budgetCalculationService;
+
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
@@ -60,17 +64,17 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
         });
     }
 
-    public static class FindByPartitionItemAndKeyItem extends BudgetCalculationRepositoryTest {
+    public static class FindUnique extends BudgetCalculationRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
             // given
             PartitionItem partitionItem = partitionItemRepository.allPartitionItems().get(0);
             KeyItem keyItem = partitionItem.getKeyTable().getItems().first();
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
 
             // when
-            BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(partitionItem, keyItem, BudgetCalculationStatus.TEMPORARY, BudgetCalculationType.BUDGETED);
+            BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(partitionItem, keyItem, BudgetCalculationType.BUDGETED);
 
             // then
             assertThat(budgetCalculation).isEqualTo(newBudgetCalculation);
@@ -86,7 +90,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             // given
             PartitionItem partitionItem = partitionItemRepository.allPartitionItems().get(0);
             KeyItem keyItem = partitionItem.getKeyTable().getItems().first();
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
 
             // when
             List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByPartitionItem(partitionItem);
@@ -109,7 +113,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
             Charge chargeNotToBeFound = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
-            budget.calculate();
+            budgetCalculationService.calculatePersistedCalculations(budget);
 
             // when
             List<BudgetCalculation> budgetCalculationsForCharge = budgetCalculationRepository.findByBudgetAndCharge(budget, charge);
@@ -126,7 +130,7 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class FindByPartitionItemAndStatus extends BudgetCalculationRepositoryTest {
+    public static class FindByBudgetAndStatus extends BudgetCalculationRepositoryTest {
 
         @Test
         public void happyCase() throws Exception {
@@ -134,20 +138,59 @@ public class BudgetCalculationRepositoryTest extends EstatioIntegrationTest {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            PartitionItem allocation = budget.getItems().first().getPartitionItems().get(0);
-            budget.calculate();
+            budgetCalculationService.calculatePersistedCalculations(budget);
 
             // when
-            List<BudgetCalculation> budgetCalculationsForAllocationOfType = budgetCalculationRepository.findByPartitionItemAndStatus(allocation, BudgetCalculationStatus.TEMPORARY);
+            List<BudgetCalculation> budgetCalculationsForAllocationOfType = budgetCalculationRepository.findByBudgetAndStatus(budget, Status.NEW);
 
             // then
-            assertThat(budgetCalculationsForAllocationOfType.size()).isEqualTo(25);
+            assertThat(budgetCalculationsForAllocationOfType.size()).isEqualTo(75);
 
             // and when
-            budgetCalculationsForAllocationOfType = budgetCalculationRepository.findByPartitionItemAndStatus(allocation, BudgetCalculationStatus.ASSIGNED);
+            budgetCalculationsForAllocationOfType = budgetCalculationRepository.findByBudgetAndStatus(budget, Status.ASSIGNED);
 
             // then
             assertThat(budgetCalculationsForAllocationOfType.size()).isEqualTo(0);
+
+        }
+    }
+
+    public static class FindByBudgetAndUnitAndInvoiceChargeAndType extends BudgetCalculationRepositoryTest {
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
+            budgetCalculationService.calculatePersistedCalculations(budget);
+
+            // when
+            List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(budget, property.getUnits().first(), partitionItem.getCharge(), BudgetCalculationType.BUDGETED);
+
+            // then
+            assertThat(budgetCalculations.size()).isEqualTo(3);
+
+        }
+    }
+
+    public static class FindByBudgetAndUnitAndInvoiceChargeAndInomingChargeAndType extends BudgetCalculationRepositoryTest {
+
+        @Test
+        public void happyCase() throws Exception {
+
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
+            budgetCalculationService.calculatePersistedCalculations(budget);
+
+            // when
+            List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType(budget, property.getUnits().first(), partitionItem.getCharge(), partitionItem.getBudgetItem().getCharge(), BudgetCalculationType.BUDGETED);
+
+            // then
+            assertThat(budgetCalculations.size()).isEqualTo(1);
 
         }
     }

@@ -60,7 +60,7 @@ public class PartitioningRepositoryTest extends EstatioIntegrationTest {
             assertThat(budget.getPartitionings().size()).isEqualTo(0);
 
             // when
-            wrap(budget).newPartitioning(BudgetCalculationType.BUDGETED);
+            partitioningRepository.newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.BUDGETED);
             Partitioning partitioning = budget.getPartitioningForBudgeting();
 
             // then
@@ -70,13 +70,6 @@ public class PartitioningRepositoryTest extends EstatioIntegrationTest {
             assertThat(partitioning.getStartDate()).isEqualTo(budget.getStartDate());
             assertThat(partitioning.getEndDate()).isEqualTo(budget.getEndDate());
             assertThat(partitioning.getType()).isEqualTo(BudgetCalculationType.BUDGETED);
-
-            // and expect
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: This partitioning already exists");
-
-            // when
-            wrap(budget).newPartitioning(BudgetCalculationType.BUDGETED);
 
         }
 
@@ -93,8 +86,25 @@ public class PartitioningRepositoryTest extends EstatioIntegrationTest {
             expectedException.expect(InvalidException.class);
             expectedException.expectMessage("Reason: Only one partitioning of type BUDGETED is supported");
 
-            // when
+            // when again
             wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate().plusDays(3), budget.getEndDate(), BudgetCalculationType.BUDGETED);
+
+        }
+
+        @Test
+        public void validatePartitioningTest2() throws Exception {
+
+            // given
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
+
+            // and expect
+            expectedException.expect(InvalidException.class);
+            expectedException.expectMessage("Reason: This partitioning already exists");
+
+            // when again
+            wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
 
         }
 

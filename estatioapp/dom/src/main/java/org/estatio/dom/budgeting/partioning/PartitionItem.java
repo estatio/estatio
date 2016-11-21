@@ -19,12 +19,14 @@
 package org.estatio.dom.budgeting.partioning;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
@@ -136,8 +138,6 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
         return null;
     }
 
-    // ////////////////////////////////////////
-
     @Column(allowsNull = "false", name = "budgetItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
@@ -165,12 +165,9 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
         return null;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    public List<BudgetCalculation> getCalculations(){
-        return budgetCalculationRepository.findByPartitionItem(this);
-    }
-
-    // ////////////////////////////////////////
+    @Persistent(mappedBy = "partitionItem", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<BudgetCalculation> calculations = new TreeSet<>();
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Budget remove() {

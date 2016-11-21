@@ -15,7 +15,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
-import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetAssignmentResult;
+import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetCalculationResultViewmodel;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
@@ -32,7 +32,7 @@ public class Budget_DownloadCalculationsForLease {
     @ActionLayout(cssClassFa = "fa-download")
     public Blob downloadCalculationsForLease(Lease lease) {
         final String fileName =  lease.getReference() + " - budget details" + ".xlsx";
-        WorksheetSpec spec = new WorksheetSpec(DetailedBudgetAssignmentResult.class, "calculations for lease");
+        WorksheetSpec spec = new WorksheetSpec(DetailedBudgetCalculationResultViewmodel.class, "values for lease");
         WorksheetContent worksheetContent = new WorksheetContent(budgetAssignmentResultsForLease(lease), spec);
         return excelService.toExcel(worksheetContent, fileName);
     }
@@ -41,7 +41,7 @@ public class Budget_DownloadCalculationsForLease {
         return leaseRepository.findLeasesByProperty(budget.getProperty());
     }
 
-    private List<DetailedBudgetAssignmentResult> budgetAssignmentResultsForLease(final Lease lease){
+    private List<DetailedBudgetCalculationResultViewmodel> budgetAssignmentResultsForLease(final Lease lease){
         return budgetAssignmentService.getDetailedBudgetAssignmentResults(budget, lease);
     }
 

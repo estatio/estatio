@@ -20,12 +20,9 @@ package org.estatio.dom.budgeting.keytable;
 import org.junit.Test;
 
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetForTesting;
 
-/**
- * Created by jodo on 22/04/15.
- */
+import org.estatio.dom.budgeting.budget.Budget;
+
 public class KeyTableTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
@@ -34,7 +31,7 @@ public class KeyTableTest {
         public void test() {
             final KeyTable pojo = new KeyTable();
             newPojoTester()
-                    .withFixture(pojos(Budget.class, BudgetForTesting.class))
+                    .withFixture(pojos(Budget.class, Budget.class))
                     .exercise(pojo);
         }
 

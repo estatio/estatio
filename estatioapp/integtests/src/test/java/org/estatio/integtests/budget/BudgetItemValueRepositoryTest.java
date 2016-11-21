@@ -121,12 +121,12 @@ public class BudgetItemValueRepositoryTest extends EstatioIntegrationTest {
         assertThat(budgetItem.getValues().first().getValue()).isEqualTo(new BigDecimal("30000.55"));
 
         // when
-        BudgetItemValue result = wrap(budgetItemValueRepository).updateOrCreateBudgetItemValue(new BigDecimal("33333.00"), budgetItem, budgetStart, BudgetCalculationType.AUDITED);
+        BudgetItemValue result = wrap(budgetItemValueRepository).updateOrCreateBudgetItemValue(new BigDecimal("33333.00"), budgetItem, budgetStart, BudgetCalculationType.ACTUAL);
 
         // then
         assertThat(budgetItem.getValues().size()).isEqualTo(2);
         assertThat(result.getValue()).isEqualTo(new BigDecimal("33333.00"));
-        assertThat(result.getType()).isEqualTo(BudgetCalculationType.AUDITED);
+        assertThat(result.getType()).isEqualTo(BudgetCalculationType.ACTUAL);
 
     }
 

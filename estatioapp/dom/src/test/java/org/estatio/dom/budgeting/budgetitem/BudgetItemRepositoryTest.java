@@ -34,7 +34,6 @@ import org.incode.module.base.dom.testing.FinderInteraction;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetForTesting;
 import org.estatio.dom.charge.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,7 +79,7 @@ public class BudgetItemRepositoryTest {
         @Test
         public void happyCase() {
 
-            Budget budget = new BudgetForTesting();
+            Budget budget = new Budget();
             budgetItemRepository.findByBudget(budget);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
@@ -154,7 +153,7 @@ public class BudgetItemRepositoryTest {
         }
 
         @Test
-        public void findOrCreateXxxCreatingNewItem() throws Exception {
+        public void findOrCreateNewItem() throws Exception {
 
             final Budget budget = new Budget();
             final Charge charge = new Charge();

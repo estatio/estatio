@@ -113,7 +113,7 @@ public class BudgetImportExport implements Importable {
                         .findOrCreatePartitioningForBudgeting()
                         .findOrCreateBudgetItem(sourceCharge)
                         .updateOrCreateBudgetItemValue(budgetedValue, budgetStartDate, BudgetCalculationType.BUDGETED)
-                        .updateOrCreateBudgetItemValue(auditedValue, budgetEndDate, BudgetCalculationType.AUDITED)
+                        .updateOrCreateBudgetItemValue(auditedValue, budgetEndDate, BudgetCalculationType.ACTUAL)
                         .updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage());
 
         return Lists.newArrayList(budget);

@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.UnitForTesting;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +43,7 @@ public class FoundationValueTypeTest {
         FoundationValueType foundationValueType = FoundationValueType.AREA;
         FoundationValueType foundationValueType2 = FoundationValueType.COUNT;
         FoundationValueType foundationValueType3 = FoundationValueType.MANUAL;
-        Unit unit = new UnitForTesting();
+        Unit unit = new Unit();
         unit.setArea(bigDecimal);
 
         //then

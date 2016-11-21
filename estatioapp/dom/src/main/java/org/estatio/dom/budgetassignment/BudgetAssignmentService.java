@@ -1,7 +1,6 @@
 package org.estatio.dom.budgetassignment;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,33 +13,90 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
-
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgetassignment.viewmodels.BudgetAssignmentResult;
-import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetAssignmentResult;
-import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.dom.budgetassignment.override.BudgetOverride;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
+import org.estatio.dom.budgetassignment.viewmodels.BudgetCalculationResultViewModel;
+import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetCalculationResultViewmodel;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationStatus;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.OccupancyRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetAssignmentService {
 
-    public List<DetailedBudgetAssignmentResult> getDetailedBudgetAssignmentResults(final Budget budget, final Lease lease){
-        List<DetailedBudgetAssignmentResult> results = new ArrayList<>();
+    public List<BudgetCalculationRun> calculateResultsForLeases(final Budget budget, final BudgetCalculationType type){
+        List<BudgetCalculationRun> results = new ArrayList<>();
+
+        for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(budget.getProperty(), budget.getStartDate())) {
+            // TODO: this is an extra filter because currently occupancies can outrun terminated leases
+            if (lease.getStatus() != LeaseStatus.TERMINATED) {
+
+                removeNewOverrideValues(lease);
+                calculateOverrideValues(lease, budget);
+                results.add(executeCalculationRun(lease, budget, type));
+
+            }
+        }
+
+        return results;
+    }
+
+    public BudgetCalculationRun executeCalculationRun(final Lease lease, final Budget budget, final BudgetCalculationType type){
+        BudgetCalculationRun run = budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(lease, budget, type);
+        createBudgetCalculationResults(run);
+        return run;
+    }
+
+    public void createBudgetCalculationResults(final BudgetCalculationRun run){
+
+        for (Partitioning partitioning : run.getBudget().getPartitionings()){
+            for (Charge invoiceCharge : partitioning.getDistinctInvoiceCharges()){
+                BudgetCalculationResult result = run.findOrCreateResult(invoiceCharge);
+                result.calculate();
+            }
+        }
+
+    }
+
+    public List<BudgetOverrideValue> calculateOverrideValues(final Lease lease, final Budget budget){
+        List<BudgetOverrideValue> results = new ArrayList<>();
+        for (BudgetOverride override : budgetOverrideRepository.findByLease(lease)) {
+            results.addAll(override.calculate(budget.getStartDate()));
+        }
+        return results;
+    }
+
+    public void removeNewOverrideValues(final Lease lease){
+        for (BudgetOverride override : budgetOverrideRepository.findByLease(lease)) {
+            for (BudgetOverrideValue value : override.getValues()){
+                value.removeWithStatusNew();
+            }
+        }
+    }
+
+    public void assign(final Budget budget){
+        // TODO: implement
+    }
+
+    public List<DetailedBudgetCalculationResultViewmodel> getDetailedBudgetAssignmentResults(final Budget budget, final Lease lease){
+        List<DetailedBudgetCalculationResultViewmodel> results = new ArrayList<>();
 
         for (Occupancy occupancy : lease.getOccupancies()) {
             if (occupancy.getInterval().overlaps(budget.getInterval())) {
@@ -49,7 +105,7 @@ public class BudgetAssignmentService {
 
                     if (calculationResult.getCalculationType() == BudgetCalculationType.BUDGETED) {
                         results.add(
-                                new DetailedBudgetAssignmentResult(
+                                new DetailedBudgetCalculationResultViewmodel(
                                         occupancy.getUnit(),
                                         calculationResult.getPartitionItem().getBudgetItem().getCharge(),
                                         getRowLabelLastPart(calculationResult.getPartitionItem().getBudgetItem()),
@@ -66,19 +122,6 @@ public class BudgetAssignmentService {
         }
 
         return results;
-    }
-
-    private BigDecimal getTotalBudgetedValue(final BudgetItem budgetItem){
-        BigDecimal returnValue = BigDecimal.ZERO;
-        List<BudgetCalculationViewmodel> resultsForItem =
-                budgetCalculationService.getCalculations(budgetItem.getBudget()).stream().filter(x -> x.getPartitionItem().getBudgetItem().equals(budgetItem)).collect(Collectors.toList()
-        );
-        for (BudgetCalculationViewmodel bcResult : resultsForItem){
-            if (bcResult.getValue() != null && bcResult.getCalculationType() == BudgetCalculationType.BUDGETED) {
-                returnValue = returnValue.add(bcResult.getValue());
-            }
-        }
-        return returnValue.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     private String getRowLabelLastPart(final BudgetItem budgetItem){
@@ -105,16 +148,16 @@ public class BudgetAssignmentService {
 
     }
 
-    public List<BudgetAssignmentResult> getAssignmentResults(final Budget budget){
-        List<BudgetAssignmentResult> results = new ArrayList<>();
+    public List<BudgetCalculationResultViewModel> getAssignmentResults(final Budget budget){
+        List<BudgetCalculationResultViewModel> results = new ArrayList<>();
         for (Lease lease : leaseRepository.findLeasesByProperty(budget.getProperty())){
            results.addAll(getAssignmentResults(budget, lease));
         }
         return results;
     }
 
-    private List<BudgetAssignmentResult> getAssignmentResults(final Budget budget, final Lease lease){
-        List<BudgetAssignmentResult> results = new ArrayList<>();
+    private List<BudgetCalculationResultViewModel> getAssignmentResults(final Budget budget, final Lease lease){
+        List<BudgetCalculationResultViewModel> results = new ArrayList<>();
         // TODO: this is an extra filter because currently occupancies can outrun terminated leases
         if (lease.getStatus() != LeaseStatus.TERMINATED) {
             for (Occupancy occupancy : lease.getOccupancies()) {
@@ -130,21 +173,21 @@ public class BudgetAssignmentService {
 
     private List<BudgetCalculationViewmodel> calculationResults(final Budget budget, final Unit u){
         return Lists.newArrayList(
-                budgetCalculationService.getCalculations(budget).stream().filter(x -> x.getKeyItem().getUnit().equals(u)).collect(Collectors.toList())
+                budgetCalculationService.getAllCalculations(budget).stream().filter(x -> x.getKeyItem().getUnit().equals(u)).collect(Collectors.toList())
         );
     }
 
-    private List<BudgetAssignmentResult> createFromCalculationResults(final Lease lease, final Unit unit, final List<BudgetCalculationViewmodel> calculationResultsForLease){
-        List<BudgetAssignmentResult> assignmentResults = new ArrayList<>();
+    private List<BudgetCalculationResultViewModel> createFromCalculationResults(final Lease lease, final Unit unit, final List<BudgetCalculationViewmodel> calculationResultsForLease){
+        List<BudgetCalculationResultViewModel> assignmentResults = new ArrayList<>();
         for (BudgetCalculationViewmodel calculationResult : calculationResultsForLease){
-            List<BudgetAssignmentResult> filteredByChargeAndKeyTable = assignmentResults.stream()
+            List<BudgetCalculationResultViewModel> filteredByChargeAndKeyTable = assignmentResults.stream()
                     .filter(x -> x.getInvoiceCharge().equals(calculationResult.getPartitionItem().getCharge().getReference()))
                     .filter(x -> x.getKeyTable().equals(calculationResult.getPartitionItem().getKeyTable().getName()))
                     .collect(Collectors.toList());
             if (filteredByChargeAndKeyTable.size()>0){
                 filteredByChargeAndKeyTable.get(0).add(calculationResult);
             } else {
-                assignmentResults.add(new BudgetAssignmentResult(
+                assignmentResults.add(new BudgetCalculationResultViewModel(
                     lease,
                     unit,
                     calculationResult.getKeyItem().getKeyTable(),
@@ -155,134 +198,6 @@ public class BudgetAssignmentService {
         }
         return assignmentResults;
     }
-
-
-    public List<BudgetCalculationLink> assignBudgetCalculations(final Budget budget) {
-
-        removeCurrentlyAssignedCalculations(budget);
-
-        List<BudgetCalculationLink> result = new ArrayList<>();
-
-        for (Charge invoiceCharge : budget.getInvoiceCharges()) {
-
-            List<BudgetCalculation> calculationsForCharge = budgetCalculationRepository.findByBudgetAndCharge(budget, invoiceCharge);
-
-            for (Occupancy occupancy : occupancyRepository.occupanciesByPropertyAndInterval(budget.getProperty(), budget.getInterval())) {
-
-                List<BudgetCalculation> budgetCalculationsForOccupancy = calculationsForOccupancy(calculationsForCharge, occupancy);
-
-                // find or create service charge item
-                if (budgetCalculationsForOccupancy.size()>0){
-
-                    ServiceChargeItem serviceChargeItem = serviceChargeItemRepository.findOrCreateServiceChargeItem(occupancy, invoiceCharge);
-
-                }
-
-            }
-
-        }
-
-        return result;
-    }
-
-    private void removeCurrentlyAssignedCalculations(final Budget budget) {
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudgetAndStatus(budget, BudgetCalculationStatus.ASSIGNED)){
-
-            for (BudgetCalculationLink link : budgetCalculationLinkRepository.findByBudgetCalculation(calculation)){
-                link.remove();
-            }
-
-            calculation.remove();
-        }
-    }
-
-    private List<BudgetCalculation> calculationsForOccupancy(final List<BudgetCalculation> calculationList, final Occupancy occupancy){
-        List<BudgetCalculation> result = new ArrayList<>();
-
-        for (BudgetCalculation budgetCalculation : calculationList){
-
-            if (budgetCalculation.getKeyItem().getUnit().equals(occupancy.getUnit())){
-                result.add(budgetCalculation);
-            }
-        }
-
-        return result;
-    }
-
-    public BigDecimal getShortFallAmountBudgeted(final Budget budget){
-        return getShortFall(budget).getBudgetedShortFall().setScale(2, BigDecimal.ROUND_HALF_UP);
-    }
-
-    public BigDecimal getShortFallAmountAudited(final Budget budget){
-        return getShortFall(budget).getAuditedShortFall().setScale(2, BigDecimal.ROUND_HALF_UP);
-    }
-
-    public BigDecimal getShortFallAmount(final BudgetCalculation budgetCalculation){
-        return getShortFall(budgetCalculation).getShortFall(budgetCalculation.getCalculationType());
-    }
-
-    private ShortFall getShortFall(final Budget budget){
-        ShortFall shortFall = new ShortFall();
-        for (BudgetItem item : budget.getItems()){
-            shortFall = shortFall.add(getShortFall(item));
-        }
-        return shortFall;
-    }
-
-    private ShortFall getShortFall(final BudgetItem budgetItem){
-        ShortFall shortFall = new ShortFall();
-        for (PartitionItem partitionItem : budgetItem.getPartitionItems()){
-            shortFall = shortFall.add(getShortFallForTemporaryCalculations(partitionItem));
-        }
-        return shortFall;
-    }
-
-    private ShortFall getShortFallForTemporaryCalculations(final PartitionItem allocation){
-        ShortFall shortFall = new ShortFall();
-        List<BudgetCalculation> calculationsForPartitionItem = budgetCalculationRepository.findByPartitionItemAndStatus(allocation, BudgetCalculationStatus.TEMPORARY);
-        for (BudgetCalculation calculation : calculationsForPartitionItem){
-            shortFall = shortFall.add(getShortFall(calculation));
-        }
-        return shortFall;
-    }
-
-    ShortFall getShortFall(final BudgetCalculation budgetCalculation){
-
-        BigDecimal shortFallAmount = BigDecimal.ZERO;
-        ShortFall shortFall = new ShortFall();
-
-        List<Occupancy> associatedOccupancies = associatedOccupancies(budgetCalculation);
-        if (associatedOccupancies.size()>0){
-
-            BigDecimal recoverableAmountForCalculation = BigDecimal.ZERO;
-            for (Occupancy occupancy : associatedOccupancies){
-
-                recoverableAmountForCalculation = recoverableAmountForCalculation.add(recoverableAmountForOccupancy(occupancy, budgetCalculation));
-
-            }
-            shortFallAmount = shortFallAmount.add(budgetCalculation.getValueForBudgetPeriod().subtract(recoverableAmountForCalculation));
-
-        } else {
-
-            shortFallAmount = shortFallAmount.add(budgetCalculation.getValueForBudgetPeriod());
-
-        }
-
-        return shortFall.add(shortFallAmount, budgetCalculation.getCalculationType());
-    }
-
-    BigDecimal recoverableAmountForOccupancy(final Occupancy occupancy, final BudgetCalculation calculation){
-        LocalDateInterval budgetInterval = calculation.getBudget().getInterval();
-        BigDecimal numberOfDaysInBudgetInterval = BigDecimal.valueOf(budgetInterval.days());
-        BigDecimal numberOfDaysInOccupancyIntervalOverlap = BigDecimal.valueOf(occupancy.getInterval().overlap(budgetInterval).days());
-        BigDecimal factor = numberOfDaysInOccupancyIntervalOverlap.divide(numberOfDaysInBudgetInterval, MathContext.DECIMAL64);
-        return calculation.getValueForBudgetPeriod().multiply(factor);
-    }
-
-    List<Occupancy> associatedOccupancies(final BudgetCalculation calculation){
-        return occupancyRepository.occupanciesByUnitAndInterval(calculation.getKeyItem().getUnit(), calculation.getBudget().getInterval());
-    }
-
 
     private class RowLabelHelper implements Comparable<RowLabelHelper> {
 
@@ -310,15 +225,15 @@ public class BudgetAssignmentService {
     private BudgetCalculationService budgetCalculationService;
 
     @Inject
-    private BudgetCalculationLinkRepository budgetCalculationLinkRepository;
-
-    @Inject
-    private OccupancyRepository occupancyRepository;
-
-    @Inject
-    private ServiceChargeItemRepository serviceChargeItemRepository;
-
-    @Inject
     private LeaseRepository leaseRepository;
+
+    @Inject
+    private BudgetOverrideRepository budgetOverrideRepository;
+
+    @Inject
+    private BudgetCalculationRunRepository budgetCalculationRunRepository;
+
+    @Inject
+    private BudgetCalculationResultRepository budgetCalculationResultRepository;
 
 }

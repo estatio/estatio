@@ -23,11 +23,8 @@ import org.junit.Test;
 
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.budgeting.ChargeForTesting;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemForTesting;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableForTesting;
 import org.estatio.dom.charge.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,9 +38,9 @@ public class PartitionItemTest {
             final PartitionItem pojo = new PartitionItem();
             newPojoTester()
                     .withFixture(pojos(Partitioning.class, Partitioning.class))
-                    .withFixture(pojos(Charge.class, ChargeForTesting.class))
-                    .withFixture(pojos(KeyTable.class, KeyTableForTesting.class))
-                    .withFixture(pojos(BudgetItem.class, BudgetItemForTesting.class))
+                    .withFixture(pojos(Charge.class, Charge.class))
+                    .withFixture(pojos(KeyTable.class, KeyTable.class))
+                    .withFixture(pojos(BudgetItem.class, BudgetItem.class))
                     .exercise(pojo);
         }
 

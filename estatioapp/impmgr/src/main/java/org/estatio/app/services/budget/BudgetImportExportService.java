@@ -34,8 +34,15 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.budgetassignment.override.BudgetOverride;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideForMax;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetImportExportService {
@@ -90,6 +97,82 @@ public class BudgetImportExportService {
 
         return lines;
     }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<BudgetOverrideImportExport> overrides(BudgetImportExportManager manager) {
+
+        List<BudgetOverrideImportExport> result = new ArrayList<BudgetOverrideImportExport>();
+        if (manager.getBudget()==null){return result;}
+
+        for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(manager.getBudget().getProperty(), manager.getBudget().getStartDate())) {
+            for (BudgetOverride override : budgetOverrideRepository.findByLease(lease)) {
+                result.addAll(createOverrides(override, manager));
+            }
+        }
+
+        return result;
+    }
+
+    private List<BudgetOverrideImportExport> createOverrides(final BudgetOverride override, final BudgetImportExportManager manager){
+        List<BudgetOverrideImportExport> result = new ArrayList<>();
+
+        String incomingChargeRef;
+        if (override.getIncomingCharge()==null){
+            incomingChargeRef=null;
+        } else {
+            incomingChargeRef = override.getIncomingCharge().getReference();
+        }
+
+        String typeName;
+        if (override.getType()==null){
+            typeName=null;
+        } else {
+            typeName=override.getType().name();
+        }
+
+        BigDecimal maxValue = BigDecimal.ZERO;
+        if (override.getClass()== BudgetOverrideForMax.class){
+            BudgetOverrideForMax o = (BudgetOverrideForMax) override;
+            maxValue = maxValue.add(o.getMaxValue());
+        }
+
+        BigDecimal fixedValue = BigDecimal.ZERO;
+        if (override.getClass()== BudgetOverrideForFixed.class){
+            BudgetOverrideForFixed o = (BudgetOverrideForFixed) override;
+            fixedValue = fixedValue.add(o.getFixedValue());
+        }
+
+        BigDecimal valuePerM2 = BigDecimal.ZERO;
+        BigDecimal weightedArea = BigDecimal.ZERO;
+        if (override.getClass()== BudgetOverrideForFlatRate.class){
+            BudgetOverrideForFlatRate o = (BudgetOverrideForFlatRate) override;
+            valuePerM2 = valuePerM2.add(o.getValuePerM2());
+            weightedArea = weightedArea.add(o.getWeightedArea());
+        }
+
+        result.add(new BudgetOverrideImportExport(
+                override.getLease().getReference(),
+                override.getStartDate(),
+                override.getEndDate(),
+                override.getInvoiceCharge().getReference(),
+                incomingChargeRef,
+                typeName,
+                override.getReason(),
+                override.getClass().getSimpleName(),
+                maxValue,
+                fixedValue,
+                valuePerM2,
+                weightedArea
+        ));
+        return result;
+    }
+
+    @Inject
+    private BudgetOverrideRepository budgetOverrideRepository;
+
+    @Inject
+    private LeaseRepository leaseRepository;
 
     @Inject
     private ExcelService excelService;

@@ -11,9 +11,6 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by jodo on 11/08/15.
- */
 public class DistributionServiceTest {
 
     @Test

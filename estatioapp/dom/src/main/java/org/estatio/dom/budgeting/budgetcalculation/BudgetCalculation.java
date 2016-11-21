@@ -21,10 +21,13 @@ package org.estatio.dom.budgeting.budgetcalculation;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -41,6 +44,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.timestamp.Timestampable;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -49,10 +53,12 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.charge.Charge;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -74,7 +80,6 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
                         "WHERE partitionItem == :partitionItem " +
                         "&& keyItem == :keyItem " +
-                        "&& status == :status " +
                         "&& calculationType == :calculationType"),
         @Query(
                 name = "findByPartitionItemAndCalculationType", language = "JDOQL",
@@ -83,24 +88,41 @@ import lombok.Setter;
                         "WHERE partitionItem == :partitionItem " +
                         "&& calculationType == :calculationType"),
         @Query(
-                name = "findByPartitionItemAndStatus", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE partitionItem == :partitionItem " +
-                        "&& status == :status"),
-        @Query(
-                name = "findByPartitionItemAndStatusAndCalculationType", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE partitionItem == :partitionItem " +
-                        "&& status == :status && calculationType == :calculationType"),
-        @Query(
                 name = "findByPartitionItem", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE partitionItem == :partitionItem")
+                        "WHERE partitionItem == :partitionItem"),
+        @Query(
+                name = "findByBudgetAndStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget && "
+                        + "status == :status"),
+        @Query(
+                name = "findByBudgetAndUnitAndInvoiceChargeAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget && "
+                        + "unit == :unit && "
+                        + "invoiceCharge == :invoiceCharge && "
+                        + "calculationType == :type"),
+        @Query(
+                name = "findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget && "
+                        + "unit == :unit && "
+                        + "invoiceCharge == :invoiceCharge && "
+                        + "incomingCharge == :incomingCharge && "
+                        + "calculationType == :type")
 })
-@Unique(name = "BudgetCalculation_partitionItem_keyItem_calculationType_status_UNQ", members = {"partitionItem", "keyItem", "calculationType", "status"})
+@Indices({
+        @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_type_IDX",
+                members = { "budget", "unit", "invoiceCharge", "calculationType" }),
+        @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_incomingCharge_type_IDX",
+                members = { "budget", "unit", "invoiceCharge", "incomingCharge", "calculationType" })
+})
+@Unique(name = "BudgetCalculation_partitionItem_keyItem_calculationType_UNQ", members = {"partitionItem", "keyItem", "calculationType"})
 @DomainObject(
         auditing = Auditing.DISABLED,
         publishing = Publishing.DISABLED,
@@ -140,8 +162,24 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     private BudgetCalculationType calculationType;
 
     @Getter @Setter
+    @Column(name = "budgetId", allowsNull = "false")
+    private Budget budget;
+
+    @Getter @Setter
+    @Column(name = "unitId", allowsNull = "false")
+    private Unit unit;
+
+    @Getter @Setter
+    @Column(name = "invoiceChargeId", allowsNull = "false")
+    private Charge invoiceCharge;
+
+    @Getter @Setter
+    @Column(name = "incomingChargeId", allowsNull = "false")
+    private Charge incomingCharge;
+
+    @Getter @Setter
     @Column(allowsNull = "false")
-    private BudgetCalculationStatus status;
+    private Status status;
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
@@ -161,26 +199,25 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
-    public Budget getBudget(){
-        return this.getPartitionItem().getBudget();
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public BudgetItem getBudgetItem(){
         return this.getPartitionItem().getBudgetItem();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
-    // TODO: revisit when working on shortfall and audited calculations
-    public BigDecimal getValueForBudgetPeriod() {
+    // TODO: revisit when working on multiple partitions for auditing
+    public BigDecimal getValueForPartitionPeriod() {
         return getValue().multiply(BigDecimal.ONE);
     }
 
     @Programmatic
-    public void remove(){
-        getContainer().remove(this);
+    public void removeWithStatusNew() {
+        if (getStatus() == Status.NEW) {
+            repositoryService.remove(this);
+        }
     }
+
+    @Inject
+    RepositoryService repositoryService;
 
 }

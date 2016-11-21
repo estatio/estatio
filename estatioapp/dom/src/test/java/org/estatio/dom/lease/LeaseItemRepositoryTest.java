@@ -27,7 +27,7 @@ import org.apache.isis.applib.query.Query;
 
 import org.incode.module.base.dom.testing.FinderInteraction;
 import org.incode.module.base.dom.testing.FinderInteraction.FinderMethod;
-import org.estatio.dom.budgeting.ChargeForTesting;
+
 import org.estatio.dom.charge.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,7 +82,7 @@ public class LeaseItemRepositoryTest {
 
             Lease lease = new Lease();
             LeaseItemType leaseItemType = LeaseItemType.SERVICE_CHARGE;
-            Charge charge = new ChargeForTesting();
+            Charge charge = new Charge();
 
             leaseItemRepository.findByLeaseAndTypeAndCharge(lease, leaseItemType, charge);
 

@@ -31,14 +31,11 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.testing.FinderInteraction;
+
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by jodo on 30/04/15.
- */
 public class KeytableRepositoryTest {
 
     FinderInteraction finderInteraction;
@@ -80,7 +77,7 @@ public class KeytableRepositoryTest {
         @Test
         public void happyCase() {
 
-            Budget budget = new BudgetForTesting();
+            Budget budget = new Budget();
             String name = "KeyTableName";
             keyTableRepository.findByBudgetAndName(budget, name);
 
@@ -101,7 +98,7 @@ public class KeytableRepositoryTest {
         @Test
         public void happyCase() {
 
-            Budget budget = new BudgetForTesting();
+            Budget budget = new Budget();
             keyTableRepository.findByBudget(budget);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
@@ -141,7 +138,7 @@ public class KeytableRepositoryTest {
         public void newKeyTable() {
 
             //given
-            Budget budget = new BudgetForTesting();
+            Budget budget = new Budget();
             final KeyTable keyTable = new KeyTable();
 
             // expect

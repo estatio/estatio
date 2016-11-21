@@ -37,7 +37,9 @@ public class BudgetMenu {
     public Budget newBudget(
             final Property property,
             final int year) {
-        return budgetRepository.newBudget(property, new LocalDate(year, 01, 01), new LocalDate(year, 12, 31));
+        Budget budget = budgetRepository.newBudget(property, new LocalDate(year, 01, 01), new LocalDate(year, 12, 31));
+        budget.findOrCreatePartitioningForBudgeting();
+        return budget;
     }
 
     public String validateNewBudget(

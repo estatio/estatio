@@ -122,6 +122,12 @@
             <ns2:collection id="guarantees">
                 <ns2:action id="newGuarantee"/>
             </ns2:collection>
+            <ns2:collection id="BudgetOverrides">
+                <ns2:action id="NewForfaitOverride"/>
+                <ns2:action id="NewCeilingOverride"/>
+                <ns2:action id="NewFixedOverride"/>
+            </ns2:collection>
+            <ns2:collection id="BudgetCalculationRuns"/>
         </col>
     </row>
 </grid>

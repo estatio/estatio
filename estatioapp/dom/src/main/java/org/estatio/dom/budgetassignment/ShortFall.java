@@ -30,7 +30,7 @@ public class ShortFall {
         if (calculationType == BudgetCalculationType.BUDGETED) {
             budgetedShortFall = budgetedShortFall.add(shortFallAmount);
         }
-        if (calculationType == BudgetCalculationType.AUDITED) {
+        if (calculationType == BudgetCalculationType.ACTUAL) {
             auditedShortFall = auditedShortFall.add(shortFallAmount);
         }
         return this;
@@ -40,7 +40,7 @@ public class ShortFall {
         if (calculationType == BudgetCalculationType.BUDGETED) {
             return getBudgetedShortFall();
         }
-        if (calculationType == BudgetCalculationType.AUDITED) {
+        if (calculationType == BudgetCalculationType.ACTUAL) {
             return getAuditedShortFall();
         }
         return null;

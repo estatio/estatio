@@ -44,7 +44,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -60,10 +59,7 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgetassignment.ServiceChargeItem;
-import org.estatio.dom.budgetassignment.ServiceChargeItemRepository;
 import org.estatio.dom.budgeting.api.BudgetItemCreator;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
@@ -78,9 +74,7 @@ import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.budgeting.partioning.PartitioningRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
-import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -134,10 +128,12 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Column(allowsNull = "true") // done because of inherited implementation WithStartDate
     @Getter @Setter
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     private LocalDate startDate;
 
     @Column(allowsNull = "true")
     @Getter @Setter
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     private LocalDate endDate;
 
     @Persistent(mappedBy = "budget", dependentElement = "true")
@@ -158,7 +154,7 @@ public class Budget extends UdoDomainObject2<Budget>
     public BudgetItem newBudgetItem(
             final BigDecimal budgetedValue,
             final Charge charge) {
-        return budgetItemRepository.newBudgetItem(this, charge);
+        return budgetItemRepository.newBudgetItem(this, budgetedValue, charge);
     }
 
     public String validateNewBudgetItem(
@@ -170,13 +166,17 @@ public class Budget extends UdoDomainObject2<Budget>
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "partitionings", sequence = "1")
-    public Budget newPartitioning(final BudgetCalculationType type){
-        partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), type);
+    public Budget newPartitioning(){
+        partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.ACTUAL);
         return this;
     }
 
-    public String validateNewPartitioning(final BudgetCalculationType type){
-        return partitioningRepository.validateNewPartitioning(this, getStartDate(), getEndDate(), type);
+    public String validateNewPartitioning(){
+        return partitioningRepository.validateNewPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.ACTUAL);
+    }
+
+    public String disableNewPartitioning(){
+        return partitioningRepository.findByBudgetAndType(this, BudgetCalculationType.ACTUAL).size()>0 ? "Partitioning for reconciliation already exists" : null;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -198,7 +198,7 @@ public class Budget extends UdoDomainObject2<Budget>
         LocalDate start = new LocalDate(getBudgetYear()+1, 01, 01);
         LocalDate end = new LocalDate(getBudgetYear()+1, 12, 31);
         Budget newBudget = budgetRepository.newBudget(getProperty(),start, end);
-        newBudget.newPartitioning(BudgetCalculationType.BUDGETED);
+        newBudget.findOrCreatePartitioningForBudgeting();
         return copyCurrentTo(newBudget);
     }
 
@@ -217,17 +217,6 @@ public class Budget extends UdoDomainObject2<Budget>
             item.createCopyOn(newBudget);
         }
         return newBudget;
-    }
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    @ActionLayout()
-    public Budget calculate(){
-        budgetCalculationService.calculatePersistedCalculations(this);
-        return this;
-    }
-
-    public String disableCalculate(){
-        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Disabled temporary; use overview";
     }
 
     @Programmatic
@@ -313,40 +302,9 @@ public class Budget extends UdoDomainObject2<Budget>
         return partitioningRepository.findUnique(this, BudgetCalculationType.BUDGETED, getStartDate());
     }
 
-    /*
-    * TODO: revisit after refactoring
-    * */
-    @Action(restrictTo = RestrictTo.PROTOTYPING ,semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void removeBudget(
-            @ParameterLayout(named = "This will delete the budget and all associated data including keytables, calculations and generated service charge terms. (You may consider downloading the budget and the keytables beforehand.) Are you sure?")
-            final boolean areYouSure
-    ){
-
-        /* delete calculation links and service charge items if needed */
-        for (Occupancy occupancy : occupancyRepository.occupanciesByPropertyAndInterval(getProperty(),getInterval())) {
-            for (ServiceChargeItem item : serviceChargeItemRepository.findByOccupancy(occupancy)){
-                    getContainer().remove(item);
-                    getContainer().flush();
-            }
-        }
-
-        // delete calculations
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
-            calculation.remove();
-        }
-
-        // delete partition items
-        for (BudgetItem budgetItem : getItems()) {
-            for (PartitionItem item : partitionItemRepository.findByBudgetItem(budgetItem)) {
-                item.remove();
-            }
-        }
-
+    @Programmatic
+    public void remove(){
         remove(this);
-    }
-
-    public String validateRemoveBudget(final boolean areYouSure){
-        return areYouSure ? null : "Please confirm";
     }
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -367,7 +325,7 @@ public class Budget extends UdoDomainObject2<Budget>
     public Budget findOrCreatePartitioningForBudgeting(){
         Partitioning partitioningForBudgeting = getPartitioningForBudgeting();
         if (partitioningForBudgeting==null){
-            newPartitioning(BudgetCalculationType.BUDGETED);
+            partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.BUDGETED);
         }
         return this;
     }
@@ -399,9 +357,6 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private KeyTableRepository keyTableRepository;
-
-    @Inject
-    private ServiceChargeItemRepository serviceChargeItemRepository; // dependency on budgetassignment package only for (temporary) remove action
 
     @Inject
     private BudgetCalculationService budgetCalculationService;

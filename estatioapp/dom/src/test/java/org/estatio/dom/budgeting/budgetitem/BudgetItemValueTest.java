@@ -29,7 +29,7 @@ public class BudgetItemValueTest {
         public void test() {
             final BudgetItemValue pojo = new BudgetItemValue();
             newPojoTester()
-                    .withFixture(pojos(BudgetItem.class, BudgetItemForTesting.class))
+                    .withFixture(pojos(BudgetItem.class, BudgetItem.class))
                     .exercise(pojo);
         }
 

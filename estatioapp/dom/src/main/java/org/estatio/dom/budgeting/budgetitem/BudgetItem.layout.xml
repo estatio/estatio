@@ -1,38 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
+            <ns2:action id="newValue"/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="Item" id="item" unreferencedProperties="true">
-                <ns2:property id="budget"/>
-                <ns2:property id="charge">
-                    <ns2:action id="changeCharge" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
+            <ns2:tabGroup>
+                <ns2:tab name="BudgetItem">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Item" id="item" unreferencedProperties="true">
+                                <ns2:property id="budget"/>
+                                <ns2:property id="charge">
+                                    <ns2:action id="changeCharge" position="BELOW"/>
+                                </ns2:property>
+                                <ns2:property id="budgetedValue"/>
+                                <ns2:property id="auditedValue"/>
+                                <ns2:property id="applicationTenancy"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </ns2:tab>
+                <ns2:tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </ns2:tab>
+            </ns2:tabGroup>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="values" defaultView="table">
-                <ns2:action id="newValue"/>
-            </ns2:collection>
             <ns2:collection id="partitionItems" defaultView="table">
                 <ns2:action id="createPartitionItemForBudgeting"/>
-                <ns2:action id="createPartitionItemForAudit"/>
+                <ns2:action id="createPartitionItemForActuals"/>
             </ns2:collection>
         </col>
     </row>

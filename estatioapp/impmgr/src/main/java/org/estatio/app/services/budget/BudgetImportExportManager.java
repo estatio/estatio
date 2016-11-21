@@ -118,29 +118,56 @@ public class BudgetImportExportManager {
         return result;
     }
 
+    public List<BudgetOverrideImportExport> getOverrides() {
+        List<BudgetOverrideImportExport> result = new ArrayList<>();
+        if (getBudget()==null){return result;} // for import from menu where budget unknown
+        return budgetImportExportService.overrides(this);
+    }
+
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout()
     @CollectionLayout()
     public Budget importBudget(
-            @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet) {
 
-        Budget importedBudget = new Budget();
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
         List<List<?>> objects =
-                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2));
+                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3));
+
+        // import budget en items
+        List<BudgetImportExport> budgetItemLines = importBudgetAndItems(objects);
+
+        // import keyTables
+        importKeyTables(budgetItemLines, objects);
+
+        // import overrides
+        importOverrides(objects);
+
+        return getBudget();
+    }
+
+    private List<BudgetImportExport> importBudgetAndItems(final List<List<?>> objects){
+        Budget importedBudget = new Budget();
         List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
         for (BudgetImportExport lineItem :lineItems){
             importedBudget = (Budget) lineItem.importData(null).get(0);
         }
         setBudget(importedBudget);
 
-        List<KeyTable> keyTablesToImport = keyTablesToImport(lineItems);
+        return lineItems;
+    }
+
+    private void importKeyTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects){
+
+        List<KeyTable> keyTablesToImport = keyTablesToImport(budgetItemLines);
         List<KeyItemImportExportLineItem> keyItemLines = (List<KeyItemImportExportLineItem>) objects.get(1);
 
         // filter case where no key items are filled in
-        if (keyItemLines.size() == 0) {return getBudget();}
+        if (keyItemLines.size() == 0) {return;}
 
         for (KeyTable keyTable : keyTablesToImport){
             List<KeyItemImportExportLineItem> itemsToImportForKeyTable = new ArrayList<>();
@@ -169,7 +196,6 @@ public class BudgetImportExportManager {
                 item.apply();
             }
         }
-        return getBudget();
     }
 
     private List<KeyTable> keyTablesToImport(final List<BudgetImportExport> lineItems){
@@ -183,15 +209,24 @@ public class BudgetImportExportManager {
         return result;
     }
 
+    private void importOverrides(final List<List<?>> objects) {
+        List<BudgetOverrideImportExport> overrides = (List<BudgetOverrideImportExport>) objects.get(2);
+        for (BudgetOverrideImportExport override : overrides){
+            override.importData(null);
+        }
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     public Blob exportBudget() {
         final String fileName = withExtension(getFileName(), ".xlsx");
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
         WorksheetContent worksheetContent = new WorksheetContent(getLines(), spec1);
         WorksheetContent keyItemsContent = new WorksheetContent(getKeyItemLines(), spec2);
-        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent), fileName);
+        WorksheetContent overridesContent = new WorksheetContent(getOverrides(), spec3);
+        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, overridesContent), fileName);
 
     }
 

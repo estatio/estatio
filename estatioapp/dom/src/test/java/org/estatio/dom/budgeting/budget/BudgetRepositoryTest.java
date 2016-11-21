@@ -31,9 +31,9 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.testing.FinderInteraction;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.asset.Property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,7 +78,7 @@ public class BudgetRepositoryTest {
         @Test
         public void happyCase() {
 
-            Property property = new PropertyForTesting();
+            Property property = new Property();
             budgetRepository.findByProperty(property);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
@@ -95,7 +95,7 @@ public class BudgetRepositoryTest {
         @Test
         public void happyCase() {
 
-            Property property = new PropertyForTesting();
+            Property property = new Property();
             LocalDate startDate = new LocalDate();
             budgetRepository.findByPropertyAndStartDate(property, startDate);
 
@@ -129,7 +129,7 @@ public class BudgetRepositoryTest {
         public void newBudget() {
 
             //given
-            Property property = new PropertyForTesting();
+            Property property = new Property();
             LocalDate startDate = new LocalDate(2016, 01, 02);
             LocalDate endDate = new LocalDate(2016, 12, 30);
             LocalDate startOfYear = new LocalDate(2016,01,01);

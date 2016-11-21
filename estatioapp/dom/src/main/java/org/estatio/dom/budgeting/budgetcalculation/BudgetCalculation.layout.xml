@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<grid xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3">
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
@@ -9,33 +11,56 @@
         </col>
     </row>
     <row>
-        <col span="4">
-            <ns2:fieldSet name="Calculation" id="calculation" unreferencedProperties="true">
-                <ns2:property id="applicationTenancy"/>
-                <ns2:property id="budgetItemAllocation"/>
-                <ns2:property id="keyItem"/>
-                <ns2:property id="budgetItem" hidden="ALL_TABLES"/>
-                <ns2:property id="budget" hidden="ALL_TABLES"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Value" id="value">
-                <ns2:property id="value"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Type" id="type">
-                <ns2:property id="calculationType"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="updatedBy"/>
-                <ns2:property id="updatedAt"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
+        <col span="12">
+            <ns2:tabGroup>
+                <ns2:tab name="BudgetCalculationResult">
+                    <row>
+                        <col span="6">
+                            <ns2:fieldSet name="Value" id="value">
+                                <ns2:property id="value"/>
+                                <ns2:property id="valueForPartitionPeriod"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Type and status" id="type">
+                                <ns2:property id="calculationType"/>
+                                <ns2:property id="status"/>
+                            </ns2:fieldSet>
+                        </col>
+                        <col span="6">
+                            <ns2:fieldSet name="Calculation" id="calculation" unreferencedProperties="true">
+                                <ns2:property id="budget" hidden="ALL_TABLES"/>
+                                <ns2:property id="budgetItem" hidden="ALL_TABLES"/>
+                                <ns2:property id="partitionItem"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Details" id="details">
+                                <ns2:property id="keyItem"/>
+                                <ns2:property id="unit"/>
+                                <ns2:property id="invoiceCharge"/>
+                                <ns2:property id="incomingCharge"/>
+                                <ns2:property id="applicationTenancy"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </ns2:tab>
+                <ns2:tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="updatedBy"/>
+                                <ns2:property id="updatedAt"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </ns2:tab>
+            </ns2:tabGroup>
         </col>
-        <col span="8" unreferencedCollections="true">
+        <col span="12" unreferencedCollections="true">
             <ns2:collection id="budgetCalculationLinks"/>
             <ns2:collection id="leaseTerms"/>
         </col>

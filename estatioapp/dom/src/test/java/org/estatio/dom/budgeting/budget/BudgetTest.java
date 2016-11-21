@@ -26,9 +26,8 @@ import org.junit.Test;
 import org.incode.module.base.dom.testing.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.PropertyForTesting;
-import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.charge.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +40,7 @@ public class BudgetTest {
         public void test() {
             final Budget pojo = new Budget();
             newPojoTester()
-                    .withFixture(pojos(Property.class, PropertyForTesting.class))
+                    .withFixture(pojos(Property.class, Property.class))
                     .exercise(pojo);
         }
 

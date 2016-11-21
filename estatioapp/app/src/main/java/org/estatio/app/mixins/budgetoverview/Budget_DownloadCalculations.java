@@ -15,7 +15,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
-import org.estatio.dom.budgetassignment.viewmodels.BudgetAssignmentResult;
+import org.estatio.dom.budgetassignment.viewmodels.BudgetCalculationResultViewModel;
 import org.estatio.dom.budgeting.budget.Budget;
 
 @Mixin
@@ -30,12 +30,12 @@ public class Budget_DownloadCalculations {
     @ActionLayout(cssClassFa = "fa-download")
     public Blob downloadCalculations() {
         final String fileName =  budget.title() + ".xlsx";
-        WorksheetSpec spec = new WorksheetSpec(BudgetAssignmentResult.class, "calculations");
+        WorksheetSpec spec = new WorksheetSpec(BudgetCalculationResultViewModel.class, "values");
         WorksheetContent worksheetContent = new WorksheetContent(budgetAssignmentResults(), spec);
         return excelService.toExcelPivot(worksheetContent, fileName);
     }
 
-    private List<BudgetAssignmentResult> budgetAssignmentResults(){
+    private List<BudgetCalculationResultViewModel> budgetAssignmentResults(){
         return budgetAssignmentService.getAssignmentResults(budget);
     }
 

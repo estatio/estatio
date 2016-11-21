@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.budgetassignment.BudgetCalculationLinkRepository;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -21,12 +20,12 @@ public class BudgetCalculationService {
 
     public List<BudgetCalculation> calculatePersistedCalculations(final Budget budget) {
 
-        removeTemporaryCalculations(budget);
+        removeNewCalculations(budget);
 
         List<BudgetCalculation> budgetCalculations = new ArrayList<>();
-        for (BudgetCalculationViewmodel result : getCalculations(budget)){
+        for (BudgetCalculationViewmodel result : getBudgetedCalculations(budget)){
             budgetCalculations.add(
-                    budgetCalculationRepository.updateOrCreateTemporaryBudgetCalculation(
+                    budgetCalculationRepository.createBudgetCalculation(
                     result.getPartitionItem(),
                     result.getKeyItem(),
                     result.getValue(),
@@ -36,44 +35,71 @@ public class BudgetCalculationService {
         return budgetCalculations;
     }
 
-    public void removeTemporaryCalculations(final Budget budget) {
-        for (BudgetCalculation calc : budgetCalculationRepository.findByBudgetAndStatus(budget, BudgetCalculationStatus.TEMPORARY)){
-            calc.remove();
+    public void removeNewCalculations(final Budget budget) {
+        for (BudgetCalculation calc : budgetCalculationRepository.findByBudget(budget)){
+            calc.removeWithStatusNew();
         }
     }
 
-    public List<BudgetCalculationViewmodel> getCalculations(final Budget budget){
+    public List<BudgetCalculationViewmodel> getBudgetedCalculations(final Budget budget){
         List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()) {
 
-            budgetCalculationViewmodels.addAll(calculate(budgetItem));
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.BUDGETED));
 
         }
         return budgetCalculationViewmodels;
     }
 
-    private List<BudgetCalculationViewmodel> calculate(final BudgetItem budgetItem) {
+    public List<BudgetCalculationViewmodel> getAuditedCalculations(final Budget budget){
+        List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
+        for (BudgetItem budgetItem : budget.getItems()) {
+
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.ACTUAL));
+
+        }
+        return budgetCalculationViewmodels;
+    }
+
+    public List<BudgetCalculationViewmodel> getAllCalculations(final Budget budget){
+        List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
+        for (BudgetItem budgetItem : budget.getItems()) {
+
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.BUDGETED));
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.ACTUAL));
+
+        }
+        return budgetCalculationViewmodels;
+    }
+
+    private List<BudgetCalculationViewmodel> calculate(final BudgetItem budgetItem, final BudgetCalculationType type) {
 
         List<BudgetCalculationViewmodel> result = new ArrayList<>();
         for (PartitionItem partitionItem : budgetItem.getPartitionItems()) {
 
-            result.addAll(calculate(partitionItem));
+            result.addAll(calculate(partitionItem, type));
 
         }
 
         return result;
     }
 
-    private List<BudgetCalculationViewmodel> calculate(final PartitionItem partitionItem) {
+    private List<BudgetCalculationViewmodel> calculate(final PartitionItem partitionItem, final BudgetCalculationType type) {
 
         List<BudgetCalculationViewmodel> results = new ArrayList<>();
 
-        BigDecimal budgetedTotal = percentageOf(partitionItem.getBudgetItem().getBudgetedValue(), partitionItem.getPercentage());
-        results.addAll(calculateForTotalAndType(partitionItem, budgetedTotal, BudgetCalculationType.BUDGETED));
+        switch (type) {
+            case BUDGETED:
+                BigDecimal budgetedTotal = percentageOf(partitionItem.getBudgetItem().getBudgetedValue(), partitionItem.getPercentage());
+                results.addAll(calculateForTotalAndType(partitionItem, budgetedTotal, BudgetCalculationType.BUDGETED));
+            break;
 
-        if (partitionItem.getBudgetItem().getAuditedValue() != null){
-            BigDecimal auditedTotal = percentageOf(partitionItem.getBudgetItem().getAuditedValue(), partitionItem.getPercentage());
-            results.addAll(calculateForTotalAndType(partitionItem,auditedTotal, BudgetCalculationType.AUDITED));
+            case ACTUAL:
+                if (partitionItem.getBudgetItem().getAuditedValue() != null) {
+                    BigDecimal auditedTotal = percentageOf(partitionItem.getBudgetItem().getAuditedValue(), partitionItem.getPercentage());
+                    results.addAll(calculateForTotalAndType(partitionItem, auditedTotal, BudgetCalculationType.ACTUAL));
+                }
+            break;
         }
 
         return results;
@@ -116,9 +142,6 @@ public class BudgetCalculationService {
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
-
-    @Inject
-    private BudgetCalculationLinkRepository budgetCalculationLinkRepository;
 
 
 }
