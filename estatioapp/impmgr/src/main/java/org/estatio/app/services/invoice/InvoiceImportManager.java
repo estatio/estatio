@@ -27,7 +27,9 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
@@ -67,7 +69,7 @@ public class InvoiceImportManager {
     @Getter @Setter
     private Property property;
 
-    @Action()
+    @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     public Blob downloadTemplate() {
         final String fileName = "template.xlsx";
@@ -76,10 +78,12 @@ public class InvoiceImportManager {
         return excelService.toExcel(worksheetContent, fileName);
     }
 
-    @Action
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @CollectionLayout(paged = -1)
     public List<InvoiceImportLine> importInvoices(
-            @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
+            @Parameter(fileAccept = ".xlsx")
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet) {
         List<InvoiceImportLine> lineItems =
                 excelService.fromExcel(spreadsheet, InvoiceImportLine.class, InvoiceImportLine.class.getSimpleName());
         return lineItems;

@@ -24,12 +24,15 @@ import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -129,6 +132,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
 
 
     //region > download (action)
+    @Action(semantics = SemanticsOf.SAFE)
     public Blob download() {
         final String fileName = "ServiceChargeBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
         final List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems = getServiceCharges();
@@ -137,7 +141,11 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     //endregion
 
     //region > upload (action)
-    public LeaseTermForServiceChargeBudgetAuditManager upload(final @Named("Excel spreadsheet") Blob spreadsheet) {
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseTermForServiceChargeBudgetAuditManager upload(
+            @Parameter(fileAccept = ".xlsx")
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet) {
         List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems =
                 excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBudgetAuditLineItem.class, "lease terms");
         for (LeaseTermForServiceChargeBudgetAuditLineItem lineItem : lineItems) {
