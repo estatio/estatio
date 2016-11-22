@@ -125,7 +125,7 @@ public class KeyItemImportExportManager {
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
     @MemberOrder(name = "keyItems", sequence = "2")
     public List<KeyItemImportExportLineItem> importBlob(
-            @Parameter(fileAccept = ".xlsx")
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
         WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");

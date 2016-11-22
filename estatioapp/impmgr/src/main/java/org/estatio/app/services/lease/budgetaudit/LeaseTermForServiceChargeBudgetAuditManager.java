@@ -143,7 +143,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     //region > upload (action)
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTermForServiceChargeBudgetAuditManager upload(
-            @Parameter(fileAccept = ".xlsx")
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
         List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems =

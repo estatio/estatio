@@ -81,7 +81,7 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence="2")
     public List<IndexValueMaintLineItem> uploadIndexValues(
-            @Parameter(fileAccept = ".xlsx")
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet,
             final ApplicationTenancy applicationTenancy) {

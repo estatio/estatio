@@ -81,7 +81,7 @@ public class InvoiceImportManager {
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @CollectionLayout(paged = -1)
     public List<InvoiceImportLine> importInvoices(
-            @Parameter(fileAccept = ".xlsx")
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
         List<InvoiceImportLine> lineItems =
