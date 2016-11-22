@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -124,7 +125,9 @@ public class KeyItemImportExportManager {
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
     @MemberOrder(name = "keyItems", sequence = "2")
     public List<KeyItemImportExportLineItem> importBlob(
-            @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet) {
         WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         List<KeyItemImportExportLineItem> lineItems =
                 excelService.fromExcel(spreadsheet, spec);

@@ -24,19 +24,22 @@ import javax.annotation.PostConstruct;
 
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Dflt;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 
@@ -65,23 +68,25 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence="1")
     public Blob downloadIndexValues() {
         final String fileName = "IndexValues.xlsx";
         final List<IndexValueMaintLineItem> viewModels = Lists.newArrayList();
-        return excelService.toExcel(viewModels, IndexValueMaintLineItem.class, fileName);
+        return excelService.toExcel(viewModels, IndexValueMaintLineItem.class, IndexValueMaintLineItem.class.getSimpleName(), fileName);
     }
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence="2")
     public List<IndexValueMaintLineItem> uploadIndexValues(
-            final @Named("Excel spreadsheet") Blob spreadsheet,
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet,
             final ApplicationTenancy applicationTenancy) {
         List<IndexValueMaintLineItem> lineItems = 
-                excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class);
+                excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class, IndexValueMaintLineItem.class.getSimpleName());
         for (IndexValueMaintLineItem lineItem : lineItems) {
             lineItem.setAtPath(applicationTenancy.getPath());
         }

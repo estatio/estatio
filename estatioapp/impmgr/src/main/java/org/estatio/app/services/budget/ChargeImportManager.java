@@ -26,7 +26,10 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -57,12 +60,13 @@ public class ChargeImportManager {
 
 
     //region > importBlob (action)
-    @Action
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @CollectionLayout(paged = -1)
     public List<ChargeImport> importBlob(
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
         List<ChargeImport> lineItems =
-                excelService.fromExcel(spreadsheet, ChargeImport.class);
+                excelService.fromExcel(spreadsheet, ChargeImport.class, ChargeImport.class.getSimpleName());
         return lineItems;
     }
     //endregion

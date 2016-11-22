@@ -24,12 +24,16 @@ import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -50,6 +54,8 @@ import lombok.Setter;
         editing = Editing.DISABLED
 )
 public class LeaseTermForTurnoverRentManager {
+
+    public static final String LEASE_TERM_FOR_TURNOVER_RENT_SHEET_NAME = "lease terms";
 
     //region > constructor, title
     public LeaseTermForTurnoverRentManager() {
@@ -116,30 +122,32 @@ public class LeaseTermForTurnoverRentManager {
     }
 
     private Function<LeaseTerm, LeaseTermForTurnoverRentLineItem> newLeaseTermForTurnoverRentAuditBulkUpdate() {
-        return new Function<LeaseTerm, LeaseTermForTurnoverRentLineItem>() {
-            @Override
-            public LeaseTermForTurnoverRentLineItem apply(final LeaseTerm leaseTerm) {
-                return new LeaseTermForTurnoverRentLineItem(leaseTerm);
-            }
-        };
+        return leaseTerm -> new LeaseTermForTurnoverRentLineItem(leaseTerm);
     }
     //endregion
 
 
     //region > download (action)
+    @Action(semantics = SemanticsOf.SAFE)
     public Blob download() {
         final String fileName = "TurnoverRentBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
         final List<LeaseTermForTurnoverRentLineItem> lineItems = getTurnoverRents();
-        return excelService.toExcel(lineItems, LeaseTermForTurnoverRentLineItem.class, "lease terms", fileName);
+        return excelService.toExcel(lineItems, LeaseTermForTurnoverRentLineItem.class,
+                LEASE_TERM_FOR_TURNOVER_RENT_SHEET_NAME, fileName);
     }
 
     //endregion
 
     //region > upload (action)
 
-    public LeaseTermForTurnoverRentManager upload(final @Named("Excel spreadsheet") Blob spreadsheet) {
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseTermForTurnoverRentManager upload(
+            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet) {
         List<LeaseTermForTurnoverRentLineItem> lineItems =
-                excelService.fromExcel(spreadsheet, LeaseTermForTurnoverRentLineItem.class, "lease terms");
+                excelService.fromExcel(spreadsheet, LeaseTermForTurnoverRentLineItem.class,
+                        LEASE_TERM_FOR_TURNOVER_RENT_SHEET_NAME);
         for (LeaseTermForTurnoverRentLineItem lineItem : lineItems) {
             final LeaseTermForTurnoverRent leaseTerm = lineItem.getLeaseTerm();
             leaseTerm.setAuditedTurnover(lineItem.getAuditedTurnover());
