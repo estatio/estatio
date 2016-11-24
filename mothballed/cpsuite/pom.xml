@@ -28,10 +28,6 @@
 
     <url>http://johanneslink.net/projects/cpsuite.jsp</url>
     
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-    </properties>
-    
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

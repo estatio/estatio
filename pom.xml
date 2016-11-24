@@ -112,22 +112,7 @@ mvn clean install -DskipTests -o
         <!-- TODO: change when this is moved out (EST-866) -->
         <incode-module-communication.version>${project.version}</incode-module-communication.version>
 
-        <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <checkstyle.configLocation>${siteBaseDir}/codequality/checkstyle.xml</checkstyle.configLocation>
-        <pmd.ruleset>${siteBaseDir}/codequality/pmd.xml</pmd.ruleset>
-
-        <clover.version>3.1.12</clover.version>
-        <maven.clover.licenseLocation>${siteBaseDir}/codequality/clover.license</maven.clover.licenseLocation>
-
-        <!-- override in each module (used by locate global resources) -->
-        <siteBaseDir>.</siteBaseDir>
-
-        <compileSource>1.8</compileSource>
-        <compileTarget>1.8</compileTarget>
-
     </properties>
 
     <repositories>
@@ -252,23 +237,6 @@ mvn clean install -DskipTests -o
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-            </plugin>
-            <!-- as per https://confluence.atlassian.com/display/CLOVER/Clover-for-Maven+2+and+3+User%27s+Guide#Clover-for-Maven2and3User%27sGuide-RunningGoalsviapom.xml -->
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
-                <version>${clover.version}</version>
-                <configuration>
-                    <instrumentation>statement</instrumentation>
-                    <includes>
-                        <include>org/estatio/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>org/estatio/api/Api.java</exclude>
-                        <exclude>org/estatio/fixture/**</exclude>
-                        <exclude>org/estatio/fixturescripts/**</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
 
         </plugins>

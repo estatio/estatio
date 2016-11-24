@@ -32,10 +32,6 @@ language governing permissions and limitations under the License.
         Cucumber specs for Estatio.
     </description>
 
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-    </properties>
-
     <build>
         <testResources>
             <testResource>

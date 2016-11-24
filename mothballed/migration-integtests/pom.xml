@@ -32,10 +32,6 @@ language governing permissions and limitations under the License.
         Integration tests for the Migration "API" service
     </description>
 
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-    </properties>
-
     <build>
         <testResources>
             <testResource>

@@ -32,16 +32,6 @@ language governing permissions and limitations under the License.
         Migration "API" Service for Estatio.
     </description>
 
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-        <!-- targetJdk required as a workaround for pmd error, 
-            see https://issues.apache.org/jira/browse/ACCUMULO-443
-            and http://jira.codehaus.org/browse/MPMD-86 -->
-            <!-- 
-        <targetJdk>1.6</targetJdk>
-             -->
-    </properties>
-
     <build>
         <resources>
             <resource>

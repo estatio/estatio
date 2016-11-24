@@ -33,10 +33,6 @@ language governing permissions and limitations under the License.
         bootstrapped or from the admin menu.)
     </description>
 
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-    </properties>
-
 	<build>
         <resources>
             <resource>

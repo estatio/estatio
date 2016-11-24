@@ -71,6 +71,11 @@ language governing permissions and limitations under the License.
                     <mixins>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>standard</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
                             <version>0.0.1</version>
                         </mixin>
@@ -107,12 +112,14 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-currency</artifactId>
         </dependency>
+<!--
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-currency</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+-->
 
         <dependency>
             <groupId>org.estatio</groupId>

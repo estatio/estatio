@@ -32,10 +32,6 @@ language governing permissions and limitations under the License.
         Integration tests for Estatio.
     </description>
 
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-    </properties>
-
     <build>
         <testResources>
             <testResource>
@@ -55,13 +51,29 @@ language governing permissions and limitations under the License.
         </testResources>
         <plugins>
             <plugin>
+                <groupId>com.github.odavid.maven.plugins</groupId>
+                <artifactId>mixin-maven-plugin</artifactId>
+                <version>0.1-alpha-39</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <mixins>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>standard</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                    </mixins>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <!--<testFailureIgnore>true</testFailureIgnore>-->
                 </configuration>
             </plugin>
-        </plugins> 
+        </plugins>
     </build>
 
     <dependencies>

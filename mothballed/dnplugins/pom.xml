@@ -23,10 +23,6 @@ language governing permissions and limitations under the License.
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <siteBaseDir>..</siteBaseDir>
-    </properties>
-
     <artifactId>estatio-dnplugins</artifactId>
     <name>Estatio DataNucleus Plugins</name>
 

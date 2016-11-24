@@ -70,6 +70,11 @@ language governing permissions and limitations under the License.
                     <mixins>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>standard</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
                             <version>0.0.1</version>
                         </mixin>
