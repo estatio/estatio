@@ -19,14 +19,9 @@
 package org.estatio.app.menus.admin;
 
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import com.google.common.base.Strings;
-
-import org.hsqldb.util.DatabaseManagerSwing;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -37,7 +32,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
@@ -58,12 +52,6 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
         super(AdministrationMenu.class);
     }
 
-    private String url;
-
-    @PostConstruct
-    public void init(Map<String,String> properties) {
-        url = properties.get("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL");
-    }
 
     //region > updateEpochDate (action)
     @Action(
@@ -96,18 +84,6 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
     //endregion
 
 
-    //region > dbManager (action)
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    public void dbManager() {
-        String[] args = {"--url", url, "--noexit" };
-        DatabaseManagerSwing.main(args);
-    }
-    public boolean hideDbManager() {
-        return Strings.isNullOrEmpty(url) || !url.contains("hsqldb:mem");
-    }
-
-    //endregion
 
     //region > injected dependencies
 
