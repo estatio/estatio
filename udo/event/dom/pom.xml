@@ -33,8 +33,14 @@ language governing permissions and limitations under the License.
     </description>
 
     <properties>
-        <siteBaseDir>..</siteBaseDir>
-        <isis-module-poly.version>1.13.0</isis-module-poly.version>
+
+        <danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
+            ${project.parent.basedir}/codequality/checkstyle.xml
+        </danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
+        <danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
+            ${project.parent.basedir}/codequality/pmd.xml
+        </danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
+
     </properties>
 
     <build>
@@ -66,6 +72,11 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>staticanalysis</artifactId>
                             <version>0.0.1</version>
                         </mixin>
                     </mixins>
@@ -175,118 +186,5 @@ language governing permissions and limitations under the License.
         </dependency>
 
     </dependencies>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
-    <profiles>
-        <profile>
-            <id>analysis</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>2.6</version>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <formats>
-                                <format>xml</format>
-                            </formats>
-                            <instrumentation>
-                                <excludes>
-                                    <exclude>org/estatio/fixture/**/*.class</exclude>
-                                    <exclude>org/estatio/api/Api.class</exclude>
-                                    <exclude>org/estatio/**/*Test*.class</exclude>
-                                </excludes>
-                            </instrumentation>
-                            <check/>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
- 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <configLocation>${checkstyle.configLocation}</configLocation>
-                            <excludes>org/estatio/api/**</excludes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>checkstyle</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <findbugsXmlOutput>true</findbugsXmlOutput>
-                            <xmlOutput>true</xmlOutput>
-                            <failOnError>false</failOnError>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <configuration>
-                            <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                            <minimumTokens>100</minimumTokens>
-                            <linkXRef>true</linkXRef>
-                            <rulesets>
-                                <ruleset>${pmd.ruleset}</ruleset>
-                            </rulesets>
-                            <excludeRoots>
-                                <excludeRoot>
-                                    ${project.build.directory}/generated-sources/modello
-                                </excludeRoot>
-                                <excludeRoot>
-                                    ${project.build.directory}/generated-sources/plugin
-                                </excludeRoot>
-                            </excludeRoots>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>pmd</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

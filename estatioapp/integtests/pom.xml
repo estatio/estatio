@@ -185,12 +185,4 @@ language governing permissions and limitations under the License.
         </repository>  
     </repositories>
 
-    <profiles>
-        <profile>
-            <id>noTest</id>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
-        </profile>
-    </profiles>
 </project>

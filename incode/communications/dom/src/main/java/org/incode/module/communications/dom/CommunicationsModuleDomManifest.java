@@ -24,6 +24,8 @@ import java.util.Map;
 import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.security.SecurityModule;
+
 /**
  * Provided for <tt>isis-maven-plugin</tt>.
  */
@@ -32,7 +34,8 @@ public class CommunicationsModuleDomManifest implements AppManifest {
     @Override
     public List<Class<?>> getModules() {
         return Arrays.asList(
-                CommunicationsModule.class  // domain (entities and repositories)
+                CommunicationsModule.class,  // domain (entities and repositories)
+                SecurityModule.class
         );
     }
 

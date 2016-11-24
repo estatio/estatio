@@ -186,26 +186,6 @@ mvn clean install -DskipTests -o
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>${compileSource}</source>
-                        <target>${compileTarget}</target>
-                        <compilerArgument>-parameters</compilerArgument>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>source</id>
-                            <phase>compile</phase>
-                        </execution>
-                        <execution>
-                            <id>test</id>
-                            <phase>test-compile</phase>
-                        </execution>
-                    </executions>
-                </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -244,262 +224,31 @@ mvn clean install -DskipTests -o
                 </plugin>
 
 
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
-                    <inherited>true</inherited>
-                    <executions>
-                        <execution>
-                            <id>package-test-jar</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>test-jar</goal>
-                            </goals>
-                            <configuration>
-                                <archive>
-                                    <manifest>
-                                        <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                    </manifest>
-                                </archive>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.3.2.v20150730</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>2.2</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>2.5</version>
-                    <inherited>true</inherited>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <!-- Quality checks: checkstyle -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.11</version>
-                    <!-- goal:check binds to phase:verify (not currently configured, can be used to break build if any violations) -->
-                    <!-- goal:checkstyle is a report so is configured in the reporting section -->
-                </plugin>
-
-                <!-- Quality checks: pmd -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <configuration>
-                        <targetJdk>${compileSource}</targetJdk>
-                    </configuration>
-                    <!-- goal:check binds to phase:verify (not currently configured, can be used to break build if any violations) -->
-                    <!-- goal:check-cpd binds to phase:verify (not currently configured, can be used to break build if any CPD violations) -->
-                    <!-- goal:pmd is a report so is configured in the reporting section -->
-                    <!-- goal:cpd is a report so is configured in the reporting section -->
-                </plugin>
-
-                <!-- Quality checks: NCSS (cyclomatic complexity) -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>javancss-maven-plugin</artifactId>
-                    <version>2.0</version>
-                    <!-- goal:check binds to phase:verify (not currently configured, can be used to break build if any violations) -->
-                    <!-- goal:report is a report so is configured in the reporting section -->
-                </plugin>
-
-                <!-- Quality checks: jdepend -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jdepend-maven-plugin</artifactId>
-                    <version>2.0-beta-2</version>
-                    <!-- goal:generate is a report so is configured in the reporting section -->
-                </plugin>
-
-                <!-- Artifacts derived from code: javadoc; supports both build and report goals; not included as a build plugin except through profiles (to speed up the build) -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <debug>true</debug>
-                        <minmemory>128m</minmemory>
-                        <maxmemory>1024m</maxmemory>
-                        <quiet>true</quiet>
-                        <doctitle>${project.name} ${project.version}</doctitle>
-                        <windowtitle>${project.name} ${project.version}</windowtitle>
-                        <testDoctitle>${project.name} ${project.version}
-                            (TEST API)</testDoctitle>
-                        <testWindowtitle>${project.name}
-                            ${project.version} (TEST API)
-                        </testWindowtitle>
-                        <splitindex>true</splitindex>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <links>
-                            <link>http://java.sun.com/j2se/1.6.0/docs/api</link>
-                            <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-                            <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
-                            <link>http://java.sun.com/j2ee/1.4/docs/api</link>
-                        </links>
-                        <linksource>true</linksource>
-                        <!-- http://jira.codehaus.org/browse/MJAVADOC-268 and http://jira.codehaus.org/browse/MJAVADOC-284 -->
-                        <detectOfflineLinks>false</detectOfflineLinks>
-                    </configuration>
-                    <!-- goal:aggregate (for aggregator modules) has no binding; explicitly bound in profiles -->
-                    <!-- goal:jar (for non-aggregator modules) binds to phase:package -->
-                    <!-- goal:test-jar (for non-aggregator modules) binds to phase:package -->
-                    <!-- goal:javadoc is a report so is configured in the reporting section -->
-                </plugin>
-
-
-                <!-- Artifacts derived from code: Java source x-ref -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jxr-plugin</artifactId>
-                    <version>2.4</version>
-                    <!-- goal:jxr is a report so is configured in the reporting section -->
-                </plugin>
-
-
-                <!-- Packaging: source jars of main and test code -->
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <inherited>true</inherited>
-                    <executions>
-                        <execution>
-                            <id>package-jars</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                                <goal>test-jar</goal>
-                            </goals>
-                            <configuration>
-                                <includePom>true</includePom>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <includePom>true</includePom>
-                    </configuration>
-                </plugin>
-
-                <!-- http://simplericity.com/2009/11/10/1257880778509.html -->
-                <plugin>
-                    <groupId>org.simplericity.jettyconsole</groupId>
-                    <artifactId>jetty-console-maven-plugin</artifactId>
-                    <version>1.57</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>1.2</version>
-                    <configuration>
-                        <shortRevisionLength>8</shortRevisionLength>
-                        <timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.3.1</version>
-                    <configuration>
-                        <rules>
-                            <requireMavenVersion>
-                                <!-- latest reliably available on CloudBees -->
-                                <version>[3.0.5,)</version>
-                            </requireMavenVersion>
-                            <requireJavaVersion>
-                                <version>[1.8.0,)</version>
-                            </requireJavaVersion>
-                            <requirePluginVersions>
-                                <message>All plugin versions must be
-                                    defined!</message>
-                                <banLatest>true</banLatest>
-                                <banRelease>true</banRelease>
-                            </requirePluginVersions>
-                            <!--
-                            RELAXED!
-                            <DependencyConvergence />
-                            -->
-                        </rules>
-                    </configuration>
-                    <!-- goal:enforce supposedly binds to phase:validate, but explicit binding seems to be required -->
-                    <executions>
-                        <execution>
-                            <id>validate-enforce</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-
             </plugins>
         </pluginManagement>
         <plugins>
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
+                <groupId>com.github.odavid.maven.plugins</groupId>
+                <artifactId>mixin-maven-plugin</artifactId>
+                <version>0.1-alpha-39</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <mixins>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>enforcerrelaxed</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>standard</artifactId>
+                            <version>0.0.1</version>
+                        </mixin>
+                    </mixins>
+                </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
@@ -521,6 +270,7 @@ mvn clean install -DskipTests -o
                     </excludes>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
@@ -960,7 +710,7 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.11</version>
+                <version>4.12</version>
             </dependency>
 
             <dependency>
@@ -984,7 +734,7 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.5.2</version>
+                <version>3.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
@@ -1019,299 +769,26 @@ mvn clean install -DskipTests -o
         </dependencies>
     </dependencyManagement>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8</version>
-                <configuration>
-                    <debug>true</debug>
-                    <minmemory>128m</minmemory>
-                    <maxmemory>1024m</maxmemory>
-                    <quiet>true</quiet>
-                    <doctitle>${project.name} ${project.version}</doctitle>
-                    <windowtitle>${project.name} ${project.version}</windowtitle>
-                    <testDoctitle>${project.name} ${project.version}
-                        (TEST API)</testDoctitle>
-                    <testWindowtitle>${project.name} ${project.version}
-                        (TEST API)</testWindowtitle>
-                    <splitindex>true</splitindex>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <links>
-                        <link>http://java.sun.com/j2se/1.6.0/docs/api</link>
-                        <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-                        <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
-                        <link>http://java.sun.com/j2ee/1.4/docs/api</link>
-                    </links>
-                    <linksource>true</linksource>
-                    <!-- http://jira.codehaus.org/browse/MJAVADOC-268 and http://jira.codehaus.org/browse/MJAVADOC-284 -->
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                    <!-- default value is as given; referenced by other plugins so specified explicitly -->
-                    <outputDirectory>${project.build.directory}/apidocs</outputDirectory>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>javadoc</report>
-                            <report>test-javadoc</report>
-                            <!-- removed because hitting bug (http://jira.codehaus.org/browse/MJAVADOC-298) -->
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+    <modules>
+        <module>udo/base/dom</module>
+        <module>udo/charge/dom</module>
+        <module>udo/currency/dom</module>
+        <module>udo/numerator/dom</module>
+        <module>udo/tax/dom</module>
+        <module>udo/event/dom</module>
+        <module>udo/index/dom</module>
+        <module>udo/link/dom</module>
+        <module>udo/project/dom</module>
+        <module>udo/settings/dom</module>
+        <module>udo/partyagreement/dom</module>
+        <module>incode/communications/dom</module>
+        <module>estatioapp/app</module>
+        <module>estatioapp/impmgr</module>
+        <module>estatioapp/dom</module>
+        <module>estatioapp/fixture</module>
+        <module>estatioapp/integtests</module>
+        <module>estatioapp/webapp</module>
+    </modules>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.11</version>
-                <configuration>
-                    <configLocation>${checkstyle.configLocation}</configLocation>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.0.1</version>
-                <configuration>
-                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <linkXRef>true</linkXRef>
-                    <targetJdk>${compileTarget}</targetJdk>
-                    <rulesets>
-                        <ruleset>${pmd.ruleset}</ruleset>
-                    </rulesets>
-                    <excludeRoots>
-                        <excludeRoot>
-                            ${project.build.directory}/generated-sources/modello
-                        </excludeRoot>
-                        <excludeRoot>
-                            ${project.build.directory}/generated-sources/plugin
-                        </excludeRoot>
-                    </excludeRoots>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-                <version>2.0-beta-2</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
-                    <linkJavadoc>true</linkJavadoc>
-                    <javadocDir>${project.build.directory}/apidocs</javadocDir>
-                </configuration>
-            </plugin>
-
-            <!--
-            TODO: reinstate?  IntelliJ wasn't resolving for some reason...
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <tagListOptions>
-                        <tagClasses>
-                            <tagClass>
-                                <displayName>Todo Work</displayName>
-                                <tags>
-                                    <tag>
-                                        <matchString>todo</matchString>
-                                        <matchType>ignoreCase</matchType>
-                                    </tag>
-                                    <tag>
-                                        <matchString>FIXME</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
-                                    <tag>
-                                        <matchString>REVIEW</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
-                                    <tag>
-                                        <matchString>hack</matchString>
-                                        <matchType>ignoreCase</matchType>
-                                    </tag>
-                                </tags>
-                            </tagClass>
-                        </tagClasses>
-                    </tagListOptions>
-                </configuration>
-            </plugin>
-            -->
-
-        </plugins>
-    </reporting>
-
-
-    <profiles>
-        <profile>
-            <id>regular-build</id>
-            <activation>
-                <property>
-                    <name>!skip.regular-build</name>
-                </property>
-            </activation>
-            <modules>
-                <module>udo/base/dom</module>
-                <module>udo/charge/dom</module>
-                <module>udo/currency/dom</module>
-                <module>udo/numerator/dom</module>
-                <module>udo/tax/dom</module>
-                <module>udo/event/dom</module>
-                <module>udo/index/dom</module>
-                <module>udo/link/dom</module>
-                <module>udo/project/dom</module>
-                <module>udo/settings/dom</module>
-                <module>udo/partyagreement/dom</module>
-                <module>incode/communications/dom</module>
-                <module>estatioapp/app</module>
-                <module>estatioapp/impmgr</module>
-                <module>estatioapp/dom</module>
-                <module>estatioapp/fixture</module>
-                <module>estatioapp/integtests</module>
-                <module>estatioapp/webapp</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>quicktest</id>
-            <modules>
-                <module>udo/base/dom</module>
-                <module>udo/charge/dom</module>
-                <module>udo/currency/dom</module>
-                <module>udo/numerator/dom</module>
-                <module>udo/tax/dom</module>
-                <module>udo/event/dom</module>
-                <module>udo/index/dom</module>
-                <module>udo/link/dom</module>
-                <module>udo/project/dom</module>
-                <module>udo/partyagreement/dom</module>
-                <module>udo/settings/dom</module>
-                <module>incode/communications/dom</module>
-                <module>estatioapp/app</module>
-                <module>estatioapp/impmgr</module>
-                <module>estatioapp/dom</module>
-                <module>estatioapp/fixture</module>
-                <module>estatioapp/integtests</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>extended</id>
-            <modules>
-                <module>udo/base/dom</module>
-                <module>udo/charge/dom</module>
-                <module>udo/currency/dom</module>
-                <module>udo/numerator/dom</module>
-                <module>udo/tax/dom</module>
-                <module>udo/event/dom</module>
-                <module>udo/index/dom</module>
-                <module>udo/link/dom</module>
-                <module>udo/project/dom</module>
-                <module>udo/partyagreement/dom</module>
-                <module>udo/settings/dom</module>
-                <module>incode/communications/dom</module>
-                <module>estatioapp/app</module>
-                <module>estatioapp/impmgr</module>
-                <module>estatioapp/dom</module>
-                <module>estatioapp/fixture</module>
-                <module>estatioapp/integtests</module>
-                <module>estatioapp/integspecs</module>
-                <module>estatioapp/webapp</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>analysis</id>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
-            <modules>
-                <module>udo/base/dom</module>
-                <module>udo/charge/dom</module>
-                <module>udo/currency/dom</module>
-                <module>udo/numerator/dom</module>
-                <module>udo/event/dom</module>
-                <module>udo/index/dom</module>
-                <module>udo/link/dom</module>
-                <module>udo/project/dom</module>
-                <module>udo/partyagreement/dom</module>
-                <module>udo/settings/dom</module>
-                <module>incode/communications/dom</module>
-                <module>estatioapp/app</module>
-                <module>estatioapp/impmgr</module>
-                <module>estatioapp/dom</module>
-            </modules>
-        </profile>
-        <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->
-        <profile>
-            <id>m2e</id>
-            <activation>
-                <property>
-                    <name>m2e.version</name>
-                </property>
-            </activation>
-            <build>
-                <directory>target-ide</directory>
-            </build>
-        </profile>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-
-                    <!-- STRICTER than the default! -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>1.3.1</version>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[2.2.1,)</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>[1.6.0-11,)</version>
-                                </requireJavaVersion>
-                                <requirePluginVersions>
-                                    <message>All plugin versions must be
-                                        defined!</message>
-                                    <banLatest>true</banLatest>
-                                    <banRelease>true</banRelease>
-                                </requirePluginVersions>
-                                <DependencyConvergence />
-                            </rules>
-                        </configuration>
-                        <!-- goal:enforce supposedly binds to phase:validate, but explicit binding seems to be required -->
-                        <executions>
-                            <execution>
-                                <id>validate-enforce</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
