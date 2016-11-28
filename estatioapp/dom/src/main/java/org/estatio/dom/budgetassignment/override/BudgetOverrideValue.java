@@ -9,6 +9,8 @@ import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -44,6 +46,15 @@ import lombok.Setter;
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@Unique(name = "BudgetOverrideValue_budgetOverride_type_UNQ", members = { "budgetOverride", "type" })
+@javax.jdo.annotations.Queries({
+        @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgetassignment.override.BudgetOverrideValue " +
+                        "WHERE budgetOverride == :budgetOverride && "
+                        + "type == :type")
+})
 
 @DomainObject(
         objectType = "org.estatio.dom.budgetassignment.override.BudgetOverrideValue",
@@ -54,7 +65,7 @@ public class BudgetOverrideValue extends UdoDomainObject2<BudgetOverrideValue>
         implements WithApplicationTenancyProperty, Timestampable {
 
     public BudgetOverrideValue() {
-        super("budgetOverride, value");
+        super("budgetOverride, type, value");
     }
 
     public String title(){
@@ -92,9 +103,14 @@ public class BudgetOverrideValue extends UdoDomainObject2<BudgetOverrideValue>
     private String updatedBy;
 
     @Programmatic
+    public void finalizeOverrideValue() {
+        setStatus(Status.ASSIGNED);
+    }
+
+    @Programmatic
     public void removeWithStatusNew(){
         if (getStatus()==Status.NEW) {
-            repositoryService.remove(this);
+            repositoryService.removeAndFlush(this);
         }
     }
 
@@ -105,4 +121,5 @@ public class BudgetOverrideValue extends UdoDomainObject2<BudgetOverrideValue>
 
     @Inject
     RepositoryService repositoryService;
+
 }

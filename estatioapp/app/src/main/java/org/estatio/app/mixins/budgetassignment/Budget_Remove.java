@@ -13,6 +13,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
@@ -24,6 +26,7 @@ import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
 @Mixin
 public class Budget_Remove {
@@ -36,14 +39,24 @@ public class Budget_Remove {
     @Action(restrictTo = RestrictTo.PROTOTYPING ,semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public void removeBudget(
-            @ParameterLayout(named = "This will delete the budget and all associated data including keytables, calculations, runs and results. (You may consider downloading the budget and the keytables beforehand.) Are you sure?")
+            @ParameterLayout(named = "This will delete the budget and all associated data including keytables, calculations, runs, results and lease terms. (You may consider downloading the budget and the keytables beforehand.) Are you sure?")
             final boolean areYouSure
     ) {
 
         // delete results and runs
         for (BudgetCalculationRun run : budgetCalculationRunRepository.allBudgetCalculationRuns().stream().filter(x->x.getBudget().equals(budget)).collect(Collectors.toList())){
             for (BudgetCalculationResult result : run.getBudgetCalculationResults()){
-                result.remove();
+                // delete links and lease terms
+                for (BudgetCalculationResultLink link : budgetCalculationResultLinkRepository.findByCalculationResult(result)){
+                    LeaseTermForServiceCharge leaseTermToRemove = null;
+                    if (link.getLeaseTermForServiceCharge()!=null) {
+                        leaseTermToRemove = link.getLeaseTermForServiceCharge();
+                    }
+                    link.remove();
+                    if (leaseTermToRemove!=null) {
+                        leaseTermToRemove.remove();
+                    }
+                }
             }
             run.remove();
         }
@@ -83,5 +96,8 @@ public class Budget_Remove {
 
     @Inject
     private BudgetOverrideRepository budgetOverrideRepository;
+
+    @Inject
+    private BudgetCalculationResultLinkRepository budgetCalculationResultLinkRepository;
 
 }

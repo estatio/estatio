@@ -135,20 +135,34 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
     }
 
     @Programmatic
-    public List<BudgetOverrideValue> calculate(final LocalDate budgetStartDate){
+    public List<BudgetOverrideValue> findOrCreateValues(final LocalDate budgetStartDate){
         List<BudgetOverrideValue> results = new ArrayList<>();
         if (isActiveOnCalculationDate(budgetStartDate)) {
+            BudgetOverrideValue resultBudgeted;
+            BudgetOverrideValue resultActual;
             if (getType() == null) {
-                if (resultFor(budgetStartDate, BudgetCalculationType.BUDGETED)!=null) results.add(resultFor(budgetStartDate, BudgetCalculationType.BUDGETED));
-                if (resultFor(budgetStartDate, BudgetCalculationType.ACTUAL)!=null) results.add(resultFor(budgetStartDate, BudgetCalculationType.ACTUAL));
+                resultBudgeted = valueFor(budgetStartDate, BudgetCalculationType.BUDGETED);
+                if (resultBudgeted!=null) {
+                    results.add(resultBudgeted);
+                }
+                resultActual = valueFor(budgetStartDate, BudgetCalculationType.ACTUAL);
+                if (resultActual!=null) {
+                    results.add(resultActual);
+                }
             } else {
                 switch (getType()) {
                 case BUDGETED:
-                    if (resultFor(budgetStartDate, BudgetCalculationType.BUDGETED)!=null) results.add(resultFor(budgetStartDate, BudgetCalculationType.BUDGETED));
+                    resultBudgeted = valueFor(budgetStartDate, BudgetCalculationType.BUDGETED);
+                    if (resultBudgeted!=null) {
+                        results.add(resultBudgeted);
+                    }
                     break;
 
                 case ACTUAL:
-                    if (resultFor(budgetStartDate, BudgetCalculationType.ACTUAL)!=null) results.add(resultFor(budgetStartDate, BudgetCalculationType.ACTUAL));
+                    resultActual = valueFor(budgetStartDate, BudgetCalculationType.ACTUAL);
+                    if (resultActual!=null) {
+                        results.add(resultActual);
+                    }
                     break;
                 }
             }
@@ -157,7 +171,7 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
     }
 
     @Programmatic
-    abstract BudgetOverrideValue resultFor(final LocalDate date, final BudgetCalculationType type);
+    abstract BudgetOverrideValue valueFor(final LocalDate date, final BudgetCalculationType type);
 
     @Programmatic
     public boolean isActiveOnCalculationDate(final LocalDate calculationDate) {
@@ -196,8 +210,8 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
     }
 
     @Programmatic
-    public BudgetOverrideValue createCalculation(final BigDecimal value, final BudgetCalculationType type){
-        return budgetOverrideValueRepository.newBudgetOverrideValue(value, this, type);
+    public BudgetOverrideValue findOrCreateCalculation(final BigDecimal value, final BudgetCalculationType type){
+        return budgetOverrideValueRepository.findOrCreateOverrideValue(value, this, type);
     }
 
     @Programmatic

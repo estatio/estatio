@@ -25,7 +25,7 @@ public class BudgetCalculationService {
         List<BudgetCalculation> budgetCalculations = new ArrayList<>();
         for (BudgetCalculationViewmodel result : getBudgetedCalculations(budget)){
             budgetCalculations.add(
-                    budgetCalculationRepository.createBudgetCalculation(
+                    budgetCalculationRepository.findOrCreateBudgetCalculation(
                     result.getPartitionItem(),
                     result.getKeyItem(),
                     result.getValue(),

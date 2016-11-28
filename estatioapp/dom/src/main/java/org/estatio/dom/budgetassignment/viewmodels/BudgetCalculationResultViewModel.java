@@ -7,10 +7,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 
-import org.isisaddons.module.excel.dom.PivotColumn;
 import org.isisaddons.module.excel.dom.PivotDecoration;
 import org.isisaddons.module.excel.dom.PivotRow;
-import org.isisaddons.module.excel.dom.PivotValue;
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
@@ -35,34 +33,31 @@ public class BudgetCalculationResultViewModel {
             final BigDecimal budgetedValue
     ){
         this.leaseReference = lease.getReference();
-        this.unit = unit.getReference();
-        this.keyTable = keyTable.getName();
         this.invoiceCharge = invoiceCharge.getReference();
         this.budgetedValue = budgetedValue;
+        this.unit = unit.getReference();
+        this.keyTable = keyTable.getName();
     }
 
     @Getter @Setter
-    @MemberOrder(sequence = "1")
     @PivotRow
     private String leaseReference;
 
     @Getter @Setter
     @MemberOrder(sequence = "2")
-    @PivotDecoration(order = 1)
     private String unit;
 
     @Getter @Setter
-    @MemberOrder(sequence = "3")
-    @PivotColumn(order = 1)
+    @MemberOrder(sequence = "2")
+    @PivotDecoration(order = 1)
     private String keyTable;
 
     @Getter @Setter
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "3")
     private String invoiceCharge;
 
     @Getter @Setter
-    @MemberOrder(sequence = "5")
-    @PivotValue(order = 1)
+    @MemberOrder(sequence = "4")
     private BigDecimal budgetedValue;
 
     public void add(final BudgetCalculationViewmodel calculationResult) {

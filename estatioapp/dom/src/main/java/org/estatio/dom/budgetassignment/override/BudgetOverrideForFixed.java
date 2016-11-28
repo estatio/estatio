@@ -25,8 +25,8 @@ public class BudgetOverrideForFixed extends BudgetOverride {
     @Column(scale = 2)
     private BigDecimal fixedValue;
 
-    @Override BudgetOverrideValue resultFor(final LocalDate date, final BudgetCalculationType type) {
-        return createCalculation(fixedValue, type);
+    @Override BudgetOverrideValue valueFor(final LocalDate date, final BudgetCalculationType type) {
+        return findOrCreateCalculation(fixedValue, type);
     }
 
     @Override

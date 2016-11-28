@@ -68,7 +68,7 @@ public class BudgetCalculationTest {
         // expect
         context.checking(new Expectations() {
             {
-                oneOf(repositoryService).remove(calculation);
+                oneOf(repositoryService).removeAndFlush(calculation);
             }
 
         });

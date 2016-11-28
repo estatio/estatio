@@ -60,7 +60,7 @@ public class BudgetOverrideValueTest {
         // expect
         context.checking(new Expectations() {
             {
-                oneOf(repositoryService).remove(value);
+                oneOf(repositoryService).removeAndFlush(value);
             }
 
         });

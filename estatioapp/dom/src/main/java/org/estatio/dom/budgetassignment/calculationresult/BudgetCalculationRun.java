@@ -51,7 +51,17 @@ import lombok.Setter;
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
-                        "WHERE lease == :lease")
+                        "WHERE lease == :lease"),
+        @Query(
+                name = "findByBudgetAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "WHERE budget == :budget && type == :type"),
+        @Query(
+                name = "findByBudgetAndTypeAndStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "WHERE budget == :budget && type == :type && status == :status")
 })
 @Unique(name = "BudgetCalculationRun_lease_budget_type_UNQ", members = { "lease", "budget", "type" })
 
@@ -107,6 +117,14 @@ public class BudgetCalculationRun extends UdoDomainObject2<BudgetCalculationRun>
     @Programmatic
     public void remove() {
         remove(this);
+    }
+
+    @Programmatic
+    public void finalizeRun(){
+        for (BudgetCalculationResult calculationResult : getBudgetCalculationResults()){
+            calculationResult.finalizeCalculationResult();
+        }
+        setStatus(Status.ASSIGNED);
     }
 
     @Inject

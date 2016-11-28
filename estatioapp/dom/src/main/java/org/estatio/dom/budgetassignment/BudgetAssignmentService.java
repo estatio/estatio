@@ -10,11 +10,16 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
@@ -28,14 +33,22 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel;
+import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermRepository;
 import org.estatio.dom.lease.Occupancy;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -44,23 +57,36 @@ public class BudgetAssignmentService {
     public List<BudgetCalculationRun> calculateResultsForLeases(final Budget budget, final BudgetCalculationType type){
         List<BudgetCalculationRun> results = new ArrayList<>();
 
-        for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(budget.getProperty(), budget.getStartDate())) {
-            // TODO: this is an extra filter because currently occupancies can outrun terminated leases
-            if (lease.getStatus() != LeaseStatus.TERMINATED) {
-
-                removeNewOverrideValues(lease);
-                calculateOverrideValues(lease, budget);
-                results.add(executeCalculationRun(lease, budget, type));
-
-            }
+        for (Lease lease : leasesWithActiveOccupations(budget)) {
+            removeNewOverrideValues(lease);
+            calculateOverrideValues(lease, budget);
+            results.add(executeCalculationRun(lease, budget, type));
         }
 
         return results;
     }
 
+    List<Lease> leasesWithActiveOccupations(final Budget budget){
+        List<Lease> result = new ArrayList<>();
+        for (Lease lease : leaseRepository.findLeasesByProperty(budget.getProperty())){
+            // TODO: this is an extra filter because currently occupancies can outrun terminated leases
+            if (lease.getStatus()!=LeaseStatus.TERMINATED) {
+                for (Occupancy occupancy : lease.getOccupancies()) {
+                    if (occupancy.getInterval().overlaps(budget.getInterval())) {
+                        result.add(lease);
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     public BudgetCalculationRun executeCalculationRun(final Lease lease, final Budget budget, final BudgetCalculationType type){
         BudgetCalculationRun run = budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(lease, budget, type);
-        createBudgetCalculationResults(run);
+        if (run.getStatus()==Status.NEW) {
+            createBudgetCalculationResults(run);
+        }
         return run;
     }
 
@@ -78,7 +104,7 @@ public class BudgetAssignmentService {
     public List<BudgetOverrideValue> calculateOverrideValues(final Lease lease, final Budget budget){
         List<BudgetOverrideValue> results = new ArrayList<>();
         for (BudgetOverride override : budgetOverrideRepository.findByLease(lease)) {
-            results.addAll(override.calculate(budget.getStartDate()));
+            results.addAll(override.findOrCreateValues(budget.getStartDate()));
         }
         return results;
     }
@@ -92,7 +118,61 @@ public class BudgetAssignmentService {
     }
 
     public void assign(final Budget budget){
-        // TODO: implement
+        for (BudgetCalculationRun run : budgetCalculationRunRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.BUDGETED, Status.NEW)){
+            for (BudgetCalculationResult resultForLease : run.getBudgetCalculationResults()){
+
+                LocalDate itemStartDate = run.getLease().getStartDate().isAfter(budget.getStartDate()) ?
+                        run.getLease().getStartDate() :
+                        budget.getStartDate();
+
+                LeaseItem leaseItem = findOrCreateLeaseItemForServiceChargeBudgeted(run.getLease(), resultForLease, itemStartDate);
+
+                LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTermRepository.findOrCreateLeaseTermForInterval(leaseItem, new LocalDateInterval(itemStartDate, budget.getEndDate()));
+
+                budgetCalculationResultLinkRepository.findOrCreateLink(resultForLease, leaseTerm);
+
+                leaseTerm.setBudgetedValue(resultForLease.getValue());
+            }
+
+            run.finalizeRun();
+        }
+    }
+
+    private LeaseItem findOrCreateLeaseItemForServiceChargeBudgeted(final Lease lease, final BudgetCalculationResult calculationResult, final LocalDate startDate){
+        InvoicingFrequency frequency;
+        PaymentMethod paymentMethod;
+        LeaseItem itemToCopyFrom;
+
+        // try to copy invoice frequency and payment method from a lease item
+        itemToCopyFrom = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, calculationResult.getInvoiceCharge());
+        if (itemToCopyFrom==null){
+            itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+        }
+        if (itemToCopyFrom==null){
+            if (lease.getItems().size()>0) {
+                itemToCopyFrom = lease.getItems().first();
+            }
+        }
+        if (itemToCopyFrom!=null){
+            frequency = itemToCopyFrom.getInvoicingFrequency();
+            paymentMethod = itemToCopyFrom.getPaymentMethod();
+        } else {
+            // this is the first item on the lease: so make some guess
+            frequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
+            paymentMethod = PaymentMethod.DIRECT_DEBIT;
+        }
+
+        LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE_BUDGETED, calculationResult.getInvoiceCharge());
+        if (leaseItem==null){
+            leaseItem = lease.newItem(
+                    LeaseItemType.SERVICE_CHARGE_BUDGETED,
+                    calculationResult.getInvoiceCharge(),
+                    frequency,
+                    paymentMethod,
+                    startDate);
+            leaseItem.setStatus(LeaseItemStatus.SUSPENDED);
+        }
+        return leaseItem;
     }
 
     public List<DetailedBudgetCalculationResultViewmodel> getDetailedBudgetAssignmentResults(final Budget budget, final Lease lease){
@@ -225,7 +305,10 @@ public class BudgetAssignmentService {
     private BudgetCalculationService budgetCalculationService;
 
     @Inject
-    private LeaseRepository leaseRepository;
+    LeaseRepository leaseRepository;
+
+    @Inject
+    private LeaseTermRepository leaseTermRepository;
 
     @Inject
     private BudgetOverrideRepository budgetOverrideRepository;
@@ -235,5 +318,8 @@ public class BudgetAssignmentService {
 
     @Inject
     private BudgetCalculationResultRepository budgetCalculationResultRepository;
+
+    @Inject
+    private BudgetCalculationResultLinkRepository budgetCalculationResultLinkRepository;
 
 }

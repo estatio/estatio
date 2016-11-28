@@ -16,6 +16,10 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 
@@ -62,7 +66,24 @@ public class BudgetMenu {
         return budgetRepository.findByProperty(property);
     }
 
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    public List<BudgetOverrideValue> allBudgetOverrideValues(){
+        return budgetOverrideValueRepository.allBudgetOverrideValues();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @CollectionLayout(render = RenderType.EAGERLY)
+    public List<BudgetCalculationResult> allBudgetCalculationResults(){
+        return budgetCalculationResultRepository.allBudgetCalculationResults();
+    }
+
     @Inject
     BudgetRepository budgetRepository;
+
+    @Inject
+    BudgetOverrideValueRepository budgetOverrideValueRepository;
+
+    @Inject BudgetCalculationResultRepository budgetCalculationResultRepository;
 
 }

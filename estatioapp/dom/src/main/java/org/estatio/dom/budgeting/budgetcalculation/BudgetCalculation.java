@@ -144,7 +144,7 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     }
 
     @Getter @Setter
-    @Column(allowsNull = "false", scale = 2)
+    @Column(allowsNull = "false", scale = 6)
     private BigDecimal value;
 
     @Getter @Setter
@@ -213,11 +213,18 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     @Programmatic
     public void removeWithStatusNew() {
         if (getStatus() == Status.NEW) {
-            repositoryService.remove(this);
+            repositoryService.removeAndFlush(this);
         }
+    }
+
+    @Programmatic
+    public void finalizeCalculation() {
+        setStatus(Status.ASSIGNED);
     }
 
     @Inject
     RepositoryService repositoryService;
+
+
 
 }

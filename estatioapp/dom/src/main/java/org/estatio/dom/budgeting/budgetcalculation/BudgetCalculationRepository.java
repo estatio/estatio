@@ -43,6 +43,16 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         return budgetCalculation;
     }
 
+    public BudgetCalculation findOrCreateBudgetCalculation(
+            final PartitionItem partitionItem,
+            final KeyItem keyItem,
+            final BigDecimal value,
+            final BudgetCalculationType calculationType) {
+        return findUnique(partitionItem, keyItem, calculationType)==null ?
+                createBudgetCalculation(partitionItem, keyItem, value, calculationType) :
+                findUnique(partitionItem, keyItem, calculationType);
+    }
+
     public BudgetCalculation findUnique(
             final PartitionItem partitionItem,
             final KeyItem keyItem,
@@ -124,5 +134,6 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     public List<BudgetCalculation> findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType(final Budget budget, final Unit unit, final Charge invoiceCharge, final Charge incomingCharge, final BudgetCalculationType type) {
         return allMatches("findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType", "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "incomingCharge", incomingCharge, "type", type);
     }
+
 }
 

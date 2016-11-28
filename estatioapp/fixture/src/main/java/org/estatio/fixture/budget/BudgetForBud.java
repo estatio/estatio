@@ -33,6 +33,7 @@ import org.estatio.fixture.lease.LeasesForBudNl;
 public class BudgetForBud extends BudgetAbstact {
 
     public static final LocalDate BUDGET_2015_START_DATE = new LocalDate(2015, 01, 01);
+    public static final LocalDate BUDGET_2015_END_DATE = BUDGET_2015_START_DATE.plusYears(1).minusDays(1);
 
     @Override
     protected void execute(ExecutionContext executionContext) {

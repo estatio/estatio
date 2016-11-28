@@ -43,7 +43,6 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String REF4A = "BUD-NLBANK-004";
     public static final String REF5 = "BUD-HYPER-005";
     public static final String REF6 = "BUD-HELLO-006";
-    public static final String REF7 = "BUD-DAGO-007";
 
     public static final String UNIT_REF1 = PropertyForBudNl.unitReference("001");
     public static final String UNIT_REF2 = PropertyForBudNl.unitReference("002");

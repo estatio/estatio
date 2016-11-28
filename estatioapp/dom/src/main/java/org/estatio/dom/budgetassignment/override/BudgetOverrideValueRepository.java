@@ -27,10 +27,27 @@ public class BudgetOverrideValueRepository extends UdoDomainRepositoryAndFactory
         newValue.setType(type);
         newValue.setStatus(Status.NEW);
         persistIfNotAlready(newValue);
+        getContainer().flush(); // needed!!! (BudgetOverrideIntegrationTest@line70 fails otherwise)
         return newValue;
     }
 
-    public List<BudgetOverrideValue> allBudgetOverrideCalculations(){
+    public BudgetOverrideValue findOrCreateOverrideValue(
+            final BigDecimal value,
+            final BudgetOverride budgetOverride,
+            final BudgetCalculationType type){
+        return findUnique(budgetOverride, type)==null ?
+                newBudgetOverrideValue(value, budgetOverride, type) :
+                findUnique(budgetOverride, type);
+    }
+
+    public BudgetOverrideValue findUnique(
+            final BudgetOverride override,
+            final BudgetCalculationType type
+            ){
+        return uniqueMatch("findUnique", "budgetOverride", override, "type", type);
+    }
+
+    public List<BudgetOverrideValue> allBudgetOverrideValues(){
         return allInstances();
     }
 

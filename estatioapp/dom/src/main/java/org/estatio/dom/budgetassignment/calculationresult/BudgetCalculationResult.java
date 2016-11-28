@@ -100,7 +100,11 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetOverrideValue> getOverrideValues(){
         List<BudgetOverrideValue> results = new ArrayList<>();
-        for (BudgetOverride override : budgetOverrideRepository.findByLeaseAndInvoiceChargeAndType(getBudgetCalculationRun().getLease(), getInvoiceCharge(), getBudgetCalculationRun().getType())){
+        for (BudgetOverride override : budgetOverrideRepository
+                .findByLeaseAndInvoiceChargeAndType(
+                        getBudgetCalculationRun().getLease(),
+                        getInvoiceCharge(),
+                        getBudgetCalculationRun().getType())){
             results.addAll(override.getValues());
         }
         return results;
@@ -173,8 +177,13 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
     }
 
     @Programmatic
-    public void remove() {
-        remove(this);
+    public void finalizeCalculationResult() {
+        for (BudgetCalculation calculation : getBudgetCalculations()){
+            calculation.finalizeCalculation();
+        }
+        for (BudgetOverrideValue overrideValue : getOverrideValues()){
+            overrideValue.finalizeOverrideValue();
+        }
     }
 
     @Override
@@ -187,5 +196,6 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
+
 
 }

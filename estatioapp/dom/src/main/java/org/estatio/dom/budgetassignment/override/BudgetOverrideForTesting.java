@@ -7,7 +7,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 
 public class BudgetOverrideForTesting extends BudgetOverride {
-    @Override BudgetOverrideValue resultFor(final LocalDate date, final BudgetCalculationType type) {
+    @Override BudgetOverrideValue valueFor(final LocalDate date, final BudgetCalculationType type) {
         return null;
     }
 

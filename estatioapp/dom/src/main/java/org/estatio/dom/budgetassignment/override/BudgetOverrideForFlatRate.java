@@ -29,8 +29,8 @@ public class BudgetOverrideForFlatRate extends BudgetOverride {
     @Column(allowsNull = "false", scale = 2)
     private BigDecimal weightedArea;
 
-    @Override BudgetOverrideValue resultFor(final LocalDate date, final BudgetCalculationType type) {
-        return createCalculation(valuePerM2.multiply(weightedArea), type);
+    @Override BudgetOverrideValue valueFor(final LocalDate date, final BudgetCalculationType type) {
+        return findOrCreateCalculation(valuePerM2.multiply(weightedArea), type);
     }
 
     @Override

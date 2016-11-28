@@ -118,4 +118,42 @@ public class BudgetCalculationRunRepositoryTest extends EstatioIntegrationTest {
 
     }
 
+    public static class FindByBudgetAndType extends BudgetCalculationRunRepositoryTest {
+
+        @Test
+        public void findByBudgetAndType() {
+
+            // given
+            Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+
+            // when
+            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+
+            // then
+            assertThat(budgetCalculationRunRepository.findByBudgetAndType(budget2015, BudgetCalculationType.BUDGETED).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByBudgetAndType(budget2015, BudgetCalculationType.ACTUAL).size()).isEqualTo(0);
+
+        }
+
+    }
+
+    public static class FindByBudgetAndTypeAndStatus extends BudgetCalculationRunRepositoryTest {
+
+        @Test
+        public void findByBudgetAndTypeStatus() {
+
+            // given
+            Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+
+            // when
+            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+
+            // then
+            assertThat(budgetCalculationRunRepository.findByBudgetAndTypeAndStatus(budget2015, BudgetCalculationType.BUDGETED, Status.NEW).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByBudgetAndTypeAndStatus(budget2015, BudgetCalculationType.BUDGETED, Status.ASSIGNED).size()).isEqualTo(0);
+
+        }
+
+    }
+
 }

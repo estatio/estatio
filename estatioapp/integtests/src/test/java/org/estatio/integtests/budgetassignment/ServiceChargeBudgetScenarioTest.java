@@ -1,11 +1,13 @@
-package org.estatio.integtests.budget;
+package org.estatio.integtests.budgetassignment;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +17,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
+import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
@@ -23,11 +27,14 @@ import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForMax;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideType;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
 import org.estatio.dom.budgetassignment.viewmodels.BudgetCalculationResultViewModel;
 import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetCalculationResultViewmodel;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel;
@@ -35,8 +42,14 @@ import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItemRepository;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.budget.BudgetForBud;
@@ -49,7 +62,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class
 
-BudgetCalculationScenarioTest extends EstatioIntegrationTest {
+ServiceChargeBudgetScenarioTest extends EstatioIntegrationTest {
 
     @Inject
     PropertyRepository propertyRepository;
@@ -67,10 +80,16 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
+    LeaseItemRepository leaseItemRepository;
+
+    @Inject
     ChargeRepository chargeRepository;
 
     @Inject
     BudgetOverrideRepository budgetOverrideRepository;
+
+    @Inject
+    BudgetOverrideValueRepository budgetOverrideValueRepository;
 
     @Inject
     BudgetCalculationRunRepository budgetCalculationRunRepository;
@@ -78,6 +97,11 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
     @Inject
     BudgetCalculationResultRepository budgetCalculationResultRepository;
 
+    @Inject
+    BudgetCalculationResultLinkRepository budgetCalculationResultLinkRepository;
+
+    @Inject
+    BudgetCalculationRepository budgetCalculationRepository;
 
     @Before
     public void setupData() {
@@ -91,7 +115,7 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
     }
 
 
-    public static class Calculate extends BudgetCalculationScenarioTest {
+    public static class Calculate extends ServiceChargeBudgetScenarioTest {
 
         Property property;
         Budget budget;
@@ -113,17 +137,34 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
         }
 
         @Test
-        public void CalculateAndAssign() throws Exception {
+        public void fullScenarioTest() throws Exception {
             calculate();
             detailedCalculation();
             createPersistedBudgetCalculations();
             calculateResultsForLeases();
-
-//            assignBudget();
+            assignResults();
+            finalCalculationIsIdemPotent();
 //            assignBudgetWhenUpdated();
 //            assignBudgetWhenAudited();
 //            assignBudgetWhenAuditedAndUpdated();
         }
+
+        public static BigDecimal U1_BVAL_1 = new BigDecimal("1928.571437");
+        public static BigDecimal U1_BVAL_2 = new BigDecimal("964.285722");
+        public static BigDecimal U2_BVAL_1 = new BigDecimal("2857.142847");
+        public static BigDecimal U2_BVAL_2 = new BigDecimal("1928.571417");
+        public static BigDecimal U3_BVAL_1 = new BigDecimal("3785.714283");
+        public static BigDecimal U3_BVAL_2 = new BigDecimal("2892.857139");
+        public static BigDecimal U4_BVAL_1 = new BigDecimal("4714.285719");
+        public static BigDecimal U4_BVAL_2 = new BigDecimal("3857.142861");
+        public static BigDecimal U5_BVAL_1 = new BigDecimal("5642.857155");
+        public static BigDecimal U5_BVAL_2 = new BigDecimal("4821.428583");
+        public static BigDecimal U6_BVAL_1 = new BigDecimal("6571.428565");
+        public static BigDecimal U6_BVAL_2 = new BigDecimal("5785.714278");
+        public static BigDecimal U7_BVAL_1 = new BigDecimal("6500.000000");
+        public static BigDecimal U7_BVAL_2 = new BigDecimal("6750.000000");
+        public static BigDecimal BVAL_POISON_1 = new BigDecimal("1921.43");
+        public static BigDecimal BVAL_MIRACLE_1 = new BigDecimal("1125.00");
 
         public void calculate() throws Exception {
 
@@ -134,18 +175,20 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
             // then
             assertThat(budgetCalculationViewmodels.size()).isEqualTo(33);
             assertThat(budgetCalculationResultViewModels.size()).isEqualTo(20);
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF1, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("1928.571437"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF1, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("964.285722"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF2, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("2857.142847"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF2, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("1928.571417"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF3, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("3785.714283"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF3, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("2892.857139"));
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF1, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(U1_BVAL_1);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF1, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(U1_BVAL_2);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF2, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(U2_BVAL_1);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF2, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(U2_BVAL_2);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF3, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(U3_BVAL_1);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF3, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(U3_BVAL_2);
             assertThat(budgetedAmountFor(LeasesForBudNl.REF4, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("11214.285719"));
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF4, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(U4_BVAL_1.add(U7_BVAL_1));
             assertThat(budgetedAmountFor(LeasesForBudNl.REF4, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("10607.142861"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF4A, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("4714.285719"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF4A, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("3857.142861"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF5, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(new BigDecimal("5642.857155"));
-            assertThat(budgetedAmountFor(LeasesForBudNl.REF5, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(new BigDecimal("4821.428583"));
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF4, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(U4_BVAL_2.add(U7_BVAL_2));
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF4A, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(U4_BVAL_1);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF4A, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(U4_BVAL_2);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF5, ChargeRefData.NL_SERVICE_CHARGE)).isEqualTo(U5_BVAL_1);
+            assertThat(budgetedAmountFor(LeasesForBudNl.REF5, ChargeRefData.NL_SERVICE_CHARGE2)).isEqualTo(U5_BVAL_2);
 
         }
 
@@ -217,6 +260,11 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
             // given
             Lease leasePoison = leaseRepository.findLeaseByReference(LeasesForBudNl.REF1);
             Lease leaseMiracle = leaseRepository.findLeaseByReference(LeasesForBudNl.REF2);
+            Lease leaseHello3 = leaseRepository.findLeaseByReference(LeasesForBudNl.REF3);
+            Lease leaseDago = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4);
+            Lease leaseNlBank = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4A);
+            Lease leaseHyper = leaseRepository.findLeaseByReference(LeasesForBudNl.REF5);
+            Lease leaseHello6 = leaseRepository.findLeaseByReference(LeasesForBudNl.REF6);
             Charge invoiceCharge1 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE);
             Charge invoiceCharge2 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE2);
             Charge incomingCharge = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);
@@ -225,34 +273,39 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
             calculationRuns = budgetAssignmentService.calculateResultsForLeases(budget, BudgetCalculationType.BUDGETED);
 
             // then
-            assertThat(calculationRuns.size()).isEqualTo(3);
-
+            assertThat(calculationRuns.size()).isEqualTo(6);
             assertThat(budgetCalculationRunRepository.findByLease(leasePoison).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByLease(leaseMiracle).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByLease(leaseHello3).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByLease(leaseDago).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByLease(leaseNlBank).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByLease(leaseHyper).size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.findByLease(leaseHello6).size()).isEqualTo(0);
+
             BudgetCalculationRun rPoison = budgetCalculationRunRepository.findByLease(leasePoison).get(0);
             assertThat(rPoison.getType()).isEqualTo(BudgetCalculationType.BUDGETED);
             assertThat(rPoison.getStatus()).isEqualTo(Status.NEW);
             assertThat(rPoison.getBudgetCalculationResults().size()).isEqualTo(2);
 
             BudgetCalculationResult cResPoison1 = budgetCalculationResultRepository.findUnique(rPoison, invoiceCharge1);
-            assertThat(cResPoison1.getValue()).isEqualTo(new BigDecimal("1921.43"));
+            assertThat(cResPoison1.getValue()).isEqualTo(BVAL_POISON_1);
             assertThat(cResPoison1.getShortfall()).isEqualTo(new BigDecimal("7.14"));
 
             BudgetCalculationResult cResPoison2 = budgetCalculationResultRepository.findUnique(rPoison, invoiceCharge2);
-            assertThat(cResPoison2.getValue()).isEqualTo(new BigDecimal("964.29"));
+            assertThat(cResPoison2.getValue()).isEqualTo(U1_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP));
             assertThat(cResPoison2.getShortfall()).isEqualTo(new BigDecimal("0.00"));
 
-            assertThat(budgetCalculationRunRepository.findByLease(leaseMiracle).size()).isEqualTo(1);
             BudgetCalculationRun rMiracle = budgetCalculationRunRepository.findByLease(leaseMiracle).get(0);
             assertThat(rMiracle.getType()).isEqualTo(BudgetCalculationType.BUDGETED);
             assertThat(rMiracle.getStatus()).isEqualTo(Status.NEW);
             assertThat(rMiracle.getBudgetCalculationResults().size()).isEqualTo(2);
 
             BudgetCalculationResult cResMiracle1 = budgetCalculationResultRepository.findUnique(rMiracle, invoiceCharge1);
-            assertThat(cResMiracle1.getValue()).isEqualTo(new BigDecimal("1125.00"));
+            assertThat(cResMiracle1.getValue()).isEqualTo(BVAL_MIRACLE_1);
             assertThat(cResMiracle1.getShortfall()).isEqualTo(new BigDecimal("1732.14"));
 
             BudgetCalculationResult cResMiracle2 = budgetCalculationResultRepository.findUnique(rMiracle, invoiceCharge2);
-            assertThat(cResMiracle2.getValue()).isEqualTo(new BigDecimal("1928.57"));
+            assertThat(cResMiracle2.getValue()).isEqualTo(U2_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP));
             assertThat(cResMiracle2.getShortfall()).isEqualTo(new BigDecimal("0.00"));
 
             assertThat(budgetOverrideRepository.findByLease(leasePoison).size()).isEqualTo(1);
@@ -286,7 +339,152 @@ BudgetCalculationScenarioTest extends EstatioIntegrationTest {
 
         }
 
-        public void assignBudget() throws Exception {
+        public void assignResults() throws Exception {
+
+            // given
+            Lease leasePoison = leaseRepository.findLeaseByReference(LeasesForBudNl.REF1);
+            Lease leaseMiracle = leaseRepository.findLeaseByReference(LeasesForBudNl.REF2);
+            Lease leaseHello3 = leaseRepository.findLeaseByReference(LeasesForBudNl.REF3);
+            Lease leaseDago = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4);
+            Lease leaseNlBank = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4A);
+            Lease leaseHyper = leaseRepository.findLeaseByReference(LeasesForBudNl.REF5);
+            Lease leaseHello6 = leaseRepository.findLeaseByReference(LeasesForBudNl.REF6);
+
+            // when
+            budgetAssignmentService.assign(budget);
+
+            // then
+            validateLeaseItemsAndTerms(
+                    leasePoison,
+                    Arrays.asList(BVAL_POISON_1, U1_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
+                    BudgetForBud.BUDGET_2015_START_DATE
+            );
+            validateLeaseItemsAndTerms(
+                    leaseMiracle,
+                    Arrays.asList(BVAL_MIRACLE_1, U2_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
+                    BudgetForBud.BUDGET_2015_START_DATE
+            );
+            validateLeaseItemsAndTerms(
+                    leaseHello3,
+                    Arrays.asList(U3_BVAL_1.setScale(2, BigDecimal.ROUND_HALF_UP), U3_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
+                    leaseHello3.getStartDate()
+            );
+            validateLeaseItemsAndTerms(
+                    leaseDago,
+                    Arrays.asList(U4_BVAL_1.add(U7_BVAL_1).setScale(2, BigDecimal.ROUND_HALF_UP), U4_BVAL_2.add(U7_BVAL_2).setScale(2, BigDecimal.ROUND_HALF_UP)),
+                    BudgetForBud.BUDGET_2015_START_DATE
+            );
+            validateLeaseItemsAndTerms(
+                    leaseNlBank,
+                    Arrays.asList(U4_BVAL_1.setScale(2, BigDecimal.ROUND_HALF_UP), U4_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
+                    leaseNlBank.getStartDate()
+            );
+            validateLeaseItemsAndTerms(
+                    leaseHyper,
+                    Arrays.asList(U5_BVAL_1.setScale(2, BigDecimal.ROUND_HALF_UP), U5_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
+                    leaseHyper.getStartDate()
+            );
+
+            assertThat(leaseItemRepository.findLeaseItemsByType(leaseHello6, LeaseItemType.SERVICE_CHARGE_BUDGETED).size()).isEqualTo(0);
+
+        }
+
+        private void validateLeaseItemsAndTerms(final Lease lease, final List<BigDecimal> values, final LocalDate startDate) {
+
+            Charge invoiceCharge1 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE);
+            Charge invoiceCharge2 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE2);
+
+            assertThat(leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.SERVICE_CHARGE_BUDGETED).size()).isEqualTo(2);
+
+            assertThat(lease.getItems().first().getCharge()).isEqualTo(invoiceCharge1);
+            assertThat(lease.getItems().first().getStartDate()).isEqualTo(startDate);
+            assertThat(lease.getItems().first().getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
+            assertThat(lease.getItems().first().getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+            assertThat(lease.getItems().first().getStatus()).isEqualTo(LeaseItemStatus.SUSPENDED);
+            assertThat(lease.getItems().first().getTerms().size()).isEqualTo(1);
+
+            LeaseTermForServiceCharge term1 = (LeaseTermForServiceCharge) lease.getItems().first().getTerms().first();
+            assertThat(budgetCalculationResultLinkRepository.findByLeaseTerm(term1).size()).isEqualTo(1);
+            assertThat(term1.getBudgetedValue()).isEqualTo(values.get(0));
+            assertThat(term1.getAuditedValue()).isNull();
+            assertThat(term1.getStartDate()).isEqualTo(startDate);
+            assertThat(term1.getEndDate()).isEqualTo(BudgetForBud.BUDGET_2015_END_DATE);
+
+            assertThat(lease.getItems().last().getCharge()).isEqualTo(invoiceCharge2);
+            assertThat(lease.getItems().last().getStartDate()).isEqualTo(startDate);
+            assertThat(lease.getItems().last().getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
+            assertThat(lease.getItems().last().getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+            assertThat(lease.getItems().last().getStatus()).isEqualTo(LeaseItemStatus.SUSPENDED);
+            assertThat(lease.getItems().last().getTerms().size()).isEqualTo(1);
+
+            LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) lease.getItems().last().getTerms().first();
+            assertThat(budgetCalculationResultLinkRepository.findByLeaseTerm(term2).size()).isEqualTo(1);
+            assertThat(term2.getBudgetedValue()).isEqualTo(values.get(1));
+            assertThat(term2.getAuditedValue()).isNull();
+            assertThat(term2.getStartDate()).isEqualTo(startDate);
+            assertThat(term2.getEndDate()).isEqualTo(BudgetForBud.BUDGET_2015_END_DATE);
+
+        }
+
+        public void finalCalculationIsIdemPotent() throws Exception {
+
+            BudgetCalculation c1Before;
+            BudgetCalculation c1After;
+            BudgetCalculationRun r1Before;
+            BudgetCalculationRun r1After;
+            BudgetCalculationResult res1Before;
+            BudgetCalculationResult res1After;
+            BudgetOverrideValue v1Before;
+            BudgetOverrideValue v1After;
+            BudgetCalculationResultLink l1Before;
+            BudgetCalculationResultLink l1After;
+
+            // given
+            assertThat(budgetCalculationRepository.allBudgetCalculations().size()).isEqualTo(33);
+            c1Before = budgetCalculationRepository.allBudgetCalculations().get(0);
+            assertThat(c1Before.getStatus()).isEqualTo(Status.ASSIGNED);
+
+            assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(6);
+            r1Before = budgetCalculationRunRepository.allBudgetCalculationRuns().get(0);
+            assertThat(r1Before.getStatus()).isEqualTo(Status.ASSIGNED);
+
+            assertThat(budgetCalculationResultRepository.allBudgetCalculationResults().size()).isEqualTo(12);
+            res1Before = budgetCalculationResultRepository.allBudgetCalculationResults().get(0);
+
+            assertThat(budgetOverrideValueRepository.allBudgetOverrideValues().size()).isEqualTo(2);
+            v1Before = budgetOverrideValueRepository.allBudgetOverrideValues().get(0);
+            assertThat(v1Before.getStatus()).isEqualTo(Status.ASSIGNED);
+
+            assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(12);
+            l1Before = budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().get(0);
+            assertThat(l1Before.getLeaseTermForServiceCharge().getLeaseItem().getStatus()).isEqualTo(LeaseItemStatus.SUSPENDED);
+
+            // when
+            budgetCalculationService.calculatePersistedCalculations(budget);
+            budgetAssignmentService.calculateResultsForLeases(budget, BudgetCalculationType.BUDGETED);
+            budgetAssignmentService.assign(budget);
+
+            // then nothing should be changed
+            assertThat(budgetCalculationRepository.allBudgetCalculations().size()).isEqualTo(33);
+            c1After = budgetCalculationRepository.allBudgetCalculations().get(0);
+            assertThat(c1Before).isEqualTo(c1After);
+
+            assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(6);
+            r1After = budgetCalculationRunRepository.allBudgetCalculationRuns().get(0);
+            assertThat(r1Before).isEqualTo(r1After);
+
+            assertThat(budgetCalculationResultRepository.allBudgetCalculationResults().size()).isEqualTo(12);
+            res1After = budgetCalculationResultRepository.allBudgetCalculationResults().get(0);
+            assertThat(res1Before).isEqualTo(res1After);
+
+            assertThat(budgetOverrideValueRepository.allBudgetOverrideValues().size()).isEqualTo(2);
+            v1After = budgetOverrideValueRepository.allBudgetOverrideValues().get(0);
+            assertThat(v1Before).isEqualTo(v1After);
+
+            assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(12);
+            l1After = budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().get(0);
+            assertThat(l1Before).isEqualTo(l1After);
+            assertThat(l1Before.getLeaseTermForServiceCharge().getLeaseItem()).isEqualTo(l1After.getLeaseTermForServiceCharge().getLeaseItem());
 
         }
 
