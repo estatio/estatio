@@ -84,6 +84,11 @@ language governing permissions and limitations under the License.
                             <artifactId>staticanalysis</artifactId>
                             <version>0.0.1</version>
                         </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>surefire</artifactId>
+                            <version>0.0.2</version>
+                        </mixin>
                     </mixins>
                 </configuration>
             </plugin>
@@ -96,35 +101,31 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <artifactId>udo-dom-currency</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-partyagreement</artifactId>
+        </dependency>
+
+        <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>
             <artifactId>incode-module-unittestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-currency</artifactId>
-        </dependency>
-<!--
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-currency</artifactId>
-            <type>test-jar</type>
+            <groupId>com.danhaywood.mavendeps</groupId>
+            <artifactId>isistesting</artifactId>
+            <version>0.0.2</version>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
--->
 
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-partyagreement</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-partyagreement</artifactId>
@@ -132,78 +133,6 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
-        <!-- testing -->
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-unittestsupport</artifactId>
-            <scope>test</scope>
-        </dependency>
+            </dependencies>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-guava</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.danhaywood.java</groupId>
-            <artifactId>danhaywood-java-assertjext</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jmock</groupId>
-            <artifactId>jmock</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jmock</groupId>
-            <artifactId>jmock-junit4</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit-dep</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
-        <dependency>
-            <groupId>org.jmock</groupId>
-            <artifactId>jmock-legacy</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- needed by gmap3/HttpClient; not correctly declared as transitive dependency, it would seem... -->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.picocontainer</groupId>
-            <artifactId>picocontainer</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
-
-</project>
+        </project>

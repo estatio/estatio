@@ -62,33 +62,23 @@ language governing permissions and limitations under the License.
                             <artifactId>standard</artifactId>
                             <version>0.0.1</version>
                         </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>surefire</artifactId>
+                            <version>0.0.2</version>
+                        </mixin>
                     </mixins>
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!--<testFailureIgnore>true</testFailureIgnore>-->
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
 
-        <!-- this project's dependencies -->
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-dom</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
         </dependency>
 
         <dependency>
@@ -96,35 +86,9 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-app</artifactId>
         </dependency>
 
-        <!-- isis -->
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-runtime</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-unittestsupport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-unittestsupport</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-specsupport</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-integtestsupport</artifactId>
         </dependency>
 
         <dependency>
@@ -136,16 +100,24 @@ language governing permissions and limitations under the License.
             <groupId>org.isisaddons.wicket.gmap3</groupId>
             <artifactId>isis-wicket-gmap3-cpt</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
             <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.isisaddons.metamodel.paraname8</groupId>
             <artifactId>isis-metamodel-paraname8-dom</artifactId>
         </dependency>
+
+
+        <!-- testing -->
+        <dependency>
+            <groupId>com.danhaywood.mavendeps</groupId>
+            <artifactId>isistesting</artifactId>
+            <version>0.0.2</version>
+            <type>pom</type>
+        </dependency>
+
 
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -175,18 +147,6 @@ language governing permissions and limitations under the License.
             <version>991</version>  
         </dependency>
 
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.danhaywood.java</groupId>
-            <artifactId>danhaywood-java-assertjext</artifactId>
-        </dependency>
 
     </dependencies>
 
