@@ -1,4 +1,4 @@
-package org.estatio.dom.apptenancy;
+package org.estatio.dom.lease;
 
 import java.util.List;
 
@@ -15,9 +15,16 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.dom.asset.Property;
+import org.incode.module.country.dom.impl.Country;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EstatioApplicationTenancyRepositoryTest{
+public class EstatioApplicationTenancyRepositoryForLease_UnitTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -41,7 +48,9 @@ public class EstatioApplicationTenancyRepositoryTest{
     private ApplicationTenancy grandeDefault;
     private ApplicationTenancy grandeTa;
 
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    private EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepositoryForLease;
+    private EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepositoryForProperty;
+    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepositoryForCountry;
 
     @Before
     public void setUp() throws Exception {
@@ -68,8 +77,16 @@ public class EstatioApplicationTenancyRepositoryTest{
             will(returnValue(grandeTa));
         }});
 
-        estatioApplicationTenancyRepository = new EstatioApplicationTenancyRepository();
-        estatioApplicationTenancyRepository.applicationTenancies = mockApplicationTenancies;
+        estatioApplicationTenancyRepositoryForLease = new EstatioApplicationTenancyRepositoryForLease();
+        estatioApplicationTenancyRepositoryForProperty = new EstatioApplicationTenancyRepositoryForProperty();
+        estatioApplicationTenancyRepositoryForCountry = new EstatioApplicationTenancyRepositoryForCountry();
+
+        estatioApplicationTenancyRepositoryForLease.estatioApplicationTenancyRepositoryForProperty = estatioApplicationTenancyRepositoryForProperty;
+        estatioApplicationTenancyRepositoryForProperty.setEstatioApplicationTenancyRepositoryForCountry(estatioApplicationTenancyRepositoryForCountry);
+
+        estatioApplicationTenancyRepositoryForLease.applicationTenancies = mockApplicationTenancies;
+        estatioApplicationTenancyRepositoryForProperty.setApplicationTenancies(mockApplicationTenancies);
+        estatioApplicationTenancyRepositoryForCountry.setApplicationTenancies(mockApplicationTenancies);
     }
 
     private List<ApplicationTenancy> someTenancies() {
@@ -115,31 +132,36 @@ public class EstatioApplicationTenancyRepositoryTest{
         return applicationTenancy;
     }
 
-
-    @Test
-    public void testChildrenOf() throws Exception {
-        List<ApplicationTenancy> applicationTenancies;
-
-        // when
-        applicationTenancies = estatioApplicationTenancyRepository.childrenOf(france);
-
-        // then
-        assertThat(applicationTenancies).containsExactly(franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
-
+    private static Country country(final String reference) {
+        Country country = new Country();
+        country.setReference(reference);
+        return country;
     }
 
     @Test
-    public void testSelfOrChildrenOf() throws Exception {
-        List<ApplicationTenancy> applicationTenancies;
-
-        // when
-        applicationTenancies = estatioApplicationTenancyRepository.selfOrChildrenOf(france);
-
-        // then
-        assertThat(applicationTenancies).containsExactly(france, franceOther, viv, vivDefault, vivTa, piq, piqDefault, piqTa);
-
+    public void testPathForPartyProperty() throws Exception {
+        //given
+        final Property p = propertyWith("ITA", "GRA");
+        final Party pa = partyWith("HELLO");
+        //then
+        assertThat(estatioApplicationTenancyRepositoryForLease.pathFor(p,pa)).isEqualTo("/ITA/GRA/HELLO");
     }
 
-    ApplicationTenancy applicationTenancyCountry;
+
+    private Party partyWith(final String hello) {
+        Party pa = new Organisation();
+        pa.setReference(hello);
+        return pa;
+    }
+
+
+    private Property propertyWith(String countryCode, String reference){
+        Property property = new Property();
+        property.setReference(reference);
+        property.setCountry(new Country(countryCode, countryCode, countryCode));
+        return property;
+    }
+
+
 
 }
