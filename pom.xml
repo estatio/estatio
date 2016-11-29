@@ -108,7 +108,7 @@ mvn clean install -DskipTests -o
         <incode-module-docrendering-stringinterpolator.version>1.13.1</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
         <incode-module-unittestsupport.version>1.13.3</incode-module-unittestsupport.version>
-        <incode-module-integtestsupport.version>1.14.0-SNAPSHOT</incode-module-integtestsupport.version>
+        <incode-module-integtestsupport.version>1.13.0</incode-module-integtestsupport.version>
 
         <!-- TODO: change when this is moved out (EST-866) -->
         <incode-module-communication.version>${project.version}</incode-module-communication.version>
