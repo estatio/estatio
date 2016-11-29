@@ -45,7 +45,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.numerator.Numerator;
+import org.estatio.numerator.dom.impl.Numerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

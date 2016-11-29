@@ -19,111 +19,87 @@
 package org.estatio.integtests;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
-import com.google.common.base.Throwables;
+
+import com.google.common.collect.Lists;
+
+import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.isis.applib.fixtures.FixtureClock;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
 import org.apache.isis.core.runtime.authentication.standard.SimpleSession;
+import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
 
 import org.isisaddons.module.command.dom.BackgroundCommandExecutionFromBackgroundCommandServiceJdo;
 import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
 import org.isisaddons.module.command.dom.CommandJdo;
+
+import org.incode.module.integtestsupport.dom.IncodeIntegrationTestAbstract;
+
+import org.estatio.app.EstatioAppManifest;
+import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Base class for integration tests.
  */
-public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
+public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstract {
 
     private static final Logger LOG = LoggerFactory.getLogger(EstatioIntegrationTest.class);
 
     @BeforeClass
     public static void initClass() {
-        PropertyConfigurator.configure("logging.properties");
+        PropertyConfigurator.configure("logging-integtest.properties");
 
         LOG.info("Starting tests");
 
-        EstatioSystemInitializer.initIsft();
-        
+        IsisSystemForTest isft = IsisSystemForTest.getElseNull();
+        if (isft == null) {
+            isft = new IsisSystemForTest.Builder()
+                    .withLoggingAt(Level.WARN)
+                    .with(new AuthenticationRequestNameOnly("estatio-admin"))
+                    .with(new EstatioAppManifest() {
+
+                        @Override public List<Class<?>> getModules() {
+                            final List<Class<?>> modules = super.getModules();
+                            modules.add(EstatioIntegTestFakeServicesModule.class);
+                            return modules;
+                        }
+
+                        @Override
+                        public Map<String, String> getConfigurationProperties() {
+                            Map<String, String> props = super.getConfigurationProperties();
+                            Util.withIsisIntegTestProperties(props);
+                            Util.withJavaxJdoRunInMemoryProperties(props);
+                            Util.withDataNucleusProperties(props);
+                            return props;
+                        }
+                        @Override
+                        public List<Class<?>> getAdditionalServices() {
+                            List<Class<?>> additionalServices = Lists.newArrayList();
+                            appendEstatioCalendarService(additionalServices);
+                            appendOptionalServicesForSecurityModule(additionalServices);
+                            return additionalServices;
+                        }
+                    })
+                    .build()
+                    .setUpSystem();
+            IsisSystemForTest.set(isft);
+        }
+
         // instantiating will install onto ThreadLocal
         new ScenarioExecutionForIntegration();
     }
 
-    // //////////////////////////////////////
-
-    protected static <T> T assertType(Object o, Class<T> type) {
-        if(o == null) {
-            throw new AssertionError("Object is null");
-        }
-        if(!type.isAssignableFrom(o.getClass())) {
-            throw new AssertionError(
-                    String.format("Object %s (%s) is not an instance of %s", o.getClass().getName(), o.toString(), type));
-        }
-        return type.cast(o);
-    }
-
-    // //////////////////////////////////////
-
-    /**
-     * Replacement for the deprecated {@link #runScript(org.apache.isis.applib.fixturescripts.FixtureScript...)}.
-     */
-    protected void runFixtureScript(final FixtureScript... fixtureScriptList) {
-        if(fixtureScriptList.length == 1) {
-            fixtureScripts.runFixtureScript(fixtureScriptList[0], null);
-        } else {
-            fixtureScripts.runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(final ExecutionContext executionContext) {
-                    for (FixtureScript fixtureScript : fixtureScriptList) {
-                        executionContext.executeChild(this, fixtureScript);
-                    }
-                }
-            }, null);
-        }
-        nextTransaction();
-    }
-
-    // //////////////////////////////////////
-
-    protected FixtureClock getFixtureClock() {
-        return ((FixtureClock)FixtureClock.getInstance());
-    }
-
-    // //////////////////////////////////////
-    
-    public Matcher<Throwable> causalChainHasMessageWith(final String messageFragment) {
-        return new TypeSafeMatcher<Throwable>() {
-
-            @Override
-            public void describeTo(Description arg0) {
-                arg0.appendText("causal chain has message with " + messageFragment);
-
-            }
-
-            @Override
-            protected boolean matchesSafely(Throwable arg0) {
-                for (Throwable ex : Throwables.getCausalChain(arg0)) {
-                    if (ex.getMessage().contains(messageFragment)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        };
-    }
 
     protected void runBackgroundCommands() throws InterruptedException {
 
@@ -153,6 +129,7 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
 
     @Inject
     protected FixtureScripts fixtureScripts;
+
 
 }
 

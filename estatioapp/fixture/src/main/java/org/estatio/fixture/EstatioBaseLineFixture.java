@@ -26,6 +26,8 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.settings.dom.ApplicationSettingsService;
 
+import org.incode.module.integtestsupport.dom.ClockFixture;
+
 import org.estatio.dom.appsettings.ApplicationSettingKey;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;

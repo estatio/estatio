@@ -61,12 +61,12 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>surefire</artifactId>
-                            <version>0.0.2</version>
+                            <version>${danhaywood-mavenmixin-surefire.version}</version>
                         </mixin>
                     </mixins>
                 </configuration>
@@ -78,6 +78,11 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-numerator</artifactId>
         </dependency>
 
         <dependency>
@@ -119,12 +124,29 @@ language governing permissions and limitations under the License.
 
         <!-- testing -->
         <dependency>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.integtestsupport</groupId>
+            <artifactId>incode-module-integtestsupport-dom</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
             <version>0.0.2</version>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-numerator</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
 
 
     </dependencies>

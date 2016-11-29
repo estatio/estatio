@@ -29,8 +29,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorRepository;
+import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorForCollectionRepository extends UdoDomainService<NumeratorForCollectionRepository> {

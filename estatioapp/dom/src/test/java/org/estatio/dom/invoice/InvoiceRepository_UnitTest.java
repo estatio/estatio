@@ -42,7 +42,7 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.numerator.NumeratorRepository;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

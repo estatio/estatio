@@ -35,9 +35,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorRepository;
 import org.estatio.dom.party.PartyConstants;
+import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

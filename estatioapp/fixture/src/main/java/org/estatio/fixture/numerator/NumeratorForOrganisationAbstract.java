@@ -6,10 +6,11 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.incode.module.country.dom.impl.Country;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorRepository;
+
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
 

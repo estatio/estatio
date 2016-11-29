@@ -25,6 +25,7 @@ import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
+import org.estatio.numerator.dom.NumeratorDomModule;
 
 public class EstatioAppManifest implements AppManifest {
 
@@ -44,6 +45,8 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioDomainModule.class,
                         EstatioDomainLinkModule.class,
                         EstatioDomainSettingsModule.class,
+
+                        NumeratorDomModule.class,
 
                         CountryModule.class,
                         CommunicationsModule.class,

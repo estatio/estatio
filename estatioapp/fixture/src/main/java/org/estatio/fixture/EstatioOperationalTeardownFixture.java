@@ -18,14 +18,6 @@
  */
 package org.estatio.fixture;
 
-import javax.inject.Inject;
-import javax.jdo.metadata.TypeMetadata;
-
-import com.google.common.base.Strings;
-
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
-
 import org.isisaddons.module.command.dom.CommandJdo;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
@@ -41,6 +33,7 @@ import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
@@ -88,7 +81,6 @@ import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationPreviousName;
@@ -102,8 +94,9 @@ import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRole;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRole;
+import org.estatio.numerator.dom.impl.Numerator;
 
-public class EstatioOperationalTeardownFixture extends FixtureScript {
+public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -131,8 +124,6 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(KeyItem.class);
         deleteFrom(KeyTable.class);
         deleteFrom(Budget.class);
-
-        deleteFrom(Numerator.class);
 
         deleteFrom(PaperclipForInvoice.class);
         deleteFrom(InvoiceItem.class);
@@ -207,41 +198,5 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom(CommandJdo.class);
     }
 
-    protected void deleteFrom(final Class cls) {
-        preDeleteFrom(cls);
-        final TypeMetadata metadata = isisJdoSupport.getJdoPersistenceManager().getPersistenceManagerFactory()
-                .getMetadata(cls.getName());
-        if(metadata == null) {
-            // fall-back
-            deleteFrom(cls.getSimpleName());
-        } else {
-            final String schema = metadata.getSchema();
-            String table = metadata.getTable();
-            if(Strings.isNullOrEmpty(table)) {
-                table = cls.getSimpleName();
-            }
-            if(Strings.isNullOrEmpty(schema)) {
-                deleteFrom(table);
-            } else {
-                deleteFrom(schema, table);
-            }
-        }
-        postDeleteFrom(cls);
-    }
-
-    protected Integer deleteFrom(final String schema, final String table) {
-        return isisJdoSupport.executeUpdate(String.format("DELETE FROM \"%s\".\"%s\"", schema, table));
-    }
-
-    protected void deleteFrom(final String table) {
-        isisJdoSupport.executeUpdate(String.format("DELETE FROM \"%s\"", table));
-    }
-
-    protected void preDeleteFrom(final Class cls) {}
-
-    protected void postDeleteFrom(final Class cls) {}
-
-    @Inject
-    private IsisJdoSupport isisJdoSupport;
 
 }

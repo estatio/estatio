@@ -34,7 +34,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
-import org.estatio.dom.numerator.Numerator;
+import org.estatio.numerator.dom.impl.Numerator;
 
 import static org.incode.module.base.integtests.VT.bi;
 

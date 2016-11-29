@@ -32,16 +32,6 @@ language governing permissions and limitations under the License.
         UDO Numerator DOM
     </description>
 
-    <properties>
-
-        <danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
-            ${project.parent.basedir}/codequality/checkstyle.xml
-        </danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
-        <danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
-            ${project.parent.basedir}/codequality/pmd.xml
-        </danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
-
-    </properties>
 
     <build>
         <resources>
@@ -60,6 +50,22 @@ language governing permissions and limitations under the License.
                 </excludes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>
@@ -72,26 +78,27 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-surefire.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-datanucleusenhance.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-staticanalysis.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>surefire</artifactId>
-                            <version>0.0.2</version>
+                            <version>${danhaywood-mavenmixin-surefire.version}</version>
                         </mixin>
                     </mixins>
                 </configuration>
             </plugin>
+
         </plugins>
 
     </build>
@@ -108,6 +115,11 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-unittestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.incode.module.integtestsupport</groupId>
+            <artifactId>incode-module-integtestsupport-dom</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
@@ -115,6 +127,19 @@ language governing permissions and limitations under the License.
             <version>0.0.2</version>
             <type>pom</type>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
 
     </dependencies>

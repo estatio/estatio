@@ -30,12 +30,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.incode.module.base.dom.Dflt;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.numerator.NumeratorRepository;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Organisation.class)
 public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organisation> {

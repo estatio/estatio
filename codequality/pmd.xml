@@ -24,20 +24,20 @@ language governing permissions and limitations under the License.
     Customized PMD ruleset for Maven, see [0] for more information 
     [0] http://pmd.sourceforge.net/howtomakearuleset.html
   -->
-  
+
   <description>
     This ruleset checks the code for discouraged programming constructs.
   </description>
-  
-  <rule ref="codequality/pmd-rulesets/basic.xml">
+
+  <rule ref="rulesets/java/basic.xml">
     <exclude name="EmptyCatchBlock"/>
   </rule>
-  <rule ref="codequality/pmd-rulesets/basic.xml/EmptyCatchBlock">
+  <rule ref="rulesets/java/basic.xml/EmptyCatchBlock">
     <properties>
       <property name="allowCommentedBlocks" value="true"/>
     </properties>
   </rule>
-  
-  <rule ref="codequality/pmd-rulesets/unusedcode.xml"/>
-  <rule ref="codequality/pmd-rulesets/imports.xml"/>
+
+  <rule ref="rulesets/java/unusedcode.xml"/>
+  <rule ref="rulesets/java/imports.xml"/>
 </ruleset>

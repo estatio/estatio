@@ -80,9 +80,9 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.roles.EstatioRole;
+import org.estatio.numerator.dom.impl.Numerator;
 
 import lombok.Getter;
 import lombok.Setter;

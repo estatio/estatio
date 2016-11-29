@@ -33,12 +33,6 @@ language governing permissions and limitations under the License.
     </description>
 
     <properties>
-        <danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
-            ${project.parent.basedir}/codequality/checkstyle.xml
-        </danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
-        <danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
-            ${project.parent.basedir}/codequality/pmd.xml
-        </danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
     </properties>
 
     <build>
@@ -69,17 +63,17 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-staticanalysis.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>surefire</artifactId>
-                            <version>0.0.2</version>
+                            <version>${danhaywood-mavenmixin-surefire.version}</version>
                         </mixin>
                     </mixins>
                 </configuration>

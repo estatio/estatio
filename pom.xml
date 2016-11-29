@@ -107,10 +107,23 @@ mvn clean install -DskipTests -o
         <incode-module-docrendering-freemarker.version>1.13.0</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-stringinterpolator.version>1.13.1</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
-        <incode-module-unittestsupport.version>1.13.2</incode-module-unittestsupport.version>
+        <incode-module-unittestsupport.version>1.13.3</incode-module-unittestsupport.version>
+        <incode-module-integtestsupport.version>1.14.0-SNAPSHOT</incode-module-integtestsupport.version>
 
         <!-- TODO: change when this is moved out (EST-866) -->
         <incode-module-communication.version>${project.version}</incode-module-communication.version>
+
+        <danhaywood-mavenmixin-enforcerelaxed.version>0.0.1</danhaywood-mavenmixin-enforcerelaxed.version>
+        <danhaywood-mavenmixin-standard.version>0.0.1</danhaywood-mavenmixin-standard.version>
+        <danhaywood-mavenmixin-datanucleusenhance.version>0.0.3</danhaywood-mavenmixin-datanucleusenhance.version>
+        <danhaywood-mavenmixin-isisvalidate.version>0.0.1</danhaywood-mavenmixin-isisvalidate.version>
+        <danhaywood-mavenmixin-surefire.version>0.0.2</danhaywood-mavenmixin-surefire.version>
+        <danhaywood-mavenmixin-staticanalysis.version>0.0.1</danhaywood-mavenmixin-staticanalysis.version>
+        <danhaywood-mavenmixin-jettyconsole.version>0.0.1</danhaywood-mavenmixin-jettyconsole.version>
+        <danhaywood-mavenmixin-jettywar.version>0.0.1</danhaywood-mavenmixin-jettywar.version>
+
+        <danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>${project.basedir}/codequality/checkstyle.xml</danhaywood-mavenmixin-staticanalysis.checkstyle.configLocation>
+        <danhaywood-mavenmixin-staticanalysis.pmd.ruleset>${project.basedir}/codequality/pmd.xml</danhaywood-mavenmixin-staticanalysis.pmd.ruleset>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -181,17 +194,17 @@ mvn clean install -DskipTests -o
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>enforcerrelaxed</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-enforcerelaxed.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>0.0.1</version>
+                            <version>${danhaywood-mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>surefire</artifactId>
-                            <version>0.0.2</version>
+                            <version>${danhaywood-mavenmixin-surefire.version}</version>
                         </mixin>
                     </mixins>
                 </configuration>
@@ -354,6 +367,11 @@ mvn clean install -DskipTests -o
                 <groupId>org.incode.module.unittestsupport</groupId>
                 <artifactId>incode-module-unittestsupport-dom</artifactId>
                 <version>${incode-module-unittestsupport.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.integtestsupport</groupId>
+                <artifactId>incode-module-integtestsupport-dom</artifactId>
+                <version>${incode-module-integtestsupport.version}</version>
             </dependency>
 
 
