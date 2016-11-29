@@ -646,41 +646,6 @@ mvn clean install -DskipTests -o
 
             <!-- testing dependencies -->
             <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>0.9.9</version>
-            </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jmock</groupId>
-                <artifactId>jmock</artifactId>
-                <version>2.6.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jmock</groupId>
-                <artifactId>jmock-junit4</artifactId>
-                <version>2.6.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit-dep</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>3.6.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-guava</artifactId>
                 <version>3.1.0</version>
@@ -695,13 +660,6 @@ mvn clean install -DskipTests -o
                 <groupId>com.danhaywood.java</groupId>
                 <artifactId>danhaywood-java-assertjext</artifactId>
                 <version>0.1.0</version>
-            </dependency>
-
-            <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
-            <dependency>
-                <groupId>org.jmock</groupId>
-                <artifactId>jmock-legacy</artifactId>
-                <version>2.6.0</version>
             </dependency>
 
             <dependency>
