@@ -61,7 +61,7 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>${danhaywood-mavenmixin-surefire.version}</version>
+                            <version>${danhaywood-mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
