@@ -98,7 +98,7 @@ Copyright 2014~2015 Dan Haywood
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <danhaywood-mavenmixin-isisvalidate.appManifest>org.incode.module.communications.dom.CommunicationsModuleDomManifest</danhaywood-mavenmixin-isisvalidate.appManifest>
+        <isis-maven-plugin.validate.appManifest>org.incode.module.communications.dom.CommunicationsModuleDomManifest</isis-maven-plugin.validate.appManifest>
 
     </properties>
 
@@ -239,7 +239,7 @@ Copyright 2014~2015 Dan Haywood
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
-                            <version>${danhaywood-mavenmixin-datanucleusenhance.version}</version>
+                            <version>${mavenmixin-datanucleusenhance.version}</version>
                         </mixin>
 <!--
 temporarily removed... getting this exception:
@@ -249,7 +249,7 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>isisvalidate</artifactId>
-                            <version>${danhaywood-mavenmixin-isisvalidate.version}</version>
+                            <version>${mavenmixin-isisvalidate.version}</version>
                         </mixin>
 -->
                     </mixins>

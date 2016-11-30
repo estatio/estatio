@@ -77,12 +77,12 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>${danhaywood-mavenmixin-standard.version}</version>
+                            <version>${mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>jettywar</artifactId>
-                            <version>${danhaywood-mavenmixin-jettywar.version}</version>
+                            <version>${mavenmixin-jettywar.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
@@ -96,7 +96,7 @@ language governing permissions and limitations under the License.
     </build>
 
     <properties>
-        <danhaywood-mavenmixin-jettywar.warName>${project.parent.artifactId}</danhaywood-mavenmixin-jettywar.warName>
+        <mavenmixin-jettywar.warName>${project.parent.artifactId}</mavenmixin-jettywar.warName>
     </properties>
 
     <dependencies>
