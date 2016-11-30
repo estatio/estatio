@@ -117,7 +117,11 @@ mvn clean install -DskipTests -o
         <danhaywood-mavenmixin-standard.version>0.0.1</danhaywood-mavenmixin-standard.version>
         <danhaywood-mavenmixin-datanucleusenhance.version>0.0.3</danhaywood-mavenmixin-datanucleusenhance.version>
         <danhaywood-mavenmixin-isisvalidate.version>0.0.1</danhaywood-mavenmixin-isisvalidate.version>
-        <danhaywood-mavenmixin-surefire.version>0.0.2</danhaywood-mavenmixin-surefire.version>
+
+        <danhaywood-mavenmixin-surefire.version>0.0.3</danhaywood-mavenmixin-surefire.version>
+        <danhaywood-mavenmixin-surefire.maven-surefire-plugin.version>2.19.1</danhaywood-mavenmixin-surefire.maven-surefire-plugin.version>
+        <danhaywood-mavenmixin-surefire.maven-surefire-report-plugin.version>2.19.1</danhaywood-mavenmixin-surefire.maven-surefire-report-plugin.version>
+
         <danhaywood-mavenmixin-staticanalysis.version>0.0.1</danhaywood-mavenmixin-staticanalysis.version>
         <danhaywood-mavenmixin-jettyconsole.version>0.0.1</danhaywood-mavenmixin-jettyconsole.version>
         <danhaywood-mavenmixin-jettywar.version>0.0.1</danhaywood-mavenmixin-jettywar.version>
@@ -182,8 +186,21 @@ mvn clean install -DskipTests -o
     </pluginRepositories>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${danhaywood-mavenmixin-surefire.maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${danhaywood-mavenmixin-surefire.maven-surefire-report-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-
             <plugin>
                 <groupId>com.github.odavid.maven.plugins</groupId>
                 <artifactId>mixin-maven-plugin</artifactId>
