@@ -77,17 +77,14 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>${mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>jettywar</artifactId>
-                            <version>${mavenmixin-jettywar.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>jettyconsole</artifactId>
-                            <version>0.0.1</version>
                         </mixin>
                     </mixins>
                 </configuration>
@@ -104,31 +101,17 @@ language governing permissions and limitations under the License.
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-app</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.isis.viewer</groupId>
-            <artifactId>isis-viewer-wicket-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-viewer-restfulobjects-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-security-shiro</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-security</artifactId>
+            <groupId>com.danhaywood.mavendeps</groupId>
+            <artifactId>isiswebapp</artifactId>
+            <version>${mavendeps-isiswebapp.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>org.isisaddons.metamodel.paraname8</groupId>
             <artifactId>isis-metamodel-paraname8-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-servlet_3.0_spec</artifactId>
         </dependency>
 
         <dependency>
@@ -146,9 +129,10 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
             <artifactId>isisintellij</artifactId>
-            <version>0.0.1</version>
+            <version>${mavendeps-isisintellij.version}</version>
             <type>pom</type>
         </dependency>
+
 
     </dependencies>
 

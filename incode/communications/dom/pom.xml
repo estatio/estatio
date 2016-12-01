@@ -17,19 +17,15 @@ Copyright 2014~2015 Dan Haywood
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<!-- 
-	REMOVE <parent> TAG ONCE THIS MODULE MOVED TO ITS OWN GIT REPO
-	-->
-	<parent>
-        <groupId>org.estatio</groupId>
-        <artifactId>estatio</artifactId>
-        <version>1.9.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+    <parent>
+        <groupId>org.incode</groupId>
+        <artifactId>incode-parent</artifactId>
+        <version>1.13.1</version>
     </parent>
-	
-	
+
     <groupId>org.incode.module.communications</groupId>
     <artifactId>incode-module-communications-dom</artifactId>
+    <version>1.9.0-SNAPSHOT</version>
 
     <!--
         REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO (EST-866).  FOR NOW, USE estatio.version
@@ -45,16 +41,13 @@ Copyright 2014~2015 Dan Haywood
     </description>
 
 	
-	<!--
-	REINSTATE ONCE THIS MODULE MOVED TO ITS OWN GIT REPO
-		
     <url>https://github.com/incodehq/incode-module-communications</url>
     <scm>
         <connection>scm:git:git@github.com:incodehq/incode-module-communications.git</connection>
         <developerConnection>scm:git:git@github.com:incodehq/incode-module-communications.git</developerConnection>
         <url>git@github.com:incodehq/incode-module-communications.git</url>
     </scm>
-	-->
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -76,10 +69,8 @@ Copyright 2014~2015 Dan Haywood
     </developers>
 
     <properties>
-        <compileSource>1.8</compileSource>
-        <compileTarget>1.8</compileTarget>
+        <isis.version>1.13.0.20161107-1837</isis.version>
 
-        <isis.version>1.13.0</isis.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.4</isis-module-security.version>
@@ -91,14 +82,18 @@ Copyright 2014~2015 Dan Haywood
         <lombok.version>1.16.6</lombok.version>
         <axon-core.version>2.4.4</axon-core.version>
 
-        <assertj-core.version>3.5.2</assertj-core.version>
         <assertj-guava.version>3.1.0</assertj-guava.version>
         <danhaywood-java-assertjext.version>0.1.0</danhaywood-java-assertjext.version>
 
+        <isis-maven-plugin.validate.appManifest>org.incode.module.communications.dom.CommunicationsModuleDomManifest</isis-maven-plugin.validate.appManifest>
+
+        <mavendeps-isistesting.version>0.0.2</mavendeps-isistesting.version>
+
+        <incode-module-unittestsupport.version>1.13.3</incode-module-unittestsupport.version>
+        <incode-module-integtestsupport.version>1.13.0</incode-module-integtestsupport.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <isis-maven-plugin.validate.appManifest>org.incode.module.communications.dom.CommunicationsModuleDomManifest</isis-maven-plugin.validate.appManifest>
 
     </properties>
 
@@ -119,114 +114,6 @@ Copyright 2014~2015 Dan Haywood
                 </excludes>
             </resource>
         </resources>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.3.1</version>
-                    <configuration>
-                        <rules>
-                            <requireMavenVersion>
-                                <version>[3.2.1,)</version>
-                            </requireMavenVersion>
-                            <requireJavaVersion>
-                                <version>[1.8.0,)</version>
-                            </requireJavaVersion>
-                            <requirePluginVersions>
-                                <message>All plugin versions must be
-                                    defined!</message>
-                                <banLatest>true</banLatest>
-                                <banRelease>true</banRelease>
-                            </requirePluginVersions>
-                            <!--
-                            RELAXED!
-                            <DependencyConvergence />
-                            -->
-                        </rules>
-                    </configuration>
-                    <!-- goal:enforce supposedly binds to phase:validate, but explicit binding seems to be required -->
-                    <executions>
-                        <execution>
-                            <id>validate-enforce</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <showDeprecation>false</showDeprecation>
-                        <showWarnings>false</showWarnings>
-                        <source>${compileSource}</source>
-                        <target>${compileTarget}</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
-                    <inherited>true</inherited>
-                    <executions>
-                        <execution>
-                            <id>package-test-jar</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>test-jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-
-
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.16</version>
-                    <configuration>
-                        <includes>
-                            <include>**/*Test.java</include>
-                            <include>**/*Test$*.java</include>
-                            <include>**/*Test*_*.java</include>
-                            <include>**/*Spec*.java</include>
-                        </includes>
-                        <excludes>
-                            <exclude>**/*ForTesting.java</exclude>
-                            <exclude>**/*Abstract*.java</exclude>
-                        </excludes>
-                        <useFile>true</useFile>
-                        <printSummary>true</printSummary>
-                        <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>2.16</version>
-                    <configuration>
-                        <showSuccess>false</showSuccess>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>test</phase>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
 
         <plugins>
             <plugin>
@@ -238,8 +125,19 @@ Copyright 2014~2015 Dan Haywood
                     <mixins>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>enforcerrelaxed</artifactId>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>standard</artifactId>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
-                            <version>${mavenmixin-datanucleusenhance.version}</version>
+                        </mixin>
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>surefire</artifactId>
                         </mixin>
 <!--
 temporarily removed... getting this exception:
@@ -249,7 +147,6 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>isisvalidate</artifactId>
-                            <version>${mavenmixin-isisvalidate.version}</version>
                         </mixin>
 -->
                     </mixins>
@@ -279,6 +176,17 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.incode.module.unittestsupport</groupId>
+                <artifactId>incode-module-unittestsupport-dom</artifactId>
+                <version>${incode-module-unittestsupport.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.integtestsupport</groupId>
+                <artifactId>incode-module-integtestsupport-dom</artifactId>
+                <version>${incode-module-integtestsupport.version}</version>
+            </dependency>
+
             <!--
             TODO: to remove, but only after have figured out/refactored WithApplicationTenancy and
             removed dependency on UdoDomainObject
@@ -287,13 +195,6 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
                 <groupId>org.estatio</groupId>
                 <artifactId>udo-base</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio</groupId>
-                <artifactId>udo-base</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -307,23 +208,11 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
                 <artifactId>incode-module-country-dom</artifactId>
                 <version>${incode-module-country.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.incode.module.country</groupId>
-                <artifactId>incode-module-country-dom</artifactId>
-                <version>${incode-module-country.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.isisaddons.module.poly</groupId>
                 <artifactId>isis-module-poly-dom</artifactId>
                 <version>${isis-module-poly.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.security</groupId>
-                <artifactId>isis-module-security-dom</artifactId>
-                <version>${isis-module-security.version}</version>
             </dependency>
 
             <dependency>
@@ -342,7 +231,6 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
             <version>${isis.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.isisaddons.module.poly</groupId>
             <artifactId>isis-module-poly-dom</artifactId>
@@ -357,21 +245,43 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
             <artifactId>incode-module-country-dom</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <!--
+        TODO: to remove, but only after have figured out/refactored WithApplicationTenancy and
+        removed dependency on UdoDomainObject
+        -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-unittestsupport</artifactId>
-            <version>${isis.version}</version>
+            <groupId>org.incode.module.base</groupId>
+            <artifactId>incode-module-base-dom</artifactId>
+        </dependency>
+
+
+        <!-- testing -->
+        <dependency>
+            <groupId>com.danhaywood.mavendeps</groupId>
+            <artifactId>isistesting</artifactId>
+            <version>${mavendeps-isistesting.version}</version>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj-core.version}</version>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-guava</artifactId>
@@ -392,21 +302,10 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!--
-        TODO: to remove, but only after have figured out/refactored WithApplicationTenancy and
-        removed dependency on UdoDomainObject
-        -->
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-        </dependency>
+        probably not required (and to remove anyway once figured out/refactored WithApplicationTenancy and removed dependency on UdoDomainObject
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
@@ -414,25 +313,10 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
             <scope>test</scope>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.incode.module.base</groupId>
-            <artifactId>incode-module-base-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.unittestsupport</groupId>
-            <artifactId>incode-module-unittestsupport-dom</artifactId>
-            <scope>test</scope>
-        </dependency>
+        -->
 
     </dependencies>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <profiles>
         <profile>
@@ -449,103 +333,6 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
                     <version>${axon-core.version}</version>
                 </dependency>
             </dependencies>
-        </profile>
-
-        <profile>
-            <id>cloudbees-snapshots</id>
-            <activation>
-                <property>
-                    <name>!skip.cloudbees-snapshots</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>snapshots-repo</id>
-                    <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
-
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.8</version>
-                        <inherited>true</inherited>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                            <debug>true</debug>
-                            <minmemory>128m</minmemory>
-                            <maxmemory>1024m</maxmemory>
-                            <quiet>true</quiet>
-                            <doctitle>${project.name} ${project.version}</doctitle>
-                            <windowtitle>${project.name} ${project.version}</windowtitle>
-                            <testDoctitle>${project.name} ${project.version} (TEST API)</testDoctitle>
-                            <testWindowtitle>${project.name} ${project.version} (TEST API)</testWindowtitle>
-                            <splitindex>true</splitindex>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <links>
-                                <link>http://docs.oracle.com/javase/7/docs/api/</link>
-                            </links>
-                            <linksource>true</linksource>
-                            <detectOfflineLinks>false</detectOfflineLinks>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.kohsuke</groupId>
-                        <artifactId>pgp-maven-plugin</artifactId>
-                        <version>1.1</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>m2e</id>
-            <activation>
-                <property>
-                    <name>m2e.version</name>
-                </property>
-            </activation>
-            <build>
-                <directory>target-ide</directory>
-            </build>
         </profile>
     </profiles>
 

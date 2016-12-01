@@ -114,10 +114,10 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
-            <version>0.0.2</version>
+            <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>
+            <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -140,6 +140,7 @@ language governing permissions and limitations under the License.
             <artifactId>commons-logging</artifactId>
             <scope>test</scope>
         </dependency>
+
 
         <dependency>  
             <groupId>com.googlecode.totallylazy</groupId>  

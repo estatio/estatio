@@ -18,27 +18,10 @@ language governing permissions and limitations under the License.
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-<!--
-to run unit tests with clover code coverage:
-mvn clean clover2:setup test clover2:aggregate clover2:clover -o
-'5m46s target/site/clover/clover.xml target/site/clover/* (html site)
-
-to run metrics (targets dom project only):
-mvn clean verify -P metrics-on -o
- '1m42s
-dom/target/checkstyle-result.xml
-dom/target/findBugs.xml and dom/target/findBugsXml.xml
-dom/target/pmd.xml
-
-to build webapp:
-mvn clean install -DskipTests -o
-
--->
-
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <groupId>org.incode</groupId>
+        <artifactId>incode-parent</artifactId>
+        <version>1.13.1</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -107,61 +90,13 @@ mvn clean install -DskipTests -o
         <incode-module-docrendering-freemarker.version>1.13.0</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-stringinterpolator.version>1.13.1</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
+
         <incode-module-unittestsupport.version>1.13.3</incode-module-unittestsupport.version>
         <incode-module-integtestsupport.version>1.13.0</incode-module-integtestsupport.version>
 
         <!-- TODO: change when this is moved out (EST-866) -->
         <incode-module-communication.version>${project.version}</incode-module-communication.version>
 
-        <mavenmixin-cucumberreporting.version>0.0.2</mavenmixin-cucumberreporting.version>
-        <maven-cucumber-reporting.dependency.log4j.version>2.7</maven-cucumber-reporting.dependency.log4j.version>
-
-        <mavenmixin-datanucleusenhance.version>0.0.4</mavenmixin-datanucleusenhance.version>
-        <datanucleus-maven-plugin.version>4.0.5</datanucleus-maven-plugin.version>
-        <datanucleus-core.version>4.1.7</datanucleus-core.version>
-        <datanucleus-api-jdo.version>4.1.1</datanucleus-api-jdo.version>
-        <datanucleus-jodatime.version>4.1.0-release</datanucleus-jodatime.version>
-
-        <mavenmixin-enforcerrelaxed.version>0.0.2</mavenmixin-enforcerrelaxed.version>
-        <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
-
-        <mavenmixin-isisswagger.version>0.0.3</mavenmixin-isisswagger.version>
-        <mavenmixin-isisvalidate.version>0.0.2</mavenmixin-isisvalidate.version>
-        <isis-maven-plugin.version>${isis.version}</isis-maven-plugin.version>
-
-        <mavenmixin-jettyconsole.version>0.0.2</mavenmixin-jettyconsole.version>
-        <jetty-console-maven-plugin.version>1.59</jetty-console-maven-plugin.version>
-        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-
-        <mavenmixin-jettywar.version>0.0.2</mavenmixin-jettywar.version>
-        <maven-war-plugin.version>2.4</maven-war-plugin.version>
-        <jetty-maven-plugin.version>9.3.5.v20151012</jetty-maven-plugin.version>
-
-        <mavenmixin-sourceandjavadoc.version>0.0.2</mavenmixin-sourceandjavadoc.version>
-        <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
-        <maven-jxr-plugin.version>2.4</maven-jxr-plugin.version>
-        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-
-        <mavenmixin-standard.version>0.0.2</mavenmixin-standard.version>
-        <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-        <maven-project-info-reports-plugin.version>2.9</maven-project-info-reports-plugin.version>
-        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
-        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-        <maven-install-plugin.version>2.5.1</maven-install-plugin.version>
-        <maven-deploy-plugin.version>2.8.1</maven-deploy-plugin.version>
-        <maven-site-plugin.version>3.3</maven-site-plugin.version>
-
-        <mavenmixin-surefire.version>0.0.4</mavenmixin-surefire.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-        <maven-surefire-report-plugin.version>2.19.1</maven-surefire-report-plugin.version>
-
-        <mavenmixin-staticanalysis.version>0.0.2</mavenmixin-staticanalysis.version>
-        <maven-checkstyle-plugin.version>2.11</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
-        <javancss-maven-plugin.version>2.1</javancss-maven-plugin.version>
-        <jdepend-maven-plugin.version>2.0-beta-2</jdepend-maven-plugin.version>
-        <findbugs-maven-plugin.version>2.5</findbugs-maven-plugin.version>
 
         <mavendeps-isistesting.version>0.0.2</mavendeps-isistesting.version>
         <mavendeps-isisintellij.version>0.0.1</mavendeps-isisintellij.version>
@@ -170,224 +105,19 @@ mvn clean install -DskipTests -o
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
 
+        <lombok.version>1.16.6</lombok.version>
+        <rfc-2445.version>1.0-SNAPSHOT</rfc-2445.version>
+        <joda-time.version>2.3</joda-time.version>
+        <freemarker.version>2.3.25-incubating</freemarker.version>
+        <jdom.version>2.0.2</jdom.version>
+        <commons-lang3.version>3.1</commons-lang3.version>
+        <danhaywood-java-assertjext.version>0.1.0</danhaywood-java-assertjext.version>
+        <javafaker.version>0.5</javafaker.version>
+        <assertj-guava.version>3.1.0</assertj-guava.version>
+
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>apache.snapshots</id>
-            <name>Apache Snapshots</name>
-            <url>https://repository.apache.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>estatio.snapshots</id>
-            <name>Estatio Snapshots (and Interim Releases)</name>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <!-- REVIEW: I'd've thought that 'always' makes more sense. http://maven.apache.org/ref/3.3.9/maven-settings/settings.html -->
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-            <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-            <layout>default</layout>
-        </repository>
-
-        <repository>
-            <id>sonatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>estatio.snapshots</id>
-            <name>Estatio Snapshots (and Interim Releases)</name>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-            <layout>default</layout>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- mavenmixin-cucumberreporting -->
-                <plugin>
-                    <groupId>net.masterthought</groupId>
-                    <artifactId>maven-cucumber-reporting</artifactId>
-                    <version>${maven-cucumber-reporting.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-datanucleusenhancer -->
-                <plugin>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-maven-plugin</artifactId>
-                    <version>${datanucleus-maven-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-enforcerrelaxed -->
-                <plugin>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>${maven-enforcer-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-isisvalidate & mavenmixin-isisswagger -->
-                <plugin>
-                    <groupId>org.apache.isis.tool</groupId>
-                    <artifactId>isis-maven-plugin</artifactId>
-                    <version>${isis-maven-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-jettyconsole -->
-                <plugin>
-                    <groupId>org.simplericity.jettyconsole</groupId>
-                    <artifactId>jetty-console-maven-plugin</artifactId>
-                    <version>${jetty-console-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>${maven-antrun-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-jettywar -->
-                <plugin>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven-war-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>${jetty-maven-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-sourceandjavadoc -->
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${maven-javadoc-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jxr-plugin</artifactId>
-                    <version>${maven-jxr-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven-source-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-standard -->
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>${maven-clean-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>${maven-project-info-reports-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${maven-resources-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>${maven-jar-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>${maven-install-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>${maven-deploy-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${maven-site-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-surefire -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>${maven-surefire-report-plugin.version}</version>
-                </plugin>
-
-                <!-- mavenmixin-staticanalysis -->
-                <plugin>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven-checkstyle-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>${maven-pmd-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>javancss-maven-plugin</artifactId>
-                    <version>${javancss-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jdepend-maven-plugin</artifactId>
-                    <version>${jdepend-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>${findbugs-maven-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>com.github.odavid.maven.plugins</groupId>
-                <artifactId>mixin-maven-plugin</artifactId>
-                <version>0.1-alpha-39</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <mixins>
-                        <mixin>
-                            <groupId>com.danhaywood.mavenmixin</groupId>
-                            <artifactId>enforcerrelaxed</artifactId>
-                            <version>${mavenmixin-enforcerrelaxed.version}</version>
-                        </mixin>
-                        <mixin>
-                            <groupId>com.danhaywood.mavenmixin</groupId>
-                            <artifactId>standard</artifactId>
-                            <version>${mavenmixin-standard.version}</version>
-                        </mixin>
-                    </mixins>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -403,7 +133,7 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.25-incubating</version>
+                <version>${freemarker.version}</version>
             </dependency>
 
             <!-- modules -->
@@ -789,19 +519,19 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.3</version>
+                <version>${joda-time.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jdom</groupId>
                 <artifactId>jdom</artifactId>
-                <version>2.0.2</version>
+                <version>${jdom.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.1</version>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
             <!-- download:
@@ -817,31 +547,31 @@ mvn clean install -DskipTests -o
             <dependency>
                 <groupId>com.google</groupId>
                 <artifactId>rfc-2445</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${rfc-2445.version}</version>
             </dependency>
 
             <!-- testing dependencies -->
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-guava</artifactId>
-                <version>3.1.0</version>
+                <version>${assertj-guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.javafaker</groupId>
                 <artifactId>javafaker</artifactId>
-                <version>0.5</version>
+                <version>${javafaker.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.danhaywood.java</groupId>
                 <artifactId>danhaywood-java-assertjext</artifactId>
-                <version>0.1.0</version>
+                <version>${danhaywood-java-assertjext.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.6</version>
+                <version>${lombok.version}</version>
             </dependency>
 
         </dependencies>
@@ -849,6 +579,7 @@ mvn clean install -DskipTests -o
 
     <modules>
         <module>udo/base/dom</module>
+        <module>incode/communications/dom</module>
         <module>udo/charge/dom</module>
         <module>udo/currency/dom</module>
         <module>udo/numerator/dom</module>
@@ -859,7 +590,6 @@ mvn clean install -DskipTests -o
         <module>udo/project/dom</module>
         <module>udo/settings/dom</module>
         <module>udo/partyagreement/dom</module>
-        <module>incode/communications/dom</module>
         <module>estatioapp/app</module>
         <module>estatioapp/impmgr</module>
         <module>estatioapp/dom</module>

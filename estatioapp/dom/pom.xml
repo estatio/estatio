@@ -66,27 +66,22 @@ language governing permissions and limitations under the License.
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
-                            <version>${mavenmixin-standard.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
-                            <version>${mavenmixin-datanucleusenhance.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>isisvalidate</artifactId>
-                            <version>${mavenmixin-isisvalidate.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
-                            <version>${mavenmixin-staticanalysis.version}</version>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>surefire</artifactId>
-                            <version>${mavenmixin-surefire.version}</version>
                         </mixin>
                     </mixins>
                 </configuration>
@@ -99,95 +94,41 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-link</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-link</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-event</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-event</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-settings</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-settings</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-numerator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-index</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-index</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-charge</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-charge</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-partyagreement</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-partyagreement</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.incode.module.unittestsupport</groupId>
-            <artifactId>incode-module-unittestsupport-dom</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -199,45 +140,21 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-project</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-project</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.incode.module.communications</groupId>
             <artifactId>incode-module-communications-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.incode.module.country</groupId>
             <artifactId>incode-module-country-dom</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.incode.module.country</groupId>
-            <artifactId>incode-module-country-dom</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
 
         <dependency>
             <groupId>org.incode.module.document</groupId>
             <artifactId>incode-module-document-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.document</groupId>
-            <artifactId>incode-module-document-dom</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -275,11 +192,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-excel-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.isisaddons.module.fakedata</groupId>
-            <artifactId>isis-module-fakedata-dom</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.poly</groupId>
             <artifactId>isis-module-poly-dom</artifactId>
         </dependency>
@@ -288,10 +200,30 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-settings-dom</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+
         <!-- testing -->
         <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-unittestsupport</artifactId>
+            <groupId>com.danhaywood.mavendeps</groupId>
+            <artifactId>isistesting</artifactId>
+            <version>${mavendeps-isistesting.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.fakedata</groupId>
+            <artifactId>isis-module-fakedata-dom</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -312,11 +244,28 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <!-- requires PartyForTesting -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-partyagreement</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 
