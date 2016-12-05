@@ -105,6 +105,8 @@ public class BudgetOverrideImportExport implements Importable {
         if (getReason()==null){
             throw new ApplicationException("Reason cannot be empty");
         }
+        BudgetCalculationType budgetCalculationType;
+        budgetCalculationType = getType()==null ? null : BudgetCalculationType.valueOf(getType());
 
         BudgetOverride budgetOverride;
         Charge incomingCharge = getIncomingChargeReference()==null ? null : fetchCharge(getIncomingChargeReference());
@@ -121,7 +123,7 @@ public class BudgetOverrideImportExport implements Importable {
                             getEndDate(),
                             fetchCharge(getInvoiceChargeReference()),
                             incomingCharge,
-                            BudgetCalculationType.valueOf(type),
+                            budgetCalculationType,
                             getReason()
                     );
             break;
@@ -136,7 +138,7 @@ public class BudgetOverrideImportExport implements Importable {
                             getEndDate(),
                             fetchCharge(getInvoiceChargeReference()),
                             incomingCharge,
-                            BudgetCalculationType.valueOf(type),
+                            budgetCalculationType,
                             getReason()
                     );
             break;
@@ -152,7 +154,7 @@ public class BudgetOverrideImportExport implements Importable {
                             getEndDate(),
                             fetchCharge(getInvoiceChargeReference()),
                             incomingCharge,
-                            BudgetCalculationType.valueOf(type),
+                            budgetCalculationType,
                             getReason()
                     );
             break;
@@ -166,13 +168,15 @@ public class BudgetOverrideImportExport implements Importable {
 
     private void validate(){
         Charge incomingCharge = getIncomingChargeReference()==null ? null : fetchCharge(getIncomingChargeReference());
+        BudgetCalculationType budgetCalculationType;
+        budgetCalculationType = getType()==null ? null : BudgetCalculationType.valueOf(getType());
         String invalidReason = budgetOverrideRepository.validateNewBudgetOverride(
                 fetchLease(getLeaseReference()),
                 getStartDate(),
                 getEndDate(),
                 fetchCharge(getInvoiceChargeReference()),
                 incomingCharge,
-                BudgetCalculationType.valueOf(type),
+                budgetCalculationType,
                 getReason()
         );
         if (invalidReason!=null){
