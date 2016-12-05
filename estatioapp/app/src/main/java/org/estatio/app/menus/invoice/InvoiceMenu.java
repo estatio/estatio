@@ -68,7 +68,8 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     public List<ApplicationTenancy> choices4NewInvoiceForLease() {
-        return estatioApplicationTenancyRepository.selfOrChildrenOf(meService.me().getTenancy());
+        return null; // TODO - EST973
+        // return estatioApplicationTenancyRepository.selfOrChildrenOf(meService.me().getTenancy());
     }
 
     // //////////////////////////////////////

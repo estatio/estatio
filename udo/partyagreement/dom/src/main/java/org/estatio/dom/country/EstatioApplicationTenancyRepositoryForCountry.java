@@ -79,17 +79,20 @@ public class EstatioApplicationTenancyRepositoryForCountry {
 
     public List<ApplicationTenancy> countryTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return countryTenanciesFor(currentUser.getTenancy());
+        return null; // TODO - EST973
+        // return countryTenanciesFor(currentUser.getTenancy());
     }
 
     public List<ApplicationTenancy> globalOrCountryTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return globalOrCountryTenanciesFor(currentUser.getTenancy());
+        return null; // TODO - EST973
+        // return globalOrCountryTenanciesFor(currentUser.getTenancy());
     }
 
     public List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(currentUser.getTenancy());
+        return null; // TODO - EST973
+        // return countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(currentUser.getTenancy());
     }
 
 
