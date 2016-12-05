@@ -33,10 +33,13 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -48,8 +51,6 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResu
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRateRepository;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
-import org.estatio.dom.appsettings.EstatioSettingsService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -440,6 +441,11 @@ public class InvoiceCalculationService_Test {
             tester(InvoicingFrequency.QUARTERLY_IN_ARREARS, "2014-02-01/2015-02-01", 10000.00, "2015-01-01/2016-01-01", "2015-01-01", 861.11, 0.00, 0.00, 0.00);
 
             tester(InvoicingFrequency.MONTHLY_IN_ADVANCE, "2014-02-01/2015-02-01", 10000.00, "2014-02-01/2015-02-01", "2015-01-01", 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33);
+        }
+
+        @Test // When EST-112 is solved this one should break and can be removed
+        public void testDateRangeWithZeroDayInterval() throws Exception {
+            tester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "1999-09-01/2015-02-01", 10000.00, "1999-09-01/2000-02-01", "2000-01-01", 0.00, 2500.00);
         }
 
         private void tester(final InvoicingFrequency invoicingFrequency, final String termInterval, final double termValue, final String caluculationInterval, final String dueDate, final Double... results) {

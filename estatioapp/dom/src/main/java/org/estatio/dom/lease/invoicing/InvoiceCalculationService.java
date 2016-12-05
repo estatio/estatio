@@ -256,7 +256,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             } else {
                 final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
                 final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
-                final BigDecimal rangeFactor = overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
+                final BigDecimal rangeFactor = frequencyDays.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
                 final BigDecimal annualFactor = leaseTerm.getLeaseItem().getInvoicingFrequency().annualMultiplier();
                 final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
                 BigDecimal mockValue = BigDecimal.ZERO;
