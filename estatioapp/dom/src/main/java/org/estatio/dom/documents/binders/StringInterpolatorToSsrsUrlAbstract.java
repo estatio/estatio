@@ -18,13 +18,13 @@
  */
 package org.estatio.dom.documents.binders;
 
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.document.dom.impl.applicability.RendererModelFactoryAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 /**
  * Creates a dataModel to be used with {@link StringInterpolatorService} for both content and subject;

@@ -28,8 +28,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
-
 /**
  * Automatically tests all domain objects implementing {@link WithApplicationTenancy} also implement one of the marker interfaces to define the levels at which instances of that type can exist..
  *

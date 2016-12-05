@@ -18,7 +18,7 @@
  */
 package org.incode.module.communications.dom.impl.commchannel;
 
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 public interface CommunicationChannelOwner extends WithApplicationTenancy {
 

@@ -32,8 +32,8 @@ import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
 
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;

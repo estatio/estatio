@@ -22,11 +22,9 @@ package org.estatio.app.menus.link;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
-
 import org.incode.module.document.dom.spi.ApplicationTenancyService;
 
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class ApplicationTenancyServiceForWithApplicationTenancy implements ApplicationTenancyService {
