@@ -2,10 +2,11 @@ package org.estatio.dom.lease.indexation;
 
 import java.math.BigDecimal;
 
+import org.incode.module.base.dom.utils.MathUtils;
+
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermFrequency;
-import org.incode.module.base.dom.utils.MathUtils;
 
 public enum IndexationMethod {
     BASE_INDEX(false, false, true, IndexationCalculationMethod.DEFAULT),
@@ -13,7 +14,8 @@ public enum IndexationMethod {
     BASE_INDEX_NO_DECREASE_FRANCE(false, false, true, IndexationCalculationMethod.FRANCE),
     BASE_INDEX_ALLOW_DECREASE_BASE_AS_FLOOR_FRANCE(true, false, true, IndexationCalculationMethod.FRANCE),
     BASE_INDEX_ALLOW_DECREASE_FRANCE(true, true, true, IndexationCalculationMethod.FRANCE),
-    LAST_KNOWN_INDEX(false, false, false, IndexationCalculationMethod.DEFAULT);
+    LAST_KNOWN_INDEX(false, false, false, IndexationCalculationMethod.DEFAULT),
+    LAST_KNOWN_INDEX_FRANCE(true, false, false, IndexationCalculationMethod.FRANCE);
 
     private IndexationMethod(
             final boolean allowDecrease,
@@ -58,14 +60,25 @@ public enum IndexationMethod {
 
     public void doAlignBeforeIndexation(Indexable term, Indexable previous) {
         if (previous != null && !fixedBase) {
-            //base value changes when previous term have been changed
-            term.setBaseValue(
-                    MathUtils.firstNonZero(
-                            previous.getSettledValue(),
-                            MathUtils.maxUsingFirstSignum(
-                                    previous.getBaseValue(),
-                                    previous.getIndexedValue(),
-                                    previous.getEffectiveIndexedValue())));
+            if (allowDecrease) {
+                term.setBaseValue(
+                        MathUtils.firstNonZero(
+                                previous.getSettledValue(),
+                                previous.getEffectiveIndexedValue(),
+                                previous.getIndexedValue(),
+                                previous.getBaseValue()
+                        )
+                );
+            } else {
+                //base value changes when previous term have been changed
+                term.setBaseValue(
+                        MathUtils.firstNonZero(
+                                previous.getSettledValue(),
+                                MathUtils.maxUsingFirstSignum(
+                                        previous.getBaseValue(),
+                                        previous.getIndexedValue(),
+                                        previous.getEffectiveIndexedValue())));
+            }
         }
     }
 
