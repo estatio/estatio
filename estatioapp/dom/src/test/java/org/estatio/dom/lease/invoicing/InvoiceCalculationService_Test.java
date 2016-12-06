@@ -41,10 +41,13 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
@@ -465,6 +468,70 @@ public class InvoiceCalculationService_Test {
             for (int i = 0; i < results.size(); i++) {
                 assertThat(results.get(i).value()).isEqualTo(BigDecimal.valueOf(value[i]).setScale(2));
             }
+
+        }
+
+    }
+
+    public static class CalculateTermTest extends InvoiceCalculationService_Test {
+
+        @Rule
+        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+
+        InvoiceCalculationService ic;
+        LocalDate epochDate = new LocalDate(2013, 1, 1);
+
+        @Mock
+        EstatioSettingsService mockSettings;
+
+        @Before
+        public void setUp() throws Exception {
+            ic = new InvoiceCalculationService();
+            ic.estatioSettingsService = mockSettings;
+
+            context.checking(new Expectations() {
+                {
+                    allowing(mockSettings).fetchEpochDate();
+                    will(returnValue(epochDate));
+                }
+            });
+
+        }
+
+        @Test
+        public void depositTerm_Should_Have_No_MockValue() throws Exception {
+
+            //given
+            LocalDate startDateBeforeEpochDate = new LocalDate(2000,01,01);
+            LocalDate endDateBeforeEpochDate = new LocalDate(2000,03,31);
+            LocalDate dueDateBeforeEpochDate = new LocalDate(2000,04,01);
+
+            LeaseItem depositItem = new LeaseItem();
+            depositItem.setType(LeaseItemType.DEPOSIT);
+            depositItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+            LeaseTermForDeposit depositTerm = new LeaseTermForDeposit(){
+                @Override
+                public LocalDateInterval getEffectiveInterval() {
+                    return new LocalDateInterval(startDateBeforeEpochDate, endDateBeforeEpochDate);
+                }
+                @Override
+                public BigDecimal valueForDate(final LocalDate dueDate){
+                    return new BigDecimal("1000.00");
+                }
+            };
+            depositTerm.setLeaseItem(depositItem);
+            InvoicingInterval invoicingInterval = new InvoicingInterval(
+                    new LocalDateInterval(startDateBeforeEpochDate, endDateBeforeEpochDate),
+                    dueDateBeforeEpochDate);
+            List<InvoicingInterval> intervals = Arrays.asList(invoicingInterval);
+            LocalDate dueDateForCalculation = dueDateBeforeEpochDate;
+
+            //when
+            List<CalculationResult> calculationResults = ic.calculateTerm(depositTerm, intervals, dueDateForCalculation);
+
+            // then
+            assertThat(calculationResults.size()).isEqualTo(1);
+            assertThat(calculationResults.get(0).mockValue()).isEqualTo(BigDecimal.ZERO.setScale(2));
 
         }
 

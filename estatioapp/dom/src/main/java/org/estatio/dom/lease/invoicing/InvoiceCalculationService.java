@@ -49,6 +49,7 @@ import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
@@ -260,7 +261,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                 final BigDecimal annualFactor = leaseTerm.getLeaseItem().getInvoicingFrequency().annualMultiplier();
                 final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
                 BigDecimal mockValue = BigDecimal.ZERO;
-                if (epochDate != null && invoicingInterval.dueDate().isBefore(epochDate)) {
+                if (epochDate != null && invoicingInterval.dueDate().isBefore(epochDate) && leaseTerm.getLeaseItem().getType()!= LeaseItemType.DEPOSIT) {
                     mockValue = leaseTerm.valueForDate(epochDate);
                 }
                 final CalculationResult calculationResult = new CalculationResult(
