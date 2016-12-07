@@ -68,7 +68,7 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     public List<ApplicationTenancy> choices4NewInvoiceForLease() {
-        return null; // TODO - EST973
+        return null; // TODO - EST973 ... think we don't need to ask; instead we can do the logic that's in EstatioApplicationTenancyRepositoryForLease#findOrCreateTenancyFor ... in turn called from LeaseItemRepository#newLeaseItem
         // return estatioApplicationTenancyRepository.selfOrChildrenOf(meService.me().getTenancy());
     }
 

@@ -44,6 +44,11 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Dflt;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.StringUtils;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
@@ -55,10 +60,6 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.JodaPeriodUtils;
-import org.incode.module.base.dom.utils.StringUtils;
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -87,6 +88,8 @@ public class LeaseMenu {
     }
 
     public List<ApplicationTenancy> choices0NewLease() {
+        // can solve this by instead asking for the property
+        // filter for properties that this user can see.
         return estatioApplicationTenancyRepository.propertyTenanciesForCurrentUser();
     }
 

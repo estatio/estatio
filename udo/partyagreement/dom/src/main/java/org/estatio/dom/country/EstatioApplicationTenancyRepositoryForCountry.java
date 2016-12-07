@@ -79,19 +79,19 @@ public class EstatioApplicationTenancyRepositoryForCountry {
 
     public List<ApplicationTenancy> countryTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973
+        return null; // TODO - EST973   ... in all cases, should prompt instead for the country, but use the apptenancy as a proxy for persisting this.  Eventually (separate story), we would like IndexValues, IndexMenu, TaxMenu to store country, and perhaps for Party also.
         // return countryTenanciesFor(currentUser.getTenancy());
     }
 
     public List<ApplicationTenancy> globalOrCountryTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973
+        return null; // TODO - EST973   ... ditto
         // return globalOrCountryTenanciesFor(currentUser.getTenancy());
     }
 
     public List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973
+        return null; // TODO - EST973   ... ditto
         // return countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(currentUser.getTenancy());
     }
 

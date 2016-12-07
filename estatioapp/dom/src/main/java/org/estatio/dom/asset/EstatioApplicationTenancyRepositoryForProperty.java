@@ -51,7 +51,7 @@ public class EstatioApplicationTenancyRepositoryForProperty {
 
     public List<ApplicationTenancy> propertyTenanciesForCurrentUser() {
         final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973
+        return null; // TODO - EST973 ... called by LeaseMenu#choices0 ... see the notes there.
         // return propertyTenanciesUnder(currentUser.getTenancy());
     }
 
