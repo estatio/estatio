@@ -76,6 +76,7 @@ public class BudgetCalculationRunRepository_IntegTest extends EstatioIntegration
 
             // then
             assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(1);
+            assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().get(0)).isEqualTo(run);
             assertThat(run.getBudget()).isEqualTo(budget2015);
             assertThat(run.getLease()).isEqualTo(leaseTopModel);
             assertThat(run.getType()).isEqualTo(BudgetCalculationType.BUDGETED);
@@ -113,6 +114,24 @@ public class BudgetCalculationRunRepository_IntegTest extends EstatioIntegration
 
             // then
             assertThat(budgetCalculationRunRepository.findByLease(leaseTopModel).size()).isEqualTo(1);
+
+        }
+
+    }
+
+    public static class FindByBudget extends BudgetCalculationRunRepository_IntegTest {
+
+        @Test
+        public void findByBudget() {
+
+            // given
+            Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+
+            // when
+            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+
+            // then
+            assertThat(budgetCalculationRunRepository.findByBudget(budget2015).size()).isEqualTo(1);
 
         }
 

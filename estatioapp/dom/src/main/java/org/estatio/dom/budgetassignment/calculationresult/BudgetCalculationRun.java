@@ -14,6 +14,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -53,6 +55,11 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
                         "WHERE lease == :lease"),
         @Query(
+                name = "findByBudget", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "WHERE budget == :budget"),
+        @Query(
                 name = "findByBudgetAndType", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
@@ -91,6 +98,7 @@ public class BudgetCalculationRun extends UdoDomainObject2<BudgetCalculationRun>
 
     @Getter @Setter
     @Column(name = "budgetId", allowsNull = "false")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private Budget budget;
 
     @Getter @Setter
