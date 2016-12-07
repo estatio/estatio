@@ -12,6 +12,8 @@ FROM
 	INNER JOIN sys.schemas s ON  t.[schema_id] = s.[schema_id]
 WHERE
 	c.[type] IN ('C', 'F', 'UQ', 'D') -- We don't want to drop PK
+AND
+    t.[name] != 'schema_version'      -- don't drop 'DEFAULT' constraints on flyway's schema_version table
 ORDER BY
 	c.[type]
 
