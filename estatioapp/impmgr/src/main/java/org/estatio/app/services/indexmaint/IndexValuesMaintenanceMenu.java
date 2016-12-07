@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
@@ -29,7 +30,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -39,8 +39,10 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Dflt;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
@@ -84,7 +86,10 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
             // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet,
-            final ApplicationTenancy applicationTenancy) {
+            final Country country) {
+
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+
         List<IndexValueMaintLineItem> lineItems = 
                 excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class, IndexValueMaintLineItem.class.getSimpleName());
         for (IndexValueMaintLineItem lineItem : lineItems) {
@@ -93,11 +98,11 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
         return lineItems;
     }
 
-    public List<ApplicationTenancy> choices1UploadIndexValues() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
+    public List<Country> choices1UploadIndexValues() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public ApplicationTenancy default1UploadIndexValues() {
+    public Country default1UploadIndexValues() {
         return Dflt.of(choices1UploadIndexValues());
     }
 
@@ -109,5 +114,8 @@ public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMain
 
     @javax.inject.Inject
     private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
 
 }

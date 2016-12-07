@@ -24,14 +24,11 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.Dflt;
-import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
@@ -46,54 +43,46 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
 
     // //////////////////////////////////////
 
+    @Programmatic
     public Organisation newOrganisation(
-            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
-            final boolean useNumereratorForReference,
+            final String reference,
+            final boolean useNumeratorForReference,
+            final String name,
+            final Country country) {
+
+        final ApplicationTenancy applicationTenancy =
+                estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+
+        return newOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
+    }
+
+    @Programmatic
+    public Organisation newOrganisation(
+            final String reference,
+            final boolean useNumeratorForReference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
+
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setApplicationTenancyPath(applicationTenancy.getPath());
+
         String refToUse = reference;
-        if (useNumereratorForReference) {
+        if (useNumeratorForReference) {
             refToUse = referenceByNumerator(applicationTenancy);
         }
+
         organisation.setReference(refToUse);
         organisation.setName(name);
         persist(organisation);
         return organisation;
     }
 
-    @Programmatic
     private String referenceByNumerator(final ApplicationTenancy applicationTenancy) {
         return numeratorRepository
                 .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy).nextIncrementStr();
     }
 
-    @Programmatic
-    public List<ApplicationTenancy> choices3NewOrganisation() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
-    }
 
-    @Programmatic
-    public ApplicationTenancy default3NewOrganisation() {
-        return Dflt.of(choices3NewOrganisation());
-    }
-
-    public String validateNewOrganisation(
-            final String reference,
-            final boolean useNumereratorForReference,
-            final String name,
-            final ApplicationTenancy applicationTenancy
-    ) {
-        if (useNumereratorForReference) {
-            if (numeratorRepository
-                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
-                return "No numerator found";
-            }
-            return null;
-        }
-        return partyRepository.validateNewParty(reference);
-    }
 
     // //////////////////////////////////////
 
@@ -108,9 +97,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
-    private PartyRepository partyRepository;
-
-    @Inject
     private NumeratorRepository numeratorRepository;
+
 
 }

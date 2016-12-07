@@ -76,7 +76,7 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-security.version>1.13.6</isis-module-security.version>
 
         <incode-module-base.version>1.13.5</incode-module-base.version>
-        <incode-module-country.version>1.13.0</incode-module-country.version>
+        <incode-module-country.version>1.14.0-SNAPSHOT</incode-module-country.version>
         <incode-module-document.version>1.13.12</incode-module-document.version>
 
         <lombok.version>1.16.6</lombok.version>

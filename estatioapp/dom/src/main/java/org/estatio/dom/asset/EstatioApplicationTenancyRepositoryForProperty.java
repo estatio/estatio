@@ -15,7 +15,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.country.dom.impl.Country;
 
@@ -47,12 +46,6 @@ public class EstatioApplicationTenancyRepositoryForProperty {
     public List<ApplicationTenancy> propertyTenanciesUnder(final ApplicationTenancy tenancy) {
         return Lists.newArrayList(Iterables.filter(
                 allTenancies(), Predicates.isPropertyTenancyUnder(tenancy)));
-    }
-
-    public List<ApplicationTenancy> propertyTenanciesForCurrentUser() {
-        final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973 ... called by LeaseMenu#choices0 ... see the notes there.
-        // return propertyTenanciesUnder(currentUser.getTenancy());
     }
 
 

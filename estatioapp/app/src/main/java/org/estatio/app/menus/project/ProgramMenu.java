@@ -28,11 +28,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.incode.module.base.dom.Dflt;
+import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.dom.country.CountryServiceForCurrentUser;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRepository;
 
@@ -46,17 +52,22 @@ public class ProgramMenu {
     public Program newProgram(
             final String reference,
             final String name,
-            final @ParameterLayout(multiLine = 5) String programGoal,
-            final ApplicationTenancy applicationTenancy) {
-        return programRepository.newProgram(reference, name, programGoal, applicationTenancy);
+            @ParameterLayout(multiLine = 5)
+            final String programGoal,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            @ParameterLayout(describedAs = "Leave blank for a program spanning multiple countries")
+            final Country countryIfAny) {
+        return programRepository.newProgram(reference, name, programGoal, countryIfAny);
     }
 
-    public List<ApplicationTenancy> choices3NewProgram() {
-        return programRepository.choices3NewProgram();
+    @Programmatic
+    public List<Country> choices3NewProgram() {
+        return countryService.countriesForCurrentUser();
     }
 
-    public ApplicationTenancy default3NewProgram() {
-        return programRepository.default3NewProgram();
+    @Programmatic
+    public Country default3NewProgram() {
+        return Dflt.of(choices3NewProgram());
     }
 
 
@@ -74,6 +85,11 @@ public class ProgramMenu {
     }
 
 
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryService;
 
     @Inject
     ProgramRepository programRepository;

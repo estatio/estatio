@@ -29,12 +29,15 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.base.dom.utils.StringUtils;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.utils.AtPathUtils;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -100,7 +103,15 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
      * For {@link Property} as per {@link DomainObject#autoCompleteRepository()}.
      */
     public List<Property> autoComplete(final String searchPhrase) {
-        return findProperties("*".concat(searchPhrase).concat("*"));
+
+        final String atPath = meService.me().getAtPath();
+
+        final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
+        final String atPathRegex = AtPathUtils.toAtPathRegex(atPath, 2);
+        return allMatches("findByReferenceOrNameAndAtPath",
+                "referenceOrName", refRegex,
+                "atPath", atPathRegex
+                );
     }
 
     // //////////////////////////////////////
@@ -121,5 +132,7 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     @Inject
     CountryRepository countryRepository;
 
+    @Inject
+    MeService meService;
 
 }

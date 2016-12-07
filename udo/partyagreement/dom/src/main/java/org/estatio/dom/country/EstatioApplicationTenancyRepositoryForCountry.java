@@ -15,9 +15,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 
 /**
@@ -36,14 +36,18 @@ public class EstatioApplicationTenancyRepositoryForCountry {
     }
 
 
-    public ApplicationTenancy findOrCreateTenancyFor(final Country country) {
-        final String countryPath = pathFor(country);
+    public ApplicationTenancy findOrCreateTenancyFor(final Country countryIfAny) {
+        if(countryIfAny == null) {
+            return findOrCreateTenancyForGlobal();
+        }
+
+        final String countryPath = pathFor(countryIfAny);
         ApplicationTenancy countryTenancy = applicationTenancies.findByPath(countryPath);
         if (countryTenancy != null){
             return countryTenancy;
         }
         final ApplicationTenancy rootTenancy = findOrCreateTenancyForGlobal();
-        return applicationTenancies.newTenancy(country.getReference(), countryPath, rootTenancy);
+        return applicationTenancies.newTenancy(countryIfAny.getReference(), countryPath, rootTenancy);
     }
 
 
@@ -77,25 +81,6 @@ public class EstatioApplicationTenancyRepositoryForCountry {
         return result;
     }
 
-    public List<ApplicationTenancy> countryTenanciesForCurrentUser() {
-        final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973   ... in all cases, should prompt instead for the country, but use the apptenancy as a proxy for persisting this.  Eventually (separate story), we would like IndexValues, IndexMenu, TaxMenu to store country, and perhaps for Party also.
-        // return countryTenanciesFor(currentUser.getTenancy());
-    }
-
-    public List<ApplicationTenancy> globalOrCountryTenanciesForCurrentUser() {
-        final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973   ... ditto
-        // return globalOrCountryTenanciesFor(currentUser.getTenancy());
-    }
-
-    public List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalForCurrentUser() {
-        final ApplicationUser currentUser = meService.me();
-        return null; // TODO - EST973   ... ditto
-        // return countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(currentUser.getTenancy());
-    }
-
-
 
     private List<ApplicationTenancy> allTenancies() {
         return applicationTenancies.allTenancies();
@@ -106,7 +91,8 @@ public class EstatioApplicationTenancyRepositoryForCountry {
         return String.format("/%s", country.getReference());
     }
 
-    private ApplicationTenancy findOrCreateTenancyForGlobal() {
+    @Programmatic
+    public ApplicationTenancy findOrCreateTenancyForGlobal() {
         return applicationTenancies.findByPath("/");
     }
 

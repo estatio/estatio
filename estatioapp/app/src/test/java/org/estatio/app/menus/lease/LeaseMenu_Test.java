@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +35,13 @@ public class LeaseMenu_Test {
             applicationTenancy = new ApplicationTenancy();
             applicationTenancy.setPath("/FRA/PDH");
 
+            final Property property = new Property() {
+                @Override public ApplicationTenancy getApplicationTenancy() {
+                    return applicationTenancy;
+                }
+            };
+
+
             // when
             landLordFra = new Party() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
@@ -49,7 +57,7 @@ public class LeaseMenu_Test {
                     return applicationTenancyParty;
                 }
             };
-            error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantFra);
+            error = leaseMenu.validateNewLease(property, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantFra);
 
             // then
             assertThat(error).isNull();
@@ -62,7 +70,7 @@ public class LeaseMenu_Test {
                     return applicationTenancyParty;
                 }
             };
-            error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordIta, tenantFra);
+            error = leaseMenu.validateNewLease(property, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordIta, tenantFra);
 
             // then
             assertThat(error).isEqualTo("Landlord not valid. (wrong application tenancy)");
@@ -75,7 +83,7 @@ public class LeaseMenu_Test {
                     return applicationTenancyParty;
                 }
             };
-            error = leaseMenu.validateNewLease(applicationTenancy, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantIta);
+            error = leaseMenu.validateNewLease(property, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordFra, tenantIta);
 
             // then
             assertThat(error).isEqualTo("Tenant not valid. (wrong application tenancy)");

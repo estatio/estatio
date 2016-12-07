@@ -44,7 +44,9 @@ public class TaxRepository extends UdoDomainRepositoryAndFactory<Tax> {
     public Tax newTax(
             final String reference,
             final String name,
+            // TODO: should probably be asking for the country here, but Tax has no dependency on country module at the moment.
             final ApplicationTenancy applicationTenancy) {
+
         final Tax tax = newTransientInstance();
         tax.setReference(reference);
         tax.setName(name);
@@ -76,6 +78,7 @@ public class TaxRepository extends UdoDomainRepositoryAndFactory<Tax> {
     public Collection<Tax> findByApplicationTenancy(final ApplicationTenancy applicationTenancy) {
         return Collections2.filter(allInstances(), tax -> tax.getApplicationTenancy().equals(applicationTenancy));
     }
+
 
 
 }
