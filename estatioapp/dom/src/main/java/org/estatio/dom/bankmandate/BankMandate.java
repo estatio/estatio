@@ -36,6 +36,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.types.NameType;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -118,8 +120,16 @@ public class BankMandate
 
     // //////////////////////////////////////
 
+    public static class SepaMandateIdentifierType {
+        private SepaMandateIdentifierType() {}
+        public static class Meta {
+            public static final int MAX_LEN = 35;
+            private Meta() {}
+        }
+    }
+
     @Property(optionality = Optionality.OPTIONAL)
-    @javax.jdo.annotations.Column(allowsNull = "true")
+    @javax.jdo.annotations.Column(allowsNull = "true", length = SepaMandateIdentifierType.Meta.MAX_LEN)
     @Getter @Setter
     private String sepaMandateIdentifier;
 
@@ -155,13 +165,20 @@ public class BankMandate
         return getSignatureDate();
     }
 
+
+    // //////////////////////////////////////
+
     public BankMandate change(
-            final @Parameter(optionality = Optionality.OPTIONAL) String name,
-            final @Parameter(optionality = Optionality.OPTIONAL) String SepaMendateIdentifier,
-            final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
-            final @Parameter(optionality = Optionality.OPTIONAL) Scheme scheme) {
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = NameType.Meta.MAX_LEN)
+            final String name,
+            @Parameter(optionality = Optionality.OPTIONAL, maxLength = SepaMandateIdentifierType.Meta.MAX_LEN)
+            final String sepaMandateIdentifier,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final SequenceType sequenceType,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Scheme scheme) {
         setName(name);
-        setSepaMandateIdentifier(SepaMendateIdentifier);
+        setSepaMandateIdentifier(sepaMandateIdentifier);
         setSequenceType(sequenceType);
         setScheme(scheme);
         return this;
