@@ -142,7 +142,7 @@ public class LeaseTermForTurnoverRentManager {
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTermForTurnoverRentManager upload(
-            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
+            @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
         List<LeaseTermForTurnoverRentLineItem> lineItems =

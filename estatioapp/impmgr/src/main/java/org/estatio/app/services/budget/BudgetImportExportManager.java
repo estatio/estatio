@@ -130,7 +130,7 @@ public class BudgetImportExportManager {
     @ActionLayout()
     @CollectionLayout()
     public Budget importBudget(
-            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
+            @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
 
