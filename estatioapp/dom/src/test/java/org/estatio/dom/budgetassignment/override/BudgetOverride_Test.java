@@ -65,7 +65,7 @@ public class BudgetOverride_Test {
 
     }
 
-    LocalDate budgetStartDate;
+    LocalDate startDate;
     BigDecimal valueCalculatedByBudget;
     BudgetOverrideValueRepository budgetOverrideValueRepository;
     BudgetOverrideValue budgetOverrideValue;
@@ -85,10 +85,9 @@ public class BudgetOverride_Test {
     }
 
     // generic behaviour of BudgetOverride#findOrCreateValues (independent of BudgetOverride#valueFor)
-    // BudgetOverrideForMax can be replaced by any other subclass of BudgetOverride
     public static class CalculateTest extends BudgetOverride_Test {
 
-        BudgetOverrideForMax override;
+        BudgetOverrideForTesting override;
         BudgetOverrideValue calculation;
 
         @Test
@@ -96,7 +95,7 @@ public class BudgetOverride_Test {
             // given
             valueCalculatedByBudget = new BigDecimal("1000.00");
             calculation = new BudgetOverrideValue();
-            override = new BudgetOverrideForMax(){
+            override = new BudgetOverrideForTesting(){
                 @Override
                 BigDecimal getCalculatedValueByBudget(final LocalDate budgetStartDate, final BudgetCalculationType type){
                     return valueCalculatedByBudget;
@@ -108,56 +107,56 @@ public class BudgetOverride_Test {
 
             };
             override.budgetOverrideValueRepository = budgetOverrideValueRepository;
-            budgetStartDate = new LocalDate(2015, 01, 01);
+            startDate = new LocalDate(2015, 01, 01);
 
             // when no dates and no type set
-            List<BudgetOverrideValue> calculations = override.findOrCreateValues(budgetStartDate);
+            List<BudgetOverrideValue> calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(2);
 
-            // and when startdate set on budgetStartDate
-            override.setStartDate(budgetStartDate);
-            calculations = override.findOrCreateValues(budgetStartDate);
+            // and when startdate set on startDate
+            override.setStartDate(startDate);
+            calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(2);
 
-            // and when enddate set on budgetStartDate
-            override.setEndDate(budgetStartDate);
-            calculations = override.findOrCreateValues(budgetStartDate);
+            // and when enddate set on startDate
+            override.setEndDate(startDate);
+            calculations = override.findOrCreateValues(startDate);
 
             // then
-            assertThat(calculations.size()).isEqualTo(2);
+            assertThat(calculations.size()).isEqualTo(0);
 
-            // and when startdate after budgetStartDate
-            override.setStartDate(budgetStartDate.plusDays(1));
+            // and when startdate after startDate
+            override.setStartDate(startDate.plusDays(1));
             override.setEndDate(null);
-            calculations = override.findOrCreateValues(budgetStartDate);
+            calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(0);
 
-            // and when enddate before budgetStartDate
+            // and when enddate after startDate
             override.setStartDate(null);
-            override.setEndDate(budgetStartDate.minusDays(1));
-            calculations = override.findOrCreateValues(budgetStartDate);
+            override.setEndDate(startDate.plusDays(1));
+            calculations = override.findOrCreateValues(startDate);
 
             // then
-            assertThat(calculations.size()).isEqualTo(0);
+            assertThat(calculations.size()).isEqualTo(2);
 
             // and when type set
             override.setStartDate(null);
             override.setEndDate(null);
             override.setType(BudgetCalculationType.BUDGETED);
-            calculations = override.findOrCreateValues(budgetStartDate);
+            calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(1);
 
             // and when
             override.setType(BudgetCalculationType.ACTUAL);
-            calculations = override.findOrCreateValues(budgetStartDate);
+            calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(1);
@@ -182,12 +181,12 @@ public class BudgetOverride_Test {
                 }
             };
             override.budgetOverrideValueRepository = budgetOverrideValueRepository;
-            budgetStartDate = new LocalDate(2015, 01, 01);
+            startDate = new LocalDate(2015, 01, 01);
 
             // when
             maxValue = new BigDecimal("1000.00");
             override.setMaxValue(maxValue);
-            List<BudgetOverrideValue> calculations = override.findOrCreateValues(budgetStartDate);
+            List<BudgetOverrideValue> calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(0);
@@ -195,7 +194,7 @@ public class BudgetOverride_Test {
             // and when
             maxValue = new BigDecimal("999.99");
             override.setMaxValue(maxValue);
-            calculations = override.findOrCreateValues(budgetStartDate);
+            calculations = override.findOrCreateValues(startDate);
 
             // then
             assertThat(calculations.size()).isEqualTo(2);

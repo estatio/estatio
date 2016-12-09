@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -30,8 +31,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.charge.Charge;
@@ -101,11 +102,14 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
     public List<BudgetOverrideValue> getOverrideValues(){
         List<BudgetOverrideValue> results = new ArrayList<>();
         for (BudgetOverride override : budgetOverrideRepository
-                .findByLeaseAndInvoiceChargeAndType(
+                .findByLeaseAndInvoiceCharge(
                         getBudgetCalculationRun().getLease(),
-                        getInvoiceCharge(),
-                        getBudgetCalculationRun().getType())){
-            results.addAll(override.getValues());
+                        getInvoiceCharge())){
+            for (BudgetOverrideValue value : override.getValues()){
+                if (value.getType() == getBudgetCalculationRun().getType()) {
+                    results.add(value);
+                }
+            }
         }
         return results;
     }
@@ -133,19 +137,15 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
             valueCalculatedByBudget = valueCalculatedByBudget.add(calculation.getValueForPartitionPeriod());
         }
 
-        if (getOverrideValues().size()==1
-                && getOverrideValues().get(0).getBudgetOverride().getIncomingCharge()==null
-                && getOverrideValues().get(0).getType()==getBudgetCalculationRun().getType()){
+        if (getOverrideValues().size()==1 && getOverrideValues().get(0).getBudgetOverride().getIncomingCharge()==null){
             // SCENARIO: one override for all
             valueUsingOverrides = valueUsingOverrides.add(getOverrideValues().get(0).getValue());
         } else {
             // SCENARIO: overrides on incoming charge level
             BigDecimal valueToSubtract = BigDecimal.ZERO;
-            for (BudgetOverrideValue value : getOverrideValues()){
-                if (value.getType()==getBudgetCalculationRun().getType()) {
-                    incomingChargesOnOverrides.add(value.getBudgetOverride().getIncomingCharge());
-                    valueUsingOverrides = valueUsingOverrides.add(value.getValue());
-                }
+            for (BudgetOverrideValue value : getOverrideValues()) {
+                incomingChargesOnOverrides.add(value.getBudgetOverride().getIncomingCharge());
+                valueUsingOverrides = valueUsingOverrides.add(value.getValue());
             }
             for (Charge charge : incomingChargesOnOverrides){
                 for (BudgetCalculation calculation : getBudgetCalculations().stream().filter(x->x.getIncomingCharge().equals(charge)).collect(Collectors.toList())){
@@ -159,21 +159,8 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
         setShortfall(valueCalculatedByBudget.subtract(valueUsingOverrides).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    private void validateOverrides() throws IllegalArgumentException {
-
-        List<Charge> incomingChargesOnOverrides = new ArrayList<>();
-        if (getOverrideValues().size()>1){
-            for (BudgetOverrideValue value : getOverrideValues()){
-                if (value.getBudgetOverride().getIncomingCharge()==null){
-                    throw new IllegalArgumentException("Conflicting budget overrides found");
-                }
-                if (incomingChargesOnOverrides.contains(value.getBudgetOverride().getIncomingCharge())){
-                    throw new IllegalArgumentException("Conflicting budget overrides found");
-                } else {
-                    incomingChargesOnOverrides.add(value.getBudgetOverride().getIncomingCharge());
-                }
-            }
-        }
+    void validateOverrides() throws IllegalArgumentException {
+        budgetOverrideRepository.validateBudgetOverridesForLease(getBudgetCalculationRun().getLease(), getInvoiceCharge());
     }
 
     @Programmatic
@@ -184,6 +171,11 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
         for (BudgetOverrideValue overrideValue : getOverrideValues()){
             overrideValue.finalizeOverrideValue();
         }
+    }
+
+    @Programmatic
+    public void remove() {
+        repositoryService.removeAndFlush(this);
     }
 
     @Override
@@ -197,5 +189,8 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
 
+    @Inject
+    private RepositoryService repositoryService;
 
 }
+

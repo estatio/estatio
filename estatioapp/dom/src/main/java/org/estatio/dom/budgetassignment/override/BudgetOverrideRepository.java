@@ -12,8 +12,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
-
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
@@ -158,22 +156,22 @@ public class BudgetOverrideRepository extends UdoDomainRepositoryAndFactory<Budg
         return allMatches("findByLease", "lease", lease);
     }
 
-    public List<BudgetOverride> findByLeaseAndInvoiceChargeAndType(final Lease lease, final Charge invoiceCharge, final BudgetCalculationType type) {
-        return allMatches("findByLeaseAndInvoiceChargeAndType", "lease", lease, "invoiceCharge", invoiceCharge, "type", type);
+    public List<BudgetOverride> findByLeaseAndInvoiceCharge(final Lease lease, final Charge invoiceCharge) {
+        return allMatches("findByLeaseAndInvoiceCharge", "lease", lease, "invoiceCharge", invoiceCharge);
     }
 
     @Programmatic
     public String validateNewBudgetOverride(final Lease lease, final LocalDate startDate, final LocalDate endDate, final Charge invoiceCharge, final Charge incomingCharge, final BudgetCalculationType type, final String reason){
-        for (BudgetOverride override : findByLease(lease)){
-            if (override.getInterval().overlaps(LocalDateInterval.including(startDate, endDate))) {
-                if (invoiceCharge == override.getInvoiceCharge()){
-                    if (incomingCharge == null || override.getIncomingCharge()==null || incomingCharge == override.getIncomingCharge()) {
-                        if (type == null || type == override.getType()) {
-                            return "Conflicting override: there is already an override for this period, combination of charges and calculationtype";
-                        }
-                    }
-                }
-            }
+        BudgetOverride tempOverride = new BudgetOverrideForTesting();
+        tempOverride.setStartDate(startDate);
+        tempOverride.setEndDate(endDate);
+        tempOverride.setInvoiceCharge(invoiceCharge);
+        tempOverride.setIncomingCharge(incomingCharge);
+        tempOverride.setType(type);
+        try {
+            validateWithSameLeaseAndInvoiceCharge(tempOverride, findByLeaseAndInvoiceCharge(lease, invoiceCharge));
+        } catch (Exception e){
+            return "Conflicting budget overrides found";
         }
         if (reason==null){
             return "Reason cannot be empty";
@@ -183,4 +181,30 @@ public class BudgetOverrideRepository extends UdoDomainRepositoryAndFactory<Budg
         }
         return null;
     }
+
+    @Programmatic
+    public void validateBudgetOverridesForLease(final Lease lease, final Charge invoiceCharge) throws IllegalArgumentException {
+        List<BudgetOverride> overridesForLeaseAndInvoiceCharge = new ArrayList<>();
+        for (BudgetOverride override : findByLeaseAndInvoiceCharge(lease, invoiceCharge)){
+            validateWithSameLeaseAndInvoiceCharge(override, overridesForLeaseAndInvoiceCharge);
+            overridesForLeaseAndInvoiceCharge.add(override);
+        }
+    }
+
+    @Programmatic
+    public void validateWithSameLeaseAndInvoiceCharge(final BudgetOverride override, final List<BudgetOverride> overrideListWithSameLeaseAndInvoiceCharge) throws IllegalArgumentException {
+        for (BudgetOverride overrideToCompare : overrideListWithSameLeaseAndInvoiceCharge){
+            // test overlapping period
+            if (override.getInterval().overlaps(overrideToCompare.getInterval())){
+                // test type
+                if (override.getType()==null || overrideToCompare.getType()==null || override.getType()==overrideToCompare.getType()){
+                    // test incoming charge
+                    if (override.getIncomingCharge()==null || overrideToCompare.getIncomingCharge()==null || override.getIncomingCharge()==overrideToCompare.getIncomingCharge()){
+                        throw new IllegalArgumentException("Conflicting budget overrides found");
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -87,7 +87,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends EstatioInte
         public void testNewLink() {
 
             // given
-            BudgetCalculationResult result = run.findOrCreateResult(charge);
+            BudgetCalculationResult result = run.createCalculationResult(charge);
             LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(budget2015.getStartDate(), budget2015.getEndDate());
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
@@ -108,7 +108,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends EstatioInte
         public void findUnique() {
 
             // given
-            BudgetCalculationResult result = run.findOrCreateResult(charge);
+            BudgetCalculationResult result = run.createCalculationResult(charge);
             LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(budget2015.getStartDate(), budget2015.getEndDate());
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
@@ -128,7 +128,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends EstatioInte
         public void findByCalculationResult() {
 
             // given
-            BudgetCalculationResult result = run.findOrCreateResult(charge);
+            BudgetCalculationResult result = run.createCalculationResult(charge);
             LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(budget2015.getStartDate(), budget2015.getEndDate());
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
@@ -146,7 +146,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends EstatioInte
         @Test
         public void findByLeaseTerm() {
             // given
-            BudgetCalculationResult result = run.findOrCreateResult(charge);
+            BudgetCalculationResult result = run.createCalculationResult(charge);
             LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(budget2015.getStartDate(), budget2015.getEndDate());
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 

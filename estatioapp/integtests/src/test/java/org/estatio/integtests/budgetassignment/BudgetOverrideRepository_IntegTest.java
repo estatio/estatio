@@ -107,7 +107,7 @@ public class BudgetOverrideRepository_IntegTest extends EstatioIntegrationTest {
 
             // and expect
             expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Conflicting override: there is already an override for this period, combination of charges and calculationtype");
+            expectedException.expectMessage("Conflicting budget overrides found");
 
             // when
             wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
@@ -134,7 +134,7 @@ public class BudgetOverrideRepository_IntegTest extends EstatioIntegrationTest {
 
             // and expect
             expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Conflicting override: there is already an override for this period, combination of charges and calculationtype");
+            expectedException.expectMessage("Conflicting budget overrides found");
 
             // when
             wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge2, null, reason);

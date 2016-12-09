@@ -65,12 +65,11 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgetassignment.override.BudgetOverride " +
                         "WHERE lease == :lease"),
         @Query(
-                name = "findByLeaseAndInvoiceChargeAndType", language = "JDOQL",
+                name = "findByLeaseAndInvoiceCharge", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgetassignment.override.BudgetOverride " +
                         "WHERE lease == :lease && "
-                        + "invoiceCharge == :invoiceCharge && "
-                        + "type == :type")
+                        + "invoiceCharge == :invoiceCharge" )
 })
 
 @DomainObject()
@@ -135,31 +134,31 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
     }
 
     @Programmatic
-    public List<BudgetOverrideValue> findOrCreateValues(final LocalDate budgetStartDate){
+    public List<BudgetOverrideValue> findOrCreateValues(final LocalDate startDate){
         List<BudgetOverrideValue> results = new ArrayList<>();
-        if (isActiveOnCalculationDate(budgetStartDate)) {
+        if (isActiveOnCalculationDate(startDate)) {
             BudgetOverrideValue resultBudgeted;
             BudgetOverrideValue resultActual;
             if (getType() == null) {
-                resultBudgeted = valueFor(budgetStartDate, BudgetCalculationType.BUDGETED);
+                resultBudgeted = valueFor(startDate, BudgetCalculationType.BUDGETED);
                 if (resultBudgeted!=null) {
                     results.add(resultBudgeted);
                 }
-                resultActual = valueFor(budgetStartDate, BudgetCalculationType.ACTUAL);
+                resultActual = valueFor(startDate, BudgetCalculationType.ACTUAL);
                 if (resultActual!=null) {
                     results.add(resultActual);
                 }
             } else {
                 switch (getType()) {
                 case BUDGETED:
-                    resultBudgeted = valueFor(budgetStartDate, BudgetCalculationType.BUDGETED);
+                    resultBudgeted = valueFor(startDate, BudgetCalculationType.BUDGETED);
                     if (resultBudgeted!=null) {
                         results.add(resultBudgeted);
                     }
                     break;
 
                 case ACTUAL:
-                    resultActual = valueFor(budgetStartDate, BudgetCalculationType.ACTUAL);
+                    resultActual = valueFor(startDate, BudgetCalculationType.ACTUAL);
                     if (resultActual!=null) {
                         results.add(resultActual);
                     }
@@ -178,7 +177,7 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
         if (getStartDate()!=null && calculationDate.isBefore(getStartDate())){
             return false;
         }
-        if (getEndDate()!=null && calculationDate.isAfter(getEndDate())){
+        if (getEndDate()!=null && (calculationDate.equals(getEndDate()) || calculationDate.isAfter(getEndDate()))){
             return false;
         }
         return true;
@@ -216,7 +215,7 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
 
     @Programmatic
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+        return LocalDateInterval.excluding(getStartDate(), getEndDate());
     }
 
     // TODO: for prototyping purposes only; should be removed when in production

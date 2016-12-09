@@ -118,8 +118,8 @@ public class BudgetCalculationRun extends UdoDomainObject2<BudgetCalculationRun>
     }
 
     @Programmatic
-    public BudgetCalculationResult findOrCreateResult(final Charge invoiceCharge) {
-        return budgetCalculationResultRepository.findOrCreateBudgetCalculationResult(this, invoiceCharge);
+    public BudgetCalculationResult createCalculationResult(final Charge invoiceCharge) {
+        return budgetCalculationResultRepository.createBudgetCalculationResult(this, invoiceCharge);
     }
 
     @Programmatic
@@ -135,6 +135,15 @@ public class BudgetCalculationRun extends UdoDomainObject2<BudgetCalculationRun>
         setStatus(Status.ASSIGNED);
     }
 
+    @Programmatic
+    public void removeCalculationResults() {
+        for (BudgetCalculationResult result : getBudgetCalculationResults()){
+            result.remove();
+        }
+    }
+
     @Inject
     private BudgetCalculationResultRepository budgetCalculationResultRepository;
+
+
 }

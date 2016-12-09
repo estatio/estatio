@@ -92,9 +92,10 @@ public class BudgetAssignmentService {
 
     public void createBudgetCalculationResults(final BudgetCalculationRun run){
 
+        run.removeCalculationResults();
         for (Partitioning partitioning : run.getBudget().getPartitionings()){
             for (Charge invoiceCharge : partitioning.getDistinctInvoiceCharges()){
-                BudgetCalculationResult result = run.findOrCreateResult(invoiceCharge);
+                BudgetCalculationResult result = run.createCalculationResult(invoiceCharge);
                 result.calculate();
             }
         }

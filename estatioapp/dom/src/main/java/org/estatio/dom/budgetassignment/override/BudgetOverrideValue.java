@@ -78,6 +78,7 @@ public class BudgetOverrideValue extends UdoDomainObject2<BudgetOverrideValue>
 
     @Getter @Setter
     @Column(name = "budgetOverrideId", allowsNull = "false")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private BudgetOverride budgetOverride;
 
     @Getter @Setter
