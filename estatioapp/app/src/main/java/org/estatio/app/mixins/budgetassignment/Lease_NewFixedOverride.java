@@ -46,6 +46,18 @@ public class Lease_NewFixedOverride {
         return budgetOverrideRepository.newBudgetOverrideForFixed(fixedValue, lease,startDate,endDate,invoiceCharge,incomingCharge,type, reason);
     }
 
+    public String validateNewFixedValue(
+            final BigDecimal fixedValue,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Charge invoiceCharge,
+            final Charge incomingCharge,
+            final BudgetCalculationType type,
+            final String reason
+    ){
+        return budgetOverrideRepository.validateNewBudgetOverride(lease, startDate, endDate, invoiceCharge, incomingCharge, type, reason);
+    }
+
     @Inject
     private BudgetOverrideRepository budgetOverrideRepository;
 

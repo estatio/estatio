@@ -46,6 +46,17 @@ public class Lease_NewCeilingOverride {
         return budgetOverrideRepository.newBudgetOverrideForMax(maxValue,lease,startDate,endDate,invoiceCharge,incomingCharge,type,BudgetOverrideType.CEILING.reason);
     }
 
+    public String validateNewCeiling(
+            final BigDecimal maxValue,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Charge invoiceCharge,
+            final Charge incomingCharge,
+            final BudgetCalculationType type
+    ){
+        return budgetOverrideRepository.validateNewBudgetOverride(lease, startDate, endDate, invoiceCharge, incomingCharge, type, BudgetOverrideType.CEILING.reason);
+    }
+
     @Inject
     private BudgetOverrideRepository budgetOverrideRepository;
 

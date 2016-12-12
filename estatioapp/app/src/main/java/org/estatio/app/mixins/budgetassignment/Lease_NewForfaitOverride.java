@@ -47,6 +47,18 @@ public class Lease_NewForfaitOverride {
         return budgetOverrideRepository.newBudgetOverrideForFlatRate(valueM2, weightedArea, lease,startDate,endDate,invoiceCharge,incomingCharge,type, BudgetOverrideType.FLATRATE.reason);
     }
 
+    public String validateNewForfait(
+            final BigDecimal valueM2,
+            final BigDecimal weightedArea,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Charge invoiceCharge,
+            final Charge incomingCharge,
+            final BudgetCalculationType type
+    ){
+        return budgetOverrideRepository.validateNewBudgetOverride(lease, startDate, endDate, invoiceCharge, incomingCharge, type, BudgetOverrideType.FLATRATE.reason);
+    }
+
     @Inject
     private BudgetOverrideRepository budgetOverrideRepository;
 
