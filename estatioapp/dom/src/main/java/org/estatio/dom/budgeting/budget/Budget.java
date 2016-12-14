@@ -257,7 +257,7 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     private boolean isActiveOn(final LocalDate date) {
-        return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
+        return getInterval().contains(date);
     }
 
     private WithIntervalMutable.Helper<Budget> changeDates = new WithIntervalMutable.Helper<>(this);

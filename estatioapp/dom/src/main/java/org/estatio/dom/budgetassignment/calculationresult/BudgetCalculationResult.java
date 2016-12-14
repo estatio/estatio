@@ -129,38 +129,58 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
 
         validateOverrides();
 
-        BigDecimal valueCalculatedByBudget = BigDecimal.ZERO;
-        BigDecimal valueUsingOverrides = BigDecimal.ZERO;
+        BigDecimal valueCalculatedByBudget = valueAsCalculatedByBudget();
+        BigDecimal annualOverrideValue = BigDecimal.ZERO;
         List<Charge> incomingChargesOnOverrides = new ArrayList<>();
 
-        for (BudgetCalculation calculation : getBudgetCalculations()){
-            valueCalculatedByBudget = valueCalculatedByBudget.add(calculation.getValueForPartitionPeriod());
-        }
-
-        if (getOverrideValues().size()==1 && getOverrideValues().get(0).getBudgetOverride().getIncomingCharge()==null){
+        if (overrideValueForInvoiceCharge()!=null){
             // SCENARIO: one override for all
-            valueUsingOverrides = valueUsingOverrides.add(getOverrideValues().get(0).getValue());
+            annualOverrideValue = annualOverrideValue.add(overrideValueForInvoiceCharge().getValue());
         } else {
             // SCENARIO: overrides on incoming charge level
             BigDecimal valueToSubtract = BigDecimal.ZERO;
             for (BudgetOverrideValue value : getOverrideValues()) {
                 incomingChargesOnOverrides.add(value.getBudgetOverride().getIncomingCharge());
-                valueUsingOverrides = valueUsingOverrides.add(value.getValue());
+                annualOverrideValue = annualOverrideValue.add(value.getValue());
             }
             for (Charge charge : incomingChargesOnOverrides){
                 for (BudgetCalculation calculation : getBudgetCalculations().stream().filter(x->x.getIncomingCharge().equals(charge)).collect(Collectors.toList())){
-                    valueToSubtract = valueToSubtract.add(calculation.getValueForPartitionPeriod());
+                    valueToSubtract = valueToSubtract.add(calculation.getValue());
                 }
             }
-            valueUsingOverrides = valueUsingOverrides.add(valueCalculatedByBudget).subtract(valueToSubtract);
+            annualOverrideValue = annualOverrideValue.add(valueCalculatedByBudget).subtract(valueToSubtract);
         }
-
-        setValue(valueUsingOverrides.setScale(2, BigDecimal.ROUND_HALF_UP));
-        setShortfall(valueCalculatedByBudget.subtract(valueUsingOverrides).setScale(2, BigDecimal.ROUND_HALF_UP));
+        BigDecimal overrideValue = annualOverrideValue.multiply(getFractionOfYear());
+        setValue(overrideValue.setScale(2, BigDecimal.ROUND_HALF_UP));
+        setShortfall(valueCalculatedByBudget.subtract(overrideValue).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     void validateOverrides() throws IllegalArgumentException {
         budgetOverrideRepository.validateBudgetOverridesForLease(getBudgetCalculationRun().getLease(), getInvoiceCharge());
+    }
+
+    @Programmatic
+    public BudgetOverrideValue overrideValueForInvoiceCharge(){
+        return (getOverrideValues().size()==1 && getOverrideValues().get(0).getBudgetOverride().getIncomingCharge()==null)
+                ?
+                getOverrideValues().get(0)
+                :
+                null;
+    }
+
+
+    @Programmatic
+    BigDecimal getFractionOfYear(){
+        return getBudgetCalculationRun().getBudget().getPartitioningForBudgeting().getFractionOfYear();
+    }
+
+    @Programmatic
+    public BigDecimal valueAsCalculatedByBudget(){
+        BigDecimal valueCalculatedByBudget = BigDecimal.ZERO;
+        for (BudgetCalculation calculation : getBudgetCalculations()){
+            valueCalculatedByBudget = valueCalculatedByBudget.add(calculation.getEffectiveValue());
+        }
+        return valueCalculatedByBudget;
     }
 
     @Programmatic

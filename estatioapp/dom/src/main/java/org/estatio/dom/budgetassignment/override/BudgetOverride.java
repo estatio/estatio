@@ -202,8 +202,7 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
             }
         }
         for (BudgetCalculation calculation : calculationsForLeaseAndCharges){
-            //TODO - consolidate in test: NOTE!! the pro rata calculation is used !!
-            value = value.add(calculation.getValueForPartitionPeriod());
+            value = value.add(calculation.getEffectiveValue());
         }
         return value;
     }

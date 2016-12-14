@@ -17,11 +17,17 @@
 
 package org.estatio.dom.budgeting.partioning;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
+import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.budgeting.budget.Budget;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Partitioning_Test {
 
@@ -33,6 +39,23 @@ public class Partitioning_Test {
             newPojoTester()
                     .withFixture(pojos(Budget.class, Budget.class))
                     .exercise(pojo);
+        }
+
+    }
+
+    public static class FractionOfYear extends Partitioning_Test {
+
+        @Test
+        public void testFraction() throws Exception {
+
+            // given
+            Partitioning partitioning = new Partitioning();
+            // when
+            partitioning.setStartDate(new LocalDate(2015,01,01));
+            partitioning.setEndDate(new LocalDate(2015,06,30));
+            // then
+            assertThat(partitioning.getFractionOfYear()).isEqualTo(new BigDecimal("181").divide(new BigDecimal("365"), MathContext.DECIMAL64));
+
         }
 
     }

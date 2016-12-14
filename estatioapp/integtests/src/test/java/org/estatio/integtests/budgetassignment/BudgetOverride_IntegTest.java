@@ -25,7 +25,7 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BudgetOverrideIntegration_IntegTest extends EstatioIntegrationTest {
+public class BudgetOverride_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     BudgetOverrideRepository budgetOverrideRepository;

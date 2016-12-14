@@ -1,14 +1,11 @@
 package org.estatio.dom.budgetassignment;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-
-import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -17,7 +14,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
@@ -26,16 +22,13 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRe
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgetassignment.viewmodels.BudgetCalculationResultViewModel;
-import org.estatio.dom.budgetassignment.viewmodels.DetailedBudgetCalculationResultViewmodel;
+import org.estatio.dom.budgetassignment.viewmodels.CalculationResultViewModel;
+import org.estatio.dom.budgetassignment.viewmodels.DetailedCalculationResultViewmodel;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.charge.Charge;
@@ -176,134 +169,104 @@ public class BudgetAssignmentService {
         return leaseItem;
     }
 
-    public List<DetailedBudgetCalculationResultViewmodel> getDetailedBudgetAssignmentResults(final Budget budget, final Lease lease){
-        List<DetailedBudgetCalculationResultViewmodel> results = new ArrayList<>();
-
-        for (Occupancy occupancy : lease.getOccupancies()) {
-            if (occupancy.getInterval().overlaps(budget.getInterval())) {
-
-                for (BudgetCalculationViewmodel calculationResult : calculationResults(budget, occupancy.getUnit())){
-
-                    if (calculationResult.getCalculationType() == BudgetCalculationType.BUDGETED) {
-                        results.add(
-                                new DetailedBudgetCalculationResultViewmodel(
-                                        occupancy.getUnit(),
-                                        calculationResult.getPartitionItem().getBudgetItem().getCharge(),
-                                        getRowLabelLastPart(calculationResult.getPartitionItem().getBudgetItem()),
-                                        calculationResult.getValue(),
-                                        calculationResult.getKeyItem().getKeyTable(),
-                                        calculationResult.getPartitionItem().getCharge()
-                                )
-                        );
+    public List<CalculationResultViewModel> getCalculationResults(final Budget budget){
+        List<CalculationResultViewModel> results = new ArrayList<>();
+        for (BudgetCalculationRun run : budgetCalculationRunRepository.findByBudgetAndType(budget, BudgetCalculationType.BUDGETED)){
+            for (BudgetCalculationResult result : run.getBudgetCalculationResults()){
+                CalculationResultViewModel vm = new CalculationResultViewModel(
+                        run.getLease(),
+                        result.getInvoiceCharge(),
+                        run.getType()==BudgetCalculationType.BUDGETED ? result.getValue().add(result.getShortfall()) : BigDecimal.ZERO,
+                        run.getType()==BudgetCalculationType.BUDGETED ? result.getValue() :BigDecimal.ZERO ,
+                        run.getType()==BudgetCalculationType.BUDGETED ? result.getShortfall() : BigDecimal.ZERO,
+                        run.getType()==BudgetCalculationType.ACTUAL ? result.getValue().add(result.getShortfall()) : BigDecimal.ZERO,
+                        run.getType()==BudgetCalculationType.ACTUAL ? result.getValue() :BigDecimal.ZERO ,
+                        run.getType()==BudgetCalculationType.ACTUAL ? result.getShortfall(): BigDecimal.ZERO
+                );
+                String unitString = run.getLease().getOccupancies().first().getUnit().getReference();
+                if (run.getLease().getOccupancies().size()>1) {
+                    boolean skip = true;
+                    for (Occupancy occupancy : run.getLease().getOccupancies()){
+                        if (skip){
+                            skip = false;
+                        } else {
+                            unitString = unitString.concat(" | ").concat(occupancy.getUnit().getReference());
+                        }
                     }
-
                 }
-
-            }
-        }
-
-        return results;
-    }
-
-    private String getRowLabelLastPart(final BudgetItem budgetItem){
-
-        String concatString = new String();
-
-        concatString = concatString
-                .concat(" | budgeted ")
-                .concat(budgetItem.getBudgetedValue().toString());
-
-        List<RowLabelHelper> helpers = new ArrayList<>();
-        for (PartitionItem partitionItem : budgetItem.getPartitionItems()){
-            helpers.add(new RowLabelHelper(partitionItem.getPercentage(), partitionItem.getKeyTable()));
-        }
-        Collections.sort(helpers);
-        for (RowLabelHelper helper : helpers){
-            concatString =
-                    concatString
-                    .concat(" | ")
-                    .concat(helper.percentage)
-                    .concat(helper.keyTableName);
-        }
-        return concatString;
-
-    }
-
-    public List<BudgetCalculationResultViewModel> getAssignmentResults(final Budget budget){
-        List<BudgetCalculationResultViewModel> results = new ArrayList<>();
-        for (Lease lease : leaseRepository.findLeasesByProperty(budget.getProperty())){
-           results.addAll(getAssignmentResults(budget, lease));
-        }
-        return results;
-    }
-
-    private List<BudgetCalculationResultViewModel> getAssignmentResults(final Budget budget, final Lease lease){
-        List<BudgetCalculationResultViewModel> results = new ArrayList<>();
-        // TODO: this is an extra filter because currently occupancies can outrun terminated leases
-        if (lease.getStatus() != LeaseStatus.TERMINATED) {
-            for (Occupancy occupancy : lease.getOccupancies()) {
-                List<BudgetCalculationViewmodel> calculationResultsForOccupancy = new ArrayList<>();
-                if (occupancy.getInterval().overlaps(budget.getInterval())) {
-                    calculationResultsForOccupancy.addAll(calculationResults(budget, occupancy.getUnit()));
-                }
-                results.addAll(createFromCalculationResults(lease, occupancy.getUnit(), calculationResultsForOccupancy));
+                vm.setUnit(unitString);
+                results.add(vm);
             }
         }
         return results;
     }
 
-    private List<BudgetCalculationViewmodel> calculationResults(final Budget budget, final Unit u){
-        return Lists.newArrayList(
-                budgetCalculationService.getAllCalculations(budget).stream().filter(x -> x.getKeyItem().getUnit().equals(u)).collect(Collectors.toList())
-        );
-    }
+    public List<DetailedCalculationResultViewmodel> getDetailedCalculationResults(final Lease lease, final Budget budget, final BudgetCalculationType type){
 
-    private List<BudgetCalculationResultViewModel> createFromCalculationResults(final Lease lease, final Unit unit, final List<BudgetCalculationViewmodel> calculationResultsForLease){
-        List<BudgetCalculationResultViewModel> assignmentResults = new ArrayList<>();
-        for (BudgetCalculationViewmodel calculationResult : calculationResultsForLease){
-            List<BudgetCalculationResultViewModel> filteredByChargeAndKeyTable = assignmentResults.stream()
-                    .filter(x -> x.getInvoiceCharge().equals(calculationResult.getPartitionItem().getCharge().getReference()))
-                    .filter(x -> x.getKeyTable().equals(calculationResult.getPartitionItem().getKeyTable().getName()))
-                    .collect(Collectors.toList());
-            if (filteredByChargeAndKeyTable.size()>0){
-                filteredByChargeAndKeyTable.get(0).add(calculationResult);
-            } else {
-                assignmentResults.add(new BudgetCalculationResultViewModel(
-                    lease,
-                    unit,
-                    calculationResult.getKeyItem().getKeyTable(),
-                    calculationResult.getPartitionItem().getCharge(),
-                    calculationResult.getValue()
+        List<DetailedCalculationResultViewmodel> results = new ArrayList<>();
+
+        BudgetCalculationRun runForLease = budgetCalculationRunRepository.findUnique(lease, budget, type);
+        if (runForLease==null){return results;}
+
+        for (BudgetCalculationResult result : runForLease.getBudgetCalculationResults()){
+
+            // scenario: one override for incoming charge
+            if (result.overrideValueForInvoiceCharge() != null){
+
+                results.add(new DetailedCalculationResultViewmodel(
+                        lease.primaryOccupancy().get().getUnit(),
+                        "Override for total " + result.getInvoiceCharge().getDescription(),
+                        result.getValue().add(result.getShortfall()),
+                        result.getValue(),
+                        result.getShortfall(),
+                        null,
+                        result.getInvoiceCharge()
                 ));
+
+            } else {
+
+                for (BudgetCalculation calculation : result.getBudgetCalculations()) {
+
+                    BigDecimal effectiveValueForIncomingCharge = calculation.getEffectiveValue();
+                    BigDecimal shortFallForIncomingCharge = BigDecimal.ZERO;
+                    BigDecimal valueInBudget = BigDecimal.ZERO;
+
+                    DetailedCalculationResultViewmodel vm = new DetailedCalculationResultViewmodel(
+                            calculation.getUnit(),
+                            calculation.getIncomingCharge().getDescription(),
+                            calculation.getEffectiveValue(),
+                            valueInBudget,
+                            effectiveValueForIncomingCharge,
+                            shortFallForIncomingCharge,
+                            calculation.getInvoiceCharge()
+                    );
+
+                    // set value in Budget
+                    PartitionItem partitionItem = calculation.getPartitionItem();
+                    BudgetItem budgetItem = calculation.getBudgetItem();
+                    BigDecimal valueForBudgetItem = type == BudgetCalculationType.BUDGETED ? budgetItem.getBudgetedValue() : budgetItem.getAuditedValue();
+                    valueInBudget = valueForBudgetItem.multiply(partitionItem.getPercentage()).divide(new BigDecimal("100"), MathContext.DECIMAL64);
+                    vm.setTotalValueInBudget(valueInBudget);
+
+                    // set possible overrides for incoming charge
+                    for (BudgetOverrideValue overrideValue : result.getOverrideValues()) {
+                        if (overrideValue.getBudgetOverride().getIncomingCharge() == calculation.getIncomingCharge() && overrideValue.getType() == type) {
+                            effectiveValueForIncomingCharge = overrideValue.getValue().multiply(calculation.getPartitionItem().getPartitioning().getFractionOfYear());
+                            shortFallForIncomingCharge = calculation.getEffectiveValue().subtract(effectiveValueForIncomingCharge);
+                        }
+                    }
+                    if (effectiveValueForIncomingCharge != BigDecimal.ZERO) {
+                        vm.setEffectiveValueForLease(effectiveValueForIncomingCharge);
+                        vm.setShortfall(shortFallForIncomingCharge);
+                    }
+                    results.add(vm);
+                }
+
             }
+
         }
-        return assignmentResults;
+        return results;
     }
-
-    private class RowLabelHelper implements Comparable<RowLabelHelper> {
-
-        RowLabelHelper(
-                final BigDecimal percentage,
-                final KeyTable keyTable){
-            this.percentage = percentage.setScale(2, BigDecimal.ROUND_HALF_UP).toString().concat(" % ");
-            this.keyTableName = keyTable.getName();
-        }
-
-        String percentage;
-
-        String keyTableName;
-
-        @Override public int compareTo(final RowLabelHelper o) {
-            return this.keyTableName.compareTo(o.keyTableName);
-        }
-
-    }
-
-    @Inject
-    BudgetCalculationRepository budgetCalculationRepository;
-
-    @Inject
-    private BudgetCalculationService budgetCalculationService;
 
     @Inject
     LeaseRepository leaseRepository;

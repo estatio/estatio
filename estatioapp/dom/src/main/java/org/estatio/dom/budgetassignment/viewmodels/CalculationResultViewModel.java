@@ -18,11 +18,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
-public class BudgetCalculationResultViewModel2 {
+public class CalculationResultViewModel {
 
-    public BudgetCalculationResultViewModel2(){}
+    public CalculationResultViewModel(){}
 
-    public BudgetCalculationResultViewModel2(
+    public CalculationResultViewModel(
             final Lease lease,
             final Charge invoiceCharge,
             final BigDecimal budgetedValue,

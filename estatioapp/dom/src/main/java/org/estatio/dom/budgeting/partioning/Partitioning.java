@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.budgeting.partioning;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -41,6 +43,9 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -77,7 +82,8 @@ import lombok.Setter;
 @DomainObject(
         objectType = "org.estatio.dom.budgeting.partioning.Partitioning"
 )
-public class Partitioning extends UdoDomainObject2<Partitioning> implements WithApplicationTenancyProperty {
+public class Partitioning extends UdoDomainObject2<Partitioning>
+        implements WithApplicationTenancyProperty, WithInterval<Partitioning> {
 
     public Partitioning() {
         super("budget, type, startDate");
@@ -98,11 +104,11 @@ public class Partitioning extends UdoDomainObject2<Partitioning> implements With
     @Getter @Setter
     private Budget budget;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true") //TODO: actually false, but interface WithInterval demands this
     @Getter @Setter
     private LocalDate startDate;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")  //TODO: actually false, but interface WithInterval demands this
     @Getter @Setter
     private LocalDate endDate;
 
@@ -129,5 +135,35 @@ public class Partitioning extends UdoDomainObject2<Partitioning> implements With
             }
         }
         return results;
+    }
+
+    @Programmatic
+    public BigDecimal getFractionOfYear(){
+        BigDecimal numberOfDaysInInterval = BigDecimal
+                .valueOf(getInterval().days());
+        BigDecimal numberOfDaysInYear = BigDecimal
+                .valueOf(
+                        new LocalDateInterval(
+                                new LocalDate(getStartDate().getYear(),01,01),
+                                new LocalDate(getStartDate().getYear()+1, 01,01), AbstractInterval.IntervalEnding.EXCLUDING_END_DATE)
+                                .days()
+                );
+        return numberOfDaysInInterval.divide(numberOfDaysInYear, MathContext.DECIMAL64);
+    }
+
+    @Override public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Override public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
+    }
+
+    @Override public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(final LocalDate date) {
+        return getInterval().contains(date);
     }
 }

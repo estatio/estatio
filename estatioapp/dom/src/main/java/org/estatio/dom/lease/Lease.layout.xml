@@ -127,7 +127,9 @@
                 <ns2:action id="NewCeilingOverride"/>
                 <ns2:action id="NewFixedOverride"/>
             </ns2:collection>
-            <ns2:collection id="BudgetCalculationRuns"/>
+            <ns2:collection id="BudgetCalculationRuns">
+                <ns2:action id="DownloadBudgetCalculationsForLease"/>
+            </ns2:collection>
         </col>
     </row>
 </grid>
