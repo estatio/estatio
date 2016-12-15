@@ -679,9 +679,9 @@ public class Lease
             final @Parameter(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) SequenceType sequenceType,
-            final @Parameter(optionality = Optionality.OPTIONAL) Scheme scheme,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate signatureDate) {
+            final SequenceType sequenceType,
+            final Scheme scheme,
+            final LocalDate signatureDate) {
 
         final Party creditor = getPrimaryParty();
         final Party debtor = getSecondaryParty();
