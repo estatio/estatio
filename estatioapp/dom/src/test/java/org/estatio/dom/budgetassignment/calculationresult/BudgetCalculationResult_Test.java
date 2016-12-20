@@ -29,7 +29,7 @@ import org.junit.rules.ExpectedException;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForTesting;
+import org.estatio.dom.budgetassignment.override.BudgetOverrideDummy;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.charge.Charge;
@@ -75,8 +75,8 @@ public class BudgetCalculationResult_Test {
         BudgetOverrideValue bOvVal2 = new BudgetOverrideValue();
         List<BudgetCalculation> budgetCalculations = new ArrayList<>();
         List<BudgetOverrideValue> budgetOverrideValues = new ArrayList<>();
-        BudgetOverride budgetOverride = new BudgetOverrideForTesting();
-        BudgetOverride otherBudgetOverride = new BudgetOverrideForTesting();
+        BudgetOverride budgetOverride = new BudgetOverrideDummy();
+        BudgetOverride otherBudgetOverride = new BudgetOverrideDummy();
         BigDecimal valueCalculatedByBudget = new BigDecimal("100.00");
         BigDecimal valueUsingOverrides = new BigDecimal("99.99");
 

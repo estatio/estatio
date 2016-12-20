@@ -87,7 +87,7 @@ public class BudgetOverride_Test {
     // generic behaviour of BudgetOverride#findOrCreateValues (independent of BudgetOverride#valueFor)
     public static class CalculateTest extends BudgetOverride_Test {
 
-        BudgetOverrideForTesting override;
+        BudgetOverrideDummy override;
         BudgetOverrideValue calculation;
 
         @Test
@@ -95,7 +95,7 @@ public class BudgetOverride_Test {
             // given
             valueCalculatedByBudget = new BigDecimal("1000.00");
             calculation = new BudgetOverrideValue();
-            override = new BudgetOverrideForTesting(){
+            override = new BudgetOverrideDummy(){
                 @Override
                 BigDecimal getCalculatedValueByBudget(final LocalDate budgetStartDate, final BudgetCalculationType type){
                     return valueCalculatedByBudget;
@@ -209,7 +209,7 @@ public class BudgetOverride_Test {
         public void test() {
 
             // given
-            BudgetOverride budgetOverride = new BudgetOverrideForTesting();
+            BudgetOverride budgetOverride = new BudgetOverrideDummy();
             LocalDate terminationDate = new LocalDate();
 
             // when
@@ -224,7 +224,7 @@ public class BudgetOverride_Test {
         public void validateTest() {
 
             // given
-            BudgetOverride budgetOverride = new BudgetOverrideForTesting();
+            BudgetOverride budgetOverride = new BudgetOverrideDummy();
             LocalDate startDate = new LocalDate();
             budgetOverride.setStartDate(startDate);
 
