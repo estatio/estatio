@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+            <cpt:action id="recentEventsPublishedByUser"/>
+            <cpt:action id="recentCommandsByUser"/>
+            <cpt:action id="links"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="6">
+            <cpt:fieldSet name="Identifiers" id="identifiers" unreferencedProperties="true">
+                <cpt:property id="type"/>
+                <cpt:property id="user"/>
+                <cpt:property id="timestamp"/>
+                <cpt:property id="transactionId"/>
+                <cpt:property id="sequence"/>
+                <cpt:property id="eventType"/>
+                <cpt:property id="title"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Target" id="target">
+                <cpt:property id="targetClass"/>
+                <cpt:property id="targetAction"/>
+                <cpt:property id="propertyId"/>
+                <cpt:property id="targetStr"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="6">
+            <cpt:fieldSet name="Detail" id="detail">
+                <cpt:property id="preValue"/>
+                <cpt:property id="postValue"/>
+                <cpt:property id="memberIdentifier"/>
+                <cpt:property id="serializedForm"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="State" id="state"/>
+            <cpt:fieldSet name="Metadata" id="metadata">
+                <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
+                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                <cpt:property id="metadataRegionDummyProperty"/>
+                <cpt:property id="datanucleusIdLong"/>
+                <cpt:property id="datanucleusVersionLong"/>
+                <cpt:property id="datanucleusVersionTimestamp"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="12" unreferencedCollections="true">
+            <cpt:collection id="statusMessagesInTransaction"/>
+            <cpt:collection id="auditEntries">
+                <cpt:metadataError>No such collection</cpt:metadataError>
+            </cpt:collection>
+            <cpt:collection id="publishedEventsInTransaction"/>
+            <cpt:collection id="siblingEvents"/>
+            <cpt:collection defaultView="table" id="auditEntriesInTransaction"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>
