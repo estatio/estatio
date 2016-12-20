@@ -17,21 +17,25 @@
  */
 package org.estatio.app.services.tenancy;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.FluentIterable;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
-import org.isisaddons.module.security.facets.TenantedAuthorizationFacetDefault;
-
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.FluentIterable;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
+import org.isisaddons.module.security.facets.TenantedAuthorizationFacetDefault;
+
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99")
 public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancyEvaluator {
@@ -163,10 +167,7 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
         if(handles(applicationUser.getClass())) {
             return applicationTenancyPathFor(applicationUser);
         } else {
-            ApplicationTenancy userTenancy = applicationUser.getTenancy();
-            return userTenancy == null
-                        ? null
-                        : userTenancy.getPath();
+            return applicationUser.getAtPath();
         }
     }
     //endregion

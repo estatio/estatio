@@ -22,8 +22,8 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.Party;
@@ -45,12 +45,12 @@ public abstract class ProgramAbstract extends FixtureScript {
             final String name, 
             final String programGoal,
             final Party owner,
-            final Party boardmember,
+            final Party boardMember,
             final ExecutionContext fixtureResults) {
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
         Program program = programRepository.newProgram(reference, name, programGoal, applicationTenancy);
         program.programRoleRepository.createRole(program, ProgramRoleType.PROGRAM_OWNER, owner, ld(1999, 1, 1), ld(2000, 1, 1));
-        program.programRoleRepository.createRole(program, ProgramRoleType.PROGRAM_BOARDMEMBER, boardmember, ld(1999, 7, 1), ld(2000, 1, 1));
+        program.programRoleRepository.createRole(program, ProgramRoleType.PROGRAM_BOARDMEMBER, boardMember, ld(1999, 7, 1), ld(2000, 1, 1));
         return fixtureResults.addResult(this, program.getReference(), program);
     }
 
@@ -66,7 +66,7 @@ public abstract class ProgramAbstract extends FixtureScript {
   	protected PropertyRepository propertyRepository;
 
     @Inject
-    protected ApplicationTenancies applicationTenancies;
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 
 
 }

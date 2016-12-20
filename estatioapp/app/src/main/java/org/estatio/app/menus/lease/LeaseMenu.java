@@ -18,10 +18,11 @@
  */
 package org.estatio.app.menus.lease;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -43,10 +44,15 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.Dflt;
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.StringUtils;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRepository;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -55,10 +61,6 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.JodaPeriodUtils;
-import org.incode.module.base.dom.utils.StringUtils;
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -68,11 +70,14 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 )
 public class LeaseMenu {
 
+    /**
+     *
+     * @param property - obtained via {@link org.estatio.dom.asset.PropertyRepository#autoComplete(String)} ... nb this does server-side filtering based on user's atPath
+     */
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
-            // CHECKSTYLE:OFF ParameterNumber
-            final ApplicationTenancy applicationTenancy,
+            final Property property,
             final @Parameter(regexPattern = Lease.ReferenceType.Meta.REGEX, regexPatternReplacement = Lease.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final LeaseType leaseType,
@@ -81,32 +86,26 @@ public class LeaseMenu {
             final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
             final @Parameter(optionality = Optionality.OPTIONAL) Party landlord,
             final @Parameter(optionality = Optionality.OPTIONAL) Party tenant
-            // CHECKSTYLE:ON
     ) {
+        final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
         return leaseRepository.newLease(applicationTenancy, reference, name, leaseType, startDate, duration, endDate, landlord, tenant);
     }
 
-    public List<ApplicationTenancy> choices0NewLease() {
-        return estatioApplicationTenancyRepository.propertyTenanciesForCurrentUser();
-    }
 
-    public ApplicationTenancy default0NewLease() {
-        return Dflt.of(choices0NewLease());
-    }
-
-    public List<LeaseType> choices3NewLease(final ApplicationTenancy applicationTenancy) {
-        if (applicationTenancy == null)
+    public List<LeaseType> choices3NewLease(final Property property) {
+        if(property == null) {
             return null;
-        List<LeaseType> result = new ArrayList<>();
+        }
+
+        final ApplicationTenancy propertyApplicationTenancy = property.getApplicationTenancy();
+        List<LeaseType> result = Lists.newArrayList();
         for (LeaseType leaseType : leaseTypeRepository.allLeaseTypes()) {
-            if (
-                    ApplicationTenancyLevel.of(applicationTenancy)
-                            .equals(ApplicationTenancyLevel.of(leaseType.getApplicationTenancy())
-                            )
-                            ||
-                            ApplicationTenancyLevel.of(applicationTenancy)
-                                    .childOf(ApplicationTenancyLevel.of(leaseType.getApplicationTenancy()))
-                    ) {
+
+            final ApplicationTenancyLevel propertyAppTenancyLevel = ApplicationTenancyLevel.of(propertyApplicationTenancy);
+            final ApplicationTenancyLevel leaseTypeAppTenancyLevel = ApplicationTenancyLevel.of(leaseType.getApplicationTenancy());
+
+            if (    propertyAppTenancyLevel.equals(leaseTypeAppTenancyLevel) ||
+                    propertyAppTenancyLevel.childOf(leaseTypeAppTenancyLevel)) {
                 result.add(leaseType);
             }
         }
@@ -114,8 +113,7 @@ public class LeaseMenu {
     }
 
     public String validateNewLease(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
-            final ApplicationTenancy applicationTenancy,
+            final Property property,
             final String reference,
             final String name,
             final LeaseType leaseType,
@@ -124,7 +122,6 @@ public class LeaseMenu {
             final LocalDate endDate,
             final Party landlord,
             final Party tenant
-            // CHECKSTYLE:ON
     ) {
         if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
             return "Either end date or duration must be filled in.";
@@ -139,24 +136,28 @@ public class LeaseMenu {
                 return "End date can not be before start date";
             }
         }
-        // check apptenancy landlord and tenant against param applicationTenancy
-        // because these can't be filtered in autoComplete
-        if (!(ApplicationTenancyLevel.of(applicationTenancy)
+
+        // for the selected property, both the landlord and the tenant must be for the same country
+        // since we don't (currently) persist the country for Party, we use app tenancy instead.
+
+        final ApplicationTenancy applicationTenancyOfProperty = property.getApplicationTenancy();
+        if (!(ApplicationTenancyLevel.of(applicationTenancyOfProperty)
                 .equals(ApplicationTenancyLevel.of(landlord.getApplicationTenancy()))
                 ||
                 ApplicationTenancyLevel.of(landlord.getApplicationTenancy())
-                        .parentOf(ApplicationTenancyLevel.of(applicationTenancy))
+                        .parentOf(ApplicationTenancyLevel.of(applicationTenancyOfProperty))
         )) {
             return "Landlord not valid. (wrong application tenancy)";
         }
-        if (!(ApplicationTenancyLevel.of(applicationTenancy)
+        if (!(ApplicationTenancyLevel.of(applicationTenancyOfProperty)
                 .equals(ApplicationTenancyLevel.of(tenant.getApplicationTenancy()))
                 ||
                 ApplicationTenancyLevel.of(tenant.getApplicationTenancy())
-                        .parentOf(ApplicationTenancyLevel.of(applicationTenancy))
+                        .parentOf(ApplicationTenancyLevel.of(applicationTenancyOfProperty))
         )) {
             return "Tenant not valid. (wrong application tenancy)";
         }
+
         return null;
     }
 

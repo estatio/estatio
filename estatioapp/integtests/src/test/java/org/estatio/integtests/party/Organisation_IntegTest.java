@@ -35,14 +35,15 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.fixture.CountriesRefData;
+
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationPreviousName;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -154,27 +155,12 @@ public class Organisation_IntegTest extends EstatioIntegrationTest {
             ApplicationTenancy applicationTenancyForFra = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(CountriesRefData.FRA));
 
             // when
-            organisation1 = wrap(organisationRepository).newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);
-            organisation2 = wrap(organisationRepository).newOrganisation(null, true, "SOME_OTHER_NAME", applicationTenancyForFra);
+            organisation1 = organisationRepository.newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);
+            organisation2 = organisationRepository.newOrganisation(null, true, "SOME_OTHER_NAME", applicationTenancyForFra);
 
             // then
             Assertions.assertThat(organisation1.getReference()).isEqualTo("FRCL0001");
             Assertions.assertThat(organisation2.getReference()).isEqualTo("FRCL0002");
-
-        }
-
-        @Test
-        public void noNumeratorFound() throws Exception {
-
-            // given
-            ApplicationTenancy applicationTenancyForGbr = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(CountriesRefData.GBR));
-
-            // then
-            exception.expect(InvalidException.class);
-            exception.expectMessage("No numerator found");
-
-            // when
-            wrap(organisationRepository).newOrganisation(null, true, "SOME_NAME", applicationTenancyForGbr);
 
         }
 

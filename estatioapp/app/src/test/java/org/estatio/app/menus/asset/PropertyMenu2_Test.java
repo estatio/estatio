@@ -34,6 +34,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
+
 import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -101,21 +102,6 @@ public class PropertyMenu2_Test {
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
-    }
-
-    public static class AutoComplete extends PropertyMenu2_Test {
-
-        @Test
-        public void happyCase() {
-
-            propertyRepository.autoComplete("X?yz");
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceOrName");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object)"(?i).*X.yz.*");
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
     }
 
     public static class AllPropertyMenu extends PropertyMenu2_Test {

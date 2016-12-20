@@ -1,3 +1,21 @@
+/*
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
 package org.estatio.app.menus.invoice;
 
 import java.util.List;
@@ -25,6 +43,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -36,7 +55,9 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
+import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
@@ -56,19 +77,30 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
             final Lease lease,
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
-            final Currency currency,
-            final ApplicationTenancy applicationTenancy) {
-        return invoiceRepository.newInvoice(applicationTenancy,
-                lease.getPrimaryParty(),
-                lease.getSecondaryParty(),
+            final Currency currency) {
+
+        final Property propertyIfAny = lease.getProperty();
+        final Party seller = lease.getPrimaryParty();
+        final Party buyer = lease.getSecondaryParty();
+
+        final ApplicationTenancy propertySellerTenancy =
+                estatioApplicationTenancyRepositoryForLease.findOrCreateTenancyFor(propertyIfAny, seller);
+
+        return invoiceRepository.newInvoice(propertySellerTenancy,
+                seller,
+                buyer,
                 paymentMethod,
                 currency,
                 dueDate,
                 lease, null);
     }
 
-    public List<ApplicationTenancy> choices4NewInvoiceForLease() {
-        return estatioApplicationTenancyRepository.selfOrChildrenOf(meService.me().getTenancy());
+    public String validate0NewInvoiceForLease(final Lease lease) {
+        final Property propertyIfAny = lease.getProperty();
+        if(propertyIfAny == null) {
+            return "Can only create invoices for leases that have an occupancy";
+        }
+        return null;
     }
 
     // //////////////////////////////////////
@@ -154,4 +186,8 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Inject
     private ClockService clockService;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepositoryForLease;
+
 }

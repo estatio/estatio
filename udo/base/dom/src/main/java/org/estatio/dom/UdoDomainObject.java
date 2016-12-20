@@ -27,13 +27,15 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.util.ObjectContracts;
 
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.with.WithCodeGetter;
 import org.incode.module.base.dom.with.WithDescriptionGetter;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
 import org.incode.module.base.dom.with.WithTitleGetter;
+
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over time,
@@ -63,6 +65,7 @@ import org.incode.module.base.dom.with.WithTitleGetter;
 public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
         extends AbstractDomainObject
         implements Comparable<T>, WithApplicationTenancy {
+
 
     protected static ObjectContracts UDO_OBJECT_CONTRACTS =
             new ObjectContracts()
@@ -97,7 +100,16 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
 
     // //////////////////////////////////////
 
-    @Inject public ClockService clockService;
+    @Override
+    public String getAtPath() {
+        final ApplicationTenancy applicationTenancy = getApplicationTenancy();
+        return applicationTenancy != null ? applicationTenancy.getPath() : null;
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
+    public ClockService clockService;
 
     protected ClockService getClockService() {
         return clockService;

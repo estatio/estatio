@@ -16,6 +16,8 @@
  */
 package org.incode.module.communications.dom.impl;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
@@ -24,6 +26,12 @@ public class CommunicationChannelOwnerForTesting implements CommunicationChannel
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
+        return null;
+    }
+
+    @Programmatic
+    @Override
+    public String getAtPath() {
         return null;
     }
 }

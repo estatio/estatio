@@ -35,10 +35,17 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.dom.country.CountryServiceForCurrentUser;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
+import org.estatio.dom.party.PartyConstants;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 @DomainServiceLayout(
         named = "Parties",
@@ -53,26 +60,36 @@ public class OrganisationMenu {
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumereratorForReference,
             final String name,
-            final ApplicationTenancy applicationTenancy) {
-        return organisationRepository.newOrganisation(reference, useNumereratorForReference, name, applicationTenancy);
+            final Country country) {
+        return organisationRepository.newOrganisation(reference, useNumereratorForReference, name, country);
     }
 
-    public List<ApplicationTenancy> choices3NewOrganisation() {
-        return organisationRepository.choices3NewOrganisation();
+    public List<Country> choices3NewOrganisation() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public ApplicationTenancy default3NewOrganisation() {
-        return organisationRepository.default3NewOrganisation();
+    public Country default3NewOrganisation() {
+        return  Dflt.of(choices3NewOrganisation());
     }
 
     public String validateNewOrganisation(
             final String reference,
-            final boolean useNumereratorForReference,
+            final boolean useNumeratorForReference,
             final String name,
-            final ApplicationTenancy applicationTenancy
+            final Country country
     ) {
-        return organisationRepository.validateNewOrganisation(reference, useNumereratorForReference, name, applicationTenancy);
+        if (useNumeratorForReference) {
+
+            final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+            if (numeratorRepository
+                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
+                return "No numerator found";
+            }
+            return null;
+        }
+        return partyRepository.validateNewParty(reference);
     }
+
 
     // //////////////////////////////////////
 
@@ -86,5 +103,17 @@ public class OrganisationMenu {
 
     @Inject
     OrganisationRepository organisationRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject
+    NumeratorRepository numeratorRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
 }

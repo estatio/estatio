@@ -33,10 +33,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.types.ReferenceType;
-
 import org.incode.module.base.dom.Dflt;
+import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
@@ -61,16 +63,17 @@ public class TaxMenu extends UdoDomainRepositoryAndFactory<Tax> {
             final String reference,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String name,
-            final ApplicationTenancy applicationTenancy) {
+            final Country country) {
 
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
         return taxRepository.newTax(reference, name, applicationTenancy);
     }
 
-    public List<ApplicationTenancy> choices2NewTax() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
+    public List<Country> choices2NewTax() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public ApplicationTenancy default2NewTax() {
+    public Country default2NewTax() {
         return Dflt.of(choices2NewTax());
     }
 
@@ -90,6 +93,9 @@ public class TaxMenu extends UdoDomainRepositoryAndFactory<Tax> {
 
     @Inject
     private TaxRepository taxRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
 
 
 }

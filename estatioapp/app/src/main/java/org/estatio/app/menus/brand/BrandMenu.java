@@ -29,16 +29,18 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.Dflt;
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.incode.module.country.dom.impl.Country;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.lease.tags.BrandRepository;
@@ -60,34 +62,45 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     @MemberOrder(sequence = "1")
     public Brand newBrand(
             final String name,
-            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
-            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
-            final @Parameter(optionality = Optionality.OPTIONAL) String group,
-            final ApplicationTenancy applicationTenancy
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BrandCoverage coverage,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Country countryOfOrigin,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String group,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            @ParameterLayout(describedAs = "Leave blank for a global brand")
+            final Country country
     ) {
-        return brandRepository.newBrand(name, coverage, countryOfOrigin, group, applicationTenancy);
+        return brandRepository.newBrand(name, coverage, countryOfOrigin, group, country);
     }
 
     public List<String> choices3NewBrand() {
         return brandRepository.findUniqueGroups();
     }
 
-    public List<ApplicationTenancy> choices4NewBrand() {
-        return estatioApplicationTenancyRepository.countryTenanciesIncludeGlobalIfTenancyIsGlobalForCurrentUser();
-    }
-
-    public ApplicationTenancy default4NewBrand() {
-        return Dflt.of(choices4NewBrand());
-    }
 
     public String validateNewBrand(
             final String name,
             final BrandCoverage coverage,
             final Country countryOfOrigin,
             final String group,
-            final ApplicationTenancy applicationTenancy) {
-        return brandRepository.validateNewBrand(name, coverage, countryOfOrigin, group, applicationTenancy);
+            final Country countryIfAny) {
+
+        final String atPath = meService.me().getAtPath();
+        final ApplicationTenancyLevel userAtPath = ApplicationTenancyLevel.of(atPath);
+        if(countryIfAny == null && (userAtPath == null || !userAtPath.isRoot())) {
+            return "You may only create country-specific brands";
+        }
+
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryIfAny);
+        if (brandRepository.findByNameLowerCaseAndAppTenancy(name, applicationTenancy).size() > 0) {
+            return String.format("Brand with name %s exists already for %s", name, applicationTenancy.getName());
+        }
+
+        return null;
     }
+
 
     // //////////////////////////////////////
 
@@ -104,9 +117,9 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     public BrandRepository brandRepository;
 
     @Inject
-    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
-    private MeService meService;
+    MeService meService;
 
 }

@@ -15,11 +15,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -46,11 +46,6 @@ public class EstatioApplicationTenancyRepositoryForProperty {
     public List<ApplicationTenancy> propertyTenanciesUnder(final ApplicationTenancy tenancy) {
         return Lists.newArrayList(Iterables.filter(
                 allTenancies(), Predicates.isPropertyTenancyUnder(tenancy)));
-    }
-
-    public List<ApplicationTenancy> propertyTenanciesForCurrentUser() {
-        final ApplicationUser currentUser = meService.me();
-        return propertyTenanciesUnder(currentUser.getTenancy());
     }
 
 

@@ -72,8 +72,16 @@ import lombok.Setter;
                 name = "findByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.Property "
-                        + "WHERE reference.matches(:referenceOrName)"
+                        + "WHERE reference.matches(:referenceOrName) "
                         + "|| name.matches(:referenceOrName)"),
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrNameAndAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.Property "
+                        + "WHERE (   reference.matches(:referenceOrName)"
+                        + "       || name.matches(:referenceOrName)      ) "
+                        + "&& atPath.matches(:atPath) "
+        ),
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "

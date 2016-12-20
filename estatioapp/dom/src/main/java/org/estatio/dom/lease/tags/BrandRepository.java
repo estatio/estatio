@@ -27,16 +27,15 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.StringUtils;
+import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.DOMAIN)
 public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
@@ -84,14 +83,27 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
                 : Lists.<Brand>newArrayList();
     }
 
+    @Programmatic
     public Brand newBrand(
             final String name,
-            final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
-            final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin,
-            final @Parameter(optionality = Optionality.OPTIONAL) String group,
+            final BrandCoverage coverage,
+            final Country countryOfOrigin,
+            final String group,
+            final Country countryIfAny) {
+
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryIfAny);
+
+        return newBrand(name, coverage, countryOfOrigin, group, applicationTenancy);
+    }
+
+    @Programmatic
+    public Brand newBrand(
+            final String name,
+            final BrandCoverage coverage,
+            final Country countryOfOrigin,
+            final String group,
             final ApplicationTenancy applicationTenancy) {
-        Brand brand;
-        brand = newTransientInstance(Brand.class);
+        Brand brand = newTransientInstance(Brand.class);
         brand.setName(name);
         brand.setCoverage(coverage);
         brand.setCountryOfOrigin(countryOfOrigin);
@@ -101,24 +113,12 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         return brand;
     }
 
-    public String validateNewBrand(
-            final String name,
-            final BrandCoverage coverage,
-            final Country countryOfOrigin,
-            final String group,
-            final ApplicationTenancy applicationTenancy) {
-        if (findByNameLowerCaseAndAppTenancy(name, applicationTenancy).size() > 0) {
-            return String.format("Brand with name %s exists already for %s", name, applicationTenancy.getName());
-        }
-        return null;
-    }
-
     @Programmatic
     public Brand findOrCreate(
             final ApplicationTenancy applicationTenancy,
             final String name,
-            @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage brandCoverage,
-            @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin) {
+            final BrandCoverage brandCoverage,
+            final Country countryOfOrigin) {
         if (name == null) {
             return null;
         }

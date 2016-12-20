@@ -30,11 +30,15 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.incode.module.base.dom.Dflt;
+import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.dom.country.CountryServiceForCurrentUser;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.PersonRepository;
@@ -54,9 +58,33 @@ public class PersonMenu {
             final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
             final String lastName,
             final PersonGenderType gender,
-            final ApplicationTenancy applicationTenancy) {
-        return personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
+            final Country country) {
+        return personRepository.newPerson(reference, initials, firstName, lastName, gender, country);
     }
+
+    @Programmatic
+    public List<Country> choices5NewPerson() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    @Programmatic
+    public Country default5NewPerson() {
+        return Dflt.of(choices5NewPerson());
+    }
+
+    public String validateNewPerson(
+            final String reference,
+            final String initials,
+            final String firstName,
+            final String lastName,
+            final PersonGenderType gender,
+            final Country country
+    ) {
+        return partyRepository.validateNewParty(reference);
+    }
+
+
+    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
@@ -68,5 +96,11 @@ public class PersonMenu {
 
     @Inject
     PersonRepository personRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
+
+    @Inject
+    private PartyRepository partyRepository;
 
 }

@@ -29,10 +29,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.country.dom.impl.CountryRepository;
+
+import org.estatio.app.menus.brand.BrandMenu;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandRepository;
 import org.estatio.fixture.lease.tags.BrandsFixture;
@@ -45,8 +47,13 @@ public class BrandRepository_IntegTest extends EstatioIntegrationTest {
     @Inject
     BrandRepository brandRepository;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
+    @Inject
+    CountryRepository countryRepository;
 
     @Before
     public void setupData() {
@@ -123,8 +130,6 @@ public class BrandRepository_IntegTest extends EstatioIntegrationTest {
 
     }
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     public static class NewBrand extends BrandRepository_IntegTest {
 
@@ -132,28 +137,14 @@ public class BrandRepository_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given, when
-            Brand brandFra = wrap(brandRepository).newBrand("Test123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
-            Brand brandGbr = wrap(brandRepository).newBrand("Test123", null, null, null, applicationTenancyRepository.findByPath("/GBR"));
+            Brand brandFra = brandRepository.newBrand("Test123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
+            Brand brandGbr = brandRepository.newBrand("Test123", null, null, null, applicationTenancyRepository.findByPath("/GBR"));
             // then
             Assertions.assertThat(brandFra.getName()).isEqualTo("Test123");
             Assertions.assertThat(brandGbr.getName()).isEqualTo("Test123");
 
         }
 
-        @Test
-        public void validationFails() throws Exception {
-
-            // given
-            brandRepository.newBrand("test123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
-
-            // then
-            exception.expect(InvalidException.class);
-            exception.expectMessage("Brand with name TeSt123 exists already for France");
-
-            // when
-            wrap(brandRepository).newBrand("TeSt123", null, null, null, applicationTenancyRepository.findByPath("/FRA"));
-
-        }
 
     }
 

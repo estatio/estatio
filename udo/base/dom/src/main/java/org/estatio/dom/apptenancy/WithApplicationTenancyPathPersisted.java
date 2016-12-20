@@ -16,8 +16,6 @@
  */
 package org.estatio.dom.apptenancy;
 
-import org.isisaddons.module.security.dom.tenancy.WithApplicationTenancy;
-
 public interface WithApplicationTenancyPathPersisted extends WithApplicationTenancy {
 
     void setApplicationTenancyPath(String newApplicationTenancy);

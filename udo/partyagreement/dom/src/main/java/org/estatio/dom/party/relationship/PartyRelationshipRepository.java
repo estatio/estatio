@@ -12,9 +12,12 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
@@ -64,7 +67,9 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
         String newReference = reference == null ? generator.generateRandomCode().toUpperCase() : reference;
-        Person person = personRepository.newPerson(newReference, initials, firstName, lastName, gender, party.getApplicationTenancy());
+        final ApplicationTenancy applicationTenancy = party.getApplicationTenancy();
+
+        Person person = personRepository.newPerson(newReference, initials, firstName, lastName, gender, applicationTenancy);
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             communicationChannelRepository.newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         }

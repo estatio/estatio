@@ -26,8 +26,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -92,7 +92,7 @@ public class ProgramRepositoryTest {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private RepositoryService mockRepositoryService;
         @Mock
         private EstatioApplicationTenancyRepositoryForCountry mockEstatioApplicationTenancyRepository;
 
@@ -101,13 +101,13 @@ public class ProgramRepositoryTest {
         @Before
         public void setup() {
             programRepository = new ProgramRepository();
-            programRepository.setContainer(mockContainer);
+            programRepository.repositoryService = mockRepositoryService;
             programRepository.estatioApplicationTenancyRepository = mockEstatioApplicationTenancyRepository;
         }
 
 
         @Test
-        public void newProgram() {
+        public void happy_case() {
             // given
             final ApplicationTenancy countryApplicationTenancy = new ApplicationTenancy();
             countryApplicationTenancy.setPath("/it");
@@ -120,10 +120,10 @@ public class ProgramRepositoryTest {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(Program.class);
+                    oneOf(mockRepositoryService).instantiate(Program.class);
                     will(returnValue(program));
 
-                    oneOf(mockContainer).persistIfNotAlready(program);
+                    oneOf(mockRepositoryService).persist(program);
                 }
             });
 

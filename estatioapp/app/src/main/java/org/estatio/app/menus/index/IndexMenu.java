@@ -32,9 +32,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.types.ReferenceType;
-
 import org.incode.module.base.dom.Dflt;
+import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.country.dom.impl.Country;
+
+import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
@@ -46,20 +48,25 @@ public class IndexMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Index newIndex(
-            @Parameter(regexPattern = ReferenceType.Meta.REGEX)
+            @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
             final String reference,
             final String name,
-            final ApplicationTenancy applicationTenancy) {
+            final Country country) {
+
+        final ApplicationTenancy applicationTenancy =  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
         return indexRepository.newIndex(reference, name, applicationTenancy);
     }
 
-    public List<ApplicationTenancy> choices2NewIndex() {
-        return estatioApplicationTenancyRepository.countryTenanciesForCurrentUser();
+    public List<Country> choices2NewIndex() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public ApplicationTenancy default2NewIndex() {
+    public Country default2NewIndex() {
         return Dflt.of(choices2NewIndex());
     }
+
+
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "60.3")
@@ -67,8 +74,14 @@ public class IndexMenu {
         return indexRepository.all();
     }
 
+
+
     @Inject
     private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
+
 
     @Inject
     private IndexRepository indexRepository;

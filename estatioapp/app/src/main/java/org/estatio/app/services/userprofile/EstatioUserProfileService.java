@@ -7,7 +7,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.userprof.UserProfileService;
 
 import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.dom.UdoDomainService;
@@ -26,9 +25,9 @@ public class EstatioUserProfileService extends UdoDomainService<EstatioUserProfi
     @Override
     public String userProfileName() {
         final ApplicationUser currentUser = meService.me();
-        final ApplicationTenancy tenancy = currentUser.getTenancy();
-        if(tenancy != null) {
-            return String.format("%s (%s)", currentUser.getName(), tenancy.getName());
+        final String atPath = currentUser.getAtPath();
+        if(atPath != null) {
+            return String.format("%s @ %s", currentUser.getName(), atPath);
         } else {
             return String.format("%s", currentUser.getName());
         }
