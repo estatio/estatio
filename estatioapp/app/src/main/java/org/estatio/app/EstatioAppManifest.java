@@ -178,13 +178,15 @@ public class EstatioAppManifest implements AppManifest {
     /**
      * We need to use overrides where we have a dependency on a module whose entities is defined to reside
      * its own schema (eg incode modules), but where we have a PK/FK relationship to its entities.
-     *
-     * In this case, because DN (seems to) require both are in the same schema, we force the module's entity to be
+     * In these cases, because DN (seems to) require both are in the same schema, we force the module's entity to be
      * mapped to a table in Estatio's own schema, ie 'dbo'.
+     *
+     * We also use overrides for certain column/property mappings, eg to reduce size of the bookmark columns where
+     * these have an index on them (limited to 900 bytes).
      */
     private static Map<String, String> withEstatioSchemaOverrides(Map<String, String> props) {
-        // to pick up Xxx-dbo.orm overrides
-        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping", "dbo");
+        // to pick up Xxx-sqlserver.orm overrides
+        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping", "sqlserver");
         return props;
     }
 
