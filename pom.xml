@@ -64,7 +64,7 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.13.0.20161107-1837</isis.version>
+        <isis.version>1.13.2</isis.version>
 
         <isis-module-command.version>1.13.2</isis-module-command.version>
         <isis-module-excel.version>1.13.6</isis-module-excel.version>
