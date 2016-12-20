@@ -1,4 +1,5 @@
 = Estatio: an open source estate management system.
+:toc:
 
 Estatio is modern and flexible property management software.
 It offers real estate professionals and service providers the power and flexibility to manage their business in a superior, flexible and cost-effective manner.
