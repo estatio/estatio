@@ -41,8 +41,8 @@ public class BudgetOverrideRepositoryTest {
         public void validation_kicks_in_no_incoming_charge_and_type_specified() throws Exception {
 
             //given
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
 
             //expect
@@ -58,9 +58,9 @@ public class BudgetOverrideRepositoryTest {
         public void validation_kicks_in_same_type_specified() throws Exception {
 
             //given
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
             override.setType(BudgetCalculationType.BUDGETED);
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setType(BudgetCalculationType.BUDGETED);
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
 
@@ -77,8 +77,8 @@ public class BudgetOverrideRepositoryTest {
         public void validation_kicks_in_one_type_specified() throws Exception {
 
             //given
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setType(BudgetCalculationType.BUDGETED);
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
 
@@ -96,9 +96,9 @@ public class BudgetOverrideRepositoryTest {
 
             //given
             Charge incomingCharge = new Charge();
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
             override.setIncomingCharge(incomingCharge);
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setIncomingCharge(incomingCharge);
 
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
@@ -117,8 +117,8 @@ public class BudgetOverrideRepositoryTest {
 
             //given
             Charge incomingCharge = new Charge();
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setIncomingCharge(incomingCharge);
 
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
@@ -137,9 +137,9 @@ public class BudgetOverrideRepositoryTest {
 
             //given
             LocalDate date = new LocalDate(2000,01,01);
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
             override.setStartDate(date);
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setEndDate(date);
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
 
@@ -155,9 +155,9 @@ public class BudgetOverrideRepositoryTest {
             //given
             Charge incomingCharge1 = new Charge();
             Charge incomingCharge2 = new Charge();
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
             override.setIncomingCharge(incomingCharge1);
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setIncomingCharge(incomingCharge2);
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
 
@@ -171,9 +171,9 @@ public class BudgetOverrideRepositoryTest {
         public void validation_does_not_kick_in_different_type_specified() throws Exception {
 
             //given
-            BudgetOverrideForTesting override = new BudgetOverrideForTesting();
+            BudgetOverrideDummy override = new BudgetOverrideDummy();
             override.setType(BudgetCalculationType.BUDGETED);
-            BudgetOverrideForTesting overrideToCompare = new BudgetOverrideForTesting();
+            BudgetOverrideDummy overrideToCompare = new BudgetOverrideDummy();
             overrideToCompare.setType(BudgetCalculationType.ACTUAL);
             List<BudgetOverride> overrides = Arrays.asList(overrideToCompare);
 

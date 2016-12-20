@@ -162,7 +162,7 @@ public class BudgetOverrideRepository extends UdoDomainRepositoryAndFactory<Budg
 
     @Programmatic
     public String validateNewBudgetOverride(final Lease lease, final LocalDate startDate, final LocalDate endDate, final Charge invoiceCharge, final Charge incomingCharge, final BudgetCalculationType type, final String reason){
-        BudgetOverride tempOverride = new BudgetOverrideForTesting();
+        BudgetOverride tempOverride = new BudgetOverrideDummy();
         tempOverride.setStartDate(startDate);
         tempOverride.setEndDate(endDate);
         tempOverride.setInvoiceCharge(invoiceCharge);
