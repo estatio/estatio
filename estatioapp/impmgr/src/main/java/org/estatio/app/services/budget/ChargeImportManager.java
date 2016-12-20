@@ -63,7 +63,7 @@ public class ChargeImportManager {
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @CollectionLayout(paged = -1)
     public List<ChargeImport> importBlob(
-            // @Parameter(fileAccept = ".xlsx")        // commented out until confirmed that ".xls" is not also in use (EST-948)
+            @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
         List<ChargeImport> lineItems =
                 excelService.fromExcel(spreadsheet, ChargeImport.class, ChargeImport.class.getSimpleName());
