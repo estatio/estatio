@@ -9,8 +9,8 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.user.UserService;
 
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
@@ -20,13 +20,16 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRe
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
 public class Budget_Remove {
@@ -36,7 +39,7 @@ public class Budget_Remove {
         this.budget = budget;
     }
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING ,semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public void removeBudget(
             @ParameterLayout(named = "This will delete the budget and all associated data including keytables, calculations, runs, results and lease terms. (You may consider downloading the budget and the keytables beforehand.) Are you sure?")
@@ -78,6 +81,15 @@ public class Budget_Remove {
         budget.remove();
     }
 
+    public String disableRemoveBudget(final boolean areYouSure){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(budget)){
+            if (calculation.getStatus().equals(Status.ASSIGNED)){
+                return "This budget is assigned already";
+            }
+        }
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to remove a budget" : null;
+    }
+
     public String validateRemoveBudget(final boolean areYouSure){
         return areYouSure ? null : "Please confirm";
     }
@@ -99,5 +111,8 @@ public class Budget_Remove {
 
     @Inject
     private BudgetCalculationResultLinkRepository budgetCalculationResultLinkRepository;
+
+    @Inject
+    private UserService userService;
 
 }

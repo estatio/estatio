@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 
 import org.isisaddons.module.excel.dom.PivotColumn;
+import org.isisaddons.module.excel.dom.PivotDecoration;
 import org.isisaddons.module.excel.dom.PivotRow;
 import org.isisaddons.module.excel.dom.PivotValue;
 
@@ -67,7 +68,7 @@ public class DetailedCalculationResultViewmodel {
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    @PivotValue(order = 1)
+    @PivotDecoration(order = 1)
     private BigDecimal totalValueInBudget;
 
     @Getter @Setter

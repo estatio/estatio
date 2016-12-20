@@ -1,7 +1,6 @@
 package org.estatio.dom.budgetassignment;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -245,7 +244,7 @@ public class BudgetAssignmentService {
                     PartitionItem partitionItem = calculation.getPartitionItem();
                     BudgetItem budgetItem = calculation.getBudgetItem();
                     BigDecimal valueForBudgetItem = type == BudgetCalculationType.BUDGETED ? budgetItem.getBudgetedValue() : budgetItem.getAuditedValue();
-                    valueInBudget = valueForBudgetItem.multiply(partitionItem.getPercentage()).divide(new BigDecimal("100"), MathContext.DECIMAL64);
+                    valueInBudget = valueForBudgetItem;
                     vm.setTotalValueInBudget(valueInBudget);
 
                     // set possible overrides for incoming charge
