@@ -64,7 +64,7 @@ and build using maven:
 
 [source]
 ----
-mvn clean install -Pjetty-console
+mvn clean install
 ----
 
 The clone is approx 400Mb, and takes approximately 5 minutes to build.
@@ -91,18 +91,7 @@ If you want to connect to some other database, be sure to update the `pom.xml` t
 
 === Run Estatio
 
-You can run Estatio either using the standalone (self-hosting) version of the WAR, or using `mvn jetty plugin`.
-
-* Running as a self-hosting JAR +
-+
-Run using: +
-+
-[source]
-----
-java -jar estatioapp/webapp/target/estatio-webapp-x.y.z-SNAPSHOT-jetty-console.war
-----
-+
-(where `x.y.z` is the current version), and press the 'start button'.
+You can run Estatio either using `mvn jetty plugin`, or using the standalone (self-hosting) version of the WAR:
 
 * Running through Maven +
 +
@@ -110,9 +99,25 @@ Run using: +
 +
 [source]
 ----
-cd estatioapp/webapp
-mvn jetty:run
+mvn -pl estatioapp/webapp jetty:run
 ----
+
+* Running as a self-hosting JAR +
++
+Package using: +
++
+[source]
+----
+mvn -pl estatioapp/webapp -Dmavenmixin-jettyconsole package
+----
++
+and run using: +
++
+[source]
+----
+mvn -pl estatioapp/webapp -Dmavenmixin-jettyconsole antrun:run
+----
+
 
 Once the app has started, browse to:
 
