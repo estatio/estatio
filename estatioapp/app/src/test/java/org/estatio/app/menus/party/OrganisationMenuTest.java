@@ -18,7 +18,7 @@ import org.estatio.dom.party.PartyRepository;
 import org.estatio.numerator.dom.impl.Numerator;
 import org.estatio.numerator.dom.impl.NumeratorRepository;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrganisationMenuTest {
 

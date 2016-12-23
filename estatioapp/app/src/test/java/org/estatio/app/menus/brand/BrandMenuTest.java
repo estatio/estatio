@@ -22,7 +22,7 @@ import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandRepository;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrandMenuTest {
 
