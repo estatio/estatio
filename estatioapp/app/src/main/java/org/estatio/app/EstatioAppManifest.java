@@ -154,9 +154,6 @@ public class EstatioAppManifest implements AppManifest {
         // withHsqldbLogging(props);
         // withSqlServerUrl(props);
 
-        withFacetFactory(props, "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory");
-        withFacetFactory(props, "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory");
-
         props.put("isis.persistor.datanucleus.impl.datanucleus.deletionPolicy", "DataNucleus");
 
         return props;
@@ -209,14 +206,6 @@ public class EstatioAppManifest implements AppManifest {
         return props;
     }
 
-
-    private static Map<String, String> withFacetFactory(Map<String, String> props, String facetFactory) {
-        String facetFactoryList = props.get("isis.reflector.facets.include");
-        facetFactoryList = (facetFactoryList != null ? facetFactoryList + "," : "") + facetFactory;
-        props.put("isis.reflector.facets.include", facetFactoryList);
-
-        return props;
-    }
 
 
     protected static Map<String, String> withInstallFixtures(Map<String, String> props) {
