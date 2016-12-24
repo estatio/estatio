@@ -154,7 +154,6 @@ public class EstatioAppManifest implements AppManifest {
         // withHsqldbLogging(props);
         // withSqlServerUrl(props);
 
-        props.put("isis.persistor.datanucleus.impl.datanucleus.deletionPolicy", "DataNucleus");
 
         return props;
     }
