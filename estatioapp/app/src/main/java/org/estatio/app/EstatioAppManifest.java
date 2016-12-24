@@ -149,8 +149,6 @@ public class EstatioAppManifest implements AppManifest {
 
         loadPropsInto(props, "isis-non-changing.properties");
 
-        withStandardProps(props);
-
         withEstatioSchemaOverrides(props);
 
         // uncomment to use log4jdbc instead
@@ -189,16 +187,6 @@ public class EstatioAppManifest implements AppManifest {
         }
     }
 
-    private static Map<String, String> withStandardProps(Map<String, String> props) {
-        // Fundamental principle is that we don't allow editing data.
-        props.put("isis.objects.editing","false");
-        props.put("isis.services.eventbus.implementation", "guava");
-        props.put("isis.services.audit.objects", "all");
-        props.put("isis.services.eventbus.allowLateRegistration", "true");
-        props.put("isis.services.injector.injectPrefix", "true");
-
-        return props;
-    }
 
     /**
      * We need to use overrides where we have a dependency on a module whose entities is defined to reside
