@@ -23,8 +23,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
@@ -82,13 +80,6 @@ public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstra
                             Util.withJavaxJdoRunInMemoryProperties(props);
                             Util.withDataNucleusProperties(props);
                             return props;
-                        }
-                        @Override
-                        public List<Class<?>> getAdditionalServices() {
-                            List<Class<?>> additionalServices = Lists.newArrayList();
-                            appendEstatioCalendarService(additionalServices);
-                            appendOptionalServicesForSecurityModule(additionalServices);
-                            return additionalServices;
                         }
                     })
                     .build()

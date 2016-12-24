@@ -123,29 +123,16 @@ public class EstatioAppManifest implements AppManifest {
     }
 
     @Override
-    public List<Class<?>> getAdditionalServices() {
+    public final List<Class<?>> getAdditionalServices() {
         List<Class<?>> additionalServices = Lists.newArrayList();
-        appendEstatioCalendarService(additionalServices);
-        appendOptionalServicesForSecurityModule(additionalServices);
+        additionalServices.addAll(
+            Arrays.asList(
+                CalendarService.class, // TODO: instead, should have a module for this
+                org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
+                org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
+                )
+        );
         return additionalServices;
-    }
-
-    protected void appendEstatioCalendarService(final List<Class<?>> additionalServices) {
-        // TODO: need to create a module for this (the Estatio ClockService... else maybe use Isis')
-        additionalServices.addAll(
-                Arrays.asList(
-                        CalendarService.class
-                )
-        );
-    }
-
-    protected void appendOptionalServicesForSecurityModule(final List<Class<?>> additionalServices) {
-        additionalServices.addAll(
-                Arrays.asList(
-                        org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
-                        org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
-                )
-        );
     }
 
     @Override
