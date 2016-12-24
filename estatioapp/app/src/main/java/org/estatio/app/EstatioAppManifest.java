@@ -1,8 +1,11 @@
 package org.estatio.app;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -143,6 +146,9 @@ public class EstatioAppManifest implements AppManifest {
     @Override
     public Map<String, String> getConfigurationProperties() {
         final Map<String, String> props = Maps.newHashMap();
+
+        loadPropsInto(props, "isis-non-changing.properties");
+
         withStandardProps(props);
 
         withEstatioSchemaOverrides(props);
@@ -162,6 +168,25 @@ public class EstatioAppManifest implements AppManifest {
         props.put("isis.persistor.datanucleus.impl.datanucleus.deletionPolicy", "DataNucleus");
 
         return props;
+    }
+
+    static void loadPropsInto(final Map<String, String> props, final String propertiesFile) {
+        final Properties properties = new Properties();
+        try {
+            try (final InputStream stream =
+                    EstatioAppManifest.class.getResourceAsStream(propertiesFile)) {
+                properties.load(stream);
+                for (Object key : properties.keySet()) {
+                    final Object value = properties.get(key);
+                    if(key instanceof String && value instanceof String) {
+                        props.put((String)key, (String)value);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    String.format("Failed to load '%s' file ", propertiesFile), e);
+        }
     }
 
     private static Map<String, String> withStandardProps(Map<String, String> props) {
