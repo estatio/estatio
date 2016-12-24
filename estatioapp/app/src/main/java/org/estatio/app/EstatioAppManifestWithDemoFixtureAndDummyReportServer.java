@@ -7,7 +7,10 @@ import org.estatio.fixturescripts.EstatioDemoFixtureWithDummyReportServer;
 public class EstatioAppManifestWithDemoFixtureAndDummyReportServer extends EstatioAppManifest {
 
     public EstatioAppManifestWithDemoFixtureAndDummyReportServer() {
-        super(Arrays.asList(EstatioDemoFixtureWithDummyReportServer.class));
+        super(
+                Arrays.asList(EstatioDemoFixtureWithDummyReportServer.class),
+                null
+        );
     }
 
 }

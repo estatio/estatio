@@ -33,13 +33,17 @@ import org.estatio.numerator.dom.NumeratorDomModule;
 public class EstatioAppManifest implements AppManifest {
 
     private final List<Class<? extends FixtureScript>> fixtureScripts;
+    private final String authMechanism;
 
     public EstatioAppManifest() {
-        this(Collections.emptyList());
+        this(Collections.emptyList(), null);
     }
 
-    public EstatioAppManifest(final List<Class<? extends FixtureScript>> fixtureScripts) {
+    public EstatioAppManifest(
+            final List<Class<? extends FixtureScript>> fixtureScripts,
+            final String authMechanism) {
         this.fixtureScripts = elseNullIfEmpty(fixtureScripts);
+        this.authMechanism = authMechanism;
     }
 
     static <T> List<T> elseNullIfEmpty(final List<T> list) {
@@ -145,13 +149,13 @@ public class EstatioAppManifest implements AppManifest {
     }
 
     @Override
-    public String getAuthenticationMechanism() {
-        return null;
+    public final String getAuthenticationMechanism() {
+        return authMechanism;
     }
 
     @Override
-    public String getAuthorizationMechanism() {
-        return null;
+    public final String getAuthorizationMechanism() {
+        return authMechanism;
     }
 
     @Override
