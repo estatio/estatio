@@ -21,7 +21,7 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.13.1</version>
+        <version>1.13.2</version>
     </parent>
 
     <groupId>org.estatio</groupId>
