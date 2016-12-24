@@ -3,6 +3,7 @@ package org.estatio.app;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -30,6 +31,22 @@ import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
 import org.estatio.numerator.dom.NumeratorDomModule;
 
 public class EstatioAppManifest implements AppManifest {
+
+    private final List<Class<? extends FixtureScript>> fixtureScripts;
+
+    public EstatioAppManifest() {
+        this(Collections.emptyList());
+    }
+
+    public EstatioAppManifest(final List<Class<? extends FixtureScript>> fixtureScripts) {
+        this.fixtureScripts = elseNullIfEmpty(fixtureScripts);
+    }
+
+    static <T> List<T> elseNullIfEmpty(final List<T> list) {
+        return list != null && list.isEmpty()
+                ? null
+                : list;
+    }
 
     @Override
     public List<Class<?>> getModules() {
@@ -139,7 +156,7 @@ public class EstatioAppManifest implements AppManifest {
 
     @Override
     public List<Class<? extends FixtureScript>> getFixtures() {
-        return null;
+        return fixtureScripts;
     }
 
     @Override
@@ -147,6 +164,10 @@ public class EstatioAppManifest implements AppManifest {
         final Map<String, String> props = Maps.newHashMap();
 
         loadPropsInto(props, "isis-non-changing.properties");
+
+        if(fixtureScripts == null) {
+            withInstallFixtures(props);
+        }
 
         return props;
     }
@@ -171,7 +192,7 @@ public class EstatioAppManifest implements AppManifest {
     }
 
 
-    protected static Map<String, String> withInstallFixtures(Map<String, String> props) {
+    private static Map<String, String> withInstallFixtures(Map<String, String> props) {
         props.put("isis.persistor.datanucleus.install-fixtures", "true");
         return props;
     }
