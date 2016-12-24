@@ -148,13 +148,6 @@ public class EstatioAppManifest implements AppManifest {
 
         loadPropsInto(props, "isis-non-changing.properties");
 
-        // uncomment to use log4jdbc instead
-        // withLog4jdbc(props);
-
-        // withHsqldbLogging(props);
-        // withSqlServerUrl(props);
-
-
         return props;
     }
 
@@ -176,35 +169,6 @@ public class EstatioAppManifest implements AppManifest {
                     String.format("Failed to load '%s' file ", propertiesFile), e);
         }
     }
-
-
-    private static Map<String, String> withLog4jdbc(Map<String, String> props) {
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-                "net.sf.log4jdbc.DriverSpy");
-
-        return props;
-    }
-
-    private static Map<String, String> withHsqldbLogging(Map<String, String> props) {
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-                "jdbc:hsqldb:mem:test;sqllog=3");
-
-        return props;
-    }
-
-    private static Map<String, String> withSqlServerUrl(Map<String, String> props) {
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-                "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-                "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
-                "estatio");
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
-                "estatio");
-
-        return props;
-    }
-
 
 
     protected static Map<String, String> withInstallFixtures(Map<String, String> props) {
