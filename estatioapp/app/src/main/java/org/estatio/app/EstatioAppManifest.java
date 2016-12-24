@@ -58,7 +58,11 @@ public class EstatioAppManifest implements AppManifest {
         appendDomModulesAndSecurityAndCommandAddon(modules);
         appendAddonModules(modules);
         appendAddonWicketComponents(modules);
+        appendAdditionalModules(modules);
         return modules;
+    }
+
+    protected void appendAdditionalModules(final List<Class<?>> modules) {
     }
 
     protected List<Class<?>> appendDomModulesAndSecurityAndCommandAddon(List<Class<?>> modules) {
