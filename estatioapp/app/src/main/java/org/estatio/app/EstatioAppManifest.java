@@ -155,7 +155,6 @@ public class EstatioAppManifest implements AppManifest {
         // withHsqldbLogging(props);
         // withSqlServerUrl(props);
 
-        withCssClassFaPatterns(props);
         withCssClassPatterns(props);
 
         withFacetFactory(props, "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory");
@@ -210,49 +209,6 @@ public class EstatioAppManifest implements AppManifest {
         props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
                 "estatio");
 
-        return props;
-    }
-
-    private static Map<String, String> withCssClassFaPatterns(Map<String, String> props) {
-        props.put("isis.reflector.facet.cssClassFa.patterns",
-                Joiner.on(',').join(
-                        "new.*:fa-plus",
-                        "add.*:fa-plus-square",
-                        "create.*:fa-plus",
-                        "update.*:fa-edit",
-                        "change.*:fa-edit",
-                        "maintain.*:fa-edit",
-                        "remove.*:fa-minus-square",
-                        "copy.*:fa-copy",
-                        "move.*:fa-arrow-right",
-                        "first.*:fa-star",
-                        "find.*:fa-search",
-                        "lookup.*:fa-search",
-                        "search.*:fa-search",
-                        "clear.*:fa-remove",
-                        "previous.*:fa-step-backward",
-                        "next.*:fa-step-forward",
-                        "list.*:fa-list",
-                        "all.*:fa-list",
-                        "download.*:fa-download",
-                        "upload.*:fa-upload",
-                        "export.*:fa-exchange",
-                        "import.*:fa-exchange",
-                        "execute.*:fa-bolt",
-                        "run.*:fa-bolt",
-                        "calculate.*:fa-calculator",
-                        "verify.*:fa-check-circle",
-                        "refresh.*:fa-refresh",
-                        "install.*:fa-wrench",
-                        "stop.*:fa-stop",
-                        "terminate.*:fa-stop",
-                        "pause.*:fa-pause",
-                        "suspend.*:fa-pause",
-                        "resume.*:fa-play",
-                        "renew.*:fa-repeat",
-                        "assign.*:fa-hand-o-right",
-                        "approve.*:fa-thumbs-o-up",
-                        "decline.*:fa-thumbs-o-down"));
         return props;
     }
 
