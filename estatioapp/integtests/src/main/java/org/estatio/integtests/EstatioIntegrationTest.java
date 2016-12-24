@@ -18,6 +18,8 @@
  */
 package org.estatio.integtests;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -65,14 +67,11 @@ public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstra
             isft = new IsisSystemForTest.Builder()
                     .withLoggingAt(Level.WARN)
                     .with(new AuthenticationRequestNameOnly("estatio-admin"))
-                    .with(new EstatioAppManifest() {
-
-                        @Override public List<Class<?>> getModules() {
-                            final List<Class<?>> modules = super.getModules();
-                            modules.add(EstatioIntegTestFakeServicesModule.class);
-                            return modules;
-                        }
-
+                    .with(new EstatioAppManifest(
+                            Collections.emptyList(),
+                            null,
+                            Arrays.asList(EstatioIntegTestFakeServicesModule.class)
+                    ) {
                         @Override
                         public Map<String, String> getConfigurationProperties() {
                             Map<String, String> props = super.getConfigurationProperties();

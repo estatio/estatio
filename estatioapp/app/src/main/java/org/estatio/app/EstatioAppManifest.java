@@ -34,16 +34,23 @@ public class EstatioAppManifest implements AppManifest {
 
     private final List<Class<? extends FixtureScript>> fixtureScripts;
     private final String authMechanism;
+    private final List<Class<?>> additionalModules;
 
     public EstatioAppManifest() {
-        this(Collections.emptyList(), null);
+        this(
+                Collections.emptyList(),
+                null,
+                Collections.emptyList()
+        );
     }
 
     public EstatioAppManifest(
             final List<Class<? extends FixtureScript>> fixtureScripts,
-            final String authMechanism) {
+            final String authMechanism,
+            final List<Class<?>> additionalModules) {
         this.fixtureScripts = elseNullIfEmpty(fixtureScripts);
         this.authMechanism = authMechanism;
+        this.additionalModules = elseNullIfEmpty(additionalModules);
     }
 
     static <T> List<T> elseNullIfEmpty(final List<T> list) {
@@ -62,7 +69,11 @@ public class EstatioAppManifest implements AppManifest {
         return modules;
     }
 
-    protected void appendAdditionalModules(final List<Class<?>> modules) {
+    private void appendAdditionalModules(final List<Class<?>> modules) {
+        if(additionalModules == null) {
+            return;
+        }
+        modules.addAll(additionalModules);
     }
 
     protected List<Class<?>> appendDomModulesAndSecurityAndCommandAddon(List<Class<?>> modules) {
@@ -95,7 +106,7 @@ public class EstatioAppManifest implements AppManifest {
         return modules;
     }
 
-    protected List<Class<?>> appendAddonModules(List<Class<?>> modules) {
+    private List<Class<?>> appendAddonModules(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
                         org.isisaddons.module.excel.ExcelModule.class,
@@ -110,7 +121,7 @@ public class EstatioAppManifest implements AppManifest {
         return modules;
     }
 
-    protected List<Class<?>> appendAddonWicketComponents(List<Class<?>> modules) {
+    private List<Class<?>> appendAddonWicketComponents(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
                         // apart from gmap3-service, the other modules here contain no services or entities

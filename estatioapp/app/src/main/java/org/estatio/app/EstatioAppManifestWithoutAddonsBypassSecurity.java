@@ -10,7 +10,8 @@ public class EstatioAppManifestWithoutAddonsBypassSecurity extends EstatioAppMan
     public EstatioAppManifestWithoutAddonsBypassSecurity() {
         super(
                 Collections.emptyList(),
-                "bypass"
+                "bypass",
+                Collections.emptyList()
         );
     }
 
