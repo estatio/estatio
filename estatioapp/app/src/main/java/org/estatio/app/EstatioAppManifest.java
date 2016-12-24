@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -155,8 +154,6 @@ public class EstatioAppManifest implements AppManifest {
         // withHsqldbLogging(props);
         // withSqlServerUrl(props);
 
-        withCssClassPatterns(props);
-
         withFacetFactory(props, "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory");
         withFacetFactory(props, "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory");
 
@@ -212,20 +209,6 @@ public class EstatioAppManifest implements AppManifest {
         return props;
     }
 
-    private static Map<String, String> withCssClassPatterns(Map<String, String> props) {
-        props.put("isis.reflector.facet.cssClass.patterns",
-                Joiner.on(',').join(
-                        "update.*:btn-default",
-                        "change.*:btn-default",
-                        "maintain.*:btn-default",
-                        "delete.*:btn-warning",
-                        "remove.*:btn-warning"
-                        /*,
-                        ".*:btn-primary" // this messes up the drop-downs
-                        */));
-
-        return props;
-    }
 
     private static Map<String, String> withFacetFactory(Map<String, String> props, String facetFactory) {
         String facetFactoryList = props.get("isis.reflector.facets.include");
