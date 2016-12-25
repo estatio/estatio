@@ -171,7 +171,7 @@ public class EstatioAppManifest implements AppManifest {
 
         loadPropsInto(props, "isis-non-changing.properties");
 
-        if(fixtureScripts == null) {
+        if(fixtureScripts != null) {
             withInstallFixtures(props);
         }
 
