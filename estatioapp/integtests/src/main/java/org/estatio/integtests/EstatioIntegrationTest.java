@@ -18,12 +18,12 @@
  */
 package org.estatio.integtests;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import com.google.common.collect.Lists;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
@@ -67,14 +67,11 @@ public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstra
             isft = new IsisSystemForTest.Builder()
                     .withLoggingAt(Level.WARN)
                     .with(new AuthenticationRequestNameOnly("estatio-admin"))
-                    .with(new EstatioAppManifest() {
-
-                        @Override public List<Class<?>> getModules() {
-                            final List<Class<?>> modules = super.getModules();
-                            modules.add(EstatioIntegTestFakeServicesModule.class);
-                            return modules;
-                        }
-
+                    .with(new EstatioAppManifest(
+                            Collections.emptyList(),
+                            null,
+                            Arrays.asList(EstatioIntegTestFakeServicesModule.class)
+                    ) {
                         @Override
                         public Map<String, String> getConfigurationProperties() {
                             Map<String, String> props = super.getConfigurationProperties();
@@ -82,13 +79,6 @@ public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstra
                             Util.withJavaxJdoRunInMemoryProperties(props);
                             Util.withDataNucleusProperties(props);
                             return props;
-                        }
-                        @Override
-                        public List<Class<?>> getAdditionalServices() {
-                            List<Class<?>> additionalServices = Lists.newArrayList();
-                            appendEstatioCalendarService(additionalServices);
-                            appendOptionalServicesForSecurityModule(additionalServices);
-                            return additionalServices;
                         }
                     })
                     .build()

@@ -3,11 +3,11 @@ package org.estatio.app;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -32,13 +32,48 @@ import org.estatio.numerator.dom.NumeratorDomModule;
 
 public class EstatioAppManifest implements AppManifest {
 
+    private final List<Class<? extends FixtureScript>> fixtureScripts;
+    private final String authMechanism;
+    private final List<Class<?>> additionalModules;
+
+    public EstatioAppManifest() {
+        this(
+                Collections.emptyList(),
+                null,
+                Collections.emptyList()
+        );
+    }
+
+    public EstatioAppManifest(
+            final List<Class<? extends FixtureScript>> fixtureScripts,
+            final String authMechanism,
+            final List<Class<?>> additionalModules) {
+        this.fixtureScripts = elseNullIfEmpty(fixtureScripts);
+        this.authMechanism = authMechanism;
+        this.additionalModules = elseNullIfEmpty(additionalModules);
+    }
+
+    static <T> List<T> elseNullIfEmpty(final List<T> list) {
+        return list != null && list.isEmpty()
+                ? null
+                : list;
+    }
+
     @Override
     public List<Class<?>> getModules() {
         List<Class<?>> modules = Lists.newArrayList();
         appendDomModulesAndSecurityAndCommandAddon(modules);
         appendAddonModules(modules);
         appendAddonWicketComponents(modules);
+        appendAdditionalModules(modules);
         return modules;
+    }
+
+    private void appendAdditionalModules(final List<Class<?>> modules) {
+        if(additionalModules == null) {
+            return;
+        }
+        modules.addAll(additionalModules);
     }
 
     protected List<Class<?>> appendDomModulesAndSecurityAndCommandAddon(List<Class<?>> modules) {
@@ -71,7 +106,7 @@ public class EstatioAppManifest implements AppManifest {
         return modules;
     }
 
-    protected List<Class<?>> appendAddonModules(List<Class<?>> modules) {
+    private List<Class<?>> appendAddonModules(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
                         org.isisaddons.module.excel.ExcelModule.class,
@@ -86,7 +121,7 @@ public class EstatioAppManifest implements AppManifest {
         return modules;
     }
 
-    protected List<Class<?>> appendAddonWicketComponents(List<Class<?>> modules) {
+    private List<Class<?>> appendAddonWicketComponents(List<Class<?>> modules) {
         modules.addAll(
                 Arrays.asList(
                         // apart from gmap3-service, the other modules here contain no services or entities
@@ -103,44 +138,31 @@ public class EstatioAppManifest implements AppManifest {
     }
 
     @Override
-    public List<Class<?>> getAdditionalServices() {
+    public final List<Class<?>> getAdditionalServices() {
         List<Class<?>> additionalServices = Lists.newArrayList();
-        appendEstatioCalendarService(additionalServices);
-        appendOptionalServicesForSecurityModule(additionalServices);
+        additionalServices.addAll(
+            Arrays.asList(
+                CalendarService.class, // TODO: instead, should have a module for this
+                org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
+                org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
+                )
+        );
         return additionalServices;
     }
 
-    protected void appendEstatioCalendarService(final List<Class<?>> additionalServices) {
-        // TODO: need to create a module for this (the Estatio ClockService... else maybe use Isis')
-        additionalServices.addAll(
-                Arrays.asList(
-                        CalendarService.class
-                )
-        );
-    }
-
-    protected void appendOptionalServicesForSecurityModule(final List<Class<?>> additionalServices) {
-        additionalServices.addAll(
-                Arrays.asList(
-                        org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
-                        org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
-                )
-        );
+    @Override
+    public final String getAuthenticationMechanism() {
+        return authMechanism;
     }
 
     @Override
-    public String getAuthenticationMechanism() {
-        return null;
-    }
-
-    @Override
-    public String getAuthorizationMechanism() {
-        return null;
+    public final String getAuthorizationMechanism() {
+        return authMechanism;
     }
 
     @Override
     public List<Class<? extends FixtureScript>> getFixtures() {
-        return null;
+        return fixtureScripts;
     }
 
     @Override
@@ -149,23 +171,9 @@ public class EstatioAppManifest implements AppManifest {
 
         loadPropsInto(props, "isis-non-changing.properties");
 
-        withStandardProps(props);
-
-        withEstatioSchemaOverrides(props);
-
-        // uncomment to use log4jdbc instead
-        // withLog4jdbc(props);
-
-        // withHsqldbLogging(props);
-        // withSqlServerUrl(props);
-
-        withCssClassFaPatterns(props);
-        withCssClassPatterns(props);
-
-        withFacetFactory(props, "org.isisaddons.module.security.facets.TenantedAuthorizationFacetFactory");
-        withFacetFactory(props, "org.isisaddons.metamodel.paraname8.NamedFacetOnParameterParaname8Factory");
-
-        props.put("isis.persistor.datanucleus.impl.datanucleus.deletionPolicy", "DataNucleus");
+        if(fixtureScripts != null) {
+            withInstallFixtures(props);
+        }
 
         return props;
     }
@@ -189,127 +197,8 @@ public class EstatioAppManifest implements AppManifest {
         }
     }
 
-    private static Map<String, String> withStandardProps(Map<String, String> props) {
-        // Fundamental principle is that we don't allow editing data.
-        props.put("isis.objects.editing","false");
-        props.put("isis.services.eventbus.implementation", "guava");
-        props.put("isis.services.audit.objects", "all");
-        props.put("isis.services.eventbus.allowLateRegistration", "true");
-        props.put("isis.services.injector.injectPrefix", "true");
 
-        return props;
-    }
-
-    /**
-     * We need to use overrides where we have a dependency on a module whose entities is defined to reside
-     * its own schema (eg incode modules), but where we have a PK/FK relationship to its entities.
-     * In these cases, because DN (seems to) require both are in the same schema, we force the module's entity to be
-     * mapped to a table in Estatio's own schema, ie 'dbo'.
-     *
-     * We also use overrides for certain column/property mappings, eg to reduce size of the bookmark columns where
-     * these have an index on them (limited to 900 bytes).
-     */
-    private static Map<String, String> withEstatioSchemaOverrides(Map<String, String> props) {
-        // to pick up Xxx-sqlserver.orm overrides
-        props.put("isis.persistor.datanucleus.impl.datanucleus.Mapping", "sqlserver");
-        return props;
-    }
-
-    private static Map<String, String> withLog4jdbc(Map<String, String> props) {
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-                "net.sf.log4jdbc.DriverSpy");
-
-        return props;
-    }
-
-    private static Map<String, String> withHsqldbLogging(Map<String, String> props) {
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-                "jdbc:hsqldb:mem:test;sqllog=3");
-
-        return props;
-    }
-
-    private static Map<String, String> withSqlServerUrl(Map<String, String> props) {
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-                "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-                "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
-                "estatio");
-        props.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
-                "estatio");
-
-        return props;
-    }
-
-    private static Map<String, String> withCssClassFaPatterns(Map<String, String> props) {
-        props.put("isis.reflector.facet.cssClassFa.patterns",
-                Joiner.on(',').join(
-                        "new.*:fa-plus",
-                        "add.*:fa-plus-square",
-                        "create.*:fa-plus",
-                        "update.*:fa-edit",
-                        "change.*:fa-edit",
-                        "maintain.*:fa-edit",
-                        "remove.*:fa-minus-square",
-                        "copy.*:fa-copy",
-                        "move.*:fa-arrow-right",
-                        "first.*:fa-star",
-                        "find.*:fa-search",
-                        "lookup.*:fa-search",
-                        "search.*:fa-search",
-                        "clear.*:fa-remove",
-                        "previous.*:fa-step-backward",
-                        "next.*:fa-step-forward",
-                        "list.*:fa-list",
-                        "all.*:fa-list",
-                        "download.*:fa-download",
-                        "upload.*:fa-upload",
-                        "export.*:fa-exchange",
-                        "import.*:fa-exchange",
-                        "execute.*:fa-bolt",
-                        "run.*:fa-bolt",
-                        "calculate.*:fa-calculator",
-                        "verify.*:fa-check-circle",
-                        "refresh.*:fa-refresh",
-                        "install.*:fa-wrench",
-                        "stop.*:fa-stop",
-                        "terminate.*:fa-stop",
-                        "pause.*:fa-pause",
-                        "suspend.*:fa-pause",
-                        "resume.*:fa-play",
-                        "renew.*:fa-repeat",
-                        "assign.*:fa-hand-o-right",
-                        "approve.*:fa-thumbs-o-up",
-                        "decline.*:fa-thumbs-o-down"));
-        return props;
-    }
-
-    private static Map<String, String> withCssClassPatterns(Map<String, String> props) {
-        props.put("isis.reflector.facet.cssClass.patterns",
-                Joiner.on(',').join(
-                        "update.*:btn-default",
-                        "change.*:btn-default",
-                        "maintain.*:btn-default",
-                        "delete.*:btn-warning",
-                        "remove.*:btn-warning"
-                        /*,
-                        ".*:btn-primary" // this messes up the drop-downs
-                        */));
-
-        return props;
-    }
-
-    private static Map<String, String> withFacetFactory(Map<String, String> props, String facetFactory) {
-        String facetFactoryList = props.get("isis.reflector.facets.include");
-        facetFactoryList = (facetFactoryList != null ? facetFactoryList + "," : "") + facetFactory;
-        props.put("isis.reflector.facets.include", facetFactoryList);
-
-        return props;
-    }
-
-
-    protected static Map<String, String> withInstallFixtures(Map<String, String> props) {
+    private static Map<String, String> withInstallFixtures(Map<String, String> props) {
         props.put("isis.persistor.datanucleus.install-fixtures", "true");
         return props;
     }

@@ -1,10 +1,19 @@
 package org.estatio.app;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
 public class EstatioAppManifestWithoutAddonsBypassSecurity extends EstatioAppManifest {
+
+    public EstatioAppManifestWithoutAddonsBypassSecurity() {
+        super(
+                Collections.emptyList(),
+                "bypass",
+                Collections.emptyList()
+        );
+    }
 
     @Override
     public List<Class<?>> getModules() {
@@ -13,11 +22,4 @@ public class EstatioAppManifestWithoutAddonsBypassSecurity extends EstatioAppMan
         return modules;
     }
 
-    @Override public String getAuthenticationMechanism() {
-        return "bypass";
-    }
-
-    @Override public String getAuthorizationMechanism() {
-        return "bypass";
-    }
 }
