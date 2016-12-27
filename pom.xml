@@ -102,7 +102,7 @@ language governing permissions and limitations under the License.
         <mavendeps-isisintellij.version>0.0.1</mavendeps-isisintellij.version>
         <mavendeps-isiswebapp.version>0.0.1</mavendeps-isiswebapp.version>
 
-        <estatio-canonical.version>1.0.0-SNAPSHOT</estatio-canonical.version>
+        <estatio-canonical.version>1.0.0</estatio-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
