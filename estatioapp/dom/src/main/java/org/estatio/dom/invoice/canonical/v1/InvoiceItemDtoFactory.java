@@ -1,4 +1,4 @@
-package org.estatio.canonical.invoice;
+package org.estatio.dom.invoice.canonical.v1;
 
 import java.util.Optional;
 import java.util.SortedSet;

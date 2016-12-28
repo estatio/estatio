@@ -1,4 +1,4 @@
-package org.estatio.canonical.invoice;
+package org.estatio.dom.invoice.canonical.v1;
 
 import java.math.BigDecimal;
 import java.util.Optional;

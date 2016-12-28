@@ -1,4 +1,4 @@
-package org.estatio.canonical.invoice;
+package org.estatio.dom.invoice.canonical.v1;
 
 import java.math.BigDecimal;
 
@@ -18,6 +18,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
+import org.estatio.dom.invoice.canonical.v1.InvoiceDtoFactory;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;

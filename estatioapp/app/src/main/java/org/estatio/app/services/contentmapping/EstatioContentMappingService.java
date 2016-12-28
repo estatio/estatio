@@ -37,7 +37,7 @@ import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
 import org.estatio.canonical.bankmandate.v1.PartyBankAccountsAndMandatesDtoFactory;
 import org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory;
 import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
-import org.estatio.canonical.invoice.InvoiceDtoFactory;
+import org.estatio.dom.invoice.canonical.v1.InvoiceDtoFactory;
 import org.estatio.canonical.party.PartyDtoFactory;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.bankmandate.BankMandate;
