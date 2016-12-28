@@ -35,9 +35,10 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.lease.Lease;
-import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class Lease_breakOptionContributions extends UdoDomainService<Lease_breakOptionContributions> {
@@ -81,11 +82,7 @@ public class Lease_breakOptionContributions extends UdoDomainService<Lease_break
         // REVIEW: this is just a guess as to a reasonable default
         return getClockService().now().plusYears(2);
     }
-
-    public String default2NewBreakOption() {
-        return "3m";
-    }
-
+    
     public BreakType default3NewBreakOption() {
         return BreakType.FIXED;
     }
