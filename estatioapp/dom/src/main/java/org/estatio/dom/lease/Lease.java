@@ -1021,7 +1021,7 @@ public class Lease
                 getStartDate(),
                 getEndDate(),
                 getTenancyStartDate(),
-                newStartDate.minusDays(1),
+                getTenancyEndDate(),
                 getPrimaryParty(),
                 getSecondaryParty());
         prevLease.setNext(this);
@@ -1029,8 +1029,6 @@ public class Lease
 
         setStartDate(newStartDate);
         setEndDate(newEndDate);
-        setTenancyStartDate(newStartDate);
-        setTenancyEndDate(newEndDate);
         return this;
     }
 

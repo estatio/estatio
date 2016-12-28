@@ -1027,10 +1027,12 @@ public class Lease_Test {
             lease.setName("OXF-HELLO-123");
             lease.setComments("Comments");
             final LocalDate startDate = new LocalDate(2000, 1, 1);
-            lease.setStartDate(startDate);
             final LocalDate endDate = new LocalDate(2009, 12, 31);
+            final LocalDate tenancyStartDate = new LocalDate(1990, 1, 1);
+            final LocalDate tenancyEndDate = null;
+            lease.setStartDate(startDate);
             lease.setEndDate(endDate);
-            lease.setTenancyStartDate(startDate);
+            lease.setTenancyStartDate(tenancyStartDate);
             lease.leaseRepository = mockLeaseRepository;
             lease.setSecurityApplicationTenancyRepository(mockApplicationTenancyRepository);
 
@@ -1052,8 +1054,8 @@ public class Lease_Test {
                             null,
                             startDate,
                             endDate,
-                            startDate,
-                            newStartDate.minusDays(1),
+                            tenancyStartDate,
+                            tenancyEndDate,
                             landlord,
                             tenant);
                     will(returnValue(previousLease));
@@ -1069,7 +1071,8 @@ public class Lease_Test {
 
             assertThat(lease.getStartDate()).isEqualTo(newStartDate);
             assertThat(lease.getEndDate()).isEqualTo(newEndDate);
-            assertThat(lease.getTenancyEndDate()).isEqualTo(newEndDate);
+            assertThat(lease.getTenancyStartDate()).isEqualTo(tenancyStartDate);
+            assertThat(lease.getTenancyEndDate()).isNull();
 
         }
 
