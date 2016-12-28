@@ -18,6 +18,7 @@
  */
 package org.estatio.app.menus.invoice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -57,6 +58,7 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
@@ -93,6 +95,17 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
                 currency,
                 dueDate,
                 lease, null);
+    }
+
+    public List<PaymentMethod> choices2NewInvoiceForLease(final Lease lease){
+        List<PaymentMethod> choices = new ArrayList<>();
+        if (lease == null) return choices;
+        for (LeaseItem item : lease.getItems()){
+            if (!choices.contains(item.getPaymentMethod())) {
+                choices.add(item.getPaymentMethod());
+            }
+        }
+        return choices;
     }
 
     public String validate0NewInvoiceForLease(final Lease lease) {
