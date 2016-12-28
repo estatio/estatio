@@ -33,7 +33,7 @@ import org.apache.isis.applib.conmap.ContentMappingService;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
-import org.estatio.canonical.bankmandate.v1.BankMandateDtoFactory;
+import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
 import org.estatio.canonical.bankmandate.v1.PartyBankAccountsAndMandatesDtoFactory;
 import org.estatio.canonical.communicationchannel.PostalAddressDtoFactory;
 import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;

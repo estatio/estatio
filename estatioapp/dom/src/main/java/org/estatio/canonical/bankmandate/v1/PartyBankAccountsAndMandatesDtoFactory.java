@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.DtoFactoryAbstract;
 import org.estatio.canonical.financial.v1.BankAccountDto;
+import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
 import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
