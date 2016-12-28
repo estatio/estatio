@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.services.jaxb.JaxbService;
 
-import org.estatio.canonical.financial.v1.BankAccountDtoFactory;
+import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 public class BankAccountDtoFactory_Test {

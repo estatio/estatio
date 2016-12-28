@@ -1,4 +1,4 @@
-package org.estatio.canonical.financial.v1;
+package org.estatio.dom.financial.bankaccount.canonical.v1;
 
 import javax.inject.Inject;
 
@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.DtoMappingHelper;
+import org.estatio.canonical.financial.v1.BankAccountDto;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @DomainService(
