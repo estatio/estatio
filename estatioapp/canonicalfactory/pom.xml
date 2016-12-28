@@ -77,7 +77,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.incode.estatio</groupId>
             <artifactId>estatio-canonical</artifactId>
-            <version>${estatio-canonical.version}</version>
         </dependency>
 
 		<dependency>
