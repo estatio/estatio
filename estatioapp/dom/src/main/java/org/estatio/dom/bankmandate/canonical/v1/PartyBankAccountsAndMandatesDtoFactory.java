@@ -1,4 +1,4 @@
-package org.estatio.canonical.bankmandate.v1;
+package org.estatio.dom.bankmandate.canonical.v1;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.DtoFactoryAbstract;
+import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
+import org.estatio.canonical.bankmandate.v1.BankMandateDto;
 import org.estatio.canonical.financial.v1.BankAccountDto;
-import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
-import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -22,9 +22,10 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.party.Party;
 
 @DomainService(

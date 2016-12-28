@@ -34,7 +34,7 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
 import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
-import org.estatio.canonical.bankmandate.v1.PartyBankAccountsAndMandatesDtoFactory;
+import org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory;
 import org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory;
 import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.invoice.canonical.v1.InvoiceDtoFactory;
