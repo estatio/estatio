@@ -29,15 +29,16 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.fixture.CountriesRefData;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
-import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.dom.impl.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -117,6 +118,21 @@ public class PropertyRepository_IntegTest extends EstatioIntegrationTest {
             // then
             Assertions.assertThat(property.getReference()).isEqualTo(PropertyForOxfGb.REF);
         }
+    }
+
+    public static class AutoComplete extends PropertyRepository_IntegTest {
+
+        @Test
+        public void autocomplete() throws Exception {
+
+            // when
+            List<Property> properties = propertyRepository.autoComplete("***");
+
+            // then
+            Assertions.assertThat(properties.size()).isEqualTo(2);
+
+        }
+
     }
 
     public static class NewProperty extends PropertyRepository_IntegTest {
