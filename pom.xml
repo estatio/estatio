@@ -592,6 +592,7 @@ language governing permissions and limitations under the License.
         <module>udo/project/dom</module>
         <module>udo/settings/dom</module>
         <module>udo/partyagreement/dom</module>
+        <module>estatioapp/canonicalfactory</module>
         <module>estatioapp/app</module>
         <module>estatioapp/impmgr</module>
         <module>estatioapp/dom</module>
