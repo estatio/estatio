@@ -39,6 +39,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemRepository;
@@ -96,6 +97,7 @@ public class InvoiceImportManager {
         for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(getProperty(), clockService.now())){
 
             PaymentMethod paymentMethod = null;
+            Unit unit = lease.primaryOccupancy().get().getUnit();
 
             if (lease.getItems().size()>0) {
 
@@ -105,11 +107,11 @@ public class InvoiceImportManager {
                     paymentMethod = lease.getItems().first().getPaymentMethod();
                 }
 
-                result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null));
+                result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null, unit.getReference()));
 
             } else {
 
-                result.add(new InvoiceImportLine(lease.getReference(), null, null, null, null, null, null, null));
+                result.add(new InvoiceImportLine(lease.getReference(), null, null, null, null, null, null, null, unit.getReference()));
 
             }
 

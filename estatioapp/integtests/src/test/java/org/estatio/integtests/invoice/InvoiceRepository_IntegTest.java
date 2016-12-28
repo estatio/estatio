@@ -625,7 +625,8 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
                     itemDescription,
                     netAmount,
                     itemStartDate,
-                    itemEndDate);
+                    itemEndDate,
+                    null);
 
             InvoiceImportLine invoiceImportLine2 = new InvoiceImportLine(
                     leaseReference,
@@ -635,7 +636,8 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
                     null,
                     netAmount,
                     itemStartDate,
-                    itemEndDate);
+                    itemEndDate,
+                    null);
 
             // when
             wrap(invoiceImportLine).importData();
