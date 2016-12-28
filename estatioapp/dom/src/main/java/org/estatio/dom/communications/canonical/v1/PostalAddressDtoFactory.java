@@ -1,4 +1,4 @@
-package org.estatio.canonical.communicationchannel;
+package org.estatio.dom.communications.canonical.v1;
 
 import javax.inject.Inject;
 
@@ -8,11 +8,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
 
 import org.estatio.canonical.DtoMappingHelper;
 import org.estatio.canonical.communicationchannel.v1.PostalAddressDto;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.State;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
