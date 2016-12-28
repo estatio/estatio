@@ -1,4 +1,4 @@
-package org.estatio.canonical.financial.bankaccount.v1;
+package org.estatio.dom.financial.bankaccount.canonical.v1;
 
 import org.junit.Before;
 import org.junit.Ignore;
