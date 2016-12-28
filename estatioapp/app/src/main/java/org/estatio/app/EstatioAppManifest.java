@@ -23,6 +23,7 @@ import org.incode.module.country.dom.CountryModule;
 import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
 import org.incode.module.document.dom.DocumentModule;
 
+import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
@@ -63,6 +64,7 @@ public class EstatioAppManifest implements AppManifest {
     public List<Class<?>> getModules() {
         List<Class<?>> modules = Lists.newArrayList();
         appendDomModulesAndSecurityAndCommandAddon(modules);
+        modules.add(EstatioCanonicalModule.class);
         appendAddonModules(modules);
         appendAddonWicketComponents(modules);
         appendAdditionalModules(modules);
