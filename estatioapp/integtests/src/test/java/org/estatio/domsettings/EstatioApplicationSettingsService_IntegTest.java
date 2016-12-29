@@ -53,7 +53,7 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
             // Given, when
             final List<ApplicationSetting> applicationSettings = applicationSettingsServiceForEstatio.listAll();
             // Then
-            assertThat(applicationSettings.size()).isEqualTo(3);
+            assertThat(applicationSettings.size()).isEqualTo(2);
         }
     }
 
@@ -75,10 +75,11 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
             final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
             // when
             final ApplicationSettingForEstatio applicationSetting = (ApplicationSettingForEstatio) ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
-            final String newDate = new LocalDate(2010, 1, 1).toString("yyyy-MM-dd");
-            applicationSetting.setValueRaw(newDate);
+            final LocalDate localDate = new LocalDate(2010, 1, 1);
+            applicationSetting.setValueRaw(localDate.toString("yyyy-MM-dd"));
             // then
-            assertThat(applicationSettingsServiceForEstatio.find(key).getValueRaw()).isEqualTo(newDate);
+            assertThat(applicationSettingsServiceForEstatio.find(key).getValueRaw()).isEqualTo(
+                    localDate.toString("yyyy-MM-dd"));
         }
     }
 
