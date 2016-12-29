@@ -228,7 +228,7 @@ public class Lease_Test {
 
     }
 
-    public static class DefaultPaymentMehodForNewItem extends Lease_Test {
+    public static class DefaultPaymentMethod extends Lease_Test {
 
         @Test
         public void test() {
@@ -243,7 +243,7 @@ public class Lease_Test {
 
             // when
             // then
-            assertThat(lease.default3NewItem()).isEqualTo(itemLast.getPaymentMethod());
+            assertThat(lease.defaultPaymentMethod()).isEqualTo(itemLast.getPaymentMethod());
 
         }
 
@@ -256,7 +256,7 @@ public class Lease_Test {
 
             // when
             // then
-            assertThat(lease.default3NewItem()).isEqualTo(null);
+            assertThat(lease.defaultPaymentMethod()).isEqualTo(null);
 
         }
 

@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +49,7 @@ public class InvoiceMenuTest {
             };
 
             // when
-            final String reason = invoiceMenu.validate0NewInvoiceForLease(lease);
+            final String reason = invoiceMenu.validateNewInvoiceForLease(lease, null, PaymentMethod.DIRECT_DEBIT, null);
 
             // then
             assertThat(reason).isNull();
@@ -65,10 +66,50 @@ public class InvoiceMenuTest {
             };
 
             // when
-            final String reason = invoiceMenu.validate0NewInvoiceForLease(lease);
+            final String reason = invoiceMenu.validateNewInvoiceForLease(lease, null, PaymentMethod.DIRECT_DEBIT, null);
 
             // then
-            assertThat(reason).isNotNull();
+            assertThat(reason).contains("Can only create invoices for leases that have an occupancy");
+        }
+
+        @Test
+        public void when_lease_does_have_defaultPaymentMethod_and_no_paymentmethod_given() throws Exception {
+
+            // given
+            final Lease lease = new Lease() {
+                @Override public Property getProperty() {
+                    return new Property();
+                }
+                @Override public PaymentMethod defaultPaymentMethod() {
+                    return PaymentMethod.DIRECT_DEBIT;
+                }
+            };
+
+            // when
+            final String reason = invoiceMenu.validateNewInvoiceForLease(lease, null, null, null);
+
+            // then
+            assertThat(reason).isNull();
+        }
+
+        @Test
+        public void when_lease_does_not_have_defaultPaymentMethod_and_no_paymentmethod_given() throws Exception {
+
+            // given
+            final Lease lease = new Lease() {
+                @Override public Property getProperty() {
+                    return new Property();
+                }
+                @Override public PaymentMethod defaultPaymentMethod() {
+                    return null;
+                }
+            };
+
+            // when
+            final String reason = invoiceMenu.validateNewInvoiceForLease(lease, null, null, null);
+
+            // then
+            assertThat(reason).contains("A payment method has to be provided");
         }
     }
 

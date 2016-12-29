@@ -489,7 +489,7 @@ public class Lease
     }
 
     public PaymentMethod default3NewItem() {
-        return getItems().size() > 0 ? getItems().last().getPaymentMethod() : null;
+        return defaultPaymentMethod();
     }
 
     public LocalDate default4NewItem() {
@@ -561,6 +561,11 @@ public class Lease
 
     public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
         return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
+    }
+
+    @Programmatic
+    public PaymentMethod defaultPaymentMethod(){
+        return getItems().size() > 0 ? getItems().last().getPaymentMethod() : null;
     }
 
     @Programmatic
