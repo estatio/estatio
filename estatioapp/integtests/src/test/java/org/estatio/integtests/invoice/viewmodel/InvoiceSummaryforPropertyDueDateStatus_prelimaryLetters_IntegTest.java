@@ -55,7 +55,6 @@ import org.estatio.dom.invoice.viewmodel.dnc.InvoiceSummaryForPropertyDueDateSta
 import org.estatio.dom.invoice.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_sendByEmailPreliminaryLetters;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixturescripts.ApplicationSettingsForReportServerForDemo;
 import org.estatio.fixturescripts.SeedDocumentAndCommsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -75,7 +74,6 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
                     executionContext.executeChild(this, new SeedDocumentAndCommsFixture());
-                    executionContext.executeChild(this, new ApplicationSettingsForReportServerForDemo());
                 }
             });
         }

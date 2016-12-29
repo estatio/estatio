@@ -18,6 +18,9 @@
  */
 package org.estatio.dom.appsettings;
 
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -52,12 +55,20 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
         super(EstatioSettingsService.class);
     }
 
-    /**
-     * @see ApplicationSettingKey#reportServerBaseUrl
-     */
-    public final static String REPORT_SERVER_BASE_URL_KEY = ApplicationSettingCreator.Helper.getKey(ApplicationSettingKey.reportServerBaseUrl);
+    public final static String REPORT_SERVER_CONFIG_PROPERTY_KEY = "estatio.application.reportServerBaseUrl";
+    public final static String REPORT_SERVER_CONFIG_PROPERTY_DEFAULT = "http://www.pdfpdf.com/samples/Sample5.PDF?name=";
 
     // //////////////////////////////////////
+
+
+    @PostConstruct
+    public void init(final Map<String,String> properties) {
+        String reportServerUrl = properties.get(REPORT_SERVER_CONFIG_PROPERTY_KEY);
+        if(reportServerUrl == null) {
+            reportServerUrl = REPORT_SERVER_CONFIG_PROPERTY_DEFAULT;
+        }
+        this.cachedReportServerBaseUrl = reportServerUrl;
+    }
 
     @Programmatic
     public Currency systemCurrency() {
@@ -110,19 +121,8 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
 
     private String cachedReportServerBaseUrl;
 
-    /**
-     * @see ApplicationSettingKey#reportServerBaseUrl
-     */
     @Programmatic
     public String fetchReportServerBaseUrl() {
-        if (cachedReportServerBaseUrl == null) {
-            final ApplicationSetting reportServerBaseUrl = applicationSettingsService.find(REPORT_SERVER_BASE_URL_KEY);
-            if (reportServerBaseUrl != null) {
-                cachedReportServerBaseUrl = reportServerBaseUrl.valueAsString();
-            } else {
-                return (String) ApplicationSettingKey.reportServerBaseUrl.getDefaultValue();
-            }
-        }
         return cachedReportServerBaseUrl;
     }
 

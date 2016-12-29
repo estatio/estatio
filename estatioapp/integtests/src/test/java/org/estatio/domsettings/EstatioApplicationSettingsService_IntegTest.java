@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +62,7 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
         @Test
         public void happyCase() throws Exception {
             // Given
-            final ApplicationSettingKey key = ApplicationSettingKey.reportServerBaseUrl;
+            final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
             // when
             final ApplicationSetting applicationSetting = ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
             // Then
@@ -70,13 +71,14 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
 
         @Test
         public void updated() throws Exception {
-            // Given
-            final ApplicationSettingKey key = ApplicationSettingKey.reportServerBaseUrl;
+            // given
+            final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
             // when
             final ApplicationSettingForEstatio applicationSetting = (ApplicationSettingForEstatio) ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
-            applicationSetting.setValueRaw("Changed");
-            // Then
-            assertThat(applicationSettingsServiceForEstatio.find(key).getValueRaw()).isEqualTo("Changed");
+            final String newDate = new LocalDate(2010, 1, 1).toString("yyyy-MM-dd");
+            applicationSetting.setValueRaw(newDate);
+            // then
+            assertThat(applicationSettingsServiceForEstatio.find(key).getValueRaw()).isEqualTo(newDate);
         }
     }
 
