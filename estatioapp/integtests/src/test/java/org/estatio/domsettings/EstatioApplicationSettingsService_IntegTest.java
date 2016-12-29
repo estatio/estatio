@@ -66,7 +66,7 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
             // when
             final ApplicationSetting applicationSetting = ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
             // Then
-            assertThat(applicationSetting.getValueRaw()).isEqualTo(key.getDefaultValue());
+            assertThat(applicationSetting.getValueRaw()).isEqualTo(((LocalDate)key.getDefaultValue()).toString("yyyy-MM-dd"));
         }
 
         @Test
