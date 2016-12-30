@@ -1,48 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-            <ns2:action id="links"/>
-            <ns2:action id="remove"/>
+            <cpt:domainObject/>
+            <cpt:action id="links"/>
+            <cpt:action id="remove"/>
         </col>
     </row>
     <row>
-        <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="owner"/>
-                <ns2:property id="description"/>
-                <ns2:property id="legal"/>
-                <ns2:property id="purpose">
-                    <ns2:action id="change" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="type"/>
-                <ns2:property id="reference"/>
-                <ns2:property id="name"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="atPath"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
+        <col span="6">
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="General" id="general">
+                                <cpt:property id="owner"/>
+                                <cpt:property id="description"/>
+                                <cpt:property id="legal"/>
+                                <cpt:property id="purpose">
+                                    <cpt:action id="change" position="BELOW"/>
+                                </cpt:property>
+                                <cpt:property id="type"/>
+                                <cpt:property id="reference"/>
+                                <cpt:property id="name"/>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application Level">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="Application Level" id="applicationLevel">
+                                <cpt:property id="atPath"/>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="id"/>
+                                <cpt:property id="versionSequence"/>
+                                <cpt:property id="datanucleusId"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
-        <col span="4">
-            <ns2:fieldSet name="Email" id="email">
-                <ns2:property id="emailAddress">
-                    <ns2:action id="changeEmailAddress" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
+        <col span="6">
+            <cpt:fieldSet name="Email" id="email">
+                <cpt:property id="emailAddress">
+                    <cpt:action id="changeEmailAddress" position="BELOW"/>
+                </cpt:property>
+            </cpt:fieldSet>
+        </col>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="false">
+            <cpt:collection id="agreements"/>
         </col>
         <col span="12" unreferencedCollections="true">
-            <ns2:collection id="agreements"/>
         </col>
     </row>
 </grid>
