@@ -18,16 +18,11 @@ package org.estatio.dom.communicationchannel;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
-public class CommunicationChannelOwnerForTesting implements CommunicationChannelOwner {
-
-    @Override
-    public ApplicationTenancy getApplicationTenancy() {
-        return null;
-    }
+public class CommunicationChannelOwnerForTesting implements CommunicationChannelOwner, HasAtPath {
 
     @Programmatic
     @Override

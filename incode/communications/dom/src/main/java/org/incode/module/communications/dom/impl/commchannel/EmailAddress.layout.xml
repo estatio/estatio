@@ -21,7 +21,7 @@
                 <ns2:property id="name"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="applicationTenancy"/>
+                <ns2:property id="atPath"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>

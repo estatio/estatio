@@ -18,8 +18,8 @@
  */
 package org.incode.module.communications.dom.impl.commchannel;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
-public interface CommunicationChannelOwner extends WithApplicationTenancy {
+public interface CommunicationChannelOwner extends HasAtPath {
 
 }

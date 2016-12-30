@@ -35,18 +35,18 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-
 @DomainService(repositoryFor = Communication.class, nature = NatureOfService.DOMAIN)
-public class CommunicationRepository extends UdoDomainRepositoryAndFactory<Communication> {
+public class CommunicationRepository  {
 
     public String getId() {
         return "incodeCommunications.CommunicationRepository";
     }
 
-    public CommunicationRepository() {
-        super(CommunicationRepository.class, Communication.class);
+    public String iconName() {
+        return Communication.class.getSimpleName();
     }
+
+    // //////////////////////////////////////
 
     @Programmatic
     public Communication createEmail(
@@ -93,6 +93,7 @@ public class CommunicationRepository extends UdoDomainRepositoryAndFactory<Commu
     }
 
 
+    // //////////////////////////////////////
 
     @Inject
     ClockService clockService;
