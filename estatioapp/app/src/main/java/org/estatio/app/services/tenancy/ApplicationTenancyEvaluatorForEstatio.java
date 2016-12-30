@@ -29,12 +29,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
-import org.isisaddons.module.security.facets.TenantedAuthorizationFacetDefault;
-
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99")
 public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancyEvaluator {
@@ -43,7 +40,7 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
     QueryResultsCache queryResultsCache;
 
     public boolean handles(Class<?> cls) {
-        return WithApplicationTenancy.class.isAssignableFrom(cls);
+        return HasAtPath.class.isAssignableFrom(cls);
     }
 
     public String hides(Object domainObject, ApplicationUser applicationUser) {
@@ -138,36 +135,34 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
 
     //region > helpers: applicationTenancyPathForCached, applicationTenancyPathFor, userTenancyPathForCached, userTenancyPathFor
     private String applicationTenancyPathForCached(final Object domainObject) {
-        return (String)queryResultsCache.execute(new Callable() {
-            public String call() throws Exception {
-                return applicationTenancyPathFor(domainObject);
-            }
-        }, TenantedAuthorizationFacetDefault.class, "applicationTenancyPathFor", domainObject);
+        return (String)queryResultsCache.execute(
+                (Callable) () -> applicationTenancyPathFor(domainObject),
+                ApplicationTenancyEvaluatorForEstatio.class,
+                "applicationTenancyPathForCached", domainObject);
     }
 
     private String applicationTenancyPathFor(Object domainObject) {
-        WithApplicationTenancy tenantedObject = (WithApplicationTenancy)domainObject;
-        ApplicationTenancy objectTenancy = tenantedObject.getApplicationTenancy();
-        String objectTenancyPath = objectTenancy == null
-                                        ? null
-                                        : objectTenancy.getPath();
-        return objectTenancyPath;
+        if (!(domainObject instanceof HasAtPath)) {
+            return null;
+        }
+        HasAtPath tenantedObject = (HasAtPath) domainObject;
+        return tenantedObject.getAtPath();
     }
 
     private String userTenancyPathForCached(final ApplicationUser applicationUser) {
-        return (String)queryResultsCache.execute(new Callable() {
-            public String call() throws Exception {
-                return userTenancyPathFor(applicationUser);
-            }
-        }, TenantedAuthorizationFacetDefault.class, "userTenancyPathFor", applicationUser);
+        return (String)queryResultsCache.execute(
+                (Callable) () -> userTenancyPathFor(applicationUser),
+                ApplicationTenancyEvaluatorForEstatio.class, "userTenancyPathForCached", applicationUser);
     }
 
-    private String userTenancyPathFor(ApplicationUser applicationUser) {
-        if(handles(applicationUser.getClass())) {
-            return applicationTenancyPathFor(applicationUser);
-        } else {
-            return applicationUser.getAtPath();
-        }
+    private String userTenancyPathFor(final ApplicationUser applicationUser) {
+        // previously the code had this clause, but this is now always false because
+        // ApplicationUser (in sec module, as of 1.13.6) does not (cannot) implement
+        // org.estatio.dom.WithApplicationTenancy
+//        if(handles(applicationUser.getClass())) {
+//            return applicationTenancyPathFor(applicationUser);
+//        }
+        return applicationUser.getAtPath();
     }
     //endregion
 
