@@ -20,7 +20,7 @@ Copyright 2014~2015 Dan Haywood
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.13.1</version>
+        <version>1.13.2</version>
     </parent>
 
     <groupId>org.incode.module.communications</groupId>
@@ -76,7 +76,7 @@ Copyright 2014~2015 Dan Haywood
         <isis-module-security.version>1.13.6</isis-module-security.version>
 
         <incode-module-base.version>1.13.5</incode-module-base.version>
-        <incode-module-country.version>1.14.0-SNAPSHOT</incode-module-country.version>
+        <incode-module-country.version>1.13.1</incode-module-country.version>
         <incode-module-document.version>1.13.12</incode-module-document.version>
 
         <lombok.version>1.16.6</lombok.version>
@@ -252,20 +252,16 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
             <scope>provided</scope>
         </dependency>
 
-        <!--
-        TODO: to remove, but only after have figured out/refactored WithApplicationTenancy and
-        removed dependency on UdoDomainObject
-        -->
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.incode.module.base</groupId>
             <artifactId>incode-module-base-dom</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.isisaddons.module.security</groupId>
+            <artifactId>isis-module-security-dom</artifactId>
+            <version>${isis-module-security.version}</version>
+        </dependency>
 
         <!-- testing -->
         <dependency>

@@ -29,18 +29,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-
 @DomainService(repositoryFor = EmailAddress.class, nature = NatureOfService.DOMAIN)
-public class EmailAddressRepository extends UdoDomainRepositoryAndFactory<EmailAddress> {
+public class EmailAddressRepository {
 
     public String getId() {
-        return "estatio.EmailAddressRepository";
+        return "incodeCommunications.EmailAddressRepository";
     }
 
-    public EmailAddressRepository() {
-        super(EmailAddressRepository.class, EmailAddress.class);
+    public String iconName() {
+        return EmailAddress.class.getSimpleName();
     }
+
 
     // //////////////////////////////////////
 
@@ -62,5 +61,6 @@ public class EmailAddressRepository extends UdoDomainRepositoryAndFactory<EmailA
 
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+
 
 }

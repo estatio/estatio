@@ -21,6 +21,7 @@ package org.incode.module.communications.dom.impl.commchannel;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
+import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -42,16 +43,20 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.ReferenceType;
-
-import org.estatio.dom.UdoDomainObject2;
+import org.incode.module.base.dom.with.WithCodeGetter;
+import org.incode.module.base.dom.with.WithDescriptionGetter;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.incode.module.base.dom.with.WithTitleGetter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -89,39 +94,44 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel
-        extends UdoDomainObject2<CommunicationChannel>
-        implements WithNameGetter, WithReferenceGetter, WithApplicationTenancyCountry {
+        implements Comparable<CommunicationChannel>,
+        HasAtPath,
+        WithNameGetter, WithReferenceGetter {
+
+    // //////////////////////////////////////
 
     public static class PhoneNumberType {
-
         private PhoneNumberType() {}
-
         public static final String REGEX = "[+]?[0-9 -]*";
         public static final String REGEX_DESC = "Only numbers and two symbols being \"-\" and \"+\" are allowed ";
-
         public final static int MAX_LEN = 20;
-
     }
 
     public static class EmailType {
-
         // as per http://emailregex.com/
         // better would probably be:
         // (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
         public static final String REGEX = "[^@ ]*@{1}[^@ ]*[.]+[^@ ]*";
         public static final String REGEX_DESC = "Only one \"@\" symbol is allowed, followed by a domain e.g. test@example.com";
-
         public final static int MAX_LEN = 254; //http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-
         private EmailType(){}
-
     }
 
     // //////////////////////////////////////
 
+    protected static ObjectContracts UDO_OBJECT_CONTRACTS =
+            new ObjectContracts()
+                    .with(WithReferenceGetter.ToString.evaluator())
+                    .with(WithCodeGetter.ToString.evaluator())
+                    .with(WithNameGetter.ToString.evaluator())
+                    .with(WithTitleGetter.ToString.evaluator())
+                    .with(WithDescriptionGetter.ToString.evaluator());
+
+    // //////////////////////////////////////
+
+    private final static String KEY_PROPERTIES = "type, legal, id";
 
     public CommunicationChannel() {
-        super("type, legal, id");
     }
 
     // //////////////////////////////////////
@@ -132,20 +142,36 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    @PropertyLayout(
-            named = "Application Level",
-            describedAs = "Determines those users for whom this object is available to view and/or modify."
-    )
-    public ApplicationTenancy getApplicationTenancy() {
-        return getOwner().getApplicationTenancy();
+    @Programmatic
+    public String getId() {
+        Object objectId = JDOHelper.getObjectId(this);
+        if (objectId == null) {
+            return "";
+        }
+        String objectIdStr = objectId.toString();
+        final String id = objectIdStr.split("\\[OID\\]")[0];
+        return id;
     }
+
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "2")
+    @PropertyLayout(
+            named = "Application Level Path",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    @Override
+    public String getAtPath() {
+        final CommunicationChannelOwner owner = getOwner();
+        return owner != null ? owner.getAtPath() : null;
+    }
+
+
+    // //////////////////////////////////////
+
     @Property(hidden = Where.OBJECT_FORMS)
     public String getName() {
-        return getContainer().titleOf(this);
+        return titleService.titleOf(this);
     }
 
     // //////////////////////////////////////
@@ -163,13 +189,13 @@ public abstract class CommunicationChannel
     @Programmatic
     public void setOwner(final CommunicationChannelOwner owner) {
         removeOwnerLink();
-        final CommunicationChannelOwnerLink link = communicationChannelOwnerLinkRepository.createLink(this, owner);
+        communicationChannelOwnerLinkRepository.createLink(this, owner);
     }
 
     private void removeOwnerLink() {
         final CommunicationChannelOwnerLink ownerLink = getOwnerLink();
         if(ownerLink != null) {
-            getContainer().remove(ownerLink);
+            repositoryService.remove(ownerLink);
         }
     }
 
@@ -205,7 +231,6 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "3")
     @Getter @Setter
     private boolean legal;
 
@@ -243,6 +268,9 @@ public abstract class CommunicationChannel
         return getPurpose();
     }
 
+
+    // //////////////////////////////////////
+
     public static class RemoveEvent extends ActionDomainEvent<CommunicationChannel> {
         private static final long serialVersionUID = 1L;
         public CommunicationChannel getReplacement() {
@@ -255,16 +283,40 @@ public abstract class CommunicationChannel
             @Parameter(optionality = Optionality.OPTIONAL)
             final CommunicationChannel replaceWith) {
         removeOwnerLink();
-        getContainer().remove(this);
+        repositoryService.remove(this);
     }
 
     public SortedSet<CommunicationChannel> choices0Remove() {
         return communicationChannelRepository.findOtherByOwnerAndType(getOwner(), getType(), this);
     }
 
+
+    // //////////////////////////////////////
+
+
+    @Override
+    public String toString() {
+        return UDO_OBJECT_CONTRACTS.toStringOf(this, KEY_PROPERTIES);
+    }
+
+    @Override
+    public int compareTo(final CommunicationChannel other) {
+        return ObjectContracts.compare(this, other, KEY_PROPERTIES);
+    }
+
+    // //////////////////////////////////////
+
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+    @Inject
+    protected ApplicationTenancyRepository securityApplicationTenancyRepository;
+    @Inject
+    RepositoryService repositoryService;
+    @Inject
+    TitleService titleService;
+
+
 
 }

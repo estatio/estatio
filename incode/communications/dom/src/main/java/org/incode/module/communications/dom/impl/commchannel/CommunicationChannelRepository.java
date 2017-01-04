@@ -29,21 +29,25 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 
 @DomainService(repositoryFor = CommunicationChannel.class, nature = NatureOfService.DOMAIN)
-public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
+public class CommunicationChannelRepository {
 
     public String getId() {
-        return "estatio.CommunicationChannelRepository";
+        return "incodeCommunications.CommunicationChannelRepository";
     }
 
-    public CommunicationChannelRepository() {
-        super(CommunicationChannelRepository.class, CommunicationChannel.class);
+    public String iconName() {
+        return CommunicationChannel.class.getSimpleName();
     }
+
+    // //////////////////////////////////////
+
 
     @Programmatic
     public PostalAddress newPostal(
@@ -57,7 +61,7 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
             final State state,
             final Country country
             ) {
-        final PostalAddress pa = newTransientInstance(PostalAddress.class);
+        final PostalAddress pa = repositoryService.instantiate(PostalAddress.class);
         pa.setType(type);
         pa.setAddress1(address1);
         pa.setAddress2(address2);
@@ -67,7 +71,7 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
         pa.setState(state);
         pa.setCountry(country);
         pa.setOwner(owner);
-        persistIfNotAlready(pa);
+        repositoryService.persist(pa);
         return pa;
     }
 
@@ -76,11 +80,11 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String address) {
-        final EmailAddress ea = newTransientInstance(EmailAddress.class);
+        final EmailAddress ea = repositoryService.instantiate(EmailAddress.class);
         ea.setType(type);
         ea.setEmailAddress(address);
         ea.setOwner(owner);
-        persistIfNotAlready(ea);
+        repositoryService.persist(ea);
         return ea;
     }
 
@@ -89,18 +93,23 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String number) {
-        final PhoneOrFaxNumber pn = newTransientInstance(PhoneOrFaxNumber.class);
+        final PhoneOrFaxNumber pn = repositoryService.instantiate(PhoneOrFaxNumber.class);
         pn.setType(type);
         pn.setPhoneNumber(number);
         pn.setOwner(owner);
-        persistIfNotAlready(pn);
+        repositoryService.persist(pn);
         return pn;
     }
 
     @Programmatic
     public CommunicationChannel findByReferenceAndType(
             final String reference, final CommunicationChannelType type) {
-        return firstMatch("findByReferenceAndType", "reference", reference, "type", type);
+        return this.repositoryService.firstMatch(
+                new QueryDefault<>(
+                        CommunicationChannel.class,
+                        "findByReferenceAndType",
+                        "reference", reference,
+                        "type", type));
     }
 
     @Programmatic
@@ -130,6 +139,12 @@ public class CommunicationChannelRepository extends UdoDomainRepositoryAndFactor
         return communicationChannels;
     }
 
+    // //////////////////////////////////////
+
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+
+    @Inject
+    RepositoryService repositoryService;
+
 }

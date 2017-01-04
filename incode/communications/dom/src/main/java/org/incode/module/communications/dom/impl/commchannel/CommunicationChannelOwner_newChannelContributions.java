@@ -30,10 +30,10 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainService;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
@@ -50,24 +50,36 @@ import org.incode.module.country.dom.impl.StateRepository;
  * {@link #communicationChannels(CommunicationChannelOwner) communication
  * channels} of a particular {@link CommunicationChannelOwner}.
  */
-public abstract class CommunicationChannelOwner_newChannelContributions
-        extends UdoDomainService<CommunicationChannelOwner_newChannelContributions> {
+public abstract class CommunicationChannelOwner_newChannelContributions  {
 
-    public CommunicationChannelOwner_newChannelContributions() {
-        super(CommunicationChannelOwner_newChannelContributions.class);
+    private final Class<? extends CommunicationChannelOwner_newChannelContributions> serviceType;
+
+    protected CommunicationChannelOwner_newChannelContributions(final Class<? extends CommunicationChannelOwner_newChannelContributions> serviceType) {
+        this.serviceType = serviceType;
     }
 
-    protected CommunicationChannelOwner_newChannelContributions(Class<? extends UdoDomainService<CommunicationChannelOwner_newChannelContributions>> serviceType) {
-        super(serviceType);
+    public CommunicationChannelOwner_newChannelContributions() {
+        this(CommunicationChannelOwner_newChannelContributions.class);
+    }
+
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public String getId() {
+        return getClass().getName();
+    }
+
+    public String iconName() {
+        return serviceType.getSimpleName();
     }
 
     // //////////////////////////////////////
 
+
     @MemberOrder(name = "CommunicationChannels", sequence = "1")
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    // CHECKSTYLE.OFF: ParameterNumber - Wicket viewer does not support
-    // aggregate value types
     public CommunicationChannelOwner newPostal(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
@@ -82,8 +94,6 @@ public abstract class CommunicationChannelOwner_newChannelContributions
         communicationChannelRepository.newPostal(owner, type, addressLine1, addressLine2, null, postalCode, city, state, country);
         return owner;
     }
-
-    // CHECKSTYLE.ON: ParameterNumber
 
     public List<CommunicationChannelType> choices1NewPostal() {
         return CommunicationChannelType.matching(PostalAddress.class);
@@ -183,9 +193,9 @@ public abstract class CommunicationChannelOwner_newChannelContributions
     public CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
-    private StateRepository stateRepository;
+    StateRepository stateRepository;
 
     @Inject
-    private CountryRepository countryRepository;
+    CountryRepository countryRepository;
 
 }

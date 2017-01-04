@@ -14,6 +14,7 @@
                             <cpt:fieldSet name="Identifier">
                                 <cpt:property id="type"/>
                                 <cpt:property id="channel"/>
+                                <cpt:property id="description" hidden="EVERYWHERE"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

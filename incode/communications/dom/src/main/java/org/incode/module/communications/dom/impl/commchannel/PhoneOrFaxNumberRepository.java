@@ -29,18 +29,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-
 @DomainService(repositoryFor = PhoneOrFaxNumber.class, nature = NatureOfService.DOMAIN)
-public class PhoneOrFaxNumberRepository extends UdoDomainRepositoryAndFactory<PhoneOrFaxNumber> {
+public class PhoneOrFaxNumberRepository {
 
     public String getId() {
-        return "estatio.PhoneOrFaxNumberRepository";
+        return "incodeCommunications.PhoneOrFaxNumberRepository";
     }
 
-    public PhoneOrFaxNumberRepository() {
-        super(PhoneOrFaxNumberRepository.class, PhoneOrFaxNumber.class);
+    public String iconName() {
+        return PhoneOrFaxNumber.class.getSimpleName();
     }
+
 
     // //////////////////////////////////////
 
@@ -68,6 +67,10 @@ public class PhoneOrFaxNumberRepository extends UdoDomainRepositoryAndFactory<Ph
         return Iterables.tryFind(phoneOrFaxNumbers, PhoneOrFaxNumber.Predicates.equalTo(phoneNumber, communicationChannelType));
     }
 
+    // //////////////////////////////////////
+
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+
+
 }

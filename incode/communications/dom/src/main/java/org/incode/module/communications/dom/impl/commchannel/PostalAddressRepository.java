@@ -31,21 +31,20 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-
 /**
  * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.
  */
 @DomainService(repositoryFor = PostalAddress.class, nature = NatureOfService.DOMAIN)
-public class PostalAddressRepository extends UdoDomainRepositoryAndFactory<PostalAddress> {
+public class PostalAddressRepository {
 
     public String getId() {
-        return "estatio.PostalAddressRepository";
+        return "incodeCommunications.PostalAddressRepository";
     }
 
-    public PostalAddressRepository() {
-        super(PostalAddressRepository.class, PostalAddress.class);
+    public String iconName() {
+        return PostalAddress.class.getSimpleName();
     }
+
 
     // //////////////////////////////////////
 
@@ -90,7 +89,10 @@ public class PostalAddressRepository extends UdoDomainRepositoryAndFactory<Posta
     }
 
 
+    // //////////////////////////////////////
+
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+
 
 }
