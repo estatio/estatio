@@ -90,6 +90,12 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.incode.estatio</groupId>
+            <artifactId>estatio-canonical</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
