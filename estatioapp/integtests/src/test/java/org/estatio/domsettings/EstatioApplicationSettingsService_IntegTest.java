@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
             // Given, when
             final List<ApplicationSetting> applicationSettings = applicationSettingsServiceForEstatio.listAll();
             // Then
-            assertThat(applicationSettings.size()).isEqualTo(3);
+            assertThat(applicationSettings.size()).isEqualTo(2);
         }
     }
 
@@ -61,22 +62,24 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
         @Test
         public void happyCase() throws Exception {
             // Given
-            final ApplicationSettingKey key = ApplicationSettingKey.reportServerBaseUrl;
+            final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
             // when
             final ApplicationSetting applicationSetting = ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
             // Then
-            assertThat(applicationSetting.getValueRaw()).isEqualTo(key.getDefaultValue());
+            assertThat(applicationSetting.getValueRaw()).isEqualTo(((LocalDate)key.getDefaultValue()).toString("yyyy-MM-dd"));
         }
 
         @Test
         public void updated() throws Exception {
-            // Given
-            final ApplicationSettingKey key = ApplicationSettingKey.reportServerBaseUrl;
+            // given
+            final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
             // when
             final ApplicationSettingForEstatio applicationSetting = (ApplicationSettingForEstatio) ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
-            applicationSetting.setValueRaw("Changed");
-            // Then
-            assertThat(applicationSettingsServiceForEstatio.find(key).getValueRaw()).isEqualTo("Changed");
+            final LocalDate localDate = new LocalDate(2010, 1, 1);
+            applicationSetting.setValueRaw(localDate.toString("yyyy-MM-dd"));
+            // then
+            assertThat(applicationSettingsServiceForEstatio.find(key).getValueRaw()).isEqualTo(
+                    localDate.toString("yyyy-MM-dd"));
         }
     }
 
